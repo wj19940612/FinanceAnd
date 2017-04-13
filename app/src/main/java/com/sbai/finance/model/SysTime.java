@@ -2,8 +2,8 @@ package com.sbai.finance.model;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.Preference;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.TimeRecorder;
 
@@ -29,14 +29,12 @@ public class SysTime {
 
         Client.getSystemTime()
                 .setRetryPolicy(new DefaultRetryPolicy(5 * 1000, 3, 1))
-                .setCallback(new Callback<Resp<Long>>() {
+                .setCallback(new Callback2D<Resp<Long>, Long>(false) {
                     @Override
-                    public void onReceive(Resp<Long> resp) {
-                        if (resp.isSuccess() && resp.getData() != null) {
-                            mSystemTime = resp.getData().longValue();
-                            Preference.get().setServerTime(mSystemTime);
-                            TimeRecorder.record(RECORD_KEY);
-                        }
+                    protected void onRespSuccessData(Long data) {
+                        mSystemTime = data.longValue();
+                        Preference.get().setServerTime(mSystemTime);
+                        TimeRecorder.record(RECORD_KEY);
                     }
                 }).fire();
     }

@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">Finance</string>
+    <string name="app_name">泛理</string>
 
     <!-- Dialog -->
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
 
+    <!-- Main -->
+    <string name="economic_circle">经济圈</string>
+    <string name="mine">我的</string>
 
 </resources>

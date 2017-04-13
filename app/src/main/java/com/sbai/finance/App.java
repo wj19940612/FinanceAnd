@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sbai.finance.activity.CatchCrashActivity;
-import com.sbai.finance.net.Client;
+import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.httplib.CookieManger;
 
@@ -17,7 +17,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         sContext = this;
-        Client.init(sContext.getCacheDir());
+        API.init(sContext.getCacheDir());
         CookieManger.getInstance().init(sContext.getFilesDir());
 
         if (BuildConfig.DEBUG) {

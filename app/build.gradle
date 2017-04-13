@@ -32,4 +32,6 @@ dependencies {
 
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
     compile 'com.jakewharton:butterknife:8.0.1'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
