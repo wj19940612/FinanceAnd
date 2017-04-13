@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.SysTime;
 import com.sbai.finance.net.API;
@@ -92,6 +94,16 @@ public class BaseActivity extends AppCompatActivity implements
             }
         });
         SysTime.getSysTime().sync();
+    }
+
+    protected void translucentStatusBar() {
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        // enable status bar tint
+        tintManager.setStatusBarTintEnabled(true);
+        // enable navigation bar tint
+        tintManager.setNavigationBarTintEnabled(true);
+        // set a custom tint color for all system bars
+        tintManager.setTintColor(Color.parseColor("#00000000"));
     }
 
     @Override
