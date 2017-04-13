@@ -4,5 +4,19 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-
+    <color name="redPrimary">#CD4A47</color>
+    <!--Assist-->
+    <color name="blackAssist">#0C0F16</color>
+    <color name="pinkAssist">#E5A19F</color>
+    <color name="blueAssist">#869bcb</color>
+    <color name="greenAssist">#33D37E</color>
+    <color name="greyAssist">#82848A</color>
+    <color name="greyLightAssist">#E7E7E8</color>
+    <!--Text-->
+    <color name="primaryText">#0C0F16</color>
+    <color name="secondaryText">#82848A</color>
+    <color name="assistText">#b3b3b3</color>
+    <color name="hintText">#d8d8d8</color>
+    <color name="warningText">#CD4A47</color>
+    
 </resources>
