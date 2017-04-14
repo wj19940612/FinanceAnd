@@ -8,7 +8,7 @@
                 android:bottomRightRadius="@dimen/common_radius"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
-            <solid android:color="#7F25D79E"/>
+            <solid android:color="#7FCD4A47"/>
         </shape>
     </item>
 
@@ -30,7 +30,7 @@
                 android:bottomRightRadius="@dimen/common_radius"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
-            <solid android:color="@android:color/darker_gray"/>
+            <solid android:color="@color/redPrimary"/>
         </shape>
     </item>
 

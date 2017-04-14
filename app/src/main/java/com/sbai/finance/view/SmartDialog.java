@@ -113,17 +113,6 @@ public class SmartDialog {
         return dialog;
     }
 
-    /**
-     * @param activity
-     * @return
-     * @deprecated use {@link #with(Activity activity, String msg)} instead
-     */
-    public static SmartDialog with(Activity activity) {
-        SmartDialog dialog = new SmartDialog(activity);
-        addMap(activity, dialog);
-        return dialog;
-    }
-
     private static void addMap(Activity activity, SmartDialog dialog) {
         String key = activity.getClass().getSimpleName();
         List<SmartDialog> dialogList = mListMap.get(key);
