@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,10 +31,8 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SmartDialog.with(getActivity(), "TEST")
-                .setPositive(R.string.ok)
-                .show();
     }
+
 
     @Override
     public void onDestroyView() {
