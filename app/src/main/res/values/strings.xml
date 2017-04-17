@@ -9,4 +9,9 @@
     <string name="economic_circle">经济圈</string>
     <string name="mine">我的</string>
 
+    <!--Home-->
+    <string name="future">期货</string>
+    <string name="stock">股票</string>
+    <string name="help">互助</string>
+    <string name="self_choice">自选</string>
 </resources>
