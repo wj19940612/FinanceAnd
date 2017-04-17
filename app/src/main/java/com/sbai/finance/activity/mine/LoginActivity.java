@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.KeyBoardHelper;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
 
@@ -195,7 +195,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        Launcher.with(this, MainActivity.class).execute();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName("王八三十");
+        LocalUser.getUser().setUserInfo(userInfo);
+        setResult(RESULT_OK);
         finish();
     }
 

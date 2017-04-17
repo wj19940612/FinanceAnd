@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorBag"
+              android:orientation="vertical">
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/takePhoneFromCamera"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/bg_white"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/take_phone_from_camera"
+        android:textColor="@color/blueAssist"
+        android:textSize="17sp"/>
+
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/takePhoneFromGallery"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
+        android:gravity="center"
+        android:text="@string/take_phone_from_phone"
+        android:textColor="@color/blueAssist"
+        android:textSize="17sp"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/takePhoneCancel"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/take_phone_cancel"
+        android:textColor="@color/redPrimary"
+        android:textSize="17sp"/>
+
+</LinearLayout>

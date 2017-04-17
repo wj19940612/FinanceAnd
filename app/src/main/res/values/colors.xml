@@ -12,6 +12,11 @@
     <color name="greenAssist">#33D37E</color>
     <color name="greyAssist">#82848A</color>
     <color name="greyLightAssist">#E7E7E8</color>
+
+    <color name="login_button_bg">#e5b96c</color>
+    <!-- 我的界面的粉丝背景颜色 -->
+    <color name="mine_">#25272E</color>
+    <color name="colorBag">#E7E7E8</color>
     <!--Text-->
     <color name="primaryText">#0C0F16</color>
     <color name="secondaryText">#82848A</color>
