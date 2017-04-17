@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">泛理</string>
+    <string name="app_name">泛理金融</string>
 
     <!-- Dialog -->
     <string name="ok">确定</string>
@@ -8,5 +8,16 @@
     <!-- Main -->
     <string name="economic_circle">经济圈</string>
     <string name="mine">我的</string>
+
+
+    <!--login   page-->
+    <string name="phone_number">手机号</string>
+    <string name="please_input_phone_number">请输入您的手机号码</string>
+    <string name="auth_code">验证码</string>
+    <string name="please_input_auth_code">请输入验证码</string>
+    <string name="get_auth_code">获取验证码</string>
+    <string name="login">登录</string>
+    <string name="resend_after_n_seconds">%1$ds后重发</string>
+    <string name="obtain_auth_code_continue">重新获取</string>
 
 </resources>
