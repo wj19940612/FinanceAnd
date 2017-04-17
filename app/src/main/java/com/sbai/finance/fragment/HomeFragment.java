@@ -130,17 +130,6 @@ public class HomeFragment extends BaseFragment {
 		mListStrs.add(new String("bbbbb"));
 		mListStrs.add(new String("cccc"));
 		mListStrs.add(new String("ddddd"));
-		mListStrs.add(new String("aaaaa"));
-		mListStrs.add(new String("bbbbb"));
-		mListStrs.add(new String("cccc"));
-		mListStrs.add(new String("ddddd"));
-		mListStrs.add(new String("aaaaa"));
-		mListStrs.add(new String("bbbbb"));
-		mListStrs.add(new String("cccc"));
-		mListStrs.add(new String("ddddd"));
-		mListStrs.add(new String("aaaaa"));
-		mListStrs.add(new String("bbbbb"));
-		mListStrs.add(new String("cccc"));
 		mTopicGridAdapter.addAll(mListStrs);
 		mTopicGridAdapter.notifyDataSetChanged();
 	}
