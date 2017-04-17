@@ -6,4 +6,7 @@
     <dimen name="common_little_radius">4dp</dimen>
     <dimen name="common_big_radius">8dp</dimen>
     <dimen name="common_margin">16dp</dimen>
+    <dimen name="common_radius">3dp</dimen>
+    <dimen name="common_padding">10dp</dimen>
+>>>>>>> home
 </resources>
