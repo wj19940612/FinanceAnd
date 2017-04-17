@@ -30,4 +30,23 @@
         <attr name="backIcon" format="reference"/>
         <attr name="barBackground" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="IconTextRow">
+        <attr name="leftIcon" format="reference"/>
+        <attr name="rightIcon" format="reference"/>
+        <attr name="rightIconVisibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
+        <attr name="subText" format="reference|string"/>
+        <attr name="subTextSize" format="reference|string"/>
+        <attr name="subTextColor" format="color"/>
+        <attr name="subTextBackground" format="reference"/>
+        <attr name="rowText" format="reference|string"/>
+        <attr name="rowTextSize" format="dimension"/>
+        <attr name="rowTextColor" format="color"/>
+        <attr name="rowIsNotNeedTopPadding" format="boolean"/>
+        <attr name="rowVerticalPadding" format="dimension"/>
+    </declare-styleable>
 </resources>

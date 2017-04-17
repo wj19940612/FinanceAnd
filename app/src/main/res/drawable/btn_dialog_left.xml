@@ -4,7 +4,7 @@
     <item android:state_pressed="true">
         <shape>
             <corners
-                android:bottomLeftRadius="@dimen/common_radius"
+                android:bottomLeftRadius="@dimen/common_little_radius"
                 android:bottomRightRadius="0dp"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
@@ -15,7 +15,7 @@
     <item android:state_enabled="false">
         <shape>
             <corners
-                android:bottomLeftRadius="@dimen/common_radius"
+                android:bottomLeftRadius="@dimen/common_little_radius"
                 android:bottomRightRadius="0dp"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
@@ -26,7 +26,7 @@
     <item>
         <shape>
             <corners
-                android:bottomLeftRadius="@dimen/common_radius"
+                android:bottomLeftRadius="@dimen/common_little_radius"
                 android:bottomRightRadius="0dp"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tool="http://schemas.android.com/tools"
+              android:id="@+id/topicBg"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@mipmap/ic_launcher">
+     <TextView
+         android:id="@+id/topicTitle"
+         android:layout_width="wrap_content"
+         android:layout_height="0dp"
+         android:layout_weight="1"
+         android:gravity="bottom"
+         android:layout_gravity="center"
+         android:textSize="16sp"
+         android:textColor="@android:color/white"
+         tool:text="匪夷所思的妖股"/>
+    <TextView
+        android:id="@+id/topicDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@color/assistText"
+        tool:text="万科 乐视 暴风"/>
+
+</LinearLayout>
