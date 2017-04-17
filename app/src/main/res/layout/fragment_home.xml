@@ -27,7 +27,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="@dimen/common_padding"
+                android:paddingLeft="@dimen/common_margin"
+                android:paddingTop="@dimen/common_padding"
+                android:paddingBottom="@dimen/common_padding"
+                android:paddingRight="@dimen/common_padding"
                 android:background="@android:color/white">
                 <ImageView
                     android:layout_width="wrap_content"

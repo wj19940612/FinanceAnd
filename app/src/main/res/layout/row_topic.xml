@@ -25,5 +25,4 @@
         android:layout_gravity="center"
         android:textColor="@color/assistText"
         tool:text="万科 乐视 暴风"/>
-
 </LinearLayout>

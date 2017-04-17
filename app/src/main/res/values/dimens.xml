@@ -8,5 +8,11 @@
     <dimen name="common_margin">16dp</dimen>
     <dimen name="common_radius">3dp</dimen>
     <dimen name="common_padding">10dp</dimen>
->>>>>>> home
+
+    <dimen name="navigate_size">16sp</dimen>
+    <dimen name="search_size">13sp</dimen>
+    <dimen name="list_title_size">15sp</dimen>
+    <dimen name="list_detail_size">13sp</dimen>
+    <dimen name="list_hint_size">11sp</dimen>
+    <dimen name="btn_size">16sp</dimen>
 </resources>
