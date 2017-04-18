@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sbai.finance"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Storage -->
@@ -44,6 +44,8 @@
         <activity
             android:name=".activity.mine.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mine.NewsActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

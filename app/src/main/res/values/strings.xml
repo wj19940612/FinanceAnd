@@ -15,7 +15,7 @@
     <string name="auth_code">验证码</string>
     <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
-    <string name="login">登录</string>
+    <string name="login">登  录</string>
     <string name="resend_after_n_seconds">%1$ds后重发</string>
     <string name="obtain_auth_code_continue">重新获取</string>
 
@@ -31,6 +31,7 @@
     <string name="fans">粉丝</string>
     <string name="mine_publish">我的发表</string>
     <string name="setting">设置</string>
+    <string name="news">消息</string>
     <string name="about_us">关于我们</string>
     <string name="please_login">您好，请先登录</string>
 
@@ -52,5 +53,9 @@
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
+
+    <!--   消息 -->
+    <string name="system_news">系统消息</string>
+
 
 </resources>
