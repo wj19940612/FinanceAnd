@@ -11,7 +11,7 @@
 
     <!--login   page-->
     <string name="phone_number">手机号</string>
-    <string name="please_input_phone_number">请输入您的手机号码</string>
+    <string name="please_input_phone_number">请输入手机号码</string>
     <string name="auth_code">验证码</string>
     <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
@@ -24,7 +24,6 @@
     <string name="stock">股票</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
-
     <!--Future-->
     <string name="future_foreign">国外期货</string>
     <string name="future_china">国内期货</string>
@@ -41,4 +40,32 @@
     <!--event-->
     <string name="no_event_record">还没有大事发生哦!</string>
     <string name="event_title">大事件</string>
+
+    <!--    我的界面  -->
+    <string name="attention">关注</string>
+    <string name="fans">粉丝</string>
+    <string name="mine_publish">我的发表</string>
+    <string name="setting">设置</string>
+    <string name="about_us">关于我们</string>
+    <string name="please_login">您好，请先登录</string>
+
+    <!--修改个人信息-->
+    <string name="modify_user_info">修改个人信息</string>
+    <string name="head_image">头像</string>
+    <string name="nick_name">昵称</string>
+    <string name="sex">性别</string>
+    <string name="age">年龄</string>
+    <string name="location">地区</string>
+    <string name="credit">信用</string>
+    <string name="logout">退出登录</string>
+    <string name="modify_user_name">修改用户名</string>
+    <string name="please_input_user_name">请输入用户名</string>
+    <string name="save">保存</string>
+    <string name="is_only_a_chinese_name">姓名填写不正确</string>
+
+    <string name="take_phone_from_camera">拍照</string>
+    <string name="take_phone_from_phone">从手机相册选择</string>
+    <string name="take_phone_cancel">取  消</string>
+    <string name="sd_is_not_useful">sd卡不可使用</string>
+
 </resources>

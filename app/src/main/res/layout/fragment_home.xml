@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:tool="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:background="@color/greyLightAssist">
     <ScrollView
@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <com.sbai.finance.view.HomeBanner
                 android:id="@+id/homeBanner"
                 android:layout_width="match_parent"
@@ -44,6 +45,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="@dimen/common_padding"
                     android:background="@color/greyLightAssist"/>
+
                 <TextView
                     android:id="@+id/event"
                     android:layout_width="match_parent"

@@ -33,8 +33,6 @@
         <attr name="rowIsNotNeedTopPadding" format="boolean"/>
         <attr name="rowVerticalPadding" format="dimension"/>
     </declare-styleable>
-
-
     <declare-styleable name="TitleBar">
         <attr name="titleText" format="reference|string"/>
         <attr name="titleTextSize" format="dimension"/>

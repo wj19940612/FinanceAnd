@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 
-
 public class TitleBar extends RelativeLayout {
 
     private CharSequence mTitle;
@@ -75,7 +74,7 @@ public class TitleBar extends RelativeLayout {
 
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
 
-
+        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
         typedArray.recycle();
     }
 
@@ -146,7 +145,7 @@ public class TitleBar extends RelativeLayout {
         if (backIcon != null) {
             mLeftView.setCompoundDrawables(backIcon, null, null, null);
         } else { // default icon
-            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tab_back, 0, 0, 0);
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back, 0, 0, 0);
         }
     }
 
@@ -204,9 +203,7 @@ public class TitleBar extends RelativeLayout {
         mRightView.setVisibility(mRightVisible ? VISIBLE : INVISIBLE);
     }
 
-
     public void setOnRightViewClickListener(OnClickListener listener) {
-
         mRightViewParent.setOnClickListener(listener);
     }
 
