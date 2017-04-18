@@ -21,7 +21,7 @@
             android:drawablePadding="13dp"
             android:drawableLeft="@drawable/fanli_list_icon_borrow"
             android:drawableRight="@drawable/ic_more"
-            android:text="借款有道\n帮助他人，赚些小慧"/>
+            android:text="@string/borrow_title"/>
     </LinearLayout>
 
     <LinearLayout
@@ -40,6 +40,6 @@
             android:drawablePadding="13dp"
             android:drawableLeft="@drawable/fanli_list_icon_opinion"
             android:drawableRight="@drawable/ic_more"
-            android:text="观点大神\n眼光奇准,跟着混，准没错"/>
+            android:text="@string/idea_title"/>
     </LinearLayout>
 </LinearLayout>
