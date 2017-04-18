@@ -34,7 +34,7 @@ public class MineFragment extends BaseFragment {
     private static final int REQ_CODE_USER_INFO = 801;
 
     // TODO: 2017/4/17 测试头像网址
-    private static final String userImageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg";
+    public static final String userImageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg";
 
     Unbinder unbinder;
 

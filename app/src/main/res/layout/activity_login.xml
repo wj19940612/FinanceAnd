@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/common_margin"
             android:layout_marginRight="@dimen/common_margin"
-            android:background="@drawable/bg_line_division_center"
+            android:background="@drawable/bg_line_division_black"
             android:gravity="center_vertical"
             android:minHeight="60dp">
 
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/common_margin"
             android:layout_marginRight="@dimen/common_margin"
-            android:background="@drawable/bg_line_division_center"
+            android:background="@drawable/bg_line_division_black"
             android:gravity="center_vertical"
             android:minHeight="60dp">
 

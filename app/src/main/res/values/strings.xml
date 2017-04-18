@@ -56,6 +56,7 @@
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
+    <string name="load_more">点击加载更多</string>
 
 
 </resources>

@@ -57,14 +57,11 @@ public class NewsActivity extends BaseActivity {
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    new EconomicCircleNewsFragment();
-                    break;
+                    return new EconomicCircleNewsFragment();
                 case 1:
-                    new MutualHelpFragment();
-                    break;
+                    return new MutualHelpFragment();
                 case 2:
-                    new SystemNewsFragment();
-                    break;
+                    return new SystemNewsFragment();
                 default:
                     break;
             }
@@ -80,15 +77,11 @@ public class NewsActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    mContext.getString(R.string.economic_circle);
-                    break;
+                    return mContext.getString(R.string.economic_circle);
                 case 1:
-                    mContext.getString(R.string.help);
-                    break;
+                    return mContext.getString(R.string.help);
                 case 2:
-                    mContext.getString(R.string.system_news);
-                    break;
-
+                    return mContext.getString(R.string.system_news);
             }
             return "";
         }
