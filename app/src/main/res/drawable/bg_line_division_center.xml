@@ -3,7 +3,7 @@
 
     <item>
         <shape>
-            <solid android:color="@color/pinkAssist"/>
+            <solid android:color="@color/colorBag"/>
         </shape>
     </item>
 

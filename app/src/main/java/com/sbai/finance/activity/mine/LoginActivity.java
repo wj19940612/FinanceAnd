@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.KeyBoardHelper;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
 
@@ -104,6 +104,7 @@ public class LoginActivity extends BaseActivity {
                 lp.topMargin = offset;
                 mShowLayout.setLayoutParams(lp);
                 mAppIcon.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                mGetAuthCode.setTextColor(Color.BLACK);
             }
 
         }
@@ -116,6 +117,7 @@ public class LoginActivity extends BaseActivity {
                 lp.topMargin = 0;
                 mShowLayout.setLayoutParams(lp);
                 mAppIcon.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_launcher_round, 0, 0);
+                mGetAuthCode.setTextColor(Color.WHITE);
             }
 
         }
@@ -195,7 +197,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        Launcher.with(this, MainActivity.class).execute();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName("王八三十");
+        LocalUser.getUser().setUserInfo(userInfo);
+        setResult(RESULT_OK);
         finish();
     }
 

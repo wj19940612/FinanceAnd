@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.model.Information;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +156,7 @@ public class HomeBanner extends FrameLayout {
             final Information information = mList.get(pos);
             container.addView(imageView, 0);
             if (!TextUtils.isEmpty(information.getCover())) {
-                Picasso.with(mContext).load(information.getCover()).into(imageView);
+                Glide.with(mContext).load(information.getCover()).into(imageView);
             }
             imageView.setOnClickListener(new OnClickListener() {
                 @Override

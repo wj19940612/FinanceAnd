@@ -49,4 +49,5 @@
         <attr name="rowIsNotNeedTopPadding" format="boolean"/>
         <attr name="rowVerticalPadding" format="dimension"/>
     </declare-styleable>
+
 </resources>
