@@ -25,7 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.home.EventActivity;
+import com.sbai.finance.activity.home.FutureActivity;
+import com.sbai.finance.activity.home.HelpActivity;
 import com.sbai.finance.model.Information;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
@@ -57,14 +61,10 @@ public class HomeFragment extends BaseFragment {
 	LinearLayout mBorrowMoney;
 	@BindView(R.id.borrowTitle)
 	TextView mBorrowTitle;
-	@BindView(R.id.borrowDetail)
-	TextView mBorrowDetail;
 	@BindView(R.id.idea)
 	LinearLayout mIdea;
 	@BindView(R.id.ideaTitle)
 	TextView mIdeaTitle;
-	@BindView(R.id.ideaDetail)
-	TextView mIdeaDetail;
 	private Unbinder unbinder;
 	private TopicGridAdapter mTopicGridAdapter;
 	private List<String> mListStrs;
@@ -102,7 +102,7 @@ public class HomeFragment extends BaseFragment {
 		mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
 			@Override
 			public void onFutureClick() {
-
+				Launcher.with(getActivity(), FutureActivity.class).execute();
 			}
 
 			@Override
@@ -112,7 +112,7 @@ public class HomeFragment extends BaseFragment {
 
 			@Override
 			public void onHelpClick() {
-
+				Launcher.with(getActivity(), HelpActivity.class).execute();
 			}
 
 			@Override
@@ -139,9 +139,20 @@ public class HomeFragment extends BaseFragment {
 		super.onDestroyView();
 		unbinder.unbind();
 	}
-	@OnClick({R.id.borrowMoney,R.id.idea})
+	@OnClick({R.id.borrowMoney,R.id.idea,R.id.event})
 	public void onClick(View view){
+        switch (view.getId()){
+			case R.id.event:
+				Launcher.with(getActivity(), EventActivity.class).execute();
+				break;
+			case R.id.borrowMoney:
+				break;
+			case R.id.idea:
+				break;
+			default:
+				break;
 
+		}
 	}
 	static class TopicGridAdapter extends ArrayAdapter<String>{
 

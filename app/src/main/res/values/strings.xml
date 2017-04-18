@@ -24,4 +24,19 @@
     <string name="stock">股票</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
+
+    <!--Future-->
+    <string name="future_foreign">国外期货</string>
+    <string name="future_china">国内期货</string>
+    <string name="name">名称</string>
+    <string name="lastPrice">最新价格</string>
+    <string name="rate">涨幅榜</string>
+    <!--help-->
+    <string name="borrow_in">我的借入</string>
+    <string name="borrow_out">我的借出</string>
+    <string name="borrow">我要借款</string>
+    <string name="help_borrow">互助-借款</string>
+    <!--event-->
+    <string name="no_event_record">还没有大事发生哦!</string>
+    <string name="event_title">大事件</string>
 </resources>

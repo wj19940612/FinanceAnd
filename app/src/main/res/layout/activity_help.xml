@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/greyLightAssist">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/help_borrow"/>
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/borrowIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pressable"
+        android:layout_marginTop="10dp"
+        app:rightIcon="@drawable/ic_more"
+        app:rowTextColor="@color/blackAssist"
+        app:rowTextSize="@dimen/list_title_size"
+        app:rowText="@string/borrow_in"/>
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/borrowOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pressable"
+        android:layout_marginTop="0.5dp"
+        app:rightIcon="@drawable/ic_more"
+        app:rowTextColor="@color/blackAssist"
+        app:rowTextSize="@dimen/list_title_size"
+        app:rowText="@string/borrow_out"/>
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/borrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pressable"
+        android:layout_marginTop="20dp"
+        app:rightIcon="@drawable/ic_more"
+        app:rowTextColor="@color/blackAssist"
+        app:rowTextSize="@dimen/list_title_size"
+        app:rowText="@string/borrow"/>
+
+</LinearLayout>

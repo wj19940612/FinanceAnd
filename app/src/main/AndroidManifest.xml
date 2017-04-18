@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.sbai.finance">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".App"
@@ -25,6 +26,15 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.FutureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.HelpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.EventActivity"
             android:screenOrientation="portrait"/>
     </application>
 

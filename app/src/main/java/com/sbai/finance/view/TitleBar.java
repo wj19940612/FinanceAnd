@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 
+
 public class TitleBar extends RelativeLayout {
 
     private CharSequence mTitle;
