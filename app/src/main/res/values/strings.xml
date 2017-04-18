@@ -24,4 +24,14 @@
     <string name="stock">股票</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
+
+    <!--Trade page-->
+    <string name="today_open">今开</string>
+    <string name="pre_close">昨收</string>
+    <string name="highest">最高</string>
+    <string name="lowest">最低</string>
+    <string name="publish_point">发表观点</string>
+    <string name="add_optional">自选</string>
+    <string name="trade">交易</string>
+    
 </resources>

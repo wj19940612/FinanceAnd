@@ -37,4 +37,15 @@
         <item name="android:textColor">#262626</item>
     </style>
 
+    <style name="MarketDataTitle">
+        <item name="android:textColor">@color/greyAssist</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="MarketData">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:minWidth">60dp</item>
+    </style>
+
 </resources>

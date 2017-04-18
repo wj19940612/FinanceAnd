@@ -49,4 +49,8 @@
         <attr name="rowIsNotNeedTopPadding" format="boolean"/>
         <attr name="rowVerticalPadding" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="TradeFloatButtons">
+        <attr name="hasTradeButton" format="boolean"/>
+    </declare-styleable>
 </resources>
