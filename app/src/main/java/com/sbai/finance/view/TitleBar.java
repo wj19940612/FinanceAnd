@@ -71,9 +71,7 @@ public class TitleBar extends RelativeLayout {
         if (customViewResId != -1) {
             mCustomView = LayoutInflater.from(getContext()).inflate(customViewResId, null);
         }
-
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
-
         typedArray.recycle();
     }
 
@@ -202,9 +200,7 @@ public class TitleBar extends RelativeLayout {
         mRightView.setVisibility(mRightVisible ? VISIBLE : INVISIBLE);
     }
 
-
     public void setOnRightViewClickListener(OnClickListener listener) {
-
         mRightViewParent.setOnClickListener(listener);
     }
 
