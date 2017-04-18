@@ -3,7 +3,6 @@ package com.sbai.finance.activity.future;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.chart.KlineView;
@@ -31,8 +30,6 @@ public class FutureTradeActivity extends BaseActivity {
     @BindView(R.id.lowest)
     TextView mLowest;
 
-    @BindView(R.id.marketArea)
-    LinearLayout mMarketArea;
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
@@ -54,5 +51,12 @@ public class FutureTradeActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 19) {
             addTopPaddingWithStatusBar(mTitleBar);
         }
+
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.day_k_line));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.sixty_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.thirty_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.fifteen_min_k));
+
     }
 }
