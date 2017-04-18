@@ -114,7 +114,7 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
-    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+    private void setWindowFlag(Activity activity, final int bits, boolean on) {
         Window win = activity.getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
         if (on) {
@@ -123,6 +123,20 @@ public class BaseActivity extends AppCompatActivity implements
             winParams.flags &= ~bits;
         }
         win.setAttributes(winParams);
+    }
+
+    protected void addTopPaddingWithStatusBar(View view) {
+        int paddingTop = getStatusBarHeight();
+        view.setPadding(0, paddingTop, 0, 0);
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     @Override

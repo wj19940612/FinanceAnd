@@ -82,7 +82,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.upLoadHeadImageDialog);
+        setStyle(STYLE_NO_TITLE, R.style.uploadHeadImageDialog);
     }
 
     @Override
