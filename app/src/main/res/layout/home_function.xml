@@ -5,81 +5,47 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="@dimen/common_padding"
-              android:paddingRight="@dimen/common_padding"
-              android:background="@android:color/white">
+              android:background="@color/greyLightAssist">
     <LinearLayout
        android:id="@+id/borrowMoney"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
+       android:padding="@dimen/common_padding"
        android:orientation="horizontal"
        android:background="@drawable/bg_pressable">
-      <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:src="@mipmap/ic_launcher"/>
-       <LinearLayout
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:layout_marginLeft="13dp"
-          android:orientation="vertical"
-          android:layout_gravity="center">
-          <TextView
-              android:id="@+id/borrowTitle"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textColor="@color/primaryText"
-              android:text="借款有道"/>
-          <TextView
-              android:id="@+id/borrowDetail"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textColor="@color/assistText"
-              android:text="帮助他人，赚些小慧"/>
-       </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/borrowTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_more"/>
+            android:gravity="left"
+            android:drawablePadding="13dp"
+            android:drawableLeft="@drawable/fanli_list_icon_borrow"
+            android:drawableRight="@drawable/ic_more"
+            android:lineSpacingExtra="8dp"
+            android:textSize="@dimen/list_title_size"
+            android:textColor="@color/blackAssist"
+            tool:text="@string/borrow_title"/>
+    </LinearLayout>
 
-  </LinearLayout>
-    <include layout="@layout/split_line_grey_light"/>
     <LinearLayout
         android:id="@+id/idea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0.5dp"
+        android:padding="@dimen/common_padding"
         android:orientation="horizontal"
         android:background="@drawable/bg_pressable">
-        <ImageView
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/ideaTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="13dp"
-            android:orientation="vertical"
-            android:layout_gravity="center">
-            <TextView
-                android:id="@+id/ideaTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primaryText"
-                android:text="观点大神"/>
-            <TextView
-                android:id="@+id/ideaDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/assistText"
-                android:text="眼光奇准,跟着混，准没错！"/>
-        </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_more"/>
+            android:gravity="left"
+            android:drawablePadding="13dp"
+            android:drawableLeft="@drawable/fanli_list_icon_opinion"
+            android:drawableRight="@drawable/ic_more"
+            android:lineSpacingExtra="8dp"
+            android:textSize="@dimen/list_title_size"
+            android:textColor="@color/blackAssist"
+            tool:text="@string/idea_title"/>
     </LinearLayout>
 </LinearLayout>

@@ -3,15 +3,13 @@
               xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
-
+              android:orientation="vertical"
+              android:background="@color/greyLightAssist">
     <ScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,31 +19,30 @@
                 android:id="@+id/homeBanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
-            <com.sbai.finance.view.HomeHeader
-                android:id="@+id/homeHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <include layout="@layout/split_line_grey_light"/>
-
+             <com.sbai.finance.view.HomeHeader
+                 android:id="@+id/homeHeader"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:padding="@dimen/common_padding">
-
+                android:layout_marginTop="0.5dp"
+                android:layout_marginBottom="10dp"
+                android:paddingTop="@dimen/common_padding"
+                android:paddingBottom="@dimen/common_padding"
+                android:paddingRight="@dimen/common_padding"
+                android:background="@android:color/white">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/tab_mine"/>
-
+                    android:paddingLeft="10dp"
+                    android:src="@drawable/fanli_pic_bigevent"/>
                 <View
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/common_padding"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="@dimen/common_padding"
                     android:background="@color/greyLightAssist"/>
 
@@ -54,25 +51,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColor="@color/blackAssist"
                     android:maxLines="1"
-                    android:textColor="@color/primaryText"
+                    android:ellipsize="end"
+                    android:textSize="12sp"
                     tool:text="雄安燃情资本市场 概念股连续疯长"/>
             </LinearLayout>
-
-            <include layout="@layout/split_internal_grey_light"/>
-
             <include layout="@layout/home_function"/>
-
             <com.sbai.finance.view.MyGridView
-                android:id="@+id/topicGv"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:horizontalSpacing="@dimen/common_padding"
-                android:numColumns="2"
-                android:padding="@dimen/common_padding"
-                android:scrollbars="none"
-                android:verticalSpacing="@dimen/common_padding"/>
+                    android:id="@+id/topicGv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/common_padding"
+                    android:paddingRight="@dimen/common_padding"
+                    android:paddingTop="@dimen/common_split"
+                    android:horizontalSpacing="9dp"
+                    android:verticalSpacing="@dimen/common_split"
+                    android:scrollbars="none"
+                    android:numColumns="2"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

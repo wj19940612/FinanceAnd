@@ -18,22 +18,23 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
             android:background="@mipmap/ic_launcher"
-            android:minHeight="150dp">
+            android:minHeight="200dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/deletePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                app:srcCompat="@android:drawable/ic_delete"/>
+                android:layout_margin="@dimen/common_margin"
+                app:srcCompat="@drawable/ic_login_head_close"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/appIconName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="5dp"
                 android:drawablePadding="5dp"
                 android:drawableTop="@mipmap/ic_launcher_round"
                 android:text="@string/app_name"
@@ -46,23 +47,22 @@
             android:layout_margin="@dimen/common_margin"
             android:background="@drawable/bg_line_division_center"
             android:gravity="center_vertical"
-            android:minHeight="50dp"
-            android:paddingTop="5dp">
+            android:minHeight="60dp">
 
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingRight="30dp"
                 android:text="@string/phone_number"
-                android:textColor="@color/assistText"
-                android:textSize="16sp"/>
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/phoneNumber"
                 style="@style/SignEditText.PhoneNum"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_weight="1"
                 android:hint="@string/please_input_phone_number"/>
 
@@ -70,18 +70,21 @@
                 android:id="@+id/phoneNumberClear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:visibility="invisible"
-                app:srcCompat="@android:drawable/ic_delete"/>
+                app:srcCompat="@drawable/ic_login_label_delete"/>
 
             <android.support.v7.widget.AppCompatTextView
+
                 android:id="@+id/getAuthCode"
-                android:enabled="false"
                 android:layout_width="93dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/btn_auth_code"
+                android:background="@drawable/btn_auth_code_rounded"
+                android:enabled="false"
                 android:gravity="center"
-                android:text="@string/get_auth_code"/>
+                android:text="@string/get_auth_code"
+                android:textColor="@android:color/white"/>
         </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.LinearLayoutCompat
@@ -91,23 +94,22 @@
             android:layout_marginRight="@dimen/common_margin"
             android:background="@drawable/bg_line_division_center"
             android:gravity="center_vertical"
-            android:minHeight="50dp"
-            android:paddingTop="10dp">
+            android:minHeight="60dp">
 
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingRight="30dp"
                 android:text="@string/auth_code"
-                android:textColor="@color/assistText"
-                android:textSize="16sp"/>
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/authCode"
                 style="@style/SignEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:layout_weight="1"
                 android:hint="@string/please_input_auth_code"
                 android:inputType="number"
@@ -118,8 +120,11 @@
             android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_margin="@dimen/common_margin"
-            android:background="@drawable/btn_login"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_login_rounded"
             android:enabled="false"
             android:gravity="center"
             android:text="@string/login"

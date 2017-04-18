@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.sbai.finance"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -34,7 +34,13 @@ dependencies {
     compile 'com.android.support:design:25.3.0'
 
     compile 'com.jakewharton:butterknife:8.0.1'
+    compile('cn.qqtheme.framework:WheelPicker:1.4.4') {
+        exclude group: 'com.android.support'
+    }
+
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    
     testCompile 'junit:junit:4.12'
 }

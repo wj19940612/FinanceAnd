@@ -5,7 +5,7 @@
         <shape>
             <corners
                 android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="@dimen/common_little_radius"
+                android:bottomRightRadius="@dimen/common_four_radius"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
             <solid android:color="#7FCD4A47"/>
@@ -16,7 +16,7 @@
         <shape>
             <corners
                 android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="@dimen/common_little_radius"
+                android:bottomRightRadius="@dimen/common_four_radius"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
             <solid android:color="@android:color/darker_gray"/>
@@ -27,7 +27,7 @@
         <shape>
             <corners
                 android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="@dimen/common_little_radius"
+                android:bottomRightRadius="@dimen/common_four_radius"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
             <solid android:color="@color/redPrimary"/>

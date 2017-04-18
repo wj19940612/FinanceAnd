@@ -110,28 +110,4 @@ public class Preference {
         return mPrefs.getLong(Key.SERVER_TIME, 0);
     }
 
-    public void setAvailableMargin(String availableMargin) {
-        apply(Key.AVAILABLE_MARGIN, availableMargin);
-    }
-
-    public String getAvailableMargin() {
-        return mPrefs.getString(Key.AVAILABLE_MARGIN, "0.0");
-    }
-
-    public boolean ifUserHasHoldingOrder() {
-        return mPrefs.getBoolean(Key.USER_HAS_HOLDING_ORDER, false);
-    }
-
-    public void setUserHasHoldingOrder(boolean isUserHasHoldingOrder) {
-        apply(Key.USER_HAS_HOLDING_ORDER, isUserHasHoldingOrder);
-    }
-
-    public void setDataSource(String datasource) {
-        apply(Key.DATA_SOURCE, datasource);
-    }
-
-    public String getDataSource() {
-        return mPrefs.getString(Key.DATA_SOURCE, null);
-    }
-
 }

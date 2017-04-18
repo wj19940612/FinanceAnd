@@ -2,6 +2,11 @@
 <manifest package="com.sbai.finance"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -29,9 +34,34 @@
             android:name=".activity.mine.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.home.FutureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.HelpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.EventActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.OptionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.TopicActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait">
         </activity>
+        <!-- 我的模块 -->
+        <activity
+            android:name=".activity.mine.UserInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.ModifyUserNameActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.ClipHeadImageActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
