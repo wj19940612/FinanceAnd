@@ -5,5 +5,5 @@
 
     <dimen name="common_four_radius">4dp</dimen>
     <dimen name="common_eight_radius">8dp</dimen>
-    <dimen name="common_margin">16dp</dimen>
+    <dimen name="common_margin">15dp</dimen>
 </resources>
