@@ -1,9 +1,11 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +19,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.FutureActivity;
 import com.sbai.finance.activity.home.HelpActivity;
+import com.sbai.finance.activity.home.OptionActivity;
+import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.model.Information;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
@@ -74,6 +79,7 @@ public class HomeFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		initView();
 		mTopicGridAdapter = new TopicGridAdapter(getContext());
 		mTopicGv.setAdapter(mTopicGridAdapter);
 		mNestedScrollView.post(new Runnable() {
@@ -106,23 +112,38 @@ public class HomeFragment extends BaseFragment {
 
 			@Override
 			public void onSelfChoiceClick() {
-
+				Launcher.with(getActivity(), OptionActivity.class).execute();
 			}
 		});
+	}
+
+	private void initView() {
+		SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
+				"\n"+getString(R.string.borrow_detail), 0.733f, Color.parseColor("#B6B6B6"));
+		mBorrowTitle.setText(attentionSpannableString);
+		SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.idea_title),
+				"\n"+getString(R.string.idea_detail), 0.733f, Color.parseColor("#B6B6B6"));
+		mIdeaTitle.setText(fansSpannableString);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		mListStrs = new ArrayList<>();
+		updateTopicInfo();
+	}
+    private void updateTopicInfo(){
+		if (mListStrs == null){
+		 mListStrs = new ArrayList<>();
+		}
+		mListStrs.clear();
 		mListStrs.add(new String("aaaaa"));
 		mListStrs.add(new String("bbbbb"));
 		mListStrs.add(new String("cccc"));
 		mListStrs.add(new String("ddddd"));
+		mTopicGridAdapter.clear();
 		mTopicGridAdapter.addAll(mListStrs);
 		mTopicGridAdapter.notifyDataSetChanged();
 	}
-
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -179,11 +200,11 @@ public class HomeFragment extends BaseFragment {
 			public void bindingData(String stockInfo){
 				mTopicTitle.setText(stockInfo);
 				mTopicDetail.setText(stockInfo);
-				mTopicBg.setBackgroundResource(R.mipmap.ic_launcher_round);
+				mTopicBg.setBackgroundResource(R.drawable.test);
 			}
 			@OnClick(R.id.topicBg)
 			public void onClick(View view){
-				Toast.makeText(mContext, String.valueOf(view.getId()), Toast.LENGTH_SHORT).show();
+				Launcher.with(mContext, TopicActivity.class).execute();
 			}
 		}
 

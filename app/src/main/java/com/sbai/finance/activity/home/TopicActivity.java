@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.home;
+package com.sbai.finance.activity.home;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,13 +7,15 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.FutureHq;
 
 import java.util.ArrayList;
@@ -21,43 +23,61 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import butterknife.OnClick;
 
+import static android.R.attr.onClick;
 
-public class ForeignFutureFragment extends BaseFragment {
-	@BindView(R.id.rate)
-	TextView mRate;
+/**
+ * Created by Administrator on 2017-04-18.
+ */
+
+public class TopicActivity extends BaseActivity {
+	@BindView(R.id.top)
+	LinearLayout mTop;
+	@BindView(R.id.back)
+	ImageView mBack;
+	@BindView(R.id.title)
+	TextView mTitle;
+	@BindView(R.id.topicTitle)
+	TextView mTopicTitle;
 	@BindView(R.id.listView)
 	ListView mListView;
 	@BindView(R.id.empty)
 	TextView mEmpty;
-	private Unbinder unbinder;
-    private FutureListAdapter mFutureListAdapter;
+
+	private TopicListAdapter mTopicListAdapter;
 	private List<FutureHq> mListHq;
-	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_future_foreign, container, false);
-		unbinder = ButterKnife.bind(this, view);
-		return view;
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_topic);
+		ButterKnife.bind(this);
+		initView();
 	}
 
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mFutureListAdapter = new FutureListAdapter(getActivity());
+	private void initView() {
+		mTopicListAdapter = new TopicListAdapter(this);
 		mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mFutureListAdapter);
+		mListView.setAdapter(mTopicListAdapter);
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+			}
+		});
 	}
 
 	@Override
-	public void onResume() {
+	protected void onResume() {
 		super.onResume();
-		updateFutureForeignHqList();
-
+		updateTopicInfo();
+	}
+	@OnClick(R.id.back)
+	public void onClick(View view){
+		this.onBackPressed();
 	}
 
-	private void updateFutureForeignHqList() {
+	private void updateTopicInfo() {
 		if (mListHq==null){
 			mListHq = new ArrayList<>();
 		}
@@ -69,21 +89,21 @@ public class ForeignFutureFragment extends BaseFragment {
 			futureHq.setUpDropSpeed(25.00);
 			mListHq.add(futureHq);
 		}
-		mFutureListAdapter.clear();
-		mFutureListAdapter.addAll(mListHq);
-		mFutureListAdapter.notifyDataSetChanged();
+		mTopicListAdapter.clear();
+		mTopicListAdapter.addAll(mListHq);
+		mTopicListAdapter.notifyDataSetChanged();
 	}
 
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		unbinder.unbind();
+	protected void onDestroy() {
+		super.onDestroy();
 	}
 
 
-	public static class FutureListAdapter extends ArrayAdapter<FutureHq>{
-       Context mContext;
-		public FutureListAdapter(@NonNull Context context){
+	static class TopicListAdapter extends ArrayAdapter<FutureHq>{
+
+		Context mContext;
+		public TopicListAdapter(@NonNull Context context){
 			super(context,0);
 			mContext = context;
 		}
@@ -112,6 +132,7 @@ public class ForeignFutureFragment extends BaseFragment {
 			TextView mLastPrice;
 			@BindView(R.id.rate)
 			TextView mRate;
+
 			@BindView(R.id.stopTrade)
 			TextView mStopTrade;
 			@BindView(R.id.trade)
@@ -120,18 +141,12 @@ public class ForeignFutureFragment extends BaseFragment {
 				ButterKnife.bind(this, view);
 			}
 			private void bindDataWithView(FutureHq item, int position, Context context) {
-                mFutureName.setText(item.getCodeName());
+				mFutureName.setText(item.getCodeName());
 				mFutureCode.setText(item.getInstrumentId());
 				mLastPrice.setText(item.getLastPrice().toString());
 				mRate.setText("+"+item.getUpDropSpeed().toString()+"%");
-               if (position==2){
-				   mTrade.setVisibility(View.GONE);
-				   mStopTrade.setVisibility(View.VISIBLE);
-			   }else{
-				   mTrade.setVisibility(View.VISIBLE);
-				   mStopTrade.setVisibility(View.GONE);
-			   }
 			}
 		}
+
 	}
 }

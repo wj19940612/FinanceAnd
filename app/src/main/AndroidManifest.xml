@@ -42,6 +42,12 @@
         <activity
             android:name=".activity.home.EventActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.OptionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.TopicActivity"
+            android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.UserInfoActivity"

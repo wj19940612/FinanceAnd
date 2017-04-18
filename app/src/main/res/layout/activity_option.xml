@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/greyLightAssist">
+              android:layout_height="match_parent">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/self_choice"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +54,7 @@
         android:drawablePadding="16dp"
         android:gravity="center_horizontal"
         android:paddingTop="180dp"
-        android:text="暂无行情数据"
+        android:text="快去添加你心仪的产品吧~"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:visibility="gone"/>
