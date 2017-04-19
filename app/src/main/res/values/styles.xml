@@ -43,13 +43,13 @@
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
     </style>
 
-    <style name="datePickerDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar.MinWidth">
+    <style name="DatePickerDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar.MinWidth">
         <item name="android:popupBackground">@color/colorPrimary</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="upLoadHeadImageDialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="UpLoadHeadImageDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>

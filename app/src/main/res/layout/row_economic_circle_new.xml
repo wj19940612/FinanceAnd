@@ -33,8 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"
             tools:text="国内这种很麻烦的撒大胜靠德快乐撒娇时间点就开始刷卡的撒"/>
 
         <android.support.v7.widget.AppCompatTextView

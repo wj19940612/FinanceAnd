@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/bg_line_division_center"
+              android:orientation="vertical"
+              android:padding="@dimen/common_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:gravity="center_vertical"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="3dp"
+            android:textColor="@color/primaryText"
+            android:textStyle="bold"
+            tools:text="欢迎加入返利"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/assistText"
+            tools:text="2017/12"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="2"
+        android:textColor="@color/secondaryText"
+        tools:text="可视对讲阿看房了解萨德里克快乐圣诞分手快乐等级分类考试大家第三方骷髅精灵第三空间节福利卡圣诞节疯狂了倒计时考虑到解放路口圣诞节疯狂时代"/>
+</LinearLayout>

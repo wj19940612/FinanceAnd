@@ -28,6 +28,7 @@ import com.sbai.finance.model.mine.EconomicCircleNewModel;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_economic_circle_news, container, false);
+        View view = inflater.inflate(R.layout.layout_refresh_listview, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -63,6 +64,19 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
+        mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
+            @Override
+            public void onUserHeadImageClick() {
+                // TODO: 2017/4/18 点击头像可跳转到用户详情页 
+                ToastUtil.curt("用户头像");
+            }
+
+            @Override
+            public void onUserAppraiseClick() {
+                // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示 
+                ToastUtil.curt("详情");
+            }
+        });
         mListView.setAdapter(mEconomicCircleNewsAdapter);
         mListView.setOnScrollListener(this);
         requestEconomicCircleNewsList();
@@ -154,12 +168,30 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
+
     static class EconomicCircleNewsAdapter extends ArrayAdapter<EconomicCircleNewModel> {
+
+        interface CallBack {
+            void onUserHeadImageClick();
+
+            void onUserAppraiseClick();
+        }
+
         private Context mContext;
+        private CallBack mCallBack;
 
         public EconomicCircleNewsAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
+        }
+
+        public EconomicCircleNewsAdapter(@NonNull Context context, CallBack callBack) {
+            super(context, 0);
+            this.mCallBack = callBack;
+        }
+
+        public void setCallBack(CallBack callBack) {
+            this.mCallBack = callBack;
         }
 
         @NonNull
@@ -173,7 +205,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindViewWithData(getItem(position), mContext, position);
+            viewHolder.bindViewWithData(getItem(position), mContext, position, mCallBack);
             return convertView;
         }
 
@@ -193,7 +225,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(EconomicCircleNewModel item, Context context, int position) {
+            public void bindViewWithData(EconomicCircleNewModel item, Context context, int position, final CallBack callBack) {
                 if (!TextUtils.isEmpty(item.getUserImage())) {
                     Glide.with(context).load(item.getUserImage())
                             .bitmapTransform(new GlideCircleTransform(context))
@@ -212,8 +244,27 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
                 mTime.setText(DateUtil.getFormatTime(item.getTime()));
 
-            }
-        }
-    }
+                mUserHeadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callBack != null) {
+                            callBack.onUserHeadImageClick();
+                        }
+                    }
+                });
 
+                mContent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callBack != null) {
+                            callBack.onUserAppraiseClick();
+                        }
+                    }
+                });
+
+            }
+
+        }
+
+    }
 }
