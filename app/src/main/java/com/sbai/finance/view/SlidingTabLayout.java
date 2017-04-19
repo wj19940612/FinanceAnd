@@ -197,7 +197,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
-        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.tab_future_text));
+        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.tab_selector_text));
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTypeface(Typeface.DEFAULT);
