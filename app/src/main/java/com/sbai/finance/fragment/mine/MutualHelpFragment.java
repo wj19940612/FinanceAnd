@@ -46,6 +46,7 @@ public class MutualHelpFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
+        mListView.setDivider(null);
 
     }
 

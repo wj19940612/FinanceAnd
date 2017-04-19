@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:gravity="center_vertical">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_marginLeft="@dimen/common_margin"
+        android:id="@+id/userHeadImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/userName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_weight="1"
+        android:textColor="@color/primaryText"
+        tools:text="张三"/>
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/common_padding"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@color/greyLightAssist"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/relive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:drawableTop="@android:drawable/ic_menu_delete"
+        android:padding="@dimen/common_padding"
+        android:text="@string/relieve"
+        android:textColor="@color/primaryText"/>
+</LinearLayout>

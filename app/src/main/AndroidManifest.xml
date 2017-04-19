@@ -54,7 +54,7 @@
         </activity>
         <!-- 我的模块 -->
         <activity
-            android:name=".activity.mine.UserInfoActivity"
+            android:name=".activity.mine.ModifyUserInfoActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.ModifyUserNameActivity"
@@ -62,8 +62,24 @@
         <activity
             android:name=".activity.mine.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.NewsActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.NewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.SettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.ShieldRelieveSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.SetNotificationSwitchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mine.UserDataActivity">
+        </activity>
+        <activity android:name=".activity.mine.AttentionActivity">
+        </activity>
+        <activity android:name=".activity.mine.FansActivity">
+        </activity>
     </application>
 
 </manifest>
