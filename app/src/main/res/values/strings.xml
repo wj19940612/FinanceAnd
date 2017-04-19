@@ -9,6 +9,26 @@
     <string name="economic_circle">经济圈</string>
     <string name="mine">我的</string>
 
+    <!-- EconomicCircle -->
+    <string name="no_data">暂无数据</string>
+    <string name="need_amount">需要金额</string>
+    <string name="RMB">￥%1$s</string>
+    <string name="borrow_time">借款时间</string>
+    <string name="day">%1$s天</string>
+    <string name="borrow_interest">借款利息</string>
+    <string name="details">详情</string>
+    <string name="discussion_area">讨论区</string>
+    <string name="followed">已关注</string>
+    <string name="comment_number">(%1$s)</string>
+    <string name="share">分享</string>
+    <string name="borrow_money">借款</string>
+    <string name="comment">评论......</string>
+    <string name="reply">回复</string>
+    <string name="people_want_help_him">想要帮助他的人</string>
+    <string name="people_want_help_him_number">(%1$s)</string>
+    <string name="give_help">给予帮助</string>
+    <string name="borrow_money_details">借款详情</string>
+
     <!--login   page-->
     <string name="phone_number">手机号</string>
     <string name="please_input_phone_number">请输入手机号码</string>
@@ -83,6 +103,20 @@
     <!--   消息 -->
     <string name="system_news">系统消息</string>
     <string name="load_more">点击加载更多</string>
+
+    <string name="new_news_notification">新消息通知</string>
+    <string name="shield_setting">屏蔽设置</string>
+
+    <string name="relieve">解除</string>
+    <string name="relieve_shield_dialog_title">是否对"%1$s"\n解除屏蔽</string>
+    <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈</string>
+
+    <string name="new_notification">新消息通知</string>
+    <string name="accept_new_notification">新消息通知</string>
+
+    <string name="user_data">用户资料</string>
+    <string name="is_attention">已关注</string>
+    <string name="real_name_approve">实名认证</string>
 
 
 </resources>

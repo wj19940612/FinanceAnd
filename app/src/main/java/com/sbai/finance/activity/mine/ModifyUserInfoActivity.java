@@ -45,7 +45,7 @@ import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
-public class UserInfoActivity extends BaseActivity {
+public class ModifyUserInfoActivity extends BaseActivity {
 
     private static final int REQ_CODE_USER_NAME = 165;
 

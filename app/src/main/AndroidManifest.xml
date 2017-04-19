@@ -3,9 +3,11 @@
           package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <!-- Storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
 
     <application
         android:name=".App"
@@ -15,9 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -27,6 +31,14 @@
         <activity
             android:name=".activity.CatchCrashActivity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.OpinionDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.BorrowMoneyDetailsActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.future.FutureActivity"
             android:screenOrientation="portrait"/>
@@ -54,7 +66,7 @@
         </activity>
         <!-- 我的模块 -->
         <activity
-            android:name=".activity.mine.UserInfoActivity"
+            android:name=".activity.mine.ModifyUserInfoActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.ModifyUserNameActivity"
@@ -62,8 +74,27 @@
         <activity
             android:name=".activity.mine.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.NewsActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.NewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.SettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.ShieldRelieveSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.SetNotificationSwitchActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.UserDataActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.AttentionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.FansActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

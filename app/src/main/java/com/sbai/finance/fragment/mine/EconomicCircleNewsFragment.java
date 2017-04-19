@@ -63,6 +63,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
+        mListView.setDivider(null);
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override

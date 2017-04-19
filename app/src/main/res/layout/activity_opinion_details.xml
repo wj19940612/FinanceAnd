@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:barBackground="@color/blackAssist"
+        app:rightImage="@drawable/ic_share"
+        app:rightText="@string/share"
+        app:rightTextSize="14sp"
+        app:rightVisible="true"
+        app:titleText="@string/details"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_avatar"/>
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/avatar"
+                android:textColor="@color/redPrimary"
+                android:textSize="15sp"
+                tools:text="刘亦菲"/>
+
+            <TextView
+                android:id="@+id/followed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/userName"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/userName"
+                android:textColor="@color/assistText"
+                android:textSize="11sp"
+                tools:text="@string/followed"/>
+
+            <TextView
+                android:id="@+id/publishTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/userName"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/assistText"
+                android:textSize="11sp"
+                tools:text="2008/08/08 08:00"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/opinion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="12dp"
+            android:textColor="#5f6166"
+            android:textSize="14sp"
+            tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="15sp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/product"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_product"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                tools:text="@string/stock"/>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:background="@drawable/bg_product_up_down">
+
+                <TextView
+                    android:id="@+id/productName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/blackAssist"
+                    android:textSize="14sp"
+                    tools:text="松柏科技"/>
+
+                <TextView
+                    android:id="@+id/lastPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="12dp"
+                    android:layout_toLeftOf="@+id/upDownArea"
+                    android:textColor="@color/redPrimary"
+                    android:textSize="14sp"
+                    tools:text="88.88"/>
+
+                <LinearLayout
+                    android:id="@+id/upDownArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/upDownPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/redPrimary"
+                        android:textSize="9sp"
+                        tools:text="+8.88"/>
+
+                    <TextView
+                        android:id="@+id/upDownPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/redPrimary"
+                        android:textSize="9sp"
+                        tools:text="+10.00%"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_like"
+                android:drawableLeft="@drawable/bg_like"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:minHeight="20dp"
+                android:minWidth="50dp"
+                android:padding="5dp"
+                android:textColor="@color/like_text"
+                android:textSize="10sp"
+                tools:text="8888"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/greyLightAssist"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:drawableLeft="@drawable/ic_discussion_area"
+            android:drawablePadding="5dp"
+            android:text="@string/discussion_area"
+            android:textColor="@color/secondaryText"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/commentNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/secondaryText"
+            android:textSize="14sp"
+            tools:text="@string/comment_number"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/divider_economic_circle_list"
+            android:dividerHeight="0.5dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"/>
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:paddingTop="200dp"
+            android:text="@string/no_data"
+            android:textColor="@color/primaryText"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/tab_background"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="5"
+            android:background="@null"
+            android:hint="@string/comment"
+            android:padding="13dp"
+            android:textColorHint="@color/hintText"
+            android:textSize="15sp"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/greyLightAssist"/>
+
+        <TextView
+            android:id="@+id/reply"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/reply"
+            android:textColor="#5f6166"
+            android:textSize="15sp"/>
+    </LinearLayout>
+</LinearLayout>
