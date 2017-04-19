@@ -35,7 +35,6 @@ public class ChartSettings {
         if (baseLines < 2) {
             baseLines = 2;
         }
-        baseLines = baseLines << 1;
         mBaseLines = new float[baseLines];
     }
 

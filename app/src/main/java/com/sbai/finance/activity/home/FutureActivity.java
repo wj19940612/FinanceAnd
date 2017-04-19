@@ -13,8 +13,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.home.ChinaFutureFragment;
 import com.sbai.finance.fragment.home.ForeignFutureFragment;
-import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.SlidingTabLayout;
+import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,82 +23,86 @@ import butterknife.ButterKnife;
  */
 
 public class FutureActivity extends BaseActivity {
-	@BindView(R.id.viewPager)
-	ViewPager mViewPager;
-	@BindView(R.id.tabLayout)
-	SlidingTabLayout mTabLayout;
-	private FuturePagesAdapter mFuturePagesAdapter;
-	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_future);
-		ButterKnife.bind(this);
-		initView();
-	}
 
-	private void initView() {
-		mViewPager.setOffscreenPageLimit(2);
-		mViewPager.setCurrentItem(0, false);
-		mFuturePagesAdapter = new FuturePagesAdapter(getSupportFragmentManager(), FutureActivity.this);
-		mViewPager.setAdapter(mFuturePagesAdapter);
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.tabLayout)
+    SlidingTabLayout mTabLayout;
 
-		mTabLayout.setDistributeEvenly(true);
-		mTabLayout.setDividerColors(ContextCompat.getColor(FutureActivity.this, android.R.color.transparent));
-		mTabLayout.setSelectedIndicatorPadding(80);
-		mTabLayout.setPadding(13);
-		mTabLayout.setSelectedIndicatorColors( ContextCompat.getColor(this,R.color.blueAssist));
-		mTabLayout.setViewPager(mViewPager);
-	}
+    private FuturePagesAdapter mFuturePagesAdapter;
 
-	@Override
-	protected void onPostResume() {
-		super.onPostResume();
-	}
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_future);
+        ButterKnife.bind(this);
+        initView();
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-	static class FuturePagesAdapter extends FragmentPagerAdapter {
+    private void initView() {
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setCurrentItem(0, false);
+        mFuturePagesAdapter = new FuturePagesAdapter(getSupportFragmentManager(), FutureActivity.this);
+        mViewPager.setAdapter(mFuturePagesAdapter);
 
-		private Context mContext;
-		FragmentManager mFragmentManager;
+        mTabLayout.setDistributeEvenly(true);
+        mTabLayout.setDividerColors(ContextCompat.getColor(FutureActivity.this, android.R.color.transparent));
+        mTabLayout.setSelectedIndicatorPadding(80);
+        mTabLayout.setPadding(13);
+        mTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
+        mTabLayout.setViewPager(mViewPager);
+    }
 
-		public FuturePagesAdapter(FragmentManager fm, Context context) {
-			super(fm);
-			mContext = context;
-			mFragmentManager = fm;
-		}
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
 
-		@Override
-		public CharSequence getPageTitle(int position) {
-			switch (position) {
-				case 0:
-					return mContext.getString(R.string.future_foreign);
-				case 1:
-					return mContext.getString(R.string.future_china);
-			}
-			return super.getPageTitle(position);
-		}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
-		@Override
-		public Fragment getItem(int position) {
-			switch (position) {
-				case 0:
-					return new ForeignFutureFragment();
-				case 1:
-					return new ChinaFutureFragment();
-			}
-			return null;
-		}
+    static class FuturePagesAdapter extends FragmentPagerAdapter {
 
-		@Override
-		public int getCount() {
-			return 2;
-		}
+        private Context mContext;
+        FragmentManager mFragmentManager;
 
-		public Fragment getFragment(int position) {
-			return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
-		}
-	}
+        public FuturePagesAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            mContext = context;
+            mFragmentManager = fm;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return mContext.getString(R.string.future_foreign);
+                case 1:
+                    return mContext.getString(R.string.future_china);
+            }
+            return super.getPageTitle(position);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new ForeignFutureFragment();
+                case 1:
+                    return new ChinaFutureFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
+        }
+    }
 }

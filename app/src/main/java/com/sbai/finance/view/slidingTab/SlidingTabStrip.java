@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sbai.finance.view;
+package com.sbai.finance.view.slidingTab;
 
 import android.content.Context;
 import android.graphics.Canvas;

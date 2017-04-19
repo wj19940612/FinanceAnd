@@ -21,7 +21,7 @@ public class App extends Application {
         CookieManger.getInstance().init(sContext.getFilesDir());
 
         if (BuildConfig.DEBUG) {
-            handleUncaughtException();
+            //handleUncaughtException();
         }
     }
 
