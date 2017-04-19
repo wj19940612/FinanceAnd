@@ -11,6 +11,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.home.ForeignFutureFragment;
 import com.sbai.finance.model.FutureHq;
+import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class OptionActivity extends BaseActivity {
 	@BindView(R.id.listView)
-	ListView mListView;
+	MyListView mListView;
 	@BindView(R.id.empty)
 	TextView mEmpty;
 
@@ -43,6 +44,12 @@ public class OptionActivity extends BaseActivity {
 		mFutureListAdapter = new ForeignFutureFragment.FutureListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mFutureListAdapter);
+		mListView.setDelButtonClickListener(new MyListView.DelButtonClickListener() {
+			@Override
+			public void clickHappend(int position) {
+				mFutureListAdapter.remove(mFutureListAdapter.getItem(position));
+			}
+		});
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
