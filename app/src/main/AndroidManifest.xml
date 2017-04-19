@@ -51,6 +51,9 @@
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".activity.home.StockActivity"
+            android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.UserInfoActivity"

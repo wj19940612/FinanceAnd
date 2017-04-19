@@ -20,6 +20,7 @@ import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.FutureActivity;
 import com.sbai.finance.activity.home.HelpActivity;
 import com.sbai.finance.activity.home.OptionActivity;
+import com.sbai.finance.activity.home.StockActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.model.Information;
 import com.sbai.finance.utils.Launcher;
@@ -82,12 +83,7 @@ public class HomeFragment extends BaseFragment {
 		initView();
 		mTopicGridAdapter = new TopicGridAdapter(getContext());
 		mTopicGv.setAdapter(mTopicGridAdapter);
-		mNestedScrollView.post(new Runnable() {
-			@Override
-			public void run() {
-				mNestedScrollView.fullScroll(ScrollView.FOCUS_UP);
-			}
-		});
+		mTopicGv.setFocusable(false);
 		mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
 			@Override
 			public void onBannerClick(Information information) {
@@ -102,7 +98,7 @@ public class HomeFragment extends BaseFragment {
 
 			@Override
 			public void onStockClick() {
-
+				Launcher.with(getActivity(), StockActivity.class).execute();
 			}
 
 			@Override
@@ -124,6 +120,11 @@ public class HomeFragment extends BaseFragment {
 		SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.idea_title),
 				"\n"+getString(R.string.idea_detail), 0.733f, Color.parseColor("#B6B6B6"));
 		mIdeaTitle.setText(fansSpannableString);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 	}
 
 	@Override
@@ -200,7 +201,7 @@ public class HomeFragment extends BaseFragment {
 			public void bindingData(String stockInfo){
 				mTopicTitle.setText(stockInfo);
 				mTopicDetail.setText(stockInfo);
-				mTopicBg.setBackgroundResource(R.drawable.test);
+				mTopicBg.setBackgroundResource(R.drawable.subject_pic_bg);
 			}
 			@OnClick(R.id.topicBg)
 			public void onClick(View view){
