@@ -74,7 +74,7 @@ public class TitleBar extends RelativeLayout {
 
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
 
-        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
+
         typedArray.recycle();
     }
 
@@ -145,7 +145,9 @@ public class TitleBar extends RelativeLayout {
         if (backIcon != null) {
             mLeftView.setCompoundDrawables(backIcon, null, null, null);
         } else { // default icon
+
             mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back, 0, 0, 0);
+
         }
     }
 
