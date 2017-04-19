@@ -24,7 +24,33 @@
     <string name="stock">股票</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
+    <!--Future-->
+    <string name="future_foreign">国外期货</string>
+    <string name="future_china">国内期货</string>
+    <string name="name">名称</string>
+    <string name="lastPrice">最新价格</string>
+    <string name="rate">涨幅榜</string>
+    <string name="borrow_title">借款有道</string>
+    <string name="borrow_detail">帮助他人，赚些小慧</string>
+    <string name="idea_title">观点大神</string>
+    <string name="idea_detail">眼光奇准,跟着混，准没错</string>
+    <!--help-->
+    <string name="borrow_in">我的借入</string>
+    <string name="borrow_out">我的借出</string>
+    <string name="borrow">我要借款</string>
+    <string name="help_borrow">互助-借款</string>
+    <!--event-->
+    <string name="no_event_record">还没有大事发生哦!</string>
+    <string name="event_title">大事件</string>
 
+    <!--Trade page-->
+    <string name="today_open">今开</string>
+    <string name="pre_close">昨收</string>
+    <string name="highest">最高</string>
+    <string name="lowest">最低</string>
+    <string name="publish_point">发表观点</string>
+    <string name="add_optional">自选</string>
+    <string name="trade">交易</string>
 
     <!--    我的界面  -->
     <string name="attention">关注</string>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/greyLightAssist">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/event_title"/>
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawableTop="@drawable/bigevent_pic_noevent"
+        android:adjustViewBounds="true"
+        android:paddingTop="150dp"
+        android:gravity="center_horizontal"
+        android:drawablePadding="25dp"
+        android:textSize="@dimen/navigate_size"
+        android:textColor="@color/assistText"
+        android:text="@string/no_event_record"/>
+
+</LinearLayout>
