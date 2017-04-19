@@ -1,13 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@color/greyLightAssist"
+              android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mine"/>
+        android:layout_height="300dp"
+        android:background="@mipmap/ic_launcher">
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/userHeadImage"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                app:srcCompat="@mipmap/ic_launcher_round"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"/>
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/mine_"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/attention"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/assistText"
+                tools:text="关注 \n1220"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/fans"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@color/assistText"
+                tools:text="粉丝 \n12200"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/minePublish"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@color/assistText"
+                tools:text="我的发表 \n1220"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/news"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white"
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/news"
+        app:subTextBackground="@drawable/bg_red_circle_no_read_news"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/setting"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_white"
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/setting"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/aboutUs"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/about_us"/>
 
 </LinearLayout>

@@ -4,8 +4,8 @@
     <corners
         android:bottomLeftRadius="0dp"
         android:bottomRightRadius="0dp"
-        android:topLeftRadius="@dimen/common_radius"
-        android:topRightRadius="@dimen/common_radius"/>
+        android:topLeftRadius="@dimen/common_four_radius"
+        android:topRightRadius="@dimen/common_four_radius"/>
     <solid android:color="@android:color/white"/>
 
 </shape>

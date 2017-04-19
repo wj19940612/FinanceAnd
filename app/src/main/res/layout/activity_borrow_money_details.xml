@@ -75,7 +75,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_help"
             android:gravity="center"
-            android:text="@string/help"
+            android:text="@string/borrow_money"
             android:textColor="@android:color/white"
             android:textSize="10sp"/>
 

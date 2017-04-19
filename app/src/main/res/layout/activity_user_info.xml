@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyLightAssist"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.UserInfoActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/modify_user_info"/>
+
+    <RelativeLayout
+        android:id="@+id/headImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_white"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:text="@string/head_image"
+            android:textColor="@color/secondaryText"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/userHeadImage"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/helpArrow"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/helpArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_arrow_mine_list_more"/>
+    </RelativeLayout>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/nickName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/nick_name"
+        app:rowTextColor="@color/secondaryText"
+        app:subTextColor="@color/primaryText"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/sex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/sex"
+        app:rowTextColor="@color/secondaryText"
+        app:subTextColor="@color/primaryText"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/age"
+        app:rowTextColor="@color/secondaryText"
+        app:subTextColor="@color/primaryText"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/location"
+        app:rowTextColor="@color/secondaryText"
+        app:subTextColor="@color/primaryText"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/credit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/credit"
+        app:rowTextColor="@color/secondaryText"
+        app:subTextColor="@color/primaryText"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_logout_rounded"
+        android:text="@string/logout"
+        android:textColor="@android:color/white"/>
+</LinearLayout>
