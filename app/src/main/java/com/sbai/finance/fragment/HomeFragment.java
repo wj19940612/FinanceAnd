@@ -137,10 +137,10 @@ public class HomeFragment extends BaseFragment {
 		 mListStrs = new ArrayList<>();
 		}
 		mListStrs.clear();
-		mListStrs.add(new String("aaaaa"));
-		mListStrs.add(new String("bbbbb"));
-		mListStrs.add(new String("cccc"));
-		mListStrs.add(new String("ddddd"));
+		mListStrs.add(new String("匪夷所思的妖股"));
+		mListStrs.add(new String("最受关注的期货"));
+		mListStrs.add(new String("股票看涨"));
+		mListStrs.add(new String("股票看跌榜"));
 		mTopicGridAdapter.clear();
 		mTopicGridAdapter.addAll(mListStrs);
 		mTopicGridAdapter.notifyDataSetChanged();

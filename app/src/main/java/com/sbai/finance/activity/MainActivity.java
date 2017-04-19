@@ -35,7 +35,6 @@ public class MainActivity extends BaseActivity {
         initView();
 
     }
-
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
@@ -64,7 +63,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;

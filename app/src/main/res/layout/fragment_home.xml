@@ -66,7 +66,6 @@
                     android:paddingLeft="@dimen/common_padding"
                     android:paddingRight="@dimen/common_padding"
                     android:paddingTop="@dimen/common_split"
-                    android:paddingBottom="20dp"
                     android:horizontalSpacing="9dp"
                     android:verticalSpacing="@dimen/common_split"
                     android:scrollbars="none"
