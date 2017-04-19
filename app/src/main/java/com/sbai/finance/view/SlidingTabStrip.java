@@ -52,7 +52,7 @@ class SlidingTabStrip extends LinearLayout {
     private int mSelectedPosition;
     private float mSelectionOffset;
 
-    private int mSelectedPadding;
+    private float mSelectedPadding;
 
     private SlidingTabLayout.TabColorizer mCustomTabColorizer;
     private final SimpleTabColorizer mDefaultTabColorizer;
@@ -118,7 +118,7 @@ class SlidingTabStrip extends LinearLayout {
         invalidate();
     }
 
-    void setSelectedIndicatorPadding(int padding) {
+    void setSelectedIndicatorPadding(float padding) {
         mSelectedPadding = padding;
         invalidate();
     }

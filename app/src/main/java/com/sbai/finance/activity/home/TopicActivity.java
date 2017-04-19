@@ -52,6 +52,7 @@ public class TopicActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_topic);
 		ButterKnife.bind(this);
+		translucentStatusBar();
 		initView();
 	}
 

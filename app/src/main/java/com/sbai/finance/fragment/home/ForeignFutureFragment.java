@@ -21,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -55,6 +56,9 @@ public class ForeignFutureFragment extends BaseFragment {
 		super.onResume();
 		updateFutureForeignHqList();
 
+	}
+	@OnClick(R.id.rate)
+	public void onClick(View view){
 	}
 
 	private void updateFutureForeignHqList() {

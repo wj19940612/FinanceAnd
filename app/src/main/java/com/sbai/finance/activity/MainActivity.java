@@ -34,7 +34,6 @@ public class MainActivity extends BaseActivity {
         translucentStatusBar();
         initView();
 
-        Launcher.with(getActivity(), FutureTradeActivity.class).execute();
     }
 
     private void initView() {

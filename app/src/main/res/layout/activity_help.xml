@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_pressable"
         android:layout_marginTop="10dp"
-        app:rightIcon="@drawable/ic_more"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowTextColor="@color/blackAssist"
         app:rowTextSize="@dimen/list_title_size"
         app:rowText="@string/borrow_in"/>
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_pressable"
         android:layout_marginTop="0.5dp"
-        app:rightIcon="@drawable/ic_more"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowTextColor="@color/blackAssist"
         app:rowTextSize="@dimen/list_title_size"
         app:rowText="@string/borrow_out"/>
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_pressable"
         android:layout_marginTop="20dp"
-        app:rightIcon="@drawable/ic_more"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowTextColor="@color/blackAssist"
         app:rowTextSize="@dimen/list_title_size"
         app:rowText="@string/borrow"/>

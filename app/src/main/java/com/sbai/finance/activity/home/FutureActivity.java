@@ -13,6 +13,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.home.ChinaFutureFragment;
 import com.sbai.finance.fragment.home.ForeignFutureFragment;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SlidingTabLayout;
 
@@ -45,8 +46,8 @@ public class FutureActivity extends BaseActivity {
 
 		mTabLayout.setDistributeEvenly(true);
 		mTabLayout.setDividerColors(ContextCompat.getColor(FutureActivity.this, android.R.color.transparent));
-		mTabLayout.setSelectedIndicatorPadding(80);
-		mTabLayout.setPadding(13);
+		mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(80,getResources()));
+		mTabLayout.setPadding(Display.dp2Px(13,getResources()));
 		mTabLayout.setSelectedIndicatorColors( ContextCompat.getColor(this,R.color.blueAssist));
 		mTabLayout.setViewPager(mViewPager);
 	}
