@@ -11,17 +11,12 @@ import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.ChinaFutureFragment;
-import com.sbai.finance.fragment.future.ForeignFutureFragment;
+import com.sbai.finance.fragment.future.FutureFragment;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by Administrator on 2017-04-17.
- */
 
 public class FutureActivity extends BaseActivity {
 
@@ -89,9 +84,9 @@ public class FutureActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ForeignFutureFragment();
+                    return  FutureFragment.newInstance(FutureFragment.FOREIGN_FUTURE);
                 case 1:
-                    return new ChinaFutureFragment();
+                    return  FutureFragment.newInstance(FutureFragment.CHINA_FUTURE);
             }
             return null;
         }

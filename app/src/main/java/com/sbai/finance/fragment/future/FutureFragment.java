@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class ForeignFutureFragment extends BaseFragment {
+public class FutureFragment extends BaseFragment {
     @BindView(R.id.rate)
     TextView mRate;
     @BindView(R.id.listView)
@@ -36,10 +36,27 @@ public class ForeignFutureFragment extends BaseFragment {
     private FutureListAdapter mFutureListAdapter;
     private List<FutureHq> mListHq;
 
+    public static final int FOREIGN_FUTURE=0;
+    public static final int CHINA_FUTURE=1;
+    private int mfutureType;
+    public static FutureFragment newInstance(int type){
+        FutureFragment futureFragment = new FutureFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("type",type);
+        futureFragment.setArguments(bundle);
+        return futureFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mfutureType = this.getArguments().getInt("type");
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_future_foreign, container, false);
+        View view = inflater.inflate(R.layout.fragment_future, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

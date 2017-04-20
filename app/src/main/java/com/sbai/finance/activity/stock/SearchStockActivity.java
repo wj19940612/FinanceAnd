@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.home;
+package com.sbai.finance.activity.stock;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,11 +9,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.home.ForeignFutureFragment;
+import com.sbai.finance.fragment.future.FutureFragment;
 import com.sbai.finance.model.FutureHq;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-04-20.
@@ -34,7 +32,7 @@ public class SearchStockActivity extends BaseActivity {
 	EditText mStock;
 	@BindView(R.id.search)
 	ImageView mSearch;
-	private ForeignFutureFragment.FutureListAdapter mListAdapter;
+	private FutureFragment.FutureListAdapter mListAdapter;
 	private List<FutureHq> mListData;
 	private View mClearRecord;
 	@Override
@@ -70,7 +68,7 @@ public class SearchStockActivity extends BaseActivity {
 				mListAdapter.notifyDataSetChanged();
 			}
 		});
-		mListAdapter = new ForeignFutureFragment.FutureListAdapter(this);
+		mListAdapter = new FutureFragment.FutureListAdapter(this);
 		mListView.addFooterView(mClearRecord);
 		mListView.setAdapter(mListAdapter);
 	}

@@ -59,7 +59,7 @@
             android:name=".activity.stock.StockActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.SearchStockActivity"
+            android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
