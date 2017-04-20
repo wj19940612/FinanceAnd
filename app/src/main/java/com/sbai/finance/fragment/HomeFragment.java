@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.FutureActivity;
@@ -191,8 +193,8 @@ public class HomeFragment extends BaseFragment {
 			TextView mTopicTitle;
 			@BindView(R.id.topicDetail)
 			TextView mTopicDetail;
-			@BindView(R.id.topicBg)
-			LinearLayout mTopicBg;
+			@BindView(R.id.topicImg)
+			ImageView mTopicImg;
 			private Context mContext;
 			ViewHolder(View view,Context context){
 				mContext = context;
@@ -201,9 +203,9 @@ public class HomeFragment extends BaseFragment {
 			public void bindingData(String stockInfo){
 				mTopicTitle.setText(stockInfo);
 				mTopicDetail.setText(stockInfo);
-				mTopicBg.setBackgroundResource(R.drawable.subject_pic_bg);
+				mTopicImg.setBackgroundResource(R.drawable.subject_pic_bg);
 			}
-			@OnClick(R.id.topicBg)
+			@OnClick(R.id.topicImg)
 			public void onClick(View view){
 				Launcher.with(mContext, TopicActivity.class).execute();
 			}
