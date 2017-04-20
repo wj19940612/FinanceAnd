@@ -4,7 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/colorBag"
+              android:background="@color/greyLightAssist"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -85,11 +85,24 @@
 
     </RelativeLayout>
 
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/news"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white"
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/news"
+        app:subTextBackground="@drawable/bg_red_circle_no_read_news"/>
+
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/setting"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/white"
+        android:layout_height="50dp"
+        android:layout_marginTop="0.5dp"
+        android:background="@drawable/bg_white"
         app:leftIcon="@mipmap/ic_launcher_round"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/setting"/>
@@ -97,9 +110,9 @@
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/aboutUs"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_marginTop="0.5dp"
-        android:background="@android:color/white"
+        android:background="@drawable/bg_white"
         app:leftIcon="@mipmap/ic_launcher_round"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/about_us"/>

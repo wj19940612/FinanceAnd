@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bg_line_division_center"
+              android:padding="@dimen/common_padding">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/userHeadImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:srcCompat="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/userAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/warningText"
+            tools:text="溺水的鱼 关注了你"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:text="国内这种很麻烦的撒大胜靠德快乐撒娇时间点就开始刷卡的撒"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            tools:text="2017/12/12"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/presentation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:maxWidth="50dp"
+        tools:text="快乐大数据反馈了解到萨拉点开链接萨菲隆开始考虑大姐夫单身快乐荆防颗粒圣诞节"/>
+
+</LinearLayout>

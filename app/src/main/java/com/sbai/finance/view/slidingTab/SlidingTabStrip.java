@@ -30,7 +30,7 @@ class SlidingTabStrip extends LinearLayout {
     private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 1;
     private static final byte DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0x26;
     private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 2;
-    private static final int DEFAULT_SELECTED_INDICATOR_COLOR = 0xFF358CF3; // Modify by JohnZ
+    private static final int DEFAULT_SELECTED_INDICATOR_COLOR = 0xFF869bcb; // Modify by JohnZ
 
     private static final int DEFAULT_DIVIDER_THICKNESS_DIPS = 1;
     private static final byte DEFAULT_DIVIDER_COLOR_ALPHA = 0x20;
@@ -52,7 +52,7 @@ class SlidingTabStrip extends LinearLayout {
     private int mSelectedPosition;
     private float mSelectionOffset;
 
-    private int mSelectedPadding;
+    private float mSelectedPadding;
 
     private SlidingTabLayout.TabColorizer mCustomTabColorizer;
     private final SimpleTabColorizer mDefaultTabColorizer;
@@ -118,7 +118,7 @@ class SlidingTabStrip extends LinearLayout {
         invalidate();
     }
 
-    void setSelectedIndicatorPadding(int padding) {
+    void setSelectedIndicatorPadding(float padding) {
         mSelectedPadding = padding;
         invalidate();
     }

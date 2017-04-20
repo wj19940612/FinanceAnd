@@ -45,7 +45,7 @@ import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
-public class UserInfoActivity extends BaseActivity {
+public class ModifyUserInfoActivity extends BaseActivity {
 
     private static final int REQ_CODE_USER_NAME = 165;
 
@@ -175,7 +175,7 @@ public class UserInfoActivity extends BaseActivity {
                 day = Integer.valueOf(split[2]);
             }
         }
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.datePickerDialog, new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DatePickerDialog, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Log.d(TAG, "年  " + year + " 月 " + month + "  日  " + dayOfMonth);

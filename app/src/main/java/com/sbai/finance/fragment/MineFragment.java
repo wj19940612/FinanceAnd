@@ -15,8 +15,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.AttentionActivity;
+import com.sbai.finance.activity.mine.FansActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.UserInfoActivity;
+import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
+import com.sbai.finance.activity.mine.NewsActivity;
+import com.sbai.finance.activity.mine.PublishActivity;
+import com.sbai.finance.activity.mine.SettingActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
@@ -30,10 +36,13 @@ import butterknife.Unbinder;
 
 public class MineFragment extends BaseFragment {
 
+    private static final int REQ_CODE_USER_INFO = 801;
+
     // TODO: 2017/4/17 测试头像网址
-    private static final String userImageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg";
+    public static final String userImageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg";
 
     Unbinder unbinder;
+
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
     @BindView(R.id.userName)
@@ -48,6 +57,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
+    @BindView(R.id.news)
+    IconTextRow mNews;
 
     @Nullable
     @Override
@@ -63,7 +74,6 @@ public class MineFragment extends BaseFragment {
 
         updateUserImage();
         updateUserStatus();
-
     }
 
     private void updateUserStatus() {
@@ -105,19 +115,33 @@ public class MineFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.userHeadImage, R.id.setting, R.id.aboutUs})
+    @OnClick({R.id.userHeadImage, R.id.attention, R.id.fans, R.id.minePublish, R.id.news, R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userHeadImage:
                 if (LocalUser.getUser().isLogin()) {
-                    startActivityForResult(new Intent(getActivity(), UserInfoActivity.class), 222);
+                    startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
                     startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
                 }
                 break;
+            case R.id.attention:
+                Launcher.with(getActivity(), AttentionActivity.class).execute();
+                break;
+            case R.id.fans:
+                Launcher.with(getActivity(), FansActivity.class).execute();
+                break;
+            case R.id.minePublish:
+                Launcher.with(getActivity(), PublishActivity.class).execute();
+                break;
+            case R.id.news:
+                Launcher.with(getActivity(), NewsActivity.class).execute();
+                break;
             case R.id.setting:
+                Launcher.with(getActivity(), SettingActivity.class).execute();
                 break;
             case R.id.aboutUs:
+                Launcher.with(getActivity(), UserDataActivity.class).execute();
                 break;
         }
     }
@@ -131,11 +155,12 @@ public class MineFragment extends BaseFragment {
                     updateUserStatus();
                     updateUserImage();
                     break;
-                case 222:
+                case REQ_CODE_USER_INFO:
                     updateUserStatus();
                     updateUserImage();
                     break;
             }
         }
     }
+
 }

@@ -44,8 +44,9 @@
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/common_margin"
-            android:background="@drawable/bg_line_division_center"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"
+            android:background="@drawable/bg_line_division_black"
             android:gravity="center_vertical"
             android:minHeight="60dp">
 
@@ -53,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:paddingTop="10dp"
                 android:text="@string/phone_number"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"/>
@@ -71,6 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_login_label_delete"/>
 
@@ -92,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/common_margin"
             android:layout_marginRight="@dimen/common_margin"
-            android:background="@drawable/bg_line_division_center"
+            android:background="@drawable/bg_line_division_black"
             android:gravity="center_vertical"
             android:minHeight="60dp">
 
@@ -100,6 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:paddingTop="10dp"
                 android:text="@string/auth_code"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"/>
@@ -113,7 +117,8 @@
                 android:layout_weight="1"
                 android:hint="@string/please_input_auth_code"
                 android:inputType="number"
-                android:maxLength="10"/>
+                android:maxLength="10"
+                android:paddingTop="10dp"/>
         </android.support.v7.widget.LinearLayoutCompat>
 
         <android.support.v7.widget.AppCompatButton

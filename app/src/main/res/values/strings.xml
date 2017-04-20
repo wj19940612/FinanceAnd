@@ -9,13 +9,33 @@
     <string name="economic_circle">经济圈</string>
     <string name="mine">我的</string>
 
+    <!-- EconomicCircle -->
+    <string name="no_data">暂无数据</string>
+    <string name="need_amount">需要金额</string>
+    <string name="RMB">￥%1$s</string>
+    <string name="borrow_time">借款时间</string>
+    <string name="day">%1$s天</string>
+    <string name="borrow_interest">借款利息</string>
+    <string name="details">详情</string>
+    <string name="discussion_area">讨论区</string>
+    <string name="followed">已关注</string>
+    <string name="comment_number">(%1$s)</string>
+    <string name="share">分享</string>
+    <string name="borrow_money">借款</string>
+    <string name="comment">评论......</string>
+    <string name="reply">回复</string>
+    <string name="people_want_help_him">想要帮助他的人</string>
+    <string name="people_want_help_him_number">(%1$s)</string>
+    <string name="give_help">给予帮助</string>
+    <string name="borrow_money_details">借款详情</string>
+
     <!--login   page-->
     <string name="phone_number">手机号</string>
     <string name="please_input_phone_number">请输入手机号码</string>
     <string name="auth_code">验证码</string>
     <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
-    <string name="login">登录</string>
+    <string name="login">登  录</string>
     <string name="resend_after_n_seconds">%1$ds后重发</string>
     <string name="obtain_auth_code_continue">重新获取</string>
 
@@ -64,6 +84,7 @@
     <string name="fans">粉丝</string>
     <string name="mine_publish">我的发表</string>
     <string name="setting">设置</string>
+    <string name="news">消息</string>
     <string name="about_us">关于我们</string>
     <string name="please_login">您好，请先登录</string>
 
@@ -85,5 +106,34 @@
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
+
+    <!--   消息 -->
+    <string name="system_news">系统消息</string>
+    <string name="load_more">点击加载更多</string>
+
+    <string name="new_news_notification">新消息通知</string>
+    <string name="shield_setting">屏蔽设置</string>
+
+    <string name="relieve">解除</string>
+    <string name="relieve_shield_dialog_title">是否对"%1$s"\n解除屏蔽</string>
+    <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈</string>
+
+
+    <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
+    <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
+
+    <string name="new_notification">新消息通知</string>
+    <string name="accept_new_notification">新消息通知</string>
+
+    <string name="user_data">用户资料</string>
+    <string name="is_attention">已关注</string>
+    <string name="real_name_approve">实名认证</string>
+    <string name="is_approve">已认证</string>
+    <string name="attention_fans_number">关注 %1$d / 粉丝 %2$d</string>
+
+    <string name="shield">屏蔽TA</string>
+    <string name="report">举报</string>
+    <string name="reply_number">回复(%1$d)</string>
+    <string name="love_number">喜欢(%1$d)</string>
 
 </resources>

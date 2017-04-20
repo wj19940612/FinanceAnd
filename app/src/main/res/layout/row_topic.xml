@@ -4,7 +4,7 @@
               android:id="@+id/topicBg"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
               android:background="@mipmap/ic_launcher">
      <TextView
          android:id="@+id/topicTitle"
@@ -23,7 +23,8 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:gravity="center"
+        android:gravity="top"
+        android:paddingTop="8dp"
         android:textColor="#CDCDCD"
         android:textSize="10sp"
         tool:text="万科 乐视 暴风"/>
