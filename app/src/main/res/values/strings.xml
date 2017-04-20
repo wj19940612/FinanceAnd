@@ -71,7 +71,14 @@
     <string name="publish_point">发表观点</string>
     <string name="add_optional">自选</string>
     <string name="trade">交易</string>
-
+    <string name="trend_chart">分时图</string>
+    <string name="day_k_line">日K</string>
+    <string name="fifteen_min_k">15分钟</string>
+    <string name="thirty_min_k">30分钟</string>
+    <string name="sixty_min_k">60分钟</string>
+    <string name="point">观点</string>
+    <string name="introduce">简介</string>
+    
     <!--    我的界面  -->
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>

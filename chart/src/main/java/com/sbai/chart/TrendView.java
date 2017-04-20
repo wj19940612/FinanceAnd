@@ -169,7 +169,12 @@ public class TrendView extends FrameLayout {
          * @return
          */
         public static boolean isValidDate(String date, String[] openMarketTime) {
-            String hhmm = date.substring(date.indexOf(" ")).substring(1, 6); // yyyy-MM-dd HH:mm:ss -> hh:mm
+            //String hhmm = date.substring(date.indexOf(" ")).substring(1, 6); // yyyy-MM-dd HH:mm:ss -> hh:mm
+            if (date.length() != 14) {
+                return false;
+            }
+
+            String hhmm = date.substring(8, 10) + ":" + date.substring(10, 12); // yyyyMMddHHmmss -> hh:mm
             return Util.isBetweenTimes(openMarketTime, hhmm);
         }
 
@@ -307,8 +312,16 @@ public class TrendView extends FrameLayout {
         }
 
         public String[] getDisplayMarketTimes() {
-            String[] openMarketTimes = getOpenMarketTimes();
-            return Util.splitTimeEvenly(openMarketTimes[0], openMarketTimes[1], 5);
+            if (TextUtils.isEmpty(mDisplayMarketTimes)) {
+                String[] openMarketTimes = getOpenMarketTimes();
+                return Util.splitTimeEvenly(openMarketTimes[0], openMarketTimes[1], 5);
+            } else {
+                return mDisplayMarketTimes.split(";");
+            }
+        }
+
+        public void setDisplayMarketTimes(String displayMarketTimes) {
+            mDisplayMarketTimes = displayMarketTimes;
         }
 
         public float getLimitUp() {

@@ -22,6 +22,6 @@
         android:paddingBottom="3dp"
         android:paddingTop="5dp"
         app:interval="2dp"
-        app:textColor="@color/tab_text"
+        app:textColor="@color/bottom_tab_text"
         app:textSize="12sp"/>
 </RelativeLayout>

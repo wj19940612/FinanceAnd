@@ -2,56 +2,59 @@ package com.sbai.chart.domain;
 
 public class TrendViewData {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT = "yyyyMMddHHmmss";
+
+    /**
+     * cu1610,37230.0,20160815101000
+     */
 
     private String contractId;
-    private float closePrice;
-    private String time; // time format 2017-03-03 07:00:59
+    private float lastPrice;
+    private String date;
 
-    public TrendViewData(String contractId, float closePrice, String time) {
+    public TrendViewData(String contractId, float lastPrice, String date) {
         this.contractId = contractId;
-        this.closePrice = closePrice;
-        this.time = time;
+        this.lastPrice = lastPrice;
+        this.date = date;
     }
 
     public String getHHmm() {
-        int spaceIndex = time.indexOf(" ");
-        if (spaceIndex > -1) {
-            return time.substring(spaceIndex + 1, spaceIndex + 6);
+        if (date.length() >= 12) {
+            return date.substring(8, 10) + ":" + date.substring(10, 12);
         }
         return "";
-    }
-
-    public String getYyyyMMdd() {
-        int spaceIndex = time.indexOf(" ");
-        if (spaceIndex > -1) {
-            return time.substring(0, spaceIndex).replace("-", "/");
-        }
-        return "";
-    }
-
-    public float getClosePrice() {
-        return closePrice;
-    }
-
-    public void setClosePrice(float closePrice) {
-        this.closePrice = closePrice;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public boolean isSameData(TrendViewData data) {
-        return this.closePrice == data.getClosePrice()
-                && this.time.equals(data.getTime());
     }
 
     public String getContractId() {
         return contractId;
+    }
+
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
+    }
+
+    public float getLastPrice() {
+        return lastPrice;
+    }
+
+    public void setLastPrice(float lastPrice) {
+        this.lastPrice = lastPrice;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public boolean isSameData(TrendViewData data) {
+        if (this.contractId.equals(data.getContractId())
+                && this.lastPrice == data.getLastPrice()
+                && this.date.equals(data.getDate())) {
+            return true;
+        }
+        return false;
     }
 }
