@@ -178,22 +178,26 @@
         android:layout_marginTop="20dp">
         <ImageView
             android:src="@drawable/help"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"/>
         <ImageView
             android:layout_marginLeft="14dp"
             android:src="@drawable/help"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"/>
         <ImageView
             android:layout_marginLeft="14dp"
             android:src="@drawable/help"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"/>
         <ImageView
             android:layout_marginLeft="14dp"
             android:src="@drawable/help"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
