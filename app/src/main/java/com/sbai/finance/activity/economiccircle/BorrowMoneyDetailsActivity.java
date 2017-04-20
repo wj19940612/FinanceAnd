@@ -1,4 +1,4 @@
-package com.sbai.finance.activity;
+package com.sbai.finance.activity.economiccircle;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
