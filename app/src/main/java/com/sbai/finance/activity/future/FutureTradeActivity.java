@@ -1,8 +1,17 @@
 package com.sbai.finance.activity.future;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -10,16 +19,18 @@ import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.trade.IntroduceFragment;
+import com.sbai.finance.fragment.trade.PointFragment;
 import com.sbai.finance.model.Product;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
+import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sbai.finance.R.id.trendView;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -37,7 +48,7 @@ public class FutureTradeActivity extends BaseActivity {
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(trendView)
+    @BindView(R.id.trendView)
     TrendView mTrendView;
     @BindView(R.id.klineView)
     KlineView mKlineView;
@@ -45,6 +56,17 @@ public class FutureTradeActivity extends BaseActivity {
     @BindView(R.id.tradeFloatButtons)
     TradeFloatButtons mTradeFloatButtons;
 
+    @BindView(R.id.slidingTab)
+    SlidingTabLayout mSlidingTab;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+
+    @BindView(R.id.chartArea)
+    FrameLayout mChartArea;
+    @BindView(R.id.subPageArea)
+    LinearLayout mSubPageArea;
+
+    private SubPageAdapter mSubPageAdapter;
     private Product mProduct;
 
     @Override
@@ -61,6 +83,14 @@ public class FutureTradeActivity extends BaseActivity {
 
         initTabLayout();
         initChartViews();
+        initSlidingTab();
+
+        mSubPageArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
     }
 
     private void initTabLayout() {
@@ -91,6 +121,61 @@ public class FutureTradeActivity extends BaseActivity {
                         mTrendView.setDataList(TrendView.Util.createDataList(resp, settings.getOpenMarketTimes()));
                     }
                 }).fireSync();
+    }
+
+    private void initSlidingTab() {
+        mViewPager.setOffscreenPageLimit(1);
+        mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
+        mViewPager.setAdapter(mSubPageAdapter);
+
+        mSlidingTab.setDistributeEvenly(true);
+        mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
+        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(80, getResources()));
+        mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
+        mSlidingTab.setViewPager(mViewPager);
+    }
+
+    private static class SubPageAdapter extends FragmentPagerAdapter {
+
+        FragmentManager mFragmentManager;
+        Context mContext;
+
+        public SubPageAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            mFragmentManager = fm;
+            mContext = context;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return mContext.getString(R.string.point);
+                case 1:
+                    return mContext.getString(R.string.introduce);
+            }
+            return super.getPageTitle(position);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new PointFragment();
+                case 1:
+                    return new IntroduceFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
+        }
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {

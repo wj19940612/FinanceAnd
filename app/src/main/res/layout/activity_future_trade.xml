@@ -148,6 +148,30 @@
             android:visibility="gone"/>
     </FrameLayout>
 
+    <LinearLayout
+        android:id="@+id/subPageArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chartArea"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/greyLightAssist"/>
+
+        <com.sbai.finance.view.slidingTab.SlidingTabLayout
+            android:id="@+id/slidingTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"/>
+    </LinearLayout>
+
     <com.sbai.finance.view.TradeFloatButtons
         android:id="@+id/tradeFloatButtons"
         android:layout_width="match_parent"
