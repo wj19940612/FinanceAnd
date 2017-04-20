@@ -61,13 +61,13 @@
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
         android:layout_marginTop="15dp"
-        android:ellipsize="end"
         android:lineSpacingExtra="12dp"
-        android:textColor="#5f6166"
+        android:textColor="@color/opinionText"
         android:textSize="14sp"
         tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
 
     <RelativeLayout
+        android:layout_marginRight="13dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"

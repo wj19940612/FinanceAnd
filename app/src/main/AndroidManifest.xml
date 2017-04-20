@@ -32,9 +32,10 @@
             android:name=".activity.CatchCrashActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.OpinionDetailsActivity"
+        <activity android:name=".activity.economiccircle.OpinionDetailsActivity"
+                  android:windowSoftInputMode="adjustPan"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.BorrowMoneyDetailsActivity"
+        <activity android:name=".activity.economiccircle.BorrowMoneyDetailsActivity"
                   android:screenOrientation="portrait"/>
 
         <activity
