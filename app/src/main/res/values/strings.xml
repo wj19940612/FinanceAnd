@@ -111,12 +111,22 @@
     <string name="relieve_shield_dialog_title">是否对"%1$s"\n解除屏蔽</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈</string>
 
+
+    <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
+    <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
+
     <string name="new_notification">新消息通知</string>
     <string name="accept_new_notification">新消息通知</string>
 
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
     <string name="real_name_approve">实名认证</string>
+    <string name="is_approve">已认证</string>
+    <string name="attention_fans_number">关注 %1$d / 粉丝 %2$d</string>
 
+    <string name="shield">屏蔽TA</string>
+    <string name="report">举报</string>
+    <string name="reply_number">回复(%1$d)</string>
+    <string name="love_number">喜欢(%1$d)</string>
 
 </resources>

@@ -20,7 +20,9 @@ import com.sbai.finance.activity.mine.FansActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
+import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.SettingActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
@@ -72,7 +74,6 @@ public class MineFragment extends BaseFragment {
 
         updateUserImage();
         updateUserStatus();
-
     }
 
     private void updateUserStatus() {
@@ -131,6 +132,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), FansActivity.class).execute();
                 break;
             case R.id.minePublish:
+                Launcher.with(getActivity(), PublishActivity.class).execute();
                 break;
             case R.id.news:
                 Launcher.with(getActivity(), NewsActivity.class).execute();
@@ -139,6 +141,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), SettingActivity.class).execute();
                 break;
             case R.id.aboutUs:
+                Launcher.with(getActivity(), UserDataActivity.class).execute();
                 break;
         }
     }

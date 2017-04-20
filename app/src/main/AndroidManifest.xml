@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -17,11 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -30,14 +27,12 @@
         <activity
             android:name=".activity.CatchCrashActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.OpinionDetailsActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.BorrowMoneyDetailsActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.future.FutureActivity"
             android:screenOrientation="portrait"/>
@@ -97,6 +92,8 @@
         <activity
             android:name=".activity.mine.FansActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mine.PublishActivity">
+        </activity>
     </application>
 
 </manifest>
