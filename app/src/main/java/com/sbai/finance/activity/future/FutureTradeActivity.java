@@ -137,7 +137,7 @@ public class FutureTradeActivity extends BaseActivity {
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(80, getResources()));
+        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setViewPager(mViewPager);
     }

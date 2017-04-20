@@ -1,276 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingLeft="13dp"
-              android:paddingRight="13dp">
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp">
 
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/trade_category"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tradeCategory"
-            android:layout_width="0dp"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/trade_category"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tradeCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/american_gold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/american_gold"/>
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/trade_code"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tradeCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="GLAC"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/trade_time"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tradeTimeSummerWinter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/trade_time_summer_winter"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/holding_time"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/holdingTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/unable_holding_overnight"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/trade_unit"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tradeUnit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/gram_per_hand"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/quote_unit"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/quoteUnit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/yuan_per_gram"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/lowest_margin"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/lowestMargin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/contract_value_percent_four"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/trade_type"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tradeType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/long_and_short_two_way_transaction"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/trade_system"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tradeSystem"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/free_offer_match_trade"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/delivery_time"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/deliveryTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/the_last_trading_day_after_5_consecutive_working_days"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/daily_price_maximum_volatility_limit"
+                android:textColor="@color/greyAssist"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/dailyPriceMaximumVolatilityLimit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/blackAssist"
+                android:textSize="13sp"
+                tools:text="@string/not_more_than_the_last_trading_day_settlement_price_plus_minus_percent_three"/>
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/trade_code"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/tradeCode"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="GLAC"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/trade_time"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/tradeTimeSummerWinter"
-            android:lineSpacingExtra="5dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="@string/trade_time_summer_winter"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/holding_time"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/holdingTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/unable_holding_overnight"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/trade_unit"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/tradeUnit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/gram_per_hand"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/quote_unit"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/quoteUnit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/yuan_per_gram"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/lowest_margin"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/lowestMargin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/contract_value_percent_four"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/trade_type"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/tradeType"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/long_and_short_two_way_transaction"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/trade_system"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/tradeSystem"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/free_offer_match_trade"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/delivery_time"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/deliveryTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/the_last_trading_day_after_5_consecutive_working_days"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:lineSpacingExtra="5dp"
-            android:text="@string/daily_price_maximum_volatility_limit"
-            android:textColor="@color/greyAssist"
-            android:textSize="13sp"/>
-
-        <TextView
-            android:id="@+id/dailyPriceMaximumVolatilityLimit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:textColor="@color/blackAssist"
-            android:textSize="13sp"
-            tools:text="@string/not_more_than_the_last_trading_day_settlement_price_plus_minus_percent_three"/>
-    </LinearLayout>
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>
