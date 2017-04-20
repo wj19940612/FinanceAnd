@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/colorPrimaryDark">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="15dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/bg_search_stock">
+        <EditText
+            android:id="@+id/stock"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@null"
+            android:singleLine="true"
+            android:inputType="number"
+            android:paddingLeft="@dimen/common_padding"
+            android:textSize="@dimen/list_title_size"
+            android:textColorHint="@color/greyLightAssist"
+            android:hint="股票名称"/>
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/greyLightAssist"/>
+        <ImageView
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:src="@drawable/shares_icon_search"/>
+    </LinearLayout>
+
+</LinearLayout>

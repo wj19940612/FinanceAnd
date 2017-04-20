@@ -67,9 +67,9 @@
             android:layout_weight="1"
             android:background="@drawable/bg_help"
             android:gravity="center"
+            android:text="@string/borrow_money"
             android:textColor="@android:color/white"
-            android:textSize="10sp"
-            android:text="@string/borrow_money"/>
+            android:textSize="10sp"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -169,36 +169,40 @@
         tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
         <ImageView
-            android:src="@drawable/help"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/help"/>
+
         <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
-            android:src="@drawable/help"
-            android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/help"/>
+
         <ImageView
-            android:layout_marginLeft="14dp"
-            android:src="@drawable/help"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/help"/>
+
         <ImageView
-            android:layout_marginLeft="14dp"
-            android:src="@drawable/help"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/help"/>
 
     </LinearLayout>
 </LinearLayout>

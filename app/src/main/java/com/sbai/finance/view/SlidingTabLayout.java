@@ -141,9 +141,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
      * Sets the padding to be used for controlling the selected tab width.
      * Add by JohnZ
      *
-     * @param padding
-     */
-    public void setSelectedIndicatorPadding(int padding) {
+	 * @param padding
+	 */
+    public void setSelectedIndicatorPadding(float padding) {
         mTabStrip.setSelectedIndicatorPadding(padding);
     }
 
@@ -197,7 +197,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
-        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.blueAssist));
+        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.tab_selector_text));
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTypeface(Typeface.DEFAULT);
