@@ -123,54 +123,71 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.sbai.finance.view.slidingTab.HackTabLayout
-        android:id="@+id/tabLayout"
-        style="@style/TradeFixedTab"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_below="@id/marketArea"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/marketArea">
 
-    <FrameLayout
-        android:id="@+id/chartArea"
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_below="@id/tabLayout">
-
-        <com.sbai.chart.TrendView
-            android:id="@+id/trendView"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content">
 
-        <com.sbai.chart.KlineView
-            android:id="@+id/klineView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
-    </FrameLayout>
+            <LinearLayout
+                android:id="@+id/chartArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll">
 
-    <LinearLayout
-        android:id="@+id/subPageArea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/chartArea"
-        android:orientation="vertical">
+                <com.sbai.finance.view.slidingTab.HackTabLayout
+                    android:id="@+id/tabLayout"
+                    style="@style/TradeFixedTab"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@color/greyLightAssist"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_below="@id/tabLayout">
 
-        <com.sbai.finance.view.slidingTab.SlidingTabLayout
-            android:id="@+id/slidingTab"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+                    <com.sbai.chart.TrendView
+                        android:id="@+id/trendView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
+                    <com.sbai.chart.KlineView
+                        android:id="@+id/klineView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"/>
+                </FrameLayout>
+            </LinearLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:id="@+id/subPageArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"/>
-    </LinearLayout>
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/greyLightAssist"/>
+
+            <com.sbai.finance.view.slidingTab.SlidingTabLayout
+                android:id="@+id/slidingTab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <com.sbai.finance.view.TradeFloatButtons
         android:id="@+id/tradeFloatButtons"
