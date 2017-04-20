@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyLightAssist"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.SettingActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/setting"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shieldSetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:background="@drawable/bg_white"
+        android:drawableRight="@drawable/ic_arrow_mine_list_more"
+        android:gravity="center_vertical"
+        android:padding="@dimen/common_padding"
+        android:text="@string/shield_setting"
+        android:textColor="@color/primaryText"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/newNewsNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@drawable/bg_white"
+        android:drawableRight="@drawable/ic_arrow_mine_list_more"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:padding="@dimen/common_padding"
+        android:text="@string/new_news_notification"
+        android:textColor="@color/primaryText"/>
+</LinearLayout>

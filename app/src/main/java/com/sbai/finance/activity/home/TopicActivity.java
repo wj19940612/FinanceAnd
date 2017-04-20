@@ -25,8 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.R.attr.onClick;
-
 /**
  * Created by Administrator on 2017-04-18.
  */
@@ -52,6 +50,7 @@ public class TopicActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_topic);
 		ButterKnife.bind(this);
+		translucentStatusBar();
 		initView();
 	}
 
@@ -113,7 +112,7 @@ public class TopicActivity extends BaseActivity {
 		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 			ViewHolder viewHolder;
 			if (convertView == null) {
-				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future, parent, false);
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_hq, parent, false);
 				viewHolder = new ViewHolder(convertView);
 				convertView.setTag(viewHolder);
 			} else {

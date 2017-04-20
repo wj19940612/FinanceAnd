@@ -34,9 +34,7 @@ public class MainActivity extends BaseActivity {
         translucentStatusBar();
         initView();
 
-        Launcher.with(getActivity(), FutureTradeActivity.class).execute();
     }
-
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
@@ -65,7 +63,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;

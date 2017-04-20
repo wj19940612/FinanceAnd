@@ -43,6 +43,7 @@ public class SmartDialog {
     private String mTitleText;
 
     private int mMessageTextMaxLines = 3;
+    private int mTitleTextMaxLines = 1;
 
     private boolean mCancelableOnTouchOutside;
 
@@ -213,7 +214,7 @@ public class SmartDialog {
         return this;
     }
 
-    public SmartDialog setMessageTextColor(int  messageTextColor) {
+    public SmartDialog setMessageTextColor(int messageTextColor) {
         mMessageTextColor = messageTextColor;
         return this;
     }
@@ -231,6 +232,11 @@ public class SmartDialog {
 
     public SmartDialog setTitleTextColor(int titleTextColor) {
         mTitleTextColor = titleTextColor;
+        return this;
+    }
+
+    public SmartDialog setTitleMaxLines(int maxLines) {
+        mTitleTextMaxLines = maxLines;
         return this;
     }
 
@@ -310,6 +316,7 @@ public class SmartDialog {
             mTitle.setLayoutParams(layoutParams);
             mTitle.setText(mTitleText);
             mTitle.setTextColor(mTitleTextColor);
+            mTitle.setMaxLines(mTitleTextMaxLines);
         }
         if (mIsDoubleButtons) {
             mSingleButton.setVisibility(View.GONE);

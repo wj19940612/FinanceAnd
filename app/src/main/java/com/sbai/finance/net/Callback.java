@@ -96,6 +96,8 @@ public abstract class Callback<T> extends ApiCallback<T> {
             } else {
                 onErrorMessageShow(resp.getMsg());
             }
+        } else {
+            onRespSuccess(t);
         }
     }
 

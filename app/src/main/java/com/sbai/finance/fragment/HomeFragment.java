@@ -10,16 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.FutureActivity;
 import com.sbai.finance.activity.home.HelpActivity;
 import com.sbai.finance.activity.home.OptionActivity;
+import com.sbai.finance.activity.home.StockActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.model.Information;
 import com.sbai.finance.utils.Launcher;
@@ -82,12 +85,7 @@ public class HomeFragment extends BaseFragment {
 		initView();
 		mTopicGridAdapter = new TopicGridAdapter(getContext());
 		mTopicGv.setAdapter(mTopicGridAdapter);
-		mNestedScrollView.post(new Runnable() {
-			@Override
-			public void run() {
-				mNestedScrollView.fullScroll(ScrollView.FOCUS_UP);
-			}
-		});
+		mTopicGv.setFocusable(false);
 		mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
 			@Override
 			public void onBannerClick(Information information) {
@@ -102,7 +100,7 @@ public class HomeFragment extends BaseFragment {
 
 			@Override
 			public void onStockClick() {
-
+				Launcher.with(getActivity(), StockActivity.class).execute();
 			}
 
 			@Override
@@ -127,6 +125,11 @@ public class HomeFragment extends BaseFragment {
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 		updateTopicInfo();
@@ -136,10 +139,10 @@ public class HomeFragment extends BaseFragment {
 		 mListStrs = new ArrayList<>();
 		}
 		mListStrs.clear();
-		mListStrs.add(new String("aaaaa"));
-		mListStrs.add(new String("bbbbb"));
-		mListStrs.add(new String("cccc"));
-		mListStrs.add(new String("ddddd"));
+		mListStrs.add(new String("匪夷所思的妖股"));
+		mListStrs.add(new String("最受关注的期货"));
+		mListStrs.add(new String("股票看涨"));
+		mListStrs.add(new String("股票看跌榜"));
 		mTopicGridAdapter.clear();
 		mTopicGridAdapter.addAll(mListStrs);
 		mTopicGridAdapter.notifyDataSetChanged();
@@ -190,8 +193,8 @@ public class HomeFragment extends BaseFragment {
 			TextView mTopicTitle;
 			@BindView(R.id.topicDetail)
 			TextView mTopicDetail;
-			@BindView(R.id.topicBg)
-			LinearLayout mTopicBg;
+			@BindView(R.id.topicImg)
+			ImageView mTopicImg;
 			private Context mContext;
 			ViewHolder(View view,Context context){
 				mContext = context;
@@ -200,9 +203,9 @@ public class HomeFragment extends BaseFragment {
 			public void bindingData(String stockInfo){
 				mTopicTitle.setText(stockInfo);
 				mTopicDetail.setText(stockInfo);
-				mTopicBg.setBackgroundResource(R.drawable.test);
+				mTopicImg.setBackgroundResource(R.drawable.subject_pic_bg);
 			}
-			@OnClick(R.id.topicBg)
+			@OnClick(R.id.topicImg)
 			public void onClick(View view){
 				Launcher.with(mContext, TopicActivity.class).execute();
 			}

@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tool="http://schemas.android.com/tools"
-              android:id="@+id/topicBg"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@mipmap/ic_launcher">
-     <TextView
-         android:id="@+id/topicTitle"
-         android:layout_width="wrap_content"
-         android:layout_height="0dp"
-         android:layout_weight="1"
-         android:gravity="bottom"
-         android:layout_gravity="center"
-         android:textSize="@dimen/list_detail_size"
-         android:textColor="@android:color/white"
-         tool:text="匪夷所思的妖股"/>
-
-    <TextView
-        android:id="@+id/topicDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textColor="#CDCDCD"
-        android:textSize="10sp"
-        tool:text="万科 乐视 暴风"/>
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/topicImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/subject_pic_bg"/>
+        <TextView
+            android:id="@+id/topicTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="bottom"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/list_detail_size"
+            android:textColor="@android:color/white"
+            tool:text="匪夷所思的妖股"/>
+        <TextView
+            android:id="@+id/topicDetail"
+            android:layout_below="@+id/topicTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:paddingTop="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="top"
+            android:textColor="#CDCDCD"
+            android:textSize="10sp"
+            tool:text="万科 乐视 暴风"/>
+    </RelativeLayout>
 </LinearLayout>

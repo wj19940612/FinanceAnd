@@ -56,6 +56,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
+        mListView.setDivider(null);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
         mListView.setAdapter(mSystemNewsAdapter);
         mListView.setOnScrollListener(this);
