@@ -230,10 +230,9 @@ public class TrendChart extends ChartView {
         mPriceAreaWidth = calculatePriceWidth(baselines[0]);
         float topY = top;
         for (int i = 0; i < baselines.length; i++) {
-            float baselineWidth = width;
             Path path = getPath();
             path.moveTo(left, topY);
-            path.lineTo(left + baselineWidth, topY);
+            path.lineTo(left + width, topY);
             setBaseLinePaint(sPaint);
             canvas.drawPath(path, sPaint);
 

@@ -9,28 +9,38 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
+import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.PointFragment;
 import com.sbai.finance.model.Product;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
+import java.util.Collections;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.R.id.klineView;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -50,7 +60,7 @@ public class FutureTradeActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(R.id.klineView)
+    @BindView(klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -103,7 +113,6 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void initChartViews() {
-        mTrendView.clearData();
         TrendView.Settings settings = new TrendView.Settings();
         settings.setBaseLines(mProduct.getBaseline());
         settings.setNumberScale(mProduct.getPriceDecimalScale());
@@ -121,6 +130,14 @@ public class FutureTradeActivity extends BaseActivity {
                         mTrendView.setDataList(TrendView.Util.createDataList(resp, settings.getOpenMarketTimes()));
                     }
                 }).fireSync();
+
+        KlineChart.Settings settings2 = new KlineChart.Settings();
+        settings2.setBaseLines(mProduct.getBaseline());
+        settings2.setNumberScale(mProduct.getPriceDecimalScale());
+        settings2.setXAxis(40);
+        settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        mKlineView.setSettings(settings2);
+        mKlineView.setOnAchieveTheLastListener(null);
     }
 
     private void initSlidingTab() {
@@ -181,7 +198,19 @@ public class FutureTradeActivity extends BaseActivity {
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
+            String tabText = tab.getText().toString();
+            if (tabText.equals(getString(R.string.day_k_line))) {
+                requestKlineDataAndSet(null);
+                showKlineView();
+            } else if (tabText.equals(getString(R.string.sixty_min_k))) {
 
+            } else if (tabText.equals(getString(R.string.thirty_min_k))) {
+
+            } else if (tabText.equals(getString(R.string.fifteen_min_k))) {
+
+            } else {
+                showTrendView();
+            }
         }
 
         @Override
@@ -195,9 +224,36 @@ public class FutureTradeActivity extends BaseActivity {
         }
     };
 
+    private void showTrendView() {
+        mTrendView.setVisibility(View.VISIBLE);
+        mKlineView.setVisibility(View.GONE);
+    }
+
+    private void showKlineView() {
+        mTrendView.setVisibility(View.GONE);
+        mKlineView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
+
+    private void requestKlineDataAndSet(final String type) {
+        Client.getKlineData(mProduct.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<KlineViewData> data) {
+                        if (TextUtils.isEmpty(type)) { // dayK
+                            mKlineView.setDayLine(true);
+                        } else {
+                            mKlineView.setDayLine(false);
+                        }
+                        Collections.reverse(data);
+                        mKlineView.setDataList(data);
+                    }
+                }).fire();
+    }
+
 }

@@ -25,7 +25,7 @@ public abstract class ChartView extends View {
         TEXT("#B3B3B3"),
         WHITE("#FFFFFF"),
         GREEN("#33D37E"),
-        BLUE("#869bcb"),
+        BLUE("#869BCB"),
         RED("#CD4A47");
 
         private String value;
@@ -48,7 +48,7 @@ public abstract class ChartView extends View {
 
     private static final int FONT_SIZE_DP = 8;
     private static final int FONT_BIG_SIZE_DP = 9;
-    private static final int FONT_MA_TITLE_DP = 10;
+    private static final int FONT_MA_TITLE_DP = 8;
     private static final int TEXT_MARGIN_WITH_LINE_DP = 3;
     private static final int RECT_PADDING_DP = 3;
     private static final int MIDDLE_EXTRA_SPACE_DP = 10;

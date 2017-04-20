@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 
 public class HackTabLayout extends TabLayout {
 
-    private static final float PADDING_DP = 10;
+    private static final float MARGIN_DP = 10;
 
     public HackTabLayout(Context context) {
         super(context);
@@ -47,8 +47,9 @@ public class HackTabLayout extends TabLayout {
             for (int i = 0; i < tabStrip.getChildCount(); i++) {
                 View child = tabStrip.getChildAt(i);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) child.getLayoutParams();
-                int padding = (int) Display.dp2Px(PADDING_DP, getResources());
-                params.setMargins(padding, 0, padding, 0);
+                int margin = (int) Display.dp2Px(MARGIN_DP, getResources());
+                params.setMargins(margin, 0, margin, 0);
+                child.setPadding(0, 0, 0, 0);
                 child.invalidate();
             }
         } catch (IllegalAccessException e) {
