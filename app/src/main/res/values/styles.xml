@@ -91,5 +91,16 @@
         <item name="android:textColor">#838489</item>
         <item name="android:textSize">12sp</item>
     </style>
+    <style name="MarketDataStock">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minHeight">70dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_pressable</item>
+        <item name="android:textSize">@dimen/list_title_size</item>
+        <item name="android:textColor">@color/blackAssist</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+    </style>
 
 </resources>

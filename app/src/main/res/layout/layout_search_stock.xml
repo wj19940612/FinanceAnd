@@ -12,8 +12,6 @@
         android:layout_marginRight="@dimen/common_margin"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="15dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:background="@drawable/bg_search_stock">
         <EditText
             android:id="@+id/stock"
@@ -22,7 +20,6 @@
             android:layout_weight="5"
             android:background="@null"
             android:singleLine="true"
-            android:inputType="number"
             android:paddingLeft="@dimen/common_padding"
             android:textSize="@dimen/list_title_size"
             android:textColorHint="@color/greyLightAssist"
