@@ -4,7 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -12,10 +15,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-04-19.
@@ -45,6 +50,7 @@ public class StockActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		mStock.setFocusable(false);
 		mListView.setEmptyView(mEmpty);
 
 		SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor("上证",
@@ -55,5 +61,9 @@ public class StockActivity extends BaseActivity {
 		mShangHai.setText(attentionSpannableString);
 		mShenZhen.setText(attentionSpannableString);
 		mBoard.setText(attentionSpannableString);
+	}
+	@OnClick({R.id.search,R.id.stock})
+	public void onClick(View view){
+		Launcher.with(getActivity(),SearchStockActivity.class).execute();
 	}
 }

@@ -61,6 +61,9 @@
         <activity
             android:name=".activity.home.StockActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.SearchStockActivity"
+            android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.ModifyUserInfoActivity"
