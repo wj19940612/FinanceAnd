@@ -123,7 +123,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.sbai.finance.view.slidingTab.MyTabLayout
+    <com.sbai.finance.view.slidingTab.HackTabLayout
         android:id="@+id/tabLayout"
         style="@style/TradeFixedTab"
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.home;
+package com.sbai.finance.fragment.future;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

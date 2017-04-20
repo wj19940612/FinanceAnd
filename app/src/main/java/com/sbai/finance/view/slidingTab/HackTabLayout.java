@@ -10,19 +10,19 @@ import com.sbai.finance.utils.Display;
 
 import java.lang.reflect.Field;
 
-public class MyTabLayout extends TabLayout {
+public class HackTabLayout extends TabLayout {
 
     private static final float PADDING_DP = 10;
 
-    public MyTabLayout(Context context) {
+    public HackTabLayout(Context context) {
         super(context);
     }
 
-    public MyTabLayout(Context context, AttributeSet attrs) {
+    public HackTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HackTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

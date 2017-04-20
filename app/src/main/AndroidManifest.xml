@@ -34,16 +34,13 @@
             android:name=".activity.BorrowMoneyDetailsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.future.FutureActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.mine.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.FutureActivity"
+            android:name=".activity.future.FutureActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.HelpActivity"
+            android:name=".activity.mutual.MutualActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.EventActivity"
@@ -59,7 +56,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.home.StockActivity"
+            android:name=".activity.stock.StockActivity"
             android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity

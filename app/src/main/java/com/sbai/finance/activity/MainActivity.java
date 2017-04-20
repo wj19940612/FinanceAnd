@@ -7,11 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BottomTabs;
 
 import butterknife.BindView;
@@ -35,6 +33,7 @@ public class MainActivity extends BaseActivity {
         initView();
 
     }
+
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
@@ -63,6 +62,7 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
