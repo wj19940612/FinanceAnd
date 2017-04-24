@@ -234,7 +234,8 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                             .into(mUserHeadImage);
                 }
 
-                SpannableString spannableString = StrUtil.mergeTextWithColor(item.getUserName(), "   " + "关注你", Color.BLACK);
+                SpannableString spannableString = StrUtil.mergeTextWithColor(item.getUserName(), "   " + "关注你",
+                        ContextCompat.getColor(context,R.color.primaryText));
                 mUserAction.setText(spannableString);
                 if (!TextUtils.isEmpty(item.getContent())) {
                     mContent.setVisibility(View.VISIBLE);

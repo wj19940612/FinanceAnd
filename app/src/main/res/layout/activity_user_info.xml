@@ -18,10 +18,10 @@
     <RelativeLayout
         android:id="@+id/headImageLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:background="@drawable/bg_white"
-        android:paddingLeft="@dimen/common_margin"
-        android:paddingRight="@dimen/common_margin">
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -29,14 +29,15 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:text="@string/head_image"
-            android:textColor="@color/secondaryText"/>
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/common_default_size"/>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/userHeadImage"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="20dp"
             android:layout_toLeftOf="@+id/helpArrow"/>
 
         <android.support.v7.widget.AppCompatImageView
@@ -57,7 +58,8 @@
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/nick_name"
         app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"/>
+        app:subTextColor="@color/primaryText"
+        app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/sex"
@@ -68,7 +70,8 @@
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/sex"
         app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"/>
+        app:subTextColor="@color/primaryText"
+        app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/age"
@@ -79,7 +82,8 @@
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/age"
         app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"/>
+        app:subTextColor="@color/primaryText"
+        app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/location"
@@ -90,7 +94,8 @@
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/location"
         app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"/>
+        app:subTextColor="@color/primaryText"
+        app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/credit"
@@ -101,7 +106,8 @@
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/credit"
         app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"/>
+        app:subTextColor="@color/primaryText"
+        app:subTextSize="@dimen/common_default_size"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/logout"
@@ -109,7 +115,7 @@
         android:layout_height="48dp"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/btn_logout_rounded"
         android:text="@string/logout"
         android:textColor="@android:color/white"/>

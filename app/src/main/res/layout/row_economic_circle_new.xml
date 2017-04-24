@@ -5,12 +5,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/bg_line_division_center"
-              android:padding="@dimen/common_padding">
+              android:paddingBottom="@dimen/common_padding"
+              android:paddingLeft="@dimen/common_padding"
+              android:paddingRight="@dimen/common_padding"
+              android:paddingTop="20dp">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/userHeadImage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         app:srcCompat="@mipmap/ic_launcher"/>
 
     <LinearLayout
@@ -18,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/common_padding"
+        android:paddingLeft="10dp"
         android:paddingRight="@dimen/common_padding">
 
         <android.support.v7.widget.AppCompatTextView
@@ -26,20 +29,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/warningText"
+            android:textSize="14sp"
             tools:text="溺水的鱼 关注了你"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
+            android:lineSpacingExtra="3dp"
+            android:textColor="@color/secondaryText"
+            android:textSize="13sp"
             tools:text="国内这种很麻烦的撒大胜靠德快乐撒娇时间点就开始刷卡的撒"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="10dp"
             tools:text="2017/12/12"/>
     </LinearLayout>
 
@@ -47,9 +54,12 @@
         android:id="@+id/presentation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:lineSpacingExtra="7dp"
+        android:textColor="@color/assistText"
         android:ellipsize="end"
         android:maxLines="3"
-        android:maxWidth="50dp"
-        tools:text="快乐大数据反馈了解到萨拉点开链接萨菲隆开始考虑大姐夫单身快乐荆防颗粒圣诞节"/>
+        android:maxWidth="61dp"
+        android:text="快乐大数据反馈了解到萨拉点开链接萨菲隆开始考虑大姐夫单身快乐荆防颗粒圣诞节"/>
 
 </LinearLayout>

@@ -16,4 +16,6 @@
     <dimen name="common_four_radius">4dp</dimen>
     <dimen name="common_eight_radius">8dp</dimen>
     <dimen name="common_margin">15dp</dimen>
+    <dimen name="user_head_image">32dp</dimen>
+    <dimen name="common_default_size">15sp</dimen>
 </resources>

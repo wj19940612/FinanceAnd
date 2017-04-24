@@ -80,6 +80,8 @@
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
     <string name="please_login">您好，请先登录</string>
+    <string name="detail">明细</string>
+    <string name="feed_back">意见反馈</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -92,9 +94,9 @@
     <string name="logout">退出登录</string>
     <string name="modify_user_name">修改用户名</string>
     <string name="please_input_user_name">请输入用户名</string>
-    <string name="save">保存</string>
+    <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-
+    <string name="nick_name_hint">昵称最多6个字符,请勿使用不良词汇</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
@@ -108,8 +110,8 @@
     <string name="shield_setting">屏蔽设置</string>
 
     <string name="relieve">解除</string>
-    <string name="relieve_shield_dialog_title">是否对"%1$s"\n解除屏蔽</string>
-    <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈</string>
+    <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
+    <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
 
 
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
