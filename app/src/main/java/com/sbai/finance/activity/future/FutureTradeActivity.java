@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,8 +39,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.R.id.klineView;
-
 public class FutureTradeActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
@@ -60,7 +57,7 @@ public class FutureTradeActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(klineView)
+    @BindView(R.id.klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -72,7 +69,7 @@ public class FutureTradeActivity extends BaseActivity {
     ViewPager mViewPager;
 
     @BindView(R.id.chartArea)
-    FrameLayout mChartArea;
+    LinearLayout mChartArea;
     @BindView(R.id.subPageArea)
     LinearLayout mSubPageArea;
 
@@ -94,13 +91,6 @@ public class FutureTradeActivity extends BaseActivity {
         initTabLayout();
         initChartViews();
         initSlidingTab();
-
-        mSubPageArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
     }
 
     private void initTabLayout() {
@@ -147,7 +137,7 @@ public class FutureTradeActivity extends BaseActivity {
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(80, getResources()));
+        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setViewPager(mViewPager);
     }
