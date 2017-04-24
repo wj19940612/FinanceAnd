@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.net.API;
+import com.sbai.finance.net.APIBase;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.httplib.ApiIndeterminate;
 
@@ -24,7 +24,7 @@ public class BaseFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         stopScheduleJob();
-        API.cancel(TAG);
+        APIBase.cancel(TAG);
     }
 
     protected void startScheduleJob(int millisecond) {

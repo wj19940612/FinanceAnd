@@ -9,12 +9,12 @@ public class Client {
      *
      * @return
      */
-    public static API getSystemTime() {
-        return new API("/user/user/getSystemTime.do");
+    public static APIBase getSystemTime() {
+        return new APIBase("/user/user/getSystemTime.do");
     }
 
-    public static API getTrendData(String varietyType) {
-        return new API("/quotaStatus/" + varietyType + ".fst");
+    public static APIBase getTrendData(String varietyType) {
+        return new APIBase("/quotaStatus/" + varietyType + ".fst");
     }
 
     /**
@@ -24,8 +24,8 @@ public class Client {
      * @param type
      * @return
      */
-    public static API getKlineData(String varietyType, String type, String endTime) {
-        return new API("/quota/candlestickData/getCandlesticKData.do",
+    public static APIBase getKlineData(String varietyType, String type, String endTime) {
+        return new APIBase("/quota/candlestickData/getCandlesticKData.do",
                 new ApiParams()
                         .put("contractsCode", varietyType)
                         .put("limit", 100)

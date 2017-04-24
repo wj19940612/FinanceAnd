@@ -232,7 +232,7 @@ public class LoginActivity extends BaseActivity {
             mErrorHint.setText("hahhhah");
         }
         setResult(RESULT_OK);
-//        finish();
+        finish();
     }
 
     private void getAuthCode() {
