@@ -75,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="@string/trade_time_summer_winter"
+            tools:text="@string/trade_time_summer_winter"
             android:textColor="@color/blackAssist"
             android:textSize="13sp"/>
     </LinearLayout>
