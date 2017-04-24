@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.mine;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -8,6 +7,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -31,27 +30,49 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
-
     @BindView(R.id.deletePage)
     AppCompatImageView mDeletePage;
     @BindView(R.id.appIconName)
-    AppCompatTextView mAppIcon;
+    AppCompatTextView mAppIconName;
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
     AppCompatImageView mPhoneNumberClear;
     @BindView(R.id.getAuthCode)
     AppCompatTextView mGetAuthCode;
+    @BindView(R.id.phoneLl)
+    LinearLayoutCompat mPhoneLl;
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
+    @BindView(R.id.errorHint)
+    AppCompatTextView mErrorHint;
     @BindView(R.id.login)
     AppCompatButton mLogin;
     @BindView(R.id.showLayout)
-    RelativeLayout mShowLayout;
+    LinearLayoutCompat mShowLayout;
     @BindView(R.id.hideLayout)
     TextView mHideLayout;
-    @BindView(R.id.errorHint)
-    AppCompatTextView mErrorHint;
+
+//    @BindView(R.id.deletePage)
+//    AppCompatImageView mDeletePage;
+//    @BindView(R.id.appIconName)
+//    AppCompatTextView mAppIcon;
+//    @BindView(R.id.phoneNumber)
+//    AppCompatEditText mPhoneNumber;
+//    @BindView(R.id.phoneNumberClear)
+//    AppCompatImageView mPhoneNumberClear;
+//    @BindView(R.id.getAuthCode)
+//    AppCompatTextView mGetAuthCode;
+//    @BindView(R.id.authCode)
+//    AppCompatEditText mAuthCode;
+//    @BindView(R.id.login)
+//    AppCompatButton mLogin;
+//    @BindView(R.id.showLayout)
+//    RelativeLayout mShowLayout;
+//    @BindView(R.id.hideLayout)
+//    TextView mHideLayout;
+//    @BindView(R.id.errorHint)
+//    AppCompatTextView mErrorHint;
 
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
@@ -66,7 +87,7 @@ public class LoginActivity extends BaseActivity {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(this,R.color.blackAssist));
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.blackAssist));
         }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -106,8 +127,8 @@ public class LoginActivity extends BaseActivity {
                         .getLayoutParams();
                 lp.topMargin = offset;
                 mShowLayout.setLayoutParams(lp);
-                mAppIcon.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-                mGetAuthCode.setTextColor(Color.BLACK);
+                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+//                mGetAuthCode.setTextColor(Color.BLACK);
             }
 
         }
@@ -119,8 +140,8 @@ public class LoginActivity extends BaseActivity {
             if (lp.topMargin != 0) {
                 lp.topMargin = 0;
                 mShowLayout.setLayoutParams(lp);
-                mAppIcon.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_launcher_round, 0, 0);
-                mGetAuthCode.setTextColor(Color.WHITE);
+                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_launcher_round, 0, 0);
+//                mGetAuthCode.setTextColor(Color.WHITE);
             }
 
         }
@@ -206,12 +227,12 @@ public class LoginActivity extends BaseActivity {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserName("王八三十");
         LocalUser.getUser().setUserInfo(userInfo);
-        if (false) {
+        if (true) {
             mErrorHint.setVisibility(View.VISIBLE);
             mErrorHint.setText("hahhhah");
         }
         setResult(RESULT_OK);
-        finish();
+//        finish();
     }
 
     private void getAuthCode() {

@@ -17,8 +17,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_height="420dp"
             android:background="@drawable/bg_login">
 
             <android.support.v7.widget.AppCompatImageView
@@ -31,65 +30,118 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/appIconName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_below="@+id/deletePage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
                 android:drawablePadding="10dp"
                 android:drawableTop="@mipmap/ic_launcher_round"
+                android:gravity="center_horizontal"
                 android:text="@string/app_name"
                 android:textColor="@android:color/white"/>
 
-            <android.support.v7.widget.LinearLayoutCompat
-                android:id="@+id/phoneLl"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/appIconName"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
-                android:layout_marginTop="180dp"
-                android:background="@drawable/bg_line_division_black"
-                android:gravity="center_vertical">
+                android:orientation="vertical">
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="10dp"
-                    android:text="@string/phone_number"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"/>
-
-                <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/phoneNumber"
-                    style="@style/SignEditText.PhoneNum"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:id="@+id/phoneLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/appIconName"
                     android:layout_marginLeft="@dimen/common_margin"
-                    android:layout_weight="1"
-                    android:hint="@string/please_input_phone_number"/>
+                    android:layout_marginRight="@dimen/common_margin"
+                    android:layout_marginTop="45dp"
+                    android:gravity="center_vertical">
 
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/phoneNumberClear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/ic_login_label_delete"/>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="10dp"
+                        android:text="@string/phone_number"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"/>
 
-                <android.support.v7.widget.AppCompatTextView
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/phoneNumber"
+                        style="@style/SignEditText.PhoneNum"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_weight="1"
+                        android:hint="@string/please_input_phone_number"/>
 
-                    android:id="@+id/getAuthCode"
-                    android:layout_width="93dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/btn_auth_code_rounded"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="@string/get_auth_code"
-                    android:textColor="@android:color/white"/>
-            </android.support.v7.widget.LinearLayoutCompat>
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/phoneNumberClear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/ic_login_label_delete"/>
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/getAuthCode"
+                        android:layout_width="93dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/btn_auth_code_rounded"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="@string/get_auth_code"
+                        android:textColor="@color/login_get_auth_code_color"/>
+                </android.support.v7.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="@dimen/common_margin"
+                    android:layout_marginRight="@dimen/common_margin"
+                    android:background="@color/greyLightAssist"/>
+
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="@dimen/common_margin"
+                    android:layout_marginRight="@dimen/common_margin"
+                    android:gravity="center_vertical"
+                    android:minHeight="60dp">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="10dp"
+                        android:text="@string/auth_code"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"/>
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/authCode"
+                        style="@style/SignEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_weight="1"
+                        android:hint="@string/please_input_auth_code"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:paddingTop="10dp"/>
+                </android.support.v7.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="@dimen/common_margin"
+                    android:layout_marginRight="@dimen/common_margin"
+                    android:background="@color/greyLightAssist"/>
+            </LinearLayout>
         </RelativeLayout>
+
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/errorHint"
