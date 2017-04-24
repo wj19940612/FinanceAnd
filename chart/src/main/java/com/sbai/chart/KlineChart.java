@@ -21,7 +21,7 @@ public class KlineChart extends ChartView {
 
     private static final int CANDLES_WIDTH_DP = 6; //dp
 
-    private static final String MA_WHITE = "#FEFEFE";
+    private static final String MA_BLUE = "#869BCB";
     private static final String MA_PURPLE = "#A63BEB";
     private static final String MA_YELLOW = "#D7CE51";
 
@@ -144,7 +144,7 @@ public class KlineChart extends ChartView {
         paint.setStrokeWidth(1);
         paint.setPathEffect(null);
         if (movingAverage == mMovingAverages[0]) {
-            paint.setColor(Color.parseColor(MA_WHITE));
+            paint.setColor(Color.parseColor(MA_BLUE));
         } else if (movingAverage == mMovingAverages[1]) {
             paint.setColor(Color.parseColor(MA_PURPLE));
         } else if (movingAverage == mMovingAverages[2]) {
@@ -158,7 +158,7 @@ public class KlineChart extends ChartView {
         paint.setPathEffect(null);
         paint.setTextSize(mMaTitleSize);
         if (movingAverage == mMovingAverages[0]) {
-            paint.setColor(Color.parseColor(MA_WHITE));
+            paint.setColor(Color.parseColor(MA_BLUE));
         } else if (movingAverage == mMovingAverages[1]) {
             paint.setColor(Color.parseColor(MA_PURPLE));
         } else if (movingAverage == mMovingAverages[2]) {
@@ -222,8 +222,10 @@ public class KlineChart extends ChartView {
                     .divide(new BigDecimal(baselines.length - 1),
                             mSettings.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
 
-            // 额外扩大最大值
+            // 额外扩大最大值 最小值
             max += priceRange;
+            min -= priceRange;
+
             priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
                     .divide(new BigDecimal(baselines.length - 1),
                             mSettings.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
@@ -260,8 +262,8 @@ public class KlineChart extends ChartView {
     protected void drawTitleAboveBaselines(float[] baselines, int left, int top, int width, int height,
                                            long[] indexesBaseLines, int left2, int top2, int width2, int height2,
                                            int touchIndex, Canvas canvas) {
-        float textX = left + mTextMargin * 10;
-        float verticalInterval = height * 1.0f / (baselines.length - 1) / 2;
+        float textX = left + mTextMargin;
+        float verticalInterval = mTextMargin * 2;
         if (mVisibleList != null && mVisibleList.size() > 0) {
             KlineViewData data = mVisibleList.get(mVisibleList.size() - 1);
             if (hasThisTouchIndex(touchIndex)) {
@@ -270,9 +272,9 @@ public class KlineChart extends ChartView {
             for (int movingAverage : mMovingAverages) {
                 setMovingAveragesTextPaint(sPaint, movingAverage);
                 float movingAverageValue = data.getMovingAverage(movingAverage);
-                String maText = "● MA" + movingAverage + ":--";
+                String maText = "MA" + movingAverage + ":--";
                 if (movingAverageValue != 0) {
-                    maText = "● MA" + movingAverage + ":" + formatNumber(movingAverageValue);
+                    maText = "MA" + movingAverage + ":" + formatNumber(movingAverageValue);
                 }
                 float textWidth = sPaint.measureText(maText);
                 canvas.drawText(maText, textX, top + verticalInterval + mOffset4CenterMaTitle, sPaint);
@@ -281,7 +283,7 @@ public class KlineChart extends ChartView {
         } else {
             for (int movingAverage : mMovingAverages) {
                 setMovingAveragesTextPaint(sPaint, movingAverage);
-                String maText = "● MA" + movingAverage + ":--";
+                String maText = "MA" + movingAverage + ":--";
                 float textWidth = sPaint.measureText(maText);
                 canvas.drawText(maText, textX, top + verticalInterval + mOffset4CenterMaTitle, sPaint);
                 textX += textWidth + mTextMargin * 5;
@@ -302,38 +304,33 @@ public class KlineChart extends ChartView {
                                  long[] indexesBaseLines, int left2, int top2, int width2, int height2, Canvas canvas) {
         if (baselines == null || baselines.length < 2) return;
 
-        float verticalInterval = height * 1.0f / (baselines.length - 1); // 根据设计可以假设基线有两倍，计算1/2的间隔
+        float verticalInterval = height * 1.0f / (baselines.length - 1);
         mPriceAreaWidth = calculatePriceWidth(baselines[0]);
         float topY = top;
         for (int i = 0; i < baselines.length; i++) {
-            if (i % 2 == 1) {
-                Path path = getPath();
-                path.moveTo(left, topY);
-                path.lineTo(left + width - mPriceAreaWidth, topY);
-                setBaseLinePaint(sPaint);
-                canvas.drawPath(path, sPaint);
-
-                if (i % 4 == 1) {
-                    setDefaultTextPaint(sPaint);
-                    String baseLineValue = formatNumber(baselines[i]);
-                    float textWidth = sPaint.measureText(baseLineValue);
-                    float x = left + width - mPriceAreaWidth + (mPriceAreaWidth - textWidth) / 2;
-                    float y = topY - mFontHeight / 2 + mOffset4CenterText;
-                    canvas.drawText(baseLineValue, x, y, sPaint);
-                }
-            }
-            topY += verticalInterval;
-        }
-
-        // 5 vertical lines
-        float horizontalInterval = (width - mPriceAreaWidth) / 5;
-        for (int i = 0; i < 5; i++) {
             Path path = getPath();
-            float chartX = left + horizontalInterval * (i + 1);
-            path.moveTo(chartX, top);
-            path.lineTo(chartX, height);
+            path.moveTo(left, topY);
+            path.lineTo(left + width, topY);
             setBaseLinePaint(sPaint);
             canvas.drawPath(path, sPaint);
+
+            if (i == 0) {
+                setDefaultTextPaint(sPaint);
+                String baseLineValue = formatNumber(baselines[i]);
+                float textWidth = sPaint.measureText(baseLineValue);
+                float x = left + width - mPriceAreaWidth + (mPriceAreaWidth - textWidth) / 2;
+                float y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
+                canvas.drawText(baseLineValue, x, y, sPaint);
+            } else if (i != 0 && i % 2 == 0) {
+                setDefaultTextPaint(sPaint);
+                String baseLineValue = formatNumber(baselines[i]);
+                float textWidth = sPaint.measureText(baseLineValue);
+                float x = left + width - mPriceAreaWidth + (mPriceAreaWidth - textWidth) / 2;
+                float y = topY - mTextMargin - mFontHeight / 2 + mOffset4CenterText;
+                canvas.drawText(baseLineValue, x, y, sPaint);
+            }
+
+            topY += verticalInterval;
         }
 
         if (indexesEnable && indexesBaseLines.length >= 2) {

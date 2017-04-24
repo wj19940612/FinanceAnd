@@ -1,6 +1,7 @@
-package com.sbai.finance.activity;
+package com.sbai.finance.activity.economiccircle;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -50,8 +51,8 @@ public class OpinionDetailsActivity extends AppCompatActivity {
     TextView mCommentNum;
     @BindView(android.R.id.list)
     ListView mList;
-    @BindView(android.R.id.empty)
-    TextView mEmpty;
+   /* @BindView(android.R.id.empty)
+    TextView mEmpty;*/
     @BindView(R.id.comment)
     EditText mComment;
     @BindView(R.id.reply)
@@ -76,6 +77,9 @@ public class OpinionDetailsActivity extends AppCompatActivity {
         mCommentAdapter = new CommentAdapter(this, mCommentList);
         //mList.setEmptyView(mEmpty);
         mList.setAdapter(mCommentAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mList.setNestedScrollingEnabled(true);
+        }
 
     }
 
@@ -89,7 +93,7 @@ public class OpinionDetailsActivity extends AppCompatActivity {
         mUserName.setText("刘亦菲");
         mFollowed.setText("已关注");
         mPublishTime.setText("战国");
-        mOpinion.setText("话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。");
+        mOpinion.setText("黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨");
         mProduct.setText("股票");
         mProductName.setText("松柏信息");
         mLastPrice.setText("88.88");

@@ -29,7 +29,7 @@
             android:layout_toRightOf="@+id/avatar"
             android:textColor="@color/redPrimary"
             android:textSize="15sp"
-            tools:text="刘亦菲"/>
+            tools:text="张三丰"/>
 
         <TextView
             android:id="@+id/followed"
@@ -51,41 +51,70 @@
             android:textColor="@color/assistText"
             android:textSize="11sp"
             tools:text="2008/08/08 08:00"/>
-
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/opinion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
         android:layout_marginTop="15dp"
-        android:lineSpacingExtra="12dp"
-        android:textColor="@color/opinionText"
-        android:textSize="14sp"
-        tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="2dp"
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_long"
+            android:gravity="center"
+            android:minHeight="13dp"
+            android:minWidth="33dp"
+            android:text="看涨"
+            android:textColor="@color/redPrimary"
+            android:textSize="9sp"/>
+
+        <TextView
+            android:id="@+id/opinion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="12dp"
+            android:textColor="@color/opinionText"
+            android:textSize="14sp"
+            tools:text="           黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+
+    </RelativeLayout>
+
 
     <RelativeLayout
-        android:layout_marginRight="13dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="13dp">
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/like"
+            android:drawableLeft="@drawable/ic_discussion_area"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:textColor="@color/greyAssist"
+            android:textSize="10dp"
+            tools:text="8888"/>
 
         <TextView
             android:id="@+id/like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@drawable/btn_like"
-            android:drawableLeft="@drawable/bg_like"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_like_future"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:minHeight="20dp"
-            android:minWidth="50dp"
-            android:padding="5dp"
-            android:textColor="@color/like_text"
+            android:textColor="@color/redPrimary"
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>

@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 
+
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
  * the user's scroll progress.
@@ -71,7 +72,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private static final int TITLE_OFFSET_DIPS = 24;
-    private static final int TAB_VIEW_PADDING_DIPS = 10;
+    private static final int TAB_VIEW_PADDING_DIPS = 16;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 14;
 
     private int mTitleOffset;
@@ -119,7 +120,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     /**
      * Set the custom {@link TabColorizer} to be used.
-     * <p>
+     *
      * If you only require simple custmisation then you can use
      * {@link #setSelectedIndicatorColors(int...)} and {@link #setDividerColors(int...)} to achieve
      * similar effects.
@@ -140,9 +141,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
      * Sets the padding to be used for controlling the selected tab width.
      * Add by JohnZ
      *
-     * @param padding
-     */
-    public void setSelectedIndicatorPadding(int padding) {
+	 * @param padding
+	 */
+    public void setSelectedIndicatorPadding(float padding) {
         mTabStrip.setSelectedIndicatorPadding(padding);
     }
 
@@ -169,7 +170,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
      * Set the custom layout to be inflated for the tab views.
      *
      * @param layoutResId Layout id to be inflated
-     * @param textViewId  id of the {@link TextView} in the inflated view
+     * @param textViewId id of the {@link TextView} in the inflated view
      */
     public void setCustomTabView(int layoutResId, int textViewId) {
         mTabViewLayoutId = layoutResId;
@@ -196,7 +197,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
-        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.tab_text));
+        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.sliding_tab_text));
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTypeface(Typeface.DEFAULT);

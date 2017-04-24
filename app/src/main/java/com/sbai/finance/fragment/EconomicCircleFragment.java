@@ -15,8 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BorrowMoneyDetailsActivity;
-import com.sbai.finance.activity.OpinionDetailsActivity;
+import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
+import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.domain.EconomicCircle;
 import com.sbai.finance.utils.Launcher;
 
