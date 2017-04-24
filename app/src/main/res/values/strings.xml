@@ -64,6 +64,7 @@
     <string name="event_title">大事件</string>
 
     <!--Trade page-->
+    <string name="stock_code">%1$s(%2$s)</string>
     <string name="today_open">今开</string>
     <string name="pre_close">昨收</string>
     <string name="highest">最高</string>
@@ -76,8 +77,13 @@
     <string name="fifteen_min_k">15分钟</string>
     <string name="thirty_min_k">30分钟</string>
     <string name="sixty_min_k">60分钟</string>
+    <string name="five_day_k_line">五日</string>
+    <string name="week_k_line">周K</string>
+    <string name="month_k_line">月K</string>
     <string name="point">观点</string>
     <string name="introduce">简介</string>
+    <string name="stock_news">新闻</string>
+    <string name="stock_finance">财务</string>
     
     <!--    我的界面  -->
     <string name="attention">关注</string>

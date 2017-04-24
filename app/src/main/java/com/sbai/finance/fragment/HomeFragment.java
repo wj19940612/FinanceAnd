@@ -60,6 +60,8 @@ public class HomeFragment extends BaseFragment {
     LinearLayout mIdea;
     @BindView(R.id.ideaTitle)
     TextView mIdeaTitle;
+    @BindView(R.id.bigEvent)
+    LinearLayout mBigEvent;
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
     private List<String> mListStrs;
@@ -152,11 +154,10 @@ public class HomeFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
-
-    @OnClick({R.id.borrowMoney, R.id.idea, R.id.event})
+    @OnClick({R.id.borrowMoney, R.id.idea, R.id.bigEvent})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.event:
+            case R.id.bigEvent:
                 Launcher.with(getActivity(), EventActivity.class).execute();
                 break;
             case R.id.borrowMoney:
@@ -208,7 +209,7 @@ public class HomeFragment extends BaseFragment {
         public void bindingData(String stockInfo) {
             mTopicTitle.setText(stockInfo);
             mTopicDetail.setText(stockInfo);
-            mTopicImg.setBackgroundResource(R.drawable.subject_pic_bg);
+            mTopicImg.setBackgroundResource(R.drawable.topic);
         }
 
         @OnClick(R.id.topicImg)
@@ -216,5 +217,4 @@ public class HomeFragment extends BaseFragment {
             Launcher.with(mContext, TopicActivity.class).execute();
         }
     }
-
 }
