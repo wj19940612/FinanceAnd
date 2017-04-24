@@ -1,8 +1,6 @@
 package com.sbai.finance.activity.mine;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
@@ -13,8 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -49,7 +46,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.login)
     AppCompatButton mLogin;
     @BindView(R.id.showLayout)
-    LinearLayoutCompat mShowLayout;
+    RelativeLayout mShowLayout;
     @BindView(R.id.hideLayout)
     TextView mHideLayout;
 
@@ -83,12 +80,13 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(this, R.color.blackAssist));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Window window = getWindow();
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(ContextCompat.getColor(this, R.color.blackAssist));
+//        }
+        translucentStatusBar();
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         setKeyboardHelper();
@@ -122,7 +120,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void OnKeyBoardPop(int keyboardHeight) {
             if (bottomHeight < keyboardHeight) {
-                int offset = bottomHeight - keyboardHeight;
+                int offset = bottomHeight - keyboardHeight + 80;
                 final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
                         .getLayoutParams();
                 lp.topMargin = offset;
