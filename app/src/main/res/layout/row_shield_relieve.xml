@@ -3,15 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:layout_height="70dp"
+    android:background="@drawable/bg_white"
     android:gravity="center_vertical">
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_marginLeft="@dimen/common_margin"
         android:id="@+id/userHeadImage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"/>
+        android:layout_width="@dimen/user_head_image"
+        android:layout_height="@dimen/user_head_image"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/userName"
@@ -19,23 +19,27 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_weight="1"
+        android:textSize="15sp"
         android:textColor="@color/primaryText"
         tools:text="张三"/>
 
     <View
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/common_padding"
-        android:layout_marginTop="@dimen/common_padding"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:background="@color/greyLightAssist"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/relive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="70dp"
+        android:textSize="12sp"
         android:gravity="center"
-        android:drawableTop="@android:drawable/ic_menu_delete"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/ic_shield_relieve"
         android:padding="@dimen/common_padding"
         android:text="@string/relieve"
-        android:textColor="@color/primaryText"/>
+        android:textColor="@color/secondaryText"/>
 </LinearLayout>

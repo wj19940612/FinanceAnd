@@ -206,7 +206,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
                 }
-
+                mRelive.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_follow_relieve,0,0);
                 mUserName.setText(item.getUserName());
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override

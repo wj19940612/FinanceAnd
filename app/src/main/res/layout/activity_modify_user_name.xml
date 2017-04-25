@@ -20,11 +20,21 @@
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
         android:background="@android:color/white"
         android:hint="@string/please_input_user_name"
-        android:padding="5dp"
+        android:maxLength="6"
+        android:paddingLeft="@dimen/common_margin"
         android:textColorHint="@color/hintText"
         android:textSize="16sp"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingTop="10dp"
+        android:text="@string/nick_name_hint"
+        android:textColor="@color/warningText"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/submitUserName"
@@ -32,7 +42,7 @@
         android:layout_height="48dp"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/btn_red_rounded"
         android:enabled="false"
         android:text="@string/save"

@@ -75,7 +75,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     private void requestSystemNewsList() {
         ArrayList<SystemNewsModel> systemNewsModels = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            systemNewsModels.add(new SystemNewsModel("头部 " + i + i, 1492509419l, "内容  " + i + "\n " + i));
+            systemNewsModels.add(new SystemNewsModel("消息哈哈头部 " + i + i, 1492509419l, "内容sjkahdkjashjdhasjkhdjkhajk手机放寒假SD卡恢复健康联合大厦dhjskakjdkljflsajfl "));
         }
         updateSystemNewsListData(systemNewsModels);
     }
@@ -190,7 +190,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 
             public void bindViewWithData(SystemNewsModel item, Context context, int position) {
                 if (position % 2 == 0) {
-                    mTitle.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher_round, 0, 0, 0);
+                    mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
                 }
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getTime()));

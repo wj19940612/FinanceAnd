@@ -59,6 +59,10 @@ public class MineFragment extends BaseFragment {
     IconTextRow mAboutUs;
     @BindView(R.id.news)
     IconTextRow mNews;
+    @BindView(R.id.detail)
+    IconTextRow mDetail;
+    @BindView(R.id.feedBack)
+    IconTextRow mFeedBack;
 
     @Nullable
     @Override
@@ -79,11 +83,11 @@ public class MineFragment extends BaseFragment {
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n1222", 1.3f, Color.WHITE);
+            SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n1222", 1.8f, Color.WHITE);
             mAttention.setText(attentionSpannableString);
-            SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n12220", 1.3f, Color.WHITE);
+            SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n12220", 1.8f, Color.WHITE);
             mFans.setText(fansSpannableString);
-            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n12220", 1.3f, Color.WHITE);
+            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n12220", 1.8f, Color.WHITE);
             mMinePublish.setText(minePublishSpannableString);
         } else {
             mUserName.setText(R.string.please_login);
@@ -115,7 +119,8 @@ public class MineFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.userHeadImage, R.id.attention, R.id.fans, R.id.minePublish, R.id.news, R.id.setting, R.id.aboutUs})
+    @OnClick({R.id.userHeadImage, R.id.attention, R.id.fans, R.id.minePublish, R.id.news,
+            R.id.setting, R.id.aboutUs, R.id.detail, R.id.feedBack})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userHeadImage:
@@ -143,6 +148,10 @@ public class MineFragment extends BaseFragment {
             case R.id.aboutUs:
                 Launcher.with(getActivity(), UserDataActivity.class).execute();
                 break;
+            case R.id.detail:
+                break;
+            case R.id.feedBack:
+                break;
         }
     }
 
@@ -162,5 +171,4 @@ public class MineFragment extends BaseFragment {
             }
         }
     }
-
 }
