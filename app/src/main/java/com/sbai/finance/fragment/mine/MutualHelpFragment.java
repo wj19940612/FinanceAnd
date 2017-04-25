@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
@@ -50,7 +50,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     private Unbinder mBind;
     private TextView mFootView;
     private MutualHelpAdapter mMutualHelpAdapter;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,7 +98,17 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
 
         ArrayList<HistoryNewsModel> economicCircleNewModels = new ArrayList<>();
         for (int i = 0; i < url.length; i++) {
-            HistoryNewsModel hahahha = new HistoryNewsModel(url[i]);
+            HistoryNewsModel hahahha = new HistoryNewsModel();
+            if (i == 0) {
+                hahahha.setType(10);
+            } else if (i == 1) {
+                hahahha.setType(11);
+            } else {
+                hahahha.setType(12);
+            }
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserPortrait(url[i]);
+            hahahha.setUserInfo(userInfo);
             economicCircleNewModels.add(hahahha);
         }
         updateMutualHelpData(economicCircleNewModels);
@@ -134,7 +143,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
         if (historyNewsModels.size() < 15) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
@@ -241,16 +249,17 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             }
 
             public void bindDataWithView(final HistoryNewsModel item, Context context, final OnUserHeadImageClickListener onUserHeadImageClickListener) {
-
-                if (!TextUtils.isEmpty(item.getUserImage())) {
-                    Glide.with(context).load(item.getUserImage())
-                            .placeholder(R.mipmap.ic_launcher_round)
+                UserInfo userInfo = item.getUserInfo();
+                if (userInfo != null) {
+                    Glide.with(context).load(userInfo.getUserPortrait())
+                            .placeholder(R.drawable.default_headportrait64x64)
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
+
+                    SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), context.getString(getUserAction(item)),
+                            ContextCompat.getColor(context, R.color.primaryText));
+                    mUserAction.setText(spannableString);
                 }
-                SpannableString spannableString = StrUtil.mergeTextWithColor("丘吉尔", "   " + "想要帮助你",
-                        ContextCompat.getColor(context, R.color.primaryText));
-                mUserAction.setText(spannableString);
                 mTime.setText(DateUtil.getFormatTime(1492667145000L));
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -261,6 +270,22 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                     }
                 });
 
+            }
+
+            /**
+             * @param historyNewsModel
+             * @return 用户对应的动作的resId
+             */
+            private int getUserAction(HistoryNewsModel historyNewsModel) {
+                switch (historyNewsModel.getType()) {
+                    case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
+                        return R.string.want_to_help_you;
+                    case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
+                        return R.string.refuse_your_help;
+                    case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
+                        return R.string.accept_your_help;
+                }
+                return 10;
             }
         }
     }

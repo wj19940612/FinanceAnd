@@ -20,6 +20,7 @@ public class HistoryNewsModel {
     public static final int ACTION_TYPE_WANT_TO_HELP_FOR_YOU = 10;
     public static final int ACTION_TYPE_REFUSE_YOU_PEOPLE = 11;
     public static final int ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE = 12;
+    public static final int ACTION_TYPE_APY = 30;
 
 
     /**
@@ -36,39 +37,16 @@ public class HistoryNewsModel {
 
     //	消息id
     private int id;
-    //借单id
-    private int loan_id;
     //详细信息
     private String msg;
-    //支付id
-    private int pay_id;
-    //评论id
-    private int reply_id;
-    //	触发这个消息的用户(非当前用户)
-    private String source_user_id;
     //	0. 未读 1.已读
     private int status;
     //	1 关注 2.点赞帖子 3.点赞评论 4. 评论 10.想帮你的人 11拒绝你的人12.接受你帮
     private int type;
-    //观点id
-    private int viewpoint_id;
+    //消息关联的id 根据type判断
+    private int dataId;
 
-    // TODO: 2017/4/24 测试用
-
-
-    public HistoryNewsModel(String userImage) {
-        this.userImage = userImage;
-    }
-
-    private String userImage;
-
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
-    }
+    private UserInfo mUserInfo;
 
     public int getId() {
         return id;
@@ -78,44 +56,12 @@ public class HistoryNewsModel {
         this.id = id;
     }
 
-    public int getLoan_id() {
-        return loan_id;
-    }
-
-    public void setLoan_id(int loan_id) {
-        this.loan_id = loan_id;
-    }
-
     public String getMsg() {
         return msg;
     }
 
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public int getPay_id() {
-        return pay_id;
-    }
-
-    public void setPay_id(int pay_id) {
-        this.pay_id = pay_id;
-    }
-
-    public int getReply_id() {
-        return reply_id;
-    }
-
-    public void setReply_id(int reply_id) {
-        this.reply_id = reply_id;
-    }
-
-    public String getSource_user_id() {
-        return source_user_id;
-    }
-
-    public void setSource_user_id(String source_user_id) {
-        this.source_user_id = source_user_id;
     }
 
     public int getStatus() {
@@ -134,30 +80,31 @@ public class HistoryNewsModel {
         this.type = type;
     }
 
-    public int getViewpoint_id() {
-        return viewpoint_id;
+    public int getDataId() {
+        return dataId;
     }
 
-    public void setViewpoint_id(int viewpoint_id) {
-        this.viewpoint_id = viewpoint_id;
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
     }
 
-    public boolean isAlreadlyRead() {
-        return getStatus() == 1;
+    public UserInfo getUserInfo() {
+        return mUserInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        mUserInfo = userInfo;
     }
 
     @Override
     public String toString() {
         return "HistoryNewsModel{" +
                 "id=" + id +
-                ", loan_id=" + loan_id +
                 ", msg='" + msg + '\'' +
-                ", pay_id=" + pay_id +
-                ", reply_id=" + reply_id +
-                ", source_user_id='" + source_user_id + '\'' +
                 ", status=" + status +
                 ", type=" + type +
-                ", viewpoint_id=" + viewpoint_id +
+                ", dataId=" + dataId +
+                ", mUserInfo=" + mUserInfo +
                 '}';
     }
 }

@@ -28,7 +28,7 @@ public class UserDetailInfo {
      * userPhone : 150*******62
      */
 
-    private int age;
+    private Integer age;
     private int agencyId;
     private boolean bIsSetNickName;
     private int certificationStatus;
@@ -48,13 +48,20 @@ public class UserDetailInfo {
     private String userPhone;
     //用户头像
     private String userPortrait;
+    /**
+     * chinaSex : 女
+     * userSex : 1
+     */
+
+    private String chinaSex;
+    private int userSex;
 
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -202,6 +209,22 @@ public class UserDetailInfo {
         this.userPortrait = userPortrait;
     }
 
+    public String getChinaSex() {
+        return chinaSex;
+    }
+
+    public void setChinaSex(String chinaSex) {
+        this.chinaSex = chinaSex;
+    }
+
+    public int getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(int userSex) {
+        this.userSex = userSex;
+    }
+
     @Override
     public String toString() {
         return "UserDetailInfo{" +
@@ -224,6 +247,8 @@ public class UserDetailInfo {
                 ", userPass='" + userPass + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", userPortrait='" + userPortrait + '\'' +
+                ", chinaSex='" + chinaSex + '\'' +
+                ", userSex=" + userSex +
                 '}';
     }
 }

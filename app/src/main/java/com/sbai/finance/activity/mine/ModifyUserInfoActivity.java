@@ -29,6 +29,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserDetailInfo;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -77,15 +78,33 @@ public class ModifyUserInfoActivity extends BaseActivity {
     @BindView(R.id.logout)
     AppCompatButton mLogout;
 
+    private String[] mAgeList;
+
+    private int mSelectAgeListIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
+        mAgeList = new String[101];
+        for (int i = 0; i < 101; i++) {
+            mAgeList[i] = ((i + 1917) + "年");
+        }
         requestDetailUserInfo();
-
-
         updateUserImage();
+
+        updateUserInfo();
+    }
+
+    private void updateUserInfo() {
+        UserInfo userInfo = LocalUser.getUser().getUserInfo();
+        mNickName.setSubText(userInfo.getUserName());
+        mSex.setSubText(userInfo.getChinaSex());
+        if (userInfo.getAge() != null) {
+            mAge.setSubText(userInfo.getAge().toString());
+        }
+        mLocation.setSubText(userInfo.getLand());
     }
 
     private void updateUserImage() {
@@ -108,14 +127,16 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<UserDetailInfo>, UserDetailInfo>() {
                     @Override
                     protected void onRespSuccessData(UserDetailInfo data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        Log.d(TAG, "onRespSuccessData:  " + data.toString());
                         LocalUser.getUser().getUserInfo().updateLocalUserInfo(data);
+                        updateUserInfo();
+                        updateUserImage();
                     }
                 })
                 .fire();
     }
 
-    private void updateUserInfo() {
+    private void submitUserInfo() {
         int age = 0;
         if (!TextUtils.isEmpty(mAge.getSubText().trim())) {
             age = Integer.parseInt(mAge.getSubText().trim());
@@ -128,7 +149,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
         int sex = 0;
         if (!TextUtils.isEmpty(mSex.getSubText().trim())) {
-            sex = Integer.parseInt(mSex.getSubText());
+            sex = mSex.getSubText().equalsIgnoreCase(SEX_BOY) ? 1 : 2;
         }
         Client.updateUserInfo(age, land, sex)
                 .setTag(TAG)
@@ -136,10 +157,18 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
-
+                        if (resp.hasData()) {
+                            Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
+                        }
                     }
                 })
                 .fireSync();
+    }
+
+    @Override
+    public void onBackPressed() {
+        submitUserInfo();
+        super.onBackPressed();
     }
 
     @OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.credit, R.id.logout})
@@ -155,7 +184,8 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 showSexPicker();
                 break;
             case R.id.age:
-                showBirthdayPicker();
+//                showBirthdayPicker();
+                showAgePicker();
                 break;
             case R.id.location:
                 showLocationPicker();
@@ -168,6 +198,34 @@ public class ModifyUserInfoActivity extends BaseActivity {
         }
     }
 
+    private void showAgePicker() {
+        OptionPicker picker = new OptionPicker(this, mAgeList);
+        picker.setCancelTextColor(Color.WHITE);
+        picker.setSubmitTextColor(Color.WHITE);
+        picker.setTopHeight(50);
+        picker.setAnimationStyle(R.style.BottomDialogAnimation);
+        picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
+        picker.setOffset(2);
+        if (LocalUser.getUser().getUserInfo().getAge() ==null) {
+            mSelectAgeListIndex = 100;
+        } else {
+            mSelectAgeListIndex = 100 - LocalUser.getUser().getUserInfo().getAge();
+        }
+        picker.setSelectedItem(mAgeList[mSelectAgeListIndex]);
+        picker.setLineConfig(new WheelView.LineConfig(0));//使用最长的线
+        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
+            @Override
+            public void onOptionPicked(int index, String item) {
+                if (!TextUtils.isEmpty(item)) {
+                    mAge.setSubText(String.valueOf(100 - index));
+                    LocalUser.getUser().getUserInfo().setAge(100 - index);
+                    mSelectAgeListIndex = index;
+                }
+            }
+        });
+        picker.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -175,8 +233,11 @@ public class ModifyUserInfoActivity extends BaseActivity {
             switch (requestCode) {
                 case REQ_CODE_USER_NAME:
                     mNickName.setSubText(LocalUser.getUser().getUserInfo().getUserName());
+                    setResult(RESULT_OK);
                     break;
                 case UploadUserImageDialogFragment.REQ_CLIP_HEAD_IMAGE_PAGE:
+                    updateUserImage();
+                    setResult(RESULT_OK);
                     break;
                 default:
                     break;
@@ -186,17 +247,19 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
-//        String land = LocalUser.getUser().getUserInfo().getLand();
+        String land = LocalUser.getUser().getUserInfo().getLand();
         String province = "";
         String city = "";
-//        if (!TextUtils.isEmpty(land)) {
-//            String[] split = land.split("-");
-//            if (split.length == 2) {
-//                province = split[0];
-//                city = split[1];
-//            }
-//        }
-        addressInitTask.execute(province, city);
+        String country = "";
+        if (!TextUtils.isEmpty(land)) {
+            String[] split = land.split("-");
+            if (split.length == 3) {
+                province = split[0];
+                city = split[1];
+                country = split[2];
+            }
+        }
+        addressInitTask.execute(province, city, country);
     }
 
     private void showSexPicker() {
@@ -206,10 +269,9 @@ public class ModifyUserInfoActivity extends BaseActivity {
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setOffset(1);
-//        if (!TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getChinaSex())) {
-//            picker.setSelectedItem(LocalUser.getUser().getUserInfo().getChinaSex());
-//        }
-        picker.setSelectedItem(SEX_GIRL);
+        if (!TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getChinaSex())) {
+            picker.setSelectedItem(LocalUser.getUser().getUserInfo().getChinaSex());
+        }
 //        picker.setTopPadding(toDp(10));
 //                picker.setTextSize(11);
         picker.setLineConfig(new WheelView.LineConfig(0));//使用最长的线
@@ -218,9 +280,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
             public void onOptionPicked(int index, String item) {
                 if (!TextUtils.isEmpty(item)) {
                     mSex.setSubText(item);
-//                    LocalUser.getUser().getUserInfo().setChinaSex(item);
-//                    updateUserHeadImage(LocalUser.getUser().getUserInfo());
-                    setResult(RESULT_OK);
+                    LocalUser.getUser().getUserInfo().setChinaSex(item);
                 }
             }
         });
@@ -281,7 +341,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
                     StringBuilder birthdayDate = new StringBuilder();
                     mAge.setSubText(formatBirthdayDate(year, month, dayOfMonth, birthdayDate));
 //                    LocalUser.getUser().getUserInfo().setBirthday(formatBirthdayDate(year, month, dayOfMonth, birthdayDate));
-//                    updateUserInfo();
                 } else {
                     ToastUtil.curt("不能大于当前时间");
                 }
@@ -313,9 +372,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
                     }
                 })
                 .fire();
-        LocalUser.getUser().logout();
-        setResult(RESULT_OK);
-        finish();
     }
 
 
@@ -403,8 +459,8 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
-//                        LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName());
-//                        updateUserInfo();
+                        LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
+                        mLocation.setSubText(LocalUser.getUser().getUserInfo().getLand());
                     }
                 });
                 picker.show();

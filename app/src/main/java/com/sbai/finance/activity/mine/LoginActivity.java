@@ -64,6 +64,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         translucentStatusBar();
+        mPhoneNumber.setText(LocalUser.getUser().getPhone());
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         setKeyboardHelper();
@@ -200,27 +201,19 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        String phoneNumber = getPhoneNumber();
+        final String phoneNumber = getPhoneNumber();
         String authCode = mAuthCode.getText().toString().trim();
         Client.login(authCode, phoneNumber)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
+                .setCallback(new Callback<Resp<UserInfo>>() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
                         if (resp.isSuccess()) {
-//                            if (resp.hasData()) {
-//                                LocalUser.getUser().setUserInfo(resp.getData());
-//                            }
                             if (resp.hasData()) {
+                                LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
-                                UserInfo userInfo = new UserInfo();
-                                userInfo.setUserName("千年王八");
-                                userInfo.setUserPortrait("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3" +
-                                        "813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg");
-                                LocalUser.getUser().setUserInfo(userInfo);
                             }
-
                             setResult(RESULT_OK);
                             finish();
 

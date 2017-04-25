@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,12 +26,18 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +58,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     private TextView mFootView;
 
 
+    private int mPage = 0;
+    private int mPageSize = 20;
+    private HashSet<Integer> mSet;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,6 +74,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
+        mSet = new HashSet<>();
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
@@ -84,6 +96,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
                 requestEconomicCircleNewsList();
             }
         });
@@ -96,20 +109,27 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
     private void requestEconomicCircleNewsList() {
 
-//        API.requestHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE)
-//                .setIndeterminate(this)
-//                .setTag(TAG)
-//                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
-//                    @Override
-//                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
-//
-//                    }
-//                })
-//                .fireSync();
+        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, mPageSize)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
+                        for (HistoryNewsModel his : data) {
+                            Log.d(TAG, " 经济圈消息" + his.toString());
+                        }
+                    }
+                })
+                .fireSync();
 
+
+        // TODO: 2017/4/25 做测试用
         ArrayList<HistoryNewsModel> historyNewsModelList = new ArrayList<>();
         for (int i = 0; i < url.length; i++) {
-            HistoryNewsModel hahahha = new HistoryNewsModel(url[i]);
+            HistoryNewsModel hahahha = new HistoryNewsModel();
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserPortrait(url[i]);
+            hahahha.setUserInfo(userInfo);
             historyNewsModelList.add(hahahha);
         }
         updateEconomicCircleData(historyNewsModelList);
@@ -133,15 +153,14 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestEconomicCircleNewsList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (historyNewsModelList.size() < 15) {
+        if (historyNewsModelList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -153,7 +172,11 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             }
             stopRefreshAnimation();
         }
-        mEconomicCircleNewsAdapter.addAll(historyNewsModelList);
+        for (HistoryNewsModel data : historyNewsModelList) {
+            if (mSet.add(data.getId())) {
+                mEconomicCircleNewsAdapter.addAll(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -238,22 +261,24 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             }
 
             public void bindViewWithData(HistoryNewsModel item, Context context, int position, final CallBack callBack) {
-                if (!TextUtils.isEmpty(item.getUserImage())) {
-                    Glide.with(context).load(item.getUserImage())
+                UserInfo userInfo = item.getUserInfo();
+                if (userInfo != null) {
+                    Glide.with(context).load(userInfo.getUserPortrait())
                             .bitmapTransform(new GlideCircleTransform(context))
-                            .placeholder(R.mipmap.ic_launcher_round)
+                            .placeholder(R.drawable.default_headportrait64x64)
                             .into(mUserHeadImage);
                 }
+
 
                 SpannableString spannableString = StrUtil.mergeTextWithColor("希特勒", "   " + "关注你",
                         ContextCompat.getColor(context, R.color.primaryText));
                 mUserAction.setText(spannableString);
-//                if (!TextUtils.isEmpty(item.getContent())) {
-//                    mContent.setVisibility(View.VISIBLE);
-//                    mContent.setText(item.getContent());
-//                } else {
-//                    mContent.setVisibility(View.GONE);
-//                }
+                if (!TextUtils.isEmpty(item.getMsg())) {
+                    mContent.setVisibility(View.VISIBLE);
+                    mContent.setText(item.getMsg());
+                } else {
+                    mContent.setVisibility(View.GONE);
+                }
 
                 mTime.setText(DateUtil.getFormatTime(1492937700000L));
 

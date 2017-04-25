@@ -5,6 +5,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -80,7 +81,11 @@ public class ModifyUserNameActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
+//                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
+//                            userInfo.setUserName(userName);
+//                            LocalUser.getUser().setUserInfo(userInfo);
                             LocalUser.getUser().getUserInfo().setUserName(userName);
+                            Log.d(TAG, "onRespSuccess: " + LocalUser.getUser().getUserInfo());
                             setResult(RESULT_OK);
                             finish();
                         }
@@ -88,8 +93,5 @@ public class ModifyUserNameActivity extends BaseActivity {
                 })
                 .fire();
 
-
-        setResult(RESULT_OK);
-        finish();
     }
 }

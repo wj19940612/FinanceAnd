@@ -119,14 +119,19 @@
     <string name="relieve">解除</string>
     <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
-
-
+    
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
     <string name="new_notification">新消息通知</string>
-    <string name="accept_new_notification">新消息通知</string>
+    <string name="want_to_help_you">     想要帮助你</string>
+    <string name="accept_your_help">     接受了你的帮助</string>
+    <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
 
+    <string name="replay_you">      回复你</string>
+    <string name="attention_you">      关注了你</string>
+    <string name="like_your_publish">      喜欢了你的发表</string>
+    <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
     <string name="real_name_approve">实名认证</string>
@@ -185,5 +190,6 @@
     <string name="publish_opinion">发表观点</string>
     <string name="submit">提交</string>
     <string name="please_enter_the_text">        请输入文字</string>
+    
 
 </resources>

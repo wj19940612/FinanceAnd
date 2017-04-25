@@ -48,7 +48,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -75,7 +75,7 @@ public class Client {
      * @return
      */
     public static API updateUserHeadImage(String pic) {
-        return new API("/user/updatePic.do", new ApiParams().put("pic", pic));
+        return new API(POST, "/user/user/updatePic.do", new ApiParams().put("pic", pic));
     }
 
     /**
@@ -120,8 +120,11 @@ public class Client {
      * @param classify
      * @return
      */
-    public static API requestHistoryNews(int classify) {
-        return new API("/msg/historyMsg.do", new ApiParams().put("classify", classify));
+    public static API requestHistoryNews(int classify, int page, int pageSize) {
+        return new API("/msg/historyMsg.do", new ApiParams()
+                .put("classify", classify)
+                .put("page", page)
+                .put("pageSize", pageSize));
     }
 
     /**
@@ -137,7 +140,7 @@ public class Client {
      */
 
     public static API updateUserInfo(int age, String land, int userSex) {
-        return new API(POST, "/user/updateUser", new ApiParams()
+        return new API(POST, "/user/user/updateUser.do", new ApiParams()
                 .put("age", age)
                 .put("land", land)
                 .put("userSex", userSex));
