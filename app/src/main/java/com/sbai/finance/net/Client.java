@@ -48,7 +48,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API(POST, "/registerLogin/quickLogin.do", new ApiParams()
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -86,7 +86,7 @@ public class Client {
      * @return
      */
     public static API logout() {
-        return new API("/out/logout.do", null);
+        return new API("/user/out/logout.do", null);
     }
 
     /**
@@ -98,7 +98,7 @@ public class Client {
      * @return
      */
     public static API updateUserNickNmae(String userName) {
-        return new API("/user/updateUserName.do", new ApiParams().put("userName", userName));
+        return new API(POST, "/user/user/updateUserName.do", new ApiParams().put("userName", userName));
     }
 
     /**
@@ -109,7 +109,7 @@ public class Client {
      * @return
      */
     public static API requestDetailUserInfo() {
-        return new API("/user/loadUserInfo.do", null);
+        return new API("/user/user/findUserInfo.do", null);
     }
 
     /**
@@ -137,7 +137,7 @@ public class Client {
      */
 
     public static API updateUserInfo(int age, String land, int userSex) {
-        return new API("/user/updateUser", new ApiParams()
+        return new API(POST, "/user/updateUser", new ApiParams()
                 .put("age", age)
                 .put("land", land)
                 .put("userSex", userSex));

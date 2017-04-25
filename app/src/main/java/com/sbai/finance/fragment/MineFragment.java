@@ -99,7 +99,7 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserHeadImageUrl())
+            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.default_headportrait160x160)
                     .into(mUserHeadImage);

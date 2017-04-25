@@ -11,7 +11,7 @@ public class UserInfo {
     private String land;
     private String userPhone;
     private boolean bIsSetNickName;
-    private String userHeadImageUrl;
+    private String userPortrait;
 
     public String getUserName() {
         return userName;
@@ -53,13 +53,23 @@ public class UserInfo {
         this.bIsSetNickName = bIsSetNickName;
     }
 
-    public String getUserHeadImageUrl() {
-        return userHeadImageUrl;
+    public String getUserPortrait() {
+        return userPortrait;
     }
 
-    public void setUserHeadImageUrl(String userHeadImageUrl) {
-        this.userHeadImageUrl = userHeadImageUrl;
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
+
+    public void updateLocalUserInfo(UserDetailInfo userDetailInfo) {
+        setUserName(userDetailInfo.getUserName());
+        setAge(userDetailInfo.getAge());
+        setbIsSetNickName(userDetailInfo.isBIsSetNickName());
+        setLand(userDetailInfo.getLand());
+        setUserPhone(userDetailInfo.getUserPhone());
+        setUserPortrait(userDetailInfo.getUserPortrait());
+    }
+
 
     @Override
     public String toString() {
@@ -69,7 +79,7 @@ public class UserInfo {
                 ", land='" + land + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", bIsSetNickName=" + bIsSetNickName +
-                ", userHeadImageUrl='" + userHeadImageUrl + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
                 '}';
     }
 }

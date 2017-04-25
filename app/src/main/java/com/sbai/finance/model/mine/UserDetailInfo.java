@@ -46,6 +46,9 @@ public class UserDetailInfo {
     private String userName;
     private String userPass;
     private String userPhone;
+    //用户头像
+    private String userPortrait;
+
 
     public int getAge() {
         return age;
@@ -191,6 +194,14 @@ public class UserDetailInfo {
         this.userPhone = userPhone;
     }
 
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
+    }
+
     @Override
     public String toString() {
         return "UserDetailInfo{" +
@@ -212,6 +223,7 @@ public class UserDetailInfo {
                 ", userName='" + userName + '\'' +
                 ", userPass='" + userPass + '\'' +
                 ", userPhone='" + userPhone + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
                 '}';
     }
 }

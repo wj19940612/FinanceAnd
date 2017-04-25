@@ -214,6 +214,11 @@ public class LoginActivity extends BaseActivity {
 //                            }
                             if (resp.hasData()) {
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
+                                UserInfo userInfo = new UserInfo();
+                                userInfo.setUserName("千年王八");
+                                userInfo.setUserPortrait("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3" +
+                                        "813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg");
+                                LocalUser.getUser().setUserInfo(userInfo);
                             }
 
                             setResult(RESULT_OK);
@@ -226,14 +231,6 @@ public class LoginActivity extends BaseActivity {
                     }
                 })
                 .fire();
-
-        // TODO: 2017/4/24 测试用，后期要删除 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserHeadImageUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg");
-        userInfo.setUserName("王八三十");
-        LocalUser.getUser().setUserInfo(userInfo);
-        setResult(RESULT_OK);
-        finish();
     }
 
     private void getAuthCode() {

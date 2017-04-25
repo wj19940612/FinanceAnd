@@ -90,7 +90,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserHeadImageUrl())
+            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.default_headportrait160x160)
                     .into(mUserHeadImage);
@@ -109,6 +109,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(UserDetailInfo data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        LocalUser.getUser().getUserInfo().updateLocalUserInfo(data);
                     }
                 })
                 .fire();
