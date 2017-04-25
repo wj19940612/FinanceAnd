@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.mine.SystemNewsModel;
+import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -56,7 +56,6 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
-        mListView.setDivider(null);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
         mListView.setAdapter(mSystemNewsAdapter);
         mListView.setOnScrollListener(this);
@@ -73,14 +72,14 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestSystemNewsList() {
-        ArrayList<SystemNewsModel> systemNewsModels = new ArrayList<>();
+        ArrayList<HistoryNewsModel> systemNewsModels = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            systemNewsModels.add(new SystemNewsModel("消息哈哈头部 " + i + i, 1492509419l, "内容sjkahdkjashjdhasjkhdjkhajk手机放寒假SD卡恢复健康联合大厦dhjskakjdkljflsajfl "));
+            systemNewsModels.add(new HistoryNewsModel(""));
         }
         updateSystemNewsListData(systemNewsModels);
     }
 
-    private void updateSystemNewsListData(ArrayList<SystemNewsModel> systemNewsModels) {
+    private void updateSystemNewsListData(ArrayList<HistoryNewsModel> systemNewsModels) {
         if (systemNewsModels == null) {
             stopRefreshAnimation();
             return;
@@ -146,13 +145,13 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SystemNewsModel systemNewsModel= (SystemNewsModel) parent.getAdapter().getItem(position);
-        if(systemNewsModel!=null){
-            ToastUtil.curt("点击了 "+systemNewsModel.getTitle());
+        HistoryNewsModel systemNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
+        if (systemNewsModel != null) {
+            ToastUtil.curt("点击了 " + "斯大林欢迎你");
         }
     }
 
-    static class SystemNewsAdapter extends ArrayAdapter<SystemNewsModel> {
+    static class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         private Context mContext;
 
@@ -188,13 +187,13 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(SystemNewsModel item, Context context, int position) {
+            public void bindViewWithData(HistoryNewsModel item, Context context, int position) {
                 if (position % 2 == 0) {
                     mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
                 }
-                mTitle.setText(item.getTitle());
-                mTime.setText(DateUtil.getFormatTime(item.getTime()));
-                mContent.setText(item.getContent());
+                mTitle.setText("系统消息");
+                mTime.setText(DateUtil.getFormatTime(1493024100000L));
+                mContent.setText("斯大林欢迎你");
             }
         }
     }

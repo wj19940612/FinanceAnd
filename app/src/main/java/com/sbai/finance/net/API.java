@@ -83,5 +83,57 @@ public class API extends APIBase {
         return new API(GET, "/out/logout.do", null);
     }
 
+    /**
+     * 接口名称 修改用户名
+     * 请求类型 post
+     * 请求Url  /user/updateUserName.do
+     *
+     * @param userName
+     * @return
+     */
+    public static API updateUserNickNmae(String userName) {
+        return new API("/user/updateUserName.do", new ApiParams().put("userName", userName));
+    }
 
+    /**
+     * 接口名称 获取用户信息
+     * 请求类型 get
+     * 请求Url  /user/loadUserInfo.do
+     *
+     * @return
+     */
+    public static API requestDetailUserInfo() {
+        return new API(GET, "/user/loadUserInfo.do", null);
+    }
+
+    /**
+     * 接口名称 历史消息
+     * 请求类型 post
+     * 请求Url  msg/historyMsg.do
+     *
+     * @param classify
+     * @return
+     */
+    public static API requestHistoryNews(int classify) {
+        return new API("msg/historyMsg.do", new ApiParams().put("classify", classify));
+    }
+
+    /**
+     * 接口名称 修改用户信息
+     * 请求类型 post
+     * 请求Url  /user/updateUser
+     * 接口描述 修改用户各种信息
+     *
+     * @param age
+     * @param land
+     * @param userSex
+     * @return
+     */
+
+    public static API updateUserInfo(int age, String land, int userSex) {
+        return new API("/user/updateUser",new ApiParams()
+                .put("age",age)
+                .put("land",land)
+                .put("userSex",userSex));
+    }
 }

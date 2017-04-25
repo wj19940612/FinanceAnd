@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.mine.EconomicCircleNewModel;
+import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
@@ -63,7 +63,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
-        mListView.setDivider(null);
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
@@ -96,17 +95,29 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void requestEconomicCircleNewsList() {
-        ArrayList<EconomicCircleNewModel> economicCircleNewModels = new ArrayList<>();
+
+//        API.requestHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE)
+//                .setIndeterminate(this)
+//                .setTag(TAG)
+//                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
+//                    @Override
+//                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
+//
+//                    }
+//                })
+//                .fireSync();
+
+        ArrayList<HistoryNewsModel> historyNewsModelList = new ArrayList<>();
         for (int i = 0; i < url.length; i++) {
-            EconomicCircleNewModel hahahha = new EconomicCircleNewModel(url[i], "" + i + i + i, "hahahha", 1425275145000l);
-            economicCircleNewModels.add(hahahha);
+            HistoryNewsModel hahahha = new HistoryNewsModel(url[i]);
+            historyNewsModelList.add(hahahha);
         }
-        updateEconomicCircleData(economicCircleNewModels);
+        updateEconomicCircleData(historyNewsModelList);
 
     }
 
-    private void updateEconomicCircleData(ArrayList<EconomicCircleNewModel> economicCircleNewModels) {
-        if (economicCircleNewModels == null) {
+    private void updateEconomicCircleData(ArrayList<HistoryNewsModel> historyNewsModelList) {
+        if (historyNewsModelList == null) {
             stopRefreshAnimation();
             return;
         }
@@ -130,7 +141,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         }
 
 //        if (economicCircleNewModels.size() < mPageSize) {
-        if (economicCircleNewModels.size() < 15) {
+        if (historyNewsModelList.size() < 15) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -142,7 +153,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             }
             stopRefreshAnimation();
         }
-        mEconomicCircleNewsAdapter.addAll(economicCircleNewModels);
+        mEconomicCircleNewsAdapter.addAll(historyNewsModelList);
     }
 
     private void stopRefreshAnimation() {
@@ -170,7 +181,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     }
 
 
-    static class EconomicCircleNewsAdapter extends ArrayAdapter<EconomicCircleNewModel> {
+    static class EconomicCircleNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         interface CallBack {
             void onUserHeadImageClick();
@@ -226,7 +237,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(EconomicCircleNewModel item, Context context, int position, final CallBack callBack) {
+            public void bindViewWithData(HistoryNewsModel item, Context context, int position, final CallBack callBack) {
                 if (!TextUtils.isEmpty(item.getUserImage())) {
                     Glide.with(context).load(item.getUserImage())
                             .bitmapTransform(new GlideCircleTransform(context))
@@ -234,17 +245,17 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                             .into(mUserHeadImage);
                 }
 
-                SpannableString spannableString = StrUtil.mergeTextWithColor(item.getUserName(), "   " + "关注你",
-                        ContextCompat.getColor(context,R.color.primaryText));
+                SpannableString spannableString = StrUtil.mergeTextWithColor("希特勒", "   " + "关注你",
+                        ContextCompat.getColor(context, R.color.primaryText));
                 mUserAction.setText(spannableString);
-                if (!TextUtils.isEmpty(item.getContent())) {
-                    mContent.setVisibility(View.VISIBLE);
-                    mContent.setText(item.getContent());
-                } else {
-                    mContent.setVisibility(View.GONE);
-                }
+//                if (!TextUtils.isEmpty(item.getContent())) {
+//                    mContent.setVisibility(View.VISIBLE);
+//                    mContent.setText(item.getContent());
+//                } else {
+//                    mContent.setVisibility(View.GONE);
+//                }
 
-                mTime.setText(DateUtil.getFormatTime(item.getTime()));
+                mTime.setText(DateUtil.getFormatTime(1492937700000L));
 
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override

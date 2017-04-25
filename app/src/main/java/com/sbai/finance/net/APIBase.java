@@ -21,8 +21,8 @@ import java.util.Set;
 
 public class APIBase extends RequestManager {
 
-    // private final static String HOST = "http://forex2.esongbai.xyz";
-    private final static String HOST = "http://gf2.dajiexin.com";
+     private final static String HOST = "http://var.esongbai.xyz";
+//    private final static String HOST = "http://gf2.dajiexin.com";
     private static String mHost;
 
     private static Set<String> sCurrentUrls = new HashSet<>();

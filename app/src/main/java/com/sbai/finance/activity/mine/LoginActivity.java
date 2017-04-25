@@ -8,16 +8,19 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.API;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -50,27 +53,6 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.hideLayout)
     TextView mHideLayout;
 
-//    @BindView(R.id.deletePage)
-//    AppCompatImageView mDeletePage;
-//    @BindView(R.id.appIconName)
-//    AppCompatTextView mAppIcon;
-//    @BindView(R.id.phoneNumber)
-//    AppCompatEditText mPhoneNumber;
-//    @BindView(R.id.phoneNumberClear)
-//    AppCompatImageView mPhoneNumberClear;
-//    @BindView(R.id.getAuthCode)
-//    AppCompatTextView mGetAuthCode;
-//    @BindView(R.id.authCode)
-//    AppCompatEditText mAuthCode;
-//    @BindView(R.id.login)
-//    AppCompatButton mLogin;
-//    @BindView(R.id.showLayout)
-//    RelativeLayout mShowLayout;
-//    @BindView(R.id.hideLayout)
-//    TextView mHideLayout;
-//    @BindView(R.id.errorHint)
-//    AppCompatTextView mErrorHint;
-
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
     private int mCounter;
@@ -80,12 +62,6 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Window window = getWindow();
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.setStatusBarColor(ContextCompat.getColor(this, R.color.blackAssist));
-//        }
         translucentStatusBar();
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -126,7 +102,6 @@ public class LoginActivity extends BaseActivity {
                 lp.topMargin = offset;
                 mShowLayout.setLayoutParams(lp);
                 mAppIconName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-//                mGetAuthCode.setTextColor(Color.BLACK);
             }
 
         }
@@ -139,7 +114,6 @@ public class LoginActivity extends BaseActivity {
                 lp.topMargin = 0;
                 mShowLayout.setLayoutParams(lp);
                 mAppIconName.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_launcher_round, 0, 0);
-//                mGetAuthCode.setTextColor(Color.WHITE);
             }
 
         }
@@ -152,7 +126,6 @@ public class LoginActivity extends BaseActivity {
             formatPhoneNumber();
             mPhoneNumberClear.setVisibility(checkClearPhoneNumButtonVisible() ? View.VISIBLE : View.INVISIBLE);
             boolean authCodeEnable = checkObtainAuthCodeEnable();
-            Log.d(TAG, "是否可获取验证码  " + authCodeEnable);
             if (mGetAuthCode.isEnabled() != authCodeEnable) {
                 mGetAuthCode.setEnabled(authCodeEnable);
             }
@@ -174,7 +147,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private boolean checkObtainAuthCodeEnable() {
-        String phone = mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
+        String phone = getPhoneNumber();
         return (!TextUtils.isEmpty(phone) && phone.length() > 10);
     }
 
@@ -193,7 +166,7 @@ public class LoginActivity extends BaseActivity {
     };
 
     private boolean checkSignInButtonEnable() {
-        String phone = mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
+        String phone = getPhoneNumber();
         String authCode = mAuthCode.getText().toString().trim();
         if (TextUtils.isEmpty(phone) || phone.length() < 11) {
             return false;
@@ -201,6 +174,10 @@ public class LoginActivity extends BaseActivity {
             return false;
         }
         return true;
+    }
+
+    private String getPhoneNumber() {
+        return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
     @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login})
@@ -222,23 +199,54 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserName("王八三十");
-        LocalUser.getUser().setUserInfo(userInfo);
-        if (true) {
-            mErrorHint.setVisibility(View.VISIBLE);
-            mErrorHint.setText("hahhhah");
-        }
-        setResult(RESULT_OK);
-        finish();
+        String phoneNumber = getPhoneNumber();
+        String authCode = mAuthCode.getText().toString().trim();
+        API.login(authCode, phoneNumber)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<UserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        if (resp.isSuccess()) {
+                            if (resp.hasData()) {
+                                LocalUser.getUser().setUserInfo(resp.getData());
+                            }
+                            setResult(RESULT_OK);
+                            finish();
+
+                        } else {
+                            mErrorHint.setVisibility(View.VISIBLE);
+                            mErrorHint.setText(resp.getMsg());
+                        }
+                    }
+                })
+                .fire();
+
+        // TODO: 2017/4/24 测试用，后期要删除 
+//        UserInfo userInfo = new UserInfo();
+//        userInfo.setUserName("王八三十");
+//        LocalUser.getUser().setUserInfo(userInfo);
+//        setResult(RESULT_OK);
+//        finish();
     }
 
     private void getAuthCode() {
-        String phoneNumber = mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
-        startScheduleJob(1000);
-        mCounter = 60;
-        mGetAuthCode.setEnabled(false);
-        mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+        String phoneNumber = getPhoneNumber();
+        API.getAuthCode(phoneNumber)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            startScheduleJob(1000);
+                            mCounter = 60;
+                            mGetAuthCode.setEnabled(false);
+                            mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+                        }
+                    }
+                })
+                .fire();
     }
 
     @Override

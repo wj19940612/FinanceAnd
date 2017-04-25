@@ -15,10 +15,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"
+            android:layout_marginTop="25dp"
             app:srcCompat="@drawable/ic_login_head_close"/>
 
         <android.support.v7.widget.AppCompatTextView
@@ -145,14 +142,12 @@
                 android:layout_marginRight="@dimen/common_margin"
                 android:background="@color/greyLightAssist"/>
         </LinearLayout>
-        <!--</RelativeLayout>-->
-
 
         <android.support.v7.widget.AppCompatTextView
-            android:layout_below="@+id/contentLL"
             android:id="@+id/errorHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/contentLL"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="15dp"
             android:drawableLeft="@drawable/ic_errow_hint"
