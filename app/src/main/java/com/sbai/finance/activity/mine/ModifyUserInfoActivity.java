@@ -20,12 +20,20 @@ import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserDetailInfo;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
@@ -74,6 +82,64 @@ public class ModifyUserInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
+        requestDetailUserInfo();
+
+
+        updateUserImage();
+    }
+
+    private void updateUserImage() {
+        if (LocalUser.getUser().isLogin()) {
+            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+                    .placeholder(R.drawable.default_headportrait160x160)
+                    .into(mUserHeadImage);
+        } else {
+            Glide.with(this).load(R.drawable.default_headportrait160x160)
+                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+                    .into(mUserHeadImage);
+        }
+    }
+
+    private void requestDetailUserInfo() {
+        Client.requestDetailUserInfo()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserDetailInfo>, UserDetailInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserDetailInfo data) {
+                        Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        LocalUser.getUser().getUserInfo().updateLocalUserInfo(data);
+                    }
+                })
+                .fire();
+    }
+
+    private void updateUserInfo() {
+        int age = 0;
+        if (!TextUtils.isEmpty(mAge.getSubText().trim())) {
+            age = Integer.parseInt(mAge.getSubText().trim());
+        }
+
+        String land = "";
+        if (!TextUtils.isEmpty(mLocation.getSubText())) {
+            land = mLocation.getSubText().trim();
+        }
+
+        int sex = 0;
+        if (!TextUtils.isEmpty(mSex.getSubText().trim())) {
+            sex = Integer.parseInt(mSex.getSubText());
+        }
+        Client.updateUserInfo(age, land, sex)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+
+                    }
+                })
+                .fireSync();
     }
 
     @OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.credit, R.id.logout})
@@ -108,7 +174,9 @@ public class ModifyUserInfoActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_USER_NAME:
-                    // TODO: 2017/4/17 更新姓名
+                    mNickName.setSubText(LocalUser.getUser().getUserInfo().getUserName());
+                    break;
+                case UploadUserImageDialogFragment.REQ_CLIP_HEAD_IMAGE_PAGE:
                     break;
                 default:
                     break;
@@ -144,7 +212,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         picker.setSelectedItem(SEX_GIRL);
 //        picker.setTopPadding(toDp(10));
 //                picker.setTextSize(11);
-//                picker.setLineConfig(new WheelView.LineConfig(0));//使用最长的线
+        picker.setLineConfig(new WheelView.LineConfig(0));//使用最长的线
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
@@ -232,6 +300,19 @@ public class ModifyUserInfoActivity extends BaseActivity {
     }
 
     private void logout() {
+        Client.logout()
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            LocalUser.getUser().logout();
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+                })
+                .fire();
         LocalUser.getUser().logout();
         setResult(RESULT_OK);
         finish();

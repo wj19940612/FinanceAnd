@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.domain.Comment;
+import com.sbai.finance.model.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +51,8 @@ public class OpinionDetailsActivity extends AppCompatActivity {
     TextView mCommentNum;
     @BindView(android.R.id.list)
     ListView mList;
-   /* @BindView(android.R.id.empty)
-    TextView mEmpty;*/
+    @BindView(android.R.id.empty)
+    TextView mEmpty;
     @BindView(R.id.comment)
     EditText mComment;
     @BindView(R.id.reply)

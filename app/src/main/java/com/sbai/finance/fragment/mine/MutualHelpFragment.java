@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.mine.EconomicCircleNewModel;
+import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
@@ -36,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class MutualHelpFragment extends BaseFragment implements AbsListView.OnScrollListener {
+public class MutualHelpFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
 
     @BindView(android.R.id.list)
@@ -66,9 +67,10 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter = new MutualHelpAdapter(getActivity());
         mListView.setAdapter(mMutualHelpAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(this);
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
-            public void onUserHeadImageClick(EconomicCircleNewModel economicCircleNewModel) {
+            public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
                 ToastUtil.curt("用户头像");
             }
         });
@@ -83,9 +85,21 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestMutualHelpList() {
-        ArrayList<EconomicCircleNewModel> economicCircleNewModels = new ArrayList<>();
+
+//        API.requestHistoryNews(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP)
+//                .setIndeterminate(this)
+//                .setTag(TAG)
+//                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
+//                    @Override
+//                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
+//
+//                    }
+//                })
+//                .fireSync();
+
+        ArrayList<HistoryNewsModel> economicCircleNewModels = new ArrayList<>();
         for (int i = 0; i < url.length; i++) {
-            EconomicCircleNewModel hahahha = new EconomicCircleNewModel(url[i], "" + i + i + i, "hahahha", 1492667145000l);
+            HistoryNewsModel hahahha = new HistoryNewsModel(url[i]);
             economicCircleNewModels.add(hahahha);
         }
         updateMutualHelpData(economicCircleNewModels);
@@ -96,8 +110,8 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
-    private void updateMutualHelpData(ArrayList<EconomicCircleNewModel> economicCircleNewModels) {
-        if (economicCircleNewModels == null) {
+    private void updateMutualHelpData(ArrayList<HistoryNewsModel> historyNewsModels) {
+        if (historyNewsModels == null) {
             stopRefreshAnimation();
             return;
         }
@@ -121,7 +135,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         }
 
 //        if (economicCircleNewModels.size() < mPageSize) {
-        if (economicCircleNewModels.size() < 15) {
+        if (historyNewsModels.size() < 15) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -133,7 +147,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             }
             stopRefreshAnimation();
         }
-        mMutualHelpAdapter.addAll(economicCircleNewModels);
+        mMutualHelpAdapter.addAll(historyNewsModels);
     }
 
     private void stopRefreshAnimation() {
@@ -161,10 +175,30 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class MutualHelpAdapter extends ArrayAdapter<EconomicCircleNewModel> {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        HistoryNewsModel item = (HistoryNewsModel) parent.getAdapter().getItem(position);
+        if (item != null) {
+            switch (item.getType()) {
+                case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
+                    ToastUtil.curt("跳转至想帮助我的人");
+                    break;
+                case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
+                    ToastUtil.curt("拒绝我的帮助");
+                    break;
+                case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
+                    ToastUtil.curt("跳转至我的借出");
+                    break;
+
+            }
+
+        }
+    }
+
+    static class MutualHelpAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         public interface OnUserHeadImageClickListener {
-            void onUserHeadImageClick(EconomicCircleNewModel economicCircleNewModel);
+            void onUserHeadImageClick(HistoryNewsModel historyNewsModel);
         }
 
         public void setOnUserHeadImageClickListener(OnUserHeadImageClickListener userHeadImageClickListener) {
@@ -206,7 +240,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final EconomicCircleNewModel item, Context context, final OnUserHeadImageClickListener onUserHeadImageClickListener) {
+            public void bindDataWithView(final HistoryNewsModel item, Context context, final OnUserHeadImageClickListener onUserHeadImageClickListener) {
 
                 if (!TextUtils.isEmpty(item.getUserImage())) {
                     Glide.with(context).load(item.getUserImage())
@@ -214,10 +248,10 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
                 }
-                SpannableString spannableString = StrUtil.mergeTextWithColor(item.getUserName(), "   " + "想要帮助你",
+                SpannableString spannableString = StrUtil.mergeTextWithColor("丘吉尔", "   " + "想要帮助你",
                         ContextCompat.getColor(context, R.color.primaryText));
                 mUserAction.setText(spannableString);
-                mTime.setText(DateUtil.getFormatTime(item.getTime()));
+                mTime.setText(DateUtil.getFormatTime(1492667145000L));
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

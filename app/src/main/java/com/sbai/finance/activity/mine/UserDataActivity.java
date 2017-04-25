@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
@@ -54,8 +53,8 @@ public class UserDataActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
         ButterKnife.bind(this);
-        Glide.with(getActivity()).load(MineFragment.userImageUrl)
-                .placeholder(R.mipmap.ic_launcher_round)
+        Glide.with(getActivity()).load("")
+                .placeholder(R.drawable.default_headportrait160x160)
                 .bitmapTransform(new GlideCircleTransform(getActivity()))
                 .into(mUserHeadImage);
         mUserName.setText(userName);
