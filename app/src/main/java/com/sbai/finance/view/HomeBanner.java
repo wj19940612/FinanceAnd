@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.model.Information;
+import com.sbai.finance.model.BannerModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class HomeBanner extends FrameLayout {
     private AdvertisementAdapter mAdapter;
 
     public interface OnViewClickListener {
-        void onBannerClick(Information information);
+        void onBannerClick(BannerModel information);
     }
 
     private OnViewClickListener mListener;
@@ -88,7 +88,7 @@ public class HomeBanner extends FrameLayout {
         mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
     }
 
-    public void setHomeAdvertisement(List<Information> informationList) {
+    public void setHomeAdvertisement(List<BannerModel> informationList) {
         filterEmptyInformation(informationList);
         if (!informationList.isEmpty()) {
             int size = informationList.size();
@@ -108,10 +108,10 @@ public class HomeBanner extends FrameLayout {
         }
     }
 
-    private void filterEmptyInformation(List<Information> informationList) {
-        List<Information> removeList = new ArrayList<>();
+    private void filterEmptyInformation(List<BannerModel> informationList) {
+        List<BannerModel> removeList = new ArrayList<>();
         for (int i = 0; i < informationList.size(); i++) {
-            Information information = informationList.get(i);
+            BannerModel information = informationList.get(i);
             if (TextUtils.isEmpty(information.getCover())) {
                 removeList.add(information);
             }
@@ -123,17 +123,17 @@ public class HomeBanner extends FrameLayout {
 
     private static class AdvertisementAdapter extends PagerAdapter {
 
-        private List<Information> mList;
+        private List<BannerModel> mList;
         private Context mContext;
         private OnViewClickListener mListener;
 
-        public AdvertisementAdapter(Context context, List<Information> informationList, OnViewClickListener listener) {
+        public AdvertisementAdapter(Context context, List<BannerModel> informationList, OnViewClickListener listener) {
             mContext = context;
             mList = informationList;
             mListener = listener;
         }
 
-        public void setNewAdvertisements(List<Information> informationList) {
+        public void setNewAdvertisements(List<BannerModel> informationList) {
             mList = informationList;
             notifyDataSetChanged();
         }
@@ -153,7 +153,7 @@ public class HomeBanner extends FrameLayout {
             int pos = position;
             ImageView imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            final Information information = mList.get(pos);
+            final BannerModel information = mList.get(pos);
             container.addView(imageView, 0);
             if (!TextUtils.isEmpty(information.getCover())) {
                 Glide.with(mContext).load(information.getCover()).into(imageView);

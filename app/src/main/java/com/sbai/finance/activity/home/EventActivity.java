@@ -66,7 +66,11 @@ public class EventActivity extends BaseActivity {
 		}
 		for (int i= 0;i<5;i++){
 			BigEvent bigEvent = new BigEvent();
-			bigEvent.setEventSource("中国财经网");
+			if (i==4){
+				bigEvent.setEventSource("中国财经网时候覅是是是i是使肌肤");
+			}else{
+			    bigEvent.setEventSource("中国财经网");
+			}
 			bigEvent.setEventTime("2017/04/18 22:22");
 			bigEvent.setEventTitle("证监会刘主席发言:鼓励上市公司分红");
 			mListEvent.add(bigEvent);

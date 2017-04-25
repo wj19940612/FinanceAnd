@@ -34,7 +34,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         initView();
-        Launcher.with(getActivity(),StockTradeActivity.class).execute();
     }
     
     private void initView() {

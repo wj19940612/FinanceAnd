@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.future.FutureActivity;
@@ -22,12 +24,17 @@ import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.stock.StockActivity;
 import com.sbai.finance.activity.home.TopicActivity;
-import com.sbai.finance.model.Information;
+import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
+import com.sbai.httplib.ApiCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +95,7 @@ public class HomeFragment extends BaseFragment {
         mTopicGv.setFocusable(false);
         mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
             @Override
-            public void onBannerClick(Information information) {
+            public void onBannerClick(BannerModel information) {
 
             }
         });
@@ -132,7 +139,18 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateHomeInfo();
         updateTopicInfo();
+    }
+
+    private void updateHomeInfo() {
+        Client.getBannerData().setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<BannerModel> data) {
+                        mHomeBanner.setHomeAdvertisement(data);
+                    }
+                }).fire();
     }
 
     private void updateTopicInfo() {
