@@ -4,14 +4,10 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-        <ListView
-            android:id="@android:id/list"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/divider_economic_circle_list"
-            android:dividerHeight="0.5dp"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"/>
+            android:layout_height="match_parent"/>
 
         <TextView
             android:id="@android:id/empty"

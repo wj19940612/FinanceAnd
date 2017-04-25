@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyLightAssist"
+    android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/publish_opinion"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp">
+
+        <TextView
+            android:layout_marginTop="22dp"
+            android:id="@+id/opinionType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_long"
+            android:gravity="center"
+            android:minHeight="13dp"
+            android:minWidth="33dp"
+            tools:text="@string/bullish"
+            android:textColor="@color/redPrimary"
+            android:textSize="9sp"/>
+
+        <EditText
+            android:id="@+id/opinionContent"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="null"
+            android:gravity="left"
+            android:hint="          请输入文字"
+            android:paddingTop="20dp"
+            android:textColor="@color/hintText"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="13sp"
+        android:layout_marginRight="13sp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/btn_red_primary"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/submit"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+</LinearLayout>
+
