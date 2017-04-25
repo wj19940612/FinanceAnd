@@ -38,9 +38,6 @@ public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
 
-    // TODO: 2017/4/17 测试头像网址
-    public static final String userImageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg";
-
     Unbinder unbinder;
 
     @BindView(R.id.userHeadImage)
@@ -102,12 +99,12 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(this).load(userImageUrl)
+            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserHeadImageUrl())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.mipmap.ic_launcher_round)
+                    .placeholder(R.drawable.default_headportrait160x160)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.mipmap.ic_launcher_round)
+            Glide.with(this).load(R.drawable.default_headportrait160x160)
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }

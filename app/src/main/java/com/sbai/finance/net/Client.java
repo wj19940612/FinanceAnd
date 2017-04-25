@@ -1,10 +1,12 @@
 package com.sbai.finance.net;
 
+import com.android.volley.Request;
 import com.sbai.httplib.ApiParams;
 
 
 public class Client {
 
+    private static final int POST = Request.Method.POST;
 
     /**
      * 获取服务器系统时间
@@ -36,7 +38,6 @@ public class Client {
     }
 
 
-
     /**
      * 接口名称 快捷登入
      * 请求类型 post
@@ -47,7 +48,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API("  /registerLogin/quickLogin.do", new ApiParams()
+        return new API(POST, "/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -108,7 +109,7 @@ public class Client {
      * @return
      */
     public static API requestDetailUserInfo() {
-        return new API( "/user/loadUserInfo.do", null);
+        return new API("/user/loadUserInfo.do", null);
     }
 
     /**
@@ -120,7 +121,7 @@ public class Client {
      * @return
      */
     public static API requestHistoryNews(int classify) {
-        return new API("msg/historyMsg.do", new ApiParams().put("classify", classify));
+        return new API("/msg/historyMsg.do", new ApiParams().put("classify", classify));
     }
 
     /**
@@ -136,10 +137,10 @@ public class Client {
      */
 
     public static API updateUserInfo(int age, String land, int userSex) {
-        return new API("/user/updateUser",new ApiParams()
-                .put("age",age)
-                .put("land",land)
-                .put("userSex",userSex));
+        return new API("/user/updateUser", new ApiParams()
+                .put("age", age)
+                .put("land", land)
+                .put("userSex", userSex));
     }
 
 }

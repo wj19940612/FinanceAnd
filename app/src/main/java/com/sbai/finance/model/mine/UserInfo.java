@@ -11,7 +11,7 @@ public class UserInfo {
     private String land;
     private String userPhone;
     private boolean bIsSetNickName;
-
+    private String userHeadImageUrl;
 
     public String getUserName() {
         return userName;
@@ -53,6 +53,14 @@ public class UserInfo {
         this.bIsSetNickName = bIsSetNickName;
     }
 
+    public String getUserHeadImageUrl() {
+        return userHeadImageUrl;
+    }
+
+    public void setUserHeadImageUrl(String userHeadImageUrl) {
+        this.userHeadImageUrl = userHeadImageUrl;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -61,6 +69,7 @@ public class UserInfo {
                 ", land='" + land + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", bIsSetNickName=" + bIsSetNickName +
+                ", userHeadImageUrl='" + userHeadImageUrl + '\'' +
                 '}';
     }
 }

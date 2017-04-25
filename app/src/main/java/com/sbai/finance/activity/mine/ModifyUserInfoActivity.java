@@ -20,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +33,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
@@ -83,7 +85,20 @@ public class ModifyUserInfoActivity extends BaseActivity {
         requestDetailUserInfo();
 
 
+        updateUserImage();
+    }
 
+    private void updateUserImage() {
+        if (LocalUser.getUser().isLogin()) {
+            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserHeadImageUrl())
+                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+                    .placeholder(R.drawable.default_headportrait160x160)
+                    .into(mUserHeadImage);
+        } else {
+            Glide.with(this).load(R.drawable.default_headportrait160x160)
+                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+                    .into(mUserHeadImage);
+        }
     }
 
     private void requestDetailUserInfo() {

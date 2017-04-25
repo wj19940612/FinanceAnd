@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -204,13 +205,17 @@ public class LoginActivity extends BaseActivity {
         Client.login(authCode, phoneNumber)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<UserInfo>>() {
+                .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
-                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
+//                            if (resp.hasData()) {
+//                                LocalUser.getUser().setUserInfo(resp.getData());
+//                            }
                             if (resp.hasData()) {
-                                LocalUser.getUser().setUserInfo(resp.getData());
+                                Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
+
                             setResult(RESULT_OK);
                             finish();
 
@@ -223,11 +228,12 @@ public class LoginActivity extends BaseActivity {
                 .fire();
 
         // TODO: 2017/4/24 测试用，后期要删除 
-//        UserInfo userInfo = new UserInfo();
-//        userInfo.setUserName("王八三十");
-//        LocalUser.getUser().setUserInfo(userInfo);
-//        setResult(RESULT_OK);
-//        finish();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserHeadImageUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg");
+        userInfo.setUserName("王八三十");
+        LocalUser.getUser().setUserInfo(userInfo);
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void getAuthCode() {
