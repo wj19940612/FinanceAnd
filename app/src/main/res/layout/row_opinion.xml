@@ -60,15 +60,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_marginTop="2dp"
-            android:id="@+id/textView"
+            android:layout_marginTop="3dp"
+            android:id="@+id/opinionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_long"
             android:gravity="center"
             android:minHeight="13dp"
             android:minWidth="33dp"
-            android:text="看涨"
+            tools:text="@string/bullish"
             android:textColor="@color/redPrimary"
             android:textSize="9sp"/>
 
@@ -92,12 +92,12 @@
         android:layout_marginTop="13dp">
 
         <TextView
-            android:id="@+id/comment"
+            android:id="@+id/commentNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@+id/like"
+            android:layout_toLeftOf="@+id/likeNum"
             android:drawableLeft="@drawable/ic_discussion_area"
             android:drawablePadding="5dp"
             android:gravity="center"
@@ -106,7 +106,7 @@
             tools:text="8888"/>
 
         <TextView
-            android:id="@+id/like"
+            android:id="@+id/likeNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -118,4 +118,8 @@
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>
+    <View
+        android:background="@color/greyLightAssist"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
 </LinearLayout>

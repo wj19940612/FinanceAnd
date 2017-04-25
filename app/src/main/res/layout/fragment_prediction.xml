@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@drawable/bg_prediction"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginTop="43dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/big_god_to_predict_the_market_today"
+            android:textColor="@color/blackAssist"
+            android:textSize="13sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/bullishButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_bullish"
+                android:gravity="center"
+                android:text="@string/bullish"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/bearishButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="54dp"
+                android:background="@drawable/bg_bearish"
+                android:gravity="center"
+                android:text="@string/bullish"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginBottom="18dp"
+            android:id="@+id/predictionRule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:drawableLeft="@drawable/ic_prediction_rule"
+            android:drawablePadding="5dp"
+            android:text="@string/prediction_rule"
+            android:textColor="@color/blueAssist"
+            android:textSize="11sp"/>
+
+    </LinearLayout>
+</LinearLayout>

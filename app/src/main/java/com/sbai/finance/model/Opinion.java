@@ -1,13 +1,13 @@
-package com.sbai.finance.domain;
+package com.sbai.finance.model;
 
 /**
- * Created by lixiaokuan0819 on 2017/4/19.
+ * Created by lixiaokuan0819 on 2017/4/24.
  */
 
-public class Comment {
+public class Opinion {
     private String name;
 
-    public Comment(String name) {
+    public Opinion (String name) {
         this.name = name;
     }
 
