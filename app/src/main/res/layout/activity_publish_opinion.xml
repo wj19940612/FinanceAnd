@@ -39,7 +39,7 @@
             android:id="@+id/opinionContent"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="null"
+            android:background="@null"
             android:gravity="left"
             android:hint="          请输入文字"
             android:paddingTop="20dp"
