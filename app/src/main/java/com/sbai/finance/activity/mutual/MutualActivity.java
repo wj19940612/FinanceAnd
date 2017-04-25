@@ -3,9 +3,11 @@ package com.sbai.finance.activity.mutual;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
 
 import butterknife.BindView;
@@ -23,7 +25,7 @@ public class MutualActivity extends BaseActivity {
     @BindView(R.id.borrowOut)
     IconTextRow mBorrowOut;
     @BindView(R.id.borrow)
-    IconTextRow mBorrow;
+    TextView mBorrow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class MutualActivity extends BaseActivity {
             case R.id.borrowOut:
                 break;
             case R.id.borrow:
+                Launcher.with(this,BorrowActivity.class).execute();
                 break;
             default:
                 break;

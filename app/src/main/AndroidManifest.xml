@@ -72,6 +72,10 @@
         <activity
             android:name=".activity.stock.StockTradeActivity"
             android:screenOrientation="portrait"/>
+        <!--互助-->
+        <activity
+            android:name=".activity.mutual.BorrowActivity"
+            android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.ModifyUserInfoActivity"

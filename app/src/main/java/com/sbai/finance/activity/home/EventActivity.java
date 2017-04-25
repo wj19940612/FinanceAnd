@@ -1,9 +1,14 @@
 package com.sbai.finance.activity.home;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +17,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BigEvent;
+import com.sbai.finance.model.EventModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,9 +42,16 @@ public class EventActivity extends BaseActivity {
 	ListView mListView;
 	@BindView(R.id.empty)
 	TextView mEmpty;
+	@BindView(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
 
 	private EventListAdapter mEventListAdapter;
-	private List<BigEvent> mListEvent;
+	private List<EventModel> mListEvent;
+
+	private TextView mFootView;
+	private int mPageSize = 15;
+	private int mPageNo = 0;
+	private HashSet<String> mSet;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,40 +61,80 @@ public class EventActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		mSet = new HashSet<>();
 		mEventListAdapter = new EventListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEventListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+				mEventListAdapter.getItem(position).getUrl();
 			}
 		});
+		initSwipeRefreshLayout();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		updateEventInfo();
+		requestEventList();
 	}
 
-	private void updateEventInfo() {
-		if (mListEvent == null){
-			mListEvent =  new ArrayList<>();
+	private void requestEventList() {
+		Client.getBreakingNewsData(mPageNo,mPageSize).setTag(TAG)
+				.setCallback(new Callback2D<Resp<EventModel>,EventModel>() {
+					@Override
+					protected void onRespSuccessData(EventModel data) {
+						updateEventInfo((ArrayList<EventModel.DataBean>) data.getData());
+					}
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
+				}).fire();
+	}
+    private void updateEventInfo(ArrayList<EventModel.DataBean> eventList){
+        if (eventList == null){
+			stopRefreshAnimation();
+			return;
 		}
-		for (int i= 0;i<5;i++){
-			BigEvent bigEvent = new BigEvent();
-			if (i==4){
-				bigEvent.setEventSource("中国财经网时候覅是是是i是使肌肤");
-			}else{
-			    bigEvent.setEventSource("中国财经网");
+		if (mFootView == null){
+			mFootView = new TextView(this);
+			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+			mFootView.setPadding(padding, padding, padding, padding);
+			mFootView.setText(getText(R.string.load_more));
+			mFootView.setGravity(Gravity.CENTER);
+			mFootView.setTextColor(Color.WHITE);
+			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+			mFootView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mSwipeRefreshLayout.isRefreshing()) return;
+					mPageNo++;
+					requestEventList();
+				}
+			});
+			mListView.addFooterView(mFootView);
+		}
+		if (eventList.size()<mPageSize){
+			mListView.removeFooterView(mFootView);
+			mFootView = null;
+		}
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			if (mEventListAdapter != null) {
+				mEventListAdapter.clear();
+				mEventListAdapter.notifyDataSetChanged();
 			}
-			bigEvent.setEventTime("2017/04/18 22:22");
-			bigEvent.setEventTitle("证监会刘主席发言:鼓励上市公司分红");
-			mListEvent.add(bigEvent);
+			stopRefreshAnimation();
 		}
-		mEventListAdapter.clear();
-		mEventListAdapter.addAll(mListEvent);
+		for (EventModel.DataBean data : eventList) {
+			if (mSet.add(data.getId())) {
+				if (mEventListAdapter != null) {
+					mEventListAdapter.add(data);
+				}
+			}
+		}
 		mEventListAdapter.notifyDataSetChanged();
 	}
 
@@ -84,9 +142,32 @@ public class EventActivity extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 	}
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
+	}
+
+	private void initSwipeRefreshLayout() {
+		mSwipeRefreshLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				mSwipeRefreshLayout.setRefreshing(true);
+			}
+		});
+
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mSet.clear();
+				mPageNo = 0;
+				requestEventList();
+			}
+		});
+	}
 
 
-	 static class EventListAdapter extends ArrayAdapter<BigEvent> {
+	 static class EventListAdapter extends ArrayAdapter<EventModel.DataBean> {
 		Context mContext;
 		public EventListAdapter(@NonNull Context context){
 			super(context,0);
@@ -118,11 +199,10 @@ public class EventActivity extends BaseActivity {
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
-			private void bindDataWithView(BigEvent item, int position, Context context) {
-				mEventSource.setText(item.getEventSource());
-				mEventTime.setText(item.getEventTime());
-				mEventTitle.setText(item.getEventTitle());
-
+			private void bindDataWithView(EventModel.DataBean item, int position, Context context) {
+				mEventSource.setText(item.getSource());
+				mEventTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+				mEventTitle.setText(item.getTitle());
 			}
 
 		}

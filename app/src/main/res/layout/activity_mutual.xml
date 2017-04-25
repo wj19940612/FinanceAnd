@@ -10,35 +10,40 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/help_borrow"/>
+
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/borrowIn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_pressable"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_pressable"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/borrow_in"
         app:rowTextColor="@color/blackAssist"
-        app:rowTextSize="@dimen/list_title_size"
-        app:rowText="@string/borrow_in"/>
+        app:rowTextSize="@dimen/list_title_size"/>
+
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/borrowOut"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@drawable/bg_pressable"
         android:layout_marginTop="0.5dp"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowTextColor="@color/blackAssist"
         app:rowTextSize="@dimen/list_title_size"
         app:rowText="@string/borrow_out"/>
-    <com.sbai.finance.view.IconTextRow
+
+    <TextView
         android:id="@+id/borrow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_pressable"
-        android:layout_marginTop="20dp"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
-        app:rowTextColor="@color/blackAssist"
-        app:rowTextSize="@dimen/list_title_size"
-        app:rowText="@string/borrow"/>
+        android:layout_height="48dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_borrow"
+        android:gravity="center"
+        android:text="@string/borrow"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/list_title_size"/>
 
 </LinearLayout>

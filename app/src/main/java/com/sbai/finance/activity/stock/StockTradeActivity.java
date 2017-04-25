@@ -24,7 +24,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.stock.FiveMarketFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
-import com.sbai.finance.fragment.trade.PointFragment;
 import com.sbai.finance.model.Product;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -185,11 +184,11 @@ public class StockTradeActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new PointFragment();
+                    return new IntroduceFragment();
                 case 1:
                     return new IntroduceFragment();
                 case 2:
-                    return new PointFragment();
+                    return new IntroduceFragment();
             }
             return null;
         }
