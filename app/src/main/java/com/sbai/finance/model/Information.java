@@ -1,5 +1,5 @@
 package com.sbai.finance.model;
-import com.sbai.finance.net.APIBase;
+import com.sbai.finance.net.API;
 
 import java.io.Serializable;
 
@@ -89,7 +89,7 @@ public class Information implements Serializable {
 
     public String getContent() {
         if (isH5Style() && content.startsWith("/")) {
-            return APIBase.getHost() + content;
+            return API.getHost() + content;
         }
         return content;
     }

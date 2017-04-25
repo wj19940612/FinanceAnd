@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -73,7 +73,7 @@ public class ModifyUserNameActivity extends BaseActivity {
             return;
         }
 
-        API.updateUserNickNmae(userName)
+        Client.updateUserNickNmae(userName)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {

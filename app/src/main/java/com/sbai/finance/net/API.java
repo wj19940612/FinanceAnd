@@ -1,139 +1,182 @@
 package com.sbai.finance.net;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.android.volley.Request;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.sbai.httplib.ApiCallback;
+import com.sbai.httplib.ApiHeaders;
+import com.sbai.httplib.ApiIndeterminate;
 import com.sbai.httplib.ApiParams;
+import com.sbai.httplib.CookieManger;
+import com.sbai.httplib.GsonRequest;
+import com.sbai.httplib.RequestManager;
 
-/**
- * Created by ${wangJie} on 2017/4/24.
- */
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public class API extends APIBase {
+public class API extends RequestManager {
 
-    private static final int GET = Request.Method.GET;
+     private final static String HOST = "http://var.esongbai.xyz";
+//    private final static String HOST = "http://gf2.dajiexin.com";
+    private static String mHost;
+
+    private static Set<String> sCurrentUrls = new HashSet<>();
+
+    private int mMethod;
+    private String mTag;
+    private String mUri;
+    private ApiCallback<?> mCallback;
+    private ApiParams mApiParams;
+    private ApiIndeterminate mIndeterminate;
+    private RetryPolicy mRetryPolicy;
 
     public API(String uri) {
-        super(uri);
+        this(Request.Method.GET, uri, null, 0);
     }
 
     public API(String uri, ApiParams apiParams) {
-        super(uri, apiParams);
+        this(Request.Method.GET, uri, apiParams, 0);
     }
 
     public API(int method, String uri, ApiParams apiParams) {
-        super(method, uri, apiParams);
+        this(method, uri, apiParams, 0);
     }
 
     public API(String uri, ApiParams apiParams, int version) {
-        super(uri, apiParams, version);
+        this(Request.Method.GET, uri, apiParams, version);
     }
 
     public API(int method, String uri, ApiParams apiParams, int version) {
-        super(method, uri, apiParams, version);
+        mUri = uri;
+        mApiParams = apiParams;
+        mMethod = method;
+        mTag = "";
     }
 
-
-    /**
-     * 接口名称 快捷登入
-     * 请求类型 post
-     * 请求Url  /registerLogin/quickLogin.do
-     *
-     * @param msgCode 短信验证码
-     * @param phone   手机
-     * @return
-     */
-    public static API login(String msgCode, String phone) {
-        return new API("  /registerLogin/quickLogin.do", new ApiParams()
-                .put("msgCode", msgCode)
-                .put("phone", phone));
+    public API setTag(String tag) {
+        this.mTag = tag;
+        return this;
     }
 
-    /**
-     * 接口名称 获取验证码
-     * 请求类型 get
-     * 请求Url  /registerLogin/sendMsgCode.do
-     *
-     * @param phone
-     * @return
-     */
-
-    public static API getAuthCode(String phone) {
-        return new API(GET, "/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
+    public API setIndeterminate(ApiIndeterminate apiProgress) {
+        mIndeterminate = apiProgress;
+        return this;
     }
 
-    /**
-     * 请求类型 post
-     * 请求Url  /user/updatePic.do
-     * 接口描述 修改头像
-     *
-     * @param pic
-     * @return
-     */
-    public static API updateUserHeadImage(String pic) {
-        return new API("/user/updatePic.do", new ApiParams().put("pic", pic));
+    public API setCallback(ApiCallback<?> callback) {
+        this.mCallback = callback;
+        return this;
     }
 
-    /**
-     * 请求类型 get
-     * 请求Url  /out/logout.do
-     * 接口描述 退出登入
-     *
-     * @return
-     */
-    public static API logout() {
-        return new API(GET, "/out/logout.do", null);
+    public API setRetryPolicy(RetryPolicy policy) {
+        this.mRetryPolicy = policy;
+        return this;
     }
 
-    /**
-     * 接口名称 修改用户名
-     * 请求类型 post
-     * 请求Url  /user/updateUserName.do
-     *
-     * @param userName
-     * @return
-     */
-    public static API updateUserNickNmae(String userName) {
-        return new API("/user/updateUserName.do", new ApiParams().put("userName", userName));
+    public static void setHost(String host) {
+        mHost = host;
     }
 
-    /**
-     * 接口名称 获取用户信息
-     * 请求类型 get
-     * 请求Url  /user/loadUserInfo.do
-     *
-     * @return
-     */
-    public static API requestDetailUserInfo() {
-        return new API(GET, "/user/loadUserInfo.do", null);
+    public static String getHost() {
+        if (TextUtils.isEmpty(mHost)) {
+            mHost = HOST;
+        }
+        return mHost;
     }
 
-    /**
-     * 接口名称 历史消息
-     * 请求类型 post
-     * 请求Url  msg/historyMsg.do
-     *
-     * @param classify
-     * @return
-     */
-    public static API requestHistoryNews(int classify) {
-        return new API("msg/historyMsg.do", new ApiParams().put("classify", classify));
+    public void fire() {
+        synchronized (sCurrentUrls) {
+            String url = createUrl();
+
+            if (sCurrentUrls.add(mTag + "#" + url)) {
+                createThenEnqueue(url);
+            }
+        }
     }
 
-    /**
-     * 接口名称 修改用户信息
-     * 请求类型 post
-     * 请求Url  /user/updateUser
-     * 接口描述 修改用户各种信息
-     *
-     * @param age
-     * @param land
-     * @param userSex
-     * @return
-     */
+    public void fireSync() {
+        String url = createUrl();
 
-    public static API updateUserInfo(int age, String land, int userSex) {
-        return new API("/user/updateUser",new ApiParams()
-                .put("age",age)
-                .put("land",land)
-                .put("userSex",userSex));
+        createThenEnqueue(url);
+    }
+
+    private String createUrl() {
+        String url = new StringBuilder(getHost()).append(mUri).toString();
+        if (mMethod == Request.Method.GET && mApiParams != null) {
+            url = url + mApiParams.toString();
+            mApiParams = null;
+        }
+        return url;
+    }
+
+    private void createThenEnqueue(String url) {
+        ApiHeaders headers = new ApiHeaders();
+        String cookies = CookieManger.getInstance().getCookies();
+        if (!TextUtils.isEmpty(cookies)) {
+            headers.put("Cookie", cookies);
+        }
+
+        Type type;
+        if (mCallback != null) {
+            mCallback.setUrl(url);
+            mCallback.setOnFinishedListener(new RequestFinishedListener());
+            mCallback.setTag(mTag);
+            mCallback.setIndeterminate(mIndeterminate);
+            mCallback.onStart();
+            type = mCallback.getGenericType();
+
+        } else { // create a default callback for handle request finish event
+            mCallback = new ApiCallback<Object>() {
+                @Override
+                public void onSuccess(Object o) {
+                    Log.d(TAG, "onReceive: result(default): " + o);
+                }
+
+                @Override
+                public void onFailure(VolleyError volleyError) {
+                    Log.d(TAG, "onFailure: error(default): " +
+                            volleyError == null ? null : volleyError.toString());
+                }
+            };
+            mCallback.setUrl(url);
+            mCallback.setOnFinishedListener(new RequestFinishedListener());
+            type = mCallback.getGenericType();
+        }
+
+        GsonRequest request = new GsonRequest(mMethod, url, headers, mApiParams, type, mCallback);
+        request.setTag(mTag);
+
+        if (mRetryPolicy != null) {
+            request.setRetryPolicy(mRetryPolicy);
+        }
+
+        enqueue(request);
+    }
+
+    private static class RequestFinishedListener implements ApiCallback.onFinishedListener {
+
+        public void onFinished(String tag, String url) {
+            if (sCurrentUrls != null) {
+                //Log.d(TAG, "onFinished: " + url);
+                sCurrentUrls.remove(tag + "#" + url);
+            }
+        }
+    }
+
+    public static void cancel(String tag) {
+        RequestManager.cancel(tag);
+        Iterator<String> iterator = sCurrentUrls.iterator();
+        while (iterator.hasNext()) {
+            String str = iterator.next();
+            if (str.startsWith(tag + "#")) {
+                Log.d(TAG, "cancel: " + str);
+                iterator.remove();
+            }
+        }
     }
 }

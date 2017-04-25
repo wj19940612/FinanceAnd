@@ -18,8 +18,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
-import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.StrFormatter;
@@ -201,7 +201,7 @@ public class LoginActivity extends BaseActivity {
     private void login() {
         String phoneNumber = getPhoneNumber();
         String authCode = mAuthCode.getText().toString().trim();
-        API.login(authCode, phoneNumber)
+        Client.login(authCode, phoneNumber)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<UserInfo>>() {
@@ -232,7 +232,7 @@ public class LoginActivity extends BaseActivity {
 
     private void getAuthCode() {
         String phoneNumber = getPhoneNumber();
-        API.getAuthCode(phoneNumber)
+        Client.getAuthCode(phoneNumber)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {

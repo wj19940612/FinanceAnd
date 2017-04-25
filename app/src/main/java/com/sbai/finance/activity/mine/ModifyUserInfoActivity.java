@@ -28,9 +28,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserDetailInfo;
-import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -87,7 +87,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
     }
 
     private void requestDetailUserInfo() {
-        API.requestDetailUserInfo()
+        Client.requestDetailUserInfo()
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<UserDetailInfo>, UserDetailInfo>() {
@@ -114,7 +114,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mSex.getSubText().trim())) {
             sex = Integer.parseInt(mSex.getSubText());
         }
-        API.updateUserInfo(age, land, sex)
+        Client.updateUserInfo(age, land, sex)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
@@ -284,7 +284,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
     }
 
     private void logout() {
-        API.logout()
+        Client.logout()
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override

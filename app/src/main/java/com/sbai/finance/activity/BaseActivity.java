@@ -19,7 +19,7 @@ import android.view.WindowManager;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.SysTime;
-import com.sbai.finance.net.APIBase;
+import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
@@ -94,7 +94,7 @@ public class BaseActivity extends AppCompatActivity implements
         mRequestProgress = new RequestProgress(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
-                APIBase.cancel(TAG);
+                API.cancel(TAG);
             }
         });
         SysTime.getSysTime().sync();
@@ -157,7 +157,7 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        APIBase.cancel(TAG);
+        API.cancel(TAG);
         SmartDialog.dismiss(this);
         mRequestProgress.dismissAll();
         stopScheduleJob();
