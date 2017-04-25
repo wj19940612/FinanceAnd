@@ -5,20 +5,24 @@
               android:layout_height="wrap_content"
               android:background="@drawable/bg_line_division_center"
               android:orientation="vertical"
-              android:padding="@dimen/common_margin">
+              android:paddingBottom="20dp"
+              android:paddingLeft="@dimen/common_padding"
+              android:paddingRight="@dimen/common_padding"
+              android:paddingTop="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.AppCompatTextView
-            android:gravity="center_vertical"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawablePadding="3dp"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
             android:textColor="@color/primaryText"
+            android:textSize="15sp"
             android:textStyle="bold"
             tools:text="欢迎加入返利"/>
 
@@ -27,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/assistText"
+            android:textSize="11sp"
             tools:text="2017/12"/>
     </LinearLayout>
 
@@ -34,9 +39,10 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:ellipsize="end"
-        android:lineSpacingExtra="3dp"
+        android:lineSpacingExtra="9dp"
+        android:textSize="13sp"
         android:maxLines="2"
         android:textColor="@color/secondaryText"
         tools:text="可视对讲阿看房了解萨德里克快乐圣诞分手快乐等级分类考试大家第三方骷髅精灵第三空间节福利卡圣诞节疯狂了倒计时考虑到解放路口圣诞节疯狂时代"/>

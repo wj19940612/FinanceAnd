@@ -22,8 +22,10 @@
     <color name="assistText">#B3B3B3</color>
     <color name="hintText">#D8D8D8</color>
     <color name="warningText">#CD4A47</color>
+    <color name="assistSecondText">#B6B6B6</color>
+    <color name="icon_text_row_text">#0c0f16</color>
 
     <color name="opinionText">#5F6166</color>
-    
+
 
 </resources>

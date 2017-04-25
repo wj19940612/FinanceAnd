@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/errorHint"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:paddingLeft="@dimen/common_padding"
+    android:paddingRight="@dimen/common_padding"
+    android:background="@color/greyLightAssist"
+    android:drawableLeft="@drawable/ic_errow_hint"
+    android:drawablePadding="5dp"
+    android:orientation="vertical"
+    android:textColor="@color/warningText"/>

@@ -192,11 +192,11 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 }
 
                 if (position % 2 == 0) {
-                    mRelive.setText(R.string.is_attention);
-                    mRelive.setCompoundDrawablesWithIntrinsicBounds(0, android.R.drawable.ic_menu_delete, 0, 0);
-                } else {
                     mRelive.setText(R.string.attention);
-                    mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.mipmap.ic_launcher_round, 0, 0);
+                    mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_fans_follow, 0, 0);
+                } else {
+                    mRelive.setText(R.string.is_attention);
+                    mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_fans_followed, 0, 0);
                 }
 
                 mUserName.setText(item.getUserName());
