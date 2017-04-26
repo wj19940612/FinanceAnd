@@ -22,9 +22,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
@@ -66,7 +70,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
                                 ToastUtil.curt("移除 " + shieldedUserModel.getUserName());
-                                mRelieveAttentionAdapter.remove(shieldedUserModel);
+                                relieveAttentionUser(shieldedUserModel);
                             }
                         })
                         .setTitleMaxLines(2)
@@ -81,6 +85,21 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             }
         });
         requestUserAttentionList();
+    }
+
+    private void relieveAttentionUser(final ShieldedUserModel shieldedUserModel) {
+        Client.attentionOrRelieveAttentionUser(100, 1)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mRelieveAttentionAdapter.remove(shieldedUserModel);
+                        }
+                    }
+                })
+                .fire();
     }
 
     private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",
@@ -206,7 +225,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
                 }
-                mRelive.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_follow_relieve,0,0);
+                mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
                 mUserName.setText(item.getUserName());
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override

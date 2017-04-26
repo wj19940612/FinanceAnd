@@ -84,9 +84,8 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             }
 
             @Override
-            public void onUserAppraiseClick() {
-                // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示 
-                ToastUtil.curt("详情");
+            public void onUserAppraiseClick(HistoryNewsModel historyNewsModel) {
+                // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示
             }
         });
         mListView.setAdapter(mEconomicCircleNewsAdapter);
@@ -209,7 +208,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         interface CallBack {
             void onUserHeadImageClick();
 
-            void onUserAppraiseClick();
+            void onUserAppraiseClick(HistoryNewsModel historyNewsModel);
         }
 
         private Context mContext;
@@ -260,7 +259,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(HistoryNewsModel item, Context context, int position, final CallBack callBack) {
+            public void bindViewWithData(final HistoryNewsModel item, Context context, int position, final CallBack callBack) {
                 UserInfo userInfo = item.getUserInfo();
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
@@ -295,7 +294,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     @Override
                     public void onClick(View v) {
                         if (callBack != null) {
-                            callBack.onUserAppraiseClick();
+                            callBack.onUserAppraiseClick(item);
                         }
                     }
                 });
