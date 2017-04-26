@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureFragment;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -35,9 +36,9 @@ public class FutureActivity extends BaseActivity {
     }
 
     private void initView() {
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(0, false);
-        mFuturePagesAdapter = new FuturePagesAdapter(getSupportFragmentManager(), FutureActivity.this);
+        mFuturePagesAdapter = new FuturePagesAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mFuturePagesAdapter);
 
         mTabLayout.setDistributeEvenly(true);
@@ -48,20 +49,10 @@ public class FutureActivity extends BaseActivity {
         mTabLayout.setViewPager(mViewPager);
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     static class FuturePagesAdapter extends FragmentPagerAdapter {
 
         private Context mContext;
-        FragmentManager mFragmentManager;
+        private FragmentManager mFragmentManager;
 
         public FuturePagesAdapter(FragmentManager fm, Context context) {
             super(fm);
@@ -84,9 +75,9 @@ public class FutureActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return  FutureFragment.newInstance(FutureFragment.FOREIGN_FUTURE);
+                    return  FutureFragment.newInstance(Variety.FUTURE_FOREIGN);
                 case 1:
-                    return  FutureFragment.newInstance(FutureFragment.CHINA_FUTURE);
+                    return  FutureFragment.newInstance(Variety.FUTURE_CHINA);
             }
             return null;
         }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -23,12 +22,12 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
-import com.sbai.finance.model.Product;
-import com.sbai.finance.net.Callback;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -74,7 +73,7 @@ public class FutureTradeActivity extends BaseActivity {
     LinearLayout mSubPageArea;
 
     private SubPageAdapter mSubPageAdapter;
-    private Product mProduct;
+    private Variety mVariety;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +85,15 @@ public class FutureTradeActivity extends BaseActivity {
             addTopPaddingWithStatusBar(mTitleBar);
         }
 
-        mProduct = new Gson().fromJson("{\"displayMarketTimes\": \"06:00;12:00;18:00;00:00;05:00\",\"decimalScale\": 0.2,\"sign\": \"$\",\"varietyType\": \"CL\",\"baseline\": 9,\"isDomestic\": 0,\"tags\": 0,\"exchangeId\": 9,\"openMarketTime\": \"06:00;05:00\",\"flashChartPriceInterval\": 0.2,\"varietyId\": 10,\"exchangeStatus\": 1,\"contractsCode\": \"CL1706\",\"advertisement\": \" \",\"currency\": \"USD\",\"marketPoint\": 2,\"varietyName\": \"美原油\",\"eachPointMoney\": 1000,\"currencyUnit\": \"美元\",\"ratio\": 7.3}", Product.class);
+        initData();
 
         initTabLayout();
         initChartViews();
         initSlidingTab();
+    }
+
+    private void initData() {
+        mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
     private void initTabLayout() {
@@ -104,30 +107,23 @@ public class FutureTradeActivity extends BaseActivity {
 
     private void initChartViews() {
         TrendView.Settings settings = new TrendView.Settings();
-        settings.setBaseLines(mProduct.getBaseline());
-        settings.setNumberScale(mProduct.getPriceDecimalScale());
-        settings.setOpenMarketTimes(mProduct.getOpenMarketTime());
-        settings.setDisplayMarketTimes(mProduct.getDisplayMarketTimes());
-        settings.setLimitUpPercent((float) mProduct.getLimitUpPercent());
+        settings.setBaseLines(mVariety.getBaseline());
+        settings.setNumberScale(mVariety.getPriceDecimalScale());
+        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
+        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
         mTrendView.setSettings(settings);
 
-        Client.getTrendData(mProduct.getVarietyType()).setTag(TAG)
-                .setCallback(new Callback<String>() {
-                    @Override
-                    protected void onRespSuccess(String resp) {
-                        TrendView.Settings settings = mTrendView.getSettings();
-                        mTrendView.setDataList(TrendView.Util.createDataList(resp, settings.getOpenMarketTimes()));
-                    }
-                }).fireSync();
-
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(mProduct.getBaseline());
-        settings2.setNumberScale(mProduct.getPriceDecimalScale());
+        settings2.setBaseLines(mVariety.getBaseline());
+        settings2.setNumberScale(mVariety.getPriceDecimalScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
+
+
     }
 
     private void initSlidingTab() {
@@ -231,7 +227,7 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void requestKlineDataAndSet(final String type) {
-        Client.getKlineData(mProduct.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
+        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<KlineViewData> data) {

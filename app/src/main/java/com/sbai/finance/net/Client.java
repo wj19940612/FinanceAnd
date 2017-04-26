@@ -78,6 +78,24 @@ public class Client {
     }
 
     /**
+     * 获取品种列表
+     *
+     * @param bigVarietyTypeCode
+     * @param page
+     * @param pageSize
+     * @param smallVarietyTypeCode
+     * @return
+     */
+    public static API getVarietyList(String bigVarietyTypeCode, int page, int pageSize, String smallVarietyTypeCode) {
+        return new API("/order/order/getVariety.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("smallVarietyTypeCode", smallVarietyTypeCode));
+    }
+
+    /**
      * 请求类型 get
      * 请求Url  /out/logout.do
      * 接口描述 退出登入
