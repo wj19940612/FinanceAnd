@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyLightAssist"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.CreditApproveActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/real_name_approve"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_line_division_center"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/realNameInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/real_name"
+            android:maxLines="1"
+            android:textColor="@color/primaryText"
+            android:textColorHint="@color/hintText"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/nameClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_login_label_delete"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_line_division_center"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/identityCardNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/identity_card_number"
+            android:maxLines="1"
+            android:textColor="@color/primaryText"
+            android:textColorHint="@color/hintText"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/identityCardNumberClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_login_label_delete"/>
+    </LinearLayout>
+</LinearLayout>

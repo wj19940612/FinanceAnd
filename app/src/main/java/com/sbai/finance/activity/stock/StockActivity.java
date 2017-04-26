@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureFragment;
-import com.sbai.finance.model.VarietyModel;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -66,27 +66,27 @@ public class StockActivity extends BaseActivity {
     private void requestStockData() {
         //获取股票列表
         Client.getStockVariety(mPage,mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<VarietyModel>>,List<VarietyModel>>() {
+                .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
                     @Override
-                    protected void onRespSuccessData(List<VarietyModel> data) {
-                        updateStockData((ArrayList<VarietyModel>) data);
+                    protected void onRespSuccessData(List<Variety> data) {
+                        updateStockData((ArrayList<Variety>) data);
                     }
                 }).fire();
         //获取股票指数
         Client.getStockIndexVariety().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<VarietyModel>>,List<VarietyModel>>() {
+                .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
                     @Override
-                    protected void onRespSuccessData(List<VarietyModel> data) {
-                        updateStockIndexData((ArrayList<VarietyModel>) data);
+                    protected void onRespSuccessData(List<Variety> data) {
+                        updateStockIndexData((ArrayList<Variety>) data);
                     }
                 }).fire();
     }
 
-    private void updateStockIndexData(ArrayList<VarietyModel> data) {
+    private void updateStockIndexData(ArrayList<Variety> data) {
         data.size();
     }
 
-    private void updateStockData(ArrayList<VarietyModel> data) {
+    private void updateStockData(ArrayList<Variety> data) {
         if (data == null){
             return;
         }

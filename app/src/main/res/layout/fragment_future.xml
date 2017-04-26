@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/greyLightAssist">
+              android:background="@color/greyLightAssist"
+              android:orientation="vertical">
+
     <include layout="@layout/layout_hq_header"/>
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@android:color/white"
         android:headerDividersEnabled="true"
-        android:visibility="visible"
-        android:background="@android:color/white"/>
+        android:visibility="visible"/>
+
     <TextView
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_gravity="center"
+        android:layout_weight="1"
         android:drawablePadding="16dp"
         android:gravity="center_horizontal"
         android:paddingTop="180dp"

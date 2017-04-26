@@ -7,18 +7,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.FutureHq;
-import com.sbai.finance.model.VarietyModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.model.Variety;
+import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,25 +32,25 @@ import butterknife.Unbinder;
 
 
 public class FutureFragment extends BaseFragment {
+
     @BindView(R.id.rate)
     TextView mRate;
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.empty)
     TextView mEmpty;
-    private Unbinder unbinder;
-    private FutureListAdapter mFutureListAdapter;
-    private List<FutureHq> mListHq;
 
-    public static final int FOREIGN_FUTURE=0;
-    public static final int CHINA_FUTURE=1;
-    private int mfutureType;
+    private Unbinder unbinder;
+
+    private FutureListAdapter mFutureListAdapter;
+
+    private String mfutureType;
     private Integer mPage = 0;
     private Integer mPageSize = 15;
-    public static FutureFragment newInstance(int type){
+    public static FutureFragment newInstance(String type) {
         FutureFragment futureFragment = new FutureFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("type",type);
+        bundle.putString("type", type);
         futureFragment.setArguments(bundle);
         return futureFragment;
     }
@@ -56,7 +58,9 @@ public class FutureFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mfutureType = this.getArguments().getInt("type");
+        if (getArguments() != null) {
+            mfutureType = getArguments().getString("type");
+        }
     }
     @Nullable
     @Override
@@ -69,40 +73,41 @@ public class FutureFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mPage = 0;
+        mPageSize = 10;
+
+        initView();
+    }
+
+    private void initView() {
         mFutureListAdapter = new FutureListAdapter(getActivity());
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mFutureListAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Variety variety = (Variety) parent.getItemAtPosition(position);
+                if (variety != null) {
+                    Launcher.with(getActivity(), FutureTradeActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                }
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestFutureData();
-
-    }
-
-    private void requestFutureData() {
-        String bigVarietyTypeCode = null;
-        if (mfutureType == FOREIGN_FUTURE){
-            bigVarietyTypeCode = "foreign";
-        }else if (mfutureType == CHINA_FUTURE){
-            bigVarietyTypeCode = "china";
-        }
-        Client.getFutureVariety(mPage,mPageSize,bigVarietyTypeCode).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<VarietyModel>>,List<VarietyModel>>() {
-                    @Override
-                    protected void onRespSuccessData(List<VarietyModel> data) {
-                        updateFutureData((ArrayList<VarietyModel>) data);
-                    }
-                }).fire();
+        requestVarietyList();
 
     }
 
     @OnClick(R.id.rate)
     public void onClick(View view) {
+
     }
 
-    private void updateFutureData(ArrayList<VarietyModel> varietyList) {
+    private void updateFutureData(List<Variety> varietyList) {
         if (varietyList == null){
             return;
         }
@@ -117,13 +122,21 @@ public class FutureFragment extends BaseFragment {
         unbinder.unbind();
     }
 
+    public void requestVarietyList() {
+        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mfutureType)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Variety> data) {
+                        updateFutureData(data);
+                    }
+                }).fireSync();
+    }
 
-    public static class FutureListAdapter extends ArrayAdapter<VarietyModel> {
+    public static class FutureListAdapter extends ArrayAdapter<Variety> {
         Context mContext;
-
         public FutureListAdapter(@NonNull Context context) {
             super(context, 0);
-            mContext = context;
         }
 
         @NonNull
@@ -131,13 +144,13 @@ public class FutureFragment extends BaseFragment {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_hq, parent, false);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), position, mContext);
+            viewHolder.bindDataWithView(getItem(position), position, getContext());
             return convertView;
         }
 
@@ -158,13 +171,13 @@ public class FutureFragment extends BaseFragment {
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-
-            private void bindDataWithView(VarietyModel item, int position, Context context) {
+            private void bindDataWithView(Variety item, int position, Context context) {
                 mFutureName.setText(item.getVarietyName());
                 mFutureCode.setText(item.getContractsCode());
                 mLastPrice.setText(item.getBigVarietyTypeCode());
-//                mRate.setText("+" + item.getUpDropSpeed().toString() + "%");
-                if (item.getExchangeStatus() == 0) {
+                mLastPrice.setText("66.66");
+                mRate.setText("+" + "0.00%");
+                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
                     mTrade.setVisibility(View.GONE);
                     mStopTrade.setVisibility(View.VISIBLE);
                 } else {

@@ -6,6 +6,8 @@ package com.sbai.finance.model.mine;
 
 public class UserInfo {
 
+    public static final int CREDIT_IS_ALREADY_APPROVE = 1;
+    public static final int CREDIT_IS_APPROVEING = 2;
 
     /**
      * agencyId : 0
@@ -38,6 +40,7 @@ public class UserInfo {
     private int loginNum;
     private int modifyNickNameTimes;
     private String registrationIp;
+    //	0 未认证 1以认证 2待审核
     private int status;
     //1 女 2男
     private int userSex;
