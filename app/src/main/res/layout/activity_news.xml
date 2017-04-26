@@ -18,7 +18,7 @@
         android:id="@+id/slidingTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"/>
+        android:background="@android:color/white"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

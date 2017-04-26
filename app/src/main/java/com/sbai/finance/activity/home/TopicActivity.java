@@ -16,7 +16,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.FutureHq;
+import com.sbai.finance.model.TopicDetailModel;
+import com.sbai.finance.model.TopicModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +29,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-/**
- * Created by Administrator on 2017-04-18.
- */
 
 public class TopicActivity extends BaseActivity {
 	@BindView(R.id.top)
@@ -44,13 +45,21 @@ public class TopicActivity extends BaseActivity {
 	TextView mEmpty;
 
 	private TopicListAdapter mTopicListAdapter;
-	private List<FutureHq> mListHq;
+	private Integer id;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_topic);
 		ButterKnife.bind(this);
 		translucentStatusBar();
+
+		Bundle bundle = this.getIntent().getExtras();
+		TopicModel topicModel = (TopicModel) bundle.getSerializable(Launcher.KEY_TOPIC);
+		if (topicModel!=null){
+		   id = topicModel.getId();
+			mTitle.setText(topicModel.getTitle());
+			mTopicTitle.setText(topicModel.getSubTitle());
+		}
 		initView();
 	}
 
@@ -69,27 +78,30 @@ public class TopicActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		updateTopicInfo();
+		requestTopicDetailInfo();
 	}
+
+	private void requestTopicDetailInfo() {
+		Client.getTopicDetailData(id).setTag(TAG)
+				.setCallback(new Callback2D<Resp<TopicDetailModel>,TopicDetailModel>() {
+					@Override
+					protected void onRespSuccessData(TopicDetailModel data) {
+						updateTopicInfo(data.getSubjectDetailModelList());
+					}
+				}).fire();
+	}
+
 	@OnClick(R.id.back)
 	public void onClick(View view){
 		this.onBackPressed();
 	}
 
-	private void updateTopicInfo() {
-		if (mListHq==null){
-			mListHq = new ArrayList<>();
-		}
-		for (int i =0;i<10;i++){
-			FutureHq futureHq = new FutureHq();
-			futureHq.setCodeName("美原油");
-			futureHq.setInstrumentId("CL1709");
-			futureHq.setLastPrice(66.66);
-			futureHq.setUpDropSpeed(25.00);
-			mListHq.add(futureHq);
+	private void updateTopicInfo(ArrayList<TopicDetailModel.SubjectDetailModelListBean> subjectLists) {
+		if (subjectLists==null){
+			return;
 		}
 		mTopicListAdapter.clear();
-		mTopicListAdapter.addAll(mListHq);
+		mTopicListAdapter.addAll(subjectLists);
 		mTopicListAdapter.notifyDataSetChanged();
 	}
 
@@ -99,7 +111,7 @@ public class TopicActivity extends BaseActivity {
 	}
 
 
-	static class TopicListAdapter extends ArrayAdapter<FutureHq>{
+	static class TopicListAdapter extends ArrayAdapter<TopicDetailModel.SubjectDetailModelListBean>{
 
 		Context mContext;
 		public TopicListAdapter(@NonNull Context context){
@@ -112,7 +124,7 @@ public class TopicActivity extends BaseActivity {
 		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 			ViewHolder viewHolder;
 			if (convertView == null) {
-				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_hq, parent, false);
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
 				viewHolder = new ViewHolder(convertView);
 				convertView.setTag(viewHolder);
 			} else {
@@ -139,11 +151,12 @@ public class TopicActivity extends BaseActivity {
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
-			private void bindDataWithView(FutureHq item, int position, Context context) {
-				mFutureName.setText(item.getCodeName());
-				mFutureCode.setText(item.getInstrumentId());
-				mLastPrice.setText(item.getLastPrice().toString());
-				mRate.setText("+"+item.getUpDropSpeed().toString()+"%");
+			private void bindDataWithView(TopicDetailModel.SubjectDetailModelListBean item, int position, Context context) {
+
+				mFutureName.setText(item.getVarityName());
+				mFutureCode.setText(item.getVarityId());
+//				mLastPrice.setText(item.get().toString());
+//				mRate.setText("+"+item.getUpDropSpeed().toString()+"%");
 			}
 		}
 

@@ -5,5 +5,5 @@ package com.sbai.finance.model;
  */
 
 public class EconomicCircle {
-  
+
 }

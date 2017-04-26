@@ -107,7 +107,7 @@ public class OptionActivity extends BaseActivity {
 		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 			ViewHolder viewHolder;
 			if (convertView == null) {
-				View content = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_hq, parent, false);
+				View content = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
 				View menu = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_delete_btn, parent, false);
 				viewHolder = new ViewHolder(content,menu);
 				SlideItem slideItem = new SlideItem(mContext);

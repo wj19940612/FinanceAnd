@@ -64,6 +64,7 @@
     <string name="event_title">大事件</string>
 
     <!--Trade page-->
+    <string name="stock_code">%1$s(%2$s)</string>
     <string name="today_open">今开</string>
     <string name="pre_close">昨收</string>
     <string name="highest">最高</string>
@@ -76,10 +77,15 @@
     <string name="fifteen_min_k">15分钟</string>
     <string name="thirty_min_k">30分钟</string>
     <string name="sixty_min_k">60分钟</string>
+    <string name="five_day_k_line">五日</string>
+    <string name="week_k_line">周K</string>
+    <string name="month_k_line">月K</string>
     <string name="point">观点</string>
     <string name="introduce">简介</string>
+    <string name="stock_news">新闻</string>
+    <string name="stock_finance">财务</string>
 
-    <!--    我的界面  -->
+    <!-- 我的界面 -->
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
     <string name="mine_publish">我的发表</string>
@@ -119,14 +125,19 @@
     <string name="relieve">解除</string>
     <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
-
-
+    
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
     <string name="new_notification">新消息通知</string>
-    <string name="accept_new_notification">新消息通知</string>
+    <string name="want_to_help_you">     想要帮助你</string>
+    <string name="accept_your_help">     接受了你的帮助</string>
+    <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
 
+    <string name="replay_you">      回复你</string>
+    <string name="attention_you">      关注了你</string>
+    <string name="like_your_publish">      喜欢了你的发表</string>
+    <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
     <string name="real_name_approve">实名认证</string>
@@ -184,5 +195,23 @@
     <string name="prediction_rule4">4.预测成功率高的用户,将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
     <string name="submit">提交</string>
+
+    <!--mutual-->
+   <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="borrow_limit">借款金额</string>
+    <string name="borrow_amount">最高2000元</string>
+    <string name="borrow_interest_amount">最高200元</string>
+    <string name="borrow_day_limit">借款期限</string>
+    <string name="borrow_day_limit_hint">1~60</string>
+    <string name="borrow_remark">备注</string>
+    <string name="borrow_remark_hint">请填写有助于借款的信息哦,但不能填写联系方式哦!</string>
+    <string name="borrow_photo_tips">最多可上传四张照片,不得带有联系方式和不好的图片哦!</string>
+    <string name="borrow_add_photo">添加照片</string>
+    <string name="borrow_day">天</string>
+    <string name="borrow_publish">确认发布</string>
+    <string name="want_borrow">我要借款</string>
+    <string name="borrow_overdue">超出借款期限</string>
+    <string name="borrow_agree">阅读并同意</string>
+    <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
 
 </resources>

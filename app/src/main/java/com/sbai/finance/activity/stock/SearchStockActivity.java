@@ -1,18 +1,23 @@
 package com.sbai.finance.activity.stock;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.FutureFragment;
 import com.sbai.finance.model.FutureHq;
 
 import java.util.ArrayList;
@@ -32,7 +37,7 @@ public class SearchStockActivity extends BaseActivity {
 	EditText mStock;
 	@BindView(R.id.search)
 	ImageView mSearch;
-	private FutureFragment.FutureListAdapter mListAdapter;
+	private FutureListAdapter mListAdapter;
 	private List<FutureHq> mListData;
 	private View mClearRecord;
 	@Override
@@ -68,7 +73,7 @@ public class SearchStockActivity extends BaseActivity {
 				mListAdapter.notifyDataSetChanged();
 			}
 		});
-		mListAdapter = new FutureFragment.FutureListAdapter(this);
+		mListAdapter = new FutureListAdapter(this);
 		mListView.addFooterView(mClearRecord);
 		mListView.setAdapter(mListAdapter);
 	}
@@ -94,5 +99,62 @@ public class SearchStockActivity extends BaseActivity {
 		mListAdapter.clear();
 		mListAdapter.addAll(mListData);
 		mListAdapter.notifyDataSetChanged();
+	}
+
+	public static class FutureListAdapter extends ArrayAdapter<FutureHq> {
+		Context mContext;
+
+		public FutureListAdapter(@NonNull Context context) {
+			super(context, 0);
+			mContext = context;
+		}
+
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindDataWithView(getItem(position), position, mContext);
+			return convertView;
+		}
+
+		static class ViewHolder {
+			@BindView(R.id.futureName)
+			TextView mFutureName;
+			@BindView(R.id.futureCode)
+			TextView mFutureCode;
+			@BindView(R.id.lastPrice)
+			TextView mLastPrice;
+			@BindView(R.id.rate)
+			TextView mRate;
+			@BindView(R.id.stopTrade)
+			TextView mStopTrade;
+			@BindView(R.id.trade)
+			LinearLayout mTrade;
+
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			private void bindDataWithView(FutureHq item, int position, Context context) {
+				mFutureName.setText(item.getCodeName());
+				mFutureCode.setText(item.getInstrumentId());
+				mLastPrice.setText(item.getLastPrice().toString());
+				mRate.setText("+" + item.getUpDropSpeed().toString() + "%");
+				if (position == 2) {
+					mTrade.setVisibility(View.GONE);
+					mStopTrade.setVisibility(View.VISIBLE);
+				} else {
+					mTrade.setVisibility(View.VISIBLE);
+					mStopTrade.setVisibility(View.GONE);
+				}
+			}
+		}
 	}
 }

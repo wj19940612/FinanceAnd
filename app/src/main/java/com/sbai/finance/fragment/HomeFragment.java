@@ -6,15 +6,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.future.FutureActivity;
@@ -22,12 +25,19 @@ import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.stock.StockActivity;
 import com.sbai.finance.activity.home.TopicActivity;
-import com.sbai.finance.model.Information;
+import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.EventTitleModel;
+import com.sbai.finance.model.TopicModel;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
+import com.sbai.httplib.ApiCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +70,10 @@ public class HomeFragment extends BaseFragment {
     LinearLayout mIdea;
     @BindView(R.id.ideaTitle)
     TextView mIdeaTitle;
+    @BindView(R.id.bigEvent)
+    LinearLayout mBigEvent;
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
-    private List<String> mListStrs;
 
     @Override
     public void onAttach(Context context) {
@@ -84,9 +95,16 @@ public class HomeFragment extends BaseFragment {
         mTopicGridAdapter = new TopicGridAdapter(getContext());
         mTopicGv.setAdapter(mTopicGridAdapter);
         mTopicGv.setFocusable(false);
+        mTopicGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getContext(), TopicActivity.class)
+                        .putExtra(Launcher.KEY_TOPIC,mTopicGridAdapter.getItem(position)).execute();
+            }
+        });
         mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
             @Override
-            public void onBannerClick(Information information) {
+            public void onBannerClick(BannerModel information) {
 
             }
         });
@@ -130,20 +148,40 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateTopicInfo();
+        updateHomeInfo();
     }
 
-    private void updateTopicInfo() {
-        if (mListStrs == null) {
-            mListStrs = new ArrayList<>();
-        }
-        mListStrs.clear();
-        mListStrs.add(new String("匪夷所思的妖股"));
-        mListStrs.add(new String("最受关注的期货"));
-        mListStrs.add(new String("股票看涨"));
-        mListStrs.add(new String("股票看跌榜"));
+    private void updateHomeInfo() {
+        //获取banner数据
+        Client.getBannerData().setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<BannerModel> data) {
+                        mHomeBanner.setHomeAdvertisement(data);
+                    }
+                }).fire();
+
+       //获取最新事件标题
+        Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<EventTitleModel>,EventTitleModel>() {
+                    @Override
+                    protected void onRespSuccessData(EventTitleModel data) {
+                        mEvent.setText(data.getTitle());
+                    }
+                }).fire();
+       //获取主题信息
+        Client.getTopicData().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TopicModel>>,List<TopicModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TopicModel> data) {
+                        updateTopicInfo((ArrayList<TopicModel>) data);
+                    }
+                }).fire();
+    }
+
+    private void updateTopicInfo(ArrayList<TopicModel> topicModels) {
         mTopicGridAdapter.clear();
-        mTopicGridAdapter.addAll(mListStrs);
+        mTopicGridAdapter.addAll(topicModels);
         mTopicGridAdapter.notifyDataSetChanged();
     }
 
@@ -152,11 +190,10 @@ public class HomeFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
-
-    @OnClick({R.id.borrowMoney, R.id.idea, R.id.event})
+    @OnClick({R.id.borrowMoney, R.id.idea, R.id.bigEvent})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.event:
+            case R.id.bigEvent:
                 Launcher.with(getActivity(), EventActivity.class).execute();
                 break;
             case R.id.borrowMoney:
@@ -169,7 +206,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    static class TopicGridAdapter extends ArrayAdapter<String> {
+    static class TopicGridAdapter extends ArrayAdapter<TopicModel> {
 
         public TopicGridAdapter(@NonNull Context context) {
             super(context, 0);
@@ -205,16 +242,10 @@ public class HomeFragment extends BaseFragment {
             ButterKnife.bind(this, view);
         }
 
-        public void bindingData(String stockInfo) {
-            mTopicTitle.setText(stockInfo);
-            mTopicDetail.setText(stockInfo);
-            mTopicImg.setBackgroundResource(R.drawable.subject_pic_bg);
-        }
-
-        @OnClick(R.id.topicImg)
-        public void onClick(View view) {
-            Launcher.with(mContext, TopicActivity.class).execute();
+        public void bindingData(TopicModel item) {
+            mTopicTitle.setText(item.getTitle());
+            mTopicDetail.setText(item.getSubTitle());
+            mTopicImg.setBackgroundResource(R.drawable.topic);
         }
     }
-
 }

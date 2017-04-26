@@ -1,11 +1,12 @@
 package com.sbai.finance.activity.trade;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 
-public class PublishOpinionActivity extends AppCompatActivity {
+
+public class PublishOpinionActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
