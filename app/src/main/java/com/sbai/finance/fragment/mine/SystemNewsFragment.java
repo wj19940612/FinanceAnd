@@ -62,7 +62,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.bigevent_pic_noevent, 0, 0);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
         mListView.setAdapter(mSystemNewsAdapter);

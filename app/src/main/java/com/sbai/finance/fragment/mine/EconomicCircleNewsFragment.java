@@ -74,7 +74,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.bigevent_pic_noevent, 0, 0);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mSet = new HashSet<>();
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
@@ -279,7 +279,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
                             .bitmapTransform(new GlideCircleTransform(context))
-                            .placeholder(R.drawable.ic_default_headportrait64x64)
+                            .placeholder(R.drawable.ic_default_avatar)
                             .into(mUserHeadImage);
                 }
 

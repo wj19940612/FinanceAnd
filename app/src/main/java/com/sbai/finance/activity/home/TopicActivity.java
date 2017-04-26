@@ -154,7 +154,7 @@ public class TopicActivity extends BaseActivity {
 			private void bindDataWithView(TopicDetailModel.SubjectDetailModelListBean item, int position, Context context) {
 
 				mFutureName.setText(item.getVarityName());
-				mFutureCode.setText(item.getVarityId());
+				mFutureCode.setText(String.valueOf(item.getVarityId()));
 //				mLastPrice.setText(item.get().toString());
 //				mRate.setText("+"+item.getUpDropSpeed().toString()+"%");
 			}

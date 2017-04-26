@@ -152,12 +152,12 @@
                 android:textColor="@color/assistText"
                 android:textSize="10sp"
                 android:text="@string/borrow_photo_tips"/>
-            <TextView
-                android:layout_width="75dp"
-                android:layout_height="65dp"
-                android:textSize="13sp"
-                android:gravity="center"
-                android:paddingTop="@dimen/common_padding"
+            <com.sbai.finance.view.MyGridView
+                android:id="@+id/photoGv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="69dp"
+                android:numColumns="4"
                 android:layout_marginLeft="@dimen/common_padding"
                 android:background="@drawable/bg_dotted_line_gray"
                 android:drawableTop="@drawable/ic_release_help_addpic"
@@ -169,6 +169,7 @@
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin">
                 <TextView
+                    android:id="@+id/warn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/publish"
@@ -178,7 +179,7 @@
                     android:textColor="@color/redPrimary"
                     android:textSize="13sp"
                     android:text="@string/borrow_overdue"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
                 <TextView
                     android:id="@+id/publish"
                     android:layout_width="match_parent"
@@ -195,6 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
                 android:orientation="horizontal">
                <View
                    android:layout_width="0dp"

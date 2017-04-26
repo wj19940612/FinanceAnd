@@ -226,26 +226,26 @@ public class HomeFragment extends BaseFragment {
             viewHolder.bindingData(getItem(position));
             return convertView;
         }
+        static class ViewHolder {
+            @BindView(R.id.topicTitle)
+            TextView mTopicTitle;
+            @BindView(R.id.topicDetail)
+            TextView mTopicDetail;
+            @BindView(R.id.topicImg)
+            ImageView mTopicImg;
+            private Context mContext;
+
+            ViewHolder(View view, Context context) {
+                mContext = context;
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindingData(TopicModel item) {
+                mTopicTitle.setText(item.getTitle());
+                mTopicDetail.setText(item.getSubTitle());
+                mTopicImg.setBackgroundResource(R.drawable.topic);
+            }
+        }
     }
 
-    static class ViewHolder {
-        @BindView(R.id.topicTitle)
-        TextView mTopicTitle;
-        @BindView(R.id.topicDetail)
-        TextView mTopicDetail;
-        @BindView(R.id.topicImg)
-        ImageView mTopicImg;
-        private Context mContext;
-
-        ViewHolder(View view, Context context) {
-            mContext = context;
-            ButterKnife.bind(this, view);
-        }
-
-        public void bindingData(TopicModel item) {
-            mTopicTitle.setText(item.getTitle());
-            mTopicDetail.setText(item.getSubTitle());
-            mTopicImg.setBackgroundResource(R.drawable.topic);
-        }
-    }
 }

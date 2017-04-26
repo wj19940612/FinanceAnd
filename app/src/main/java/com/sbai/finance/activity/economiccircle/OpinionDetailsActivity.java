@@ -1,20 +1,21 @@
 package com.sbai.finance.activity.economiccircle;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Comment;
+import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +24,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OpinionDetailsActivity extends AppCompatActivity {
+public class OpinionDetailsActivity extends BaseActivity {
 
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
     @BindView(R.id.avatar)
     ImageView mAvatar;
     @BindView(R.id.userName)
     TextView mUserName;
-    @BindView(R.id.followed)
-    TextView mFollowed;
+    @BindView(R.id.isAttention)
+    TextView mIsAttention;
     @BindView(R.id.publishTime)
     TextView mPublishTime;
-    @BindView(R.id.opinion)
-    TextView mOpinion;
+    @BindView(R.id.opinionContent)
+    TextView mOpinionContent;
     @BindView(R.id.product)
     TextView mProduct;
     @BindView(R.id.productName)
@@ -45,19 +48,20 @@ public class OpinionDetailsActivity extends AppCompatActivity {
     TextView mUpDownPrice;
     @BindView(R.id.upDownPercent)
     TextView mUpDownPercent;
-    @BindView(R.id.like)
-    TextView mLike;
-    @BindView(R.id.commentNum)
-    TextView mCommentNum;
+    @BindView(R.id.upDownArea)
+    LinearLayout mUpDownArea;
+    @BindView(R.id.loveNum)
+    TextView mLoveNum;
+    @BindView(R.id.opinionNum)
+    TextView mOpinionNum;
     @BindView(android.R.id.list)
-    ListView mList;
+    MyListView mList;
     @BindView(android.R.id.empty)
     TextView mEmpty;
     @BindView(R.id.comment)
     EditText mComment;
     @BindView(R.id.reply)
     TextView mReply;
-
     private List<Comment> mCommentList;
     private CommentAdapter mCommentAdapter;
 
@@ -66,6 +70,7 @@ public class OpinionDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opinion_details);
         ButterKnife.bind(this);
+
         initView();
     }
 
@@ -75,12 +80,8 @@ public class OpinionDetailsActivity extends AppCompatActivity {
         mCommentList = new ArrayList<>();
         initData();
         mCommentAdapter = new CommentAdapter(this, mCommentList);
-        //mList.setEmptyView(mEmpty);
+        mList.setEmptyView(mEmpty);
         mList.setAdapter(mCommentAdapter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mList.setNestedScrollingEnabled(true);
-        }
-
     }
 
     private void initData() {
@@ -90,17 +91,18 @@ public class OpinionDetailsActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        mScrollView.smoothScrollTo(0, 0);
         mUserName.setText("刘亦菲");
-        mFollowed.setText("已关注");
+        mIsAttention.setText("已关注");
         mPublishTime.setText("战国");
-        mOpinion.setText("黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨");
+        mOpinionContent.setText("黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨");
         mProduct.setText("股票");
         mProductName.setText("松柏信息");
         mLastPrice.setText("88.88");
         mUpDownPrice.setText("+8.8");
         mUpDownPercent.setText("+10%");
-        mLike.setText("8888");
-        mCommentNum.setText(getString(R.string.comment_number, "88"));
+        mLoveNum.setText("8888");
+        mOpinionNum.setText(getString(R.string.opinion_number, "88"));
 
     }
 
@@ -180,14 +182,14 @@ public class OpinionDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.like, R.id.reply})
+    @OnClick({R.id.loveNum, R.id.reply})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.like:
-                if (mLike.isSelected()) {
-                    mLike.setSelected(false);
+            case R.id.loveNum:
+                if (mLoveNum.isSelected()) {
+                    mLoveNum.setSelected(false);
                 } else {
-                    mLike.setSelected(true);
+                    mLoveNum.setSelected(true);
                 }
                 break;
             case R.id.reply:

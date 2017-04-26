@@ -16,12 +16,13 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.utils.Launcher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,12 +43,10 @@ public class FutureFragment extends BaseFragment {
     private Unbinder unbinder;
 
     private FutureListAdapter mFutureListAdapter;
-    private List<Variety> mVarietyList;
 
-    private String mFutureType;
-    private int mPage;
-    private int mPageSize;
-
+    private String mfutureType;
+    private Integer mPage = 0;
+    private Integer mPageSize = 15;
     public static FutureFragment newInstance(String type) {
         FutureFragment futureFragment = new FutureFragment();
         Bundle bundle = new Bundle();
@@ -60,7 +59,7 @@ public class FutureFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFutureType = getArguments().getString("type");
+            mfutureType = getArguments().getString("type");
         }
     }
     @Nullable
@@ -100,6 +99,7 @@ public class FutureFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         requestVarietyList();
+
     }
 
     @OnClick(R.id.rate)
@@ -107,9 +107,12 @@ public class FutureFragment extends BaseFragment {
 
     }
 
-    private void updateVarietyList() {
+    private void updateFutureData(List<Variety> varietyList) {
+        if (varietyList == null){
+            return;
+        }
         mFutureListAdapter.clear();
-        mFutureListAdapter.addAll(mVarietyList);
+        mFutureListAdapter.addAll(varietyList);
         mFutureListAdapter.notifyDataSetChanged();
     }
 
@@ -120,20 +123,18 @@ public class FutureFragment extends BaseFragment {
     }
 
     public void requestVarietyList() {
-        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mFutureType)
+        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mfutureType)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
-                        mVarietyList = data;
-                        updateVarietyList();
+                        updateFutureData(data);
                     }
                 }).fireSync();
     }
 
-
     public static class FutureListAdapter extends ArrayAdapter<Variety> {
-
+        Context mContext;
         public FutureListAdapter(@NonNull Context context) {
             super(context, 0);
         }
@@ -170,11 +171,11 @@ public class FutureFragment extends BaseFragment {
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-
             private void bindDataWithView(Variety item, int position, Context context) {
                 mFutureName.setText(item.getVarietyName());
                 mFutureCode.setText(item.getContractsCode());
-                mLastPrice.setText("");
+                mLastPrice.setText(item.getBigVarietyTypeCode());
+                mLastPrice.setText("66.66");
                 mRate.setText("+" + "0.00%");
                 if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
                     mTrade.setVisibility(View.GONE);

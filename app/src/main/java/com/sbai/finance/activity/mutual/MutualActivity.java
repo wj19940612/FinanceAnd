@@ -27,6 +27,7 @@ public class MutualActivity extends BaseActivity {
     @BindView(R.id.borrow)
     TextView mBorrow;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

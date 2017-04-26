@@ -70,7 +70,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.bigevent_pic_noevent, 0, 0);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mMutualHelpAdapter = new MutualHelpAdapter(getActivity());
         mListView.setAdapter(mMutualHelpAdapter);
@@ -263,7 +263,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 UserInfo userInfo = item.getUserInfo();
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
-                            .placeholder(R.drawable.ic_default_headportrait64x64)
+                            .placeholder(R.drawable.ic_default_avatar)
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
 

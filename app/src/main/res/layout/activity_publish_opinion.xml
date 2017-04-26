@@ -23,7 +23,7 @@
         android:paddingRight="13dp">
 
         <TextView
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="22.5dp"
             android:id="@+id/opinionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

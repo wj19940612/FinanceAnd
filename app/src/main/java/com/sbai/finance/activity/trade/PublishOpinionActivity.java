@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 
+
 public class PublishOpinionActivity extends BaseActivity {
 
     @Override
