@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,10 @@ import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.SettingActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -84,6 +89,7 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
+            requestUserAttentionAndroidFansNumber();
             mHeadImageLayout.setVisibility(View.VISIBLE);
             mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
@@ -161,6 +167,19 @@ public class MineFragment extends BaseFragment {
             case R.id.feedBack:
                 break;
         }
+    }
+
+    private void requestUserAttentionAndroidFansNumber() {
+        Client.getAttentionFollowUserNumber(0)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>() {
+                    @Override
+                    protected void onRespSuccessData(AttentionAndFansNumberModel data) {
+                        Log.d(TAG, "粉丝数量 " + data.toString());
+                    }
+                })
+                .fire();
     }
 
     @Override

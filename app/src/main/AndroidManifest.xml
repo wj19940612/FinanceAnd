@@ -29,7 +29,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activity.CatchCrashActivity"
@@ -72,7 +71,7 @@
         <activity
             android:name=".activity.stock.StockTradeActivity"
             android:screenOrientation="portrait"/>
-        <!--互助-->
+        <!-- 互助 -->
         <activity
             android:name=".activity.mutual.BorrowActivity"
             android:screenOrientation="portrait"/>
@@ -112,6 +111,10 @@
         <activity android:name=".activity.trade.PredictionRuleActivity">
         </activity>
         <activity android:name=".activity.trade.PublishOpinionActivity">
+        </activity>
+        <activity android:name=".activity.mine.CreditApproveActivity">
+        </activity>
+        <activity android:name=".activity.mine.CreditActivity">
         </activity>
     </application>
 

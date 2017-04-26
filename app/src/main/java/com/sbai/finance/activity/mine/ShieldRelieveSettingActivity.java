@@ -22,9 +22,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
@@ -66,7 +70,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
                                 ToastUtil.curt("移除 " + shieldedUserModel.getUserName());
-                                mShieldRelieveAdapter.remove(shieldedUserModel);
+                                relieveShield(shieldedUserModel);
                             }
                         })
                         .setTitleMaxLines(2)
@@ -81,6 +85,21 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
             }
         });
         requestShieldUserList();
+    }
+
+    private void relieveShield(final ShieldedUserModel shieldedUserModel) {
+        Client.shieldOrRelieveShieldUser(100, 1)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mShieldRelieveAdapter.remove(shieldedUserModel);
+                        }
+                    }
+                })
+                .fire();
     }
 
     private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 
 import com.sbai.finance.R;
@@ -14,13 +15,16 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.EconomicCircleNewsFragment;
 import com.sbai.finance.fragment.mine.MutualHelpFragment;
 import com.sbai.finance.fragment.mine.SystemNewsFragment;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class  NewsActivity extends BaseActivity {
+public class NewsActivity extends BaseActivity {
 
     @BindView(R.id.slidingTabLayout)
     SlidingTabLayout mSlidingTabLayout;
@@ -43,6 +47,21 @@ public class  NewsActivity extends BaseActivity {
         mViewPager.setAdapter(newsAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mSlidingTabLayout.setViewPager(mViewPager);
+
+        requestNoReadNewsNumber();
+    }
+
+    private void requestNoReadNewsNumber() {
+        Client.getNoReadMessageNumber()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                    @Override
+                    protected void onRespSuccessData(Object data) {
+                        Log.d(TAG, "onRespSuccessData: 未读消息数量 " + data.toString());
+                    }
+                })
+                .fireSync();
     }
 
 

@@ -191,6 +191,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 showLocationPicker();
                 break;
             case R.id.credit:
+                Launcher.with(getActivity(), CreditActivity.class).execute();
                 break;
             case R.id.logout:
                 logout();
@@ -206,7 +207,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setOffset(2);
-        if (LocalUser.getUser().getUserInfo().getAge() ==null) {
+        if (LocalUser.getUser().getUserInfo().getAge() == null) {
             mSelectAgeListIndex = 100;
         } else {
             mSelectAgeListIndex = 100 - LocalUser.getUser().getUserInfo().getAge();

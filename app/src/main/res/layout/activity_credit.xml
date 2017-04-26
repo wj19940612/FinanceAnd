@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyLightAssist"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.CreditActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/credit"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/credit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:minHeight="60dp"
+        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rowText="@string/real_name_approve"
+        app:rowTextColor="@color/secondaryText"
+        app:subTextColor="@color/blueAssist"
+        app:subTextSize="@dimen/common_default_size"/>
+</LinearLayout>

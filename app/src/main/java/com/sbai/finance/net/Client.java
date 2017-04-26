@@ -36,6 +36,7 @@ public class Client {
                         .put("endTime", endTime)
                         .put("type", type));
     }
+
     /**
      * 接口名称 快捷登入
      * 请求类型 post
@@ -133,7 +134,7 @@ public class Client {
      * 请求类型 post
      * 请求Url  msg/historyMsg.do
      *
-     * @param classify
+     * @param classify 消息类型{1.系统消息 2.互助消息 3.经济圈消息}
      * @return
      */
     public static API requestHistoryNews(int classify, int page, int pageSize) {
@@ -161,16 +162,17 @@ public class Client {
                 .put("land", land)
                 .put("userSex", userSex));
     }
-    public static API getBannerData(){
-        return new API(Request.Method.POST,"/user/news/findBannerList.do");
+
+    public static API getBannerData() {
+        return new API(Request.Method.POST, "/user/news/findBannerList.do");
     }
 
     /**
-     * @param page  页码
+     * @param page     页码
      * @param pageSize 页码大小
      * @return
      */
-    public static API getBreakingNewsData(Integer page,Integer pageSize){
+    public static API getBreakingNewsData(Integer page, Integer pageSize) {
         return new API("/user/breakingNews/findBreakingNewsList.do",
                 new ApiParams()
                         .put("page", page)
@@ -178,11 +180,74 @@ public class Client {
     }
 
     /**
+     * 接口名称 屏蔽或者取消屏蔽
+     * 请求类型 post
+     * 请求Url  coterie/userDetail/shield
+     *
+     * @param shieldId 屏蔽对象的ID
+     * @param status   0屏蔽 1取消屏蔽
+     * @return
+     */
+    public static API shieldOrRelieveShieldUser(int shieldId, int status) {
+        return new API(POST, "/coterie/userDetail/shield.do", new ApiParams()
+                .put("shieldId", shieldId)
+                .put("status", status));
+    }
+
+    /**
+     * 接口名称 关注
+     * 请求类型 post
+     * 请求Url  coterie/userDetail/follow
+     *
+     * @param followId 关注对象的ID
+     * @param status   0关注 1取消关注
+     * @return
+     */
+    public static API attentionOrRelieveAttentionUser(int followId, int status) {
+        return new API(POST, "/coterie/userDetail/follow.do", new ApiParams()
+                .put("followId", followId)
+                .put("status", status));
+    }
+
+    /**
+     * 接口名称 关注,粉丝数量
+     * 请求类型 get
+     * 请求Url  coterie/userDetail/getAttentionFollow
+     *
+     * @param userId 点击查看的用户ID
+     * @return
+     */
+    public static API getAttentionFollowUserNumber(int userId) {
+        return new API("/coterie/userDetail/getStatistics.do", new ApiParams().put("userId", userId));
+    }
+
+    /**
+     * 接口名称 未读消息的数量
+     * 请求类型 post
+     * 请求Url  msg/count.do
+     */
+    public static API getNoReadMessageNumber() {
+        return new API("/msg/count.do");
+    }
+
+    /**
+     * 接口名称 认证查询
+     * 请求类型 get
+     * 请求Url  /user/user/userCertification.do
+     *
+     * @return
+     */
+    public static API getUserCreditApproveStatus() {
+        return new API("/user/user/userCertification.do");
+    }
+
+    /**
      * 大事件详情
+     *
      * @param id
      * @return
      */
-    public static API getBreakingNewsDetailData(String id){
+    public static API getBreakingNewsDetailData(String id) {
         return new API("/user/breakingNews/showDetail.do",
                 new ApiParams()
                         .put("id", id));
@@ -190,26 +255,29 @@ public class Client {
 
     /**
      * 大事件最新标题
+     *
      * @return
      */
-    public static API getBreakingNewsTitleData(){
+    public static API getBreakingNewsTitleData() {
         return new API("/user/breakingNews/findOneTitle.do");
     }
 
     /**
      * 获取主题
+     *
      * @return
      */
-    public static API getTopicData(){
+    public static API getTopicData() {
         return new API("/coterie/subject/find.do");
     }
 
     /**
      * 获取主题详情
+     *
      * @param id
      * @return
      */
-    public static API getTopicDetailData(Integer id){
+    public static API getTopicDetailData(Integer id) {
         return new API("/coterie/subject/findCoterieInfo.do",
                 new ApiParams()
                         .put("id", id));
