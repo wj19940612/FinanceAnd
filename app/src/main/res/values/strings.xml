@@ -213,6 +213,8 @@
     <string name="borrow_publish">确认发布</string>
     <string name="want_borrow">我要借款</string>
     <string name="borrow_overdue">超出借款期限</string>
+    <string name="borrow_over_money">超出借款金额</string>
+    <string name="borrow_over_interest">超出愿付利息</string>
     <string name="borrow_agree">阅读并同意</string>
     <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
 </resources>

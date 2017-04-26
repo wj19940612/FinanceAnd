@@ -197,4 +197,73 @@ public class Client {
                 new ApiParams()
                         .put("id", id));
     }
+
+    /**
+     * 获取期货品种
+     * @param page
+     * @param pageSize
+     * @param smallVarietyTypeCode
+     * @return
+     */
+    public static API getFutureVariety(Integer page,Integer pageSize,String smallVarietyTypeCode){
+        return new API("/order/order/getVariety.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode","future")
+                        .put("page", page)
+                        .put("pageSize",pageSize)
+                        .put("smallVarietyTypeCode",smallVarietyTypeCode));
+    }
+
+    /**
+     * 股票除指数品种
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getStockVariety(Integer page,Integer pageSize){
+        return new API("/order/order/getStockVariety.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize",pageSize));
+    }
+
+    /**
+     * 股票指数品种
+     * @return
+     */
+    public static API getStockIndexVariety(){
+        return new API("order/order/getStockExponentVariety.do");
+    }
+
+    /**
+     * 查询自选gu
+     * @param bigVarietyTypeCode
+     * @return
+     */
+    public static API getOptional(String bigVarietyTypeCode){
+        return new API("/order/optional/findOptional.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode));
+    }
+
+    /**
+     * 添加自选股
+     * @param varietyId
+     * @return
+     */
+    public static API addOptional(String varietyId){
+        return new API("/order/optional/addOptional.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
+    /**
+     * 添加自选股
+     * @param varietyId
+     * @return
+     */
+    public static API delOptional(String varietyId){
+        return new API("/order/optional/deleteOptional.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
 }

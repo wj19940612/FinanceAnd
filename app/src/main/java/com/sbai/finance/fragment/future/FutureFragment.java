@@ -15,6 +15,10 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.FutureHq;
+import com.sbai.finance.model.VarietyModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,8 @@ public class FutureFragment extends BaseFragment {
     public static final int FOREIGN_FUTURE=0;
     public static final int CHINA_FUTURE=1;
     private int mfutureType;
+    private Integer mPage = 0;
+    private Integer mPageSize = 15;
     public static FutureFragment newInstance(int type){
         FutureFragment futureFragment = new FutureFragment();
         Bundle bundle = new Bundle();
@@ -71,7 +77,24 @@ public class FutureFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateFutureForeignHqList();
+        requestFutureData();
+
+    }
+
+    private void requestFutureData() {
+        String bigVarietyTypeCode = null;
+        if (mfutureType == FOREIGN_FUTURE){
+            bigVarietyTypeCode = "foreign";
+        }else if (mfutureType == CHINA_FUTURE){
+            bigVarietyTypeCode = "china";
+        }
+        Client.getFutureVariety(mPage,mPageSize,bigVarietyTypeCode).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<VarietyModel>>,List<VarietyModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<VarietyModel> data) {
+                        updateFutureData((ArrayList<VarietyModel>) data);
+                    }
+                }).fire();
 
     }
 
@@ -79,20 +102,12 @@ public class FutureFragment extends BaseFragment {
     public void onClick(View view) {
     }
 
-    private void updateFutureForeignHqList() {
-        if (mListHq == null) {
-            mListHq = new ArrayList<>();
-        }
-        for (int i = 0; i < 10; i++) {
-            FutureHq futureHq = new FutureHq();
-            futureHq.setCodeName("美原油");
-            futureHq.setInstrumentId("CL1709");
-            futureHq.setLastPrice(66.66);
-            futureHq.setUpDropSpeed(25.00);
-            mListHq.add(futureHq);
+    private void updateFutureData(ArrayList<VarietyModel> varietyList) {
+        if (varietyList == null){
+            return;
         }
         mFutureListAdapter.clear();
-        mFutureListAdapter.addAll(mListHq);
+        mFutureListAdapter.addAll(varietyList);
         mFutureListAdapter.notifyDataSetChanged();
     }
 
@@ -103,7 +118,7 @@ public class FutureFragment extends BaseFragment {
     }
 
 
-    public static class FutureListAdapter extends ArrayAdapter<FutureHq> {
+    public static class FutureListAdapter extends ArrayAdapter<VarietyModel> {
         Context mContext;
 
         public FutureListAdapter(@NonNull Context context) {
@@ -144,12 +159,12 @@ public class FutureFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(FutureHq item, int position, Context context) {
-                mFutureName.setText(item.getCodeName());
-                mFutureCode.setText(item.getInstrumentId());
-                mLastPrice.setText(item.getLastPrice().toString());
-                mRate.setText("+" + item.getUpDropSpeed().toString() + "%");
-                if (position == 2) {
+            private void bindDataWithView(VarietyModel item, int position, Context context) {
+                mFutureName.setText(item.getVarietyName());
+                mFutureCode.setText(item.getContractsCode());
+                mLastPrice.setText(item.getBigVarietyTypeCode());
+//                mRate.setText("+" + item.getUpDropSpeed().toString() + "%");
+                if (item.getExchangeStatus() == 0) {
                     mTrade.setVisibility(View.GONE);
                     mStopTrade.setVisibility(View.VISIBLE);
                 } else {

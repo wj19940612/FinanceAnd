@@ -14,6 +14,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureFragment;
 import com.sbai.finance.model.FutureHq;
+import com.sbai.finance.model.VarietyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class SearchStockActivity extends BaseActivity {
 	@BindView(R.id.search)
 	ImageView mSearch;
 	private FutureFragment.FutureListAdapter mListAdapter;
-	private List<FutureHq> mListData;
+	private List<VarietyModel> mListData;
 	private View mClearRecord;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,14 +84,14 @@ public class SearchStockActivity extends BaseActivity {
 		if (mListData==null){
 			mListData = new ArrayList<>();
 		}
-		for (int i = 0;i<5;i++){
-			FutureHq futureHq = new FutureHq();
-			futureHq.setCodeName("恒生电子");
-			futureHq.setInstrumentId("600570");
-			futureHq.setLastPrice(66.66);
-			futureHq.setUpDropSpeed(66.66);
-			mListData.add(futureHq);
-		}
+//		for (int i = 0;i<5;i++){
+//			VarietyModel futureHq = new VarietyModel();
+//			futureHq.setCodeName("恒生电子");
+//			futureHq.setInstrumentId("600570");
+//			futureHq.setLastPrice(66.66);
+//			futureHq.setUpDropSpeed(66.66);
+//			mListData.add(futureHq);
+//		}
 		mListAdapter.clear();
 		mListAdapter.addAll(mListData);
 		mListAdapter.notifyDataSetChanged();
