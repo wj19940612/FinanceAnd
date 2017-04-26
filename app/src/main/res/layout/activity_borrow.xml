@@ -174,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/publish"
                     android:layout_marginBottom="10dp"
-                    android:drawableLeft="@drawable/prompt"
+                    android:drawableLeft="@drawable/ic_prompt"
                     android:drawablePadding="5dp"
                     android:textColor="@color/redPrimary"
                     android:textSize="13sp"
