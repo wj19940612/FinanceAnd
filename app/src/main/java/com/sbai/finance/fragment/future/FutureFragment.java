@@ -63,7 +63,6 @@ public class FutureFragment extends BaseFragment {
             mFutureType = getArguments().getString("type");
         }
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

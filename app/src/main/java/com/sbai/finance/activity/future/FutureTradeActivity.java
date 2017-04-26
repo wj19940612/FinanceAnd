@@ -123,7 +123,7 @@ public class FutureTradeActivity extends BaseActivity {
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
 
-        
+
     }
 
     private void initSlidingTab() {

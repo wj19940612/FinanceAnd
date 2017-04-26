@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.future.FutureTradeActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/stock_code"/>
+
+    <LinearLayout
+        android:id="@+id/marketArea"
+        android:layout_width="match_parent"
+        android:layout_height="97dp"
+        android:layout_below="@id/titleBar"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/redPrimary"
+                android:textSize="38sp"
+                tools:text="46.24"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/redPrimary"
+                android:textSize="14sp"
+                tools:text="+0.32     +0.65%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/MarketDataTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/today_open"/>
+
+            <TextView
+                android:id="@+id/todayOpen"
+                style="@style/MarketData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="458681"/>
+
+            <TextView
+                style="@style/MarketDataTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/pre_close"/>
+
+            <TextView
+                android:id="@+id/preClose"
+                style="@style/MarketData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="458681"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/greyAssist"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/MarketDataTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/highest"/>
+
+            <TextView
+                android:id="@+id/highest"
+                style="@style/MarketData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="458681"/>
+
+            <TextView
+                style="@style/MarketDataTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/lowest"/>
+
+            <TextView
+                android:id="@+id/lowest"
+                style="@style/MarketData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="458681"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/marketArea">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                app:layout_scrollFlags="scroll|snap">
+
+                <LinearLayout
+                    android:id="@+id/chartArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7">
+
+                    <com.sbai.finance.view.slidingTab.HackTabLayout
+                        android:id="@+id/tabLayout"
+                        style="@style/TradeFixedTab"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="@dimen/common_padding">
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_below="@id/tabLayout">
+                            <com.sbai.chart.TrendView
+                                android:id="@+id/trendView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+                            <com.sbai.chart.KlineView
+                                android:id="@+id/klineView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"/>
+                        </FrameLayout>
+                        <LinearLayout
+                            android:id="@+id/detailMarket"
+                            android:layout_width="100dp"
+                            android:layout_height="240dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="@dimen/common_padding"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+                            <FrameLayout
+                                android:id="@+id/detailView"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1">
+                            </FrameLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="18dp"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:id="@+id/fiveHq"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_selected"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/blackAssist"
+                                    android:text="五档"/>
+                                <TextView
+                                    android:id="@+id/splitHq"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_selected"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/blackAssist"
+                                    android:text="明细"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:id="@+id/subPageArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/greyLightAssist"/>
+
+            <com.sbai.finance.view.slidingTab.SlidingTabLayout
+                android:id="@+id/slidingTab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <include layout="@layout/split_line_grey_light"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <com.sbai.finance.view.TradeFloatButtons
+        android:id="@+id/tradeFloatButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:hasTradeButton="false"/>
+</RelativeLayout>

@@ -16,7 +16,7 @@ public class ValidityDecideUtil {
      * @param nickName
      * @return
      */
-    public static boolean getNicknameStatus(String nickName) {
+    public static boolean isLegalNickName(String nickName) {
         nickName = nickName.trim();
         Pattern letter = Pattern.compile("^[A-Za-z0-9\u4e00-\u9fa5]+$");
         Matcher letterMatcher = letter.matcher(nickName);
@@ -25,6 +25,7 @@ public class ValidityDecideUtil {
 
     /**
      * 真实姓名只能是中文
+     *
      * @param realName
      * @return
      */

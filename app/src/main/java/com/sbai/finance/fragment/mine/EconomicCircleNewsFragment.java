@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,13 +25,19 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.mine.EconomicCircleNewModel;
+import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +58,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     private TextView mFootView;
 
 
+    private int mPage = 0;
+    private int mPageSize = 20;
+    private HashSet<Integer> mSet;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,7 +74,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setEmptyView(mEmpty);
-        mListView.setDivider(null);
+        mSet = new HashSet<>();
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
@@ -85,6 +96,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
                 requestEconomicCircleNewsList();
             }
         });
@@ -96,17 +108,36 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void requestEconomicCircleNewsList() {
-        ArrayList<EconomicCircleNewModel> economicCircleNewModels = new ArrayList<>();
+
+        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, mPageSize)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
+                        for (HistoryNewsModel his : data) {
+                            Log.d(TAG, " 经济圈消息" + his.toString());
+                        }
+                    }
+                })
+                .fireSync();
+
+
+        // TODO: 2017/4/25 做测试用
+        ArrayList<HistoryNewsModel> historyNewsModelList = new ArrayList<>();
         for (int i = 0; i < url.length; i++) {
-            EconomicCircleNewModel hahahha = new EconomicCircleNewModel(url[i], "" + i + i + i, "hahahha", 1425275145000l);
-            economicCircleNewModels.add(hahahha);
+            HistoryNewsModel hahahha = new HistoryNewsModel();
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserPortrait(url[i]);
+            hahahha.setUserInfo(userInfo);
+            historyNewsModelList.add(hahahha);
         }
-        updateEconomicCircleData(economicCircleNewModels);
+        updateEconomicCircleData(historyNewsModelList);
 
     }
 
-    private void updateEconomicCircleData(ArrayList<EconomicCircleNewModel> economicCircleNewModels) {
-        if (economicCircleNewModels == null) {
+    private void updateEconomicCircleData(ArrayList<HistoryNewsModel> historyNewsModelList) {
+        if (historyNewsModelList == null) {
             stopRefreshAnimation();
             return;
         }
@@ -122,15 +153,14 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestEconomicCircleNewsList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (economicCircleNewModels.size() < 15) {
+        if (historyNewsModelList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -142,7 +172,11 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             }
             stopRefreshAnimation();
         }
-        mEconomicCircleNewsAdapter.addAll(economicCircleNewModels);
+        for (HistoryNewsModel data : historyNewsModelList) {
+            if (mSet.add(data.getId())) {
+                mEconomicCircleNewsAdapter.addAll(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -170,7 +204,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     }
 
 
-    static class EconomicCircleNewsAdapter extends ArrayAdapter<EconomicCircleNewModel> {
+    static class EconomicCircleNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         interface CallBack {
             void onUserHeadImageClick();
@@ -226,25 +260,27 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(EconomicCircleNewModel item, Context context, int position, final CallBack callBack) {
-                if (!TextUtils.isEmpty(item.getUserImage())) {
-                    Glide.with(context).load(item.getUserImage())
+            public void bindViewWithData(HistoryNewsModel item, Context context, int position, final CallBack callBack) {
+                UserInfo userInfo = item.getUserInfo();
+                if (userInfo != null) {
+                    Glide.with(context).load(userInfo.getUserPortrait())
                             .bitmapTransform(new GlideCircleTransform(context))
-                            .placeholder(R.mipmap.ic_launcher_round)
+                            .placeholder(R.drawable.default_headportrait64x64)
                             .into(mUserHeadImage);
                 }
 
-                SpannableString spannableString = StrUtil.mergeTextWithColor(item.getUserName(), "   " + "关注你",
-                        ContextCompat.getColor(context,R.color.primaryText));
+
+                SpannableString spannableString = StrUtil.mergeTextWithColor("希特勒", "   " + "关注你",
+                        ContextCompat.getColor(context, R.color.primaryText));
                 mUserAction.setText(spannableString);
-                if (!TextUtils.isEmpty(item.getContent())) {
+                if (!TextUtils.isEmpty(item.getMsg())) {
                     mContent.setVisibility(View.VISIBLE);
-                    mContent.setText(item.getContent());
+                    mContent.setText(item.getMsg());
                 } else {
                     mContent.setVisibility(View.GONE);
                 }
 
-                mTime.setText(DateUtil.getFormatTime(item.getTime()));
+                mTime.setText(DateUtil.getFormatTime(1492937700000L));
 
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override

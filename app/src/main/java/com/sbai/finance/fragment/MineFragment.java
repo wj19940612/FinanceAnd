@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +39,6 @@ public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
 
-    // TODO: 2017/4/17 测试头像网址
-    public static final String userImageUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492407267951&di=7004d3813362f7f110884f39aea48276&imgtype=0&src=http%3A%2F%2Fwww.bz55.com%2Fuploads%2Fallimg%2F150317%2F140-15031G04119.jpg";
-
     Unbinder unbinder;
 
     @BindView(R.id.userHeadImage)
@@ -63,6 +61,10 @@ public class MineFragment extends BaseFragment {
     IconTextRow mDetail;
     @BindView(R.id.feedBack)
     IconTextRow mFeedBack;
+    @BindView(R.id.headImageLayout)
+    LinearLayoutCompat mHeadImageLayout;
+    @BindView(R.id.logoutImage)
+    AppCompatImageView mLogoutImage;
 
     @Nullable
     @Override
@@ -82,6 +84,8 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
+            mHeadImageLayout.setVisibility(View.VISIBLE);
+            mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
             SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n1222", 1.8f, Color.WHITE);
             mAttention.setText(attentionSpannableString);
@@ -90,7 +94,8 @@ public class MineFragment extends BaseFragment {
             SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n12220", 1.8f, Color.WHITE);
             mMinePublish.setText(minePublishSpannableString);
         } else {
-            mUserName.setText(R.string.please_login);
+            mHeadImageLayout.setVisibility(View.GONE);
+            mLogoutImage.setVisibility(View.VISIBLE);
             SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, Color.WHITE);
             mAttention.setText(attentionSpannableString);
             SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, Color.WHITE);
@@ -102,12 +107,12 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(this).load(userImageUrl)
+            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.mipmap.ic_launcher_round)
+                    .placeholder(R.drawable.default_headportrait160x160)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.mipmap.ic_launcher_round)
+            Glide.with(this).load(R.drawable.default_headportrait160x160)
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }
@@ -119,16 +124,19 @@ public class MineFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.userHeadImage, R.id.attention, R.id.fans, R.id.minePublish, R.id.news,
+    @OnClick({R.id.headImageLayout, R.id.logoutImage, R.id.userHeadImage,
+            R.id.attention, R.id.fans, R.id.minePublish, R.id.news,
             R.id.setting, R.id.aboutUs, R.id.detail, R.id.feedBack})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.headImageLayout:
+                startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                break;
+            case R.id.logoutImage:
+                startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                break;
             case R.id.userHeadImage:
-                if (LocalUser.getUser().isLogin()) {
-                    startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
-                } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
-                }
+                startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 break;
             case R.id.attention:
                 Launcher.with(getActivity(), AttentionActivity.class).execute();

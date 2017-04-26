@@ -42,7 +42,9 @@ public class API extends RequestManager {
     public API(String uri, ApiParams apiParams) {
         this(Request.Method.GET, uri, apiParams, 0);
     }
-
+    public API(int method, String uri) {
+        this(method, uri, null, 0);
+    }
     public API(int method, String uri, ApiParams apiParams) {
         this(method, uri, apiParams, 0);
     }
@@ -167,7 +169,6 @@ public class API extends RequestManager {
             }
         }
     }
-
     public static void cancel(String tag) {
         RequestManager.cancel(tag);
         Iterator<String> iterator = sCurrentUrls.iterator();

@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity {
         translucentStatusBar();
         initView();
     }
-
+    
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);

@@ -25,17 +25,16 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/eventSource"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textColor="@color/assistText"
+            android:paddingRight="25dp"
             android:textSize="@dimen/list_hint_size"
             tool:text="中国财经网"/>
         <TextView
             android:id="@+id/eventTime"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:textColor="@color/assistText"
             android:textSize="@dimen/list_hint_size"
             tool:text="2017/03/26  12:37"/>

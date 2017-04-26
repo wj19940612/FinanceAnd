@@ -14,12 +14,13 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.EconomicCircleNewsFragment;
 import com.sbai.finance.fragment.mine.MutualHelpFragment;
 import com.sbai.finance.fragment.mine.SystemNewsFragment;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewsActivity extends BaseActivity {
+public class  NewsActivity extends BaseActivity {
 
     @BindView(R.id.slidingTabLayout)
     SlidingTabLayout mSlidingTabLayout;
@@ -35,6 +36,9 @@ public class NewsActivity extends BaseActivity {
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTabLayout.setSelectedIndicatorPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, getResources().getDisplayMetrics()));
+        mSlidingTabLayout.setPadding(Display.dp2Px(13, getResources()));
+        mSlidingTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
+
         NewsAdapter newsAdapter = new NewsAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(newsAdapter);
         mViewPager.setOffscreenPageLimit(3);

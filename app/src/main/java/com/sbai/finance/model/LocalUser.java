@@ -57,6 +57,10 @@ public class LocalUser {
         return mUserInfo;
     }
 
+    public String getPhone() {
+        return mPhone;
+    }
+
     public boolean isLogin() {
         return mUserInfo != null;
     }

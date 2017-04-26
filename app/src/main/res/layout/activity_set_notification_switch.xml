@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/accept_new_notification"
+            android:text="@string/new_notification"
             android:textSize="@dimen/common_default_size"
             android:textColor="@color/primaryText"/>
 

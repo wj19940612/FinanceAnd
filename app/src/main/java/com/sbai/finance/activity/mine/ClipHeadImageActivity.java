@@ -4,11 +4,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.view.clipimage.ClipImageLayout;
 
 import butterknife.BindView;
@@ -47,7 +53,29 @@ public class ClipHeadImageActivity extends BaseActivity {
                 break;
             case R.id.complete:
                 Bitmap clipBitmap = mClipImageLayout.clip();
+                String bitmapToBase64 = ImageUtils.bitmapToBase64(clipBitmap);
+                if (clipBitmap != null) {
+                    clipBitmap.recycle();
+                }
+                confirmUserNewHeadImage(bitmapToBase64);
                 break;
         }
+    }
+
+    private void confirmUserNewHeadImage(String bitmapToBase64) {
+        Client.updateUserHeadImage(bitmapToBase64)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<String>, String>() {
+                    @Override
+                    protected void onRespSuccessData(String data) {
+                        if (!TextUtils.isEmpty(data)) {
+                            LocalUser.getUser().getUserInfo().setUserPortrait(data);
+                        }
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                })
+                .fire();
     }
 }
