@@ -347,7 +347,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API delOptional(String varietyId) {
+    public static API delOptional(Integer varietyId) {
         return new API("/order/optional/deleteOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
