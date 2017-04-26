@@ -15,11 +15,14 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.EconomicCircleNewsFragment;
 import com.sbai.finance.fragment.mine.MutualHelpFragment;
 import com.sbai.finance.fragment.mine.SystemNewsFragment;
+import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,10 +58,12 @@ public class NewsActivity extends BaseActivity {
         Client.getNoReadMessageNumber()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                .setCallback(new Callback2D<Resp<List<NotReadMessageNumberModel>>, List<NotReadMessageNumberModel>>() {
                     @Override
-                    protected void onRespSuccessData(Object data) {
-                        Log.d(TAG, "onRespSuccessData: 未读消息数量 " + data.toString());
+                    protected void onRespSuccessData(List<NotReadMessageNumberModel> data) {
+                        for (NotReadMessageNumberModel list : data) {
+                            Log.d(TAG, "onRespSuccessData: " + list.toString());
+                        }
                     }
                 })
                 .fireSync();

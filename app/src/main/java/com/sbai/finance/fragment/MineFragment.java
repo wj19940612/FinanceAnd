@@ -24,7 +24,6 @@ import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.SettingActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback2D;
@@ -89,16 +88,11 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
+            updateUserNumber(null);
             requestUserAttentionAndroidFansNumber();
             mHeadImageLayout.setVisibility(View.VISIBLE);
             mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n1222", 1.8f, Color.WHITE);
-            mAttention.setText(attentionSpannableString);
-            SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n12220", 1.8f, Color.WHITE);
-            mFans.setText(fansSpannableString);
-            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n12220", 1.8f, Color.WHITE);
-            mMinePublish.setText(minePublishSpannableString);
         } else {
             mHeadImageLayout.setVisibility(View.GONE);
             mLogoutImage.setVisibility(View.VISIBLE);
@@ -115,10 +109,10 @@ public class MineFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.drawable.default_headportrait160x160)
+                    .placeholder(R.drawable.ic_default_headportrait160x160)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.drawable.default_headportrait160x160)
+            Glide.with(this).load(R.drawable.ic_default_headportrait160x160)
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }
@@ -145,13 +139,25 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 break;
             case R.id.attention:
-                Launcher.with(getActivity(), AttentionActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), AttentionActivity.class).execute();
+                } else {
+                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                }
                 break;
             case R.id.fans:
-                Launcher.with(getActivity(), FansActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), FansActivity.class).execute();
+                } else {
+                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                }
                 break;
             case R.id.minePublish:
-                Launcher.with(getActivity(), PublishActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), PublishActivity.class).execute();
+                } else {
+                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                }
                 break;
             case R.id.news:
                 Launcher.with(getActivity(), NewsActivity.class).execute();
@@ -160,7 +166,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), SettingActivity.class).execute();
                 break;
             case R.id.aboutUs:
-                Launcher.with(getActivity(), UserDataActivity.class).execute();
+//                Launcher.with(getActivity(), UserDataActivity.class).execute();
                 break;
             case R.id.detail:
                 break;
@@ -177,9 +183,22 @@ public class MineFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(AttentionAndFansNumberModel data) {
                         Log.d(TAG, "粉丝数量 " + data.toString());
+
+                        updateUserNumber(data);
                     }
                 })
                 .fire();
+    }
+
+    private void updateUserNumber(AttentionAndFansNumberModel data) {
+        if (data == null)
+            data = new AttentionAndFansNumberModel();
+        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1.8f, Color.WHITE);
+        mAttention.setText(attentionSpannableString);
+        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1.8f, Color.WHITE);
+        mFans.setText(fansSpannableString);
+        SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n" + data.getViewpoint(), 1.8f, Color.WHITE);
+        mMinePublish.setText(minePublishSpannableString);
     }
 
     @Override

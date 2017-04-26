@@ -26,6 +26,8 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -117,8 +119,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 .setCallback(new Callback2D<Resp<List<EconomicCircle>>, List<EconomicCircle>>() {
                     @Override
                     protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
-
+                        if (economicCircleList != null) {
+                            sortEconomicCircleList(economicCircleList);
+                        }
                         updateEconomicCircleList(economicCircleList);
+                        stopRefreshAnimation();
                     }
 
                     @Override
@@ -126,7 +131,16 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                         super.onFailure(volleyError);
                         stopRefreshAnimation();
                     }
-                });
+                }).fire();
+    }
+
+    private void sortEconomicCircleList(List<EconomicCircle> economicCircleList) {
+        Collections.sort(economicCircleList, new Comparator<EconomicCircle>() {
+            @Override
+            public int compare(EconomicCircle o1, EconomicCircle o2) {
+                return Long.valueOf(o2.getCreateTime() - o1.getCreateTime()).intValue();
+            }
+        });
     }
 
     private void stopRefreshAnimation() {
@@ -138,7 +152,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     private void updateEconomicCircleList(List<EconomicCircle> economicCircleList) {
         if (economicCircleList == null) {
             stopRefreshAnimation();
-            return;
         }
 
 

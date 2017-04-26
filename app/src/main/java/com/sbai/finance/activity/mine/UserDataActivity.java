@@ -54,7 +54,7 @@ public class UserDataActivity extends BaseActivity {
         setContentView(R.layout.activity_user_data);
         ButterKnife.bind(this);
         Glide.with(getActivity()).load("")
-                .placeholder(R.drawable.default_headportrait160x160)
+                .placeholder(R.drawable.ic_default_headportrait160x160)
                 .bitmapTransform(new GlideCircleTransform(getActivity()))
                 .into(mUserHeadImage);
         mUserName.setText(userName);

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:drawablePadding="20dp"
-            android:drawableTop="@mipmap/ic_launcher"
+            android:drawableTop="@drawable/img_no_data"
             android:gravity="center"
             android:paddingTop="100dp"
             android:text="数据为空"

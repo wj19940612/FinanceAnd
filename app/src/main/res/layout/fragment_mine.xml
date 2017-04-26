@@ -129,8 +129,7 @@
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/news"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"
-        app:subTextBackground="@drawable/bg_red_circle_no_read_news"/>
+        app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/feedBack"
@@ -138,7 +137,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
-        android:visibility="gone"
+        android:visibility="visible"
         app:leftIcon="@drawable/ic_mine_list_feed_back"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/feed_back"

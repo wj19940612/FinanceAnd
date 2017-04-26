@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,12 +27,16 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +56,9 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     private TextView mFootView;
     private MutualHelpAdapter mMutualHelpAdapter;
 
+    private int mPage;
+    private int mSize = 15;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +70,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mMutualHelpAdapter = new MutualHelpAdapter(getActivity());
         mListView.setAdapter(mMutualHelpAdapter);
@@ -85,33 +94,35 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
 
     private void requestMutualHelpList() {
 
-//        API.requestHistoryNews(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP)
-//                .setIndeterminate(this)
-//                .setTag(TAG)
-//                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
-//                    @Override
-//                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
-//
-//                    }
-//                })
-//                .fireSync();
+        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, mSize)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
+                        for (HistoryNewsModel his : data) {
+                            Log.d(TAG, " 互助消息" + his.toString());
+                        }
+                    }
+                })
+                .fire();
 
-        ArrayList<HistoryNewsModel> economicCircleNewModels = new ArrayList<>();
-        for (int i = 0; i < url.length; i++) {
-            HistoryNewsModel hahahha = new HistoryNewsModel();
-            if (i == 0) {
-                hahahha.setType(10);
-            } else if (i == 1) {
-                hahahha.setType(11);
-            } else {
-                hahahha.setType(12);
-            }
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserPortrait(url[i]);
-            hahahha.setUserInfo(userInfo);
-            economicCircleNewModels.add(hahahha);
-        }
-        updateMutualHelpData(economicCircleNewModels);
+//        ArrayList<HistoryNewsModel> economicCircleNewModels = new ArrayList<>();
+//        for (int i = 0; i < url.length; i++) {
+//            HistoryNewsModel hahahha = new HistoryNewsModel();
+//            if (i == 0) {
+//                hahahha.setType(10);
+//            } else if (i == 1) {
+//                hahahha.setType(11);
+//            } else {
+//                hahahha.setType(12);
+//            }
+//            UserInfo userInfo = new UserInfo();
+//            userInfo.setUserPortrait(url[i]);
+//            hahahha.setUserInfo(userInfo);
+//            economicCircleNewModels.add(hahahha);
+//        }
+//        updateMutualHelpData(economicCircleNewModels);
     }
 
     // TODO: 2017/4/18 后期删除
@@ -136,14 +147,14 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestMutualHelpList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModels.size() < 15) {
+        if (historyNewsModels.size() < mSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -252,7 +263,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 UserInfo userInfo = item.getUserInfo();
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
-                            .placeholder(R.drawable.default_headportrait64x64)
+                            .placeholder(R.drawable.ic_default_avatar)
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
 

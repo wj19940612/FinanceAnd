@@ -159,10 +159,10 @@
                 android:minHeight="69dp"
                 android:numColumns="4"
                 android:layout_marginLeft="@dimen/common_padding"
-                android:layout_marginRight="@dimen/common_padding"
-                android:horizontalSpacing="@dimen/common_split"
-                android:verticalSpacing="@dimen/common_split"
-                android:scrollbars="none"/>
+                android:background="@drawable/bg_dotted_line_gray"
+                android:drawableTop="@drawable/ic_release_help_addpic"
+                android:textColor="@color/assistText"
+                android:text="@string/borrow_add_photo"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="98dp"

@@ -35,4 +35,9 @@ public class ValidityDecideUtil {
         Matcher letterMatcher = letter.matcher(realName);
         return letterMatcher.matches();
     }
+
+    public static boolean isIdentityCard(String identityCard) {
+        Pattern compile = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
+        return compile.matcher(identityCard).matches();
+    }
 }
