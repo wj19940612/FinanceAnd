@@ -18,7 +18,7 @@
             android:id="@+id/avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_avatar"/>
+            android:src="@drawable/ic_default_avatar"/>
 
         <TextView
             android:id="@+id/userName"
@@ -78,14 +78,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@drawable/btn_like"
-            android:drawableLeft="@drawable/bg_like"
+            android:background="@drawable/btn_love"
+            android:drawableLeft="@drawable/bg_love"
             android:drawablePadding="5dp"
             android:gravity="center"
             android:minHeight="20dp"
             android:minWidth="50dp"
             android:padding="5dp"
-            android:textColor="@color/like_text"
+            android:textColor="@color/love_text"
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>

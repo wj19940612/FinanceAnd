@@ -23,7 +23,7 @@
         android:paddingRight="13dp">
 
         <TextView
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="22.5dp"
             android:id="@+id/opinionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:id="@+id/opinionContent"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="null"
+            android:background="@null"
             android:gravity="left"
             android:hint="          请输入文字"
             android:paddingTop="20dp"

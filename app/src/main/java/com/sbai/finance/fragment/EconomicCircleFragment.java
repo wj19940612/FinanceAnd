@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class EconomicCircleFragment extends BaseFragment {
+public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener {
     private static final int TYPE_PRODUCT = 0;
     private static final int TYPE_HELP = 1;
 
@@ -58,6 +59,7 @@ public class EconomicCircleFragment extends BaseFragment {
         mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
         //mList.setEmptyView(mEmpty);
         mList.setAdapter(mEconomicCircleAdapter);
+        mList.setOnScrollListener(this);
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,6 +94,19 @@ public class EconomicCircleFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mList == null || mList.getChildCount() == 0) ? 0 : mList.getChildAt(0).getTop();
+        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+
     }
 
     static class EconomicCircleAdapter extends BaseAdapter {

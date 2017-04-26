@@ -19,7 +19,7 @@
     <string name="details">详情</string>
     <string name="discussion_area">讨论区</string>
     <string name="followed">已关注</string>
-    <string name="comment_number">(%1$s)</string>
+    <string name="opinion_number">(%1$s)</string>
     <string name="share">分享</string>
     <string name="borrow_money">借款</string>
     <string name="comment">评论......</string>
@@ -184,6 +184,5 @@
     <string name="prediction_rule4">4.预测成功率高的用户,将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
     <string name="submit">提交</string>
-    <string name="please_enter_the_text">        请输入文字</string>
 
 </resources>

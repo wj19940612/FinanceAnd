@@ -57,7 +57,7 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawableTop="@drawable/bigevent_pic_noevent"
+        android:drawableTop="@drawable/no_data"
         android:adjustViewBounds="true"
         android:paddingTop="150dp"
         android:gravity="center_horizontal"

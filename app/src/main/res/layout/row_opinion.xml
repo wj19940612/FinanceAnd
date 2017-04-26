@@ -18,7 +18,7 @@
             android:id="@+id/avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_avatar"/>
+            android:src="@drawable/ic_default_avatar"/>
 
         <TextView
             android:id="@+id/userName"

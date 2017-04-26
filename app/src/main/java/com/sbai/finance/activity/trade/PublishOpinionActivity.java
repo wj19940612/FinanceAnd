@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.sbai.finance.R;
 
-public class PublishOpinion extends AppCompatActivity {
+public class PublishOpinionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
