@@ -74,7 +74,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     private void requestSystemNewsList() {
         ArrayList<HistoryNewsModel> systemNewsModels = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            systemNewsModels.add(new HistoryNewsModel(""));
+            systemNewsModels.add(new HistoryNewsModel());
         }
         updateSystemNewsListData(systemNewsModels);
     }
