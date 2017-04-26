@@ -134,7 +134,7 @@ public class Client {
      * 请求类型 post
      * 请求Url  msg/historyMsg.do
      *
-     * @param classify  	消息类型{1.系统消息 2.互助消息 3.经济圈消息}
+     * @param classify 消息类型{1.系统消息 2.互助消息 3.经济圈消息}
      * @return
      */
     public static API requestHistoryNews(int classify, int page, int pageSize) {
@@ -218,7 +218,7 @@ public class Client {
      * @return
      */
     public static API getAttentionFollowUserNumber(int userId) {
-        return new API("/coterie/userDetail/getAttentionFollow.do", new ApiParams().put("userId", userId));
+        return new API("/coterie/userDetail/getStatistics.do", new ApiParams().put("userId", userId));
     }
 
     /**
@@ -228,6 +228,17 @@ public class Client {
      */
     public static API getNoReadMessageNumber() {
         return new API("/msg/count.do");
+    }
+
+    /**
+     * 接口名称 认证查询
+     * 请求类型 get
+     * 请求Url  /user/user/userCertification.do
+     *
+     * @return
+     */
+    public static API getUserCreditApproveStatus() {
+        return new API("/user/user/userCertification.do");
     }
 
     /**

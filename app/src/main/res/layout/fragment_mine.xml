@@ -112,11 +112,11 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
-        android:visibility="gone"
+        android:visibility="visible"
         app:leftIcon="@drawable/ic_mine_list_detail"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/detail"
-        app:rowTextColor="@color/icon_text_row_text"
+        app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -128,7 +128,7 @@
         app:leftIcon="@drawable/ic_mine_list_news"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/news"
-        app:rowTextColor="@color/icon_text_row_text"
+        app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
         app:subTextBackground="@drawable/bg_red_circle_no_read_news"/>
 
@@ -142,7 +142,7 @@
         app:leftIcon="@drawable/ic_mine_list_feed_back"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/feed_back"
-        app:rowTextColor="@color/icon_text_row_text"
+        app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -154,7 +154,7 @@
         app:leftIcon="@drawable/ic_mine_list_setting"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/setting"
-        app:rowTextColor="@color/icon_text_row_text"
+        app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -166,7 +166,7 @@
         app:leftIcon="@drawable/ic_mine_list_aboutus"
         app:rightIcon="@drawable/ic_arrow_mine_list_more"
         app:rowText="@string/about_us"
-        app:rowTextColor="@color/icon_text_row_text"
+        app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
 
 </LinearLayout>

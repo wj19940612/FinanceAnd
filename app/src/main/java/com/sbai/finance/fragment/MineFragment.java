@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.AttentionActivity;
@@ -27,6 +26,7 @@ import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.SettingActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -170,12 +170,12 @@ public class MineFragment extends BaseFragment {
     }
 
     private void requestUserAttentionAndroidFansNumber() {
-        Client.getAttentionFollowUserNumber(100)
+        Client.getAttentionFollowUserNumber(0)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<JsonObject>, JsonObject>() {
+                .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>() {
                     @Override
-                    protected void onRespSuccessData(JsonObject data) {
+                    protected void onRespSuccessData(AttentionAndFansNumberModel data) {
                         Log.d(TAG, "粉丝数量 " + data.toString());
                     }
                 })

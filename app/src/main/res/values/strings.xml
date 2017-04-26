@@ -114,6 +114,8 @@
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
+    <string name="real_name">真实姓名</string>
+    <string name="identity_card_number">身份证号码</string>
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -125,7 +127,7 @@
     <string name="relieve">解除</string>
     <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
-    
+
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
@@ -142,6 +144,8 @@
     <string name="is_attention">已关注</string>
     <string name="real_name_approve">实名认证</string>
     <string name="is_approve">已认证</string>
+    <string name="is_not_approve">未认证</string>
+    <string name="is_auditing">审核中</string>
     <string name="attention_fans_number">关注 %1$d / 粉丝 %2$d</string>
 
     <string name="shield">屏蔽TA</string>
@@ -196,10 +200,10 @@
     <string name="publish_opinion">发表观点</string>
     <string name="submit">提交</string>
     <string name="please_enter_the_text">        请输入文字</string>
-    
+
 
     <!--mutual-->
-   <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="borrow_limit">借款金额</string>
     <string name="borrow_amount">最高2000元</string>
     <string name="borrow_interest_amount">最高200元</string>

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
@@ -32,8 +33,8 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,14 +79,27 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
-            public void onUserHeadImageClick() {
-                // TODO: 2017/4/18 点击头像可跳转到用户详情页 
-                ToastUtil.curt("用户头像");
+            public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
             }
 
             @Override
             public void onUserAppraiseClick(HistoryNewsModel historyNewsModel) {
                 // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示
+                switch (historyNewsModel.getType()) {
+                    //关注
+                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
+                        break;
+                    //点赞帖子
+                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
+                        break;
+                    //点赞评论
+                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                        break;
+                    //评论
+                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
+                        break;
+                }
             }
         });
         mListView.setAdapter(mEconomicCircleNewsAdapter);
@@ -206,7 +220,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     static class EconomicCircleNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         interface CallBack {
-            void onUserHeadImageClick();
+            void onUserHeadImageClick(HistoryNewsModel historyNewsModel);
 
             void onUserAppraiseClick(HistoryNewsModel historyNewsModel);
         }
@@ -285,7 +299,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     @Override
                     public void onClick(View v) {
                         if (callBack != null) {
-                            callBack.onUserHeadImageClick();
+                            callBack.onUserHeadImageClick(item);
                         }
                     }
                 });
