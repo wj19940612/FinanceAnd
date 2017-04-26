@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -14,25 +15,30 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.model.EconomicCircle;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class EconomicCircleFragment extends BaseFragment {
+public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener {
     private static final int TYPE_PRODUCT = 0;
     private static final int TYPE_HELP = 1;
 
     @BindView(android.R.id.list)
-    ListView mList;
+    ListView mListView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
@@ -41,6 +47,11 @@ public class EconomicCircleFragment extends BaseFragment {
 
     private List<EconomicCircle> mEconomicCircleList;
     private EconomicCircleAdapter mEconomicCircleAdapter;
+    private TextView mFootView;
+
+    private int mPage = 0;
+    private int mPageSize = 15;
+    private HashSet<Integer> mSet;
 
     @Nullable
     @Override
@@ -53,12 +64,13 @@ public class EconomicCircleFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSet = new HashSet<>();
         mEconomicCircleList = new ArrayList<>();
-        initData();
         mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
-        //mList.setEmptyView(mEmpty);
-        mList.setAdapter(mEconomicCircleAdapter);
-        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setEmptyView(mEmpty);
+        mListView.setAdapter(mEconomicCircleAdapter);
+        mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position % 2 == 0) {
@@ -70,21 +82,65 @@ public class EconomicCircleFragment extends BaseFragment {
                 }
             }
         });
-    }
 
-    private void initData() {
-        for (int i = 0; i < 10; i++) {
-            mEconomicCircleList.add(new EconomicCircle(5));
-        }
+        requestEconomicCircleList();
+        initSwipeRefreshLayout();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        requestEconomicCircleList();
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+
+    }
+
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSet.clear();
+                mPage = 0;
+                requestEconomicCircleList();
+            }
+        });
+
     }
 
     private void requestEconomicCircleList() {
+        Client.getEconomicCircleList(mPage, mPageSize).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<EconomicCircle>>, List<EconomicCircle>>() {
+                    @Override
+                    protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
+
+                        updateEconomicCircleList(economicCircleList);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                });
+    }
+
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void updateEconomicCircleList(List<EconomicCircle> economicCircleList) {
+        if (economicCircleList == null) {
+            stopRefreshAnimation();
+            return;
+        }
+
 
     }
 
@@ -110,7 +166,11 @@ public class EconomicCircleFragment extends BaseFragment {
 
         @Override
         public Object getItem(int position) {
-            return mEconomicCircleList.get(position);
+            if (position % 2 == 0) {
+                return TYPE_PRODUCT;
+            }
+            return TYPE_HELP;
+            //return mEconomicCircleList.get(position);
         }
 
         @Override
@@ -125,11 +185,7 @@ public class EconomicCircleFragment extends BaseFragment {
 
         @Override
         public int getItemViewType(int position) {
-            if (position % 2 == 0) {
-                return TYPE_PRODUCT;
-            }
-            return TYPE_HELP;
-            //return mEconomicCircleList.get(position).getType();
+            return mEconomicCircleList.get(position).getType();
         }
 
         @Override

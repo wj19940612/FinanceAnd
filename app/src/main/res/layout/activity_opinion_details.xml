@@ -18,27 +18,27 @@
         app:rightVisible="true"
         app:titleText="@string/details"/>
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="13dp"
-                android:orientation="vertical"
-                app:layout_scrollFlags="scroll|enterAlways">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
                     android:layout_marginTop="15dp"
                     android:gravity="center_vertical">
 
@@ -46,7 +46,7 @@
                         android:id="@+id/avatar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_avatar"/>
+                        android:src="@drawable/ic_default_avatar"/>
 
                     <TextView
                         android:id="@+id/userName"
@@ -60,7 +60,7 @@
                         tools:text="刘亦菲"/>
 
                     <TextView
-                        android:id="@+id/followed"
+                        android:id="@+id/isAttention"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/userName"
@@ -68,7 +68,7 @@
                         android:layout_toRightOf="@+id/userName"
                         android:textColor="@color/assistText"
                         android:textSize="11sp"
-                        tools:text="@string/followed"/>
+                        tools:text="@string/is_attention"/>
 
                     <TextView
                         android:id="@+id/publishTime"
@@ -79,23 +79,26 @@
                         android:textColor="@color/assistText"
                         android:textSize="11sp"
                         tools:text="2008/08/08 08:00"/>
-
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/opinion"
+                    android:id="@+id/opinionContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
                     android:layout_marginTop="15dp"
                     android:ellipsize="end"
                     android:lineSpacingExtra="12dp"
-                    android:textColor="#5f6166"
+                    android:textColor="@color/opinionText"
                     android:textSize="14sp"
                     tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
                     android:layout_marginTop="15sp"
                     android:orientation="horizontal">
 
@@ -142,7 +145,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginRight="13dp"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
 
@@ -170,83 +173,84 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
                     android:layout_marginTop="15dp">
 
                     <TextView
-                        android:id="@+id/like"
+                        android:id="@+id/loveNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/btn_love"
+                        android:drawableLeft="@drawable/bg_love"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:textColor="@color/love_text"
+                        android:textSize="10sp"
+                        tools:text="88"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@color/greyLightAssist"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/btn_like"
-                        android:drawableLeft="@drawable/bg_like"
+                        android:layout_marginLeft="13dp"
+                        android:drawableLeft="@drawable/ic_discussion_area"
                         android:drawablePadding="5dp"
-                        android:gravity="center"
-                        android:minHeight="20dp"
-                        android:minWidth="50dp"
-                        android:padding="5dp"
-                        android:textColor="@color/like_text"
-                        android:textSize="10sp"
-                        tools:text="8888"/>
-                </RelativeLayout>
+                        android:text="@string/discussion_area"
+                        android:textColor="@color/secondaryText"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/opinionNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/secondaryText"
+                        android:textSize="14sp"
+                        tools:text="@string/opinion_number"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <com.sbai.finance.view.MyListView
+                        android:id="@android:id/list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@drawable/divider_economic_circle_list"
+                        android:dividerHeight="0.5dp"
+                        android:footerDividersEnabled="false"
+                        android:headerDividersEnabled="false"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@android:id/empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="100dp"
+                        android:gravity="center_horizontal"
+                        android:text="@string/no_data"
+                        android:textColor="@color/primaryText"
+                        android:textSize="20sp"/>
+                </LinearLayout>
             </LinearLayout>
+        </ScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:background="@color/greyLightAssist"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
-                    android:drawableLeft="@drawable/ic_discussion_area"
-                    android:drawablePadding="5dp"
-                    android:text="@string/discussion_area"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/commentNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="14sp"
-                    tools:text="@string/comment_number"/>
-
-            </LinearLayout>
-
-        </android.support.design.widget.AppBarLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <ListView
-                android:id="@android:id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@drawable/divider_economic_circle_list"
-                android:dividerHeight="0.5dp"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="false"/>
-
-            <TextView
-                android:id="@android:id/empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:text="@string/no_data"
-                android:textColor="@color/primaryText"
-                android:textSize="20sp"/>
-        </LinearLayout>
-    </android.support.design.widget.CoordinatorLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

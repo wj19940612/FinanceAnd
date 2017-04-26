@@ -284,6 +284,7 @@ public class Client {
     }
 
     /**
+<<<<<<< HEAD
      * 获取期货品种
      * @param page
      * @param pageSize
@@ -346,9 +347,22 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API delOptional(String varietyId){
+    public static API delOptional(String varietyId) {
         return new API("/order/optional/deleteOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
+    }
+     /**
+     * 获取经济圈首页列表
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getEconomicCircleList(int page,int pageSize) {
+        return new API("/coterie/coterie/coterieList.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 }
