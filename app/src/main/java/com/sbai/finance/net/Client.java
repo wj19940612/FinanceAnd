@@ -33,4 +33,22 @@ public class Client {
                         .put("type", type));
     }
 
+    /**
+     * 获取品种列表
+     *
+     * @param bigVarietyTypeCode
+     * @param page
+     * @param pageSize
+     * @param smallVarietyTypeCode
+     * @return
+     */
+    public static API getVarietyList(String bigVarietyTypeCode, int page, int pageSize, String smallVarietyTypeCode) {
+        return new API("/order/order/getVariety.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("smallVarietyTypeCode", smallVarietyTypeCode));
+    }
+
 }
