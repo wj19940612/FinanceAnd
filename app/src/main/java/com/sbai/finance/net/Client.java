@@ -2,6 +2,7 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.sbai.httplib.ApiParams;
+import com.android.volley.Request;
 
 
 public class Client {
@@ -36,8 +37,6 @@ public class Client {
                         .put("endTime", endTime)
                         .put("type", type));
     }
-
-
     /**
      * 接口名称 快捷登入
      * 请求类型 post
@@ -145,5 +144,57 @@ public class Client {
                 .put("land", land)
                 .put("userSex", userSex));
     }
+    public static API getBannerData(){
+        return new API(Request.Method.POST,"/user/news/findBannerList.do");
+    }
 
+    /**
+     * @param page  页码
+     * @param pageSize 页码大小
+     * @return
+     */
+    public static API getBreakingNewsData(Integer page,Integer pageSize){
+        return new API("/user/breakingNews/findBreakingNewsList.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * 大事件详情
+     * @param id
+     * @return
+     */
+    public static API getBreakingNewsDetailData(String id){
+        return new API("/user/breakingNews/showDetail.do",
+                new ApiParams()
+                        .put("id", id));
+    }
+
+    /**
+     * 大事件最新标题
+     * @return
+     */
+    public static API getBreakingNewsTitleData(){
+        return new API("/user/breakingNews/findOneTitle.do");
+    }
+
+    /**
+     * 获取主题
+     * @return
+     */
+    public static API getTopicData(){
+        return new API("/coterie/subject/find.do");
+    }
+
+    /**
+     * 获取主题详情
+     * @param id
+     * @return
+     */
+    public static API getTopicDetailData(Integer id){
+        return new API("/coterie/subject/findCoterieInfo.do",
+                new ApiParams()
+                        .put("id", id));
+    }
 }

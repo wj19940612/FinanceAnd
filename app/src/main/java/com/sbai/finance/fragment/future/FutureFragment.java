@@ -52,7 +52,6 @@ public class FutureFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mfutureType = this.getArguments().getInt("type");
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

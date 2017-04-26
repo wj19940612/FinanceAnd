@@ -64,6 +64,7 @@
     <string name="event_title">大事件</string>
 
     <!--Trade page-->
+    <string name="stock_code">%1$s(%2$s)</string>
     <string name="today_open">今开</string>
     <string name="pre_close">昨收</string>
     <string name="highest">最高</string>
@@ -76,8 +77,13 @@
     <string name="fifteen_min_k">15分钟</string>
     <string name="thirty_min_k">30分钟</string>
     <string name="sixty_min_k">60分钟</string>
+    <string name="five_day_k_line">五日</string>
+    <string name="week_k_line">周K</string>
+    <string name="month_k_line">月K</string>
     <string name="point">观点</string>
     <string name="introduce">简介</string>
+    <string name="stock_news">新闻</string>
+    <string name="stock_finance">财务</string>
 
     <!--    我的界面  -->
     <string name="attention">关注</string>
@@ -192,4 +198,21 @@
     <string name="please_enter_the_text">        请输入文字</string>
     
 
+    <!--mutual-->
+   <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="borrow_limit">借款金额</string>
+    <string name="borrow_amount">最高2000元</string>
+    <string name="borrow_interest_amount">最高200元</string>
+    <string name="borrow_day_limit">借款期限</string>
+    <string name="borrow_day_limit_hint">1~60</string>
+    <string name="borrow_remark">备注</string>
+    <string name="borrow_remark_hint">请填写有助于借款的信息哦,但不能填写联系方式哦!</string>
+    <string name="borrow_photo_tips">最多可上传四张照片,不得带有联系方式和不好的图片哦!</string>
+    <string name="borrow_add_photo">添加照片</string>
+    <string name="borrow_day">天</string>
+    <string name="borrow_publish">确认发布</string>
+    <string name="want_borrow">我要借款</string>
+    <string name="borrow_overdue">超出借款期限</string>
+    <string name="borrow_agree">阅读并同意</string>
+    <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
 </resources>
