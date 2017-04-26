@@ -2,7 +2,6 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.sbai.httplib.ApiParams;
-import com.android.volley.Request;
 
 
 public class Client {
@@ -214,5 +213,19 @@ public class Client {
         return new API("/coterie/subject/findCoterieInfo.do",
                 new ApiParams()
                         .put("id", id));
+    }
+
+    /**
+     * 获取经济圈首页列表
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getEconomicCircleList(int page,int pageSize) {
+        return new API("/coterie/coterie/coterieList.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 }
