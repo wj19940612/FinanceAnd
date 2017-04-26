@@ -74,6 +74,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.bigevent_pic_noevent, 0, 0);
         mListView.setEmptyView(mEmpty);
         mSet = new HashSet<>();
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
@@ -133,19 +134,19 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                         }
                     }
                 })
-                .fireSync();
+                .fire();
 
 
         // TODO: 2017/4/25 做测试用
-        ArrayList<HistoryNewsModel> historyNewsModelList = new ArrayList<>();
-        for (int i = 0; i < url.length; i++) {
-            HistoryNewsModel hahahha = new HistoryNewsModel();
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserPortrait(url[i]);
-            hahahha.setUserInfo(userInfo);
-            historyNewsModelList.add(hahahha);
-        }
-        updateEconomicCircleData(historyNewsModelList);
+//        ArrayList<HistoryNewsModel> historyNewsModelList = new ArrayList<>();
+//        for (int i = 0; i < url.length; i++) {
+//            HistoryNewsModel hahahha = new HistoryNewsModel();
+//            UserInfo userInfo = new UserInfo();
+//            userInfo.setUserPortrait(url[i]);
+//            hahahha.setUserInfo(userInfo);
+//            historyNewsModelList.add(hahahha);
+//        }
+//        updateEconomicCircleData(historyNewsModelList);
 
     }
 
@@ -278,7 +279,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
                             .bitmapTransform(new GlideCircleTransform(context))
-                            .placeholder(R.drawable.default_headportrait64x64)
+                            .placeholder(R.drawable.ic_default_headportrait64x64)
                             .into(mUserHeadImage);
                 }
 

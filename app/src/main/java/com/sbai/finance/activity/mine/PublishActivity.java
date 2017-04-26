@@ -49,8 +49,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
         ButterKnife.bind(this);
-
-        mListView.setEmptyView(mFootView);
+        mListView.setEmptyView(mEmpty);
         mPublishAdapter = new PublishAdapter(getActivity());
         mListView.setAdapter(mPublishAdapter);
         mListView.setOnScrollListener(this);
@@ -64,11 +63,11 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        ArrayList<UserPublishModel> userPublishModels = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            userPublishModels.add(new UserPublishModel());
-        }
-        updateUserPublishData(userPublishModels);
+//        ArrayList<UserPublishModel> userPublishModels = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            userPublishModels.add(new UserPublishModel());
+//        }
+//        updateUserPublishData(userPublishModels);
     }
 
     private void updateUserPublishData(ArrayList<UserPublishModel> userPublishModelList) {

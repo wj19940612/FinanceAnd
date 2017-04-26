@@ -160,7 +160,7 @@
                 android:paddingTop="@dimen/common_padding"
                 android:layout_marginLeft="@dimen/common_padding"
                 android:background="@drawable/bg_dotted_line_gray"
-                android:drawableTop="@drawable/releasehelp_icon_addpic"
+                android:drawableTop="@drawable/ic_release_help_addpic"
                 android:textColor="@color/assistText"
                 android:text="@string/borrow_add_photo"/>
             <RelativeLayout
