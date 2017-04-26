@@ -284,7 +284,6 @@ public class Client {
     }
 
     /**
-<<<<<<< HEAD
      * 获取期货品种
      * @param page
      * @param pageSize
