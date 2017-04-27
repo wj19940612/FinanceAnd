@@ -107,11 +107,11 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void requestUserAttentionList() {
-        ArrayList<ShieldedUserModel> dataList = new ArrayList<>();
-        for (int i = 0; i < url.length; i++) {
-            dataList.add(new ShieldedUserModel("用户 " + i + i, url[i]));
-        }
-        updateShieldUserData(dataList);
+//        ArrayList<ShieldedUserModel> dataList = new ArrayList<>();
+//        for (int i = 0; i < url.length; i++) {
+//            dataList.add(new ShieldedUserModel("用户 " + i + i, url[i]));
+//        }
+//        updateShieldUserData(dataList);
     }
 
 

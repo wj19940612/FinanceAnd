@@ -80,12 +80,13 @@ public class BorrowActivity extends BaseActivity {
 				    setPublishStatus();
 				}
 		});
-
-		String photo1 = LocalUser.getUser().getUserInfo().getUserPortrait();
-		mPhotoGridAdapter.add(photo1);
-		mPhotoGridAdapter.add(photo1);
-		mPhotoGridAdapter.add(photo1);
-		mPhotoGridAdapter.add(photo1);
+        if(LocalUser.getUser().isLogin()){
+			String photo1 = LocalUser.getUser().getUserInfo().getUserPortrait();
+			mPhotoGridAdapter.add(photo1);
+			mPhotoGridAdapter.add(photo1);
+			mPhotoGridAdapter.add(photo1);
+			mPhotoGridAdapter.add(photo1);
+		}
 		mPhotoGridAdapter.add(" ");
 		mPhotoGridAdapter.notifyDataSetChanged();
 	}

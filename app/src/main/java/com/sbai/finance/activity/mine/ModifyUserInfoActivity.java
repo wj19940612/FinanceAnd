@@ -8,8 +8,8 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -76,7 +76,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
     @BindView(R.id.credit)
     IconTextRow mCredit;
     @BindView(R.id.logout)
-    AppCompatButton mLogout;
+    AppCompatTextView mLogout;
 
     private String[] mAgeList;
 
@@ -111,10 +111,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
         if (LocalUser.getUser().isLogin()) {
             Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.drawable.default_headportrait160x160)
+                    .placeholder(R.drawable.ic_default_headportrait160x160)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.drawable.default_headportrait160x160)
+            Glide.with(this).load(R.drawable.ic_default_headportrait160x160)
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }

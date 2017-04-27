@@ -95,7 +95,7 @@ public class EventActivity extends BaseActivity {
 				}).fire();
 	}
     private void updateEventInfo(ArrayList<EventModel.DataBean> eventList){
-        if (eventList == null){
+        if (eventList.isEmpty()){
 			stopRefreshAnimation();
 			return;
 		}

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,10 +23,13 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.ToastUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +48,9 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     private TextView mFootView;
     private SystemNewsAdapter mSystemNewsAdapter;
 
+    private int mPage;
+    private int mSize = 15;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,6 +62,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
         mListView.setAdapter(mSystemNewsAdapter);
@@ -72,14 +80,27 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestSystemNewsList() {
-        ArrayList<HistoryNewsModel> systemNewsModels = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            systemNewsModels.add(new HistoryNewsModel());
-        }
-        updateSystemNewsListData(systemNewsModels);
+        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, mSize)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<HistoryNewsModel> data) {
+                        for (HistoryNewsModel his : data) {
+                            Log.d(TAG, " 系统消息" + his.toString());
+                        }
+                        updateSystemNewsListData(data);
+                    }
+                })
+                .fire();
+//        ArrayList<HistoryNewsModel> systemNewsModels = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            systemNewsModels.add(new HistoryNewsModel());
+//        }
+//        updateSystemNewsListData(systemNewsModels);
     }
 
-    private void updateSystemNewsListData(ArrayList<HistoryNewsModel> systemNewsModels) {
+    private void updateSystemNewsListData(List<HistoryNewsModel> systemNewsModels) {
         if (systemNewsModels == null) {
             stopRefreshAnimation();
             return;
@@ -96,15 +117,14 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestSystemNewsList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (systemNewsModels.size() < 15) {
+        if (systemNewsModels.size() < mSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }

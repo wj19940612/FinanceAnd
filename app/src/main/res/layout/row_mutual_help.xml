@@ -13,7 +13,7 @@
         android:layout_width="@dimen/user_head_image"
         android:layout_height="@dimen/user_head_image"
         android:layout_marginRight="10dp"
-        tools:src="@drawable/default_headportrait64x64"/>
+        tools:src="@drawable/ic_default_avatar"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/userAction"

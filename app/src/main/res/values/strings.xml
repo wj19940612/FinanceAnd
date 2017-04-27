@@ -116,6 +116,8 @@
     <string name="sd_is_not_useful">sd卡不可使用</string>
     <string name="real_name">真实姓名</string>
     <string name="identity_card_number">身份证号码</string>
+    <string name="identity_card_font">身份证正面照片</string>
+    <string name="identity_card_reverse">身份证反面照片</string>
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -198,7 +200,8 @@
     <string name="prediction_rule3">3.每次预测时间段内预测一次后,将不能进行重复预测</string>
     <string name="prediction_rule4">4.预测成功率高的用户,将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
-    <string name="submit">提交</string>
+    <string name="submit_has_empty">提  交</string>
+    <string name="please_enter_the_text">        请输入文字</string>
 
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>

@@ -57,7 +57,7 @@
         android:background="@drawable/btn_red_primary"
         android:enabled="false"
         android:gravity="center"
-        android:text="@string/submit"
+        android:text="@string/submit_has_empty"
         android:textColor="@android:color/white"
         android:textSize="16sp"/>
 </LinearLayout>
