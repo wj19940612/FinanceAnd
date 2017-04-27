@@ -18,6 +18,7 @@ import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
+import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
@@ -123,7 +124,13 @@ public class FutureTradeActivity extends BaseActivity {
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
 
-
+        Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TrendViewData> data) {
+                        mTrendView.setDataList(data);
+                    }
+                }).fireSync();
     }
 
     private void initSlidingTab() {
@@ -189,11 +196,14 @@ public class FutureTradeActivity extends BaseActivity {
                 requestKlineDataAndSet(null);
                 showKlineView();
             } else if (tabText.equals(getString(R.string.sixty_min_k))) {
-
+                requestKlineDataAndSet("60");
+                showKlineView();
             } else if (tabText.equals(getString(R.string.thirty_min_k))) {
-
+                requestKlineDataAndSet("30");
+                showKlineView();
             } else if (tabText.equals(getString(R.string.fifteen_min_k))) {
-
+                requestKlineDataAndSet("15");
+                showKlineView();
             } else {
                 showTrendView();
             }
@@ -227,7 +237,8 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void requestKlineDataAndSet(final String type) {
-        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
+        Client.getKlineData(mVariety.getContractsCode(), type, null)
+                .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<KlineViewData> data) {
