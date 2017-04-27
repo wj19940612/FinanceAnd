@@ -17,6 +17,17 @@ public class Client {
         return new API("/user/user/getSystemTime.do");
     }
 
+    public static API getSocketAddress() {
+        return new API("/fut/ip/list.do",
+                new ApiParams().put("type", "app"));
+    }
+
+    /**
+     * 获取分时图数据
+     *
+     * @param code
+     * @return
+     */
     public static API getTrendData(String code) {
         return new API("/fut/k/timeSharing.do",
                 new ApiParams().put("code", code));

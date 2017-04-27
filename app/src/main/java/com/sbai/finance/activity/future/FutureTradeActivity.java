@@ -39,6 +39,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.R.id.klineView;
+
 public class FutureTradeActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
@@ -57,7 +59,7 @@ public class FutureTradeActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(R.id.klineView)
+    @BindView(klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -237,6 +239,7 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void requestKlineDataAndSet(final String type) {
+        mKlineView.clearData();
         Client.getKlineData(mVariety.getContractsCode(), type, null)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
