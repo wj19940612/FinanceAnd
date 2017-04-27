@@ -369,4 +369,42 @@ public class Client {
                         .put("page", page)
                         .put("pageSize", pageSize));
     }
+
+    /**
+     * 发表观点
+     * @param bigVarietyTypeCode
+     * @param content
+     * @param direction
+     * @param varietyId
+     * @param varietyType
+     * @return
+     */
+    public static API saveViewPoint(String bigVarietyTypeCode,String content,int direction,int varietyId,String varietyType) {
+        return new API(POST,"/coterie/viewpoint/saveViewpoint.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("content", content)
+                        .put("direction",direction)
+                        .put("varietyId",varietyId)
+                        .put("varietyType",varietyType));
+    }
+
+    /**
+     * 查询观点
+     * @param page
+     * @param pageSize
+     * @param varietyId
+     * @return
+     */
+    public static API findViewpoint(int page,int pageSize,int varietyId) {
+        return new API("/coterie/viewpoint/findViewpoint.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("varietyId",varietyId));
+    }
+
+
+
+
 }
