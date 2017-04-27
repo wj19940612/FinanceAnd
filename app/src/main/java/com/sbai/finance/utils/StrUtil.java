@@ -1,11 +1,14 @@
 package com.sbai.finance.utils;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
+import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -17,7 +20,25 @@ import android.text.style.ReplacementSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 
+import com.sbai.finance.view.CenteredImageSpan;
+
 public class StrUtil {
+
+    /**
+     * 给TextView,EditText前面添加图片
+     * @param context
+     * @param s
+     * @param drawableRes
+     * @return
+     */
+    public static SpannableString mergeTextWithImage(Context context, String s, int drawableRes) {
+        SpannableString spanString = new SpannableString("   " + s);
+        Drawable d = ContextCompat.getDrawable(context, drawableRes);
+        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+        CenteredImageSpan span = new CenteredImageSpan(context, drawableRes);
+        spanString.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spanString;
+    }
 
     /**
      * 设置 s1 的字体，按比例缩放 s2 的大小，同时拼接 s1 和 s2

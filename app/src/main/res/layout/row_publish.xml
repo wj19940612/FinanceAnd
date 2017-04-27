@@ -6,7 +6,7 @@
               android:background="@color/greyLightAssist"
               android:orientation="vertical">
 
-    <include layout="@layout/row_economic_circle_product"/>
+    <include layout="@layout/row_economic_circle_opinion"/>
 
     <LinearLayout
         android:layout_width="match_parent"
