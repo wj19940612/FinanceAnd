@@ -32,7 +32,7 @@
             tools:text="刘亦菲"/>
 
         <TextView
-            android:id="@+id/followed"
+            android:id="@+id/isAttention"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/userName"
@@ -40,7 +40,7 @@
             android:layout_toRightOf="@+id/userName"
             android:textColor="@color/assistText"
             android:textSize="11sp"
-            tools:text="@string/followed"/>
+            tools:text="@string/is_attention"/>
 
         <TextView
             android:id="@+id/publishTime"
@@ -54,7 +54,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/opinion"
+        android:id="@+id/opinionContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="13dp"
@@ -73,11 +73,11 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
-        android:layout_marginTop="15sp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/product"
+            android:id="@+id/bigVarietyName"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -94,7 +94,7 @@
             android:background="@drawable/bg_product_up_down">
 
             <TextView
-                android:id="@+id/productName"
+                android:id="@+id/varietyName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -120,7 +120,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="13dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
