@@ -132,16 +132,16 @@ public class Client {
     /**
      * 接口名称 历史消息
      * 请求类型 post
-     * 请求Url  msg/historyMsg.do
+     * 请求Url  msg/msg/history.do
      *
      * @param classify 消息类型{1.系统消息 2.互助消息 3.经济圈消息}
      * @return
      */
     public static API requestHistoryNews(int classify, int page, int pageSize) {
-        return new API("/msg/historyMsg.do", new ApiParams()
+        return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
-                .put("pageSize", pageSize));
+                .put("size", pageSize));
     }
 
     /**
@@ -163,8 +163,13 @@ public class Client {
                 .put("userSex", userSex));
     }
 
+    /**
+     * 获取首页的 banner
+     *
+     * @return
+     */
     public static API getBannerData() {
-        return new API(Request.Method.POST, "/user/news/findBannerList.do");
+        return new API(POST, "/user/news/findBannerList.do");
     }
 
     /**
@@ -224,10 +229,10 @@ public class Client {
     /**
      * 接口名称 未读消息的数量
      * 请求类型 post
-     * 请求Url  msg/count.do
+     * 请求Url   msg/msg/count.do
      */
     public static API getNoReadMessageNumber() {
-        return new API("/msg/count.do");
+        return new API("/msg/msg/count.do");
     }
 
     /**
@@ -346,7 +351,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API delOptional(String varietyId) {
+    public static API delOptional(Integer varietyId) {
         return new API("/order/optional/deleteOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));

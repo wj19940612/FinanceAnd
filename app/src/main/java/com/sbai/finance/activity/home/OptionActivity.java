@@ -16,6 +16,12 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.FutureHq;
+import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.slidingListView.SlideItem;
 import com.sbai.finance.view.slidingListView.SlideListView;
 
@@ -36,8 +42,6 @@ public class OptionActivity extends BaseActivity {
 	TextView mEmpty;
 
 	private SlideListAdapter mSlideListAdapter;
-	private List<FutureHq> mListHq;
-
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,8 +54,8 @@ public class OptionActivity extends BaseActivity {
 		mSlideListAdapter = new SlideListAdapter(this);
 		mSlideListAdapter.setOnDelClickListener(new SlideListAdapter.OnDelClickListener() {
 			@Override
-			public void onClick(int position) {
-				mSlideListAdapter.remove(mSlideListAdapter.getItem(position));
+			public void onClick(final int position) {
+				requestDelOptionalData(mSlideListAdapter.getItem(position).getVarietyId());
 			}
 		});
 		mListView.setEmptyView(mEmpty);
@@ -66,30 +70,42 @@ public class OptionActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		updateOptionInfo();
+		requestOptionalData();
+	}
+
+	private void requestOptionalData() {
+		Client.getOptional(Variety.VAR_STOCK).setTag(TAG)
+				.setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+					@Override
+					protected void onRespSuccessData(List<Variety> data) {
+                          updateOptionInfo((ArrayList<Variety>) data);
+					}
+				}).fireSync();
+	}
+	private void requestDelOptionalData(Integer varietyId ) {
+		Client.delOptional(varietyId).setTag(TAG)
+				.setCallback(new Callback<Resp<Object>>() {
+					@Override
+					protected void onRespSuccess(Resp<Object> resp) {
+						if (resp.isSuccess()){
+							requestOptionalData();
+						}else{
+							ToastUtil.curt(resp.getMsg());
+						}
+					}
+				}).fire();
 	}
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 	}
-	private void updateOptionInfo() {
-		if (mListHq==null){
-			mListHq = new ArrayList<>();
-		}
-		for (int i =0;i<10;i++){
-			FutureHq futureHq = new FutureHq();
-			futureHq.setCodeName("美原油"+i);
-			futureHq.setInstrumentId("CL1709");
-			futureHq.setLastPrice(66.66);
-			futureHq.setUpDropSpeed(25.00);
-			mListHq.add(futureHq);
-		}
+	private void updateOptionInfo(ArrayList<Variety> data) {
 		mSlideListAdapter.clear();
-		mSlideListAdapter.addAll(mListHq);
+		mSlideListAdapter.addAll(data);
 		mSlideListAdapter.notifyDataSetChanged();
 
 	}
-	public static class SlideListAdapter extends ArrayAdapter<FutureHq> {
+	public static class SlideListAdapter extends ArrayAdapter<Variety> {
 		Context mContext;
 		private OnDelClickListener mOnDelClickListener;
 		interface OnDelClickListener {
@@ -146,11 +162,11 @@ public class OptionActivity extends BaseActivity {
 				ButterKnife.bind(this, content);
 				mDel = (Button)menu.findViewById(R.id.del);
 			}
-			private void bindDataWithView(FutureHq item, int position, Context context) {
-				mFutureName.setText(item.getCodeName());
-				mFutureCode.setText(item.getInstrumentId());
-				mLastPrice.setText(item.getLastPrice().toString());
-				mRate.setText("+"+item.getUpDropSpeed().toString()+"%");
+			private void bindDataWithView(Variety item, int position, Context context) {
+				mFutureName.setText(item.getVarietyName());
+				mFutureCode.setText(item.getContractsCode());
+				mLastPrice.setText("66.66");
+				mRate.setText("+66.00%");
 			}
 		}
 	}

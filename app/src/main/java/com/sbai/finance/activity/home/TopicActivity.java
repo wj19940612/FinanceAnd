@@ -155,8 +155,7 @@ public class TopicActivity extends BaseActivity {
 
 				mFutureName.setText(item.getVarityName());
 				mFutureCode.setText(String.valueOf(item.getVarityId()));
-//				mLastPrice.setText(item.get().toString());
-//				mRate.setText("+"+item.getUpDropSpeed().toString()+"%");
+				mLastPrice.setText("66.66");
 			}
 		}
 

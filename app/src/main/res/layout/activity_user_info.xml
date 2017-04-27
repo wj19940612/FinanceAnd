@@ -109,7 +109,7 @@
         app:subTextColor="@color/primaryText"
         app:subTextSize="@dimen/common_default_size"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -117,6 +117,7 @@
         android:layout_marginRight="@dimen/common_margin"
         android:layout_marginTop="50dp"
         android:background="@drawable/btn_logout_rounded"
+        android:gravity="center"
         android:text="@string/logout"
         android:textColor="@android:color/white"/>
 </LinearLayout>
