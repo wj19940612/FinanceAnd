@@ -159,8 +159,7 @@
                 android:minHeight="69dp"
                 android:numColumns="4"
                 android:layout_marginLeft="@dimen/common_padding"
-                android:background="@drawable/bg_dotted_line_gray"
-                android:drawableTop="@drawable/ic_release_help_addpic"
+                android:drawableTop="@drawable/ic_add_pic"
                 android:textColor="@color/assistText"
                 android:text="@string/borrow_add_photo"/>
             <RelativeLayout
