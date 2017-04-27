@@ -21,6 +21,7 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
 import com.sbai.finance.model.Variety;
@@ -93,6 +94,7 @@ public class FutureTradeActivity extends BaseActivity {
         initTabLayout();
         initChartViews();
         initSlidingTab();
+        initFloatBar();
     }
 
     private void initData() {
@@ -139,6 +141,7 @@ public class FutureTradeActivity extends BaseActivity {
         mViewPager.setOffscreenPageLimit(1);
         mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mSubPageAdapter);
+        mViewPager.addOnPageChangeListener(mSubPageChangeListener);
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -147,7 +150,36 @@ public class FutureTradeActivity extends BaseActivity {
         mSlidingTab.setViewPager(mViewPager);
     }
 
-    private static class SubPageAdapter extends FragmentPagerAdapter {
+    private void initFloatBar() {
+        mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
+            @Override
+            public void onPublishPointButtonClick() {
+                showPredictDialog(mVariety);
+            }
+
+            @Override
+            public void onAddOptionalButtonClick() {
+                addOption();
+            }
+
+            @Override
+            public void onTradeButtonClick() {
+                // TODO: 2017/4/27 跳转交易H5页面
+            }
+        });
+    }
+
+    private void showPredictDialog(Variety variety) {
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        PredictionFragment.newInstance(args).show(getSupportFragmentManager());
+    }
+
+    private void addOption() {
+
+    }
+
+    private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
         Context mContext;
@@ -171,11 +203,15 @@ public class FutureTradeActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
+
+            Bundle args = new Bundle();
+            args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
+
             switch (position) {
                 case 0:
-                    return new OpinionFragment();
+                    return OpinionFragment.newInstance(args);
                 case 1:
-                    return new IntroduceFragment();
+                    return IntroduceFragment.newInstance(args);
             }
             return null;
         }
@@ -189,6 +225,27 @@ public class FutureTradeActivity extends BaseActivity {
             return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
         }
     }
+
+    private ViewPager.OnPageChangeListener mSubPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (mSubPageAdapter.getPageTitle(position).equals(getString(R.string.point))) {
+                mTradeFloatButtons.setVisibility(View.VISIBLE);
+            } else {
+                mTradeFloatButtons.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override

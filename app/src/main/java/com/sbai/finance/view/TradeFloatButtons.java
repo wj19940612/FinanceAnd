@@ -20,7 +20,7 @@ public class TradeFloatButtons extends LinearLayout {
     private LinearLayout mAddOptional;
     private LinearLayout mTrade;
 
-    interface OnViewClickListener {
+    public interface OnViewClickListener {
         void onPublishPointButtonClick();
 
         void onAddOptionalButtonClick();
