@@ -163,8 +163,13 @@ public class Client {
                 .put("userSex", userSex));
     }
 
+    /**
+     * 获取首页的 banner
+     *
+     * @return
+     */
     public static API getBannerData() {
-        return new API(Request.Method.POST, "/user/news/findBannerList.do");
+        return new API(POST, "/user/news/findBannerList.do");
     }
 
     /**
