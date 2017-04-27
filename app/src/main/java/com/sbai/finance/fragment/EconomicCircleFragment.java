@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.EconomicCircle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -26,8 +27,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -67,7 +66,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
+
         mEconomicCircleList = new ArrayList<>();
+        initData();
         mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mEconomicCircleAdapter);
@@ -85,8 +86,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             }
         });
 
-        requestEconomicCircleList();
-        initSwipeRefreshLayout();
+        //requestEconomicCircleList();
+        //initSwipeRefreshLayout();
+    }
+
+    private void initData() {
+        for (int i = 0; i < 2; i++) {
+            mEconomicCircleList.add(new EconomicCircle("哈哈"));
+        }
     }
 
     @Override
@@ -108,7 +115,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
-                requestEconomicCircleList();
+                //requestEconomicCircleList();
             }
         });
 
@@ -120,7 +127,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                     @Override
                     protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
                         if (economicCircleList != null) {
-                            sortEconomicCircleList(economicCircleList);
+                            //sortEconomicCircleList(economicCircleList);
                         }
                         updateEconomicCircleList(economicCircleList);
                         stopRefreshAnimation();
@@ -134,14 +141,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 }).fire();
     }
 
-    private void sortEconomicCircleList(List<EconomicCircle> economicCircleList) {
+    /*private void sortEconomicCircleList(List<EconomicCircle> economicCircleList) {
         Collections.sort(economicCircleList, new Comparator<EconomicCircle>() {
             @Override
             public int compare(EconomicCircle o1, EconomicCircle o2) {
                 return Long.valueOf(o2.getCreateTime() - o1.getCreateTime()).intValue();
             }
         });
-    }
+    }*/
 
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
@@ -179,11 +186,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         @Override
         public Object getItem(int position) {
-            if (position % 2 == 0) {
-                return TYPE_PRODUCT;
-            }
-            return TYPE_HELP;
-            //return mEconomicCircleList.get(position);
+            return mEconomicCircleList.get(position);
         }
 
         @Override
@@ -198,7 +201,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         @Override
         public int getItemViewType(int position) {
-            return mEconomicCircleList.get(position).getType();
+            if (position % 2 == 0) {
+                return TYPE_PRODUCT;
+            }
+            return TYPE_HELP;
+            //return mEconomicCircleList.get(position).getType();
         }
 
         @Override
@@ -261,7 +268,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, EconomicCircle item) {
+            private void bindingData(final Context context, EconomicCircle item) {
                 mUserName.setText("刘亦菲");
                 mFollowed.setText("已关注");
                 mPublishTime.setText("战国时期");
@@ -271,6 +278,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 mLastPrice.setText("88.88");
                 mUpDownPrice.setText("+8.8");
                 mUpDownPercent.setText("+10%");
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class).execute();
+                    }
+                });
             }
         }
 
@@ -297,7 +310,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, EconomicCircle item) {
+            private void bindingData(final Context context, EconomicCircle item) {
                 mUserName.setText("吴彦祖");
                 mPublishTime.setText("战国时期");
                 mAddress.setText("山东");
@@ -305,6 +318,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 mBorrowTime.setText(context.getString(R.string.day, "8888"));
                 mBorrowInterest.setText(context.getString(R.string.RMB, "8888"));
                 mOpinion.setText("话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。");
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class).execute();
+                    }
+                });
             }
         }
     }
