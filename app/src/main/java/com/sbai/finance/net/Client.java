@@ -163,8 +163,13 @@ public class Client {
                 .put("userSex", userSex));
     }
 
+    /**
+     * 获取首页的 banner
+     *
+     * @return
+     */
     public static API getBannerData() {
-        return new API(Request.Method.POST, "/user/news/findBannerList.do");
+        return new API(POST, "/user/news/findBannerList.do");
     }
 
     /**
@@ -346,7 +351,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API delOptional(String varietyId) {
+    public static API delOptional(Integer varietyId) {
         return new API("/order/optional/deleteOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));

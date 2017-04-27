@@ -238,7 +238,7 @@ public class HomeFragment extends BaseFragment {
             public void bindingData(TopicModel item) {
                 mTopicTitle.setText(item.getTitle());
                 mTopicDetail.setText(item.getSubTitle());
-                mTopicImg.setBackgroundResource(R.drawable.topic);
+                mTopicImg.setBackgroundResource(R.drawable.bg_topic);
             }
         }
     }

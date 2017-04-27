@@ -6,6 +6,27 @@ package com.sbai.finance.model;
 
 public class EconomicCircle {
 
+	private String name;
+
+	public EconomicCircle(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "EconomicCircle{" +
+				"name='" + name + '\'' +
+				'}';
+	}
+
 	/**
 	 * bigVarietyTypeCode : future
 	 * bigVarietyTypeName : 期货
@@ -31,7 +52,7 @@ public class EconomicCircle {
 	 * varietyType : CL
 	 */
 
-	private String bigVarietyTypeCode;
+	/*private String bigVarietyTypeCode;
 	private String bigVarietyTypeName;
 	private String content;
 	private String contentImg;
@@ -256,5 +277,5 @@ public class EconomicCircle {
 				", varietyName='" + varietyName + '\'' +
 				", varietyType='" + varietyType + '\'' +
 				'}';
-	}
+	}*/
 }
