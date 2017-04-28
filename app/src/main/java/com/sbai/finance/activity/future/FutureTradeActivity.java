@@ -47,10 +47,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.R.id.klineView;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
 import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
-import static com.sbai.finance.R.id.klineView;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -179,14 +179,15 @@ public class FutureTradeActivity extends BaseActivity {
         mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
             @Override
             public void onPublishPointButtonClick() {
-                if (mPredict != null && mPredict.isIsCalculate()) {
-                    Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                            .putExtra(PREDICT_DIRECTION,mPredict.getDirection())
-                            .execute();
-
-                } else {
-                    showPredictDialog(mVariety);
+                if (mPredict != null) {
+                    if (mPredict.isIsCalculate()) {
+                        Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                                .putExtra(PREDICT_DIRECTION, mPredict.getDirection())
+                                .execute();
+                    } else {
+                        showPredictDialog(mVariety);
+                    }
                 }
             }
 
@@ -296,9 +297,9 @@ public class FutureTradeActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             if (mSubPageAdapter.getPageTitle(position).equals(getString(R.string.point))) {
-                mTradeFloatButtons.setVisibility(View.VISIBLE);
+                mOpinionFragment.refreshPointList();
             } else {
-                mTradeFloatButtons.setVisibility(View.GONE);
+                //简介没接口暂时不刷新
             }
         }
 

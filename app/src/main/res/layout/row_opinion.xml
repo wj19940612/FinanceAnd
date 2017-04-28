@@ -62,19 +62,6 @@
         android:layout_marginTop="15dp">
 
         <TextView
-            android:id="@+id/opinionType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/bg_long"
-            android:gravity="center"
-            android:minHeight="13dp"
-            android:minWidth="33dp"
-            android:textColor="@color/redPrimary"
-            android:textSize="9sp"
-            tools:text="@string/bullish"/>
-
-        <TextView
             android:id="@+id/opinion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

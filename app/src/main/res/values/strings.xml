@@ -121,6 +121,7 @@
     <!--   消息 -->
     <string name="system_news">系统消息</string>
     <string name="load_more">点击加载更多</string>
+    <string name="load_all">已加载全部</string>
 
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
