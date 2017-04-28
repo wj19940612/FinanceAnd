@@ -47,6 +47,7 @@ import butterknife.Unbinder;
  */
 
 public class HomeFragment extends BaseFragment {
+
     @BindView(R.id.event)
     TextView mEvent;
     @BindView(R.id.homeBanner)
@@ -221,6 +222,7 @@ public class HomeFragment extends BaseFragment {
             viewHolder.bindingData(getItem(position));
             return convertView;
         }
+
         static class ViewHolder {
             @BindView(R.id.topicTitle)
             TextView mTopicTitle;
