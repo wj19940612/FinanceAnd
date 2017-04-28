@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,9 +31,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.view.RedPointTipTextView;
 
 
 /**
@@ -52,6 +55,8 @@ import com.sbai.finance.R;
  * providing the layout ID of your custom layout.
  */
 public class SlidingTabLayout extends HorizontalScrollView {
+
+    private static final String TAG = "SlidingTabLayout";
 
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
@@ -120,7 +125,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     /**
      * Set the custom {@link TabColorizer} to be used.
-     *
+     * <p>
      * If you only require simple custmisation then you can use
      * {@link #setSelectedIndicatorColors(int...)} and {@link #setDividerColors(int...)} to achieve
      * similar effects.
@@ -141,8 +146,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
      * Sets the padding to be used for controlling the selected tab width.
      * Add by JohnZ
      *
-	 * @param padding
-	 */
+     * @param padding
+     */
     public void setSelectedIndicatorPadding(float padding) {
         mTabStrip.setSelectedIndicatorPadding(padding);
     }
@@ -170,7 +175,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
      * Set the custom layout to be inflated for the tab views.
      *
      * @param layoutResId Layout id to be inflated
-     * @param textViewId id of the {@link TextView} in the inflated view
+     * @param textViewId  id of the {@link TextView} in the inflated view
      */
     public void setCustomTabView(int layoutResId, int textViewId) {
         mTabViewLayoutId = layoutResId;
@@ -203,6 +208,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
         textView.setTypeface(Typeface.DEFAULT);
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.bg_red_circle_no_read_news, 0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // If we're running on Honeycomb or newer, then we can use the Theme's
@@ -350,6 +356,27 @@ public class SlidingTabLayout extends HorizontalScrollView {
         }
         if (position < mTabStrip.getChildCount()) {
             mTabStrip.getChildAt(position).setSelected(true);
+        }
+    }
+
+    //控制textView上的红点显示或隐藏
+    public void setRedPointVisibility(int position) {
+        this.setRedPointVisibility(position, VISIBLE);
+    }
+
+    public void setRedPointVisibility(int position, int visibility) {
+        Log.d(TAG, "setRedPointVisibility: " + mTabStrip.getChildCount());
+        for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+            Log.d(TAG, "setRedPointVisibility: " + mTabStrip.getChildAt(i).toString());
+            if (i == position) {
+                View childAt = mTabStrip.getChildAt(i);
+                if (childAt instanceof RelativeLayout) {
+                    View view = ((RelativeLayout) (childAt)).getChildAt(0);
+                    if (view instanceof RedPointTipTextView) {
+                        ((RedPointTipTextView) (view)).setRedPointVisibility(visibility);
+                    }
+                }
+            }
         }
     }
 

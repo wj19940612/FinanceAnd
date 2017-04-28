@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -85,6 +86,14 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             }
         });
         requestUserAttentionList();
+        // TODO: 2017/4/27 没有接口，后期删除
+        mSwipeRefreshLayout.setEnabled(false);
+    }
+
+    @NonNull
+    @Override
+    public AppCompatDelegate getDelegate() {
+        return super.getDelegate();
     }
 
     private void relieveAttentionUser(final ShieldedUserModel shieldedUserModel) {
