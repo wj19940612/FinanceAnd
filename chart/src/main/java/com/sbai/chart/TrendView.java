@@ -3,7 +3,6 @@ package com.sbai.chart;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -11,9 +10,7 @@ import com.sbai.chart.domain.TrendViewData;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 public class TrendView extends FrameLayout {
@@ -131,52 +128,52 @@ public class TrendView extends FrameLayout {
             }
         }
 
-        public static List<TrendViewData> createDataList(String rawData, String[] openMarketTime) {
-            List<TrendViewData> result = new ArrayList<>();
-            HashSet hashSet = new HashSet();
-            int length = rawData.length();
-            int start = 0;
-            while (start < length) {
-                int end = rawData.indexOf("|", start);
-                if (end > start) {
-                    String singleData = rawData.substring(start, end);
-                    String[] splitData = singleData.split(",");
-                    float lastPrice = Float.valueOf(splitData[1]);
-                    String date = splitData[2];
-                    start = end + 1;
-                    // filter invalid data and repeated data based on data.date
-                    if (!isRepeatedDate(date, hashSet) && isValidDate(date, openMarketTime)
-                            && lastPrice != 0) {
-                        TrendViewData validData = new TrendViewData(splitData[0], lastPrice, date);
-                        result.add(validData);
-                    }
-                }
-            }
-            Log.d("TEST", "hashSet.size: " + hashSet.size());
-            return result;
-        }
-
-        private static boolean isRepeatedDate(String date, HashSet hashSet) {
-            String dateWithHourMinute = date.substring(8, 12); // yyyyMMddHHmmss -> hhmm
-            return !hashSet.add(dateWithHourMinute);
-        }
-
-        /**
-         * check if trendView data.date is valid
-         *
-         * @param date
-         * @param openMarketTime
-         * @return
-         */
-        public static boolean isValidDate(String date, String[] openMarketTime) {
-            //String hhmm = date.substring(date.indexOf(" ")).substring(1, 6); // yyyy-MM-dd HH:mm:ss -> hh:mm
-            if (date.length() != 14) {
-                return false;
-            }
-
-            String hhmm = date.substring(8, 10) + ":" + date.substring(10, 12); // yyyyMMddHHmmss -> hh:mm
-            return Util.isBetweenTimes(openMarketTime, hhmm);
-        }
+//        public static List<TrendViewData> createDataList(String rawData, String[] openMarketTime) {
+//            List<TrendViewData> result = new ArrayList<>();
+//            HashSet hashSet = new HashSet();
+//            int length = rawData.length();
+//            int start = 0;
+//            while (start < length) {
+//                int end = rawData.indexOf("|", start);
+//                if (end > start) {
+//                    String singleData = rawData.substring(start, end);
+//                    String[] splitData = singleData.split(",");
+//                    float lastPrice = Float.valueOf(splitData[1]);
+//                    String date = splitData[2];
+//                    start = end + 1;
+//                    // filter invalid data and repeated data based on data.date
+//                    if (!isRepeatedDate(date, hashSet) && isValidDate(date, openMarketTime)
+//                            && lastPrice != 0) {
+//                        TrendViewData validData = new TrendViewData(splitData[0], lastPrice, date);
+//                        result.add(validData);
+//                    }
+//                }
+//            }
+//            Log.d("TEST", "hashSet.size: " + hashSet.size());
+//            return result;
+//        }
+//
+//        private static boolean isRepeatedDate(String date, HashSet hashSet) {
+//            String dateWithHourMinute = date.substring(8, 12); // yyyyMMddHHmmss -> hhmm
+//            return !hashSet.add(dateWithHourMinute);
+//        }
+//
+//        /**
+//         * check if trendView data.date is valid
+//         *
+//         * @param date
+//         * @param openMarketTime
+//         * @return
+//         */
+//        public static boolean isValidDate(String date, String[] openMarketTime) {
+//            //String hhmm = date.substring(date.indexOf(" ")).substring(1, 6); // yyyy-MM-dd HH:mm:ss -> hh:mm
+//            if (date.length() != 14) {
+//                return false;
+//            }
+//
+//            String hhmm = date.substring(8, 10) + ":" + date.substring(10, 12); // yyyyMMddHHmmss -> hh:mm
+//            return Util.isBetweenTimes(openMarketTime, hhmm);
+//        }
 
         /**
          * check if time is between times[i] and times[i + 1] (open interval)

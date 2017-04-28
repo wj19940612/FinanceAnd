@@ -17,8 +17,20 @@ public class Client {
         return new API("/user/user/getSystemTime.do");
     }
 
-    public static API getTrendData(String varietyType) {
-        return new API("/quotaStatus/" + varietyType + ".fst");
+    public static API getSocketAddress() {
+        return new API("/fut/ip/list.do",
+                new ApiParams().put("type", "app"));
+    }
+
+    /**
+     * 获取分时图数据
+     *
+     * @param code
+     * @return
+     */
+    public static API getTrendData(String code) {
+        return new API("/fut/k/timeSharing.do",
+                new ApiParams().put("code", code));
     }
 
     /**
@@ -29,7 +41,7 @@ public class Client {
      * @return
      */
     public static API getKlineData(String varietyType, String type, String endTime) {
-        return new API("/quota/candlestickData/getCandlesticKData.do",
+        return new API("/fut/k/data.do",
                 new ApiParams()
                         .put("contractsCode", varietyType)
                         .put("limit", 100)
@@ -47,7 +59,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -62,7 +74,7 @@ public class Client {
      */
 
     public static API getAuthCode(String phone) {
-        return new API("/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
+        return new API("/user/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
     }
 
     /**
@@ -247,6 +259,23 @@ public class Client {
     }
 
     /**
+     * 接口名称 查看点击用户观点
+     * 请求类型 post
+     * 请求Url  /coterie/userInterest/queryClickUserViewPoint.do
+     *
+     * @param page
+     * @param pageSize
+     * @param userId   用户id
+     * @return
+     */
+    public static API getUserPublishList(int page, int pageSize, int userId) {
+        return new API("/coterie/userInterest/queryClickUserViewPoint.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .put("userId", userId));
+    }
+
+    /**
      * 大事件详情
      *
      * @param id
@@ -290,47 +319,51 @@ public class Client {
 
     /**
      * 获取期货品种
+     *
      * @param page
      * @param pageSize
      * @param smallVarietyTypeCode
      * @return
      */
-    public static API getFutureVariety(Integer page,Integer pageSize,String smallVarietyTypeCode){
+    public static API getFutureVariety(Integer page, Integer pageSize, String smallVarietyTypeCode) {
         return new API("/order/order/getVariety.do",
                 new ApiParams()
-                        .put("bigVarietyTypeCode","future")
+                        .put("bigVarietyTypeCode", "future")
                         .put("page", page)
-                        .put("pageSize",pageSize)
-                        .put("smallVarietyTypeCode",smallVarietyTypeCode));
+                        .put("pageSize", pageSize)
+                        .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
 
     /**
      * 股票除指数品种
+     *
      * @param page
      * @param pageSize
      * @return
      */
-    public static API getStockVariety(Integer page,Integer pageSize){
+    public static API getStockVariety(Integer page, Integer pageSize) {
         return new API("/order/order/getStockVariety.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize",pageSize));
+                        .put("pageSize", pageSize));
     }
 
     /**
      * 股票指数品种
+     *
      * @return
      */
-    public static API getStockIndexVariety(){
+    public static API getStockIndexVariety() {
         return new API("order/order/getStockExponentVariety.do");
     }
 
     /**
      * 查询自选gu
+     *
      * @param bigVarietyTypeCode
      * @return
      */
-    public static API getOptional(String bigVarietyTypeCode){
+    public static API getOptional(String bigVarietyTypeCode) {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode));
@@ -338,6 +371,7 @@ public class Client {
 
     /**
      * 添加自选股
+     *
      * @param varietyId
      * @return
      */
@@ -346,8 +380,10 @@ public class Client {
                 new ApiParams()
                         .put("varietyId", varietyId));
     }
+
     /**
      * 添加自选股
+     *
      * @param varietyId
      * @return
      */
@@ -356,14 +392,15 @@ public class Client {
                 new ApiParams()
                         .put("varietyId", varietyId));
     }
-     /**
+
+    /**
      * 获取经济圈首页列表
      *
      * @param page
      * @param pageSize
      * @return
      */
-    public static API getEconomicCircleList(int page,int pageSize) {
+    public static API getEconomicCircleList(int page, int pageSize) {
         return new API("/coterie/coterie/coterieList.do",
                 new ApiParams()
                         .put("page", page)

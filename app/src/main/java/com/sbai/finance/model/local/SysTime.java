@@ -1,4 +1,4 @@
-package com.sbai.finance.model;
+package com.sbai.finance.model.local;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.Preference;
