@@ -26,6 +26,7 @@ import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.stock.StockActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.EventModel;
 import com.sbai.finance.model.EventTitleModel;
 import com.sbai.finance.model.TopicModel;
 import com.sbai.finance.net.Callback;
@@ -163,10 +164,10 @@ public class HomeFragment extends BaseFragment {
 
        //获取最新事件标题
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<EventTitleModel>,EventTitleModel>() {
+                .setCallback(new Callback2D<Resp<String>,String>() {
                     @Override
-                    protected void onRespSuccessData(EventTitleModel data) {
-                        mEvent.setText(data.getTitle());
+                    protected void onRespSuccessData(String data) {
+                        updateEventInfo(data);
                     }
                 }).fire();
        //获取主题信息
@@ -177,6 +178,10 @@ public class HomeFragment extends BaseFragment {
                         updateTopicInfo((ArrayList<TopicModel>) data);
                     }
                 }).fire();
+    }
+
+    private void updateEventInfo(String data) {
+        mEvent.setText(data);
     }
 
     private void updateTopicInfo(ArrayList<TopicModel> topicModels) {

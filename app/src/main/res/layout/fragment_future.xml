@@ -25,8 +25,9 @@
         android:drawablePadding="16dp"
         android:gravity="center_horizontal"
         android:paddingTop="180dp"
+        android:drawableTop="@drawable/img_no_data"
         android:text="暂无行情数据"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textColor="@color/assistText"
+        android:textSize="@dimen/list_title_size"
         android:visibility="gone"/>
 </LinearLayout>

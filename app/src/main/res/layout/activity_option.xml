@@ -17,7 +17,7 @@
         android:layout_weight="1"
         android:headerDividersEnabled="true"
         android:background="@android:color/white"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/empty"
         android:layout_width="match_parent"
@@ -27,8 +27,9 @@
         android:drawablePadding="16dp"
         android:gravity="center_horizontal"
         android:paddingTop="180dp"
+        android:drawableTop="@drawable/img_no_data"
         android:text="快去添加你心仪的产品吧~"
         android:textColor="@android:color/white"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>
