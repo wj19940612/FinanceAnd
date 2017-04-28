@@ -6,6 +6,9 @@ package com.sbai.finance.model;
 
 public class BorrowInHis {
 
+    public static final int STATUS_FAIL=4;
+    public static final int STATUS_SUCCESS=7;
+    public static final int STATUS_PAY_INTENTION=6;
     /**
      * content : 测试内容4ph4
      * days : 41666
