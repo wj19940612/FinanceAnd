@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
+import com.sbai.finance.model.mine.UserAttentionModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -35,6 +36,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,28 +52,29 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
 
     private TextView mFootView;
     private RelieveAttentionAdapter mRelieveAttentionAdapter;
+    private HashSet<Integer> mSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
         ButterKnife.bind(this);
+        mSet = new HashSet<>();
         mListView.setEmptyView(mEmpty);
         mRelieveAttentionAdapter = new RelieveAttentionAdapter(this);
         mListView.setAdapter(mRelieveAttentionAdapter);
         mListView.setOnScrollListener(this);
         mRelieveAttentionAdapter.setOnRelieveAttentionClickListener(new RelieveAttentionAdapter.OnRelieveAttentionClickListener() {
             @Override
-            public void onRelieveAttention(final ShieldedUserModel shieldedUserModel) {
+            public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
                 SmartDialog.with(getActivity(),
-                        getString(R.string.relieve_shield_dialog_content, shieldedUserModel.getUserName())
+                        getString(R.string.relieve_shield_dialog_content, userAttentionModel.getFollowuserName())
                         , getString(R.string.relieve_shield_dialog_title, shieldedUserModel.getUserName()))
                         .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                ToastUtil.curt("移除 " + shieldedUserModel.getUserName());
-                                relieveAttentionUser(shieldedUserModel);
+                                relieveAttentionUser(userAttentionModel);
                             }
                         })
                         .setTitleMaxLines(2)
@@ -86,8 +89,6 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             }
         });
         requestUserAttentionList();
-        // TODO: 2017/4/27 没有接口，后期删除
-        mSwipeRefreshLayout.setEnabled(false);
     }
 
     @NonNull
@@ -96,7 +97,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         return super.getDelegate();
     }
 
-    private void relieveAttentionUser(final ShieldedUserModel shieldedUserModel) {
+    private void relieveAttentionUser(final UserAttentionModel userAttentionModel) {
         Client.attentionOrRelieveAttentionUser(100, 1)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -104,7 +105,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mRelieveAttentionAdapter.remove(shieldedUserModel);
+                            mRelieveAttentionAdapter.remove(userAttentionModel);
                         }
                     }
                 })
@@ -124,8 +125,8 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
     }
 
 
-    private void updateShieldUserData(ArrayList<ShieldedUserModel> shieldUserList) {
-        if (shieldUserList == null) {
+    private void updateShieldUserData(ArrayList<UserAttentionModel> userAttentionModelList) {
+        if (userAttentionModelList == null) {
             stopRefreshAnimation();
             return;
         }
@@ -149,7 +150,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         }
 
 //        if (economicCircleNewModels.size() < mPageSize) {
-        if (shieldUserList.size() < 15) {
+        if (userAttentionModelList.size() < 15) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -161,7 +162,12 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             }
             stopRefreshAnimation();
         }
-        mRelieveAttentionAdapter.addAll(shieldUserList);
+
+        for (UserAttentionModel data : userAttentionModelList) {
+            if (mSet.add(data.getId())) {
+                mRelieveAttentionAdapter.add(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -182,13 +188,13 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class RelieveAttentionAdapter extends ArrayAdapter<ShieldedUserModel> {
+    static class RelieveAttentionAdapter extends ArrayAdapter<UserAttentionModel> {
 
         OnRelieveAttentionClickListener mOnRelieveAttentionClickListener;
         Context mContext;
 
         interface OnRelieveAttentionClickListener {
-            void onRelieveAttention(ShieldedUserModel shieldedUserModel);
+            void onRelieveAttention(UserAttentionModel userAttentionModel);
         }
 
         public RelieveAttentionAdapter(@NonNull Context context) {
@@ -227,15 +233,14 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final ShieldedUserModel item, Context context, final OnRelieveAttentionClickListener onRelieveAttentionClickListener) {
-                if (!TextUtils.isEmpty(item.getUserHeadImage())) {
-                    Glide.with(context).load(item.getUserHeadImage())
-                            .placeholder(R.mipmap.ic_launcher_round)
-                            .bitmapTransform(new GlideCircleTransform(context))
-                            .into(mUserHeadImage);
-                }
+            public void bindViewWithData(final UserAttentionModel item, Context context, final OnRelieveAttentionClickListener onRelieveAttentionClickListener) {
+                if (item == null) return;
+                Glide.with(context).load(item.getFollowUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .into(mUserHeadImage);
                 mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
-                mUserName.setText(item.getUserName());
+                mUserName.setText(item.getFollowUserId());
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
