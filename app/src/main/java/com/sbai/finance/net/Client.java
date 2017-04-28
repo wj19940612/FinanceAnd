@@ -341,7 +341,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API addOptional(String varietyId){
+    public static API addOptional(int varietyId){
         return new API("/order/optional/addOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
@@ -379,10 +379,11 @@ public class Client {
      * @param varietyType
      * @return
      */
-    public static API saveViewPoint(String bigVarietyTypeCode,String content,int direction,int varietyId,String varietyType) {
+    public static API saveViewPoint(String bigVarietyTypeCode,int calcuId,String content,int direction,int varietyId,String varietyType) {
         return new API(POST,"/coterie/viewpoint/saveViewpoint.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("calcuId",calcuId)
                         .put("content", content)
                         .put("direction",direction)
                         .put("varietyId",varietyId)
@@ -404,6 +405,18 @@ public class Client {
                         .put("varietyId",varietyId));
     }
 
+    /**
+     * 观点检测是否已发表
+     * @param bigVarietyTypeCode
+     * @param varietyId
+     * @return
+     */
+    public static API checkViewpoint(String bigVarietyTypeCode,int varietyId) {
+        return new API(POST, "/coterie/viewpoint/checkCalculate.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("varietyId", varietyId));
+    }
 
 
 

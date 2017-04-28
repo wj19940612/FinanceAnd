@@ -1,6 +1,9 @@
 package com.sbai.finance.activity.future;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -14,16 +17,20 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
+import com.sbai.finance.model.PredictModel;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -38,6 +45,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
+import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -73,8 +84,12 @@ public class FutureTradeActivity extends BaseActivity {
     @BindView(R.id.subPageArea)
     LinearLayout mSubPageArea;
 
+    private OpinionFragment mOpinionFragment;
+    private IntroduceFragment mIntroduceFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
+    private PredictModel mPredict;
+    private RefreshPointReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +102,26 @@ public class FutureTradeActivity extends BaseActivity {
         }
 
         initData();
+        initFragment();
 
         initTabLayout();
         initChartViews();
         initSlidingTab();
         initFloatBar();
+
+        registerRefreshReceiver();
+        requsetUserViewPoint();
     }
 
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+    }
+
+    private void initFragment() {
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
+        mOpinionFragment = OpinionFragment.newInstance(args);
+        mIntroduceFragment = IntroduceFragment.newInstance(args);
     }
 
     private void initTabLayout() {
@@ -145,7 +171,15 @@ public class FutureTradeActivity extends BaseActivity {
         mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
             @Override
             public void onPublishPointButtonClick() {
-                showPredictDialog(mVariety);
+                if (mPredict != null && mPredict.isIsCalculate()) {
+                    Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                            .putExtra(PREDICT_DIRECTION,mPredict.getDirection())
+                            .execute();
+
+                } else {
+                    showPredictDialog(mVariety);
+                }
             }
 
             @Override
@@ -163,11 +197,43 @@ public class FutureTradeActivity extends BaseActivity {
     private void showPredictDialog(Variety variety) {
         Bundle args = new Bundle();
         args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        args.putInt(PREDICT_DIRECTION, mPredict.getDirection());
+        args.putInt(PREDICT_CALCUID, mPredict.getCalcuId());
         PredictionFragment.newInstance(args).show(getSupportFragmentManager());
     }
 
     private void addOption() {
+       Client.addOptional(mVariety.getVarietyId())
+               .setTag(TAG)
+               .setIndeterminate(this)
+               .setCallback(new Callback<Resp<JsonObject>>() {
+                   @Override
+                   protected void onRespSuccess(Resp<JsonObject> resp) {
+                       if (resp.isSuccess()){
+                           // TODO: 2017/4/28 更新UI
+                       }
+                   }
+               })
+               .fire();
+    }
 
+    private void registerRefreshReceiver() {
+        mReceiver = new RefreshPointReceiver();
+        registerReceiver(mReceiver,new IntentFilter(REFRESH_POINT));
+    }
+
+
+    private void requsetUserViewPoint() {
+        Client.checkViewpoint(mVariety.getBigVarietyTypeCode(),mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<PredictModel>,PredictModel>() {
+                    @Override
+                    protected void onRespSuccessData(PredictModel data) {
+                        mPredict = data;
+                    }
+                })
+                .fire();
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {
@@ -194,15 +260,11 @@ public class FutureTradeActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-
-            Bundle args = new Bundle();
-            args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
-
             switch (position) {
                 case 0:
-                    return OpinionFragment.newInstance(args);
+                    return mOpinionFragment;
                 case 1:
-                    return IntroduceFragment.newInstance(args);
+                    return mIntroduceFragment;
             }
             return null;
         }
@@ -281,6 +343,7 @@ public class FutureTradeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        unregisterReceiver(mReceiver);
     }
 
     private void requestKlineDataAndSet(final String type) {
@@ -297,6 +360,14 @@ public class FutureTradeActivity extends BaseActivity {
                         mKlineView.setDataList(data);
                     }
                 }).fire();
+    }
+
+    private class RefreshPointReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requsetUserViewPoint();
+            mOpinionFragment.refreshPointList();
+        }
     }
 
 }

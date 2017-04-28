@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -21,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
+
 /**
  * Created by lixiaokuan0819 on 2017/4/24.
  */
@@ -32,12 +35,12 @@ public class PredictionFragment extends DialogFragment {
 
     public static final int REQ_CODE_PREDICT = 300;
 
-    public static final String PREDICT_DIRECTION = "predict_direction";
+//    public static final String PREDICT_DIRECTION = "predict_direction";
 
     @BindView(R.id.bullishButton)
-    TextView mBullishButton;
+    Button mBullishButton;
     @BindView(R.id.bearishButton)
-    TextView mBearishButton;
+    Button mBearishButton;
     @BindView(R.id.predictionRule)
     TextView mPredictionRule;
     Unbinder unbinder;

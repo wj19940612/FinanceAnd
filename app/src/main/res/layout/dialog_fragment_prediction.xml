@@ -26,7 +26,7 @@
             android:layout_marginTop="30dp"
             android:gravity="center_horizontal">
 
-            <TextView
+            <Button
                 android:id="@+id/bullishButton"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -36,14 +36,14 @@
                 android:textColor="@android:color/white"
                 android:textSize="15sp"/>
 
-            <TextView
+            <Button
                 android:id="@+id/bearishButton"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="54dp"
                 android:background="@drawable/bg_bearish"
                 android:gravity="center"
-                android:text="@string/bullish"
+                android:text="@string/bearish"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"/>
         </LinearLayout>

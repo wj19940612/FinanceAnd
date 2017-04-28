@@ -1,9 +1,5 @@
 package com.sbai.finance.fragment.trade;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,8 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
-
 public class OpinionFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
@@ -44,7 +38,6 @@ public class OpinionFragment extends BaseFragment {
 
     private OpinionAdapter mOpinionAdapter;
     private List<Opinion.OpinionBean> mOpinionList;
-    private RefreshPointReceiver mReceiver;
 
     private int mPage = 0;
     private int mPageSize = 15;
@@ -72,8 +65,7 @@ public class OpinionFragment extends BaseFragment {
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
-        mReceiver = new RefreshPointReceiver();
-        getActivity().registerReceiver(mReceiver, new IntentFilter(REFRESH_POINT));
+        getPointList();
     }
 
 
@@ -91,12 +83,15 @@ public class OpinionFragment extends BaseFragment {
                 .fire();
     }
 
+    public void refreshPointList(){
+        getPointList();
+    }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        getActivity().unregisterReceiver(mReceiver);
     }
 
 
@@ -123,13 +118,24 @@ public class OpinionFragment extends BaseFragment {
                     .setText(R.id.opinion, item.getContent())
                     .setText(R.id.commentNum, item.getReplyCount())
                     .setText(R.id.likeNum, item.getPraiseCount());
-        }
-    }
-
-    private class RefreshPointReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            getPointList();
+            helper.getView(R.id.avatar).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: 2017/4/28  用户详情
+                }
+            });
+            helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: 2017/4/28 观点详情
+                }
+            });
+            helper.getView(R.id.commentRl).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: 2017/4/28 观点详情
+                }
+            });
         }
     }
 }
