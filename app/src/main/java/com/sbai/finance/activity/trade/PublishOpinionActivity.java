@@ -39,7 +39,7 @@ public class PublishOpinionActivity extends BaseActivity {
     Button mSubmitButton;
 
     Variety mVariety;
-    int mDirection = -1 ;
+    int mDirection = -1;
     int mCalcuId = -1;
 
     @Override
@@ -85,22 +85,41 @@ public class PublishOpinionActivity extends BaseActivity {
 
     private void saveViewPoint() {
         String content = mOpinionContent.getText().toString().trim();
-        Client.saveViewPoint(mVariety.getBigVarietyTypeCode(),mCalcuId,
-                content, mDirection, mVariety.getVarietyId(), mVariety.getVarietyType())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            Intent intent = new Intent(REFRESH_POINT);
-                            LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
-                                    .sendBroadcast(intent);
-                            finish();
+        if (mCalcuId != -1) {
+            Client.saveViewPoint(mVariety.getBigVarietyTypeCode(), mCalcuId,
+                    content, mDirection, mVariety.getVarietyId(), mVariety.getVarietyType())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            if (resp.isSuccess()) {
+                                Intent intent = new Intent(REFRESH_POINT);
+                                LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
+                                        .sendBroadcast(intent);
+                                finish();
+                            }
                         }
-                    }
-                })
-                .fire();
+                    })
+                    .fire();
+        } else {
+            Client.saveViewPoint(mVariety.getBigVarietyTypeCode(),
+                    content, mDirection, mVariety.getVarietyId(), mVariety.getVarietyType())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            if (resp.isSuccess()) {
+                                Intent intent = new Intent(REFRESH_POINT);
+                                LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
+                                        .sendBroadcast(intent);
+                                finish();
+                            }
+                        }
+                    })
+                    .fire();
+        }
     }
 
 

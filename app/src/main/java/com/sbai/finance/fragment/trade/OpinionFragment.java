@@ -25,6 +25,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ import butterknife.Unbinder;
 public class OpinionFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
     Unbinder unbinder;
@@ -70,7 +71,6 @@ public class OpinionFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mOpinionList = new ArrayList<>();
-        addTestList();
         initViewWithAdapter();
         getPointList();
 
@@ -95,6 +95,7 @@ public class OpinionFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
+        mRecyclerView.setEmptyView(mEmpty);
     }
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -119,32 +120,15 @@ public class OpinionFragment extends BaseFragment {
         return false;
     }
 
-
-    private void addTestList() {
-        //测试数据
-        for (int i = 0; i < 10; i++) {
-            Opinion.OpinionBean opinionBean = new Opinion.OpinionBean();
-            opinionBean.setIsAttention(2);
-            opinionBean.setCreateTime(System.currentTimeMillis());
-            opinionBean.setUserName("李诚信");
-            opinionBean.setDirection(1);
-            opinionBean.setContent("蒙古海军总司令,蒙古海军总司令");
-            opinionBean.setReplyCount(9999);
-            opinionBean.setPraiseCount(8888);
-            mOpinionList.add(opinionBean);
-        }
-    }
-
     private void getPointList() {
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Opinion.OpinionBean>>,List<Opinion.OpinionBean>>() {
+                .setCallback(new Callback2D<Resp<Opinion>,Opinion>() {
                     @Override
-                    protected void onRespSuccessData(List<Opinion.OpinionBean> data) {
-                        updateViewWithData(data);
+                    protected void onRespSuccessData(Opinion data) {
+                        updateViewWithData(data.getData());
                     }
-
                 })
                 .fire();
     }
@@ -152,8 +136,8 @@ public class OpinionFragment extends BaseFragment {
     private void updateViewWithData(List<Opinion.OpinionBean> data) {
         if (data != null && data.size() > 0) {
             mOpinionList.addAll(data);
-            if (data.size()<mPageSize){
-                mOpinionAdapter.removeFooterView(mBottomView);
+            if (data.size() < mPageSize) {
+                mOpinionAdapter.removeAllFooterView();
                 mOpinionAdapter.addFooterView(mFootView);
                 mLoadMore = false;
             }
@@ -161,23 +145,23 @@ public class OpinionFragment extends BaseFragment {
         }
     }
 
+    public void refreshPointList() {
+        getNewPointList();
+    }
+
     private void getNewPointList() {
         mPage = 0;
+        mOpinionList.clear();
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Opinion>, Opinion>() {
                     @Override
                     protected void onRespSuccessData(Opinion data) {
-                        mOpinionList = data.getData();
-                        mOpinionAdapter.notifyDataSetChanged();
+                        updateViewWithData(data.getData());
                     }
                 })
                 .fire();
-    }
-
-    public void refreshPointList() {
-        getNewPointList();
     }
 
 

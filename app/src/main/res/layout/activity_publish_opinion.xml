@@ -39,7 +39,8 @@
             android:hint="@string/please_enter_the_text"
             android:maxLength="300"
             android:paddingTop="5dp"
-            android:textColor="@color/hintText"
+            android:textColor="@color/greyAssist"
+            android:textColorHint="@color/hintText"
             android:textSize="15sp"/>
     </LinearLayout>
 

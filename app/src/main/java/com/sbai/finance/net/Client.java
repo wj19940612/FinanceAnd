@@ -428,6 +428,25 @@ public class Client {
     }
 
     /**
+     * 发表观点
+     * @param bigVarietyTypeCode
+     * @param content
+     * @param direction
+     * @param varietyId
+     * @param varietyType
+     * @return
+     */
+    public static API saveViewPoint(String bigVarietyTypeCode,String content,int direction,int varietyId,String varietyType) {
+        return new API(POST,"/coterie/viewpoint/saveViewpoint.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("content", content)
+                        .put("direction",direction)
+                        .put("varietyId",varietyId)
+                        .put("varietyType",varietyType));
+    }
+
+    /**
      * 查询观点
      * @param page
      * @param pageSize
