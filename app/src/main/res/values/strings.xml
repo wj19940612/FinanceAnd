@@ -239,7 +239,7 @@
     <string name="cancel_borrow_in">取消借款</string>
     <string name="helper">想要帮助你的人 (%1$d)</string>
     <string name="borrow_in_time">%1$s时间\n%2$s</string>
-    <string name="borrow_out_time">借出时间\n%2$s</string>
+    <string name="borrow_out_time">借出时间\n%1$s</string>
     <string name="borrow_in_time_success">借入</string>
     <string name="borrow_in_time_failure">失败</string>
     <string name="call">联系对方</string>
@@ -248,4 +248,7 @@
     <string name="user_address">这里是用户名\n杭州 萧山</string>
     <string name="wait_confirm">等待确认中</string>
     <string name="end_time">倒计时</string>
+
+    <string name="borrow_failure">借款失败</string>
+
 </resources>

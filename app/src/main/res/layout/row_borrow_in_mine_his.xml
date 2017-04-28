@@ -26,7 +26,8 @@
             android:layout_marginLeft="10dp"
             android:orientation="vertical"
             android:layout_gravity="center"
-            android:textColor="@color/redPrimary"
+            android:lineSpacingExtra="8dp"
+            android:textColor="@color/blackAssist"
             android:textSize="15sp"
             tools:text="@string/user_address"/>
         <TextView
