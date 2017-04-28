@@ -59,7 +59,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -74,7 +74,7 @@ public class Client {
      */
 
     public static API getAuthCode(String phone) {
-        return new API("/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
+        return new API("/user/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
     }
 
     /**
@@ -256,6 +256,23 @@ public class Client {
      */
     public static API getUserCreditApproveStatus() {
         return new API("/user/user/userCertification.do");
+    }
+
+    /**
+     * 接口名称 查看点击用户观点
+     * 请求类型 post
+     * 请求Url  /coterie/userInterest/queryClickUserViewPoint.do
+     *
+     * @param page
+     * @param pageSize
+     * @param userId   用户id
+     * @return
+     */
+    public static API getUserPublishList(int page, int pageSize, int userId) {
+        return new API("/coterie/userInterest/queryClickUserViewPoint.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .put("userId", userId));
     }
 
     /**

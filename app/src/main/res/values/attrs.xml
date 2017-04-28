@@ -57,4 +57,12 @@
         <attr name="hasTradeButton" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="RedPointTipTextView">
+        <attr name="redPointTipVisibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
+    </declare-styleable>
+
 </resources>
