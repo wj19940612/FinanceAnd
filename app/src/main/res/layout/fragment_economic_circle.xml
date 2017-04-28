@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawablePadding="16dp"
-                android:drawableTop="@drawable/img_no_message"
+                android:drawableTop="@drawable/img_no_data"
                 android:gravity="center_horizontal"
                 android:paddingTop="150dp"
                 android:text="@string/no_data"

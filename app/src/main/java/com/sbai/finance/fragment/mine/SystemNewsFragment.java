@@ -23,10 +23,12 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.util.List;
@@ -47,9 +49,23 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     private Unbinder mBind;
     private TextView mFootView;
     private SystemNewsAdapter mSystemNewsAdapter;
+    private OnNoReadNewsListener mOnNoReadNewsListener;
+    private NotReadMessageNumberModel mNotReadMessageNumberModel;
 
     private int mPage;
     private int mSize = 15;
+    private NotReadMessageNumberModel mNotReadNewsNumber;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnNoReadNewsListener) {
+            mOnNoReadNewsListener = (OnNoReadNewsListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "" +
+                    "must implements OnNoReadNewsListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,10 +93,11 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
         });
 
         requestSystemNewsList();
+        mOnNoReadNewsListener.onNoReadNewsNumber(15, 0);
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, mSize)
+        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize)
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
@@ -93,11 +110,6 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     }
                 })
                 .fire();
-//        ArrayList<HistoryNewsModel> systemNewsModels = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            systemNewsModels.add(new HistoryNewsModel());
-//        }
-//        updateSystemNewsListData(systemNewsModels);
     }
 
     private void updateSystemNewsListData(List<HistoryNewsModel> systemNewsModels) {
@@ -169,6 +181,11 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
         if (systemNewsModel != null) {
             ToastUtil.curt("点击了 " + "斯大林欢迎你");
         }
+    }
+
+    public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNewsNumber) {
+        mNotReadNewsNumber = notReadNewsNumber;
+        Log.d("wangjie", "系统消息: " + notReadNewsNumber.toString());
     }
 
     static class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {

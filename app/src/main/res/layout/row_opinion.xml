@@ -40,7 +40,7 @@
             android:layout_toRightOf="@+id/userName"
             android:textColor="@color/assistText"
             android:textSize="11sp"
-            tools:text="@string/followed"/>
+            tools:text="@string/is_attention"/>
 
         <TextView
             android:id="@+id/publishTime"
@@ -54,23 +54,25 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/contentRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="15dp">
+
         <TextView
-            android:layout_marginTop="3dp"
             android:id="@+id/opinionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:background="@drawable/bg_long"
             android:gravity="center"
             android:minHeight="13dp"
             android:minWidth="33dp"
-            tools:text="@string/bullish"
             android:textColor="@color/redPrimary"
-            android:textSize="9sp"/>
+            android:textSize="9sp"
+            tools:text="@string/bullish"/>
 
         <TextView
             android:id="@+id/opinion"
@@ -85,6 +87,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/commentRl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -118,8 +121,9 @@
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>
+
     <View
-        android:background="@color/greyLightAssist"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="0.5dp"
+        android:background="@color/greyLightAssist"/>
 </LinearLayout>

@@ -27,6 +27,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -34,9 +35,9 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -57,11 +58,24 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     private Unbinder mBind;
     private EconomicCircleNewsAdapter mEconomicCircleNewsAdapter;
     private TextView mFootView;
-
+    private OnNoReadNewsListener mOnNoReadNewsListener;
+    private NotReadMessageNumberModel mNotReadMessageNumberModel;
 
     private int mPage = 0;
     private int mPageSize = 20;
     private HashSet<Integer> mSet;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnNoReadNewsListener) {
+            mOnNoReadNewsListener = (OnNoReadNewsListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "" +
+                    "must implements OnNoReadNewsListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +128,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 requestEconomicCircleNewsList();
             }
         });
+        mOnNoReadNewsListener.onNoReadNewsNumber(5, 0);
     }
 
     // TODO: 2017/4/18 后期删除 
@@ -129,28 +144,16 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
+                        updateEconomicCircleData(data);
                         for (HistoryNewsModel his : data) {
                             Log.d(TAG, " 经济圈消息" + his.toString());
                         }
                     }
                 })
                 .fire();
-
-
-        // TODO: 2017/4/25 做测试用
-//        ArrayList<HistoryNewsModel> historyNewsModelList = new ArrayList<>();
-//        for (int i = 0; i < url.length; i++) {
-//            HistoryNewsModel hahahha = new HistoryNewsModel();
-//            UserInfo userInfo = new UserInfo();
-//            userInfo.setUserPortrait(url[i]);
-//            hahahha.setUserInfo(userInfo);
-//            historyNewsModelList.add(hahahha);
-//        }
-//        updateEconomicCircleData(historyNewsModelList);
-
     }
 
-    private void updateEconomicCircleData(ArrayList<HistoryNewsModel> historyNewsModelList) {
+    private void updateEconomicCircleData(List<HistoryNewsModel> historyNewsModelList) {
         if (historyNewsModelList == null) {
             stopRefreshAnimation();
             return;
@@ -215,6 +218,11 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
+    public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
+        mNotReadMessageNumberModel = notReadNews;
+        Log.d("wangjie", "经济圈: " + notReadNews.toString());
     }
 
 

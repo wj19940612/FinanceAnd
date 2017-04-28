@@ -13,6 +13,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureFragment;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -33,6 +34,18 @@ public class FutureActivity extends BaseActivity {
         setContentView(R.layout.activity_future);
         ButterKnife.bind(this);
         initView();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Netty.get().subscribe(Netty.REQ_SUB_ALL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Netty.get().subscribe(Netty.REQ_UNSUB_ALL);
     }
 
     private void initView() {

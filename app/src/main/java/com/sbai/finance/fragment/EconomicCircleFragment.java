@@ -1,17 +1,21 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +27,9 @@ import com.sbai.finance.model.EconomicCircle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +42,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener {
-    private static final int TYPE_PRODUCT = 0;
-    private static final int TYPE_HELP = 1;
+
+    private static final int TYPE_OPINION = 2;
+    private static final int TYPE_BORROW_MONEY = 1;
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -53,7 +60,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
     private int mPage = 0;
     private int mPageSize = 15;
-    private HashSet<Integer> mSet;
+    private HashSet<String> mSet;
 
     @Nullable
     @Override
@@ -68,9 +75,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
         mEconomicCircleList = new ArrayList<>();
-        mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
+        mEconomicCircleAdapter = new EconomicCircleAdapter(getContext());
         mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mEconomicCircleAdapter);
+//        mListView.setAdapter(mEconomicCircleAdapter);
         mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,11 +126,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 .setCallback(new Callback2D<Resp<List<EconomicCircle>>, List<EconomicCircle>>() {
                     @Override
                     protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
-                        if (economicCircleList != null) {
-                            sortEconomicCircleList(economicCircleList);
-                        }
-                        updateEconomicCircleList(economicCircleList);
-                        stopRefreshAnimation();
+                        mEconomicCircleList.clear();
+                        mEconomicCircleList.addAll(economicCircleList);
+                        sortEconomicCircleList(mEconomicCircleList);
+                        updateEconomicCircleList(mEconomicCircleList);
                     }
 
                     @Override
@@ -152,9 +158,46 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     private void updateEconomicCircleList(List<EconomicCircle> economicCircleList) {
         if (economicCircleList == null) {
             stopRefreshAnimation();
+            return;
         }
 
+        if (mFootView == null) {
+            mFootView = new TextView(getActivity());
+            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+            mFootView.setPadding(padding, padding, padding, padding);
+            mFootView.setText(getText(R.string.load_more));
+            mFootView.setGravity(Gravity.CENTER);
+            mFootView.setTextColor(Color.WHITE);
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mSwipeRefreshLayout.isRefreshing()) return;
+                    mPage++;
+                    requestEconomicCircleList();
+                }
+            });
+            mListView.addFooterView(mFootView);
+        }
 
+        if (economicCircleList.size() < mPageSize) {
+            mListView.removeFooterView(mFootView);
+            mFootView = null;
+        }
+
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            if (mEconomicCircleAdapter != null) {
+                mEconomicCircleAdapter.clear();
+                mEconomicCircleAdapter.notifyDataSetChanged();
+            }
+            stopRefreshAnimation();
+        }
+
+        for (EconomicCircle economicCircle : economicCircleList) {
+            if (mSet.add(economicCircle.getId())) {
+                mEconomicCircleAdapter.addAll(economicCircle);
+            }
+        }
     }
 
     @Override
@@ -163,32 +206,24 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         unbinder.unbind();
     }
 
-    static class EconomicCircleAdapter extends BaseAdapter {
+    static class EconomicCircleAdapter extends ArrayAdapter<EconomicCircle> {
+
+        interface Callback {
+            void onAvatarOpinionClick(EconomicCircle economicCircle);
+
+            void onAvatarBorrowMoneyClick(EconomicCircle economicCircle);
+        }
+
         private Context mContext;
-        private List<EconomicCircle> mEconomicCircleList;
+        private Callback mCallback;
 
-        private EconomicCircleAdapter(Context context, List<EconomicCircle> economicCircleList) {
+        private EconomicCircleAdapter(Context context) {
+            super(context, 0);
             this.mContext = context;
-            this.mEconomicCircleList = economicCircleList;
         }
 
-        @Override
-        public int getCount() {
-            return mEconomicCircleList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            if (position % 2 == 0) {
-                return TYPE_PRODUCT;
-            }
-            return TYPE_HELP;
-            //return mEconomicCircleList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
+        public void setCallback(Callback callback) {
+            mCallback = callback;
         }
 
         @Override
@@ -198,83 +233,96 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         @Override
         public int getItemViewType(int position) {
-            return mEconomicCircleList.get(position).getType();
+            return getItem(position).getType();
         }
 
+        @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ProductViewHolder productViewHolder;
-            HelpViewHolder helpViewHolder;
-                switch (getItemViewType(position)) {
-                    case TYPE_PRODUCT:
-                        if (convertView == null) {
-                            convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_product, null);
-                            productViewHolder = new ProductViewHolder(convertView);
-                            convertView.setTag(productViewHolder);
-                        } else {
-                            productViewHolder = (ProductViewHolder) convertView.getTag();
-                        }
+            OpinionViewHolder opinionViewHolder;
+            BorrowMoneyViewHolder borrowMoneyViewHolder;
+            switch (getItemViewType(position)) {
+                case TYPE_OPINION:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, null);
+                        opinionViewHolder = new OpinionViewHolder(convertView);
+                        convertView.setTag(opinionViewHolder);
+                    } else {
+                        opinionViewHolder = (OpinionViewHolder) convertView.getTag();
+                    }
 
-                        productViewHolder.bindingData(mContext, (EconomicCircle) getItem(position));
-                        break;
+                    opinionViewHolder.bindingData(mContext, getItem(position), mCallback);
+                    break;
 
-                    case TYPE_HELP:
-                        if (convertView == null) {
-                            convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_help, null);
-                            helpViewHolder = new HelpViewHolder(convertView);
-                            convertView.setTag(helpViewHolder);
-                        } else {
-                            helpViewHolder = (HelpViewHolder) convertView.getTag();
-                        }
-                        helpViewHolder.bindingData(mContext, (EconomicCircle) getItem(position));
-                        break;
-                }
-
+                case TYPE_BORROW_MONEY:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_borrow_money, null);
+                        borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
+                        convertView.setTag(borrowMoneyViewHolder);
+                    } else {
+                        borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag();
+                    }
+                    borrowMoneyViewHolder.bindingData(mContext, getItem(position), mCallback);
+                    break;
+            }
             return convertView;
         }
 
-        static class ProductViewHolder {
+        static class OpinionViewHolder {
             @BindView(R.id.avatar)
             ImageView mAvatar;
             @BindView(R.id.userName)
             TextView mUserName;
-            @BindView(R.id.followed)
-            TextView mFollowed;
+            @BindView(R.id.isAttention)
+            TextView mIsAttention;
             @BindView(R.id.publishTime)
             TextView mPublishTime;
-            @BindView(R.id.opinion)
-            TextView mOpinion;
-            @BindView(R.id.product)
-            TextView mProduct;
-            @BindView(R.id.productName)
-            TextView mProductName;
+            @BindView(R.id.opinionContent)
+            TextView mOpinionContent;
+            @BindView(R.id.bigVarietyName)
+            TextView mBigVarietyName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
             @BindView(R.id.lastPrice)
             TextView mLastPrice;
             @BindView(R.id.upDownPrice)
             TextView mUpDownPrice;
             @BindView(R.id.upDownPercent)
             TextView mUpDownPercent;
-            @BindView(R.id.upDownArea)
-            LinearLayout mUpDownArea;
 
-            ProductViewHolder(View view) {
+            OpinionViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, EconomicCircle item) {
-                mUserName.setText("刘亦菲");
-                mFollowed.setText("已关注");
-                mPublishTime.setText("战国时期");
-                mOpinion.setText("话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。");
-                mProduct.setText("股票");
-                mProductName.setText("曹操股份");
+            private void bindingData(Context context, final EconomicCircle item, final Callback callback) {
+                mUserName.setText(item.getUserName());
+                if (item.getIsAttention() == 1) {
+                    mIsAttention.setText("已关注");
+                }
+                mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+
+                if (item.getGuessPass() == 1) {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                } else {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                }
+
+                mBigVarietyName.setText(item.getBigVarietyTypeName());
+                mVarietyName.setText(item.getVarietyName());
                 mLastPrice.setText("88.88");
                 mUpDownPrice.setText("+8.8");
                 mUpDownPercent.setText("+10%");
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.onAvatarOpinionClick(item);
+                    }
+                });
+
             }
         }
 
-        static class HelpViewHolder {
+        static class BorrowMoneyViewHolder {
             @BindView(R.id.avatar)
             ImageView mAvatar;
             @BindView(R.id.userName)
@@ -293,13 +341,13 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             @BindView(R.id.opinion)
             TextView mOpinion;
 
-            HelpViewHolder(View view) {
+            BorrowMoneyViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, EconomicCircle item) {
-                mUserName.setText("吴彦祖");
-                mPublishTime.setText("战国时期");
+            private void bindingData(Context context, EconomicCircle item, Callback callback) {
+                mUserName.setText(item.getUserName());
+                mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mAddress.setText("山东");
                 mNeedAmount.setText(context.getString(R.string.RMB, "8888"));
                 mBorrowTime.setText(context.getString(R.string.day, "8888"));

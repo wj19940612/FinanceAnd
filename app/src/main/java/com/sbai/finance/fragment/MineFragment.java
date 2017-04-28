@@ -179,7 +179,7 @@ public class MineFragment extends BaseFragment {
         Client.getAttentionFollowUserNumber(0)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>() {
+                .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
                     @Override
                     protected void onRespSuccessData(AttentionAndFansNumberModel data) {
                         Log.d(TAG, "粉丝数量 " + data.toString());

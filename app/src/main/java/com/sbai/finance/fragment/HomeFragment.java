@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.future.FutureActivity;
-import com.sbai.finance.activity.mutual.MutualActivity;
+import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionActivity;
-import com.sbai.finance.activity.stock.StockActivity;
 import com.sbai.finance.activity.home.TopicActivity;
+import com.sbai.finance.activity.mutual.MutualActivity;
+import com.sbai.finance.activity.stock.StockActivity;
 import com.sbai.finance.model.BannerModel;
-import com.sbai.finance.model.EventModel;
-import com.sbai.finance.model.EventTitleModel;
 import com.sbai.finance.model.TopicModel;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -38,7 +33,6 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
-import com.sbai.httplib.ApiCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +47,7 @@ import butterknife.Unbinder;
  */
 
 public class HomeFragment extends BaseFragment {
+
     @BindView(R.id.event)
     TextView mEvent;
     @BindView(R.id.homeBanner)
@@ -162,7 +157,7 @@ public class HomeFragment extends BaseFragment {
                     }
                 }).fire();
 
-       //获取最新事件标题
+       //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改 
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<String>,String>() {
                     @Override
@@ -231,6 +226,7 @@ public class HomeFragment extends BaseFragment {
             viewHolder.bindingData(getItem(position));
             return convertView;
         }
+
         static class ViewHolder {
             @BindView(R.id.topicTitle)
             TextView mTopicTitle;
