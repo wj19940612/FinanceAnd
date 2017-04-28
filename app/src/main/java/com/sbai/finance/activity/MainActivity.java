@@ -10,6 +10,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
+import com.sbai.finance.netty.Netty;
 import com.sbai.finance.view.BottomTabs;
 
 import butterknife.BindView;
@@ -32,7 +33,13 @@ public class MainActivity extends BaseActivity {
         translucentStatusBar();
         initView();
     }
-    
+
+    @Override
+    protected void onDestroy() {
+        Netty.get().shutdown();
+        super.onDestroy();
+    }
+
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);

@@ -18,7 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.sbai.finance.Preference;
-import com.sbai.finance.model.SysTime;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;

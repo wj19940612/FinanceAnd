@@ -1,70 +1,40 @@
 package com.sbai.finance.model;
 
-/**
- * 经济圈首页列表
- */
-
 public class EconomicCircle {
 
-	private String name;
-
-	public EconomicCircle(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return "EconomicCircle{" +
-				"name='" + name + '\'' +
-				'}';
-	}
 
 	/**
+	 * auditStatus : 1
 	 * bigVarietyTypeCode : future
 	 * bigVarietyTypeName : 期货
-	 * content : 看涨
-	 * contentImg : order/order.png
 	 * contractsCode : CL1706
-	 * createTime : 2017-09-08 00:00:00
-	 * dataId : 1
-	 * days : 10
+	 * createTime : 1493212327046
+	 * dataId : 8
 	 * direction : 1
 	 * guessPass : 0
-	 * interest : 10
+	 * id : 59009ca755ce743b88e08e4f
 	 * isAttention : 1
-	 * money : 10
-	 * praiseCount : 10
-	 * replyCount : 10
-	 * type : 1
-	 * userId : 1
-	 * userName : yehx
-	 * userPortrait : order/order.png
+	 * praiseCount : 0
+	 * replyCount : 0
+	 * type : 2
+	 * userId : 21
+	 * userName : 用户65
+	 * userPortrait : shanghai.aliyuncs.com/ueditor/1493109274765.png
 	 * varietyId : 1
-	 * varietyName : 美原油
+	 * varietyName : CL
 	 * varietyType : CL
 	 */
 
-	/*private String bigVarietyTypeCode;
+	private int auditStatus;
+	private String bigVarietyTypeCode;
 	private String bigVarietyTypeName;
-	private String content;
-	private String contentImg;
 	private String contractsCode;
 	private long createTime;
 	private int dataId;
-	private int days;
 	private int direction;
 	private int guessPass;
-	private int interest;
+	private String id;
 	private int isAttention;
-	private int money;
 	private int praiseCount;
 	private int replyCount;
 	private int type;
@@ -74,6 +44,15 @@ public class EconomicCircle {
 	private int varietyId;
 	private String varietyName;
 	private String varietyType;
+	private String content;
+
+	public int getAuditStatus() {
+		return auditStatus;
+	}
+
+	public void setAuditStatus(int auditStatus) {
+		this.auditStatus = auditStatus;
+	}
 
 	public String getBigVarietyTypeCode() {
 		return bigVarietyTypeCode;
@@ -89,22 +68,6 @@ public class EconomicCircle {
 
 	public void setBigVarietyTypeName(String bigVarietyTypeName) {
 		this.bigVarietyTypeName = bigVarietyTypeName;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getContentImg() {
-		return contentImg;
-	}
-
-	public void setContentImg(String contentImg) {
-		this.contentImg = contentImg;
 	}
 
 	public String getContractsCode() {
@@ -131,14 +94,6 @@ public class EconomicCircle {
 		this.dataId = dataId;
 	}
 
-	public int getDays() {
-		return days;
-	}
-
-	public void setDays(int days) {
-		this.days = days;
-	}
-
 	public int getDirection() {
 		return direction;
 	}
@@ -155,12 +110,12 @@ public class EconomicCircle {
 		this.guessPass = guessPass;
 	}
 
-	public int getInterest() {
-		return interest;
+	public String getId() {
+		return id;
 	}
 
-	public void setInterest(int interest) {
-		this.interest = interest;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public int getIsAttention() {
@@ -169,14 +124,6 @@ public class EconomicCircle {
 
 	public void setIsAttention(int isAttention) {
 		this.isAttention = isAttention;
-	}
-
-	public int getMoney() {
-		return money;
-	}
-
-	public void setMoney(int money) {
-		this.money = money;
 	}
 
 	public int getPraiseCount() {
@@ -251,22 +198,27 @@ public class EconomicCircle {
 		this.varietyType = varietyType;
 	}
 
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 	@Override
 	public String toString() {
 		return "EconomicCircle{" +
-				"bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+				"auditStatus=" + auditStatus +
+				", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
 				", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
-				", content='" + content + '\'' +
-				", contentImg='" + contentImg + '\'' +
 				", contractsCode='" + contractsCode + '\'' +
-				", createTime='" + createTime + '\'' +
+				", createTime=" + createTime +
 				", dataId=" + dataId +
-				", days=" + days +
 				", direction=" + direction +
 				", guessPass=" + guessPass +
-				", interest=" + interest +
+				", id='" + id + '\'' +
 				", isAttention=" + isAttention +
-				", money=" + money +
 				", praiseCount=" + praiseCount +
 				", replyCount=" + replyCount +
 				", type=" + type +
@@ -276,6 +228,7 @@ public class EconomicCircle {
 				", varietyId=" + varietyId +
 				", varietyName='" + varietyName + '\'' +
 				", varietyType='" + varietyType + '\'' +
+				", content='" + content + '\'' +
 				'}';
-	}*/
+	}
 }

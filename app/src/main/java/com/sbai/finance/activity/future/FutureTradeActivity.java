@@ -18,8 +18,10 @@ import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
+import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
 import com.sbai.finance.model.Variety;
@@ -37,6 +39,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.R.id.klineView;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -56,7 +60,7 @@ public class FutureTradeActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(R.id.klineView)
+    @BindView(klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -90,6 +94,7 @@ public class FutureTradeActivity extends BaseActivity {
         initTabLayout();
         initChartViews();
         initSlidingTab();
+        initFloatBar();
     }
 
     private void initData() {
@@ -123,13 +128,20 @@ public class FutureTradeActivity extends BaseActivity {
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
 
-
+        Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TrendViewData> data) {
+                        mTrendView.setDataList(data);
+                    }
+                }).fireSync();
     }
 
     private void initSlidingTab() {
         mViewPager.setOffscreenPageLimit(1);
         mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mSubPageAdapter);
+        mViewPager.addOnPageChangeListener(mSubPageChangeListener);
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -138,7 +150,36 @@ public class FutureTradeActivity extends BaseActivity {
         mSlidingTab.setViewPager(mViewPager);
     }
 
-    private static class SubPageAdapter extends FragmentPagerAdapter {
+    private void initFloatBar() {
+        mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
+            @Override
+            public void onPublishPointButtonClick() {
+                showPredictDialog(mVariety);
+            }
+
+            @Override
+            public void onAddOptionalButtonClick() {
+                addOption();
+            }
+
+            @Override
+            public void onTradeButtonClick() {
+                // TODO: 2017/4/27 跳转交易H5页面
+            }
+        });
+    }
+
+    private void showPredictDialog(Variety variety) {
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        PredictionFragment.newInstance(args).show(getSupportFragmentManager());
+    }
+
+    private void addOption() {
+
+    }
+
+    private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
         Context mContext;
@@ -162,11 +203,15 @@ public class FutureTradeActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
+
+            Bundle args = new Bundle();
+            args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
+
             switch (position) {
                 case 0:
-                    return new OpinionFragment();
+                    return OpinionFragment.newInstance(args);
                 case 1:
-                    return new IntroduceFragment();
+                    return IntroduceFragment.newInstance(args);
             }
             return null;
         }
@@ -181,6 +226,27 @@ public class FutureTradeActivity extends BaseActivity {
         }
     }
 
+    private ViewPager.OnPageChangeListener mSubPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (mSubPageAdapter.getPageTitle(position).equals(getString(R.string.point))) {
+                mTradeFloatButtons.setVisibility(View.VISIBLE);
+            } else {
+                mTradeFloatButtons.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
@@ -189,11 +255,14 @@ public class FutureTradeActivity extends BaseActivity {
                 requestKlineDataAndSet(null);
                 showKlineView();
             } else if (tabText.equals(getString(R.string.sixty_min_k))) {
-
+                requestKlineDataAndSet("60");
+                showKlineView();
             } else if (tabText.equals(getString(R.string.thirty_min_k))) {
-
+                requestKlineDataAndSet("30");
+                showKlineView();
             } else if (tabText.equals(getString(R.string.fifteen_min_k))) {
-
+                requestKlineDataAndSet("15");
+                showKlineView();
             } else {
                 showTrendView();
             }
@@ -227,7 +296,9 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void requestKlineDataAndSet(final String type) {
-        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
+        mKlineView.clearData();
+        Client.getKlineData(mVariety.getContractsCode(), type, null)
+                .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<KlineViewData> data) {

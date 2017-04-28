@@ -17,8 +17,20 @@ public class Client {
         return new API("/user/user/getSystemTime.do");
     }
 
-    public static API getTrendData(String varietyType) {
-        return new API("/quotaStatus/" + varietyType + ".fst");
+    public static API getSocketAddress() {
+        return new API("/fut/ip/list.do",
+                new ApiParams().put("type", "app"));
+    }
+
+    /**
+     * 获取分时图数据
+     *
+     * @param code
+     * @return
+     */
+    public static API getTrendData(String code) {
+        return new API("/fut/k/timeSharing.do",
+                new ApiParams().put("code", code));
     }
 
     /**
@@ -29,7 +41,7 @@ public class Client {
      * @return
      */
     public static API getKlineData(String varietyType, String type, String endTime) {
-        return new API("/quota/candlestickData/getCandlesticKData.do",
+        return new API("/fut/k/data.do",
                 new ApiParams()
                         .put("contractsCode", varietyType)
                         .put("limit", 100)
@@ -394,4 +406,42 @@ public class Client {
                         .put("page", page)
                         .put("pageSize", pageSize));
     }
+
+    /**
+     * 发表观点
+     * @param bigVarietyTypeCode
+     * @param content
+     * @param direction
+     * @param varietyId
+     * @param varietyType
+     * @return
+     */
+    public static API saveViewPoint(String bigVarietyTypeCode,String content,int direction,int varietyId,String varietyType) {
+        return new API(POST,"/coterie/viewpoint/saveViewpoint.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("content", content)
+                        .put("direction",direction)
+                        .put("varietyId",varietyId)
+                        .put("varietyType",varietyType));
+    }
+
+    /**
+     * 查询观点
+     * @param page
+     * @param pageSize
+     * @param varietyId
+     * @return
+     */
+    public static API findViewpoint(int page,int pageSize,int varietyId) {
+        return new API("/coterie/viewpoint/findViewpoint.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("varietyId",varietyId));
+    }
+
+
+
+
 }
