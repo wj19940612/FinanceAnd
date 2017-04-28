@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class EventActivity extends BaseActivity {
+public class EventActivity extends BaseActivity  implements AbsListView.OnScrollListener{
 	@BindView(R.id.listView)
 	ListView mListView;
 	@BindView(R.id.empty)
@@ -71,6 +72,7 @@ public class EventActivity extends BaseActivity {
 				mEventListAdapter.getItem(position).getUrl();
 			}
 		});
+		mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
 	}
 
@@ -166,8 +168,20 @@ public class EventActivity extends BaseActivity {
 		});
 	}
 
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-	 static class EventListAdapter extends ArrayAdapter<EventModel.DataBean> {
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int topRowVerticalPosition =
+				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+	}
+
+
+	static class EventListAdapter extends ArrayAdapter<EventModel.DataBean> {
 		Context mContext;
 		public EventListAdapter(@NonNull Context context){
 			super(context,0);

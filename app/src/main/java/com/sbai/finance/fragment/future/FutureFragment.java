@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -33,7 +34,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class FutureFragment extends BaseFragment {
+public class FutureFragment extends BaseFragment implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.rate)
@@ -102,6 +103,7 @@ public class FutureFragment extends BaseFragment {
                 }
             }
         });
+        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -149,6 +151,19 @@ public class FutureFragment extends BaseFragment {
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
     public static class FutureListAdapter extends ArrayAdapter<Variety> {
         Context mContext;
         public FutureListAdapter(@NonNull Context context) {

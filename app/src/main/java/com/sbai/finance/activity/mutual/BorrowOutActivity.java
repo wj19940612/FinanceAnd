@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BorrowOutActivity extends BaseActivity {
+public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnScrollListener{
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.listView)
@@ -64,7 +65,7 @@ public class BorrowOutActivity extends BaseActivity {
         mBorrowOutAdapter = new BorrowOutAdapter(this);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowOutAdapter);
-
+        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -103,6 +104,19 @@ public class BorrowOutActivity extends BaseActivity {
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
     static class BorrowOutAdapter extends ArrayAdapter<BorrowOut>{
 
         Context mContext;

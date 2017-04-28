@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +40,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-27.
  */
 
-public class BorrowInHisActivity extends BaseActivity {
+public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnScrollListener{
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.listView)
@@ -77,7 +78,7 @@ public class BorrowInHisActivity extends BaseActivity {
         });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowInHisAdapter);
-
+        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -125,6 +126,19 @@ public class BorrowInHisActivity extends BaseActivity {
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
     static class BorrowInHisAdapter extends ArrayAdapter<BorrowInHis>{
         Context mContext;
         private Callback mCallback;
