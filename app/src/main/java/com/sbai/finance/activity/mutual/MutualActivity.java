@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.BorrowIn;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
 
@@ -44,8 +45,10 @@ public class MutualActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.borrowIn:
+                Launcher.with(this, BorrowInActivity.class).execute();
                 break;
             case R.id.borrowOut:
+                Launcher.with(this,BorrowOutActivity.class).execute();
                 break;
             case R.id.borrow:
                 Launcher.with(this,BorrowActivity.class).execute();

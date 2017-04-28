@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/greyLightAssist"
-              android:orientation="vertical">
-
-    <include layout="@layout/layout_hq_header"/>
+              android:layout_height="match_parent">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/borrow_out_his"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -13,30 +16,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/greyLightAssist"
             android:orientation="vertical">
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:headerDividersEnabled="true"
-                android:visibility="visible"/>
-
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:drawablePadding="16dp"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
-                android:drawableTop="@drawable/img_no_data"
-                android:text="暂无行情数据"
+                android:drawableTop="@drawable/ic_noloan"
+                android:text="@string/mutual_no_borrow_out"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

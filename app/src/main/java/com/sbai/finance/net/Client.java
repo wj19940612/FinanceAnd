@@ -406,6 +406,97 @@ public class Client {
                         .put("page", page)
                         .put("pageSize", pageSize));
     }
+    /**
+     * 发布借款
+     * @param content
+     * @param contentImg
+     * @param days
+     * @param interest
+     * @param money
+     * @param userId
+     * @return
+     */
+    public static API borrowIn(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
+        return new API("/coterie/help/loan/addLoan.do",
+                new ApiParams()
+                        .put("content", content)
+                        .put("contentImg", contentImg)
+                        .put("days",days)
+                        .put("interest",interest)
+                        .put("money",money)
+                        .put("userId",userId));
+    }
+    /**
+     * 我的借入
+     * @return
+     */
+    public static API getBorrowInList(){
+        return new API("/coterie/help/loan/myLoanIn.do");
+    }
+    /**
+     * 我的历史借入
+     * @return
+     */
+    public static API getBorrowInHisList(){
+        return new API("/coterie/help/loan/historyLoan.do");
+    }
+
+    /**
+     * 取消借款
+     * @param id
+     * @return
+     */
+    public static API cancelBorrowIn(Integer id){
+        return new API("/coterie/help/loan/cancelLoan.do",
+                new ApiParams()
+                .put("id",id));
+    }
+    /**
+     * 已经还款
+     * @param id
+     * @return
+     */
+    public static API repayed(Integer id){
+        return new API("/coterie/help/loan/repayed.do",
+                new ApiParams()
+                        .put("id",id));
+    }
+    /**
+     * 查看帮助的人
+     * @param id
+     * @return
+     */
+    public static API getHelper(Integer id){
+        return new API("/coterie/help/loan/intentionCount.do",
+                new ApiParams()
+                        .put("id",id));
+    }
+    /**
+     * 选择借款人
+     * @param id
+     * @return
+     */
+    public static API selectHelper(Integer id,String userId){
+        return new API("/coterie/help/loan/intentionCount.do",
+                new ApiParams()
+                        .put("userId",userId)
+                        .put("id",id));
+    }
+
+    /**
+     * 我的借出
+     * @return
+     */
+    public static API getBorrowOutList(){
+        return new API("/coterie/help/loan/myLoanOut.do");
+    }
+    /**
+     * 我的历史借出
+     * @return
+     */
+    public static API getBorrowOutHisList(){
+        return new API("/coterie/help/loan/historyLoanOut.do");
+    }
 
     /**
      * 发表观点
@@ -473,7 +564,4 @@ public class Client {
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("varietyId", varietyId));
     }
-
-
-
 }
