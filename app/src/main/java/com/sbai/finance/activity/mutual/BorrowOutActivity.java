@@ -155,10 +155,7 @@ public class BorrowOutActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(BorrowOut item, int position, Context context){
-//                mPublishTime.setText(DateUtil.formatSlash(item.getCreateTime()));
-                if (LocalUser.getUser().isLogin()){
-                    Glide.with(context).load(LocalUser.getUser().getUserInfo().getUserPortrait()).into(mUserPortrait);
-                }
+                loadImage(context,item.getPortrait(),mUserPortrait);
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));

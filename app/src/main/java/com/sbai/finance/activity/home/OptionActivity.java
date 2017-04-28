@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ import butterknife.ButterKnife;
  */
 
 public class OptionActivity extends BaseActivity {
+	@BindView(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.listView)
 	SlideListView mListView;
 	@BindView(R.id.empty)
@@ -51,6 +54,12 @@ public class OptionActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				requestOptionalData();
+			}
+		});
 		mSlideListAdapter = new SlideListAdapter(this);
 		mSlideListAdapter.setOnDelClickListener(new SlideListAdapter.OnDelClickListener() {
 			@Override
@@ -74,7 +83,7 @@ public class OptionActivity extends BaseActivity {
 	}
 
 	private void requestOptionalData() {
-		Client.getOptional(Variety.VAR_STOCK).setTag(TAG)
+		Client.getOptional(Variety.VAR_FUTURE).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
 					@Override
 					protected void onRespSuccessData(List<Variety> data) {
@@ -91,6 +100,7 @@ public class OptionActivity extends BaseActivity {
 							requestOptionalData();
 						}else{
 							ToastUtil.curt(resp.getMsg());
+							stopRefreshAnimation();
 						}
 					}
 				}).fire();
@@ -100,10 +110,16 @@ public class OptionActivity extends BaseActivity {
 		super.onDestroy();
 	}
 	private void updateOptionInfo(ArrayList<Variety> data) {
+		stopRefreshAnimation();
 		mSlideListAdapter.clear();
 		mSlideListAdapter.addAll(data);
 		mSlideListAdapter.notifyDataSetChanged();
 
+	}
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
 	}
 	public static class SlideListAdapter extends ArrayAdapter<Variety> {
 		Context mContext;

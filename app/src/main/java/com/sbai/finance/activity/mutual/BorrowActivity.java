@@ -1,12 +1,17 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +31,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.MyGridView;
@@ -85,6 +91,8 @@ public class BorrowActivity extends BaseActivity {
 				    setPublishStatus();
 				}
 		});
+
+
         if(LocalUser.getUser().isLogin()){
 			String photo1 = LocalUser.getUser().getUserInfo().getUserPortrait();
 			mPhotoGridAdapter.add(photo1);
@@ -109,10 +117,12 @@ public class BorrowActivity extends BaseActivity {
 		StringBuilder contentImg = new StringBuilder();
 		int phontAmount =mPhotoGridAdapter.getCount();
 		for (int i = 0; i<phontAmount-1;i++){
+			ImageView imageView = (ImageView) mPhotoGv.getChildAt(i).findViewById(R.id.photoImg);
+			String bitmapToBase64 = ImageUtils.bitmapToBase64(imageView.getDrawingCache());
 			if (i<=phontAmount-1){
-				contentImg.append(mPhotoGridAdapter.getItem(i)+",");
+				contentImg.append(bitmapToBase64+",");
 			}else{
-				contentImg.append(mPhotoGridAdapter.getItem(i));
+				contentImg.append(bitmapToBase64);
 			}
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
@@ -253,7 +263,6 @@ public class BorrowActivity extends BaseActivity {
 			@BindView(R.id.photoImg)
 			ImageView mPhotoImg;
 			private Context mContext;
-
 			ViewHolder(View view, Context context) {
 				mContext = context;
 				ButterKnife.bind(this, view);

@@ -194,7 +194,7 @@
             android:background="@drawable/bg_cancel_borrow"
             android:textColor="@color/redPrimary"
             android:textSize="13sp"
-            tools:text="@string/cancel_borrow_in"/>
+            android:text="@string/cancel_borrow_in"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

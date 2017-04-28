@@ -7,23 +7,29 @@ package com.sbai.finance.model;
 public class BorrowOut {
 
     /**
-     * content : 测试内容644l
-     * contentImg : 测试内容5w12
-     * days : 41478
-     * interest : 28644
-     * loanId : 32300
-     * money : 27007
-     * status : 25351
-     * userId : 41560
-     * userName : 测试内容4t5h
+     * content : 测试内容4tsw
+     * contentImg : 测试内容7814
+     * createTime : 51854
+     * days : 34432
+     * interest : 45666
+     * loanId : 33244
+     * location : 1
+     * money : 40768
+     * portrait : 测试内容7ye6
+     * status : 32604
+     * userId : 25508
+     * userName : 测试内容44k1
      */
 
     private String content;
     private String contentImg;
+    private int createTime;
     private int days;
     private int interest;
     private int loanId;
+    private int location;
     private int money;
+    private String portrait;
     private int status;
     private int userId;
     private String userName;
@@ -42,6 +48,14 @@ public class BorrowOut {
 
     public void setContentImg(String contentImg) {
         this.contentImg = contentImg;
+    }
+
+    public int getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(int createTime) {
+        this.createTime = createTime;
     }
 
     public int getDays() {
@@ -68,12 +82,28 @@ public class BorrowOut {
         this.loanId = loanId;
     }
 
+    public int getLocation() {
+        return location;
+    }
+
+    public void setLocation(int location) {
+        this.location = location;
+    }
+
     public int getMoney() {
         return money;
     }
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public int getStatus() {

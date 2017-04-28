@@ -115,9 +115,7 @@ public class BorrowInHisActivity extends BaseActivity {
                }).fire();
    }
    private void updateBorrowHis(List<BorrowInHis> data){
-       if (data.isEmpty()){
-           stopRefreshAnimation();
-       }
+       stopRefreshAnimation();
        mBorrowInHisAdapter.clear();
        mBorrowInHisAdapter.addAll(data);
        mBorrowInHisAdapter.notifyDataSetChanged();

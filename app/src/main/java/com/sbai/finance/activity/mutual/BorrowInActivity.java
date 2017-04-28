@@ -202,7 +202,7 @@ public class BorrowInActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(BorrowIn item, int position, Context context){
-                mPublishTime.setText(DateUtil.formatSlash(item.getCreateTime()));
+                mPublishTime.setText(DateUtil.formatSlash(item.getCreateDate()));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));

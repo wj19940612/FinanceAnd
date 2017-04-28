@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -32,7 +34,8 @@ import butterknife.Unbinder;
 
 
 public class FutureFragment extends BaseFragment {
-
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.rate)
     TextView mRate;
     @BindView(R.id.listView)
@@ -80,6 +83,12 @@ public class FutureFragment extends BaseFragment {
     }
 
     private void initView() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestVarietyList();
+            }
+        });
         mFutureListAdapter = new FutureListAdapter(getActivity());
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mFutureListAdapter);
@@ -108,9 +117,7 @@ public class FutureFragment extends BaseFragment {
     }
 
     private void updateFutureData(List<Variety> varietyList) {
-        if (varietyList == null){
-            return;
-        }
+        stopRefreshAnimation();
         mFutureListAdapter.clear();
         mFutureListAdapter.addAll(varietyList);
         mFutureListAdapter.notifyDataSetChanged();
@@ -123,16 +130,25 @@ public class FutureFragment extends BaseFragment {
     }
 
     public void requestVarietyList() {
-        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mfutureType)
-                .setTag(TAG).setIndeterminate(this)
+        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mfutureType).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateFutureData(data);
                     }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
                 }).fireSync();
     }
-
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
     public static class FutureListAdapter extends ArrayAdapter<Variety> {
         Context mContext;
         public FutureListAdapter(@NonNull Context context) {

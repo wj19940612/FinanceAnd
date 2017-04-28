@@ -58,7 +58,7 @@
         android:layout_gravity="center"
         android:drawablePadding="16dp"
         android:gravity="center_horizontal"
-        android:paddingTop="180dp"
+        android:paddingTop="100dp"
         android:drawableTop="@drawable/img_no_data"
         android:text="暂无行情数据"
         android:textColor="@color/assistText"

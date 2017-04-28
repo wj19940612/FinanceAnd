@@ -5,29 +5,33 @@ package com.sbai.finance.model;
  */
 
 public class BorrowIn {
+
+
     /**
-     * content : 测试内容qog1
-     * contentImg : 测试内容6jwm
-     * createTime : 57644
-     * days : 38275
-     * endlineTime : 43700
-     * id : 72263
-     * interest : 55188
-     * money : 82204
-     * status : 37204
-     * userID : 12110
+     * content : 测试借款
+     * contentImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773198.png,https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773530.png,https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773621.png,https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773636.png,
+     * createDate : 1493363773000
+     * days : 6
+     * endlineTime : 1493450173000
+     * id : 13
+     * interest : 66
+     * modifyDate : 1493363773000
+     * money : 666
+     * status : 1
+     * userId : 83
      */
 
     private String content;
     private String contentImg;
-    private int createTime;
+    private long createDate;
     private int days;
-    private int endlineTime;
+    private long endlineTime;
     private int id;
     private int interest;
+    private long modifyDate;
     private int money;
     private int status;
-    private int userID;
+    private int userId;
 
     public String getContent() {
         return content;
@@ -45,12 +49,12 @@ public class BorrowIn {
         this.contentImg = contentImg;
     }
 
-    public int getCreateTime() {
-        return createTime;
+    public long getCreateDate() {
+        return createDate;
     }
 
-    public void setCreateTime(int createTime) {
-        this.createTime = createTime;
+    public void setCreateDate(long createDate) {
+        this.createDate = createDate;
     }
 
     public int getDays() {
@@ -61,11 +65,11 @@ public class BorrowIn {
         this.days = days;
     }
 
-    public int getEndlineTime() {
+    public long getEndlineTime() {
         return endlineTime;
     }
 
-    public void setEndlineTime(int endlineTime) {
+    public void setEndlineTime(long endlineTime) {
         this.endlineTime = endlineTime;
     }
 
@@ -85,6 +89,14 @@ public class BorrowIn {
         this.interest = interest;
     }
 
+    public long getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(long modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
     public int getMoney() {
         return money;
     }
@@ -101,11 +113,11 @@ public class BorrowIn {
         this.status = status;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
