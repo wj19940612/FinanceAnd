@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,13 +25,11 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.mine.ShieldedUserModel;
 import com.sbai.finance.model.mine.UserAttentionModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -69,7 +66,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
                 SmartDialog.with(getActivity(),
                         getString(R.string.relieve_shield_dialog_content, userAttentionModel.getFollowuserName())
-                        , getString(R.string.relieve_shield_dialog_title, shieldedUserModel.getUserName()))
+                        , getString(R.string.relieve_shield_dialog_title, userAttentionModel.getFollowuserName()))
                         .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
