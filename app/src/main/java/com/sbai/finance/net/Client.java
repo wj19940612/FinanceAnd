@@ -7,6 +7,7 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
+    public static final int PAGE_SIZE = 15;
 
     /**
      * 获取服务器系统时间
@@ -59,7 +60,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API( "/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -179,7 +180,7 @@ public class Client {
      *
      * @param age
      * @param land
-     * @param userSex
+     * @param userSex 1女2男0未知
      * @return
      */
 

@@ -1,10 +1,13 @@
 package com.sbai.finance.model.mine;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ${wangJie} on 2017/4/26.
  */
 
-public class NotReadMessageNumberModel {
+public class NotReadMessageNumberModel implements Parcelable{
 
     /**
      * classify : 77008
@@ -14,13 +17,6 @@ public class NotReadMessageNumberModel {
     private int classify;
     private int count;
 
-    public NotReadMessageNumberModel() {
-    }
-
-    public NotReadMessageNumberModel(int classify, int count) {
-        this.classify = classify;
-        this.count = count;
-    }
 
     public int getClassify() {
         return classify;
@@ -45,4 +41,32 @@ public class NotReadMessageNumberModel {
                 ", count=" + count +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.classify);
+        dest.writeInt(this.count);
+    }
+
+    protected NotReadMessageNumberModel(Parcel in) {
+        this.classify = in.readInt();
+        this.count = in.readInt();
+    }
+
+    public static final Creator<NotReadMessageNumberModel> CREATOR = new Creator<NotReadMessageNumberModel>() {
+        @Override
+        public NotReadMessageNumberModel createFromParcel(Parcel source) {
+            return new NotReadMessageNumberModel(source);
+        }
+
+        @Override
+        public NotReadMessageNumberModel[] newArray(int size) {
+            return new NotReadMessageNumberModel[size];
+        }
+    };
 }

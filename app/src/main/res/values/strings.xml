@@ -94,6 +94,8 @@
     <string name="please_login">您好，请先登录</string>
     <string name="detail">明细</string>
     <string name="feed_back">意见反馈</string>
+    <string name="new_message">新消息</string>
+    <string name="item">条</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>

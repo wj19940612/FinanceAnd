@@ -21,7 +21,7 @@
             android:layout_weight="1"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
-            android:textColor="@color/primaryText"
+            android:textColor="@color/already_read_or_not_read_text_color"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:text="欢迎加入返利"/>
@@ -42,8 +42,8 @@
         android:layout_marginTop="15dp"
         android:ellipsize="end"
         android:lineSpacingExtra="9dp"
-        android:textSize="13sp"
         android:maxLines="2"
-        android:textColor="@color/secondaryText"
+        android:textColor="@color/already_read_or_not_read_text_color"
+        android:textSize="13sp"
         tools:text="可视对讲阿看房了解萨德里克快乐圣诞分手快乐等级分类考试大家第三方骷髅精灵第三空间节福利卡圣诞节疯狂了倒计时考虑到解放路口圣诞节疯狂时代"/>
 </LinearLayout>
