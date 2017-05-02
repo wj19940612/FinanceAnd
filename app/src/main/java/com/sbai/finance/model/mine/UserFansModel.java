@@ -19,6 +19,12 @@ public class UserFansModel {
     private int userId;
     private String userName;
     private String userPortrait;
+    //	0以关注1未关注
+    private int other;
+
+    public boolean isNotAttention() {
+        return getOther() == 1;
+    }
 
     public long getCreateTime() {
         return createTime;
@@ -60,6 +66,14 @@ public class UserFansModel {
         this.userPortrait = userPortrait;
     }
 
+    public int getOther() {
+        return other;
+    }
+
+    public void setOther(int other) {
+        this.other = other;
+    }
+
     @Override
     public String toString() {
         return "UserFansModel{" +
@@ -68,6 +82,7 @@ public class UserFansModel {
                 ", userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", userPortrait='" + userPortrait + '\'' +
+                ", other=" + other +
                 '}';
     }
 }

@@ -189,11 +189,11 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.news:
-                if (LocalUser.getUser().isLogin()) {
+//                if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), NewsActivity.class).execute();
-                } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
-                }
+//                } else {
+//                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+//                }
                 break;
             case R.id.setting:
                 Launcher.with(getActivity(), SettingActivity.class).execute();

@@ -188,7 +188,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindViewWithData(getItem(position), mContext, mOnUserFansClickListener, position);
+            viewHolder.bindViewWithData(getItem(position), mContext, mOnUserFansClickListener);
             return convertView;
         }
 
@@ -204,14 +204,14 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener, int position) {
+            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener) {
                 if (item == null) return;
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
 
-                if (position % 2 == 0) {
+                if (item.isNotAttention()) {
                     mRelive.setText(R.string.attention);
                     mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_fans_follow, 0, 0);
                 } else {

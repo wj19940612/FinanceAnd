@@ -278,9 +278,10 @@ public class Client {
      * @param followId 关注对象的ID
      * @param status   0关注 1取消关注
      * @return
+     *
      */
     public static API attentionOrRelieveAttentionUser(int followId, int status) {
-        return new API(POST, "/coterie/userDetail/follow.do", new ApiParams()
+        return new API(POST, "/coterie/userInterest/follow.do", new ApiParams()
                 .put("followId", followId)
                 .put("status", status));
     }

@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -117,6 +118,12 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                     @Override
                     protected void onRespSuccessData(ArrayList<ShieldedUserModel> data) {
                         updateShieldUserData(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();

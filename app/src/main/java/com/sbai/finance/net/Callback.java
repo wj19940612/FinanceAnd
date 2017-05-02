@@ -38,6 +38,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
         if (t instanceof Resp) {
             if (((Resp) t).isTokenExpired()) {
                 sendTokenExpiredBroadcast(((Resp) t).getMsg());
+                onFailure(null);
             } else {
                 onReceive(t);
             }
@@ -65,6 +66,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     @Override
     public void onFailure(VolleyError volleyError) {
+        if (volleyError == null) return;
         Log.d(RequestManager.TAG, getUrl() + " " + volleyError.toString());
 
         int toastResId = R.string.http_lib_error_network;

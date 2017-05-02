@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.CreditApproveActivity;
@@ -114,6 +115,12 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                             Log.d(TAG, " 系统消息" + his.toString());
                         }
                         updateSystemNewsListData(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();

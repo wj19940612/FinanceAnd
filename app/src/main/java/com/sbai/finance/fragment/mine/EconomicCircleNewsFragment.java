@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -123,6 +124,12 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
                         updateEconomicCircleData(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();
