@@ -76,7 +76,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         mEconomicCircleList = new ArrayList<>();
         mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
         mListView.setEmptyView(mEmpty);
-//        mListView.setAdapter(mEconomicCircleAdapter);
+//       mListView.setAdapter(mEconomicCircleAdapter);
         mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

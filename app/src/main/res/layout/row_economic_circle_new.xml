@@ -54,12 +54,12 @@
         android:id="@+id/presentation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="11sp"
-        android:lineSpacingExtra="7dp"
-        android:textColor="@color/assistText"
         android:ellipsize="end"
+        android:lineSpacingExtra="7dp"
         android:maxLines="3"
         android:maxWidth="61dp"
-        android:text="快乐大数据反馈了解到萨拉点开链接萨菲隆开始考虑大姐夫单身快乐荆防颗粒圣诞节"/>
+        android:textColor="@color/secondaryText"
+        android:textSize="11sp"
+        tools:text="快乐大数据反馈了解到萨拉点开链接萨菲隆开始考虑大姐夫单身快乐荆防颗粒圣诞节"/>
 
 </LinearLayout>

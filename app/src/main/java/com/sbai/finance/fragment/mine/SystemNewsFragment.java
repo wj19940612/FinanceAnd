@@ -31,6 +31,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.ToastUtil;
 
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,6 +55,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 
     private int mPage;
     private int mSize = 15;
+    private HashSet<Integer> mSet;
     private NotReadMessageNumberModel mNotReadNewsNumber;
 
     @Override
@@ -78,6 +80,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSet = new HashSet<>();
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
@@ -88,6 +91,8 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
+                mPage = 0;
                 requestSystemNewsList();
             }
         });
@@ -97,7 +102,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize)
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
@@ -144,11 +149,15 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mSystemNewsAdapter != null) {
                 mSystemNewsAdapter.clear();
-                mSystemNewsAdapter.notifyDataSetChanged();
             }
             stopRefreshAnimation();
         }
-        mSystemNewsAdapter.addAll(systemNewsModels);
+
+        for (HistoryNewsModel data : systemNewsModels) {
+            if (mSet.add(data.getId())) {
+                mSystemNewsAdapter.add(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -185,7 +194,6 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNewsNumber) {
         mNotReadNewsNumber = notReadNewsNumber;
-        Log.d("wangjie", "系统消息: " + notReadNewsNumber.toString());
     }
 
     static class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
@@ -225,9 +233,55 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             }
 
             public void bindViewWithData(HistoryNewsModel item, Context context, int position) {
-                if (position % 2 == 0) {
-                    mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
+                // 13.借款单审核未通过 14.借款发布成功 *
+//                public static final int BORROW_MONEY_AUDIT_IS_NOT_PASS = 13;
+//                public static final int BORROW_MONEY_PUBLISH_SUCCESS = 14;
+//                // 20.成为观点大神 21.实名认证已通过 22.实名认证未通过 * 25.涨跌预测成功 26.涨跌预测失败
+//                public static final int BECOME_VIEWPOINT_MANITO = 20;
+//                public static final int REAL_NAME_APPROVE_PASSED = 21;
+//                public static final int REAL_NAME_APPROVE_FAILED = 22;
+//                public static final int FORCAEST_highs_and_lows_fail = 25;
+//                public static final int FORCAEST_highs_and_lows_success = 26;
+//
+//                //   30.意向金支付成功
+//                public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
+
+                switch (item.getType()) {
+                    //借款单审核未通过
+                    case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
+                        break;
+//                    14.借款发布成功 *
+                    case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
+                        break;
+                    //// 20.成为观点大神
+                    case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
+                        break;
+                    //21.实名认证已通过
+                    case HistoryNewsModel.REAL_NAME_APPROVE_PASSED:
+                        break;
+                    // 22.实名认证未通过
+                    case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
+                        break;
+                    // 25.涨跌预测成功
+                    case HistoryNewsModel.FORCAEST_highs_and_lows_fail:
+                        break;
+                    case HistoryNewsModel.FORCAEST_highs_and_lows_success:
+                        break;
+                    case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
+                        break;
                 }
+                if (item.getType() == HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS) {
+                    if (item.isAlreadyRead()) {
+                        if (position % 2 == 0) {
+                            mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
+                        }
+                    } else {
+                        if (position % 2 == 0) {
+                            mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed_read, 0, 0, 0);
+                        }
+                    }
+                }
+
                 mTitle.setText("系统消息");
                 mTime.setText(DateUtil.getFormatTime(1493024100000L));
                 mContent.setText("斯大林欢迎你");

@@ -18,17 +18,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -38,6 +41,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -46,7 +50,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class EconomicCircleNewsFragment extends BaseFragment implements AbsListView.OnScrollListener {
+public class EconomicCircleNewsFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -97,26 +101,8 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
                 Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
             }
-
-            @Override
-            public void onUserAppraiseClick(HistoryNewsModel historyNewsModel) {
-                // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示
-                switch (historyNewsModel.getType()) {
-                    //关注
-                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                        break;
-                    //点赞帖子
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                        break;
-                    //点赞评论
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                        break;
-                    //评论
-                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
-                        break;
-                }
-            }
         });
+        mListView.setOnItemClickListener(this);
         mListView.setAdapter(mEconomicCircleNewsAdapter);
         mListView.setOnScrollListener(this);
         requestEconomicCircleNewsList();
@@ -125,20 +111,16 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             @Override
             public void onRefresh() {
                 mSet.clear();
+                mPage = 0;
                 requestEconomicCircleNewsList();
             }
         });
-        mOnNoReadNewsListener.onNoReadNewsNumber(5, 0);
+
     }
 
-    // TODO: 2017/4/18 后期删除 
-    private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void requestEconomicCircleNewsList() {
-
-        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, mPageSize)
+        Client.requestHistoryNews(false,HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, mPageSize)
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
@@ -151,6 +133,12 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     }
                 })
                 .fire();
+
+        ArrayList<HistoryNewsModel> historyNewsModels = new ArrayList<>();
+        historyNewsModels.add(new HistoryNewsModel(1, 1, 1, new UserInfo()));
+        historyNewsModels.add(new HistoryNewsModel(2, 0, 4, new UserInfo()));
+        historyNewsModels.add(new HistoryNewsModel(3, 0, 4, new UserInfo()));
+        updateEconomicCircleData(historyNewsModels);
     }
 
     private void updateEconomicCircleData(List<HistoryNewsModel> historyNewsModelList) {
@@ -185,13 +173,12 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mEconomicCircleNewsAdapter != null) {
                 mEconomicCircleNewsAdapter.clear();
-                mEconomicCircleNewsAdapter.notifyDataSetChanged();
             }
             stopRefreshAnimation();
         }
         for (HistoryNewsModel data : historyNewsModelList) {
             if (mSet.add(data.getId())) {
-                mEconomicCircleNewsAdapter.addAll(data);
+                mEconomicCircleNewsAdapter.add(data);
             }
         }
     }
@@ -222,7 +209,46 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
         mNotReadMessageNumberModel = notReadNews;
-        Log.d("wangjie", "经济圈: " + notReadNews.toString());
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        HistoryNewsModel historyNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
+        if (historyNewsModel != null) {
+            if (!historyNewsModel.isAlreadyRead()) {
+                mEconomicCircleNewsAdapter.remove(historyNewsModel);
+                historyNewsModel.setStatus(1);
+                mEconomicCircleNewsAdapter.insert(historyNewsModel, position);
+            }
+
+            Client.updateMsgReadStatus(historyNewsModel.getId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            Log.d(TAG, "onRespSuccess: " + resp.toString());
+                        }
+                    })
+                    .fire();
+
+            // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示
+            switch (historyNewsModel.getType()) {
+                //关注
+                case HistoryNewsModel.ACTION_TYPE_ATTENTION:
+                    break;
+                //点赞帖子
+                case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
+                    break;
+                //点赞评论
+                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                    break;
+                //评论
+                case HistoryNewsModel.ACTION_TYPE_COMMENT:
+                    break;
+            }
+
+        }
     }
 
 
@@ -230,8 +256,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
         interface CallBack {
             void onUserHeadImageClick(HistoryNewsModel historyNewsModel);
-
-            void onUserAppraiseClick(HistoryNewsModel historyNewsModel);
         }
 
         private Context mContext;
@@ -282,19 +306,26 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final HistoryNewsModel item, Context context, int position, final CallBack callBack) {
+            public void bindViewWithData(final HistoryNewsModel item, final Context context, int position, final CallBack callBack) {
+                if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
                             .bitmapTransform(new GlideCircleTransform(context))
                             .placeholder(R.drawable.ic_default_avatar)
                             .into(mUserHeadImage);
+                    if (item.isAlreadyRead()) {
+//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor("哈哈哈    ", getUserAction(context, item),
+                                ContextCompat.getColor(context, R.color.primaryText));
+                        mUserAction.setText(spannableString);
+                    } else {
+                        SpannableString spannableString = StrUtil.mergeTextWithColor("2222    ", getUserAction(context, item),
+                                ContextCompat.getColor(context, R.color.secondaryText));
+                        mUserAction.setText(spannableString);
+                    }
                 }
 
-
-                SpannableString spannableString = StrUtil.mergeTextWithColor("希特勒", "   " + "关注你",
-                        ContextCompat.getColor(context, R.color.primaryText));
-                mUserAction.setText(spannableString);
                 if (!TextUtils.isEmpty(item.getMsg())) {
                     mContent.setVisibility(View.VISIBLE);
                     mContent.setText(item.getMsg());
@@ -302,7 +333,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     mContent.setVisibility(View.GONE);
                 }
 
-                mTime.setText(DateUtil.getFormatTime(1492937700000L));
+                mTime.setText(DateUtil.getFormatTime(item.getCreate_date()));
 
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -313,17 +344,25 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     }
                 });
 
-                mContent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (callBack != null) {
-                            callBack.onUserAppraiseClick(item);
-                        }
-                    }
-                });
-
             }
 
+            private String getUserAction(Context context, HistoryNewsModel item) {
+                switch (item.getType()) {
+                    //关注
+                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
+                        return context.getString(R.string.attention_you);
+                    //点赞帖子
+                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
+                        return context.getString(R.string.like_your_publish);
+                    //点赞评论
+                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                        return context.getString(R.string.like_your_publish);
+                    //评论
+                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
+                        return context.getString(R.string.replay_you);
+                }
+                return "";
+            }
         }
 
     }

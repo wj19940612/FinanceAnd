@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -33,10 +34,12 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -61,6 +64,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
 
     private int mPage;
     private int mSize = 15;
+    private HashSet<Integer> mSet;
 
     @Override
     public void onAttach(Context context) {
@@ -84,6 +88,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSet = new HashSet<>();
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mMutualHelpAdapter = new MutualHelpAdapter(getActivity());
@@ -93,7 +98,8 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                ToastUtil.curt("用户头像");
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
+                getActivity().finish();
             }
         });
 
@@ -101,6 +107,8 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
+                mPage = 0;
                 requestMutualHelpList();
             }
         });
@@ -108,8 +116,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestMutualHelpList() {
-
-        Client.requestHistoryNews(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, mSize)
+        Client.requestHistoryNews(false,HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, mSize)
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
@@ -125,11 +132,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 .fire();
 
     }
-
-    // TODO: 2017/4/18 后期删除
-    private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void updateMutualHelpData(List<HistoryNewsModel> historyNewsModels) {
         if (historyNewsModels == null) {
@@ -167,7 +169,13 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             }
             stopRefreshAnimation();
         }
-        mMutualHelpAdapter.addAll(historyNewsModels);
+
+        for (HistoryNewsModel data : historyNewsModels) {
+            if (mSet.add(data.getId())) {
+                mMutualHelpAdapter.add(data);
+            }
+        }
+
     }
 
     private void stopRefreshAnimation() {
@@ -217,7 +225,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
         mNotReadMessageNumberModel = notReadNews;
-        Log.d("wangjie", "互助: " + notReadNews.toString());
     }
 
     static class MutualHelpAdapter extends ArrayAdapter<HistoryNewsModel> {
@@ -266,18 +273,24 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             }
 
             public void bindDataWithView(final HistoryNewsModel item, Context context, final OnUserHeadImageClickListener onUserHeadImageClickListener) {
+                if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
-
-                    SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), context.getString(getUserAction(item)),
-                            ContextCompat.getColor(context, R.color.primaryText));
-                    mUserAction.setText(spannableString);
+                    if (item.isAlreadyRead()) {
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+                                ContextCompat.getColor(context, R.color.primaryText));
+                        mUserAction.setText(spannableString);
+                    } else {
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+                                ContextCompat.getColor(context, R.color.secondaryText));
+                        mUserAction.setText(spannableString);
+                    }
                 }
-                mTime.setText(DateUtil.getFormatTime(1492667145000L));
+                mTime.setText(DateUtil.getFormatTime(item.getCreate_date()));
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -290,19 +303,20 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             }
 
             /**
+             * @param context
              * @param historyNewsModel
              * @return 用户对应的动作的resId
              */
-            private int getUserAction(HistoryNewsModel historyNewsModel) {
+            private String getUserAction(Context context, HistoryNewsModel historyNewsModel) {
                 switch (historyNewsModel.getType()) {
                     case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                        return R.string.want_to_help_you;
+                        return context.getString(R.string.want_to_help_you);
                     case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
-                        return R.string.refuse_your_help;
+                        return context.getString(R.string.refuse_your_help);
                     case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
-                        return R.string.accept_your_help;
+                        return context.getString(R.string.accept_your_help);
                 }
-                return 10;
+                return "";
             }
         }
     }

@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,13 +19,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.UserFansModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,11 +47,16 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
     private TextView mFootView;
     private UserFansAdapter mUserFansAdapter;
 
+    private HashSet<Integer> mSet;
+    private int mPage;
+    private int mPageSize = 15;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fans);
         ButterKnife.bind(this);
+        mSet = new HashSet<>();
         mListView.setEmptyView(mEmpty);
         mUserFansAdapter = new UserFansAdapter(this);
         mListView.setAdapter(mUserFansAdapter);
@@ -61,22 +70,31 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
+                mPage = 0;
                 requestUserAttentionList();
             }
         });
         requestUserAttentionList();
     }
 
-    private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void requestUserAttentionList() {
-//        ArrayList<UserFansModel> dataList = new ArrayList<>();
-//        for (int i = 0; i < url.length; i++) {
-//            dataList.add(new UserFansModel("用户 " + i + i, url[i]));
-//        }
-//        updateShieldUserData(dataList);
+        Client.getUserFansList(mPage, mPageSize)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArrayList<UserFansModel>>, ArrayList<UserFansModel>>(false) {
+                    @Override
+                    protected void onRespSuccessData(ArrayList<UserFansModel> data) {
+                        updateShieldUserData(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
     }
 
 
@@ -97,15 +115,14 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestUserAttentionList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (userFansModelList.size() < 15) {
+        if (userFansModelList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -117,7 +134,11 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
             }
             stopRefreshAnimation();
         }
-        mUserFansAdapter.addAll(userFansModelList);
+        for (UserFansModel data : userFansModelList) {
+            if (mSet.add(data.getId())) {
+                mUserFansAdapter.add(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -184,12 +205,11 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
             }
 
             public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener, int position) {
-                if (!TextUtils.isEmpty(item.getUserHeadImage())) {
-                    Glide.with(context).load(item.getUserHeadImage())
-                            .placeholder(R.mipmap.ic_launcher_round)
-                            .bitmapTransform(new GlideCircleTransform(context))
-                            .into(mUserHeadImage);
-                }
+                if (item == null) return;
+                Glide.with(context).load(item.getUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .into(mUserHeadImage);
 
                 if (position % 2 == 0) {
                     mRelive.setText(R.string.attention);

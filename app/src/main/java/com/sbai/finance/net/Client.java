@@ -147,13 +147,28 @@ public class Client {
      * 请求Url  msg/msg/history.do
      *
      * @param classify 消息类型{1.系统消息 2.互助消息 3.经济圈消息}
+     * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(int classify, int page, int pageSize) {
+    public static API requestHistoryNews(boolean autoRead, int classify, int page, int pageSize) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
-                .put("size", pageSize));
+                .put("size", pageSize)
+                .put("autoRead", autoRead));
+    }
+
+    /**
+     * 接口名称 标记已读
+     * 请求类型 get
+     * 请求Url  /msg/msg/read.do
+     * 接口描述 如果 不在获取消息列表的时候自动标记就需要在 用户点击消息的时候去 标记一下
+     *
+     * @param msgId
+     * @return
+     */
+    public static API updateMsgReadStatus(int msgId) {
+        return new API("/msg/msg/read.do", new ApiParams().put("msgId", msgId));
     }
 
     /**
@@ -209,6 +224,49 @@ public class Client {
         return new API(POST, "/coterie/userDetail/shield.do", new ApiParams()
                 .put("shieldId", shieldId)
                 .put("status", status));
+    }
+
+    /**
+     * 接口名称 查看屏蔽表
+     * 请求类型 get
+     * 请求Url  /user/followShield/myShield.do
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getShieldList(int page, int pageSize) {
+        return new API("/user/followShield/myShield.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", pageSize));
+    }
+
+    /**
+     * 接口名称 查看用户关注表
+     * 请求类型 get
+     * 请求Url  /user/followShield/myFollow.do
+     *
+     * @return
+     */
+    public static API getUserAttentionList(int page, int pageSize) {
+        return new API("/user/followShield/myFollow.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", pageSize));
+    }
+
+    /**
+     * 接口名称 查看粉丝表
+     * 请求类型 get
+     * 请求Url  /user/followShield/followMe.do
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getUserFansList(int page, int pageSize) {
+        return new API("/user/followShield/followMe.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", pageSize));
     }
 
     /**
@@ -409,6 +467,7 @@ public class Client {
 
     /**
      * 发表观点
+     *
      * @param bigVarietyTypeCode
      * @param content
      * @param direction
@@ -416,32 +475,31 @@ public class Client {
      * @param varietyType
      * @return
      */
-    public static API saveViewPoint(String bigVarietyTypeCode,String content,int direction,int varietyId,String varietyType) {
-        return new API(POST,"/coterie/viewpoint/saveViewpoint.do",
+    public static API saveViewPoint(String bigVarietyTypeCode, String content, int direction, int varietyId, String varietyType) {
+        return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("content", content)
-                        .put("direction",direction)
-                        .put("varietyId",varietyId)
-                        .put("varietyType",varietyType));
+                        .put("direction", direction)
+                        .put("varietyId", varietyId)
+                        .put("varietyType", varietyType));
     }
 
     /**
      * 查询观点
+     *
      * @param page
      * @param pageSize
      * @param varietyId
      * @return
      */
-    public static API findViewpoint(int page,int pageSize,int varietyId) {
+    public static API findViewpoint(int page, int pageSize, int varietyId) {
         return new API("/coterie/viewpoint/findViewpoint.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize)
-                        .put("varietyId",varietyId));
+                        .put("varietyId", varietyId));
     }
-
-
 
 
 }
