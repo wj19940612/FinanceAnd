@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.PredictModel;
+import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
@@ -23,7 +23,6 @@ import com.sbai.finance.utils.ValidationWatcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 public class PublishOpinionActivity extends BaseActivity {
 
@@ -36,7 +35,7 @@ public class PublishOpinionActivity extends BaseActivity {
     @BindView(R.id.submitButton)
     Button mSubmitButton;
 
-    PredictModel mPredict;
+    Prediction mPredict;
     Variety mVariety;
     int mDirection = -1;
     int mCalcuId = -1;

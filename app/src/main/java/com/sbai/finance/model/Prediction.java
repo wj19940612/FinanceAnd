@@ -6,8 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by linrongfang on 2017/4/28.
  */
-
-public class PredictModel implements Parcelable{
+public class Prediction implements Parcelable{
 
     //预测id
     public static final String PREDICT_CALCUID = "predict_calcuid";
@@ -60,24 +59,24 @@ public class PredictModel implements Parcelable{
         dest.writeByte(this.isCalculate ? (byte) 1 : (byte) 0);
     }
 
-    public PredictModel() {
+    public Prediction() {
     }
 
-    protected PredictModel(Parcel in) {
+    protected Prediction(Parcel in) {
         this.calcuId = in.readInt();
         this.direction = in.readInt();
         this.isCalculate = in.readByte() != 0;
     }
 
-    public static final Creator<PredictModel> CREATOR = new Creator<PredictModel>() {
+    public static final Creator<Prediction> CREATOR = new Creator<Prediction>() {
         @Override
-        public PredictModel createFromParcel(Parcel source) {
-            return new PredictModel(source);
+        public Prediction createFromParcel(Parcel source) {
+            return new Prediction(source);
         }
 
         @Override
-        public PredictModel[] newArray(int size) {
-            return new PredictModel[size];
+        public Prediction[] newArray(int size) {
+            return new Prediction[size];
         }
     };
 }

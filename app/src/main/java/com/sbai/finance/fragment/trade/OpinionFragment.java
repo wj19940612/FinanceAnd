@@ -45,6 +45,7 @@ public class OpinionFragment extends BaseFragment {
     EmptyRecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
+
     Unbinder unbinder;
     TextView mFootView;
     View mBottomView;

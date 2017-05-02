@@ -94,8 +94,8 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
         lowestPrice.setText(mKlineChart.formatNumber(data.getMinPrice()));
         closePrice.setText(mKlineChart.formatNumber(data.getClosePrice()));
 
-        int redColor = ContextCompat.getColor(getContext(), R.color.redPrimary);
-        int greenColor = ContextCompat.getColor(getContext(), R.color.greenPrimary);
+        int redColor = ContextCompat.getColor(getContext(), R.color.colorRed);
+        int greenColor = ContextCompat.getColor(getContext(), R.color.colorGreen);
 
         openPrice.setTextColor(redColor);
         if (previousData != null && data.getOpenPrice() < previousData.getClosePrice()) {
