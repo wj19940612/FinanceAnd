@@ -27,13 +27,14 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.UserAttentionModel;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.view.SmartDialog;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +51,9 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
     private TextView mFootView;
     private RelieveAttentionAdapter mRelieveAttentionAdapter;
     private HashSet<Integer> mSet;
+
+    private int mPage = 0;
+    private int mPageSize = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,8 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
+                mPage = 0;
                 requestUserAttentionList();
             }
         });
@@ -95,7 +101,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
     }
 
     private void relieveAttentionUser(final UserAttentionModel userAttentionModel) {
-        Client.attentionOrRelieveAttentionUser(100, 1)
+        Client.attentionOrRelieveAttentionUser(userAttentionModel.getFollowUserId(), 1)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
@@ -109,20 +115,22 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 .fire();
     }
 
-    private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
     private void requestUserAttentionList() {
-//        ArrayList<ShieldedUserModel> dataList = new ArrayList<>();
-//        for (int i = 0; i < url.length; i++) {
-//            dataList.add(new ShieldedUserModel("用户 " + i + i, url[i]));
-//        }
-//        updateShieldUserData(dataList);
+        Client.getUserAttentionList(mPage, mPageSize)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<UserAttentionModel>>, List<UserAttentionModel>>(false) {
+                    @Override
+                    protected void onRespSuccessData(List<UserAttentionModel> data) {
+                        updateShieldUserData(data);
+                    }
+                })
+                .fire();
+
     }
 
 
-    private void updateShieldUserData(ArrayList<UserAttentionModel> userAttentionModelList) {
+    private void updateShieldUserData(List<UserAttentionModel> userAttentionModelList) {
         if (userAttentionModelList == null) {
             stopRefreshAnimation();
             return;
@@ -139,15 +147,14 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestUserAttentionList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (userAttentionModelList.size() < 15) {
+        if (userAttentionModelList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -155,7 +162,6 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mRelieveAttentionAdapter != null) {
                 mRelieveAttentionAdapter.clear();
-                mRelieveAttentionAdapter.notifyDataSetChanged();
             }
             stopRefreshAnimation();
         }
