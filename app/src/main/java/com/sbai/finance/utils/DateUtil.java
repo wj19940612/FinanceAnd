@@ -17,7 +17,7 @@ public class DateUtil {
     public static final String FORMAT_NOT_HOUR = "MM月dd日 ";
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
-
+    public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
         return dateFormat.format(new Date(time));
@@ -171,6 +171,11 @@ public class DateUtil {
 
     public static String format(long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_FORMAT);
+        Date date = new Date(timestamp);
+        return dateFormat.format(date);
+    }
+    public static String formatSlash(long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH);
         Date date = new Date(timestamp);
         return dateFormat.format(date);
     }

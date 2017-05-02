@@ -80,9 +80,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:lineSpacingExtra="5dp"
-                tools:text="@string/trade_time_summer_winter"
                 android:textColor="@color/blackAssist"
-                android:textSize="13sp"/>
+                android:textSize="13sp"
+                tools:text="@string/trade_time_summer_winter"/>
         </LinearLayout>
 
         <LinearLayout
@@ -278,5 +278,10 @@
                 android:textSize="13sp"
                 tools:text="@string/not_more_than_the_last_trading_day_settlement_price_plus_minus_percent_three"/>
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

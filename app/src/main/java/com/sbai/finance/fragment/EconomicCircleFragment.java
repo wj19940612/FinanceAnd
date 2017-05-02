@@ -78,7 +78,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
         mEconomicCircleList = new ArrayList<>();
-        mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
+        mEconomicCircleAdapter = new EconomicCircleAdapter(getContext());
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mEconomicCircleAdapter);
         mListView.setOnScrollListener(this);
@@ -241,12 +241,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         private Context mContext;
         private Callback mCallback;
-        private List<EconomicCircle> mEconomicCircleList;
 
-        private EconomicCircleAdapter(Context context, List<EconomicCircle> economicCircleList) {
+        private EconomicCircleAdapter(Context context) {
             super(context, 0);
             this.mContext = context;
-            this.mEconomicCircleList = economicCircleList;
         }
 
         public void setCallback(Callback callback) {
@@ -260,7 +258,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         @Override
         public int getItemViewType(int position) {
-            return mEconomicCircleList.get(position).getType();
+            return getItem(position).getType();
         }
 
         @NonNull
@@ -268,31 +266,30 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         public View getView(int position, View convertView, ViewGroup parent) {
             OpinionViewHolder opinionViewHolder;
             BorrowMoneyViewHolder borrowMoneyViewHolder;
-                switch (getItemViewType(position)) {
-                    case TYPE_OPINION:
-                        if (convertView == null) {
-                            convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, null);
-                            opinionViewHolder = new OpinionViewHolder(convertView);
-                            convertView.setTag(opinionViewHolder);
-                        } else {
-                            opinionViewHolder = (OpinionViewHolder) convertView.getTag();
-                        }
+            switch (getItemViewType(position)) {
+                case TYPE_OPINION:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, null);
+                        opinionViewHolder = new OpinionViewHolder(convertView);
+                        convertView.setTag(opinionViewHolder);
+                    } else {
+                        opinionViewHolder = (OpinionViewHolder) convertView.getTag();
+                    }
 
-                        opinionViewHolder.bindingData(mContext, getItem(position), mCallback);
-                        break;
+                    opinionViewHolder.bindingData(mContext, getItem(position), mCallback);
+                    break;
 
-                    case TYPE_BORROW_MONEY:
-                        if (convertView == null) {
-                            convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_borrow_money, null);
-                            borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
-                            convertView.setTag(borrowMoneyViewHolder);
-                        } else {
-                            borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag();
-                        }
-                        borrowMoneyViewHolder.bindingData(mContext, getItem(position), mCallback);
-                        break;
-                }
-
+                case TYPE_BORROW_MONEY:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_borrow_money, null);
+                        borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
+                        convertView.setTag(borrowMoneyViewHolder);
+                    } else {
+                        borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag();
+                    }
+                    borrowMoneyViewHolder.bindingData(mContext, getItem(position), mCallback);
+                    break;
+            }
             return convertView;
         }
 
@@ -329,10 +326,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 }
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
-                if (item.getDirection() == 1 ) {
-                    mOpinionContent.setText( StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+
+                if (item.getGuessPass() == 1) {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
                 } else {
-                    mOpinionContent.setText( StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
                 }
 
                 mBigVarietyName.setText(item.getBigVarietyTypeName());

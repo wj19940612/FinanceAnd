@@ -85,17 +85,44 @@
         app:subTextColor="@color/primaryText"
         app:subTextSize="@dimen/common_default_size"/>
 
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/location"
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:id="@+id/ll_Location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
-        app:rightIcon="@drawable/ic_more"
-        app:rowText="@string/location"
-        app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"
-        app:subTextSize="@dimen/common_default_size"/>
+
+        android:minHeight="50dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/location"
+            android:textColor="@color/secondaryText"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:maxLines="1"
+            android:textColor="@color/primaryText"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more"
+            tools:ignore="ContentDescription"/>
+    </LinearLayout>
+
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/credit"

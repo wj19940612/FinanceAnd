@@ -14,6 +14,14 @@ public class NotReadMessageNumberModel {
     private int classify;
     private int count;
 
+    public NotReadMessageNumberModel() {
+    }
+
+    public NotReadMessageNumberModel(int classify, int count) {
+        this.classify = classify;
+        this.count = count;
+    }
+
     public int getClassify() {
         return classify;
     }

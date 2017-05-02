@@ -106,6 +106,30 @@ public class StrUtil {
         }
         return res;
     }
+    /**
+     * 设置s1的颜色，按比例缩放 s2 的大小并设置 s2 颜色，同时拼接 s1 和 s2
+     *
+     * @param s1
+     * @param ratio
+     * @param s2Color
+     * @param s2
+     * @return 处理后的字符串
+     */
+    public static SpannableString mergeTextWithRatioColor(String s1, String s2, float ratio,int s1Color,int s2Color) {
+        SpannableString res = new SpannableString("");
+        if (!TextUtils.isEmpty(s1)) {
+            int start = s1.length();
+            s1 = s1 + s2;
+            int end = s1.length();
+            res = new SpannableString(s1);
+            res.setSpan(new ForegroundColorSpan(s1Color),0,start,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            res.setSpan(new RelativeSizeSpan(ratio), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (s2Color != Color.TRANSPARENT) {
+                res.setSpan(new ForegroundColorSpan(s2Color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return res;
+    }
 
     /**
      * 按比例缩放 s2,s3 的大小并设置 s2 ,s3 颜色，同时拼接 s1  s2  s3

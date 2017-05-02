@@ -47,6 +47,7 @@ import butterknife.Unbinder;
  */
 
 public class HomeFragment extends BaseFragment {
+
     @BindView(R.id.event)
     TextView mEvent;
     @BindView(R.id.homeBanner)
@@ -161,7 +162,7 @@ public class HomeFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<String>,String>() {
                     @Override
                     protected void onRespSuccessData(String data) {
-                        mEvent.setText(data);
+                        updateEventInfo(data);
                     }
                 }).fire();
        //获取主题信息
@@ -172,6 +173,10 @@ public class HomeFragment extends BaseFragment {
                         updateTopicInfo((ArrayList<TopicModel>) data);
                     }
                 }).fire();
+    }
+
+    private void updateEventInfo(String data) {
+        mEvent.setText(data);
     }
 
     private void updateTopicInfo(ArrayList<TopicModel> topicModels) {
@@ -221,6 +226,7 @@ public class HomeFragment extends BaseFragment {
             viewHolder.bindingData(getItem(position));
             return convertView;
         }
+
         static class ViewHolder {
             @BindView(R.id.topicTitle)
             TextView mTopicTitle;

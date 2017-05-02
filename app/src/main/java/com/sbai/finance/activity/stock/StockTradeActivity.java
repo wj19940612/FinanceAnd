@@ -25,7 +25,6 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.stock.FiveMarketFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -124,15 +123,6 @@ public class StockTradeActivity extends BaseActivity {
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
         mTrendView.setSettings(settings);
-
-        Client.getTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new Callback<String>() {
-                    @Override
-                    protected void onRespSuccess(String resp) {
-                        TrendView.Settings settings = mTrendView.getSettings();
-                        mTrendView.setDataList(TrendView.Util.createDataList(resp, settings.getOpenMarketTimes()));
-                    }
-                }).fireSync();
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
         settings2.setBaseLines(mVariety.getBaseline());

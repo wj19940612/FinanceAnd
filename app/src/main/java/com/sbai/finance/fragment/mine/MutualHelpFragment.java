@@ -26,16 +26,17 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,9 +56,22 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     private Unbinder mBind;
     private TextView mFootView;
     private MutualHelpAdapter mMutualHelpAdapter;
+    private OnNoReadNewsListener mOnNoReadNewsListener;
+    private NotReadMessageNumberModel mNotReadMessageNumberModel;
 
     private int mPage;
     private int mSize = 15;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnNoReadNewsListener) {
+            mOnNoReadNewsListener = (OnNoReadNewsListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "" +
+                    "must implements OnNoReadNewsListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +104,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 requestMutualHelpList();
             }
         });
+        mOnNoReadNewsListener.onNoReadNewsNumber(10, 0);
     }
 
     private void requestMutualHelpList() {
@@ -100,6 +115,8 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
+
+                        updateMutualHelpData(data);
                         for (HistoryNewsModel his : data) {
                             Log.d(TAG, " 互助消息" + his.toString());
                         }
@@ -107,22 +124,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 })
                 .fire();
 
-//        ArrayList<HistoryNewsModel> economicCircleNewModels = new ArrayList<>();
-//        for (int i = 0; i < url.length; i++) {
-//            HistoryNewsModel hahahha = new HistoryNewsModel();
-//            if (i == 0) {
-//                hahahha.setType(10);
-//            } else if (i == 1) {
-//                hahahha.setType(11);
-//            } else {
-//                hahahha.setType(12);
-//            }
-//            UserInfo userInfo = new UserInfo();
-//            userInfo.setUserPortrait(url[i]);
-//            hahahha.setUserInfo(userInfo);
-//            economicCircleNewModels.add(hahahha);
-//        }
-//        updateMutualHelpData(economicCircleNewModels);
     }
 
     // TODO: 2017/4/18 后期删除
@@ -130,7 +131,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
 
-    private void updateMutualHelpData(ArrayList<HistoryNewsModel> historyNewsModels) {
+    private void updateMutualHelpData(List<HistoryNewsModel> historyNewsModels) {
         if (historyNewsModels == null) {
             stopRefreshAnimation();
             return;
@@ -212,6 +213,11 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             }
 
         }
+    }
+
+    public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
+        mNotReadMessageNumberModel = notReadNews;
+        Log.d("wangjie", "互助: " + notReadNews.toString());
     }
 
     static class MutualHelpAdapter extends ArrayAdapter<HistoryNewsModel> {

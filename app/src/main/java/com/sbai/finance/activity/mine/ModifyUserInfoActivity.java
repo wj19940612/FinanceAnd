@@ -72,7 +72,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
     @BindView(R.id.age)
     IconTextRow mAge;
     @BindView(R.id.location)
-    IconTextRow mLocation;
+    AppCompatTextView mLocation;
     @BindView(R.id.credit)
     IconTextRow mCredit;
     @BindView(R.id.logout)
@@ -104,7 +104,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         if (userInfo.getAge() != null) {
             mAge.setSubText(userInfo.getAge().toString());
         }
-        mLocation.setSubText(userInfo.getLand());
+        mLocation.setText(userInfo.getLand());
     }
 
     private void updateUserImage() {
@@ -143,8 +143,8 @@ public class ModifyUserInfoActivity extends BaseActivity {
         }
 
         String land = "";
-        if (!TextUtils.isEmpty(mLocation.getSubText())) {
-            land = mLocation.getSubText().trim();
+        if (!TextUtils.isEmpty(mLocation.getText())) {
+            land = mLocation.getText().toString().trim();
         }
 
         int sex = 0;
@@ -455,13 +455,14 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 picker.setAnimationStyle(R.style.BottomDialogAnimation);
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
+                lineConfig.setColor(Color.RED);
 //            lineConfig.setColor(R.color.lucky);//设置分割线颜色
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
                         LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
-                        mLocation.setSubText(LocalUser.getUser().getUserInfo().getLand());
+                        mLocation.setText(LocalUser.getUser().getUserInfo().getLand());
                     }
                 });
                 picker.show();

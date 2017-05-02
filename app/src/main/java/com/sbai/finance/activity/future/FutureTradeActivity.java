@@ -1,6 +1,9 @@
 package com.sbai.finance.activity.future;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,21 +11,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
+import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.trade.PublishOpinionActivity;
+import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.PredictModel;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -37,6 +49,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.R.id.klineView;
+import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
+import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -56,7 +73,7 @@ public class FutureTradeActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(R.id.klineView)
+    @BindView(klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -72,8 +89,12 @@ public class FutureTradeActivity extends BaseActivity {
     @BindView(R.id.subPageArea)
     LinearLayout mSubPageArea;
 
+    private OpinionFragment mOpinionFragment;
+    private IntroduceFragment mIntroduceFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
+    private PredictModel mPredict;
+    private RefreshPointReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +107,25 @@ public class FutureTradeActivity extends BaseActivity {
         }
 
         initData();
+        initFragment();
 
         initTabLayout();
         initChartViews();
         initSlidingTab();
+        initFloatBar();
+
+        registerRefreshReceiver();
     }
 
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+    }
+
+    private void initFragment() {
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
+        mOpinionFragment = OpinionFragment.newInstance(args);
+        mIntroduceFragment = IntroduceFragment.newInstance(args);
     }
 
     private void initTabLayout() {
@@ -123,13 +155,20 @@ public class FutureTradeActivity extends BaseActivity {
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
 
-
+        Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TrendViewData> data) {
+                        mTrendView.setDataList(data);
+                    }
+                }).fireSync();
     }
 
     private void initSlidingTab() {
         mViewPager.setOffscreenPageLimit(1);
         mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mSubPageAdapter);
+        mViewPager.addOnPageChangeListener(mSubPageChangeListener);
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -138,7 +177,94 @@ public class FutureTradeActivity extends BaseActivity {
         mSlidingTab.setViewPager(mViewPager);
     }
 
-    private static class SubPageAdapter extends FragmentPagerAdapter {
+    private void initFloatBar() {
+        mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
+            @Override
+            public void onPublishPointButtonClick() {
+                if (LocalUser.getUser().isLogin()) {
+                    if (mPredict != null) {
+                        publishPoint();
+                    }else {
+                        requsetUserViewPoint(true);
+                    }
+                }else {
+                    Launcher.with(FutureTradeActivity.this, LoginActivity.class).execute();
+                }
+            }
+
+            @Override
+            public void onAddOptionalButtonClick() {
+                addOption();
+            }
+
+            @Override
+            public void onTradeButtonClick() {
+                // TODO: 2017/4/27 跳转交易H5页面
+            }
+        });
+    }
+
+    private void publishPoint() {
+        if (mPredict.isIsCalculate()) {
+            Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                    .putExtra(PREDICT_DIRECTION, mPredict.getDirection())
+                    .putExtra(PREDICT_CALCUID, mPredict.getCalcuId())
+                    .execute();
+        } else {
+            showPredictDialog(mVariety);
+        }
+    }
+
+    private void showPredictDialog(Variety variety) {
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        args.putInt(PREDICT_DIRECTION, mPredict.getDirection());
+        args.putInt(PREDICT_CALCUID, mPredict.getCalcuId());
+        PredictionFragment.newInstance(args).show(getSupportFragmentManager());
+    }
+
+    private void addOption() {
+        Client.addOptional(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            // TODO: 2017/4/28 更新UI
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void registerRefreshReceiver() {
+        mReceiver = new RefreshPointReceiver();
+        IntentFilter filter = new IntentFilter(REFRESH_POINT);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+    }
+
+
+    private void requsetUserViewPoint(final boolean needPublish) {
+        if (LocalUser.getUser().isLogin()) {
+            Client.checkViewpoint(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<PredictModel>, PredictModel>() {
+                        @Override
+                        protected void onRespSuccessData(PredictModel data) {
+                            mPredict = data;
+                            if (needPublish) {
+                                publishPoint();
+                            }
+                        }
+                    })
+                    .fire();
+        }
+    }
+
+    private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
         Context mContext;
@@ -164,9 +290,9 @@ public class FutureTradeActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new OpinionFragment();
+                    return mOpinionFragment;
                 case 1:
-                    return new IntroduceFragment();
+                    return mIntroduceFragment;
             }
             return null;
         }
@@ -181,6 +307,27 @@ public class FutureTradeActivity extends BaseActivity {
         }
     }
 
+    private ViewPager.OnPageChangeListener mSubPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (mSubPageAdapter.getPageTitle(position).equals(getString(R.string.point))) {
+                mOpinionFragment.refreshPointList();
+            } else {
+                //简介没接口暂时不刷新
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
@@ -189,11 +336,14 @@ public class FutureTradeActivity extends BaseActivity {
                 requestKlineDataAndSet(null);
                 showKlineView();
             } else if (tabText.equals(getString(R.string.sixty_min_k))) {
-
+                requestKlineDataAndSet("60");
+                showKlineView();
             } else if (tabText.equals(getString(R.string.thirty_min_k))) {
-
+                requestKlineDataAndSet("30");
+                showKlineView();
             } else if (tabText.equals(getString(R.string.fifteen_min_k))) {
-
+                requestKlineDataAndSet("15");
+                showKlineView();
             } else {
                 showTrendView();
             }
@@ -224,10 +374,13 @@ public class FutureTradeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     private void requestKlineDataAndSet(final String type) {
-        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
+        mKlineView.clearData();
+        Client.getKlineData(mVariety.getContractsCode(), type, null)
+                .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<KlineViewData> data) {
@@ -240,6 +393,14 @@ public class FutureTradeActivity extends BaseActivity {
                         mKlineView.setDataList(data);
                     }
                 }).fire();
+    }
+
+    private class RefreshPointReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requsetUserViewPoint(false);
+            mOpinionFragment.refreshPointList();
+        }
     }
 
 }
