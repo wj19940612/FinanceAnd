@@ -23,8 +23,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
-import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
+import static com.sbai.finance.model.Prediction.PREDICT_CALCUID;
+import static com.sbai.finance.model.Prediction.PREDICT_DIRECTION;
 
 
 public class PublishOpinionActivity extends BaseActivity {

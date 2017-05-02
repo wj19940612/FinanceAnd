@@ -4,7 +4,7 @@ package com.sbai.finance.model;
  * Created by linrongfang on 2017/4/28.
  */
 
-public class PredictModel {
+public class Prediction {
 
     //预测id
     public static final String PREDICT_CALCUID = "predict_calcuid";

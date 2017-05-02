@@ -649,7 +649,7 @@ public class Client {
     }
 
     /**
-     * 观点检测是否已发表
+     * 检测是否已经预测'看涨'看跌'
      *
      * @param bigVarietyTypeCode
      * @param varietyId

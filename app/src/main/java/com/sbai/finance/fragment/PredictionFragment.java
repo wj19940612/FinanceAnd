@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
+import static com.sbai.finance.model.Prediction.PREDICT_DIRECTION;
 
 /**
  * Created by lixiaokuan0819 on 2017/4/24.

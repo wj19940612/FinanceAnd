@@ -34,7 +34,7 @@ import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
 import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.PredictModel;
+import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -58,8 +58,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
-import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
-import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
+import static com.sbai.finance.model.Prediction.PREDICT_CALCUID;
+import static com.sbai.finance.model.Prediction.PREDICT_DIRECTION;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -103,7 +103,7 @@ public class FutureTradeActivity extends BaseActivity {
     private IntroduceFragment mIntroduceFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
-    private PredictModel mPredict;
+    private Prediction mPrediction;
     private RefreshPointReceiver mReceiver;
 
     @Override
@@ -117,11 +117,11 @@ public class FutureTradeActivity extends BaseActivity {
         }
 
         initData();
-        initFragment();
 
         initTabLayout();
         initChartViews();
         initSlidingTab();
+        initFragment();
         initFloatBar();
 
         registerRefreshReceiver();
@@ -206,7 +206,7 @@ public class FutureTradeActivity extends BaseActivity {
             @Override
             public void onPublishPointButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    if (mPredict != null) {
+                    if (mPrediction != null) {
                         publishPoint();
                     }else {
                         requestUserViewPoint(true);
@@ -233,11 +233,11 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void publishPoint() {
-        if (mPredict.isIsCalculate()) {
+        if (mPrediction.isIsCalculate()) {
             Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                    .putExtra(PREDICT_DIRECTION, mPredict.getDirection())
-                    .putExtra(PREDICT_CALCUID, mPredict.getCalcuId())
+                    .putExtra(PREDICT_DIRECTION, mPrediction.getDirection())
+                    .putExtra(PREDICT_CALCUID, mPrediction.getCalcuId())
                     .execute();
         } else {
             showPredictDialog(mVariety);
@@ -247,8 +247,8 @@ public class FutureTradeActivity extends BaseActivity {
     private void showPredictDialog(Variety variety) {
         Bundle args = new Bundle();
         args.putParcelable(Launcher.EX_PAYLOAD, variety);
-        args.putInt(PREDICT_DIRECTION, mPredict.getDirection());
-        args.putInt(PREDICT_CALCUID, mPredict.getCalcuId());
+        args.putInt(PREDICT_DIRECTION, mPrediction.getDirection());
+        args.putInt(PREDICT_CALCUID, mPrediction.getCalcuId());
         PredictionFragment.newInstance(args).show(getSupportFragmentManager());
     }
 
@@ -275,22 +275,19 @@ public class FutureTradeActivity extends BaseActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
-
     private void requestUserViewPoint(final boolean needPublish) {
         if (LocalUser.getUser().isLogin()) {
             Client.checkViewpoint(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<PredictModel>, PredictModel>() {
+                    .setTag(TAG).setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<Prediction>, Prediction>() {
                         @Override
-                        protected void onRespSuccessData(PredictModel data) {
-                            mPredict = data;
+                        protected void onRespSuccessData(Prediction data) {
+                            mPrediction = data;
                             if (needPublish) {
                                 publishPoint();
                             }
                         }
-                    })
-                    .fire();
+                    }).fire();
         }
     }
 
