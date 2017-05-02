@@ -48,8 +48,10 @@ public class IntroduceFragment extends BaseFragment {
 
     Variety mVariety;
 
-    public static IntroduceFragment newInstance(Bundle args) {
+    public static IntroduceFragment newInstance(Variety variety) {
         IntroduceFragment fragment = new IntroduceFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, variety);
         fragment.setArguments(args);
         return fragment;
     }

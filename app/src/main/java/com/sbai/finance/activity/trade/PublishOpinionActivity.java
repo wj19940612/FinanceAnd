@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.PredictModel;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
@@ -22,9 +23,6 @@ import com.sbai.finance.utils.ValidationWatcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
-import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
 
 
 public class PublishOpinionActivity extends BaseActivity {
@@ -38,6 +36,7 @@ public class PublishOpinionActivity extends BaseActivity {
     @BindView(R.id.submitButton)
     Button mSubmitButton;
 
+    PredictModel mPredict;
     Variety mVariety;
     int mDirection = -1;
     int mCalcuId = -1;
@@ -54,8 +53,9 @@ public class PublishOpinionActivity extends BaseActivity {
 
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
-        mDirection = getIntent().getIntExtra(PREDICT_DIRECTION, -1);
-        mCalcuId = getIntent().getIntExtra(PREDICT_CALCUID, -1);
+        mPredict = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
+        mDirection = mPredict.getDirection();
+        mCalcuId = mPredict.getCalcuId();
     }
 
     private void initViews() {

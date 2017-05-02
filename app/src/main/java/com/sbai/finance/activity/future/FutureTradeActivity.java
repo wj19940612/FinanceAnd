@@ -54,10 +54,8 @@ import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.klineView;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
-import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
-import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
 
-public class FutureTradeActivity extends BaseActivity {
+public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -124,10 +122,8 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        Bundle args = new Bundle();
-        args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
-        mOpinionFragment = OpinionFragment.newInstance(args);
-        mIntroduceFragment = IntroduceFragment.newInstance(args);
+        mOpinionFragment = OpinionFragment.newInstance(mVariety);
+        mIntroduceFragment = IntroduceFragment.newInstance(mVariety);
     }
 
     private void initTabLayout() {
@@ -210,24 +206,39 @@ public class FutureTradeActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onBullish() {
+        mPredict.setDirection(1);
+        Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                .putExtra(Launcher.EX_PAYLOAD_1, mPredict)
+                .execute();
+    }
+
+    @Override
+    public void onBearish() {
+        mPredict.setDirection(0);
+        Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                .putExtra(Launcher.EX_PAYLOAD_1, mPredict)
+                .execute();
+    }
+
     private void publishPoint() {
         if (mPredict.isIsCalculate()) {
             Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                    .putExtra(PREDICT_DIRECTION, mPredict.getDirection())
-                    .putExtra(PREDICT_CALCUID, mPredict.getCalcuId())
+                    .putExtra(Launcher.EX_PAYLOAD_1,mPredict)
                     .execute();
         } else {
-            showPredictDialog(mVariety);
+            showPredictDialog();
         }
     }
 
-    private void showPredictDialog(Variety variety) {
-        Bundle args = new Bundle();
-        args.putParcelable(Launcher.EX_PAYLOAD, variety);
-        args.putInt(PREDICT_DIRECTION, mPredict.getDirection());
-        args.putInt(PREDICT_CALCUID, mPredict.getCalcuId());
-        PredictionFragment.newInstance(args).show(getSupportFragmentManager());
+    private void showPredictDialog() {
+        PredictionFragment.newInstance()
+                .setOnPredictButtonListener(this)
+                .show(getSupportFragmentManager());
     }
 
     private void addOption() {

@@ -57,8 +57,10 @@ public class OpinionFragment extends BaseFragment {
     private Variety mVariety;
     boolean mLoadMore = true;
 
-    public static OpinionFragment newInstance(Bundle args) {
+    public static OpinionFragment newInstance(Variety variety) {
         OpinionFragment fragment = new OpinionFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, variety);
         fragment.setArguments(args);
         return fragment;
     }
