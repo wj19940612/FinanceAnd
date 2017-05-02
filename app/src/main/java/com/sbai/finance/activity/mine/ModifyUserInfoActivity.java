@@ -111,10 +111,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
         if (LocalUser.getUser().isLogin()) {
             Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.drawable.ic_default_headportrait160x160)
+                    .placeholder(R.drawable.ic_default_avatar_big)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.drawable.ic_default_headportrait160x160)
+            Glide.with(this).load(R.drawable.ic_default_avatar_big)
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }

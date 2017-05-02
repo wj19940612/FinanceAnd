@@ -363,10 +363,29 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getEconomicCircleList(int page,int pageSize) {
+    public static API getEconomicCircleList(int page, int pageSize) {
         return new API("/coterie/coterie/coterieList.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize));
+    }
+
+    /**
+     * 获取观点详情
+     * @param viewpointId
+     * @return
+     */
+    public static API getOpinionDetails(int viewpointId) {
+        return new API( POST, "/coterie/viewpoint/findViewpointInfo.do",
+                new ApiParams()
+                .put("viewpointId", viewpointId));
+    }
+
+    public static API getOpinionReply(int page, int pageSize, int viewpointId) {
+        return new API("/coterie/viewpoint/findViewpointReply.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("viewpointId", viewpointId));
     }
 }

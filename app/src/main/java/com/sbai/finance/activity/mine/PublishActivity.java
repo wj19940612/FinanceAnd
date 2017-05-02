@@ -163,10 +163,10 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             TextView mPublishTime;
             @BindView(R.id.opinion)
             TextView mOpinion;
-            @BindView(R.id.product)
-            TextView mProduct;
-            @BindView(R.id.productName)
-            TextView mProductName;
+            @BindView(R.id.bigVarietyName)
+            TextView mBigVarietyName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
             @BindView(R.id.lastPrice)
             TextView mLastPrice;
             @BindView(R.id.upDownPrice)
