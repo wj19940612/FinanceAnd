@@ -40,6 +40,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -233,6 +234,8 @@ public class FutureTradeActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
                             // TODO: 2017/4/28 更新UI
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
                         }
                     }
                 })

@@ -465,7 +465,6 @@ public class Client {
                         .put("pageSize", pageSize));
     }
 
-<<<<<<< HEAD
     /**
      * 获取观点详情
      * @param viewpointId
@@ -485,8 +484,6 @@ public class Client {
                         .put("viewpointId", viewpointId));
     }
 
-=======
->>>>>>> 89b78fabc17ea4aec820a3df3cf70105a274520f
     /**
      * 发布借款
      *

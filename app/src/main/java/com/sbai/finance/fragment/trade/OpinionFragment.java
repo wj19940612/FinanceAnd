@@ -10,11 +10,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.Opinion;
 import com.sbai.finance.model.Variety;
@@ -23,6 +27,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
@@ -79,7 +84,7 @@ public class OpinionFragment extends BaseFragment {
     private void initViewWithAdapter() {
         mBottomView = new View(getActivity());
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) Display.dp2Px(55,getResources()));
+                (int) Display.dp2Px(55, getResources()));
         mBottomView.setLayoutParams(layoutParams);
 
         mFootView = new TextView(getActivity());
@@ -124,7 +129,7 @@ public class OpinionFragment extends BaseFragment {
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Opinion>,Opinion>() {
+                .setCallback(new Callback2D<Resp<Opinion>, Opinion>() {
                     @Override
                     protected void onRespSuccessData(Opinion data) {
                         updateViewWithData(data.getData());
@@ -140,6 +145,10 @@ public class OpinionFragment extends BaseFragment {
                 mOpinionAdapter.removeAllFooterView();
                 mOpinionAdapter.addFooterView(mFootView);
                 mLoadMore = false;
+            } else {
+                mOpinionAdapter.removeAllFooterView();
+                mOpinionAdapter.addFooterView(mBottomView);
+                mLoadMore = true;
             }
             mOpinionAdapter.notifyDataSetChanged();
         }
@@ -183,7 +192,7 @@ public class OpinionFragment extends BaseFragment {
             bindDataWithView(helper, item);
         }
 
-        private void bindDataWithView(BaseViewHolder helper, Opinion.OpinionBean item) {
+        private void bindDataWithView(BaseViewHolder helper, final Opinion.OpinionBean item) {
             String attend = item.getIsAttention() == 1 ? "" : getString(R.string.is_attention);
             String format = "yyyy/MM/dd HH:mm";
             String time = DateUtil.format(item.getCreateTime(), format);
@@ -192,6 +201,10 @@ public class OpinionFragment extends BaseFragment {
                     .setText(R.id.publishTime, time)
                     .setText(R.id.commentNum, String.valueOf(item.getReplyCount()))
                     .setText(R.id.likeNum, String.valueOf(item.getPraiseCount()));
+            Glide.with(getActivity()).load(item.getUserPortrait())
+                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .into((ImageView) helper.getView(R.id.avatar));
             if (item.getDirection() == 1) {
                 ((TextView) helper.getView(R.id.opinion))
                         .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up));
@@ -202,19 +215,25 @@ public class OpinionFragment extends BaseFragment {
             helper.getView(R.id.avatar).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: 2017/4/28  用户详情
+                    Launcher.with(getActivity(), UserDataActivity.class)
+                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
+                            .execute();
                 }
             });
             helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: 2017/4/28 观点详情
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
+                            .execute();
                 }
             });
             helper.getView(R.id.commentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: 2017/4/28 观点详情
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
+                            .execute();
                 }
             });
         }
