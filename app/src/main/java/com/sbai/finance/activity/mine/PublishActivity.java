@@ -24,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserPublishModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -207,9 +206,9 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mAvatar);
-                mReplyCount.setText(item.getReplyCount());
-                mPraiseCount.setText(item.getPraiseCount());
-                mOpinionContent.setText(item.getContent());
+                mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
+                mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
+                mOpinionContent.setText( item.getContent());
             }
         }
     }

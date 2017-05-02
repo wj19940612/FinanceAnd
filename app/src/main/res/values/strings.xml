@@ -172,6 +172,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="number">%1$d</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
