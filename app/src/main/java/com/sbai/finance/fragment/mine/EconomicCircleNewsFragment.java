@@ -74,7 +74,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         if (context instanceof OnNoReadNewsListener) {
             mOnNoReadNewsListener = (OnNoReadNewsListener) context;
         } else {
-            throw new RuntimeException(context.toString() + "" +
+            throw new RuntimeException(context.toString() + "  " +
                     "must implements OnNoReadNewsListener");
         }
     }

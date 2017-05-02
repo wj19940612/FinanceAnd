@@ -18,7 +18,7 @@
     <string name="borrow_interest">借款利息</string>
     <string name="details">详情</string>
     <string name="discussion_area">讨论区</string>
-    <string name="opinion_number">(%1$s)</string>
+    <string name="comment_number">(%1$s)</string>
     <string name="share">分享</string>
     <string name="borrow_money">借款</string>
     <string name="comment">评论......</string>
@@ -123,6 +123,7 @@
     <!--   消息 -->
     <string name="system_news">系统消息</string>
     <string name="load_more">点击加载更多</string>
+    <string name="up_load_more">加载更多</string>
     <string name="load_all">已加载全部</string>
 
     <string name="new_news_notification">新消息通知</string>
@@ -146,11 +147,12 @@
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
-    <string name="real_name_approve">实名认证</string>
-    <string name="is_approve">已认证</string>
-    <string name="is_not_approve">未认证</string>
+    <string name="real_name_authentication">实名认证</string>
+    <string name="authenticated">已认证</string>
+    <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
-    <string name="attention_fans_number">关注 %1$d / 粉丝 %2$d</string>
+    <string name="attention_number">关注 %1$d</string>
+    <string name="fans_number">粉丝 %1$d</string>
 
     <string name="shield">屏蔽TA</string>
     <string name="report">举报</string>

@@ -71,7 +71,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, LocalUser.getUser().getUserInfo().getId())
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, 0)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<UserPublishModel>, UserPublishModel>() {
                     @Override
@@ -105,7 +105,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestUserPublishList();
                 }
             });
@@ -167,6 +167,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             return convertView;
 
         }
+
 
         static class ViewHolder {
             @BindView(R.id.avatar)

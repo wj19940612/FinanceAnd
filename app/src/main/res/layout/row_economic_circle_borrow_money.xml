@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="15sp"
             tools:text="吴彦祖"/>
 
@@ -41,7 +41,7 @@
             tools:text="2008/08/08 08:00"/>
 
         <TextView
-            android:id="@+id/address"
+            android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName"
@@ -147,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/redPrimary"
+                    android:textColor="@color/colorRed"
                     tools:text="@string/RMB"/>
 
             </LinearLayout>
@@ -155,7 +155,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/opinion"
+        android:id="@+id/borrowMoneyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="13dp"
@@ -166,7 +166,7 @@
         android:maxLines="2"
         android:textColor="@color/opinionText"
         android:textSize="14sp"
-        tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+        tools:text="狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -186,21 +186,18 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:src="@drawable/help"/>
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:src="@drawable/help"/>
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:src="@drawable/help"/>
 

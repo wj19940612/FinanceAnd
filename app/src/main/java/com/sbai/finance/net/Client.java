@@ -468,6 +468,25 @@ public class Client {
     }
 
     /**
+     * 获取观点详情
+     * @param viewpointId
+     * @return
+     */
+    public static API getOpinionDetails(int viewpointId) {
+        return new API( POST, "/coterie/viewpoint/findViewpointInfo.do",
+                new ApiParams()
+                .put("viewpointId", viewpointId));
+    }
+
+    public static API getOpinionReply(int page, int pageSize, int viewpointId) {
+        return new API("/coterie/viewpoint/findViewpointReply.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("viewpointId", viewpointId));
+    }
+
+    /**
      * 发布借款
      *
      * @param content
@@ -632,7 +651,7 @@ public class Client {
     }
 
     /**
-     * 观点检测是否已发表
+     * 检测是否已经预测'看涨'看跌'
      *
      * @param bigVarietyTypeCode
      * @param varietyId
@@ -642,6 +661,17 @@ public class Client {
         return new API(POST, "/coterie/viewpoint/checkCalculate.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("varietyId", varietyId));
+    }
+
+    /**
+     * 获取品种简介
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietytradeIntrouce(int varietyId) {
+        return new API("/order/order/getVarietytradeIntro.do",
+                new ApiParams()
                         .put("varietyId", varietyId));
     }
 }

@@ -23,7 +23,10 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
-import com.sbai.finance.model.EconomicCircle;
+import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.economiccircle.EconomicCircle;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -43,8 +46,8 @@ import butterknife.Unbinder;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener {
 
-    private static final int TYPE_OPINION = 2;
     private static final int TYPE_BORROW_MONEY = 1;
+    private static final int TYPE_OPINION = 2;
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -77,18 +80,40 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         mEconomicCircleList = new ArrayList<>();
         mEconomicCircleAdapter = new EconomicCircleAdapter(getContext());
         mListView.setEmptyView(mEmpty);
-//       mListView.setAdapter(mEconomicCircleAdapter);
+        mListView.setAdapter(mEconomicCircleAdapter);
         mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position % 2 == 0) {
-                    Launcher.with(getContext(), OpinionDetailsActivity.class)
-                            .execute();
+                EconomicCircle economicCircle = (EconomicCircle) parent.getItemAtPosition(position);
+                if (economicCircle.getType() == TYPE_OPINION) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Client.getOpinionDetails(economicCircle.getDataId()).setTag(TAG)
+                                .setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
+                                    @Override
+                                    protected void onRespSuccessData(OpinionDetails opinionDetails) {
+                                        Launcher.with(getContext(), OpinionDetailsActivity.class)
+                                                .putExtra(Launcher.EX_PAYLOAD, opinionDetails)
+                                                .execute();
+                                    }
+                                }).fire();
+                    }
                 } else {
                     Launcher.with(getContext(), BorrowMoneyDetailsActivity.class)
                             .execute();
                 }
+            }
+        });
+
+        mEconomicCircleAdapter.setCallback(new EconomicCircleAdapter.Callback() {
+            @Override
+            public void onAvatarOpinionClick(EconomicCircle economicCircle) {
+                Launcher.with(getContext(), UserDataActivity.class).execute();
+            }
+
+            @Override
+            public void onAvatarBorrowMoneyClick(EconomicCircle economicCircle) {
+                Launcher.with(getContext(), UserDataActivity.class).execute();
             }
         });
 
@@ -195,7 +220,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         for (EconomicCircle economicCircle : economicCircleList) {
             if (mSet.add(economicCircle.getId())) {
-                mEconomicCircleAdapter.addAll(economicCircle);
+                mEconomicCircleAdapter.add(economicCircle);
             }
         }
     }
@@ -297,9 +322,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             private void bindingData(Context context, final EconomicCircle item, final Callback callback) {
                 mUserName.setText(item.getUserName());
                 if (item.getIsAttention() == 1) {
-                    mIsAttention.setText("已关注");
+                    mIsAttention.setText(R.string.is_attention);
                 }
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+
 
                 if (item.getGuessPass() == 1) {
                     mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
@@ -315,7 +341,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onAvatarOpinionClick(item);
+                        if (callback != null) {
+                            callback.onAvatarOpinionClick(item);
+                        }
                     }
                 });
 
@@ -329,8 +357,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             TextView mUserName;
             @BindView(R.id.publishTime)
             TextView mPublishTime;
-            @BindView(R.id.address)
-            TextView mAddress;
+            @BindView(R.id.location)
+            TextView mLocation;
+            @BindView(R.id.borrowMoneyContent)
+            TextView mBorrowMoneyContent;
             @BindView(R.id.needAmount)
 
             TextView mNeedAmount;
@@ -338,21 +368,28 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             TextView mBorrowTime;
             @BindView(R.id.borrowInterest)
             TextView mBorrowInterest;
-            @BindView(R.id.opinion)
-            TextView mOpinion;
+
 
             BorrowMoneyViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, EconomicCircle item, Callback callback) {
+            private void bindingData(Context context, final EconomicCircle item, final Callback callback) {
                 mUserName.setText(item.getUserName());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-                mAddress.setText("山东");
-                mNeedAmount.setText(context.getString(R.string.RMB, "8888"));
-                mBorrowTime.setText(context.getString(R.string.day, "8888"));
-                mBorrowInterest.setText(context.getString(R.string.RMB, "8888"));
-                mOpinion.setText("话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。");
+                mLocation.setText(item.getLand());
+                mNeedAmount.setText(context.getString(R.string.RMB,  String.valueOf(item.getMoney())));
+                mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
+                mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));
+                mBorrowMoneyContent.setText(item.getContent());
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onAvatarBorrowMoneyClick(item);
+                        }
+                    }
+                });
             }
         }
     }

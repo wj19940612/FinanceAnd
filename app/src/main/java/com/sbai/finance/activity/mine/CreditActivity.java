@@ -35,13 +35,13 @@ public class CreditActivity extends BaseActivity {
     private void updateUserCreditStatus() {
         switch (LocalUser.getUser().getUserInfo().getStatus()) {
             case UserInfo.CREDIT_IS_ALREADY_APPROVE:
-                mCredit.setSubText(R.string.is_approve);
+                mCredit.setSubText(R.string.authenticated);
                 break;
             case UserInfo.CREDIT_IS_APPROVEING:
                 mCredit.setSubText(R.string.is_auditing);
                 break;
             default:
-                mCredit.setSubText(R.string.is_not_approve);
+                mCredit.setSubText(R.string.unauthorized);
                 break;
         }
     }

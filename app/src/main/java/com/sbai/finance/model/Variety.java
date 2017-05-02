@@ -158,7 +158,7 @@ public class Variety implements Parcelable {
         this.varietyType = varietyType;
     }
 
-    public int getPriceDecimalScale() {
+    public int getPriceScale() {
         return marketPoint;
     }
 

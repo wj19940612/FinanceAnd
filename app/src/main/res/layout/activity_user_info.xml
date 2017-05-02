@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_arrow_mine_list_more"/>
+            app:srcCompat="@drawable/ic_more"/>
     </RelativeLayout>
 
     <com.sbai.finance.view.IconTextRow
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/nick_name"
         app:rowTextColor="@color/secondaryText"
         app:subTextColor="@color/primaryText"
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/sex"
         app:rowTextColor="@color/secondaryText"
         app:subTextColor="@color/primaryText"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/age"
         app:rowTextColor="@color/secondaryText"
         app:subTextColor="@color/primaryText"
@@ -92,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
+
         android:minHeight="50dp"
         android:paddingBottom="12dp"
         android:paddingLeft="16dp"
@@ -118,9 +119,10 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_mine_list_more"
+            android:src="@drawable/ic_more"
             tools:ignore="ContentDescription"/>
     </LinearLayout>
+
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/credit"
@@ -128,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/credit"
         app:rowTextColor="@color/secondaryText"
         app:subTextColor="@color/primaryText"

@@ -1,10 +1,14 @@
 package com.sbai.finance.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -74,7 +78,16 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.logoutImage)
     AppCompatImageView mLogoutImage;
 
-    private ArrayList<NotReadMessageNumberModel> mNotReadMessageNumberModelList;
+
+    private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
+                updateUserImage();
+                updateUserStatus();
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -87,9 +100,15 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.LOGIN_SUCCESS_ACTION));
         updateUserImage();
         updateUserStatus();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(LoginBroadcastReceiver);
     }
 
     private void requestNoReadNewsNumber() {
@@ -99,7 +118,6 @@ public class MineFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
-                        mNotReadMessageNumberModelList = data;
                         int count = 0;
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
                             count = count + notReadMessageNumberData.getCount();
@@ -138,10 +156,10 @@ public class MineFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.drawable.ic_default_headportrait160x160)
+                    .placeholder(R.drawable.ic_default_avatar_big)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.drawable.ic_default_headportrait160x160)
+            Glide.with(this).load(R.drawable.ic_default_avatar_big)
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }
@@ -162,7 +180,7 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 break;
             case R.id.logoutImage:
-                startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                Launcher.with(getActivity(), LoginActivity.class).execute();
                 break;
             case R.id.userHeadImage:
                 startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
@@ -171,29 +189,21 @@ public class MineFragment extends BaseFragment {
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), AttentionActivity.class).execute();
                 } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.fans:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), FansActivity.class).execute();
                 } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.minePublish:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), PublishActivity.class).execute();
-                } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
-                }
+                Launcher.with(getActivity(), PublishActivity.class).execute();
                 break;
             case R.id.news:
-//                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), NewsActivity.class).execute();
-//                } else {
-//                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
-//                }
+                Launcher.with(getActivity(), NewsActivity.class).execute();
                 break;
             case R.id.setting:
                 Launcher.with(getActivity(), SettingActivity.class).execute();

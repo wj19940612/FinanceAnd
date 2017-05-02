@@ -21,7 +21,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_weight="1"
+        android:layout_height="0dp">
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -55,7 +56,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@+id/avatar"
-                        android:textColor="@color/redPrimary"
+                        android:textColor="@color/colorRed"
                         android:textSize="15sp"
                         tools:text="刘亦菲"/>
 
@@ -103,7 +104,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/product"
+                        android:id="@+id/bigVarietyName"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -120,7 +121,7 @@
                         android:background="@drawable/bg_product_up_down">
 
                         <TextView
-                            android:id="@+id/productName"
+                            android:id="@+id/varietyName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -136,7 +137,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/upDownArea"
-                            android:textColor="@color/redPrimary"
+                            android:textColor="@color/colorRed"
                             android:textSize="14sp"
                             tools:text="88.88"/>
 
@@ -153,7 +154,7 @@
                                 android:id="@+id/upDownPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/redPrimary"
+                                android:textColor="@color/colorRed"
                                 android:textSize="9sp"
                                 tools:text="+8.88"/>
 
@@ -162,7 +163,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
-                                android:textColor="@color/redPrimary"
+                                android:textColor="@color/colorRed"
                                 android:textSize="9sp"
                                 tools:text="+10.00%"/>
                         </LinearLayout>
@@ -184,13 +185,13 @@
                         android:layout_alignParentRight="true"
                         android:background="@drawable/btn_love"
                         android:drawableLeft="@drawable/bg_love"
-                        android:drawablePadding="8dp"
+                        android:drawablePadding="6dp"
                         android:gravity="center"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
                         android:textColor="@color/love_text"
                         android:textSize="10sp"
-                        tools:text="88"/>
+                        tools:text="8888"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -211,13 +212,13 @@
                         android:textSize="14sp"/>
 
                     <TextView
-                        android:id="@+id/opinionNum"
+                        android:id="@+id/commentNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:textColor="@color/secondaryText"
                         android:textSize="14sp"
-                        tools:text="@string/opinion_number"/>
+                        tools:text="@string/comment_number"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -239,11 +240,12 @@
                         android:id="@android:id/empty"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="100dp"
+                        android:drawablePadding="16dp"
+                        android:drawableTop="@drawable/img_no_data"
                         android:gravity="center_horizontal"
+                        android:paddingTop="50dp"
                         android:text="@string/no_data"
-                        android:textColor="@color/primaryText"
+                        android:textColor="@color/assistText"
                         android:textSize="20sp"/>
                 </LinearLayout>
             </LinearLayout>
