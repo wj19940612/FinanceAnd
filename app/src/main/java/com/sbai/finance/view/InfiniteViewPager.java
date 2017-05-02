@@ -39,7 +39,6 @@ public class InfiniteViewPager extends ViewPager {
 
         public InnerPageChangeListener(OnPageChangeListener externalListener) {
             mExternalListener = externalListener;
-
         }
 
         @Override
@@ -95,7 +94,10 @@ public class InfiniteViewPager extends ViewPager {
 
         @Override
         public int getCount() {
-            return mExternalAdapter.getCount() + 2; // fake object at head and tail
+            if (mExternalAdapter.getCount() > 1) {
+                return mExternalAdapter.getCount() + 2; // fake object at head and tail
+            }
+            return mExternalAdapter.getCount();
         }
 
         @Override

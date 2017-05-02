@@ -17,20 +17,20 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.TopicDetailModel;
-import com.sbai.finance.model.TopicModel;
+import com.sbai.finance.model.Topic;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TopicActivity extends BaseActivity {
+
 	@BindView(R.id.top)
 	LinearLayout mTop;
 	@BindView(R.id.back)
@@ -46,6 +46,7 @@ public class TopicActivity extends BaseActivity {
 
 	private TopicListAdapter mTopicListAdapter;
 	private Integer id;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,11 +55,11 @@ public class TopicActivity extends BaseActivity {
 		translucentStatusBar();
 
 		Bundle bundle = this.getIntent().getExtras();
-		TopicModel topicModel = (TopicModel) bundle.getSerializable(Launcher.KEY_TOPIC);
-		if (topicModel!=null){
-		   id = topicModel.getId();
-			mTitle.setText(topicModel.getTitle());
-			mTopicTitle.setText(topicModel.getSubTitle());
+		Topic topic = (Topic) bundle.getSerializable(Launcher.KEY_TOPIC);
+		if (topic !=null){
+		   id = topic.getId();
+			mTitle.setText(topic.getTitle());
+			mTopicTitle.setText(topic.getSubTitle());
 		}
 		initView();
 	}
@@ -114,6 +115,7 @@ public class TopicActivity extends BaseActivity {
 	static class TopicListAdapter extends ArrayAdapter<TopicDetailModel.SubjectDetailModelListBean>{
 
 		Context mContext;
+
 		public TopicListAdapter(@NonNull Context context){
 			super(context,0);
 			mContext = context;
