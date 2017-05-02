@@ -10,25 +10,36 @@
         app:backFeature="true"
         app:titleText="@string/self_choice"/>
     <include layout="@layout/layout_hq_header"/>
-    <com.sbai.finance.view.slidingListView.SlideListView
-        android:id="@+id/listView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:headerDividersEnabled="true"
-        android:background="@android:color/white"
-        android:visibility="visible"/>
-    <TextView
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:drawablePadding="16dp"
-        android:gravity="center_horizontal"
-        android:paddingTop="180dp"
-        android:text="快去添加你心仪的产品吧~"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:visibility="gone"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.sbai.finance.view.slidingListView.SlideListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:headerDividersEnabled="true"
+                android:background="@android:color/white"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:drawablePadding="16dp"
+                android:gravity="center_horizontal"
+                android:paddingTop="180dp"
+                android:drawableTop="@drawable/img_no_data"
+                android:text="快去添加你心仪的产品吧~"
+                android:textColor="@color/assistText"
+                android:textSize="@dimen/list_title_size"
+                android:visibility="visible"/>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

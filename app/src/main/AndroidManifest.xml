@@ -75,6 +75,14 @@
         <activity
             android:name=".activity.mutual.BorrowActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mutual.BorrowInActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mutual.BorrowInHisActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mutual.BorrowOutActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mutual.BorrowOutHisActivity"
+                  android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.ModifyUserInfoActivity"

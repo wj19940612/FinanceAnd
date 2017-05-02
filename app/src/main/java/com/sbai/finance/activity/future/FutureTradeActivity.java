@@ -1,6 +1,9 @@
 package com.sbai.finance.activity.future;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,12 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -21,10 +26,15 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.PredictModel;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -41,6 +51,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.klineView;
+import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
+import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
 
 public class FutureTradeActivity extends BaseActivity {
 
@@ -76,8 +89,12 @@ public class FutureTradeActivity extends BaseActivity {
     @BindView(R.id.subPageArea)
     LinearLayout mSubPageArea;
 
+    private OpinionFragment mOpinionFragment;
+    private IntroduceFragment mIntroduceFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
+    private PredictModel mPredict;
+    private RefreshPointReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +107,25 @@ public class FutureTradeActivity extends BaseActivity {
         }
 
         initData();
+        initFragment();
 
         initTabLayout();
         initChartViews();
         initSlidingTab();
         initFloatBar();
+
+        registerRefreshReceiver();
     }
 
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+    }
+
+    private void initFragment() {
+        Bundle args = new Bundle();
+        args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
+        mOpinionFragment = OpinionFragment.newInstance(args);
+        mIntroduceFragment = IntroduceFragment.newInstance(args);
     }
 
     private void initTabLayout() {
@@ -154,7 +181,15 @@ public class FutureTradeActivity extends BaseActivity {
         mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
             @Override
             public void onPublishPointButtonClick() {
-                showPredictDialog(mVariety);
+                if (LocalUser.getUser().isLogin()) {
+                    if (mPredict != null) {
+                        publishPoint();
+                    }else {
+                        requsetUserViewPoint(true);
+                    }
+                }else {
+                    Launcher.with(FutureTradeActivity.this, LoginActivity.class).execute();
+                }
             }
 
             @Override
@@ -169,14 +204,64 @@ public class FutureTradeActivity extends BaseActivity {
         });
     }
 
+    private void publishPoint() {
+        if (mPredict.isIsCalculate()) {
+            Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                    .putExtra(PREDICT_DIRECTION, mPredict.getDirection())
+                    .putExtra(PREDICT_CALCUID, mPredict.getCalcuId())
+                    .execute();
+        } else {
+            showPredictDialog(mVariety);
+        }
+    }
+
     private void showPredictDialog(Variety variety) {
         Bundle args = new Bundle();
         args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        args.putInt(PREDICT_DIRECTION, mPredict.getDirection());
+        args.putInt(PREDICT_CALCUID, mPredict.getCalcuId());
         PredictionFragment.newInstance(args).show(getSupportFragmentManager());
     }
 
     private void addOption() {
+        Client.addOptional(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            // TODO: 2017/4/28 更新UI
+                        }
+                    }
+                })
+                .fire();
+    }
 
+    private void registerRefreshReceiver() {
+        mReceiver = new RefreshPointReceiver();
+        IntentFilter filter = new IntentFilter(REFRESH_POINT);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+    }
+
+
+    private void requsetUserViewPoint(final boolean needPublish) {
+        if (LocalUser.getUser().isLogin()) {
+            Client.checkViewpoint(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<PredictModel>, PredictModel>() {
+                        @Override
+                        protected void onRespSuccessData(PredictModel data) {
+                            mPredict = data;
+                            if (needPublish) {
+                                publishPoint();
+                            }
+                        }
+                    })
+                    .fire();
+        }
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {
@@ -203,15 +288,11 @@ public class FutureTradeActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-
-            Bundle args = new Bundle();
-            args.putParcelable(Launcher.EX_PAYLOAD, mVariety);
-
             switch (position) {
                 case 0:
-                    return OpinionFragment.newInstance(args);
+                    return mOpinionFragment;
                 case 1:
-                    return IntroduceFragment.newInstance(args);
+                    return mIntroduceFragment;
             }
             return null;
         }
@@ -235,9 +316,9 @@ public class FutureTradeActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             if (mSubPageAdapter.getPageTitle(position).equals(getString(R.string.point))) {
-                mTradeFloatButtons.setVisibility(View.VISIBLE);
+                mOpinionFragment.refreshPointList();
             } else {
-                mTradeFloatButtons.setVisibility(View.GONE);
+                //简介没接口暂时不刷新
             }
         }
 
@@ -293,6 +374,7 @@ public class FutureTradeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     private void requestKlineDataAndSet(final String type) {
@@ -311,6 +393,14 @@ public class FutureTradeActivity extends BaseActivity {
                         mKlineView.setDataList(data);
                     }
                 }).fire();
+    }
+
+    private class RefreshPointReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requsetUserViewPoint(false);
+            mOpinionFragment.refreshPointList();
+        }
     }
 
 }

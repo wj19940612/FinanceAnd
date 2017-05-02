@@ -3,10 +3,11 @@ package com.sbai.finance.activity.trade;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -16,12 +17,14 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.fragment.PredictionFragment.PREDICT_DIRECTION;
+import static com.sbai.finance.model.PredictModel.PREDICT_CALCUID;
+import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
 
 
 public class PublishOpinionActivity extends BaseActivity {
@@ -29,14 +32,15 @@ public class PublishOpinionActivity extends BaseActivity {
     public static final String REFRESH_POINT = "refresh_point";
 
     @BindView(R.id.opinionType)
-    TextView mOpinionType;
+    ImageView mOpinionType;
     @BindView(R.id.opinionContent)
     EditText mOpinionContent;
     @BindView(R.id.submitButton)
     Button mSubmitButton;
 
     Variety mVariety;
-    int mDirection = -1 ;
+    int mDirection = -1;
+    int mCalcuId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +55,28 @@ public class PublishOpinionActivity extends BaseActivity {
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mDirection = getIntent().getIntExtra(PREDICT_DIRECTION, -1);
+        mCalcuId = getIntent().getIntExtra(PREDICT_CALCUID, -1);
     }
 
     private void initViews() {
-        // TODO: 2017/4/27 根据涨和跌初始化view
-        if (mDirection == 1){
-
-        }else {
-
+        mOpinionContent.addTextChangedListener(mOptionContentWatcher);
+        if (mDirection == 1) {
+            mOpinionType.setImageResource(R.drawable.ic_opinion_up);
+        } else {
+            mOpinionType.setImageResource(R.drawable.ic_opinion_down);
         }
     }
+
+    private ValidationWatcher mOptionContentWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.toString().length() > 0) {
+                mSubmitButton.setEnabled(true);
+            } else {
+                mSubmitButton.setEnabled(false);
+            }
+        }
+    };
 
     @OnClick(R.id.submitButton)
     public void onClick(View view) {
@@ -69,22 +85,41 @@ public class PublishOpinionActivity extends BaseActivity {
 
     private void saveViewPoint() {
         String content = mOpinionContent.getText().toString().trim();
-        Client.saveViewPoint(mVariety.getBigVarietyTypeCode(),
-                content, mDirection, mVariety.getVarietyId(), mVariety.getVarietyType())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            Intent intent = new Intent(REFRESH_POINT);
-                            LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
-                                    .sendBroadcast(intent);
-                            finish();
+        if (mCalcuId != -1) {
+            Client.saveViewPoint(mVariety.getBigVarietyTypeCode(), mCalcuId,
+                    content, mDirection, mVariety.getVarietyId(), mVariety.getVarietyType())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            if (resp.isSuccess()) {
+                                Intent intent = new Intent(REFRESH_POINT);
+                                LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
+                                        .sendBroadcast(intent);
+                                finish();
+                            }
                         }
-                    }
-                })
-                .fire();
+                    })
+                    .fire();
+        } else {
+            Client.saveViewPoint(mVariety.getBigVarietyTypeCode(),
+                    content, mDirection, mVariety.getVarietyId(), mVariety.getVarietyType())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            if (resp.isSuccess()) {
+                                Intent intent = new Intent(REFRESH_POINT);
+                                LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
+                                        .sendBroadcast(intent);
+                                finish();
+                            }
+                        }
+                    })
+                    .fire();
+        }
     }
 
 
