@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Administrator on 2017-04-25.
  */
 
-public class TopicModel implements Serializable{
+public class Topic implements Serializable{
 	/**
 	 * click : 1
 	 * count : 2
