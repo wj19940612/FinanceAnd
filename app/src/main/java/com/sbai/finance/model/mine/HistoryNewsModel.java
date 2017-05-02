@@ -45,6 +45,8 @@ public class HistoryNewsModel {
      * type : 52888
      */
 
+    //{"msg":"评论......吵吵吵","classify":1,"viewpointId":31,"dataId":13,"source_user":{"id":78,"userPhone":"17317322083"},"id":9,"sourceUserId":78,"type":30,"userId":86,"status":0}
+
     private int create_date;
     private int dataId;
     private int id;
@@ -56,7 +58,20 @@ public class HistoryNewsModel {
     // 13.借款单审核未通过 14.借款发布成功 *
     // 20.成为观点大神 21.实名认证已通过 22.实名认证未通过 * 25.涨跌预测成功 26.涨跌预测失败 * 30.意向金支付成功
     private int type;
-    private UserInfo mUserInfo;
+    private int classify;
+    private int viewpointId;
+    private UserInfo source_user;
+    private int sourceUserId;
+    private int userId;
+
+    /**
+     * classify : 1
+     * viewpointId : 31
+     * source_user : {"id":78,"userPhone":"17317322083"}
+     * sourceUserId : 78
+     * userId : 86
+     */
+
 
     public HistoryNewsModel() {
     }
@@ -69,15 +84,16 @@ public class HistoryNewsModel {
     public HistoryNewsModel(int status, int type, UserInfo userInfo) {
         this.status = status;
         this.type = type;
-        mUserInfo = userInfo;
+        this.source_user = userInfo;
     }
 
     public HistoryNewsModel(int id, int status, int type, UserInfo userInfo) {
         this.status = status;
         this.type = type;
-        mUserInfo = userInfo;
+        source_user = userInfo;
         this.id = id;
     }
+
 
     public boolean isAlreadyRead() {
         return getStatus() == 1;
@@ -131,12 +147,44 @@ public class HistoryNewsModel {
         this.type = type;
     }
 
-    public UserInfo getUserInfo() {
-        return mUserInfo;
+    public int getClassify() {
+        return classify;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        mUserInfo = userInfo;
+    public void setClassify(int classify) {
+        this.classify = classify;
+    }
+
+    public int getViewpointId() {
+        return viewpointId;
+    }
+
+    public void setViewpointId(int viewpointId) {
+        this.viewpointId = viewpointId;
+    }
+
+    public UserInfo getUserInfo() {
+        return source_user;
+    }
+
+    public void setSource_user(UserInfo source_user) {
+        this.source_user = source_user;
+    }
+
+    public int getSourceUserId() {
+        return sourceUserId;
+    }
+
+    public void setSourceUserId(int sourceUserId) {
+        this.sourceUserId = sourceUserId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -148,7 +196,11 @@ public class HistoryNewsModel {
                 ", msg='" + msg + '\'' +
                 ", status=" + status +
                 ", type=" + type +
-                ", mUserInfo=" + mUserInfo +
+                ", classify=" + classify +
+                ", viewpointId=" + viewpointId +
+                ", source_user=" + source_user +
+                ", sourceUserId=" + sourceUserId +
+                ", userId=" + userId +
                 '}';
     }
 }
