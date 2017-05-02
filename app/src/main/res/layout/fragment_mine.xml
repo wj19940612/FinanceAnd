@@ -114,7 +114,7 @@
         android:background="@drawable/bg_white"
         android:visibility="visible"
         app:leftIcon="@drawable/ic_mine_list_detail"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/detail"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
@@ -126,7 +126,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
         app:leftIcon="@drawable/ic_mine_list_news"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/news"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
@@ -139,7 +139,7 @@
         android:background="@drawable/bg_white"
         android:visibility="visible"
         app:leftIcon="@drawable/ic_mine_list_feed_back"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/feed_back"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
@@ -151,7 +151,7 @@
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
         app:leftIcon="@drawable/ic_mine_list_setting"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/setting"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
@@ -163,7 +163,7 @@
         android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
         app:leftIcon="@drawable/ic_mine_list_aboutus"
-        app:rightIcon="@drawable/ic_arrow_mine_list_more"
+        app:rightIcon="@drawable/ic_more"
         app:rowText="@string/about_us"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>

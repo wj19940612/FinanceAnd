@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,7 +37,9 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class OptionActivity extends BaseActivity {
+public class OptionActivity extends BaseActivity implements AbsListView.OnScrollListener {
+	@BindView(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.listView)
 	SlideListView mListView;
 	@BindView(R.id.empty)
@@ -51,6 +55,12 @@ public class OptionActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				requestOptionalData();
+			}
+		});
 		mSlideListAdapter = new SlideListAdapter(this);
 		mSlideListAdapter.setOnDelClickListener(new SlideListAdapter.OnDelClickListener() {
 			@Override
@@ -65,6 +75,7 @@ public class OptionActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			}
 		});
+        mListView.setOnScrollListener(this);
 	}
 
 	@Override
@@ -74,7 +85,7 @@ public class OptionActivity extends BaseActivity {
 	}
 
 	private void requestOptionalData() {
-		Client.getOptional(Variety.VAR_STOCK).setTag(TAG)
+		Client.getOptional(Variety.VAR_FUTURE).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
 					@Override
 					protected void onRespSuccessData(List<Variety> data) {
@@ -91,6 +102,7 @@ public class OptionActivity extends BaseActivity {
 							requestOptionalData();
 						}else{
 							ToastUtil.curt(resp.getMsg());
+							stopRefreshAnimation();
 						}
 					}
 				}).fire();
@@ -100,11 +112,30 @@ public class OptionActivity extends BaseActivity {
 		super.onDestroy();
 	}
 	private void updateOptionInfo(ArrayList<Variety> data) {
+		stopRefreshAnimation();
 		mSlideListAdapter.clear();
 		mSlideListAdapter.addAll(data);
 		mSlideListAdapter.notifyDataSetChanged();
 
 	}
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int topRowVerticalPosition =
+				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+	}
+
 	public static class SlideListAdapter extends ArrayAdapter<Variety> {
 		Context mContext;
 		private OnDelClickListener mOnDelClickListener;

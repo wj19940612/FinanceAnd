@@ -6,30 +6,26 @@ package com.sbai.finance.model.mine;
 
 public class UserAttentionModel {
 
-
     /**
-     * createTime : 44808
-     * followUserId : 11880
-     * followUserPortrait : 测试内容2431
-     * followuserName : 测试内容0ax2
-     * id : 43540
+     * createTime : 20211
+     * followUserId : 16765
+     * followUserPortrait : 测试内容87i3
+     * followuserName : 测试内容bgw7
+     * id : 80825
      */
 
-    //	创建时间
-    private long createTime;
-    //关注用户id
+    private int createTime;
+    //	关注用户id
     private int followUserId;
-    //	关注用户头像
     private String followUserPortrait;
-    //	关注用户名
     private String followuserName;
     private int id;
 
-    public long getCreateTime() {
+    public int getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(int createTime) {
         this.createTime = createTime;
     }
 
@@ -63,5 +59,16 @@ public class UserAttentionModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "UserAttentionModel{" +
+                "createTime=" + createTime +
+                ", followUserId=" + followUserId +
+                ", followUserPortrait='" + followUserPortrait + '\'' +
+                ", followuserName='" + followuserName + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

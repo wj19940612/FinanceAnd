@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -38,8 +41,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class FutureFragment extends BaseFragment {
+public class FutureFragment extends BaseFragment implements AbsListView.OnScrollListener {
 
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.rate)
     TextView mRate;
     @BindView(R.id.listView)
@@ -89,6 +94,12 @@ public class FutureFragment extends BaseFragment {
     }
 
     private void initView() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestVarietyList();
+            }
+        });
         mFutureListAdapter = new FutureListAdapter(getActivity());
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mFutureListAdapter);
@@ -102,6 +113,7 @@ public class FutureFragment extends BaseFragment {
                 }
             }
         });
+        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -167,6 +179,7 @@ public class FutureFragment extends BaseFragment {
         if (varietyList == null) {
             return;
         }
+        stopRefreshAnimation();
         mFutureListAdapter.clear();
         mFutureListAdapter.addAll(varietyList);
         mFutureListAdapter.notifyDataSetChanged();
@@ -179,14 +192,36 @@ public class FutureFragment extends BaseFragment {
     }
 
     public void requestVarietyList() {
-        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mFutureType)
-                .setTag(TAG).setIndeterminate(this)
+        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mFutureType).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateFutureData(data);
                     }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
                 }).fireSync();
+    }
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
     public static class FutureListAdapter extends ArrayAdapter<Variety> {

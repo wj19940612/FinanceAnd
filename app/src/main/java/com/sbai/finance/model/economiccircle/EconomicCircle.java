@@ -1,4 +1,4 @@
-package com.sbai.finance.model;
+package com.sbai.finance.model.economiccircle;
 
 public class EconomicCircle {
 
@@ -45,6 +45,27 @@ public class EconomicCircle {
 	private String varietyName;
 	private String varietyType;
 	private String content;
+	private String land;
+	private int money;
+	private int interest;
+
+	public int getInterest() {
+		return interest;
+	}
+
+	public void setInterest(int interest) {
+		this.interest = interest;
+	}
+
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+
+	private int days;
 
 	public int getAuditStatus() {
 		return auditStatus;
@@ -206,29 +227,19 @@ public class EconomicCircle {
 		this.content = content;
 	}
 
-	@Override
-	public String toString() {
-		return "EconomicCircle{" +
-				"auditStatus=" + auditStatus +
-				", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
-				", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
-				", contractsCode='" + contractsCode + '\'' +
-				", createTime=" + createTime +
-				", dataId=" + dataId +
-				", direction=" + direction +
-				", guessPass=" + guessPass +
-				", id='" + id + '\'' +
-				", isAttention=" + isAttention +
-				", praiseCount=" + praiseCount +
-				", replyCount=" + replyCount +
-				", type=" + type +
-				", userId=" + userId +
-				", userName='" + userName + '\'' +
-				", userPortrait='" + userPortrait + '\'' +
-				", varietyId=" + varietyId +
-				", varietyName='" + varietyName + '\'' +
-				", varietyType='" + varietyType + '\'' +
-				", content='" + content + '\'' +
-				'}';
+	public String getLand() {
+		return land;
+	}
+
+	public void setLand(String land) {
+		this.land = land;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
 	}
 }

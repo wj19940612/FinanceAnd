@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +26,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
@@ -34,6 +34,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,11 +51,16 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
     private TextView mFootView;
     private ShieldRelieveAdapter mShieldRelieveAdapter;
 
+    private int mPage = 0;
+    private int mPageSize = 15;
+    private HashSet<Integer> mSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shield_relieve);
         ButterKnife.bind(this);
+        mSet = new HashSet<>();
         mListView.setEmptyView(mEmpty);
         mShieldRelieveAdapter = new ShieldRelieveAdapter(getActivity());
         mListView.setAdapter(mShieldRelieveAdapter);
@@ -63,13 +69,13 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
             @Override
             public void onRelieveShield(final ShieldedUserModel shieldedUserModel) {
                 SmartDialog.with(getActivity(),
-                        getString(R.string.relieve_shield_dialog_content, shieldedUserModel.getUserName())
-                        , getString(R.string.relieve_shield_dialog_title, shieldedUserModel.getUserName()))
+                        getString(R.string.relieve_shield_dialog_content, shieldedUserModel.getShielduserName())
+                        , getString(R.string.relieve_shield_dialog_title, shieldedUserModel.getShielduserName()))
                         .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                ToastUtil.curt("移除 " + shieldedUserModel.getUserName());
+                                ToastUtil.curt("移除 " + shieldedUserModel.getShielduserName());
                                 relieveShield(shieldedUserModel);
                             }
                         })
@@ -81,6 +87,8 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mSet.clear();
+                mPage = 0;
                 requestShieldUserList();
             }
         });
@@ -102,16 +110,16 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                 .fire();
     }
 
-    private String url[] = new String[]{"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510917267&di=d5b3057b37d5c83964230849e42cfead&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F15%2F11%2Fb998b8878108.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510860938&di=64f5b45b80c90746513b448207191e4f&imgtype=0&src=http%3A%2F%2Fpic7.nipic.com%2F20100613%2F3823726_085130049412_2.jpg",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492510590388&di=034d5a13126feef4ed18beff5dfe9e50&imgtype=0&src=http%3A%2F%2Fpic38.nipic.com%2F20140228%2F8821914_204428973000_2.jpg"};
-
     private void requestShieldUserList() {
-//        ArrayList<ShieldedUserModel> dataList = new ArrayList<>();
-//        for (int i = 0; i < url.length; i++) {
-//            dataList.add(new ShieldedUserModel("用户 " + i + i, url[i]));
-//        }
-//        updateShieldUserData(dataList);
+        Client.getShieldList(mPage, mPageSize)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArrayList<ShieldedUserModel>>, ArrayList<ShieldedUserModel>>() {
+                    @Override
+                    protected void onRespSuccessData(ArrayList<ShieldedUserModel> data) {
+                        updateShieldUserData(data);
+                    }
+                })
+                .fire();
     }
 
 
@@ -132,15 +140,14 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestShieldUserList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (shieldUserList.size() < 15) {
+        if (shieldUserList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -152,7 +159,12 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
             }
             stopRefreshAnimation();
         }
-        mShieldRelieveAdapter.addAll(shieldUserList);
+
+        for (ShieldedUserModel data : shieldUserList) {
+            if (mSet.add(data.getId())) {
+                mShieldRelieveAdapter.add(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -219,14 +231,13 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
             }
 
             public void bindViewWithData(final ShieldedUserModel item, Context context, final OnRelieveShieldClickListener onRelieveShieldClickListener) {
-                if (!TextUtils.isEmpty(item.getUserHeadImage())) {
-                    Glide.with(context).load(item.getUserHeadImage())
-                            .placeholder(R.mipmap.ic_launcher_round)
-                            .bitmapTransform(new GlideCircleTransform(context))
-                            .into(mUserHeadImage);
-                }
+                if (item == null) return;
+                Glide.with(context).load(item.getShielduserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .into(mUserHeadImage);
 
-                mUserName.setText(item.getUserName());
+                mUserName.setText(item.getShielduserName());
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

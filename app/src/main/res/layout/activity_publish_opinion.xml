@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greyLightAssist"
@@ -14,7 +13,7 @@
         app:backFeature="true"
         app:titleText="@string/publish_opinion"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -22,18 +21,12 @@
         android:paddingLeft="13dp"
         android:paddingRight="13dp">
 
-        <TextView
-            android:layout_marginTop="22.5dp"
+        <ImageView
             android:id="@+id/opinionType"
             android:layout_width="wrap_content"
+            android:src="@drawable/ic_opinion_up"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_long"
-            android:gravity="center"
-            android:minHeight="13dp"
-            android:minWidth="33dp"
-            tools:text="@string/bullish"
-            android:textColor="@color/colorRed"
-            android:textSize="9sp"/>
+            android:layout_marginTop="20dp"/>
 
         <EditText
             android:id="@+id/opinionContent"
@@ -41,11 +34,13 @@
             android:layout_height="150dp"
             android:background="@null"
             android:gravity="left"
-            android:hint="          请输入文字"
-            android:paddingTop="20dp"
-            android:textColor="@color/hintText"
+            android:hint="@string/please_enter_the_text"
+            android:maxLength="300"
+            android:paddingTop="5dp"
+            android:textColor="@color/greyAssist"
+            android:textColorHint="@color/hintText"
             android:textSize="15sp"/>
-    </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/submitButton"

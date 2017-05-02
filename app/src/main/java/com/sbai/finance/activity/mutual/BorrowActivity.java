@@ -1,12 +1,17 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +27,19 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.MyGridView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-04-25.
@@ -80,6 +91,8 @@ public class BorrowActivity extends BaseActivity {
 				    setPublishStatus();
 				}
 		});
+
+
         if(LocalUser.getUser().isLogin()){
 			String photo1 = LocalUser.getUser().getUserInfo().getUserPortrait();
 			mPhotoGridAdapter.add(photo1);
@@ -94,6 +107,39 @@ public class BorrowActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+	}
+	@OnClick(R.id.publish)
+	public void onClick(){
+		int money = Integer.valueOf( mBorrowLimit.getText().toString());
+		int interest =  Integer.valueOf( mBorrowInterest.getText().toString());
+		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
+		String content = mBorrowRemark.getText().toString();
+		StringBuilder contentImg = new StringBuilder();
+		int phontAmount =mPhotoGridAdapter.getCount();
+		for (int i = 0; i<phontAmount-1;i++){
+			ImageView imageView = (ImageView) mPhotoGv.getChildAt(i).findViewById(R.id.photoImg);
+			String bitmapToBase64 = ImageUtils.bitmapToBase64(imageView.getDrawingCache());
+			if (i<=phontAmount-1){
+				contentImg.append(bitmapToBase64+",");
+			}else{
+				contentImg.append(bitmapToBase64);
+			}
+		}
+		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
+
+	}
+	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
+		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
+				.setCallback(new Callback<Resp<Object>>() {
+					@Override
+					protected void onRespSuccess(Resp<Object> resp) {
+						if (resp.isSuccess()){
+							ToastUtil.curt("发布借款成功");
+						}else{
+							ToastUtil.curt(resp.getMsg());
+						}
+					}
+				}).fire();
 	}
 	private void setPublishStatus(){
 		boolean enable = checkPublishButtonEnable();
@@ -217,7 +263,6 @@ public class BorrowActivity extends BaseActivity {
 			@BindView(R.id.photoImg)
 			ImageView mPhotoImg;
 			private Context mContext;
-
 			ViewHolder(View view, Context context) {
 				mContext = context;
 				ButterKnife.bind(this, view);

@@ -64,9 +64,9 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         translucentStatusBar();
-        mPhoneNumber.setText(LocalUser.getUser().getPhone());
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
+        mPhoneNumber.setText(LocalUser.getUser().getPhone());
         setKeyboardHelper();
     }
 
