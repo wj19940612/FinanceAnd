@@ -55,7 +55,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@+id/avatar"
-                        android:textColor="@color/redPrimary"
+                        android:textColor="@color/colorRed"
                         android:textSize="15sp"
                         tools:text="刘亦菲"/>
 
@@ -136,7 +136,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/upDownArea"
-                            android:textColor="@color/redPrimary"
+                            android:textColor="@color/colorRed"
                             android:textSize="14sp"
                             tools:text="88.88"/>
 
@@ -153,7 +153,7 @@
                                 android:id="@+id/upDownPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/redPrimary"
+                                android:textColor="@color/colorRed"
                                 android:textSize="9sp"
                                 tools:text="+8.88"/>
 
@@ -162,7 +162,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
-                                android:textColor="@color/redPrimary"
+                                android:textColor="@color/colorRed"
                                 android:textSize="9sp"
                                 tools:text="+10.00%"/>
                         </LinearLayout>

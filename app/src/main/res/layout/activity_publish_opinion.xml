@@ -32,7 +32,7 @@
             android:minHeight="13dp"
             android:minWidth="33dp"
             tools:text="@string/bullish"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="9sp"/>
 
         <EditText

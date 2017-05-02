@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="15sp"
             tools:text="刘亦菲"/>
 

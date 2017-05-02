@@ -12,7 +12,7 @@
      <TextView
          android:layout_width="match_parent"
          android:layout_height="25dp"
-         android:background="@color/redPrimary"
+         android:background="@color/colorRed"
          android:gravity="center"
          android:textSize="11sp"
          android:textColor="@android:color/white"
@@ -175,7 +175,7 @@
                     android:layout_marginBottom="10dp"
                     android:drawableLeft="@drawable/ic_prompt"
                     android:drawablePadding="5dp"
-                    android:textColor="@color/redPrimary"
+                    android:textColor="@color/colorRed"
                     android:textSize="13sp"
                     android:text="@string/borrow_overdue"
                     android:visibility="invisible"/>

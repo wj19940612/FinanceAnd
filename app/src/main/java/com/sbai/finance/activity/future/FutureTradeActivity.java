@@ -24,29 +24,34 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
+import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.netty.Netty;
+import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.R.id.klineView;
-
 public class FutureTradeActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
+    @BindView(R.id.priceChange)
+    TextView mPriceChange;
     @BindView(R.id.todayOpen)
     TextView mTodayOpen;
     @BindView(R.id.preClose)
@@ -60,7 +65,7 @@ public class FutureTradeActivity extends BaseActivity {
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(klineView)
+    @BindView(R.id.klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -75,6 +80,8 @@ public class FutureTradeActivity extends BaseActivity {
     LinearLayout mChartArea;
     @BindView(R.id.subPageArea)
     LinearLayout mSubPageArea;
+    @BindView(R.id.lastPrice)
+    TextView mLastPrice;
 
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
@@ -97,6 +104,20 @@ public class FutureTradeActivity extends BaseActivity {
         initFloatBar();
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
+        Netty.get().addHandler(mNettyHandler);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
+        Netty.get().removeHandler(mNettyHandler);
+    }
+
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
@@ -113,7 +134,7 @@ public class FutureTradeActivity extends BaseActivity {
     private void initChartViews() {
         TrendView.Settings settings = new TrendView.Settings();
         settings.setBaseLines(mVariety.getBaseline());
-        settings.setNumberScale(mVariety.getPriceDecimalScale());
+        settings.setNumberScale(mVariety.getPriceScale());
         settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
@@ -122,7 +143,7 @@ public class FutureTradeActivity extends BaseActivity {
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
         settings2.setBaseLines(mVariety.getBaseline());
-        settings2.setNumberScale(mVariety.getPriceDecimalScale());
+        settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);
@@ -313,4 +334,36 @@ public class FutureTradeActivity extends BaseActivity {
                 }).fire();
     }
 
+    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
+        @Override
+        public void onReceiveData(Resp<FutureData> data) {
+            if (data.getCode() == Netty.REQ_QUOTA) {
+                updateMarketDataView(data.getData());
+            }
+        }
+    };
+
+    private void updateMarketDataView(FutureData data) {
+        mLastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), mVariety.getPriceScale()));
+        double priceChange = FinanceUtil.subtraction(data.getLastPrice(), data.getPreSetPrice()).doubleValue();
+        double priceChangePercent = FinanceUtil.divide(priceChange, data.getPreSetPrice(), 4)
+                .multiply(new BigDecimal(100)).doubleValue();
+
+        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        String priceChangeStr = FinanceUtil.formatWithScale(priceChange, mVariety.getPriceScale());
+        String priceChangePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
+        if (priceChange >= 0) {
+            priceChangeStr = "+" + priceChangeStr;
+            priceChangePercentStr = "+" + priceChangePercentStr;
+            mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+        }
+        mPriceChange.setText(priceChangeStr + "     " + priceChangePercentStr);
+
+        mTodayOpen.setText(FinanceUtil.formatWithScale(data.getOpenPrice(), mVariety.getPriceScale()));
+        mHighest.setText(FinanceUtil.formatWithScale(data.getHighestPrice(), mVariety.getPriceScale()));
+        mLowest.setText(FinanceUtil.formatWithScale(data.getLowestPrice(), mVariety.getPriceScale()));
+        mPreClose.setText(FinanceUtil.formatWithScale(data.getPreClsPrice(), mVariety.getPriceScale()));
+    }
 }

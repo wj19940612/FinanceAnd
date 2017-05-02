@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="15sp"
             tools:text="张三丰"/>
 
@@ -69,7 +69,7 @@
             android:minHeight="13dp"
             android:minWidth="33dp"
             tools:text="@string/bullish"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="9sp"/>
 
         <TextView
@@ -114,7 +114,7 @@
             android:drawableLeft="@drawable/ic_like_future"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>
