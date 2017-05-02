@@ -661,4 +661,15 @@ public class Client {
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("varietyId", varietyId));
     }
+
+    /**
+     * 获取品种简介
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietytradeIntrouce(int varietyId) {
+        return new API("/order/order/getVarietytradeIntro.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
 }
