@@ -9,7 +9,11 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.FutureIntroduce;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -58,6 +62,40 @@ public class IntroduceFragment extends BaseFragment {
         mVariety = getArguments().getParcelable(Launcher.EX_PAYLOAD);
         return view;
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        requestVarietyTradeIntrouce();
+    }
+
+    private void requestVarietyTradeIntrouce(){
+        Client.getVarietytradeIntrouce(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<FutureIntroduce>,FutureIntroduce>() {
+                    @Override
+                    protected void onRespSuccessData(FutureIntroduce data) {
+                        updateFutureIntrouce(data);
+                    }
+                })
+                .fire();
+    }
+
+    private void updateFutureIntrouce(FutureIntroduce data) {
+        mTradeCategory.setText(data.getVarietyName());
+        mTradeCode.setText(String.valueOf(data.getVarietyType()));
+        mTradeTimeSummerWinter.setText(data.getTradeTime());
+        mHoldingTime.setText(data.getTradeTime());
+        mTradeUnit.setText(data.getTradeUnit());
+        mQuoteUnit.setText(data.getReportPriceUnit());
+        mLowestMargin.setText(data.getLowestMargin());
+        mTradeType.setText(data.getTradeType());
+        mTradeSystem.setText(data.getTradeRegime());
+        mDeliveryTime.setText(data.getDeliveryTime());
+        mDailyPriceMaximumVolatilityLimit.setText(data.getEverydayPriceMaxFluctuateLimit());
+    }
+
 
     @Override
     public void onDestroyView() {

@@ -28,6 +28,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
+import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
@@ -217,12 +218,16 @@ public class FutureTradeActivity extends BaseActivity {
 
             @Override
             public void onAddOptionalButtonClick() {
-                addOption();
+                if (LocalUser.getUser().isLogin()) {
+                    addOption();
+                } else {
+                    Launcher.with(FutureTradeActivity.this, LoginActivity.class).execute();
+                }
             }
 
             @Override
             public void onTradeButtonClick() {
-                // TODO: 2017/4/27 跳转交易H5页面
+                Launcher.with(FutureTradeActivity.this, TradeWebActivity.class).execute();
             }
         });
     }
