@@ -66,9 +66,6 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         if (mListView == null) {
             getListView();
         }
-        if (mRecyclerView == null){
-            getRecyclerView();
-        }
     }
 
     private void getListView() {
@@ -83,32 +80,6 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
             }
         }
     }
-
-    private void getRecyclerView() {
-        int childCount = getChildCount();
-        if (childCount > 0) {
-            for (int i = 0; i < childCount; i++) {
-                View child = getChildAt(i);
-                if (child instanceof ListView) {
-                    mRecyclerView = (RecyclerView)child;
-                    mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
-                }
-            }
-        }
-    }
-
-    //RecyclerView的OnScrollListener是自带的
-    private RecyclerView.OnScrollListener mRecyclerViewScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-        }
-    };
 
 
     @Override
@@ -181,6 +152,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     }
 
+    public boolean isLoading(){
+        return isLoading;
+    }
+
     public void setLoadingContent(String string) {
         mTvLoadMore.setText(string);
     }
@@ -196,6 +171,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
                          int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+
         mVisibleItemCount = visibleItemCount;
         mTotalItemCount = totalItemCount;
         if (visibleItemCount < totalItemCount && enableBottomLoad()) {

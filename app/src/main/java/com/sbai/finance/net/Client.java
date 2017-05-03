@@ -418,7 +418,7 @@ public class Client {
      * @return
      */
     public static API getStockIndexVariety() {
-        return new API("order/order/getStockExponentVariety.do");
+        return new API("/order/order/getStockExponentVariety.do");
     }
 
     /**
