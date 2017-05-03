@@ -15,11 +15,6 @@ public class Variety implements Parcelable {
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
 
-    public static final String EX_PRODUCT = "product";
-    public static final String EX_FUND_TYPE = "fund";
-    public static final String EX_PRODUCT_LIST = "productList";
-
-
     /**
      * baseline : 2
      * bigVarietyTypeCode : 测试内容65aj

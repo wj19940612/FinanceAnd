@@ -88,9 +88,9 @@ public class FutureListActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return  FutureListFragment.newInstance(Variety.FUTURE_FOREIGN);
+                    return FutureListFragment.newInstance(Variety.FUTURE_FOREIGN);
                 case 1:
-                    return  FutureListFragment.newInstance(Variety.FUTURE_CHINA);
+                    return FutureListFragment.newInstance(Variety.FUTURE_CHINA);
             }
             return null;
         }

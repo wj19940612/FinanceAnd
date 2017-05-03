@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true" android:state_pressed="false">
         <shape>
-            <solid android:color="@color/loginButtonAssist"/>
+            <solid android:color="@color/yellowAssist"/>
             <corners android:radius="@dimen/common_four_radius"/>
         </shape>
     </item>

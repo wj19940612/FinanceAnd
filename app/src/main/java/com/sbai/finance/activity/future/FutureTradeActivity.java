@@ -96,12 +96,18 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     LinearLayout mSubPageArea;
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
+    @BindView(R.id.exchangeCloseView)
+    TextView mExchangeCloseView;
+    @BindView(R.id.priceDataArea)
+    LinearLayout mPriceDataArea;
 
     private OpinionFragment mOpinionFragment;
     private IntroduceFragment mIntroduceFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
     private Prediction mPrediction;
+    private FutureData mFutureData;
+
     private RefreshPointReceiver mReceiver;
 
     @Override
@@ -111,7 +117,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         ButterKnife.bind(this);
         translucentStatusBar();
         if (Build.VERSION.SDK_INT >= 19) {
-            addTopPaddingWithStatusBar(mTitleBar);
+            addStatusBarHeightTopPadding(mTitleBar);
         }
 
         initData();
@@ -119,8 +125,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         initTabLayout();
         initChartViews();
         initSlidingTab();
-        initFragment();
+        initFragments();
         initFloatBar();
+
+        updateExchangeStatusView();
 
         registerRefreshReceiver();
     }
@@ -130,6 +138,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         super.onPostResume();
         Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
         Netty.get().addHandler(mNettyHandler);
+
+        requestExchangeStatus();
     }
 
     @Override
@@ -139,11 +149,24 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         Netty.get().removeHandler(mNettyHandler);
     }
 
+    private void requestExchangeStatus() {
+        Client.getExchangeStatus(mVariety.getExchangeId()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Integer>, Integer>() {
+                    @Override
+                    protected void onRespSuccessData(Integer data) {
+                        int exchangeStatus = (data != null ?
+                                data.intValue() : mVariety.getExchangeStatus());
+                        mVariety.setExchangeStatus(exchangeStatus);
+                        updateExchangeStatusView();
+                    }
+                }).fireSync();
+    }
+
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
-    private void initFragment() {
+    private void initFragments() {
         mOpinionFragment = OpinionFragment.newInstance(mVariety);
         mIntroduceFragment = IntroduceFragment.newInstance(mVariety);
     }
@@ -202,68 +225,54 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             @Override
             public void onPublishPointButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    if (mPrediction != null) {
-                        publishPoint();
-                    }else {
-                        requestUserViewPoint(true);
-                    }
-                }else {
-                    Launcher.with(FutureTradeActivity.this, LoginActivity.class).execute();
+                    requestPrediction();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
 
             @Override
             public void onAddOptionalButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    addOption();
+                    addOptional();
                 } else {
-                    Launcher.with(FutureTradeActivity.this, LoginActivity.class).execute();
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
 
             @Override
             public void onTradeButtonClick() {
-                Launcher.with(FutureTradeActivity.this, TradeWebActivity.class).execute();
+                Launcher.with(getActivity(), TradeWebActivity.class).execute();
             }
         });
     }
 
     @Override
-    public void onBullish() {
-        mPrediction.setDirection(1);
-        Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
-                .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .execute();
+    public void onBullishButtonClick() {
+        mPrediction.setDirection(Prediction.DIRECTION_LONG);
+        startPublishPointPage();
     }
 
     @Override
-    public void onBearish() {
-        mPrediction.setDirection(0);
-        Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
+    public void onBearishButtonClick() {
+        mPrediction.setDirection(Prediction.DIRECTION_SHORT);
+        startPublishPointPage();
+    }
+
+    private void startPublishPointPage() {
+        Launcher.with(getActivity(), PublishOpinionActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
+                .putExtra(Launcher.EX_PAYLOAD_2, mFutureData)
                 .execute();
     }
 
-    private void publishPoint() {
-        if (mPrediction.isIsCalculate()) {
-            Launcher.with(FutureTradeActivity.this, PublishOpinionActivity.class)
-                    .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                    .putExtra(Launcher.EX_PAYLOAD_1,mPrediction)
-                    .execute();
-        } else {
-            showPredictDialog();
-        }
-    }
-
     private void showPredictDialog() {
-        PredictionFragment.newInstance()
-                .setOnPredictButtonListener(this)
+        PredictionFragment.newInstance().setOnPredictButtonListener(this)
                 .show(getSupportFragmentManager());
     }
 
-    private void addOption() {
+    private void addOptional() {
         Client.addOptional(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -286,16 +295,18 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
-    private void requestUserViewPoint(final boolean needPublish) {
+    private void requestPrediction() {
         if (LocalUser.getUser().isLogin()) {
-            Client.checkViewpoint(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
+            Client.getPrediction(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
                     .setTag(TAG).setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<Prediction>, Prediction>() {
                         @Override
                         protected void onRespSuccessData(Prediction data) {
                             mPrediction = data;
-                            if (needPublish) {
-                                publishPoint();
+                            if (mPrediction.isCalculate()) {
+                                startPublishPointPage();
+                            } else {
+                                showPredictDialog();
                             }
                         }
                     }).fire();
@@ -437,7 +448,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         @Override
         public void onReceiveData(Resp<FutureData> data) {
             if (data.getCode() == Netty.REQ_QUOTA) {
-                updateMarketDataView(data.getData());
+                mFutureData = data.getData();
+                updateMarketDataView(mFutureData);
             }
         }
     };
@@ -466,10 +478,20 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         mPreClose.setText(FinanceUtil.formatWithScale(data.getPreClsPrice(), mVariety.getPriceScale()));
     }
 
+    private void updateExchangeStatusView() {
+        int exchangeStatus = mVariety.getExchangeStatus();
+        if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
+            mExchangeCloseView.setVisibility(View.VISIBLE);
+            mPriceDataArea.setVisibility(View.GONE);
+        } else {
+            mExchangeCloseView.setVisibility(View.GONE);
+            mPriceDataArea.setVisibility(View.VISIBLE);
+        }
+    }
+
     private class RefreshPointReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            requestUserViewPoint(false);
             mOpinionFragment.refreshPointList();
         }
     }

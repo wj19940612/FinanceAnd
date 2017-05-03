@@ -125,7 +125,7 @@ public class BaseActivity extends AppCompatActivity implements
         win.setAttributes(winParams);
     }
 
-    protected void addTopPaddingWithStatusBar(View view) {
+    protected void addStatusBarHeightTopPadding(View view) {
         int paddingTop = getStatusBarHeight();
         view.setPadding(0, paddingTop, 0, 0);
     }

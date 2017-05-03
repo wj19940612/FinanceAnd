@@ -83,6 +83,7 @@
     <string name="introduce">简介</string>
     <string name="stock_news">新闻</string>
     <string name="stock_finance">财务</string>
+    <string name="market_close">休市</string>
 
     <!-- 我的界面 -->
     <string name="attention">关注</string>
