@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.mine;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -235,6 +236,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             systemNewsModel.setStatus(1);
             mSystemNewsAdapter.insert(systemNewsModel, position);
         }
+        getActivity().setResult(Activity.RESULT_OK);
         mNotReadNewsNumber--;
         if (mNotReadNewsNumber == 0) {
             mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, 0);
@@ -346,7 +348,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     mContent.setSelected(false);
                 }
 
-                mTitle.setText(item.getMsg());
+                mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
                 mContent.setText(item.getMsg());
             }

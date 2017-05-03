@@ -63,7 +63,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API(POST,"/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone)
                 .put("deviceId", Preference.get().getPushClientId())

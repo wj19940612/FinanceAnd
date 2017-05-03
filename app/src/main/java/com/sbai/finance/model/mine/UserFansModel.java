@@ -16,7 +16,9 @@ public class UserFansModel {
 
     private long createTime;
     private int id;
+    //粉丝id
     private int userId;
+    //粉丝姓名
     private String userName;
     private String userPortrait;
     //	0以关注1未关注

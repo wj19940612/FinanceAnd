@@ -50,6 +50,7 @@ import butterknife.Unbinder;
 public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
+    private static final int REQ_CODE_NEW_NEWS = 18;
 
     Unbinder unbinder;
 
@@ -122,11 +123,14 @@ public class MineFragment extends BaseFragment {
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
                             count = count + notReadMessageNumberData.getCount();
                         }
-
-                        SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
-                                " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
-                                , getString(R.string.item));
-                        mNews.setSubText(attentionSpannableString);
+                        if (count != 0) {
+                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
+                                    " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
+                                    , getString(R.string.item));
+                            mNews.setSubText(attentionSpannableString);
+                        } else {
+                            mNews.setSubText("");
+                        }
                     }
                 })
                 .fireSync();
@@ -203,7 +207,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), PublishActivity.class).execute();
                 break;
             case R.id.news:
-                Launcher.with(getActivity(), NewsActivity.class).execute();
+                startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_NEW_NEWS);
                 break;
             case R.id.setting:
                 Launcher.with(getActivity(), SettingActivity.class).execute();
@@ -256,6 +260,9 @@ public class MineFragment extends BaseFragment {
                 case REQ_CODE_USER_INFO:
                     updateUserStatus();
                     updateUserImage();
+                    break;
+                case REQ_CODE_NEW_NEWS:
+                    requestNoReadNewsNumber();
                     break;
             }
         }

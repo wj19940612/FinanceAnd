@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.mine;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -123,6 +125,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
+//                        HistoryNewsModel historyNewsModel = new HistoryNewsModel();
+//                        historyNewsModel.setType(1);
+//                        historyNewsModel.setTitle("哈哈哈哈哈哈");
+//                        data.add(5,historyNewsModel);
                         updateEconomicCircleData(data);
                     }
 
@@ -241,6 +247,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             if (mNotReadNewsNumber == 0) {
                 mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, 0);
             }
+            getActivity().setResult(Activity.RESULT_OK);
             Client.updateMsgReadStatus(historyNewsModel.getId())
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<JsonObject>>() {
@@ -287,7 +294,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindViewWithData(getItem(position), mContext, position, mCallBack);
+            viewHolder.bindViewWithData(getItem(position), mContext, mCallBack);
             return convertView;
         }
 
@@ -307,26 +314,54 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final HistoryNewsModel item, final Context context, int position, final CallBack callBack) {
+            public void bindViewWithData(final HistoryNewsModel item, final Context context, final CallBack callBack) {
                 if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
+
+                switch (item.getType()) {
+                    //关注
+                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
+                        mContent.setVisibility(View.GONE);
+                        break;
+                    //点赞帖子
+                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
+                        mContent.setVisibility(View.GONE);
+                        break;
+                    //点赞评论
+                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                        mContent.setVisibility(View.VISIBLE);
+                        break;
+                    //评论
+                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
+                        mContent.setVisibility(View.VISIBLE);
+                        break;
+                }
+
                 if (userInfo != null) {
                     Glide.with(context).load(userInfo.getUserPortrait())
                             .bitmapTransform(new GlideCircleTransform(context))
                             .placeholder(R.drawable.ic_default_avatar)
                             .into(mUserHeadImage);
                     if (item.isAlreadyRead()) {
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", getUserAction(context, item),
+                        mContent.setSelected(true);
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
+                                !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
                                 ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     } else {
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", getUserAction(context, item),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
+                                !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
                                 ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
+                        mContent.setSelected(false);
                     }
                 }
 
-                mPresentation.setText(item.getMsg());
+                mContent.setText(item.getMsg());
+
+                if (item.getData() != null) {
+                    mPresentation.setText(item.getData().getContent());
+                }
 
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
 

@@ -64,6 +64,15 @@ public class HistoryNewsModel implements Parcelable {
     private int userId;
     private int status;
     private long createDate;
+    /**
+     * title : test
+     */
+
+    private String title;
+
+    /**
+     * data : {"content":"第一次发表观点，这个品种一定涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！"}
+     */
 
     public boolean isAlreadyRead() {
         return getStatus() == 1;
@@ -165,7 +174,35 @@ public class HistoryNewsModel implements Parcelable {
         this.createDate = createDate;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
     public static class DataBean implements Parcelable {
+
+        /**
+         * content : 第一次发表观点，这个品种一定涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！
+         */
+
+        private String content;
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public DataBean() {
+
+        }
+
 
         @Override
         public int describeContents() {
@@ -174,12 +211,11 @@ public class HistoryNewsModel implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-        }
-
-        public DataBean() {
+            dest.writeString(this.content);
         }
 
         protected DataBean(Parcel in) {
+            this.content = in.readString();
         }
 
         public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
@@ -193,8 +229,6 @@ public class HistoryNewsModel implements Parcelable {
                 return new DataBean[size];
             }
         };
-
-
     }
 
     /**

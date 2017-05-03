@@ -58,6 +58,8 @@ public class LoginActivity extends BaseActivity {
     RelativeLayout mShowLayout;
     @BindView(R.id.hideLayout)
     TextView mHideLayout;
+    @BindView(R.id.codeClear)
+    AppCompatImageView mCodeClear;
 
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
@@ -168,6 +170,12 @@ public class LoginActivity extends BaseActivity {
                 mErrorHint.setVisibility(View.INVISIBLE);
             }
             boolean enable = checkSignInButtonEnable();
+            String authCode = mAuthCode.getText().toString().trim();
+            if (!TextUtils.isEmpty(authCode) && authCode.length() > 3) {
+                mCodeClear.setVisibility(View.VISIBLE);
+            } else {
+                mCodeClear.setVisibility(View.INVISIBLE);
+            }
             if (enable != mLogin.isEnabled()) {
                 mLogin.setEnabled(enable);
             }
@@ -189,7 +197,7 @@ public class LoginActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login})
+    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.codeClear, R.id.getAuthCode, R.id.login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deletePage:
@@ -197,6 +205,9 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.phoneNumberClear:
                 mPhoneNumber.setText("");
+                break;
+            case R.id.codeClear:
+                mAuthCode.setText("");
                 break;
             case R.id.getAuthCode:
                 getAuthCode();
@@ -265,4 +276,5 @@ public class LoginActivity extends BaseActivity {
             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
         }
     }
+
 }
