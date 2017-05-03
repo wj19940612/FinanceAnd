@@ -119,7 +119,6 @@ public class NewsActivity extends BaseActivity implements OnNoReadNewsListener {
         }
     }
 
-
     private static class NewsAdapter extends FragmentPagerAdapter {
 
         private FragmentManager mFragmentManager;
