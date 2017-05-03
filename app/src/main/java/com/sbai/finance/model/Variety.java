@@ -34,7 +34,7 @@ public class Variety implements Parcelable {
      */
 
     private int baseline;
-    private String bigVarietyTypeCode;
+    private String bigVarietyTypeCode; // 期货：future 外汇：forex 股票：stock
     private String contractsCode;
     private double decimalScale;
     private String displayMarketTimes;
@@ -43,7 +43,7 @@ public class Variety implements Parcelable {
     private int flashChartPriceInterval;
     private int marketPoint;
     private String openMarketTime;
-    private String smallVarietyTypeCode;
+    private String smallVarietyTypeCode; //期货小类 smallVarietyTypeCode china 国内 foreign 国外 //外汇小类 directPlate 直盘 noDirectPlate 非直盘 crossPlate 交叉盘 //股票 exponent 指数
     private int sort;
     private int varietyId;
     private String varietyName;

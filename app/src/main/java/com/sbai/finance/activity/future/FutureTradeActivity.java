@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -115,10 +114,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_future_trade);
         ButterKnife.bind(this);
-        translucentStatusBar();
-        if (Build.VERSION.SDK_INT >= 19) {
-            addStatusBarHeightTopPadding(mTitleBar);
-        }
 
         initData();
 
@@ -128,6 +123,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         initFragments();
         initFloatBar();
 
+        updateTitleBar();
         updateExchangeStatusView();
 
         registerRefreshReceiver();
@@ -487,6 +483,18 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             mExchangeCloseView.setVisibility(View.GONE);
             mPriceDataArea.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void updateTitleBar() {
+        View customView = mTitleBar.getCustomView();
+        TextView productName = (TextView) customView.findViewById(R.id.productName);
+        TextView productType = (TextView) customView.findViewById(R.id.productType);
+        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getContractsCode() + ")");
+        String productTypeStr = getString(R.string.future_china);
+        if (mVariety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.FUTURE_FOREIGN)) {
+            productTypeStr = getString(R.string.future_foreign);
+        }
+        productType.setText(productTypeStr);
     }
 
     private class RefreshPointReceiver extends BroadcastReceiver {
