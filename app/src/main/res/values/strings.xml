@@ -69,7 +69,7 @@
     <string name="highest">最高</string>
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
-    <string name="add_optional">自选</string>
+    <string name="add_optional">+ 自选</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>

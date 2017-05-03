@@ -49,7 +49,7 @@ public class TradeFloatButtons extends LinearLayout {
         setPadding(0, padding, 0, padding);
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
 
-        mPublishPoint = createChildView(0, R.string.publish_point);
+        mPublishPoint = createChildView(R.drawable.ic_futures_btn_opinion, R.string.publish_point);
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1f;
         int margin = (int) dp2Px(12);
@@ -73,7 +73,7 @@ public class TradeFloatButtons extends LinearLayout {
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);
 
-        mTrade = createChildView(0, R.string.trade);
+        mTrade = createChildView(R.drawable.ic_futures_btn_trade, R.string.trade);
         params = new LayoutParams(buttonWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(mTrade, params);
 
