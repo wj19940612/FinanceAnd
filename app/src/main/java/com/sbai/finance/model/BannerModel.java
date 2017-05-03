@@ -37,7 +37,9 @@ public class BannerModel implements Serializable {
     private String title;
     private int type;
     private long updateTime;
-
+    public boolean isH5Style() {
+        return this.style.equalsIgnoreCase("h5");
+    }
     public String getSummary() {
         return summary;
     }

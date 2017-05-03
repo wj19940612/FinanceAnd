@@ -51,6 +51,17 @@ public class Client {
     }
 
     /**
+     * 获取多个行情
+     * @param codes
+     * @return
+     */
+    public static API getQuotaList(String codes){
+        return new API("/fut/quota/list.do",
+                new ApiParams()
+                        .put("codes", codes));
+    }
+
+    /**
      * 接口名称 快捷登入
      * 请求类型 post
      * 请求Url  /registerLogin/quickLogin.do

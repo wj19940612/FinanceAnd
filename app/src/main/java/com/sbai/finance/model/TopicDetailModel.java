@@ -1,6 +1,5 @@
 package com.sbai.finance.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,14 +7,13 @@ import java.util.List;
  */
 
 public class TopicDetailModel {
-
 	/**
-	 * SubjectDetailModelList : [{"bigVarietyTypeCode":1,"createActor":0,"createDate":1492145998000,"id":1,"modifyActor":0,"modifyDate":1492145998000,"smallVarietyTypeCode":1,"sort":1,"subjectId":18,"varietyType":"股票","varityId":1,"varityName":"雷鸣次"},{"bigVarietyTypeCode":2,"createActor":0,"createDate":1492145998000,"id":2,"modifyActor":0,"modifyDate":1492145998000,"smallVarietyTypeCode":2,"sort":2,"subjectId":18,"varietyType":"期货","varityId":2,"varityName":"累的地方"}]
-	 * subjectModel : {"click":1,"count":2,"createActor":0,"createDate":1492145990000,"id":18,"modifyActor":0,"modifyDate":1492145990000,"sort":1,"status":1,"subTitle":"哈哈","title":"测试"}
+	 * subjectModel : {"backgroundImg":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493709712809021409.png","count":2,"createActor":0,"createDate":1493709736000,"id":54,"introduction":"大专题大专题大专题大专题","modifyActor":0,"modifyDate":1493713139000,"sort":2,"status":1,"subTitle":"小专题","title":"大专题","type":"future"}
+	 * SubjectDetailModelList : [{"bigVarietyTypeCode":"future","createActor":0,"createDate":1493713139000,"id":39,"modifyActor":0,"modifyDate":1493713139000,"smallVarietyTypeCode":"foreign","sort":1,"subjectId":54,"varietyType":"CL","varityId":1,"varityName":"美原油"},{"bigVarietyTypeCode":"future","createActor":0,"createDate":1493713139000,"id":40,"modifyActor":0,"modifyDate":1493713139000,"smallVarietyTypeCode":"china","sort":2,"subjectId":54,"varietyType":"ag","varityId":8,"varityName":"沪银"}]
 	 */
 
 	private SubjectModelBean subjectModel;
-	private ArrayList<SubjectDetailModelListBean> SubjectDetailModelList;
+	private List<SubjectDetailModelListBean> SubjectDetailModelList;
 
 	public SubjectModelBean getSubjectModel() {
 		return subjectModel;
@@ -25,47 +23,51 @@ public class TopicDetailModel {
 		this.subjectModel = subjectModel;
 	}
 
-	public ArrayList<SubjectDetailModelListBean> getSubjectDetailModelList() {
+	public List<SubjectDetailModelListBean> getSubjectDetailModelList() {
 		return SubjectDetailModelList;
 	}
 
-	public void setSubjectDetailModelList(ArrayList<SubjectDetailModelListBean> SubjectDetailModelList) {
+	public void setSubjectDetailModelList(List<SubjectDetailModelListBean> SubjectDetailModelList) {
 		this.SubjectDetailModelList = SubjectDetailModelList;
 	}
 
 	public static class SubjectModelBean {
 		/**
-		 * click : 1
+		 * backgroundImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493709712809021409.png
 		 * count : 2
 		 * createActor : 0
-		 * createDate : 1492145990000
-		 * id : 18
+		 * createDate : 1493709736000
+		 * id : 54
+		 * introduction : 大专题大专题大专题大专题
 		 * modifyActor : 0
-		 * modifyDate : 1492145990000
-		 * sort : 1
+		 * modifyDate : 1493713139000
+		 * sort : 2
 		 * status : 1
-		 * subTitle : 哈哈
-		 * title : 测试
+		 * subTitle : 小专题
+		 * title : 大专题
+		 * type : future
 		 */
 
-		private int click;
+		private String backgroundImg;
 		private int count;
 		private int createActor;
 		private long createDate;
 		private int id;
+		private String introduction;
 		private int modifyActor;
 		private long modifyDate;
 		private int sort;
 		private int status;
 		private String subTitle;
 		private String title;
+		private String type;
 
-		public int getClick() {
-			return click;
+		public String getBackgroundImg() {
+			return backgroundImg;
 		}
 
-		public void setClick(int click) {
-			this.click = click;
+		public void setBackgroundImg(String backgroundImg) {
+			this.backgroundImg = backgroundImg;
 		}
 
 		public int getCount() {
@@ -98,6 +100,14 @@ public class TopicDetailModel {
 
 		public void setId(int id) {
 			this.id = id;
+		}
+
+		public String getIntroduction() {
+			return introduction;
+		}
+
+		public void setIntroduction(String introduction) {
+			this.introduction = introduction;
 		}
 
 		public int getModifyActor() {
@@ -147,42 +157,50 @@ public class TopicDetailModel {
 		public void setTitle(String title) {
 			this.title = title;
 		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
 	}
 
 	public static class SubjectDetailModelListBean {
 		/**
-		 * bigVarietyTypeCode : 1
+		 * bigVarietyTypeCode : future
 		 * createActor : 0
-		 * createDate : 1492145998000
-		 * id : 1
+		 * createDate : 1493713139000
+		 * id : 39
 		 * modifyActor : 0
-		 * modifyDate : 1492145998000
-		 * smallVarietyTypeCode : 1
+		 * modifyDate : 1493713139000
+		 * smallVarietyTypeCode : foreign
 		 * sort : 1
-		 * subjectId : 18
-		 * varietyType : 股票
+		 * subjectId : 54
+		 * varietyType : CL
 		 * varityId : 1
-		 * varityName : 雷鸣次
+		 * varityName : 美原油
 		 */
 
-		private int bigVarietyTypeCode;
+		private String bigVarietyTypeCode;
 		private int createActor;
 		private long createDate;
 		private int id;
 		private int modifyActor;
 		private long modifyDate;
-		private int smallVarietyTypeCode;
+		private String smallVarietyTypeCode;
 		private int sort;
 		private int subjectId;
 		private String varietyType;
 		private int varityId;
 		private String varityName;
 
-		public int getBigVarietyTypeCode() {
+		public String getBigVarietyTypeCode() {
 			return bigVarietyTypeCode;
 		}
 
-		public void setBigVarietyTypeCode(int bigVarietyTypeCode) {
+		public void setBigVarietyTypeCode(String bigVarietyTypeCode) {
 			this.bigVarietyTypeCode = bigVarietyTypeCode;
 		}
 
@@ -226,11 +244,11 @@ public class TopicDetailModel {
 			this.modifyDate = modifyDate;
 		}
 
-		public int getSmallVarietyTypeCode() {
+		public String getSmallVarietyTypeCode() {
 			return smallVarietyTypeCode;
 		}
 
-		public void setSmallVarietyTypeCode(int smallVarietyTypeCode) {
+		public void setSmallVarietyTypeCode(String smallVarietyTypeCode) {
 			this.smallVarietyTypeCode = smallVarietyTypeCode;
 		}
 
