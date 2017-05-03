@@ -242,4 +242,34 @@ public class EconomicCircle {
 	public void setMoney(int money) {
 		this.money = money;
 	}
+
+	@Override
+	public String toString() {
+		return "EconomicCircle{" +
+				"auditStatus=" + auditStatus +
+				", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+				", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
+				", contractsCode='" + contractsCode + '\'' +
+				", createTime=" + createTime +
+				", dataId=" + dataId +
+				", direction=" + direction +
+				", guessPass=" + guessPass +
+				", id='" + id + '\'' +
+				", isAttention=" + isAttention +
+				", praiseCount=" + praiseCount +
+				", replyCount=" + replyCount +
+				", type=" + type +
+				", userId=" + userId +
+				", userName='" + userName + '\'' +
+				", userPortrait='" + userPortrait + '\'' +
+				", varietyId=" + varietyId +
+				", varietyName='" + varietyName + '\'' +
+				", varietyType='" + varietyType + '\'' +
+				", content='" + content + '\'' +
+				", land='" + land + '\'' +
+				", money=" + money +
+				", interest=" + interest +
+				", days=" + days +
+				'}';
+	}
 }

@@ -180,4 +180,27 @@ public class OpinionDetails implements Serializable{
 	public void setVarietyType(String varietyType) {
 		this.varietyType = varietyType;
 	}
+
+	@Override
+	public String toString() {
+		return "OpinionDetails{" +
+				"bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+				", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
+				", content='" + content + '\'' +
+				", contractsCode='" + contractsCode + '\'' +
+				", createTime=" + createTime +
+				", direction=" + direction +
+				", guessPass=" + guessPass +
+				", id=" + id +
+				", praiseCount=" + praiseCount +
+				", replyCount=" + replyCount +
+				", userId=" + userId +
+				", userName='" + userName + '\'' +
+				", userPortrait='" + userPortrait + '\'' +
+				", varietyId=" + varietyId +
+				", varietyName='" + varietyName + '\'' +
+				", varietyType='" + varietyType + '\'' +
+				", isAttention=" + isAttention +
+				'}';
+	}
 }

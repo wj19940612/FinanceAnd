@@ -17,9 +17,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:gravity="center_horizontal"
+            android:lineSpacingExtra="13dp"
             android:maxLines="1"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="17sp"
             tools:text="Title"/>
 
         <TextView
@@ -35,6 +36,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:textColor="@android:color/black"
+            android:textSize="10sp"
             tools:text="Message"/>
     </LinearLayout>
 
@@ -58,9 +60,9 @@
             android:textSize="16sp"/>
 
         <!--<View-->
-            <!--android:layout_width="0.5dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@android:color/white"/>-->
+        <!--android:layout_width="0.5dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/white"/>-->
 
         <TextView
             android:id="@+id/position"

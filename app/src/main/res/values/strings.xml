@@ -130,11 +130,16 @@
     <string name="shield_setting">屏蔽设置</string>
 
     <string name="relieve">解除</string>
+    <string name="shield">屏蔽</string>
+    <string name="relieve_shield">解除屏蔽</string>
     <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
 
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
+
+    <string name="cancel_attention_dialog_title">是否对“%1$s”\n取消关注?</string>
+    <string name="cancel_attention">取消关注</string>
 
     <string name="new_notification">新消息通知</string>
     <string name="want_to_help_you">     想要帮助你</string>
@@ -151,10 +156,11 @@
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
-    <string name="attention_number">关注 %1$d</string>
-    <string name="fans_number">粉丝 %1$d</string>
+    <string name="attention_number">关注 %1$s</string>
+    <string name="fans_number">粉丝 %1$s</string>
 
-    <string name="shield">屏蔽TA</string>
+    <string name="shield_him">屏蔽TA</string>
+    <string name="is_shield">已屏蔽</string>
     <string name="report">举报</string>
     <string name="reply_number">回复(%1$d)</string>
     <string name="love_number">喜欢(%1$d)</string>

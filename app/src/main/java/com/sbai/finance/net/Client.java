@@ -454,7 +454,7 @@ public class Client {
     }
 
     /**
-     * 获取经济圈首页列表
+     * 获取经济圈列表
      *
      * @param page
      * @param pageSize
@@ -475,15 +475,44 @@ public class Client {
     public static API getOpinionDetails(int viewpointId) {
         return new API( POST, "/coterie/viewpoint/findViewpointInfo.do",
                 new ApiParams()
-                .put("viewpointId", viewpointId));
+                        .put("viewpointId", viewpointId));
     }
 
-    public static API getOpinionReply(int page, int pageSize, int viewpointId) {
+    /**
+     * 获取观点回复列表
+     * @param page
+     * @param pageSize
+     * @param viewpointId
+     * @return
+     */
+    public static API getOpinionReplyList(int page, int pageSize, int viewpointId) {
         return new API("/coterie/viewpoint/findViewpointReply.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize)
                         .put("viewpointId", viewpointId));
+    }
+    
+    /**
+     * 获取用户资料
+     * @param userId
+     * @return
+     */
+    public static API getUserData(int userId) {
+        return new API(POST, "/coterie/userInterest/queryClickUserDetail.do",
+                new ApiParams()
+                        .put("userId", userId));
+    }
+
+    /**
+     * 是否关注,屏蔽
+     * @param objId
+     * @return
+     */
+    public static API whetherAttentionShieldOrNot(int objId) {
+        return new API("/coterie/userInterest/findShieldOrFollow.do",
+                new ApiParams()
+                        .put("objId", objId));
     }
 
     /**
