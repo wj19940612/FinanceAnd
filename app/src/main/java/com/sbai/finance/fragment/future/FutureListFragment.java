@@ -41,7 +41,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class FutureFragment extends BaseFragment implements AbsListView.OnScrollListener {
+public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener {
 
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -60,12 +60,12 @@ public class FutureFragment extends BaseFragment implements AbsListView.OnScroll
     private int mPage = 0;
     private int mPageSize = 15;
 
-    public static FutureFragment newInstance(String type) {
-        FutureFragment futureFragment = new FutureFragment();
+    public static FutureListFragment newInstance(String type) {
+        FutureListFragment futureListFragment = new FutureListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("type", type);
-        futureFragment.setArguments(bundle);
-        return futureFragment;
+        futureListFragment.setArguments(bundle);
+        return futureListFragment;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class FutureFragment extends BaseFragment implements AbsListView.OnScroll
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_future, container, false);
+        View view = inflater.inflate(R.layout.fragment_future_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

@@ -19,7 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
-import com.sbai.finance.fragment.future.FutureFragment;
+import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Topic;
@@ -56,7 +56,7 @@ public class TopicActivity extends BaseActivity {
 	@BindView(R.id.empty)
 	TextView mEmpty;
 
-	private FutureFragment.FutureListAdapter mTopicListAdapter;
+	private FutureListFragment.FutureListAdapter mTopicListAdapter;
 	private Integer id;
 
 	@Override
@@ -77,7 +77,7 @@ public class TopicActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mTopicListAdapter = new FutureFragment.FutureListAdapter(this);
+		mTopicListAdapter = new FutureListFragment.FutureListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mTopicListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -121,9 +121,10 @@ public class TopicActivity extends BaseActivity {
 			Variety variety = new Variety();
 			variety.setBigVarietyTypeCode(subject.getBigVarietyTypeCode());
 			variety.setSmallVarietyTypeCode(subject.getSmallVarietyTypeCode());
-			variety.setVarietyName(subject.getVarityName());
-			variety.setVarietyId(subject.getVarityId());
+			variety.setVarietyName(subject.getVarietyName());
+			variety.setVarietyId(subject.getVarietyId());
 			variety.setVarietyType(subject.getVarietyType());
+			variety.setContractsCode(subject.getContractsCode());
 			mTopicListAdapter.add(variety);
            if (variety.getContractsCode()!=null){
 			 codes.append(variety.getContractsCode()).append(",");

@@ -44,7 +44,7 @@
             android:name=".activity.mine.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.future.FutureActivity"
+            android:name=".activity.future.FutureListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mutual.MutualActivity"
@@ -63,7 +63,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.stock.StockActivity"
+            android:name=".activity.stock.StockListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.stock.SearchStockActivity"

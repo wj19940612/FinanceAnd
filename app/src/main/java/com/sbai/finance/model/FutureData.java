@@ -1,6 +1,9 @@
 package com.sbai.finance.model;
 
-public class FutureData {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class FutureData implements Parcelable {
 
     /**
      * askPrice : 49.34
@@ -255,4 +258,81 @@ public class FutureData {
     public void setVolume(int volume) {
         this.volume = volume;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(this.askPrice);
+        dest.writeInt(this.askVolume);
+        dest.writeDouble(this.bidPrice);
+        dest.writeInt(this.bidVolume);
+        dest.writeDouble(this.downLimitPrice);
+        dest.writeString(this.exchangeId);
+        dest.writeDouble(this.highestPrice);
+        dest.writeString(this.instrumentId);
+        dest.writeInt(this.inventory);
+        dest.writeDouble(this.lastPrice);
+        dest.writeInt(this.lastVolume);
+        dest.writeDouble(this.lowestPrice);
+        dest.writeDouble(this.openPrice);
+        dest.writeDouble(this.preClsPrice);
+        dest.writeInt(this.preInventory);
+        dest.writeDouble(this.preSetPrice);
+        dest.writeDouble(this.settlePrice);
+        dest.writeString(this.tradeDay);
+        dest.writeDouble(this.turnover);
+        dest.writeDouble(this.upDropPrice);
+        dest.writeDouble(this.upDropSpeed);
+        dest.writeDouble(this.upLimitPrice);
+        dest.writeLong(this.upTime);
+        dest.writeString(this.upTimeFormat);
+        dest.writeInt(this.volume);
+    }
+
+    public FutureData() {
+    }
+
+    protected FutureData(Parcel in) {
+        this.askPrice = in.readDouble();
+        this.askVolume = in.readInt();
+        this.bidPrice = in.readDouble();
+        this.bidVolume = in.readInt();
+        this.downLimitPrice = in.readDouble();
+        this.exchangeId = in.readString();
+        this.highestPrice = in.readDouble();
+        this.instrumentId = in.readString();
+        this.inventory = in.readInt();
+        this.lastPrice = in.readDouble();
+        this.lastVolume = in.readInt();
+        this.lowestPrice = in.readDouble();
+        this.openPrice = in.readDouble();
+        this.preClsPrice = in.readDouble();
+        this.preInventory = in.readInt();
+        this.preSetPrice = in.readDouble();
+        this.settlePrice = in.readDouble();
+        this.tradeDay = in.readString();
+        this.turnover = in.readDouble();
+        this.upDropPrice = in.readDouble();
+        this.upDropSpeed = in.readDouble();
+        this.upLimitPrice = in.readDouble();
+        this.upTime = in.readLong();
+        this.upTimeFormat = in.readString();
+        this.volume = in.readInt();
+    }
+
+    public static final Parcelable.Creator<FutureData> CREATOR = new Parcelable.Creator<FutureData>() {
+        @Override
+        public FutureData createFromParcel(Parcel source) {
+            return new FutureData(source);
+        }
+
+        @Override
+        public FutureData[] newArray(int size) {
+            return new FutureData[size];
+        }
+    };
 }

@@ -4,24 +4,21 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by linrongfang on 2017/4/28.
+ * Modified by JohnZ on 2017/5/3.
  */
 public class Prediction implements Parcelable{
 
-    //预测id
-    public static final String PREDICT_CALCUID = "predict_calcuid";
-    //预测方向
-    public static final String PREDICT_DIRECTION = "predict_direction";
+    public static final int DIRECTION_SHORT = 0;
+    public static final int DIRECTION_LONG = 1;
 
     /**
      * calcuId : 1
      * direction : 0
      * isCalculate : true
      */
-
-    private int calcuId;
-    private int direction;
-    private boolean isCalculate;
+    private int calcuId; // 预测 id
+    private int direction; // 方向0：跌 1 涨
+    private boolean isCalculate; // 是否预测 true已预测，false没预测
 
     public int getCalcuId() {
         return calcuId;
@@ -39,7 +36,11 @@ public class Prediction implements Parcelable{
         this.direction = direction;
     }
 
-    public boolean isIsCalculate() {
+    /**
+     * 是否已经预测
+     * @return true 已经预测
+     */
+    public boolean isCalculate() {
         return isCalculate;
     }
 
@@ -57,9 +58,6 @@ public class Prediction implements Parcelable{
         dest.writeInt(this.calcuId);
         dest.writeInt(this.direction);
         dest.writeByte(this.isCalculate ? (byte) 1 : (byte) 0);
-    }
-
-    public Prediction() {
     }
 
     protected Prediction(Parcel in) {

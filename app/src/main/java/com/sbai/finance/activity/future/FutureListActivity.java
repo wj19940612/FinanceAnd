@@ -11,7 +11,7 @@ import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.FutureFragment;
+import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.Display;
@@ -20,7 +20,7 @@ import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FutureActivity extends BaseActivity {
+public class FutureListActivity extends BaseActivity {
 
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
@@ -31,7 +31,7 @@ public class FutureActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future);
+        setContentView(R.layout.activity_future_list);
         ButterKnife.bind(this);
         initView();
     }
@@ -55,7 +55,7 @@ public class FutureActivity extends BaseActivity {
         mViewPager.setAdapter(mFuturePagesAdapter);
 
         mTabLayout.setDistributeEvenly(true);
-        mTabLayout.setDividerColors(ContextCompat.getColor(FutureActivity.this, android.R.color.transparent));
+        mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(70, getResources()));
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
@@ -88,9 +88,9 @@ public class FutureActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return  FutureFragment.newInstance(Variety.FUTURE_FOREIGN);
+                    return FutureListFragment.newInstance(Variety.FUTURE_FOREIGN);
                 case 1:
-                    return  FutureFragment.newInstance(Variety.FUTURE_CHINA);
+                    return FutureListFragment.newInstance(Variety.FUTURE_CHINA);
             }
             return null;
         }

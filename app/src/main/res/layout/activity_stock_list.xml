@@ -2,66 +2,92 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tool="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/greyLightAssist">
+              android:background="@color/greyLightAssist"
+              android:orientation="vertical">
+
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/stock"/>
+
     <include layout="@layout/layout_search_stock"/>
+
     <LinearLayout
+        android:id="@+id/marketArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
         android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
         android:orientation="horizontal"
-        android:background="@android:color/white">
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
         <TextView
             android:id="@+id/shangHai"
             style="@style/MarketDataStock"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
+
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/greyLightAssist"/>
+
         <TextView
             android:id="@+id/shenZhen"
             style="@style/MarketDataStock"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
+
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/greyLightAssist"/>
+
         <TextView
             android:id="@+id/board"
             style="@style/MarketDataStock"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
     </LinearLayout>
+
     <include layout="@layout/layout_hq_header"/>
-    <ListView
-        android:id="@+id/listView"
+
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:headerDividersEnabled="true"
-        android:background="@android:color/white"
-        android:visibility="visible"/>
-    <TextView
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:drawablePadding="16dp"
-        android:gravity="center_horizontal"
-        android:paddingTop="100dp"
-        android:drawableTop="@drawable/img_no_data"
-        android:text="暂无行情数据"
-        android:textColor="@color/assistText"
-        android:textSize="@dimen/list_title_size"
-        android:visibility="gone"/>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:headerDividersEnabled="true"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawablePadding="16dp"
+                android:drawableTop="@drawable/img_no_data"
+                android:gravity="center_horizontal"
+                android:paddingTop="180dp"
+                android:text="暂无行情数据"
+                android:textColor="@color/assistText"
+                android:textSize="@dimen/list_title_size"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
+
 </LinearLayout>

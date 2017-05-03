@@ -24,7 +24,19 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/exchangeCloseView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:text="@string/market_close"
+            android:textColor="@color/secondaryText"
+            android:textSize="38sp"
+            android:visibility="gone"/>
+
         <LinearLayout
+            android:id="@+id/priceDataArea"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
@@ -35,15 +47,15 @@
                 android:id="@+id/lastPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorRed"
-                android:textSize="38sp"
-                android:text="0.00"/>
+                android:text="0.00"
+                android:textColor="@color/redPrimary"
+                android:textSize="38sp"/>
 
             <TextView
                 android:id="@+id/priceChange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorRed"
+                android:textColor="@color/redPrimary"
                 android:textSize="14sp"
                 tools:text="+0.00     +0.00%"/>
         </LinearLayout>
@@ -206,5 +218,4 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:hasTradeButton="true"/>
-
 </RelativeLayout>

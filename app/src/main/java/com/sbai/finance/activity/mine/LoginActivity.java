@@ -62,6 +62,8 @@ public class LoginActivity extends BaseActivity {
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
     private int mCounter;
+    //获取验证是否开始
+    private boolean mFreezeObtainAuthCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +157,7 @@ public class LoginActivity extends BaseActivity {
 
     private boolean checkObtainAuthCodeEnable() {
         String phone = getPhoneNumber();
-        return (!TextUtils.isEmpty(phone) && phone.length() > 10);
+        return (!TextUtils.isEmpty(phone) && phone.length() > 10 && !mFreezeObtainAuthCode);
     }
 
 
@@ -240,6 +242,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
+                            mFreezeObtainAuthCode = true;
                             startScheduleJob(1000);
                             mCounter = 60;
                             mGetAuthCode.setEnabled(false);
@@ -254,6 +257,7 @@ public class LoginActivity extends BaseActivity {
     public void onTimeUp(int count) {
         mCounter--;
         if (mCounter <= 0) {
+            mFreezeObtainAuthCode = false;
             mGetAuthCode.setEnabled(true);
             mGetAuthCode.setText(R.string.obtain_auth_code_continue);
             stopScheduleJob();
