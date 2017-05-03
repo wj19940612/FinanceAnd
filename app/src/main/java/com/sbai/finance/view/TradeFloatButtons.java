@@ -138,6 +138,7 @@ public class TradeFloatButtons extends LinearLayout {
         if (leftRes != 0) {
             textView.setCompoundDrawablesWithIntrinsicBounds(leftRes, 0, 0, 0);
         }
+        textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
         layout.addView(textView);
