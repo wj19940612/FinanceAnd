@@ -20,12 +20,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.UserPublishModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.view.TitleBar;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +49,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
 
     private TextView mFootView;
     private PublishAdapter mPublishAdapter;
+    private int mPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +70,24 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-//        ArrayList<UserPublishModel> userPublishModels = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            userPublishModels.add(new UserPublishModel());
-//        }
-//        updateUserPublishData(userPublishModels);
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, 0)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserPublishModel>, UserPublishModel>() {
+                    @Override
+                    protected void onRespSuccessData(UserPublishModel data) {
+                        updateUserPublishData(data.getData());
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
     }
 
-    private void updateUserPublishData(ArrayList<UserPublishModel> userPublishModelList) {
+    private void updateUserPublishData(List<UserPublishModel.DataBean> userPublishModelList) {
         if (userPublishModelList == null) {
             stopRefreshAnimation();
             return;
@@ -87,15 +104,14 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPageNo++;
+                    mPage++;
                     requestUserPublishList();
                 }
             });
             mListView.addFooterView(mFootView);
         }
 
-//        if (economicCircleNewModels.size() < mPageSize) {
-        if (userPublishModelList.size() < 15) {
+        if (userPublishModelList.size() < Client.PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -103,7 +119,6 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mPublishAdapter != null) {
                 mPublishAdapter.clear();
-                mPublishAdapter.notifyDataSetChanged();
             }
             stopRefreshAnimation();
         }
@@ -128,7 +143,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class PublishAdapter extends ArrayAdapter<UserPublishModel> {
+    static class PublishAdapter extends ArrayAdapter<UserPublishModel.DataBean> {
         private Context mContext;
 
         public PublishAdapter(@NonNull Context context) {
@@ -147,22 +162,23 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position));
+            viewHolder.bindDataWithView(getItem(position), mContext);
             return convertView;
 
         }
+
 
         static class ViewHolder {
             @BindView(R.id.avatar)
             ImageView mAvatar;
             @BindView(R.id.userName)
             TextView mUserName;
-            @BindView(R.id.followed)
-            TextView mFollowed;
+            @BindView(R.id.isAttention)
+            TextView mIsAttention;
             @BindView(R.id.publishTime)
             TextView mPublishTime;
-            @BindView(R.id.opinion)
-            TextView mOpinion;
+            @BindView(R.id.opinionContent)
+            TextView mOpinionContent;
             @BindView(R.id.bigVarietyName)
             TextView mBigVarietyName;
             @BindView(R.id.varietyName)
@@ -175,13 +191,24 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             TextView mUpDownPercent;
             @BindView(R.id.upDownArea)
             LinearLayout mUpDownArea;
+            @BindView(R.id.replyCount)
+            AppCompatTextView mReplyCount;
+            @BindView(R.id.praiseCount)
+            AppCompatTextView mPraiseCount;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(UserPublishModel item) {
-
+            public void bindDataWithView(UserPublishModel.DataBean item, Context context) {
+                mUserName.setText(item.getUserName());
+                Glide.with(context).load(item.getUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .into(mAvatar);
+                mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
+                mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
+                mOpinionContent.setText( item.getContent());
             }
         }
     }

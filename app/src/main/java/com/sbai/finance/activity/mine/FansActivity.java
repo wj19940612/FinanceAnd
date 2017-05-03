@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,8 +65,32 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
         mListView.setOnScrollListener(this);
         mUserFansAdapter.setOnUserFansClickListener(new UserFansAdapter.OnUserFansClickListener() {
             @Override
-            public void onFansClick(UserFansModel userFansModel) {
-
+            public void onFansClick(final UserFansModel userFansModel) {
+                if(userFansModel.isNotAttention()){
+                    SmartDialog.with(getActivity(), "关注", "是否关注")
+                            .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                                @Override
+                                public void onClick(Dialog dialog) {
+                                    dialog.dismiss();
+                                    relieveAttentionUser(userFansModel);
+                                }
+                            })
+                            .setTitleMaxLines(2)
+                            .setNegative(android.R.string.cancel)
+                            .show();
+                }else {
+                    SmartDialog.with(getActivity(), "取消关注", "是否取消关注")
+                            .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                                @Override
+                                public void onClick(Dialog dialog) {
+                                    dialog.dismiss();
+                                    relieveAttentionUser(userFansModel);
+                                }
+                            })
+                            .setTitleMaxLines(2)
+                            .setNegative(android.R.string.cancel)
+                            .show(); 
+                }
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -76,6 +102,21 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
             }
         });
         requestUserAttentionList();
+    }
+    // TODO: 2017/5/2 取消或者关注用户
+    private void relieveAttentionUser(UserFansModel userFansModel) {
+//        Client.attentionOrRelieveAttentionUser(userAttentionModel.getFollowUserId(), 1)
+//                .setTag(TAG)
+//                .setIndeterminate(this)
+//                .setCallback(new Callback<Resp<Object>>() {
+//                    @Override
+//                    protected void onRespSuccess(Resp<Object> resp) {
+//                        if (resp.isSuccess()) {
+//                            mRelieveAttentionAdapter.remove(userAttentionModel);
+//                        }
+//                    }
+//                })
+//                .fire();
     }
 
 
@@ -188,7 +229,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindViewWithData(getItem(position), mContext, mOnUserFansClickListener, position);
+            viewHolder.bindViewWithData(getItem(position), mContext, mOnUserFansClickListener);
             return convertView;
         }
 
@@ -204,14 +245,14 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener, int position) {
+            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener) {
                 if (item == null) return;
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
 
-                if (position % 2 == 0) {
+                if (item.isNotAttention()) {
                     mRelive.setText(R.string.attention);
                     mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_fans_follow, 0, 0);
                 } else {

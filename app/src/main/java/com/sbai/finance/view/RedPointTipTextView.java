@@ -47,7 +47,9 @@ public class RedPointTipTextView extends AppCompatTextView {
             mPointPaint.setAntiAlias(true);
             mPointPaint.setDither(true);
             mPointPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-            canvas.drawCircle(width - getPaddingRight() / 2, paddingRight , TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()), mPointPaint);
+            canvas.drawCircle(width - getPaddingRight() / 2, paddingRight, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()), mPointPaint);
+        } else {
+            canvas.drawCircle(0, 0, 0, mPointPaint);
         }
     }
 

@@ -94,6 +94,8 @@
     <string name="please_login">您好，请先登录</string>
     <string name="detail">明细</string>
     <string name="feed_back">意见反馈</string>
+    <string name="new_message">新消息</string>
+    <string name="item">条</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -121,6 +123,7 @@
     <!--   消息 -->
     <string name="system_news">系统消息</string>
     <string name="load_more">点击加载更多</string>
+    <string name="up_load_more">加载更多</string>
     <string name="load_all">已加载全部</string>
 
     <string name="new_news_notification">新消息通知</string>
@@ -175,6 +178,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="number">%1$d</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>

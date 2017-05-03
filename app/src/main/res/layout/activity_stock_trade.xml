@@ -34,14 +34,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/redPrimary"
+                android:textColor="@color/colorRed"
                 android:textSize="38sp"
                 tools:text="46.24"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/redPrimary"
+                android:textColor="@color/colorRed"
                 android:textSize="14sp"
                 tools:text="+0.32     +0.65%"/>
         </LinearLayout>

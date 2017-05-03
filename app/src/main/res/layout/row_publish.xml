@@ -22,6 +22,7 @@
             android:layout_weight="1"/>
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/replyCount"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:drawableLeft="@drawable/ic_discussion_area"
@@ -32,13 +33,14 @@
             tools:text="1000"/>
 
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/praiseCount"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:drawableLeft="@drawable/ic_futures_opinion_like"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/colorRed"
             android:textSize="10sp"
             tools:text="1000"/>
     </LinearLayout>

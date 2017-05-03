@@ -7,25 +7,29 @@ package com.sbai.finance.model.mine;
 public class UserAttentionModel {
 
     /**
-     * createTime : 20211
-     * followUserId : 16765
-     * followUserPortrait : 测试内容87i3
-     * followuserName : 测试内容bgw7
-     * id : 80825
+     * createTime : 1493654400000
+     * followUserId : 71
+     * followuserName : 用户213
+     * id : 63
+     * userId : 86
+     * userName : 溺水的鱼
+     * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493707651242.png
      */
 
-    private int createTime;
-    //	关注用户id
+    private long createTime;
     private int followUserId;
     private String followUserPortrait;
     private String followuserName;
     private int id;
+    private int userId;
+    private String userName;
+    private String userPortrait;
 
-    public int getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
@@ -35,14 +39,6 @@ public class UserAttentionModel {
 
     public void setFollowUserId(int followUserId) {
         this.followUserId = followUserId;
-    }
-
-    public String getFollowUserPortrait() {
-        return followUserPortrait;
-    }
-
-    public void setFollowUserPortrait(String followUserPortrait) {
-        this.followUserPortrait = followUserPortrait;
     }
 
     public String getFollowuserName() {
@@ -61,6 +57,38 @@ public class UserAttentionModel {
         this.id = id;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
+    }
+
+    public String getFollowUserPortrait() {
+        return followUserPortrait;
+    }
+
+    public void setFollowUserPortrait(String followUserPortrait) {
+        this.followUserPortrait = followUserPortrait;
+    }
+
     @Override
     public String toString() {
         return "UserAttentionModel{" +
@@ -69,6 +97,9 @@ public class UserAttentionModel {
                 ", followUserPortrait='" + followUserPortrait + '\'' +
                 ", followuserName='" + followuserName + '\'' +
                 ", id=" + id +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
                 '}';
     }
 }

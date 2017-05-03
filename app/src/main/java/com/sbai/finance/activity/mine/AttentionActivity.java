@@ -21,8 +21,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.UserAttentionModel;
@@ -104,9 +104,9 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         Client.attentionOrRelieveAttentionUser(userAttentionModel.getFollowUserId(), 1)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
+                .setCallback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                    protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             mRelieveAttentionAdapter.remove(userAttentionModel);
                         }
@@ -123,6 +123,12 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                     @Override
                     protected void onRespSuccessData(List<UserAttentionModel> data) {
                         updateShieldUserData(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();
@@ -243,7 +249,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
                 mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
-                mUserName.setText(item.getFollowUserId());
+                mUserName.setText(item.getFollowuserName());
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

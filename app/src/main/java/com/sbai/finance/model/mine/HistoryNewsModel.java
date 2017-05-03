@@ -1,11 +1,14 @@
 package com.sbai.finance.model.mine;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ${wangJie} on 2017/4/24.
  * 消息界面 的经济圈 互助 系统消息的model
  */
 
-public class HistoryNewsModel {
+public class HistoryNewsModel implements Parcelable {
     //	消息类型{1.系统消息 2.互助消息 3.经济圈消息}
     public static final int NEW_TYPE_SYSTEM_NEWS = 1;
     public static final int NEW_TYPE_MUTUAL_HELP = 2;
@@ -34,93 +37,36 @@ public class HistoryNewsModel {
 
     //   30.意向金支付成功
     public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
-
     /**
-     * create_date : 35203
-     * dataId : 41874
-     * id : 1
-     * msg : 测试内容8oyc
-     * source_user : {"age":1,"id":1,"land":1,"userName":1,"userPhone":1,"userPortrait":1,"userSex":1}
-     * status : 30556
-     * type : 52888
-     */
-
-    //{"msg":"评论......吵吵吵","classify":1,"viewpointId":31,"dataId":13,"source_user":{"id":78,"userPhone":"17317322083"},"id":9,"sourceUserId":78,"type":30,"userId":86,"status":0}
-
-    private int create_date;
-    private int dataId;
-    private int id;
-    private String msg;
-    //	0. 未读 1.已读
-    private int status;
-    //1 关注 2.点赞帖子 3.点赞评论 4. 评论 *
-    // 10.想帮你的人 11拒绝你的人12.接受你帮助的人
-    // 13.借款单审核未通过 14.借款发布成功 *
-    // 20.成为观点大神 21.实名认证已通过 22.实名认证未通过 * 25.涨跌预测成功 26.涨跌预测失败 * 30.意向金支付成功
-    private int type;
-    private int classify;
-    private int viewpointId;
-    private UserInfo source_user;
-    private int sourceUserId;
-    private int userId;
-
-    /**
+     * msg : 我
      * classify : 1
      * viewpointId : 31
-     * source_user : {"id":78,"userPhone":"17317322083"}
+     * dataId : 11
+     * data : {}
+     * sourceUser : {"id":78,"userName":"用户235","userPhone":"17317322083","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493705928691.png"}
+     * id : 7
      * sourceUserId : 78
+     * type : 26
      * userId : 86
+     * status : 0
+     * createDate : 1493693125000
      */
 
-
-    public HistoryNewsModel() {
-    }
-
-    public HistoryNewsModel(int status, int type) {
-        this.status = status;
-        this.type = type;
-    }
-
-    public HistoryNewsModel(int status, int type, UserInfo userInfo) {
-        this.status = status;
-        this.type = type;
-        this.source_user = userInfo;
-    }
-
-    public HistoryNewsModel(int id, int status, int type, UserInfo userInfo) {
-        this.status = status;
-        this.type = type;
-        source_user = userInfo;
-        this.id = id;
-    }
-
+    private String msg;
+    private int classify;
+    private int viewpointId;
+    private int dataId;
+    private DataBean data;
+    private UserInfo sourceUser;
+    private int id;
+    private int sourceUserId;
+    private int type;
+    private int userId;
+    private int status;
+    private long createDate;
 
     public boolean isAlreadyRead() {
         return getStatus() == 1;
-    }
-
-    public int getCreate_date() {
-        return create_date;
-    }
-
-    public void setCreate_date(int create_date) {
-        this.create_date = create_date;
-    }
-
-    public int getDataId() {
-        return dataId;
-    }
-
-    public void setDataId(int dataId) {
-        this.dataId = dataId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getMsg() {
@@ -129,22 +75,6 @@ public class HistoryNewsModel {
 
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public int getClassify() {
@@ -163,12 +93,36 @@ public class HistoryNewsModel {
         this.viewpointId = viewpointId;
     }
 
-    public UserInfo getUserInfo() {
-        return source_user;
+    public int getDataId() {
+        return dataId;
     }
 
-    public void setSource_user(UserInfo source_user) {
-        this.source_user = source_user;
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
+    }
+
+    public DataBean getData() {
+        return data;
+    }
+
+    public void setData(DataBean data) {
+        this.data = data;
+    }
+
+    public UserInfo getUserInfo() {
+        return sourceUser;
+    }
+
+    public void setSourceUser(UserInfo sourceUser) {
+        this.sourceUser = sourceUser;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getSourceUserId() {
@@ -179,6 +133,14 @@ public class HistoryNewsModel {
         this.sourceUserId = sourceUserId;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public int getUserId() {
         return userId;
     }
@@ -187,20 +149,131 @@ public class HistoryNewsModel {
         this.userId = userId;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(long createDate) {
+        this.createDate = createDate;
+    }
+
+    public static class DataBean implements Parcelable {
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+        }
+
+        public DataBean() {
+        }
+
+        protected DataBean(Parcel in) {
+        }
+
+        public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
+            @Override
+            public DataBean createFromParcel(Parcel source) {
+                return new DataBean(source);
+            }
+
+            @Override
+            public DataBean[] newArray(int size) {
+                return new DataBean[size];
+            }
+        };
+
+
+    }
+
+    /**
+     * create_date : 35203
+     * dataId : 41874
+     * id : 1
+     * msg : 测试内容8oyc
+     * source_user : {"age":1,"id":1,"land":1,"userName":1,"userPhone":1,"userPortrait":1,"userSex":1}
+     * status : 30556
+     * type : 52888
+     */
+
+    //{"msg":"评论......吵吵吵","classify":1,"viewpointId":31,"dataId":13,"source_user":{"id":78,"userPhone":"17317322083"},"id":9,"sourceUserId":78,"type":30,"userId":86,"status":0}
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.msg);
+        dest.writeInt(this.classify);
+        dest.writeInt(this.viewpointId);
+        dest.writeInt(this.dataId);
+        dest.writeParcelable(this.data, flags);
+        dest.writeParcelable(this.sourceUser, flags);
+        dest.writeInt(this.id);
+        dest.writeInt(this.sourceUserId);
+        dest.writeInt(this.type);
+        dest.writeInt(this.userId);
+        dest.writeInt(this.status);
+        dest.writeLong(this.createDate);
+    }
+
+    public HistoryNewsModel() {
+    }
+
+    protected HistoryNewsModel(Parcel in) {
+        this.msg = in.readString();
+        this.classify = in.readInt();
+        this.viewpointId = in.readInt();
+        this.dataId = in.readInt();
+        this.data = in.readParcelable(DataBean.class.getClassLoader());
+        this.sourceUser = in.readParcelable(UserInfo.class.getClassLoader());
+        this.id = in.readInt();
+        this.sourceUserId = in.readInt();
+        this.type = in.readInt();
+        this.userId = in.readInt();
+        this.status = in.readInt();
+        this.createDate = in.readLong();
+    }
+
+    public static final Creator<HistoryNewsModel> CREATOR = new Creator<HistoryNewsModel>() {
+        @Override
+        public HistoryNewsModel createFromParcel(Parcel source) {
+            return new HistoryNewsModel(source);
+        }
+
+        @Override
+        public HistoryNewsModel[] newArray(int size) {
+            return new HistoryNewsModel[size];
+        }
+    };
+
     @Override
     public String toString() {
         return "HistoryNewsModel{" +
-                "create_date=" + create_date +
-                ", dataId=" + dataId +
-                ", id=" + id +
-                ", msg='" + msg + '\'' +
-                ", status=" + status +
-                ", type=" + type +
+                "msg='" + msg + '\'' +
                 ", classify=" + classify +
                 ", viewpointId=" + viewpointId +
-                ", source_user=" + source_user +
+                ", dataId=" + dataId +
+                ", data=" + data +
+                ", sourceUser=" + sourceUser +
+                ", id=" + id +
                 ", sourceUserId=" + sourceUserId +
+                ", type=" + type +
                 ", userId=" + userId +
+                ", status=" + status +
+                ", createDate=" + createDate +
                 '}';
     }
 }

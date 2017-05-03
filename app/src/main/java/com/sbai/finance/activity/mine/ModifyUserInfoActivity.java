@@ -1,8 +1,6 @@
 package com.sbai.finance.activity.mine;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -10,13 +8,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -36,7 +30,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
 
 import java.lang.reflect.Type;
@@ -60,6 +53,8 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
     private static final String SEX_BOY = "男";
     private static final String SEX_GIRL = "女";
+
+    private static String[] sexData = new String[]{SEX_BOY, SEX_GIRL};
 
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
@@ -89,7 +84,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         ButterKnife.bind(this);
         mAgeList = new String[101];
         for (int i = 0; i < 101; i++) {
-            mAgeList[i] = ((i + 1917) + "年");
+            mAgeList[i] = ((i + Calendar.getInstance().get(Calendar.YEAR) - 100) + "年");
         }
         requestDetailUserInfo();
         updateUserImage();
@@ -100,7 +95,11 @@ public class ModifyUserInfoActivity extends BaseActivity {
     private void updateUserInfo() {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
         mNickName.setSubText(userInfo.getUserName());
-        mSex.setSubText(userInfo.getChinaSex());
+        if (userInfo.getUserSex() == UserInfo.SEX_GIRL) {
+            mSex.setSubText(SEX_GIRL);
+        } else if (userInfo.getUserSex() == UserInfo.SEX_BOY) {
+            mSex.setSubText(SEX_BOY);
+        }
         if (userInfo.getAge() != null) {
             mAge.setSubText(userInfo.getAge().toString());
         }
@@ -149,7 +148,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
 
         int sex = 0;
         if (!TextUtils.isEmpty(mSex.getSubText().trim())) {
-            sex = mSex.getSubText().equalsIgnoreCase(SEX_BOY) ? 1 : 2;
+            sex = mSex.getSubText().equalsIgnoreCase(SEX_BOY) ? 2 : 1;
         }
         Client.updateUserInfo(age, land, sex)
                 .setTag(TAG)
@@ -208,7 +207,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setOffset(2);
         if (LocalUser.getUser().getUserInfo().getAge() == null) {
-            mSelectAgeListIndex = 100;
+            mSelectAgeListIndex = 73;
         } else {
             mSelectAgeListIndex = 100 - LocalUser.getUser().getUserInfo().getAge();
         }
@@ -264,14 +263,16 @@ public class ModifyUserInfoActivity extends BaseActivity {
     }
 
     private void showSexPicker() {
-        OptionPicker picker = new OptionPicker(this, new String[]{SEX_BOY, SEX_GIRL,});
+        OptionPicker picker = new OptionPicker(this, sexData);
         picker.setCancelTextColor(Color.WHITE);
         picker.setSubmitTextColor(Color.WHITE);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setOffset(1);
-        if (!TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getChinaSex())) {
-            picker.setSelectedItem(LocalUser.getUser().getUserInfo().getChinaSex());
+        if (LocalUser.getUser().getUserInfo().getUserSex() == UserInfo.SEX_BOY) {
+            picker.setSelectedItem(sexData[0]);
+        } else if (LocalUser.getUser().getUserInfo().getUserSex() == UserInfo.SEX_GIRL) {
+            picker.setSelectedItem(sexData[1]);
         }
 //        picker.setTopPadding(toDp(10));
 //                picker.setTextSize(11);
@@ -286,77 +287,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
             }
         });
         picker.show();
-    }
-
-    private void showBirthdayPicker() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-//        final String birthday = LocalUser.getUser().getUserInfo().getBirthday();
-        final String birthday = mAge.getSubText();
-        if (!TextUtils.isEmpty(birthday)) {
-            String[] split = birthday.split("-");
-            if (split.length == 3) {
-                year = Integer.valueOf(split[0]);
-                month = Integer.valueOf(split[1]) - 1;
-                day = Integer.valueOf(split[2]);
-            }
-        }
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DatePickerDialog, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "年  " + year + " 月 " + month + "  日  " + dayOfMonth);
-            }
-        }, year, month, day);
-
-        //设置时间picker的取消颜色
-        SpannableStringBuilder cancelSpannableString = new SpannableStringBuilder();
-        cancelSpannableString.append(getString(R.string.cancel));
-        ForegroundColorSpan backgroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.assistText));
-        cancelSpannableString.setSpan(backgroundColorSpan, 0, cancelSpannableString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, cancelSpannableString, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        //设置时间picker的确定颜色
-        SpannableStringBuilder confirmSpannableString = new SpannableStringBuilder();
-        confirmSpannableString.append(getString(R.string.ok));
-        ForegroundColorSpan confirmColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorPrimary));
-        confirmSpannableString.setSpan(confirmColorSpan, 0, confirmSpannableString.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, confirmSpannableString, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                DatePicker datePicker = datePickerDialog.getDatePicker();
-                int year = datePicker.getYear();
-                int month = datePicker.getMonth() + 1;
-                int dayOfMonth = datePicker.getDayOfMonth();
-
-                int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-                int nowMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
-                int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-                if (year <= nowYear && month <= nowMonth && dayOfMonth <= today) {
-                    StringBuilder birthdayDate = new StringBuilder();
-                    mAge.setSubText(formatBirthdayDate(year, month, dayOfMonth, birthdayDate));
-//                    LocalUser.getUser().getUserInfo().setBirthday(formatBirthdayDate(year, month, dayOfMonth, birthdayDate));
-                } else {
-                    ToastUtil.curt("不能大于当前时间");
-                }
-            }
-        });
-        datePickerDialog.show();
-    }
-
-    private String formatBirthdayDate(int year, int month, int dayOfMonth, StringBuilder birthdayDate) {
-        birthdayDate.append(year);
-        birthdayDate.append("-");
-        birthdayDate.append(month);
-        birthdayDate.append("-");
-        birthdayDate.append(dayOfMonth);
-        return birthdayDate.toString();
     }
 
     private void logout() {

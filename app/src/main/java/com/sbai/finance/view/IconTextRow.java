@@ -151,7 +151,7 @@ public class IconTextRow extends LinearLayout {
         mTextView.setText(text);
     }
 
-    public void setSubText(String subText) {
+    public void setSubText(CharSequence subText) {
         mSubTextView.setText(subText);
     }
 

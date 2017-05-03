@@ -40,7 +40,6 @@
         android:drawableTop="@drawable/ic_shield_relieve"
         android:gravity="center"
         android:minWidth="70dp"
-        android:padding="@dimen/common_padding"
         android:text="@string/relieve"
         android:textColor="@color/secondaryText"
         android:textSize="12sp"/>

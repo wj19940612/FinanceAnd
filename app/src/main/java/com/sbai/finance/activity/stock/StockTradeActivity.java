@@ -117,7 +117,7 @@ public class StockTradeActivity extends BaseActivity {
     private void initChartViews() {
         TrendView.Settings settings = new TrendView.Settings();
         settings.setBaseLines(mVariety.getBaseline());
-        settings.setNumberScale(mVariety.getPriceDecimalScale());
+        settings.setNumberScale(mVariety.getPriceScale());
         settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
@@ -126,7 +126,7 @@ public class StockTradeActivity extends BaseActivity {
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
         settings2.setBaseLines(mVariety.getBaseline());
-        settings2.setNumberScale(mVariety.getPriceDecimalScale());
+        settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);

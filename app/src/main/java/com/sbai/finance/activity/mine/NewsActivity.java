@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -41,6 +42,7 @@ public class NewsActivity extends BaseActivity implements OnNoReadNewsListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         ButterKnife.bind(this);
+
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTabLayout.setCustomTabView(R.layout.layout_new, R.id.news);
@@ -51,7 +53,6 @@ public class NewsActivity extends BaseActivity implements OnNoReadNewsListener {
         mViewPager.setAdapter(mNewsAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mSlidingTabLayout.setViewPager(mViewPager);
-
         requestNoReadNewsNumber();
     }
 
@@ -62,11 +63,6 @@ public class NewsActivity extends BaseActivity implements OnNoReadNewsListener {
                 .setCallback(new Callback2D<Resp<List<NotReadMessageNumberModel>>, List<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(List<NotReadMessageNumberModel> data) {
-                        for (int i = 0; i < data.size(); i++) {
-                            if (data.get(i).getCount() > 0) {
-                                mSlidingTabLayout.setRedPointVisibility(i);
-                            }
-                        }
                         handleNotReadData(data);
                     }
                 })
@@ -78,20 +74,29 @@ public class NewsActivity extends BaseActivity implements OnNoReadNewsListener {
             switch (notReadNews.getClassify()) {
                 case HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE:
                     EconomicCircleNewsFragment economicCircleNewsFragment = (EconomicCircleNewsFragment) mNewsAdapter.getFragment(0);
-                    if (economicCircleNewsFragment != null) {
-                        economicCircleNewsFragment.setNotReadNewsNumber(notReadNews);
+                    if (notReadNews.getCount() > 0) {
+                        if (economicCircleNewsFragment != null) {
+                            economicCircleNewsFragment.setNotReadNewsNumber(notReadNews);
+                        }
+                        mSlidingTabLayout.setRedPointVisibility(0, View.VISIBLE);
                     }
                     break;
                 case HistoryNewsModel.NEW_TYPE_MUTUAL_HELP:
                     MutualHelpFragment mutualHelpFragment = (MutualHelpFragment) mNewsAdapter.getFragment(1);
-                    if (mutualHelpFragment != null) {
-                        mutualHelpFragment.setNotReadNewsNumber(notReadNews);
+                    if (notReadNews.getCount() > 0) {
+                        if (mutualHelpFragment != null) {
+                            mutualHelpFragment.setNotReadNewsNumber(notReadNews);
+                        }
+                        mSlidingTabLayout.setRedPointVisibility(1, View.VISIBLE);
                     }
                     break;
                 case HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS:
                     SystemNewsFragment systemNewsFragment = (SystemNewsFragment) mNewsAdapter.getFragment(2);
-                    if (systemNewsFragment != null) {
-                        systemNewsFragment.setNotReadNewsNumber(notReadNews);
+                    if (notReadNews.getCount() > 0) {
+                        if (systemNewsFragment != null) {
+                            systemNewsFragment.setNotReadNewsNumber(notReadNews);
+                        }
+                        mSlidingTabLayout.setRedPointVisibility(2, View.VISIBLE);
                     }
                     break;
             }
@@ -101,6 +106,17 @@ public class NewsActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     public void onNoReadNewsNumber(int index, int count) {
         Log.d(TAG, "onNoReadNewsNumber: " + index);
+        switch (index) {
+            case HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE:
+                mSlidingTabLayout.setRedPointVisibility(0, View.GONE);
+                break;
+            case HistoryNewsModel.NEW_TYPE_MUTUAL_HELP:
+                mSlidingTabLayout.setRedPointVisibility(1, View.GONE);
+                break;
+            case HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS:
+                mSlidingTabLayout.setRedPointVisibility(2, View.GONE);
+                break;
+        }
     }
 
 

@@ -1,6 +1,8 @@
 package com.sbai.finance.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
@@ -31,6 +33,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
+
+    public static final String LOGIN_SUCCESS_ACTION = "LOGIN_SUCCESS_ACTION";
+
     @BindView(R.id.deletePage)
     AppCompatImageView mDeletePage;
     @BindView(R.id.appIconName)
@@ -214,7 +219,7 @@ public class LoginActivity extends BaseActivity {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
-                            setResult(RESULT_OK);
+                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
                             finish();
 
                         } else {

@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.PredictionRuleActivity;
-import com.sbai.finance.activity.trade.PublishOpinionActivity;
-import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
-import com.sbai.finance.model.Variety;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -22,20 +19,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.model.PredictModel.PREDICT_DIRECTION;
-
 /**
  * Created by lixiaokuan0819 on 2017/4/24.
  */
 
 public class PredictionFragment extends DialogFragment {
-
-    public static final int TREND_UP = 1;
-    public static final int TREND_DOWN = 0;
-
-    public static final int REQ_CODE_PREDICT = 300;
-
-//    public static final String PREDICT_DIRECTION = "predict_direction";
 
     @BindView(R.id.bullishButton)
     Button mBullishButton;
@@ -45,11 +33,10 @@ public class PredictionFragment extends DialogFragment {
     TextView mPredictionRule;
     Unbinder unbinder;
 
-    Variety mVariety;
+    OnPredictButtonListener mOnPredictButtonListener;
 
-    public static PredictionFragment newInstance(Bundle args) {
+    public static PredictionFragment newInstance() {
         PredictionFragment fragment = new PredictionFragment();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -58,7 +45,6 @@ public class PredictionFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_prediction, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mVariety = getArguments().getParcelable(Launcher.EX_PAYLOAD);
         return view;
     }
 
@@ -66,17 +52,11 @@ public class PredictionFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bullishButton:
-                Launcher.with(getActivity(), PublishOpinionActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                        .putExtra(PREDICT_DIRECTION, TREND_UP)
-                        .execute();
+                mOnPredictButtonListener.onBullish();
                 this.dismiss();
                 break;
             case R.id.bearishButton:
-                Launcher.with(getActivity(), PublishOpinionActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                        .putExtra(PREDICT_DIRECTION, TREND_DOWN)
-                        .execute();
+                mOnPredictButtonListener.onBearish();
                 this.dismiss();
                 break;
             case R.id.predictionRule:
@@ -87,12 +67,22 @@ public class PredictionFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, UploadUserImageDialogFragment.class.getSimpleName());
+        this.show(manager, PredictionFragment.class.getSimpleName());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener l){
+        this.mOnPredictButtonListener = l;
+        return this;
+    }
+
+    public interface OnPredictButtonListener{
+        void onBullish();
+        void onBearish();
     }
 }

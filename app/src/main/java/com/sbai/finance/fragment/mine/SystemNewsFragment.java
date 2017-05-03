@@ -20,16 +20,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.CreditApproveActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
+import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,12 +57,10 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     private TextView mFootView;
     private SystemNewsAdapter mSystemNewsAdapter;
     private OnNoReadNewsListener mOnNoReadNewsListener;
-    private NotReadMessageNumberModel mNotReadMessageNumberModel;
 
     private int mPage;
-    private int mSize = 15;
     private HashSet<Integer> mSet;
-    private NotReadMessageNumberModel mNotReadNewsNumber;
+    private int mNotReadNewsNumber;
 
     @Override
     public void onAttach(Context context) {
@@ -102,8 +106,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize)
-                .setIndeterminate(this)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, Client.PAGE_SIZE)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -112,6 +115,12 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                             Log.d(TAG, " 系统消息" + his.toString());
                         }
                         updateSystemNewsListData(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();
@@ -141,7 +150,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-        if (systemNewsModels.size() < mSize) {
+        if (systemNewsModels.size() < Client.PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -188,12 +197,60 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HistoryNewsModel systemNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (systemNewsModel != null) {
-            ToastUtil.curt("点击了 " + "斯大林欢迎你");
+            updateNewsReadStatus(position, systemNewsModel);
+            switch (systemNewsModel.getType()) {
+                //借款单审核未通过
+                case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
+                    // TODO: 2017/5/2  历史借入
+                    break;
+                // 14.借款发布成功 *
+                case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
+                    // TODO: 2017/5/2 我的借入
+                    break;
+                //// 20.成为观点大神
+                case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
+                    // TODO: 2017/5/2 观点大神 
+                    break;
+                //21.实名认证已通过
+                case HistoryNewsModel.REAL_NAME_APPROVE_PASSED:
+                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_ALREADY_APPROVE);
+                    Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                    break;
+                // 22.实名认证未通过
+                case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
+                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_APPROVEING);
+                    Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                    break;
+                //   30.意向金支付成功
+                case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
+                    // TODO: 2017/5/2 跳转明细
+                    break;
+            }
         }
     }
 
+    private void updateNewsReadStatus(int position, HistoryNewsModel systemNewsModel) {
+        if (!systemNewsModel.isAlreadyRead()) {
+            mSystemNewsAdapter.remove(systemNewsModel);
+            systemNewsModel.setStatus(1);
+            mSystemNewsAdapter.insert(systemNewsModel, position);
+        }
+        mNotReadNewsNumber--;
+        if (mNotReadNewsNumber == 0) {
+            mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, 0);
+        }
+        Client.updateMsgReadStatus(systemNewsModel.getId())
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                    }
+                })
+                .fire();
+    }
+
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNewsNumber) {
-        mNotReadNewsNumber = notReadNewsNumber;
+        mNotReadNewsNumber = notReadNewsNumber.getCount();
     }
 
     static class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
@@ -265,26 +322,33 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     // 25.涨跌预测成功
                     case HistoryNewsModel.FORCAEST_highs_and_lows_fail:
                         break;
+                    //26.涨跌预测失败
                     case HistoryNewsModel.FORCAEST_highs_and_lows_success:
                         break;
+
+                    //   30.意向金支付成功
                     case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
                         break;
                 }
                 if (item.getType() == HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS) {
                     if (item.isAlreadyRead()) {
-                        if (position % 2 == 0) {
-                            mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
-                        }
+                        mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
                     } else {
-                        if (position % 2 == 0) {
-                            mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed_read, 0, 0, 0);
-                        }
+                        mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed_read, 0, 0, 0);
                     }
                 }
 
-                mTitle.setText("系统消息");
-                mTime.setText(DateUtil.getFormatTime(1493024100000L));
-                mContent.setText("斯大林欢迎你");
+                if (item.isAlreadyRead()) {
+                    mContent.setSelected(true);
+                    mTitle.setSelected(true);
+                } else {
+                    mTitle.setSelected(false);
+                    mContent.setSelected(false);
+                }
+
+                mTitle.setText(item.getMsg());
+                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+                mContent.setText(item.getMsg());
             }
         }
     }

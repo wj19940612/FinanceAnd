@@ -119,7 +119,7 @@
         <item name="android:gravity">left</item>
     </style>
     <style name="FiveMarketDataStockBidLastPrice">
-        <item name="android:textColor">@color/redPrimary</item>
+        <item name="android:textColor">@color/colorRed</item>
         <item name="android:textSize">11sp</item>
     </style>
 

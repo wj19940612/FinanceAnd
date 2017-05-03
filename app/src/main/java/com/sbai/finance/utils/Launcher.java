@@ -16,6 +16,7 @@ public class Launcher {
     public static final String EX_PAYLOAD_2 = "payload2";
 
     public static final String KEY_TOPIC= "topic";
+    public static final String KEY_USER_ID= "userid";
 
     public static final int REQ_CODE_LOGIN = 620;
 

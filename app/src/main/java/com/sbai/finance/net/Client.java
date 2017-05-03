@@ -7,6 +7,7 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
+    public static final int PAGE_SIZE = 15;
 
     /**
      * 获取服务器系统时间
@@ -59,7 +60,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API( "/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone));
     }
@@ -179,7 +180,7 @@ public class Client {
      *
      * @param age
      * @param land
-     * @param userSex
+     * @param userSex 1女2男0未知
      * @return
      */
 
@@ -277,9 +278,10 @@ public class Client {
      * @param followId 关注对象的ID
      * @param status   0关注 1取消关注
      * @return
+     *
      */
     public static API attentionOrRelieveAttentionUser(int followId, int status) {
-        return new API(POST, "/coterie/userDetail/follow.do", new ApiParams()
+        return new API(POST, "/coterie/userInterest/follow.do", new ApiParams()
                 .put("followId", followId)
                 .put("status", status));
     }
@@ -490,7 +492,7 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("viewpointId", viewpointId));
     }
-
+    
     /**
      * 获取用户资料
      * @param userId
@@ -678,7 +680,7 @@ public class Client {
     }
 
     /**
-     * 观点检测是否已发表
+     * 检测是否已经预测'看涨'看跌'
      *
      * @param bigVarietyTypeCode
      * @param varietyId
@@ -688,6 +690,17 @@ public class Client {
         return new API(POST, "/coterie/viewpoint/checkCalculate.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("varietyId", varietyId));
+    }
+
+    /**
+     * 获取品种简介
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietytradeIntrouce(int varietyId) {
+        return new API("/order/order/getVarietytradeIntro.do",
+                new ApiParams()
                         .put("varietyId", varietyId));
     }
 }

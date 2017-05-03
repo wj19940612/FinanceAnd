@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
  */
 
 public class HomeBanner extends FrameLayout {
+
     @BindView(R.id.viewPager)
     InfiniteViewPager mViewPager;
     @BindView(R.id.pageIndicator)
@@ -85,11 +86,14 @@ public class HomeBanner extends FrameLayout {
     };
 
     public void nextAdvertisement() {
-        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+        if (mAdapter != null && mAdapter.getCount() > 1) {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+        }
     }
 
     public void setHomeAdvertisement(List<BannerModel> informationList) {
         filterEmptyInformation(informationList);
+
         if (!informationList.isEmpty()) {
             int size = informationList.size();
             if (size < 2) {
@@ -98,6 +102,7 @@ public class HomeBanner extends FrameLayout {
                 mPageIndicator.setVisibility(VISIBLE);
             }
             mPageIndicator.setCount(size);
+
             if (mAdapter == null) {
                 mAdapter = new AdvertisementAdapter(getContext(), informationList, mListener);
                 mViewPager.addOnPageChangeListener(mOnPageChangeListener);

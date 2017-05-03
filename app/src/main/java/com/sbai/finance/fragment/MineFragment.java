@@ -1,9 +1,14 @@
 package com.sbai.finance.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -26,6 +31,7 @@ import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.SettingActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -33,6 +39,8 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.IconTextRow;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +78,17 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.logoutImage)
     AppCompatImageView mLogoutImage;
 
+
+    private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
+                updateUserImage();
+                updateUserStatus();
+            }
+        }
+    };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,15 +100,43 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.LOGIN_SUCCESS_ACTION));
         updateUserImage();
         updateUserStatus();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(LoginBroadcastReceiver);
+    }
+
+    private void requestNoReadNewsNumber() {
+        Client.getNoReadMessageNumber()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
+                    @Override
+                    protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
+                        int count = 0;
+                        for (NotReadMessageNumberModel notReadMessageNumberData : data) {
+                            count = count + notReadMessageNumberData.getCount();
+                        }
+
+                        SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
+                                " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
+                                , getString(R.string.item));
+                        mNews.setSubText(attentionSpannableString);
+                    }
+                })
+                .fireSync();
     }
 
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
             updateUserNumber(null);
             requestUserAttentionAndroidFansNumber();
+            requestNoReadNewsNumber();
             mHeadImageLayout.setVisibility(View.VISIBLE);
             mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
@@ -133,7 +180,7 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 break;
             case R.id.logoutImage:
-                startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                Launcher.with(getActivity(), LoginActivity.class).execute();
                 break;
             case R.id.userHeadImage:
                 startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
@@ -142,22 +189,18 @@ public class MineFragment extends BaseFragment {
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), AttentionActivity.class).execute();
                 } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.fans:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), FansActivity.class).execute();
                 } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.minePublish:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), PublishActivity.class).execute();
-                } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), Launcher.REQ_CODE_LOGIN);
-                }
+                Launcher.with(getActivity(), PublishActivity.class).execute();
                 break;
             case R.id.news:
                 Launcher.with(getActivity(), NewsActivity.class).execute();

@@ -10,8 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,9 +21,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
@@ -41,7 +41,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -63,12 +62,11 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     private EconomicCircleNewsAdapter mEconomicCircleNewsAdapter;
     private TextView mFootView;
     private OnNoReadNewsListener mOnNoReadNewsListener;
-    private NotReadMessageNumberModel mNotReadMessageNumberModel;
 
     private int mPage = 0;
-    private int mPageSize = 20;
     private HashSet<Integer> mSet;
 
+    private int mNotReadNewsNumber;
 
     @Override
     public void onAttach(Context context) {
@@ -76,7 +74,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         if (context instanceof OnNoReadNewsListener) {
             mOnNoReadNewsListener = (OnNoReadNewsListener) context;
         } else {
-            throw new RuntimeException(context.toString() + "" +
+            throw new RuntimeException(context.toString() + "  " +
                     "must implements OnNoReadNewsListener");
         }
     }
@@ -120,25 +118,21 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
 
     private void requestEconomicCircleNewsList() {
-        Client.requestHistoryNews(false,HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, mPageSize)
-                .setIndeterminate(this)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, Client.PAGE_SIZE)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
                         updateEconomicCircleData(data);
-                        for (HistoryNewsModel his : data) {
-                            Log.d(TAG, " 经济圈消息" + his.toString());
-                        }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();
-
-        ArrayList<HistoryNewsModel> historyNewsModels = new ArrayList<>();
-        historyNewsModels.add(new HistoryNewsModel(1, 1, 1, new UserInfo()));
-        historyNewsModels.add(new HistoryNewsModel(2, 0, 4, new UserInfo()));
-        historyNewsModels.add(new HistoryNewsModel(3, 0, 4, new UserInfo()));
-        updateEconomicCircleData(historyNewsModels);
     }
 
     private void updateEconomicCircleData(List<HistoryNewsModel> historyNewsModelList) {
@@ -165,7 +159,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModelList.size() < mPageSize) {
+        if (historyNewsModelList.size() < Client.PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -208,46 +202,53 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     }
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
-        mNotReadMessageNumberModel = notReadNews;
+        mNotReadNewsNumber = notReadNews.getCount();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HistoryNewsModel historyNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (historyNewsModel != null) {
-            if (!historyNewsModel.isAlreadyRead()) {
-                mEconomicCircleNewsAdapter.remove(historyNewsModel);
-                historyNewsModel.setStatus(1);
-                mEconomicCircleNewsAdapter.insert(historyNewsModel, position);
-            }
+            updateNewsReadStatus(position, historyNewsModel);
 
-            Client.updateMsgReadStatus(historyNewsModel.getId())
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback<Resp<JsonObject>>() {
-                        @Override
-                        protected void onRespSuccess(Resp<JsonObject> resp) {
-                            Log.d(TAG, "onRespSuccess: " + resp.toString());
-                        }
-                    })
-                    .fire();
-
-            // TODO: 2017/4/18  点击可跳转至观点详情页面，将选择的这条评论置顶显示
             switch (historyNewsModel.getType()) {
                 //关注
                 case HistoryNewsModel.ACTION_TYPE_ATTENTION:
                     break;
                 //点赞帖子
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
+                    //.点赞动态，点击可跳转至观点页面
                     break;
                 //点赞评论
                 case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
+                    //观点详情页面  将选择的这条评论置顶显示，
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel).execute();
                     break;
             }
 
+        }
+    }
+
+    private void updateNewsReadStatus(int position, HistoryNewsModel historyNewsModel) {
+        if (!historyNewsModel.isAlreadyRead()) {
+            mEconomicCircleNewsAdapter.remove(historyNewsModel);
+            historyNewsModel.setStatus(1);
+            mEconomicCircleNewsAdapter.insert(historyNewsModel, position);
+            mNotReadNewsNumber--;
+            if (mNotReadNewsNumber == 0) {
+                mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, 0);
+            }
+            Client.updateMsgReadStatus(historyNewsModel.getId())
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                        }
+                    })
+                    .fire();
         }
     }
 
@@ -315,25 +316,19 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                             .placeholder(R.drawable.ic_default_avatar)
                             .into(mUserHeadImage);
                     if (item.isAlreadyRead()) {
-//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
-                        SpannableString spannableString = StrUtil.mergeTextWithColor("哈哈哈    ", getUserAction(context, item),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", getUserAction(context, item),
                                 ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     } else {
-                        SpannableString spannableString = StrUtil.mergeTextWithColor("2222    ", getUserAction(context, item),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", getUserAction(context, item),
                                 ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     }
                 }
 
-                if (!TextUtils.isEmpty(item.getMsg())) {
-                    mContent.setVisibility(View.VISIBLE);
-                    mContent.setText(item.getMsg());
-                } else {
-                    mContent.setVisibility(View.GONE);
-                }
+                mPresentation.setText(item.getMsg());
 
-                mTime.setText(DateUtil.getFormatTime(item.getCreate_date()));
+                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
 
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override

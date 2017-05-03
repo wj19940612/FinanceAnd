@@ -22,13 +22,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -60,11 +63,11 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     private TextView mFootView;
     private MutualHelpAdapter mMutualHelpAdapter;
     private OnNoReadNewsListener mOnNoReadNewsListener;
-    private NotReadMessageNumberModel mNotReadMessageNumberModel;
 
     private int mPage;
-    private int mSize = 15;
     private HashSet<Integer> mSet;
+    private int mNotReadNewsNumber;
+
 
     @Override
     public void onAttach(Context context) {
@@ -116,8 +119,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestMutualHelpList() {
-        Client.requestHistoryNews(false,HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, mSize)
-                .setIndeterminate(this)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, Client.PAGE_SIZE)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -127,6 +129,12 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                         for (HistoryNewsModel his : data) {
                             Log.d(TAG, " 互助消息" + his.toString());
                         }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 })
                 .fire();
@@ -157,7 +165,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModels.size() < mSize) {
+        if (historyNewsModels.size() < Client.PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -207,6 +215,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HistoryNewsModel item = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (item != null) {
+            updateNewsReadStatus(position, item);
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
                     ToastUtil.curt("跳转至想帮助我的人");
@@ -223,8 +232,28 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         }
     }
 
+    private void updateNewsReadStatus(int position, HistoryNewsModel item) {
+        if (!item.isAlreadyRead()) {
+            mMutualHelpAdapter.remove(item);
+            item.setStatus(1);
+            mMutualHelpAdapter.insert(item, position);
+            mNotReadNewsNumber--;
+            if (mNotReadNewsNumber == 0) {
+                mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, 0);
+            }
+            Client.updateMsgReadStatus(item.getId())
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                        }
+                    })
+                    .fire();
+        }
+    }
+
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
-        mNotReadMessageNumberModel = notReadNews;
+        mNotReadNewsNumber = notReadNews.getCount();
     }
 
     static class MutualHelpAdapter extends ArrayAdapter<HistoryNewsModel> {
@@ -281,16 +310,18 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
                     if (item.isAlreadyRead()) {
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getMsg(),
                                 ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     } else {
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getMsg(),
                                 ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     }
                 }
-                mTime.setText(DateUtil.getFormatTime(item.getCreate_date()));
+                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

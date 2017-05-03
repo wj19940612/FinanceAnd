@@ -1,13 +1,19 @@
 package com.sbai.finance.model.mine;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ${wangJie} on 2017/4/17.
  */
 
-public class UserInfo {
+public class UserInfo implements Parcelable {
 
     public static final int CREDIT_IS_ALREADY_APPROVE = 1;
     public static final int CREDIT_IS_APPROVEING = 2;
+
+    public static final int SEX_BOY = 2;
+    public static final int SEX_GIRL = 1;
 
     /**
      * agencyId : 0
@@ -209,6 +215,7 @@ public class UserInfo {
         this.chinaSex = chinaSex;
     }
 
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -233,4 +240,69 @@ public class UserInfo {
                 ", chinaSex='" + chinaSex + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.userName);
+        dest.writeValue(this.age);
+        dest.writeString(this.land);
+        dest.writeString(this.userPhone);
+        dest.writeByte(this.bIsSetNickName ? (byte) 1 : (byte) 0);
+        dest.writeString(this.userPortrait);
+        dest.writeInt(this.agencyId);
+        dest.writeInt(this.certificationStatus);
+        dest.writeLong(this.createTime);
+        dest.writeInt(this.id);
+        dest.writeLong(this.lastLoginTime);
+        dest.writeInt(this.loginErrorNum);
+        dest.writeString(this.loginIp);
+        dest.writeInt(this.loginNum);
+        dest.writeInt(this.modifyNickNameTimes);
+        dest.writeString(this.registrationIp);
+        dest.writeInt(this.status);
+        dest.writeInt(this.userSex);
+        dest.writeString(this.chinaSex);
+    }
+
+    public UserInfo() {
+    }
+
+    protected UserInfo(Parcel in) {
+        this.userName = in.readString();
+        this.age = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.land = in.readString();
+        this.userPhone = in.readString();
+        this.bIsSetNickName = in.readByte() != 0;
+        this.userPortrait = in.readString();
+        this.agencyId = in.readInt();
+        this.certificationStatus = in.readInt();
+        this.createTime = in.readLong();
+        this.id = in.readInt();
+        this.lastLoginTime = in.readLong();
+        this.loginErrorNum = in.readInt();
+        this.loginIp = in.readString();
+        this.loginNum = in.readInt();
+        this.modifyNickNameTimes = in.readInt();
+        this.registrationIp = in.readString();
+        this.status = in.readInt();
+        this.userSex = in.readInt();
+        this.chinaSex = in.readString();
+    }
+
+    public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
+        @Override
+        public UserInfo createFromParcel(Parcel source) {
+            return new UserInfo(source);
+        }
+
+        @Override
+        public UserInfo[] newArray(int size) {
+            return new UserInfo[size];
+        }
+    };
 }

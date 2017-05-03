@@ -24,7 +24,7 @@ import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.stock.StockActivity;
 import com.sbai.finance.model.BannerModel;
-import com.sbai.finance.model.TopicModel;
+import com.sbai.finance.model.Topic;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -41,10 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
-/**
- * Created by Administrator on 2017-04-14.
- */
 
 public class HomeFragment extends BaseFragment {
 
@@ -71,11 +67,6 @@ public class HomeFragment extends BaseFragment {
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,14 +79,19 @@ public class HomeFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+
         mTopicGridAdapter = new TopicGridAdapter(getContext());
         mTopicGv.setAdapter(mTopicGridAdapter);
         mTopicGv.setFocusable(false);
         mTopicGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Launcher.with(getContext(), TopicActivity.class)
-                        .putExtra(Launcher.KEY_TOPIC,mTopicGridAdapter.getItem(position)).execute();
+                Topic topic = (Topic) parent.getItemAtPosition(position);
+                if (topic != null) {
+                    Launcher.with(getContext(), TopicActivity.class)
+                            .putExtra(Launcher.KEY_TOPIC, topic)
+                            .execute();
+                }
             }
         });
         mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
@@ -137,14 +133,36 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
+        startScheduleJob(1 * 1000);
+        updateHomeInfo();
+    }
+
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        if (getUserVisibleHint()) {
+            if (count % 5 == 0) {
+                mHomeBanner.nextAdvertisement();
+            }
+        }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        updateHomeInfo();
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            startScheduleJob(1 * 1000);
+        } else {
+            stopScheduleJob();
+        }
     }
 
     private void updateHomeInfo() {
@@ -157,20 +175,20 @@ public class HomeFragment extends BaseFragment {
                     }
                 }).fire();
 
-       //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改 
+        //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<String>,String>() {
+                .setCallback(new Callback2D<Resp<String>, String>() {
                     @Override
                     protected void onRespSuccessData(String data) {
                         updateEventInfo(data);
                     }
                 }).fire();
-       //获取主题信息
+        //获取主题信息
         Client.getTopicData().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TopicModel>>,List<TopicModel>>() {
+                .setCallback(new Callback2D<Resp<List<Topic>>, List<Topic>>() {
                     @Override
-                    protected void onRespSuccessData(List<TopicModel> data) {
-                        updateTopicInfo((ArrayList<TopicModel>) data);
+                    protected void onRespSuccessData(List<Topic> data) {
+                        updateTopicInfo((ArrayList<Topic>) data);
                     }
                 }).fire();
     }
@@ -179,9 +197,9 @@ public class HomeFragment extends BaseFragment {
         mEvent.setText(data);
     }
 
-    private void updateTopicInfo(ArrayList<TopicModel> topicModels) {
+    private void updateTopicInfo(ArrayList<Topic> topics) {
         mTopicGridAdapter.clear();
-        mTopicGridAdapter.addAll(topicModels);
+        mTopicGridAdapter.addAll(topics);
         mTopicGridAdapter.notifyDataSetChanged();
     }
 
@@ -190,6 +208,7 @@ public class HomeFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
     @OnClick({R.id.borrowMoney, R.id.idea, R.id.bigEvent})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -206,7 +225,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    static class TopicGridAdapter extends ArrayAdapter<TopicModel> {
+    static class TopicGridAdapter extends ArrayAdapter<Topic> {
 
         public TopicGridAdapter(@NonNull Context context) {
             super(context, 0);
@@ -241,7 +260,7 @@ public class HomeFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(TopicModel item) {
+            public void bindingData(Topic item) {
                 mTopicTitle.setText(item.getTitle());
                 mTopicDetail.setText(item.getSubTitle());
                 mTopicImg.setBackgroundResource(R.drawable.bg_topic);
