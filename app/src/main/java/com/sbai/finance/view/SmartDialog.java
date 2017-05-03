@@ -84,10 +84,10 @@ public class SmartDialog {
         return dialog;
     }
 
-    public static SmartDialog with(Activity activity, int resid) {
+    public static SmartDialog with(Activity activity, int resId) {
         SmartDialog dialog = new SmartDialog(activity);
         addMap(activity, dialog);
-        dialog.setMessage(resid);
+        dialog.setMessage(resId);
         return dialog;
     }
 
@@ -98,10 +98,10 @@ public class SmartDialog {
         return dialog;
     }
 
-    public static SmartDialog with(Activity activity, int resid, int titleId) {
+    public static SmartDialog with(Activity activity, int resId, int titleId) {
         SmartDialog dialog = new SmartDialog(activity);
         addMap(activity, dialog);
-        dialog.setMessage(resid);
+        dialog.setMessage(resId);
         dialog.setTitle(titleId);
         return dialog;
     }
