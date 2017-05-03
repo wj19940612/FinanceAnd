@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.FutureFragment;
+import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -31,7 +31,8 @@ import butterknife.OnClick;
  * Created by Administrator on 2017-04-19.
  */
 
-public class StockActivity extends BaseActivity {
+public class StockListActivity extends BaseActivity {
+
     @BindView(R.id.shangHai)
     TextView mShangHai;
     @BindView(R.id.shenZhen)
@@ -46,13 +47,16 @@ public class StockActivity extends BaseActivity {
     EditText mStock;
     @BindView(R.id.search)
     ImageView mSearch;
-    private FutureFragment.FutureListAdapter mListAdapter;
+
+    private FutureListFragment.FutureListAdapter mListAdapter;
+
     private Integer mPage = 0;
     private Integer mPageSize = 15;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock);
+        setContentView(R.layout.activity_stock_list);
         ButterKnife.bind(this);
         initView();
     }
@@ -97,7 +101,7 @@ public class StockActivity extends BaseActivity {
 
     private void initView() {
         mStock.setFocusable(false);
-        mListAdapter = new FutureFragment.FutureListAdapter(this);
+        mListAdapter = new FutureListFragment.FutureListAdapter(this);
         mListView.setAdapter(mListAdapter);
         mListView.setEmptyView(mEmpty);
 
@@ -109,6 +113,7 @@ public class StockActivity extends BaseActivity {
         mShenZhen.setText(attentionSpannableString);
         mBoard.setText(attentionSpannableString);
     }
+
     @OnClick({R.id.stock,R.id.search})
     public void onClick(View view){
         Launcher.with(getActivity(), SearchStockActivity.class).execute();
