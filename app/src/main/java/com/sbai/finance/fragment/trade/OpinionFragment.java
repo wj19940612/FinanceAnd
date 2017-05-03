@@ -152,6 +152,7 @@ public class OpinionFragment extends BaseFragment {
                 mOpinionAdapter.removeAllFooterView();
                 mOpinionAdapter.addFooterView(mBottomView);
                 mLoadMore = true;
+                mPage++;
             }
             mOpinionAdapter.notifyDataSetChanged();
         }

@@ -34,7 +34,7 @@ public class FutureIntroduce {
     private String tradeUnit;
     private int varietyId;
     private String varietyName;
-    private int varietyType;
+    private String varietyType;
 
     public String getDeliveryTime() {
         return deliveryTime;
@@ -132,11 +132,11 @@ public class FutureIntroduce {
         this.varietyName = varietyName;
     }
 
-    public int getVarietyType() {
+    public String getVarietyType() {
         return varietyType;
     }
 
-    public void setVarietyType(int varietyType) {
+    public void setVarietyType(String varietyType) {
         this.varietyType = varietyType;
     }
 }
