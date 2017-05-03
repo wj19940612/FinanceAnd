@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
@@ -27,11 +28,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.MyListView;
-
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,7 +84,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
 
-	private List<OpinionReply> mOpinionReplyList;
+	private List<OpinionReply.DataBean> mOpinionReplyList;
 	private OpinionReplyAdapter mOpinionReplyAdapter;
 	private OpinionDetails mOpinionDetails;
 	private TextView mFootView;
@@ -112,7 +112,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		mOpinionReplyList = new ArrayList<>();
-
+		mSet = new HashSet<>();
 		mOpinionReplyAdapter = new OpinionReplyAdapter(this, mOpinionReplyList);
 		mMyListView.setEmptyView(mEmpty);
 		mMyListView.setAdapter(mOpinionReplyAdapter);
@@ -123,15 +123,14 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 	private void requestOpinionReplyList() {
 		if (mOpinionDetails != null) {
-			Client.getOpinionReply(mPage, mPageSize, mOpinionDetails.getId()).setTag(TAG)
-					.setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
+			Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId()).setTag(TAG)
+					.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
 						@Override
-						protected void onRespSuccessData(List<OpinionReply> opinionReplyList) {
+						protected void onRespSuccessData(OpinionReply OpinionReply) {
 							mOpinionReplyList.clear();
-							mOpinionReplyList.addAll(opinionReplyList);
+							mOpinionReplyList.addAll(OpinionReply.getData());
 							sortCommentList(mOpinionReplyList);
 							updateEconomicCircleList(mOpinionReplyList);
-
 						}
 
 						@Override
@@ -149,16 +148,16 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	private void sortCommentList(List<OpinionReply> opinionReplyList) {
-		Collections.sort(opinionReplyList, new Comparator<OpinionReply>() {
+	private void sortCommentList(List<OpinionReply.DataBean> opinionReplyList) {
+		Collections.sort(opinionReplyList, new Comparator<OpinionReply.DataBean>() {
 			@Override
-			public int compare(OpinionReply o1, OpinionReply o2) {
+			public int compare(OpinionReply.DataBean o1, OpinionReply.DataBean o2) {
 				return Long.valueOf(o2.getCreateTime() - o1.getCreateTime()).intValue();
 			}
 		});
 	}
 
-	private void updateEconomicCircleList(List<OpinionReply> opinionReplyList) {
+	private void updateEconomicCircleList(List<OpinionReply.DataBean> opinionReplyList) {
 		if (opinionReplyList == null) {
 			stopRefreshAnimation();
 			return;
@@ -196,7 +195,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			stopRefreshAnimation();
 		}
 
-		for (OpinionReply opinionReply : opinionReplyList) {
+		for (OpinionReply.DataBean opinionReply : opinionReplyList) {
 			if (mSet.add(opinionReply.getId())) {
 				mOpinionReplyAdapter.add(opinionReply);
 			}
@@ -208,6 +207,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 		if (mOpinionDetails != null ) {
 			mScrollView.smoothScrollTo(0, 0);
 			mUserName.setText(mOpinionDetails.getUserName());
+
+			Glide.with(this).load(mOpinionDetails.getUserPortrait())
+					.placeholder(R.drawable.ic_default_avatar)
+					.transform(new GlideCircleTransform(this))
+					.into(mAvatar);
+
 			if (mOpinionDetails.getIsAttention() == 1) {
 				mIsAttention.setText(R.string.is_attention);
 			}
@@ -229,14 +234,16 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
+
+
 		}
 	}
 
-	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply> {
+	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply.DataBean> {
 		private Context mContext;
-		private List<OpinionReply> mOpinionReplyList;
+		private List<OpinionReply.DataBean> mOpinionReplyList;
 
-		private OpinionReplyAdapter(Context context, List<OpinionReply> opinionReplyList) {
+		private OpinionReplyAdapter(Context context, List<OpinionReply.DataBean> opinionReplyList) {
 			super(context, 0);
 			this.mContext = context;
 			this.mOpinionReplyList = opinionReplyList;
@@ -252,7 +259,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, (Comment) getItem(position));
+			viewHolder.bindingData(mContext, getItem(position));
 			return convertView;
 		}
 
@@ -274,12 +281,21 @@ public class OpinionDetailsActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(Context context, Comment item) {
-				mUserName.setText("刘亦菲");
-				mIsAttention.setText("已关注");
-				mPublishTime.setText("战国");
-				mOpinionContent.setText("话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。话说天下大势，分久必合，合久必分。");
-				mLoveNum.setText("8888");
+			private void bindingData(Context context, OpinionReply.DataBean item) {
+				mUserName.setText(item.getUserName());
+
+				Glide.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mAvatar);
+
+				if (item.getIsAttention() == 1) {
+					mIsAttention.setText(R.string.is_attention);
+				}
+
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+				mOpinionContent.setText(item.getContent());
+				mLoveNum.setText(String.valueOf(item.getPraiseCount()));
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -305,6 +321,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				}
 				break;
 			case R.id.reply:
+
 				break;
 		}
 	}
