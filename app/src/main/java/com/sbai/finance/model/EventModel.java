@@ -1,12 +1,13 @@
 package com.sbai.finance.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017-04-25.
  */
 
-public class EventModel {
+public class EventModel implements Serializable{
 	/**
 	 * data : [{"clicks":2001,"source":"测试内容2268","url":"测试内容hsj2","content":"sjahshagshga8suh","createTime":1492565130496,"format":1,"id":"58f6bc8a3c81657096b37e07","operator":"admin","status":1,"title":"萨斯往往"},{"clicks":2001,"source":"测试内容2268","url":"测试内容hsj2","content":"OOXXXX","createTime":1492494448142,"format":1,"id":"58f5a870ca2920e93b639018","operator":"admin","status":1,"title":"shuishuishui"}]
 	 * pageSize : 10
@@ -61,7 +62,7 @@ public class EventModel {
 		this.data = data;
 	}
 
-	public static class DataBean {
+	public static class DataBean implements Serializable  {
 		/**
 		 * clicks : 2001
 		 * source : 测试内容2268
@@ -85,7 +86,9 @@ public class EventModel {
 		private String operator;
 		private int status;
 		private String title;
-
+		public boolean isH5Style() {
+			return this.format == 2;
+		}
 		public int getClicks() {
 			return clicks;
 		}

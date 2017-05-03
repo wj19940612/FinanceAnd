@@ -12,29 +12,13 @@
         android:orientation="vertical"
         android:background="@drawable/bg_subject"
         android:fitsSystemWindows="true">
-        <LinearLayout
+        <com.sbai.finance.view.TitleBar
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:clickable="true"
-                android:src="@drawable/ic_tb_back"/>
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:text="妖股推荐"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            app:barBackground="@android:color/transparent"
+            app:backFeature="true"
+            app:titleText="妖股推荐"/>
         <TextView
             android:id="@+id/topicTitle"
             android:layout_width="match_parent"

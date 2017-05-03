@@ -57,8 +57,8 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     private FutureListAdapter mFutureListAdapter;
 
     private String mFutureType;
-    private Integer mPage = 0;
-    private Integer mPageSize = 15;
+    private int mPage = 0;
+    private int mPageSize = 15;
 
     public static FutureListFragment newInstance(String type) {
         FutureListFragment futureListFragment = new FutureListFragment();

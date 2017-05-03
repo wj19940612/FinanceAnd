@@ -4,20 +4,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingBottom="5dp"
         app:backFeature="true"/>
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/progress"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
     <ProgressBar
         android:id="@+id/progress"
         style="@android:style/Widget.ProgressBar.Horizontal"

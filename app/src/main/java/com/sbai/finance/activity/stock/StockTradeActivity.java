@@ -90,7 +90,7 @@ public class StockTradeActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         if (Build.VERSION.SDK_INT >= 19) {
-            addTopPaddingWithStatusBar(mTitleBar);
+            addStatusBarHeightTopPadding(mTitleBar);
         }
 
         mVariety = new Gson().fromJson("{\"displayMarketTimes\": \"06:00;12:00;18:00;00:00;05:00\",\"decimalScale\": 0.2,\"sign\": \"$\",\"varietyType\": \"CL\",\"baseline\": 9,\"isDomestic\": 0,\"tags\": 0,\"exchangeId\": 9,\"openMarketTime\": \"06:00;05:00\",\"flashChartPriceInterval\": 0.2,\"varietyId\": 10,\"exchangeStatus\": 1,\"contractsCode\": \"CL1706\",\"advertisement\": \" \",\"currency\": \"USD\",\"marketPoint\": 2,\"varietyName\": \"美原油\",\"eachPointMoney\": 1000,\"currencyUnit\": \"美元\",\"ratio\": 7.3}", Variety.class);
