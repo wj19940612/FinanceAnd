@@ -2,6 +2,7 @@ package com.sbai.finance.view;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,11 +27,17 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     private ListView mListView;
 
+    //暂不支持RecyclerView
+    private RecyclerView mRecyclerView;
+
     private int mYdown;
 
     private int mYlast;
 
     private boolean isLoading = false;
+
+    //滑动到底部的时候手动设置不允许loadMore
+    private boolean loadMoreEnable = true;
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
@@ -55,9 +62,12 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     protected void onLayout(boolean changed, int left, int top, int right,
                             int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        //获取listview
+        //只存在两种情况  不是ListView就是RecyclerView
         if (mListView == null) {
             getListView();
+        }
+        if (mRecyclerView == null){
+            getRecyclerView();
         }
     }
 
@@ -73,6 +83,33 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
             }
         }
     }
+
+    private void getRecyclerView() {
+        int childCount = getChildCount();
+        if (childCount > 0) {
+            for (int i = 0; i < childCount; i++) {
+                View child = getChildAt(i);
+                if (child instanceof ListView) {
+                    mRecyclerView = (RecyclerView)child;
+                    mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
+                }
+            }
+        }
+    }
+
+    //RecyclerView的OnScrollListener是自带的
+    private RecyclerView.OnScrollListener mRecyclerViewScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+        }
+    };
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -107,7 +144,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private boolean canLoad() {
-        return !isLoading && isPullup() && isBottom();
+        return loadMoreEnable && !isLoading && isPullup() && isBottom();
     }
 
     private boolean enableBottomLoad() {
@@ -164,6 +201,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         if (visibleItemCount < totalItemCount && enableBottomLoad()) {
             loadData();
         }
+    }
+
+    public void setLoadMoreEnable(boolean enable){
+        loadMoreEnable = enable;
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
