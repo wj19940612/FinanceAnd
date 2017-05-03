@@ -130,7 +130,7 @@ public class UserDataActivity extends BaseActivity {
 
 			if(mWhetherAttentionShieldOrNot.isFollow()) {
 				mAttention.setText(R.string.is_attention);
-				mAttention.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				mAttention.setTextColor(ContextCompat.getColor(this, R.color.greenAssist));
 			} else {
 				mAttention.setText(R.string.attention);
 				mAttention.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
@@ -236,7 +236,7 @@ public class UserDataActivity extends BaseActivity {
 					protected void onRespSuccess(Resp<JsonObject> resp) {
 						if (resp.isSuccess()) {
 							mAttention.setText(R.string.is_attention);
-							mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.greenPrimary));
+							mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.greenAssist));
 							mWhetherAttentionShieldOrNot.setFollow(true);
 							ToastUtil.curt(R.string.attention + mUserData.getUserName());
 						}
