@@ -1,6 +1,7 @@
 package com.sbai.finance.net;
 
 import com.android.volley.Request;
+import com.sbai.finance.Preference;
 import com.sbai.httplib.ApiParams;
 
 
@@ -57,12 +58,16 @@ public class Client {
      *
      * @param msgCode 短信验证码
      * @param phone   手机
+     *                deviceId 设备id
+     *                platform 平台 0安卓 1ios
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API(POST,"/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
-                .put("phone", phone));
+                .put("phone", phone)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0));
     }
 
     /**
@@ -278,7 +283,6 @@ public class Client {
      * @param followId 关注对象的ID
      * @param status   0关注 1取消关注
      * @return
-     *
      */
     public static API attentionOrRelieveAttentionUser(int followId, int status) {
         return new API(POST, "/coterie/userInterest/follow.do", new ApiParams()
@@ -469,13 +473,14 @@ public class Client {
 
     /**
      * 获取观点详情
+     *
      * @param viewpointId
      * @return
      */
     public static API getOpinionDetails(int viewpointId) {
-        return new API( POST, "/coterie/viewpoint/findViewpointInfo.do",
+        return new API(POST, "/coterie/viewpoint/findViewpointInfo.do",
                 new ApiParams()
-                .put("viewpointId", viewpointId));
+                        .put("viewpointId", viewpointId));
     }
 
     public static API getOpinionReply(int page, int pageSize, int viewpointId) {
@@ -666,6 +671,7 @@ public class Client {
 
     /**
      * 获取品种简介
+     *
      * @param varietyId
      * @return
      */
