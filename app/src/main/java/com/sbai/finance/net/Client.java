@@ -462,7 +462,7 @@ public class Client {
      * @param userId   用户id
      * @return
      */
-    public static API getUserPublishList(int page, int pageSize, int userId) {
+    public static API getUserPublishList(int page, int pageSize, Integer userId) {
         return new API("/coterie/userInterest/queryClickUserViewPoint.do", new ApiParams()
                 .put("page", page)
                 .put("pageSize", pageSize)

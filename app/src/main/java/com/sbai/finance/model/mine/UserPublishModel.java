@@ -97,7 +97,7 @@ public class UserPublishModel {
         private String content;
         private long createTime;
         private int direction;
-//        预测状态 0等待结果 1成功 2失败
+        //        预测状态 0等待结果 1成功 2失败
         private int guessPass;
         private int id;
         //	最新价
@@ -124,8 +124,13 @@ public class UserPublishModel {
          * lastPrice : 84672
          * risePre : 16208
          */
+
+        //2 关注 1不关注
         private int isAttention;
 
+        public boolean isAttention() {
+            return getIsAttention() == 2;
+        }
 
         public int getAuditStatus() {
             return auditStatus;

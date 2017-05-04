@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -22,10 +21,8 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowInHis;
-import com.sbai.finance.model.BorrowOut;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.BorrowOutHis;
+import com.sbai.finance.model.BorrowOutHistory;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -104,9 +101,9 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
 
     private void requestBorrowOutHisData() {
         Client.getBorrowOutHisList().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<BorrowOutHis>>,List<BorrowOutHis>>() {
+                .setCallback(new Callback2D<Resp<List<BorrowOutHistory>>,List<BorrowOutHistory>>() {
                     @Override
-                    protected void onRespSuccessData(List<BorrowOutHis> data) {
+                    protected void onRespSuccessData(List<BorrowOutHistory> data) {
                         updateBorrowOutHis(data);
                     }
 
@@ -118,7 +115,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 }).fire();
     }
 
-    private void updateBorrowOutHis(List<BorrowOutHis> data) {
+    private void updateBorrowOutHis(List<BorrowOutHistory> data) {
         if (data.isEmpty()){
             stopRefreshAnimation();
         }
@@ -145,7 +142,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class BorrowOutHisAdapter  extends ArrayAdapter<BorrowOutHis>{
+    static class BorrowOutHisAdapter  extends ArrayAdapter<BorrowOutHistory>{
         Context mContext;
         private Callback mCallback;
         interface Callback{
@@ -207,7 +204,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOutHis item, int position, Context context){
+            private void bindDataWithView(BorrowOutHistory item, int position, Context context){
                 if (LocalUser.getUser().isLogin()){
                     Glide.with(context).load(LocalUser.getUser().getUserInfo().getUserPortrait()).into(mUserPortrait);
                 }
@@ -220,10 +217,10 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 mPublishTime.setText(context.getString(R.string.borrow_in_time,
                         context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
                 switch (item.getStatus()){
-                    case BorrowOutHis.STATUST_6:
+                    case BorrowOutHistory.STATUST_6:
                         break;
-                    case BorrowOutHis.STATUST_7:
-                    case BorrowOutHis.STATUST_8:
+                    case BorrowOutHistory.STATUST_7:
+                    case BorrowOutHistory.STATUST_8:
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mAlreadyRepayment.setVisibility(View.GONE);
                         break;
