@@ -75,7 +75,7 @@ public class OpinionReply {
 		 */
 
 		private String content;
-		private int createTime;
+		private long createTime;
 		private int id;
 		private int isAttention;
 		private int praiseCount;
@@ -91,11 +91,11 @@ public class OpinionReply {
 			this.content = content;
 		}
 
-		public int getCreateTime() {
+		public long getCreateTime() {
 			return createTime;
 		}
 
-		public void setCreateTime(int createTime) {
+		public void setCreateTime(long createTime) {
 			this.createTime = createTime;
 		}
 
@@ -145,6 +145,20 @@ public class OpinionReply {
 
 		public void setUserPortrait(String userPortrait) {
 			this.userPortrait = userPortrait;
+		}
+
+		@Override
+		public String toString() {
+			return "DataBean{" +
+					"content='" + content + '\'' +
+					", createTime=" + createTime +
+					", id=" + id +
+					", isAttention=" + isAttention +
+					", praiseCount=" + praiseCount +
+					", userId=" + userId +
+					", userName='" + userName + '\'' +
+					", userPortrait='" + userPortrait + '\'' +
+					'}';
 		}
 	}
 

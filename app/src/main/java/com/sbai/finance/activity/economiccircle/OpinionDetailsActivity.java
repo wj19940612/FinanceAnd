@@ -2,10 +2,11 @@ package com.sbai.finance.activity.economiccircle;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,10 +21,13 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.OpinionReply;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -31,11 +35,10 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -77,8 +80,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 	MyListView mMyListView;
 	@BindView(android.R.id.empty)
 	TextView mEmpty;
-	@BindView(R.id.comment)
-	EditText mComment;
+	@BindView(R.id.commentContent)
+	EditText mCommentContent;
 	@BindView(R.id.reply)
 	TextView mReply;
 	@BindView(R.id.swipeRefreshLayout)
@@ -102,15 +105,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		initData(getIntent());
 
 		initView();
-	}
 
-	private void initData(Intent intent) {
-		mOpinionDetails = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 		mOpinionReplyList = new ArrayList<>();
 		mSet = new HashSet<>();
 		mOpinionReplyAdapter = new OpinionReplyAdapter(this, mOpinionReplyList);
@@ -118,7 +113,28 @@ public class OpinionDetailsActivity extends BaseActivity {
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
 		requestOpinionReplyList();
+		initSwipeRefreshLayout();
+	}
 
+	private void initData(Intent intent) {
+		mOpinionDetails = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+	}
+
+	private void initSwipeRefreshLayout() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mSet.clear();
+				mPage = 0;
+				requestOpinionReplyList();
+			}
+		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.i(TAG, "onDestroy: xxx");
 	}
 
 	private void requestOpinionReplyList() {
@@ -126,11 +142,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 			Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId()).setTag(TAG)
 					.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
 						@Override
-						protected void onRespSuccessData(OpinionReply OpinionReply) {
-							mOpinionReplyList.clear();
-							mOpinionReplyList.addAll(OpinionReply.getData());
-							sortCommentList(mOpinionReplyList);
-							updateEconomicCircleList(mOpinionReplyList);
+						protected void onRespSuccessData(OpinionReply opinionReply) {
+							updateEconomicCircleList(opinionReply.getData());
 						}
 
 						@Override
@@ -148,15 +161,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	private void sortCommentList(List<OpinionReply.DataBean> opinionReplyList) {
-		Collections.sort(opinionReplyList, new Comparator<OpinionReply.DataBean>() {
-			@Override
-			public int compare(OpinionReply.DataBean o1, OpinionReply.DataBean o2) {
-				return Long.valueOf(o2.getCreateTime() - o1.getCreateTime()).intValue();
-			}
-		});
-	}
-
 	private void updateEconomicCircleList(List<OpinionReply.DataBean> opinionReplyList) {
 		if (opinionReplyList == null) {
 			stopRefreshAnimation();
@@ -169,8 +173,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mFootView.setPadding(padding, padding, padding, padding);
 			mFootView.setText(getText(R.string.load_more));
 			mFootView.setGravity(Gravity.CENTER);
-			mFootView.setTextColor(Color.WHITE);
-			mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+			mFootView.setTextColor(ContextCompat.getColor(this, R.color.greyAssist));
+			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.greyLightAssist));
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -190,7 +194,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			if (mOpinionReplyAdapter != null) {
 				mOpinionReplyAdapter.clear();
-				mOpinionReplyAdapter.notifyDataSetChanged();
 			}
 			stopRefreshAnimation();
 		}
@@ -204,13 +207,13 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 
 	private void initView() {
-		if (mOpinionDetails != null ) {
-			mScrollView.smoothScrollTo(0, 0);
+		if (mOpinionDetails != null) {
+
 			mUserName.setText(mOpinionDetails.getUserName());
 
 			Glide.with(this).load(mOpinionDetails.getUserPortrait())
 					.placeholder(R.drawable.ic_default_avatar)
-					.transform(new GlideCircleTransform(this))
+					.bitmapTransform(new GlideCircleTransform(this))
 					.into(mAvatar);
 
 			if (mOpinionDetails.getIsAttention() == 1) {
@@ -235,7 +238,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
 
-
+			mScrollView.smoothScrollTo(0, 0);
 		}
 	}
 
@@ -314,14 +317,48 @@ public class OpinionDetailsActivity extends BaseActivity {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.loveNum:
-				if (mLoveNum.isSelected()) {
-					mLoveNum.setSelected(false);
-				} else {
-					mLoveNum.setSelected(true);
-				}
+
+				Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
+						.setCallback(new Callback<Resp<JsonPrimitive>>() {
+							@Override
+							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+								int praiseCount = mOpinionDetails.getPraiseCount();
+								if (resp.isSuccess()) {
+									if (mLoveNum.isSelected()) {
+										mLoveNum.setSelected(false);
+										mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+									} else {
+										mLoveNum.setSelected(true);
+										mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+									}
+								}
+							}
+						}).fire();
+
 				break;
 			case R.id.reply:
+				String commentContent = mCommentContent.getText().toString().trim();
+				if (TextUtils.isEmpty(commentContent)) {
+					ToastUtil.curt("评论内容不能为空");
+					return;
+				}
 
+				Client.opinionReply(commentContent, mOpinionDetails.getId())
+						.setTag(TAG)
+						.setIndeterminate(this)
+						.setCallback(new Callback<Resp<JsonObject>>() {
+							@Override
+							protected void onRespSuccess(Resp<JsonObject> resp) {
+								if (resp.isSuccess()) {
+									mSet.clear();
+									mPage = 0;
+									mSwipeRefreshLayout.setRefreshing(true);
+									requestOpinionReplyList();
+									mCommentContent.setText("");
+									mScrollView.smoothScrollTo(0, 0);
+								}
+							}
+						}).fire();
 				break;
 		}
 	}
