@@ -445,6 +445,17 @@ public class Client {
     }
 
     /**
+     * 检测是否已添加
+     * @param varietyId
+     * @return
+     */
+    public static API checkOptional(int varietyId) {
+        return new API(POST, "/order/optional/checkOptional.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
+
+    /**
      * 添加自选股
      *
      * @param varietyId
