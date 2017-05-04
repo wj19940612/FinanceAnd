@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.OpinionReply;
 import com.sbai.finance.net.Callback;
@@ -130,12 +130,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 				requestOpinionReplyList();
 			}
 		});
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.i(TAG, "onDestroy: xxx");
 	}
 
 	private void requestOpinionReplyList() {
@@ -268,6 +262,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			if (mOpinionDetails.getIsPraise() == 1) {
 				mLoveNum.setSelected(true);
+			} else {
+				mLoveNum.setSelected(false);
 			}
 			mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
@@ -316,13 +312,22 @@ public class OpinionDetailsActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(Context context, final OpinionReply.DataBean item) {
+			private void bindingData(final Context context, final OpinionReply.DataBean item) {
 				mUserName.setText(item.getUserName());
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
+
+				mAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(context, UserDataActivity.class)
+								.putExtra("userId", item.getUserId())
+								.execute();
+					}
+				});
 
 				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
@@ -333,6 +338,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 				if (item.getIsPraise() == 1) {
 					mLoveNum.setSelected(true);
+				} else {
+					mLoveNum.setSelected(false);
 				}
 				mLoveNum.setText(String.valueOf(item.getPraiseCount()));
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
@@ -359,7 +366,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.loveNum, R.id.reply})
+	@OnClick({R.id.loveNum, R.id.reply, R.id.avatar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.loveNum:
@@ -403,6 +410,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 								}
 							}
 						}).fire();
+				break;
+
+			case R.id.avatar:
+				Launcher.with(this, UserDataActivity.class)
+						.putExtra("userId", mOpinionDetails.getUserId())
+						.execute();
 				break;
 		}
 	}
