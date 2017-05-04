@@ -1,7 +1,6 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,9 +34,8 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.TitleBar;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +49,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     private static final int TYPE_BORROW_MONEY = 1;
     private static final int TYPE_OPINION = 2;
 
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(android.R.id.list)
     ListView mListView;
     @BindView(android.R.id.empty)
@@ -59,7 +59,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     SwipeRefreshLayout mSwipeRefreshLayout;
     Unbinder unbinder;
 
-    private List<EconomicCircle> mEconomicCircleList;
     private EconomicCircleAdapter mEconomicCircleAdapter;
     private TextView mFootView;
 
@@ -78,9 +77,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        addTopPaddingWithStatusBar(mTitleBar);
         mSet = new HashSet<>();
-        mEconomicCircleList = new ArrayList<>();
-        mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
+        mEconomicCircleAdapter = new EconomicCircleAdapter(getContext());
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mEconomicCircleAdapter);
         mListView.setOnScrollListener(this);
@@ -126,6 +125,25 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && isVisible()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            mSet.clear();
+            mPage = 0;
+            requestEconomicCircleList();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSet.clear();
+        mPage = 0;
+        requestEconomicCircleList();
+    }
+
+    @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
     }
@@ -155,10 +173,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 .setCallback(new Callback2D<Resp<List<EconomicCircle>>, List<EconomicCircle>>() {
                     @Override
                     protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
-                        mEconomicCircleList.clear();
-                        mEconomicCircleList.addAll(economicCircleList);
-                        sortEconomicCircleList(mEconomicCircleList);
-                        updateEconomicCircleList(mEconomicCircleList);
+                        updateEconomicCircleList(economicCircleList);
                     }
 
                     @Override
@@ -167,15 +182,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                         stopRefreshAnimation();
                     }
                 }).fire();
-    }
-
-    private void sortEconomicCircleList(List<EconomicCircle> economicCircleList) {
-        Collections.sort(economicCircleList, new Comparator<EconomicCircle>() {
-            @Override
-            public int compare(EconomicCircle o1, EconomicCircle o2) {
-                return Long.valueOf(o2.getCreateTime() - o1.getCreateTime()).intValue();
-            }
-        });
     }
 
     private void stopRefreshAnimation() {
@@ -196,8 +202,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             mFootView.setPadding(padding, padding, padding, padding);
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setTextColor(ContextCompat.getColor(getContext(), R.color.greyAssist));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.greyLightAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,6 +231,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         for (EconomicCircle economicCircle : economicCircleList) {
             if (mSet.add(economicCircle.getId())) {
                 mEconomicCircleAdapter.add(economicCircle);
+                mEconomicCircleAdapter.sort(new Comparator<EconomicCircle>() {
+                    @Override
+                    public int compare(EconomicCircle o1, EconomicCircle o2) {
+                        return Long.valueOf(o2.getCreateTime() - o1.getCreateTime()).intValue();
+                    }
+                });
             }
         }
     }
@@ -245,12 +257,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
         private Context mContext;
         private Callback mCallback;
-        private List<EconomicCircle> mEconomicCircleList;
 
-        private EconomicCircleAdapter(Context context, List<EconomicCircle> economicCircleList) {
+        private EconomicCircleAdapter(Context context) {
             super(context, 0);
             this.mContext = context;
-            this.mEconomicCircleList = economicCircleList;
         }
 
         public void setCallback(Callback callback) {
@@ -258,13 +268,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         }
 
         @Override
-        public int getViewTypeCount() {
-            return 2;
-        }
-
-        @Override
         public int getItemViewType(int position) {
-            return mEconomicCircleList.get(position).getType();
+            return getItem(position).getType();
         }
 
         @NonNull
@@ -332,7 +337,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                         .into(mAvatar);
 
                 mUserName.setText(item.getUserName());
-                if (item.getIsAttention() == 1) {
+                if (item.getIsAttention() == 2) {
                     mIsAttention.setText(R.string.is_attention);
                 }
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
@@ -346,9 +351,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
                 mBigVarietyName.setText(item.getBigVarietyTypeName());
                 mVarietyName.setText(item.getVarietyName());
+                
                 mLastPrice.setText("88.88");
                 mUpDownPrice.setText("+8.8");
                 mUpDownPercent.setText("+10%");
+
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

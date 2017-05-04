@@ -48,24 +48,9 @@ public class EconomicCircle {
 	private String land;
 	private int money;
 	private int interest;
-
-	public int getInterest() {
-		return interest;
-	}
-
-	public void setInterest(int interest) {
-		this.interest = interest;
-	}
-
-	public int getDays() {
-		return days;
-	}
-
-	public void setDays(int days) {
-		this.days = days;
-	}
-
-	private int days;
+	private String lastPrice;
+	private String risePre;
+	private String  risePrice;
 
 	public int getAuditStatus() {
 		return auditStatus;
@@ -243,6 +228,38 @@ public class EconomicCircle {
 		this.money = money;
 	}
 
+	public int getInterest() {
+		return interest;
+	}
+
+	public void setInterest(int interest) {
+		this.interest = interest;
+	}
+
+	public String getLastPrice() {
+		return lastPrice;
+	}
+
+	public void setLastPrice(String lastPrice) {
+		this.lastPrice = lastPrice;
+	}
+
+	public String getRisePre() {
+		return risePre;
+	}
+
+	public void setRisePre(String risePre) {
+		this.risePre = risePre;
+	}
+
+	public String getRisePrice() {
+		return risePrice;
+	}
+
+	public void setRisePrice(String risePrice) {
+		this.risePrice = risePrice;
+	}
+
 	@Override
 	public String toString() {
 		return "EconomicCircle{" +
@@ -269,7 +286,9 @@ public class EconomicCircle {
 				", land='" + land + '\'' +
 				", money=" + money +
 				", interest=" + interest +
-				", days=" + days +
+				", lastPrice='" + lastPrice + '\'' +
+				", risePre='" + risePre + '\'' +
+				", risePrice='" + risePrice + '\'' +
 				'}';
 	}
 }
