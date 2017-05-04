@@ -226,6 +226,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			if (mOpinionDetails.getIsAttention() == 2) {
 				mIsAttention.setText(R.string.is_attention);
+			} else {
+				mIsAttention.setText("");
 			}
 
 			mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
@@ -242,6 +244,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
 				mLastPrice.setText("--");
+				mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
 				if (mOpinionDetails.getRisePrice().startsWith("+")) {
 					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
@@ -253,6 +256,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
 				mUpDownPrice.setText("--");
+				mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
 				if (mOpinionDetails.getRisePrice().startsWith("+")) {
 					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
@@ -264,6 +268,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			if (TextUtils.isEmpty(mOpinionDetails.getRisePre())) {
 				mUpDownPercent.setText("--");
+				mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
 				if (mOpinionDetails.getRisePre().startsWith("+")) {
 					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
@@ -344,6 +349,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
 				}
 
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));

@@ -336,6 +336,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 mUserName.setText(item.getUserName());
                 if (item.getIsAttention() == 2) {
                     mIsAttention.setText(R.string.is_attention);
+                } else {
+                    mIsAttention.setText("");
                 }
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
@@ -351,6 +353,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
                 if (TextUtils.isEmpty(item.getLastPrice())) {
                     mLastPrice.setText("--");
+                    mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                 } else {
                     if (item.getRisePrice().startsWith("+")) {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
@@ -362,6 +365,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
                 if (TextUtils.isEmpty(item.getRisePrice())) {
                     mUpDownPrice.setText("--");
+                    mUpDownPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                 } else {
                     if (item.getRisePrice().startsWith("+")) {
                         mUpDownPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
@@ -373,6 +377,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
                 if (TextUtils.isEmpty(item.getRisePre())) {
                     mUpDownPercent.setText("--");
+                    mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                 } else {
                     if (item.getRisePre().startsWith("+")) {
                         mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
