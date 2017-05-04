@@ -31,11 +31,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +67,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
         mListView.setOnScrollListener(this);
         mShieldRelieveAdapter.setOnRelieveShieldClickListener(new ShieldRelieveAdapter.OnRelieveShieldClickListener() {
             @Override
-            public void onRelieveShield(final ShieldedUserModel shieldedUserModel) {
+            public void onRelieveShield(final ShieldedUserModel.DataBean shieldedUserModel) {
                 SmartDialog.with(getActivity(),
                         getString(R.string.relieve_shield_dialog_content, shieldedUserModel.getShielduserName())
                         , getString(R.string.relieve_shield_dialog_title, shieldedUserModel.getShielduserName()))
@@ -76,7 +75,6 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                ToastUtil.curt("移除 " + shieldedUserModel.getShielduserName());
                                 relieveShield(shieldedUserModel);
                             }
                         })
@@ -96,7 +94,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
         requestShieldUserList();
     }
 
-    private void relieveShield(final ShieldedUserModel shieldedUserModel) {
+    private void relieveShield(final ShieldedUserModel.DataBean shieldedUserModel) {
         Client.shieldOrRelieveShieldUser(100, 1)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -114,10 +112,10 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
     private void requestShieldUserList() {
         Client.getShieldList(mPage, mPageSize)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArrayList<ShieldedUserModel>>, ArrayList<ShieldedUserModel>>() {
+                .setCallback(new Callback2D<Resp<ShieldedUserModel>, ShieldedUserModel>() {
                     @Override
-                    protected void onRespSuccessData(ArrayList<ShieldedUserModel> data) {
-                        updateShieldUserData(data);
+                    protected void onRespSuccessData(ShieldedUserModel data) {
+                        updateShieldUserData(data.getData());
                     }
 
                     @Override
@@ -130,7 +128,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
     }
 
 
-    private void updateShieldUserData(ArrayList<ShieldedUserModel> shieldUserList) {
+    private void updateShieldUserData(List<ShieldedUserModel.DataBean> shieldUserList) {
         if (shieldUserList == null) {
             stopRefreshAnimation();
             return;
@@ -167,7 +165,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
             stopRefreshAnimation();
         }
 
-        for (ShieldedUserModel data : shieldUserList) {
+        for (ShieldedUserModel.DataBean data : shieldUserList) {
             if (mSet.add(data.getId())) {
                 mShieldRelieveAdapter.add(data);
             }
@@ -192,13 +190,13 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class ShieldRelieveAdapter extends ArrayAdapter<ShieldedUserModel> {
+    static class ShieldRelieveAdapter extends ArrayAdapter<ShieldedUserModel.DataBean> {
 
         OnRelieveShieldClickListener mOnRelieveShieldClickListener;
         Context mContext;
 
         interface OnRelieveShieldClickListener {
-            void onRelieveShield(ShieldedUserModel shieldedUserModel);
+            void onRelieveShield(ShieldedUserModel.DataBean shieldedUserModel);
         }
 
         public ShieldRelieveAdapter(@NonNull Context context) {
@@ -237,7 +235,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final ShieldedUserModel item, Context context, final OnRelieveShieldClickListener onRelieveShieldClickListener) {
+            public void bindViewWithData(final ShieldedUserModel.DataBean item, Context context, final OnRelieveShieldClickListener onRelieveShieldClickListener) {
                 if (item == null) return;
                 Glide.with(context).load(item.getShielduserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
