@@ -117,20 +117,15 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onResume() {
         super.onResume();
+        Netty.get().addHandler(mNettyHandler);
         reset();
         requestVarietyList();
-        Netty.get().addHandler(mNettyHandler);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Netty.get().removeHandler(mNettyHandler);
-    }
-
-    @OnClick(R.id.rate)
-    public void onClick(View view) {
-
     }
 
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
@@ -196,11 +191,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     public void requestVarietyList() {
         Client.getVarietyList(Variety.VAR_FUTURE, mPage, mFutureType).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ListWrapper<Variety>>, ListWrapper<Variety>>() {
+                .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
 
                     @Override
-                    protected void onRespSuccessData(ListWrapper<Variety> data) {
-                        updateFutureData(data.getData());
+                    protected void onRespSuccessData(List<Variety> data) {
+                        updateFutureData(data);
                     }
 
                     @Override
@@ -208,6 +203,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         super.onFailure(volleyError);
                         stopRefreshAnimation();
                     }
+
                 }).fireSync();
     }
     private void stopRefreshAnimation() {
