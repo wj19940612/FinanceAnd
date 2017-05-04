@@ -24,10 +24,10 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
-import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -90,15 +90,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 EconomicCircle economicCircle = (EconomicCircle) parent.getItemAtPosition(position);
                 if (economicCircle.getType() == TYPE_OPINION) {
                     if (LocalUser.getUser().isLogin()) {
-                        Client.getOpinionDetails(economicCircle.getDataId()).setTag(TAG)
-                                .setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
-                                    @Override
-                                    protected void onRespSuccessData(OpinionDetails opinionDetails) {
-                                        Launcher.with(getContext(), OpinionDetailsActivity.class)
-                                                .putExtra(Launcher.EX_PAYLOAD, opinionDetails)
-                                                .execute();
-                                    }
-                                }).fire();
+                        Launcher.with(getContext(), OpinionDetailsActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, economicCircle.getDataId())
+                                .execute();
+                    } else {
+                        Launcher.with(getContext(), LoginActivity.class).execute();
                     }
                 } else {
                     Launcher.with(getContext(), BorrowMoneyDetailsActivity.class)

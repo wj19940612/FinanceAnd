@@ -640,6 +640,23 @@ public class Client {
                         .put("viewpointId", viewpointId));
     }
 
+	/**
+	 * 获取观点回复列表,在消息里面的回复列表里的置顶回复id
+	 * @param page
+	 * @param pageSize
+	 * @param viewpointId
+	 * @param replyId
+	 * @return
+	 */
+	public static API getOpinionReplyList(int page, int pageSize, int viewpointId, int replyId) {
+		return new API("/coterie/viewpoint/findViewpointReply.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize)
+						.put("viewpointId", viewpointId)
+						.put("replyId", replyId));
+	}
+
     /**
      * 获取用户资料
      *
