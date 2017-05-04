@@ -23,7 +23,6 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.ListWrapper;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.VarietyData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -197,9 +196,10 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     public void requestVarietyList() {
         Client.getVarietyList(Variety.VAR_FUTURE, mPage, mFutureType).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ListWrapper>, ListWrapper>() {
+                .setCallback(new Callback2D<Resp<ListWrapper<Variety>>, ListWrapper<Variety>>() {
+
                     @Override
-                    protected void onRespSuccessData(ListWrapper data) {
+                    protected void onRespSuccessData(ListWrapper<Variety> data) {
                         updateFutureData(data.getData());
                     }
 

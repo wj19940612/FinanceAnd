@@ -69,7 +69,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		mEventListAdapter = new EventListAdapter(this);
 		mSwipeRefreshLayout.setOnRefreshListener(this);
 		mSwipeRefreshLayout.setOnLoadMoreListener(this);
-		mSwipeRefreshLayout.setAdapte(mListView,mEventListAdapter);
+		mSwipeRefreshLayout.setAdapter(mListView,mEventListAdapter);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEventListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
