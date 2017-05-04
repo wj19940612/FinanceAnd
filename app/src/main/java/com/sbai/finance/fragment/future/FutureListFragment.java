@@ -29,6 +29,7 @@ import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -41,10 +42,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener {
+public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,SwipeRefreshLayout.OnRefreshListener,CustomSwipeRefreshLayout.OnLoadMoreListener {
 
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.rate)
     TextView mRate;
     @BindView(R.id.listView)
@@ -94,13 +95,10 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void initView() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestVarietyList();
-            }
-        });
         mFutureListAdapter = new FutureListAdapter(getActivity());
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setAdapte(mListView,mFutureListAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mFutureListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -119,6 +117,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onResume() {
         super.onResume();
+        reset();
         requestVarietyList();
         Netty.get().addHandler(mNettyHandler);
     }
@@ -180,8 +179,12 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
             return;
         }
         stopRefreshAnimation();
-        mFutureListAdapter.clear();
         mFutureListAdapter.addAll(varietyList);
+        if (varietyList.size() < mPageSize) {
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
+        }
         mFutureListAdapter.notifyDataSetChanged();
     }
 
@@ -210,6 +213,9 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
     }
 
     @Override
@@ -222,6 +228,23 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
+    @Override
+    public void onRefresh() {
+        reset();
+        requestVarietyList();
+    }
+
+    private void reset() {
+        mPage = 0;
+        mFutureListAdapter.clear();
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+
+    @Override
+    public void onLoadMore() {
+        requestVarietyList();
     }
 
     public static class FutureListAdapter extends ArrayAdapter<Variety> {

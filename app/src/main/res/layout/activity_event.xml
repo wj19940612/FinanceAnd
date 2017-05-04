@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/event_title"/>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -37,5 +37,5 @@
                 android:text="@string/no_event_record"/>
 
         </LinearLayout>
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

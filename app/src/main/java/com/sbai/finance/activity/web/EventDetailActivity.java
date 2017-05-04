@@ -41,10 +41,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  */
 
 public class EventDetailActivity extends BaseActivity {
-    public static final String EX_URL = "url";
-    public static final String EX_TITLE = "title";
     public static String EX_RAW_COOKIE = "rawCookie";
-    public static final String EX_HTML = "html";
     public static final String EX_EVENT = "event";
 
     @BindView(R.id.eventTitle)

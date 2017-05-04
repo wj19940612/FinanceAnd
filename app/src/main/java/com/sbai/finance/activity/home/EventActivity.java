@@ -30,6 +30,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
@@ -43,17 +44,15 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class EventActivity extends BaseActivity  implements AbsListView.OnScrollListener{
+public class EventActivity extends BaseActivity  implements AbsListView.OnScrollListener,CustomSwipeRefreshLayout.OnLoadMoreListener,SwipeRefreshLayout.OnRefreshListener{
 	@BindView(R.id.listView)
 	ListView mListView;
 	@BindView(R.id.empty)
 	TextView mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
+	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
 	private EventListAdapter mEventListAdapter;
-
-	private TextView mFootView;
 	private int mPageSize = 15;
 	private int mPageNo = 0;
 	private HashSet<String> mSet;
@@ -68,6 +67,9 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	private void initView() {
 		mSet = new HashSet<>();
 		mEventListAdapter = new EventListAdapter(this);
+		mSwipeRefreshLayout.setOnRefreshListener(this);
+		mSwipeRefreshLayout.setOnLoadMoreListener(this);
+		mSwipeRefreshLayout.setAdapte(mListView,mEventListAdapter);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEventListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,12 +84,14 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		});
 		mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
+
+		reset();
+		requestEventList();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		requestEventList();
 	}
 
 	private void requestEventList() {
@@ -105,42 +109,15 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 				}).fire();
 	}
     private void updateEventInfo(ArrayList<EventModel.DataBean> eventList){
+		if (eventList == null) {
+			return;
+		}
 		stopRefreshAnimation();
-		if (mFootView == null){
-			mFootView = new TextView(this);
-			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-			mFootView.setPadding(padding, padding, padding, padding);
-			mFootView.setText(getText(R.string.load_more));
-			mFootView.setGravity(Gravity.CENTER);
-			mFootView.setTextColor(ContextCompat.getColor(this, R.color.assistText));
-			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.greyLightAssist));
-			mFootView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mPageNo++;
-					requestEventList();
-				}
-			});
-			mListView.addFooterView(mFootView);
-		}
-		if (eventList.size()<mPageSize){
-			mListView.removeFooterView(mFootView);
-			mFootView = null;
-		}
-		if (mSwipeRefreshLayout.isRefreshing()) {
-			if (mEventListAdapter != null) {
-				mEventListAdapter.clear();
-				mEventListAdapter.notifyDataSetChanged();
-			}
-			stopRefreshAnimation();
-		}
-		for (EventModel.DataBean data : eventList) {
-			if (mSet.add(data.getId())) {
-				if (mEventListAdapter != null) {
-					mEventListAdapter.add(data);
-				}
-			}
+		mEventListAdapter.addAll(eventList);
+		if (eventList.size() < mPageSize) {
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mPageNo++;
 		}
 		mEventListAdapter.notifyDataSetChanged();
 	}
@@ -153,6 +130,9 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -160,15 +140,6 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 			@Override
 			public void run() {
 				mSwipeRefreshLayout.setRefreshing(true);
-			}
-		});
-
-		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				mSet.clear();
-				mPageNo = 0;
-				requestEventList();
 			}
 		});
 	}
@@ -183,6 +154,23 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		int topRowVerticalPosition =
 				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
 		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+	}
+
+	@Override
+	public void onLoadMore() {
+		requestEventList();
+	}
+
+	@Override
+	public void onRefresh() {
+		reset();
+		requestEventList();
+	}
+
+	private void reset() {
+		mPageNo = 0;
+		mEventListAdapter.clear();
+		mSwipeRefreshLayout.setLoadMoreEnable(true);
 	}
 
 
