@@ -1,303 +1,384 @@
 package com.sbai.finance.model.economiccircle;
 
-public class EconomicCircle {
+import java.io.Serializable;
+import java.util.List;
+
+public class EconomicCircle implements Serializable{
 
 	/**
-	 * auditStatus : 1
-	 * bigVarietyTypeCode : future
-	 * bigVarietyTypeName : 期货
-	 * contractsCode : CL1706
-	 * createTime : 1493212327046
-	 * dataId : 8
-	 * direction : 1
-	 * guessPass : 0
-	 * id : 59009ca755ce743b88e08e4f
-	 * isAttention : 1
-	 * praiseCount : 0
-	 * replyCount : 0
-	 * type : 2
-	 * userId : 21
-	 * userName : 用户65
-	 * userPortrait : shanghai.aliyuncs.com/ueditor/1493109274765.png
-	 * varietyId : 1
-	 * varietyName : CL
-	 * varietyType : CL
+	 * data : [{"auditStatus":2,"bigVarietyTypeCode":"future","bigVarietyTypeName":"期货","calcuId":51,"content":"丁丹丹","createTime":1493876911159,"dataId":112,"direction":1,"guessPass":0,"id":"590ac0af55cef8b807e4ce6d","isAttention":2,"isPraise":0,"praiseCount":0,"replyCount":0,"type":2,"userId":115,"userName":"用户1392","varietyId":1,"varietyName":"美原油","varietyType":"CL"}]
+	 * pageSize : 10
+	 * resultCount : 4
+	 * start : 0
+	 * total : 1
 	 */
 
-	private int auditStatus;
-	private String bigVarietyTypeCode;
-	private String bigVarietyTypeName;
-	private String contractsCode;
-	private long createTime;
-	private int dataId;
-	private int direction;
-	private int guessPass;
-	private String id;
-	private int isAttention;
-	private int praiseCount;
-	private int replyCount;
-	private int type;
-	private int userId;
-	private String userName;
-	private String userPortrait;
-	private int varietyId;
-	private String varietyName;
-	private String varietyType;
-	private String content;
-	private String land;
-	private int money;
-	private int interest;
-	private int days;
-	private String lastPrice;
-	private String risePre;
-	private String  risePrice;
+	private int pageSize;
+	private int resultCount;
+	private int start;
+	private int total;
+	private List<DataBean> data;
 
-	public int getAuditStatus() {
-		return auditStatus;
+	public int getPageSize() {
+		return pageSize;
 	}
 
-	public void setAuditStatus(int auditStatus) {
-		this.auditStatus = auditStatus;
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
-	public String getBigVarietyTypeCode() {
-		return bigVarietyTypeCode;
+	public int getResultCount() {
+		return resultCount;
 	}
 
-	public void setBigVarietyTypeCode(String bigVarietyTypeCode) {
-		this.bigVarietyTypeCode = bigVarietyTypeCode;
+	public void setResultCount(int resultCount) {
+		this.resultCount = resultCount;
 	}
 
-	public String getBigVarietyTypeName() {
-		return bigVarietyTypeName;
+	public int getStart() {
+		return start;
 	}
 
-	public void setBigVarietyTypeName(String bigVarietyTypeName) {
-		this.bigVarietyTypeName = bigVarietyTypeName;
+	public void setStart(int start) {
+		this.start = start;
 	}
 
-	public String getContractsCode() {
-		return contractsCode;
+	public int getTotal() {
+		return total;
 	}
 
-	public void setContractsCode(String contractsCode) {
-		this.contractsCode = contractsCode;
+	public void setTotal(int total) {
+		this.total = total;
 	}
 
-	public long getCreateTime() {
-		return createTime;
+	public List<DataBean> getData() {
+		return data;
 	}
 
-	public void setCreateTime(long createTime) {
-		this.createTime = createTime;
+	public void setData(List<DataBean> data) {
+		this.data = data;
 	}
 
-	public int getDataId() {
-		return dataId;
-	}
+	public static class DataBean {
+		/**
+		 * auditStatus : 2
+		 * bigVarietyTypeCode : future
+		 * bigVarietyTypeName : 期货
+		 * calcuId : 51
+		 * content : 丁丹丹
+		 * createTime : 1493876911159
+		 * dataId : 112
+		 * direction : 1
+		 * guessPass : 0
+		 * id : 590ac0af55cef8b807e4ce6d
+		 * isAttention : 2
+		 * isPraise : 0
+		 * praiseCount : 0
+		 * replyCount : 0
+		 * type : 2
+		 * userId : 115
+		 * userName : 用户1392
+		 * varietyId : 1
+		 * varietyName : 美原油
+		 * varietyType : CL
+		 */
 
-	public void setDataId(int dataId) {
-		this.dataId = dataId;
-	}
+		private int auditStatus;
+		private String bigVarietyTypeCode;
+		private String bigVarietyTypeName;
+		private int calcuId;
+		private String content;
+		private long createTime;
+		private int dataId;
+		private int direction;
+		private int guessPass;
+		private String id;
+		private int isAttention;
+		private int isPraise;
+		private int praiseCount;
+		private int replyCount;
+		private int type;
+		private int userId;
+		private String userName;
+		private int varietyId;
+		private String varietyName;
+		private String varietyType;
+		private String userPortrait;
+		private String land;
+		private int days;
+		private int  interest;
+		private int money;
+		private String lastPrice;
+		private String risePre;
+		private String risePrice;
 
-	public int getDirection() {
-		return direction;
-	}
+		public int getDays() {
+			return days;
+		}
 
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
+		public void setDays(int days) {
+			this.days = days;
+		}
 
-	public int getGuessPass() {
-		return guessPass;
-	}
+		public int getInterest() {
+			return interest;
+		}
 
-	public void setGuessPass(int guessPass) {
-		this.guessPass = guessPass;
-	}
+		public void setInterest(int interest) {
+			this.interest = interest;
+		}
 
-	public String getId() {
-		return id;
-	}
+		public int getMoney() {
+			return money;
+		}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+		public void setMoney(int money) {
+			this.money = money;
+		}
 
-	public int getIsAttention() {
-		return isAttention;
-	}
+		public String getLastPrice() {
+			return lastPrice;
+		}
 
-	public void setIsAttention(int isAttention) {
-		this.isAttention = isAttention;
-	}
+		public void setLastPrice(String lastPrice) {
+			this.lastPrice = lastPrice;
+		}
 
-	public int getPraiseCount() {
-		return praiseCount;
-	}
+		public String getRisePre() {
+			return risePre;
+		}
 
-	public void setPraiseCount(int praiseCount) {
-		this.praiseCount = praiseCount;
-	}
+		public void setRisePre(String risePre) {
+			this.risePre = risePre;
+		}
 
-	public int getReplyCount() {
-		return replyCount;
-	}
+		public String getRisePrice() {
+			return risePrice;
+		}
 
-	public void setReplyCount(int replyCount) {
-		this.replyCount = replyCount;
-	}
+		public void setRisePrice(String risePrice) {
+			this.risePrice = risePrice;
+		}
 
-	public int getType() {
-		return type;
-	}
+		public String getLand() {
+			return land;
+		}
 
-	public void setType(int type) {
-		this.type = type;
-	}
+		public void setLand(String land) {
+			this.land = land;
+		}
 
-	public int getUserId() {
-		return userId;
-	}
+		public String getUserPortrait() {
+			return userPortrait;
+		}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+		public void setUserPortrait(String userPortrait) {
+			this.userPortrait = userPortrait;
+		}
 
-	public String getUserName() {
-		return userName;
-	}
+		public int getAuditStatus() {
+			return auditStatus;
+		}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+		public void setAuditStatus(int auditStatus) {
+			this.auditStatus = auditStatus;
+		}
 
-	public String getUserPortrait() {
-		return userPortrait;
-	}
+		public String getBigVarietyTypeCode() {
+			return bigVarietyTypeCode;
+		}
 
-	public void setUserPortrait(String userPortrait) {
-		this.userPortrait = userPortrait;
-	}
+		public void setBigVarietyTypeCode(String bigVarietyTypeCode) {
+			this.bigVarietyTypeCode = bigVarietyTypeCode;
+		}
 
-	public int getVarietyId() {
-		return varietyId;
-	}
+		public String getBigVarietyTypeName() {
+			return bigVarietyTypeName;
+		}
 
-	public void setVarietyId(int varietyId) {
-		this.varietyId = varietyId;
-	}
+		public void setBigVarietyTypeName(String bigVarietyTypeName) {
+			this.bigVarietyTypeName = bigVarietyTypeName;
+		}
 
-	public String getVarietyName() {
-		return varietyName;
-	}
+		public int getCalcuId() {
+			return calcuId;
+		}
 
-	public void setVarietyName(String varietyName) {
-		this.varietyName = varietyName;
-	}
+		public void setCalcuId(int calcuId) {
+			this.calcuId = calcuId;
+		}
 
-	public String getVarietyType() {
-		return varietyType;
-	}
+		public String getContent() {
+			return content;
+		}
 
-	public void setVarietyType(String varietyType) {
-		this.varietyType = varietyType;
-	}
+		public void setContent(String content) {
+			this.content = content;
+		}
 
-	public String getContent() {
-		return content;
-	}
+		public long getCreateTime() {
+			return createTime;
+		}
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+		public void setCreateTime(long createTime) {
+			this.createTime = createTime;
+		}
 
-	public String getLand() {
-		return land;
-	}
+		public int getDataId() {
+			return dataId;
+		}
 
-	public void setLand(String land) {
-		this.land = land;
-	}
+		public void setDataId(int dataId) {
+			this.dataId = dataId;
+		}
 
-	public int getMoney() {
-		return money;
-	}
+		public int getDirection() {
+			return direction;
+		}
 
-	public void setMoney(int money) {
-		this.money = money;
-	}
+		public void setDirection(int direction) {
+			this.direction = direction;
+		}
 
-	public int getInterest() {
-		return interest;
-	}
+		public int getGuessPass() {
+			return guessPass;
+		}
 
-	public void setInterest(int interest) {
-		this.interest = interest;
-	}
+		public void setGuessPass(int guessPass) {
+			this.guessPass = guessPass;
+		}
 
-	public int getDays() {
-		return days;
-	}
+		public String getId() {
+			return id;
+		}
 
-	public void setDays(int days) {
-		this.days = days;
-	}
+		public void setId(String id) {
+			this.id = id;
+		}
 
-	public String getLastPrice() {
-		return lastPrice;
-	}
+		public int getIsAttention() {
+			return isAttention;
+		}
 
-	public void setLastPrice(String lastPrice) {
-		this.lastPrice = lastPrice;
-	}
+		public void setIsAttention(int isAttention) {
+			this.isAttention = isAttention;
+		}
 
-	public String getRisePre() {
-		return risePre;
-	}
+		public int getIsPraise() {
+			return isPraise;
+		}
 
-	public void setRisePre(String risePre) {
-		this.risePre = risePre;
-	}
+		public void setIsPraise(int isPraise) {
+			this.isPraise = isPraise;
+		}
 
-	public String getRisePrice() {
-		return risePrice;
-	}
+		public int getPraiseCount() {
+			return praiseCount;
+		}
 
-	public void setRisePrice(String risePrice) {
-		this.risePrice = risePrice;
+		public void setPraiseCount(int praiseCount) {
+			this.praiseCount = praiseCount;
+		}
+
+		public int getReplyCount() {
+			return replyCount;
+		}
+
+		public void setReplyCount(int replyCount) {
+			this.replyCount = replyCount;
+		}
+
+		public int getType() {
+			return type;
+		}
+
+		public void setType(int type) {
+			this.type = type;
+		}
+
+		public int getUserId() {
+			return userId;
+		}
+
+		public void setUserId(int userId) {
+			this.userId = userId;
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+
+		public int getVarietyId() {
+			return varietyId;
+		}
+
+		public void setVarietyId(int varietyId) {
+			this.varietyId = varietyId;
+		}
+
+		public String getVarietyName() {
+			return varietyName;
+		}
+
+		public void setVarietyName(String varietyName) {
+			this.varietyName = varietyName;
+		}
+
+		public String getVarietyType() {
+			return varietyType;
+		}
+
+		public void setVarietyType(String varietyType) {
+			this.varietyType = varietyType;
+		}
+
+		@Override
+		public String toString() {
+			return "DataBean{" +
+					"auditStatus=" + auditStatus +
+					", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+					", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
+					", calcuId=" + calcuId +
+					", content='" + content + '\'' +
+					", createTime=" + createTime +
+					", dataId=" + dataId +
+					", direction=" + direction +
+					", guessPass=" + guessPass +
+					", id='" + id + '\'' +
+					", isAttention=" + isAttention +
+					", isPraise=" + isPraise +
+					", praiseCount=" + praiseCount +
+					", replyCount=" + replyCount +
+					", type=" + type +
+					", userId=" + userId +
+					", userName='" + userName + '\'' +
+					", varietyId=" + varietyId +
+					", varietyName='" + varietyName + '\'' +
+					", varietyType='" + varietyType + '\'' +
+					", userPortrait='" + userPortrait + '\'' +
+					", land='" + land + '\'' +
+					", days=" + days +
+					", interest=" + interest +
+					", money=" + money +
+					", lastPrice='" + lastPrice + '\'' +
+					", risePre='" + risePre + '\'' +
+					", risePrice='" + risePrice + '\'' +
+					'}';
+		}
 	}
 
 	@Override
 	public String toString() {
 		return "EconomicCircle{" +
-				"auditStatus=" + auditStatus +
-				", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
-				", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
-				", contractsCode='" + contractsCode + '\'' +
-				", createTime=" + createTime +
-				", dataId=" + dataId +
-				", direction=" + direction +
-				", guessPass=" + guessPass +
-				", id='" + id + '\'' +
-				", isAttention=" + isAttention +
-				", praiseCount=" + praiseCount +
-				", replyCount=" + replyCount +
-				", type=" + type +
-				", userId=" + userId +
-				", userName='" + userName + '\'' +
-				", userPortrait='" + userPortrait + '\'' +
-				", varietyId=" + varietyId +
-				", varietyName='" + varietyName + '\'' +
-				", varietyType='" + varietyType + '\'' +
-				", content='" + content + '\'' +
-				", land='" + land + '\'' +
-				", money=" + money +
-				", interest=" + interest +
-				", days=" + days +
-				", lastPrice='" + lastPrice + '\'' +
-				", risePre='" + risePre + '\'' +
-				", risePrice='" + risePrice + '\'' +
+				"pageSize=" + pageSize +
+				", resultCount=" + resultCount +
+				", start=" + start +
+				", total=" + total +
+				", data=" + data +
 				'}';
 	}
 }

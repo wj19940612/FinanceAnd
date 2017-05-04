@@ -233,7 +233,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
                     //观点详情页面  将选择的这条评论置顶显示，
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
+                            .putExtra(Launcher.EX_PAYLOAD_1,  historyNewsModel.getDataId())
+                            .execute();
                     break;
             }
 

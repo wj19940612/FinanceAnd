@@ -230,16 +230,15 @@ public class Client {
      *
      * @param bigVarietyTypeCode
      * @param page
-     * @param pageSize
      * @param smallVarietyTypeCode
      * @return
      */
-    public static API getVarietyList(String bigVarietyTypeCode, int page, int pageSize, String smallVarietyTypeCode) {
+    public static API getVarietyList(String bigVarietyTypeCode, int page, String smallVarietyTypeCode) {
         return new API("/order/order/getVariety.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("page", page)
-                        .put("pageSize", pageSize)
+                        .put("pageSize", 15)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
 
@@ -357,7 +356,7 @@ public class Client {
      * @return
      */
     public static API shieldOrRelieveShieldUser(int shieldId, int status) {
-        return new API(POST, "/coterie/userDetail/shield.do", new ApiParams()
+        return new API(POST, "/coterie/userInterest/shield.do", new ApiParams()
                 .put("shieldId", shieldId)
                 .put("status", status));
     }
@@ -639,6 +638,23 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("viewpointId", viewpointId));
     }
+
+	/**
+	 * 获取观点回复列表,在消息里面的回复列表里的置顶回复id
+	 * @param page
+	 * @param pageSize
+	 * @param viewpointId
+	 * @param replyId
+	 * @return
+	 */
+	public static API getOpinionReplyList(int page, int pageSize, int viewpointId, Integer replyId) {
+		return new API("/coterie/viewpoint/findViewpointReply.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize)
+						.put("viewpointId", viewpointId)
+						.put("replyId", replyId));
+	}
 
     /**
      * 获取用户资料

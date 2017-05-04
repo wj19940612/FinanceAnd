@@ -22,6 +22,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -44,7 +45,7 @@ public class UserDataActivity extends BaseActivity {
 	@BindView(R.id.attentionNum)
 	TextView mAttentionNum;
 	@BindView(R.id.diagonal)
-	TextView mdiagonal;
+	TextView mDiagonal;
 	@BindView(R.id.fansNum)
 	TextView mFansNum;
 	@BindView(R.id.hisPublish)
@@ -139,7 +140,7 @@ public class UserDataActivity extends BaseActivity {
 		}
 
 		if (mAttentionAndFansNum != null) {
-			mdiagonal.setText(" / ");
+			mDiagonal.setText(" / ");
 			mAttentionNum.setText(getString(R.string.attention_number, String.valueOf(mAttentionAndFansNum.getAttention())));
 			mFansNum.setText(getString(R.string.fans_number, String.valueOf(mAttentionAndFansNum.getFollower())));
 		}
@@ -161,7 +162,7 @@ public class UserDataActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.attention, R.id.shield, R.id.avatar})
+	@OnClick({R.id.attention, R.id.shield, R.id.avatar, R.id.hisPublish})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.attention:
@@ -194,6 +195,12 @@ public class UserDataActivity extends BaseActivity {
 							.show(getSupportFragmentManager());
 				}
 				break;
+
+			case R.id.hisPublish:
+				Launcher.with(this, PublishActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, mAttentionAndFansNum.getUserId())
+						.execute();
+				break;
 		}
 	}
 
@@ -210,7 +217,8 @@ public class UserDataActivity extends BaseActivity {
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
 											mShield.setText(R.string.is_shield);
-											ToastUtil.curt(R.string.shield + mUserData.getUserName());
+											mWhetherAttentionShieldOrNot.setShield(true);
+											ToastUtil.curt("已屏蔽" + mUserData.getUserName());
 										}
 									}
 								}).fire();
@@ -237,7 +245,8 @@ public class UserDataActivity extends BaseActivity {
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
 											mShield.setText(R.string.shield_him);
-											ToastUtil.curt(R.string.relieve_shield + mUserData.getUserName());
+											mWhetherAttentionShieldOrNot.setShield(false);
+											ToastUtil.curt("解除屏蔽"+ mUserData.getUserName());
 										}
 									}
 								}).fire();
@@ -262,7 +271,7 @@ public class UserDataActivity extends BaseActivity {
 							mAttention.setText(R.string.is_attention);
 							mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.greenAssist));
 							mWhetherAttentionShieldOrNot.setFollow(true);
-							ToastUtil.curt("关注" + mUserData.getUserName());
+							ToastUtil.curt("已关注" + mUserData.getUserName());
 						}
 					}
 				}).fire();
