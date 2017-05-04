@@ -335,5 +335,50 @@ public class EconomicCircle implements Serializable{
 		public void setVarietyType(String varietyType) {
 			this.varietyType = varietyType;
 		}
+
+		@Override
+		public String toString() {
+			return "DataBean{" +
+					"auditStatus=" + auditStatus +
+					", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+					", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
+					", calcuId=" + calcuId +
+					", content='" + content + '\'' +
+					", createTime=" + createTime +
+					", dataId=" + dataId +
+					", direction=" + direction +
+					", guessPass=" + guessPass +
+					", id='" + id + '\'' +
+					", isAttention=" + isAttention +
+					", isPraise=" + isPraise +
+					", praiseCount=" + praiseCount +
+					", replyCount=" + replyCount +
+					", type=" + type +
+					", userId=" + userId +
+					", userName='" + userName + '\'' +
+					", varietyId=" + varietyId +
+					", varietyName='" + varietyName + '\'' +
+					", varietyType='" + varietyType + '\'' +
+					", userPortrait='" + userPortrait + '\'' +
+					", land='" + land + '\'' +
+					", days=" + days +
+					", interest=" + interest +
+					", money=" + money +
+					", lastPrice='" + lastPrice + '\'' +
+					", risePre='" + risePre + '\'' +
+					", risePrice='" + risePrice + '\'' +
+					'}';
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "EconomicCircle{" +
+				"pageSize=" + pageSize +
+				", resultCount=" + resultCount +
+				", start=" + start +
+				", total=" + total +
+				", data=" + data +
+				'}';
 	}
 }

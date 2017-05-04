@@ -407,7 +407,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             @BindView(R.id.borrowMoneyContent)
             TextView mBorrowMoneyContent;
             @BindView(R.id.needAmount)
-
             TextView mNeedAmount;
             @BindView(R.id.borrowTime)
             TextView mBorrowTime;
