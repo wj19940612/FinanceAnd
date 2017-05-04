@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -351,10 +352,40 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
                 mBigVarietyName.setText(item.getBigVarietyTypeName());
                 mVarietyName.setText(item.getVarietyName());
-                
-                mLastPrice.setText("88.88");
-                mUpDownPrice.setText("+8.8");
-                mUpDownPercent.setText("+10%");
+
+                if (TextUtils.isEmpty(item.getLastPrice())) {
+                    mLastPrice.setText("--");
+                } else {
+                    if (item.getRisePrice().startsWith("+")) {
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                    } else {
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenPrimary));
+                    }
+                    mLastPrice.setText(item.getLastPrice());
+                }
+
+                if (TextUtils.isEmpty(item.getRisePrice())) {
+                    mUpDownPrice.setText("--");
+                } else {
+                    if (item.getRisePrice().startsWith("+")) {
+                        mUpDownPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                    } else {
+                        mUpDownPrice.setTextColor(ContextCompat.getColor(context, R.color.greenPrimary));
+                    }
+                    mUpDownPrice.setText(item.getRisePrice());
+                }
+
+                if (TextUtils.isEmpty(item.getRisePre())) {
+                    mUpDownPercent.setText("--");
+                } else {
+                    if (item.getRisePre().startsWith("+")) {
+                        mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                    } else {
+                        mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.greenPrimary));
+                    }
+                    mUpDownPercent.setText(item.getRisePre());
+                }
+
 
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override

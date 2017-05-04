@@ -210,7 +210,8 @@ public class UserDataActivity extends BaseActivity {
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
 											mShield.setText(R.string.is_shield);
-											ToastUtil.curt(R.string.shield + mUserData.getUserName());
+											mWhetherAttentionShieldOrNot.setShield(true);
+											ToastUtil.curt("已屏蔽" + mUserData.getUserName());
 										}
 									}
 								}).fire();
@@ -237,7 +238,8 @@ public class UserDataActivity extends BaseActivity {
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
 											mShield.setText(R.string.shield_him);
-											ToastUtil.curt(R.string.relieve_shield + mUserData.getUserName());
+											mWhetherAttentionShieldOrNot.setShield(false);
+											ToastUtil.curt("解除屏蔽"+ mUserData.getUserName());
 										}
 									}
 								}).fire();
@@ -262,7 +264,7 @@ public class UserDataActivity extends BaseActivity {
 							mAttention.setText(R.string.is_attention);
 							mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.greenAssist));
 							mWhetherAttentionShieldOrNot.setFollow(true);
-							ToastUtil.curt("关注" + mUserData.getUserName());
+							ToastUtil.curt("已关注" + mUserData.getUserName());
 						}
 					}
 				}).fire();

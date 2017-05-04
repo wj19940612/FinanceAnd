@@ -2,7 +2,6 @@ package com.sbai.finance.model.economiccircle;
 
 public class EconomicCircle {
 
-
 	/**
 	 * auditStatus : 1
 	 * bigVarietyTypeCode : future
@@ -48,6 +47,7 @@ public class EconomicCircle {
 	private String land;
 	private int money;
 	private int interest;
+	private int days;
 	private String lastPrice;
 	private String risePre;
 	private String  risePrice;
@@ -236,6 +236,14 @@ public class EconomicCircle {
 		this.interest = interest;
 	}
 
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+
 	public String getLastPrice() {
 		return lastPrice;
 	}
@@ -286,6 +294,7 @@ public class EconomicCircle {
 				", land='" + land + '\'' +
 				", money=" + money +
 				", interest=" + interest +
+				", days=" + days +
 				", lastPrice='" + lastPrice + '\'' +
 				", risePre='" + risePre + '\'' +
 				", risePrice='" + risePrice + '\'' +
