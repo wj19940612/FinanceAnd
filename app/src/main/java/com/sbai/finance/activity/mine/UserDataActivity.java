@@ -22,6 +22,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -161,7 +162,7 @@ public class UserDataActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.attention, R.id.shield, R.id.avatar})
+	@OnClick({R.id.attention, R.id.shield, R.id.avatar, R.id.hisPublish})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.attention:
@@ -193,6 +194,12 @@ public class UserDataActivity extends BaseActivity {
 					AvatarFragment.newInstance(mUserData.getUserPortrait())
 							.show(getSupportFragmentManager());
 				}
+				break;
+
+			case R.id.hisPublish:
+				Launcher.with(this, PublishActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, mAttentionAndFansNum.getUserId())
+						.execute();
 				break;
 		}
 	}
