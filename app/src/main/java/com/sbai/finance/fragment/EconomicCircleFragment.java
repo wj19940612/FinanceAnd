@@ -397,7 +397,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mLocation.setText(item.getLand());
                 mNeedAmount.setText(context.getString(R.string.RMB,  String.valueOf(item.getMoney())));
-                mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
+//                mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));
                 mBorrowMoneyContent.setText(item.getContent());
                 mAvatar.setOnClickListener(new View.OnClickListener() {

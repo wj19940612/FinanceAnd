@@ -89,11 +89,15 @@ public class UserPublishModel {
          */
 
         private int auditStatus;
+        //大类代码
         private String bigVarietyTypeCode;
+        //大类名称
+        private String bigVarietyTypeName;
         private int calcuId;
         private String content;
         private long createTime;
         private int direction;
+//        预测状态 0等待结果 1成功 2失败
         private int guessPass;
         private int id;
         //	最新价
@@ -113,6 +117,15 @@ public class UserPublishModel {
         private int varietyId;
         private String varietyName;
         private String varietyType;
+        /**
+         * bigVarietyTypeName : 测试内容3z0m
+         * createTime : 测试内容051b
+         * isAttention : 18117
+         * lastPrice : 84672
+         * risePre : 16208
+         */
+        private int isAttention;
+
 
         public int getAuditStatus() {
             return auditStatus;
@@ -273,5 +286,58 @@ public class UserPublishModel {
         public void setVarietyType(String varietyType) {
             this.varietyType = varietyType;
         }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "auditStatus=" + auditStatus +
+                    ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+                    ", calcuId=" + calcuId +
+                    ", content='" + content + '\'' +
+                    ", createTime=" + createTime +
+                    ", direction=" + direction +
+                    ", guessPass=" + guessPass +
+                    ", id=" + id +
+                    ", lastPrice='" + lastPrice + '\'' +
+                    ", praiseCount=" + praiseCount +
+                    ", replyCount=" + replyCount +
+                    ", risePre='" + risePre + '\'' +
+                    ", risePrice='" + risePrice + '\'' +
+                    ", updateTime=" + updateTime +
+                    ", userId=" + userId +
+                    ", userName='" + userName + '\'' +
+                    ", userPortrait='" + userPortrait + '\'' +
+                    ", varietyId=" + varietyId +
+                    ", varietyName='" + varietyName + '\'' +
+                    ", varietyType='" + varietyType + '\'' +
+                    '}';
+        }
+
+        public String getBigVarietyTypeName() {
+            return bigVarietyTypeName;
+        }
+
+        public void setBigVarietyTypeName(String bigVarietyTypeName) {
+            this.bigVarietyTypeName = bigVarietyTypeName;
+        }
+
+        public int getIsAttention() {
+            return isAttention;
+        }
+
+        public void setIsAttention(int isAttention) {
+            this.isAttention = isAttention;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "UserPublishModel{" +
+                "pageSize=" + pageSize +
+                ", resultCount=" + resultCount +
+                ", start=" + start +
+                ", total=" + total +
+                ", data=" + data +
+                '}';
     }
 }
