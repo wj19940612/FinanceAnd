@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/avatar"
                 android:layout_toRightOf="@+id/avatar"
-                android:drawableLeft="@drawable/ic_male"
+                tools:drawableLeft="@drawable/ic_male"
                 android:drawablePadding="8dp"
                 android:textColor="@android:color/white"
                 android:textSize="17sp"
@@ -77,7 +77,7 @@
                 android:layout_below="@+id/location"
                 android:layout_marginTop="15dp"
                 android:layout_toRightOf="@+id/attentionNum"
-                android:text=" / "
+                tools:text=" / "
                 android:textColor="@android:color/white"
                 android:textSize="12sp"/>
 
@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/ic_failed"
+            tools:drawableLeft="@drawable/ic_failed"
             android:drawablePadding="5dp"
             android:gravity="center"
             android:text="@string/unauthorized"
@@ -160,6 +160,7 @@
         android:layout_weight="1"/>
 
     <LinearLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
@@ -188,7 +189,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white"
             android:gravity="center"
-            android:text="@string/shield"
+            android:text="@string/shield_him"
             android:textColor="@color/primaryText"
             android:textSize="16sp"/>
     </LinearLayout>
