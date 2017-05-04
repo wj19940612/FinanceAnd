@@ -31,16 +31,17 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        translucentStatusBar();
+        initView();
+
         // init getui push
         PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), PushIntentService.class);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        translucentStatusBar();
-        initView();
     }
 
     @Override

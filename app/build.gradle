@@ -11,16 +11,16 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        // the ndk and manifest configs are for getui
-        ndk {
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
-        }
         manifestPlaceholders = [
                 GETUI_APP_ID : "3OXiQAgdLK74blL5qrfvn7",
                 GETUI_APP_KEY : "Cm5IpNQNesA7Pg6hQI6wq8",
                 GETUI_APP_SECRET : "dIHXqXMBzt6rhfAFui4Gt9"
         ]
+
+        // the ndk and manifest configs are for getui
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
+        }
     }
     buildTypes {
         release {

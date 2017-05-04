@@ -145,13 +145,13 @@
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
 
+        <!--      service       -->
         <service android:name=".service.PushIntentService"/>
         <service
             android:name=".service.PushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice">
-        </service>
+            android:process=":pushservice"/>
     </application>
 
 </manifest>
