@@ -135,6 +135,15 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSet.clear();
+        mPage = 0;
+        requestEconomicCircleList();
+    }
+
+    @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
     }
@@ -328,7 +337,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                         .into(mAvatar);
 
                 mUserName.setText(item.getUserName());
-                if (item.getIsAttention() == 1) {
+                if (item.getIsAttention() == 2) {
                     mIsAttention.setText(R.string.is_attention);
                 }
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
@@ -342,9 +351,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
                 mBigVarietyName.setText(item.getBigVarietyTypeName());
                 mVarietyName.setText(item.getVarietyName());
+                
                 mLastPrice.setText("88.88");
                 mUpDownPrice.setText("+8.8");
                 mUpDownPercent.setText("+10%");
+
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

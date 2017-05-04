@@ -742,4 +742,79 @@ public class Client {
 				new ApiParams()
 						.put("varietyId", varietyId));
 	}
+
+    /**
+     * 获取多个行情
+     * @param codes
+     * @return
+     */
+    public static API getQuotaList(String codes){
+        return new API("/fut/quota/list.do",
+                new ApiParams()
+                        .put("codes", codes));
+    }
+
+    /**
+     * 发表观点
+     *
+     * @param bigVarietyTypeCode
+     * @param content
+     * @param direction
+     * @param varietyId
+     * @param varietyType
+     * @return
+     */
+    public static API publishPoint(String bigVarietyTypeCode, String calcuId, String content, int direction,
+                                   String lastPrice, String risePrice, String risePercent,
+                                   int varietyId, String varietyType) {
+        return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("calcuId", calcuId)
+                        .put("content", content)
+                        .put("direction", direction)
+                        .put("lastPrice", lastPrice)
+                        .put("risePrice", risePrice)
+                        .put("risePre", risePercent)
+                        .put("varietyId", varietyId)
+                        .put("varietyType", varietyType));
+    }
+
+    /**
+     * 检测是否已经预测'看涨'看跌'
+     *
+     * @param bigVarietyTypeCode
+     * @param varietyId
+     * @return
+     */
+    public static API getPrediction(String bigVarietyTypeCode, int varietyId) {
+        return new API("/coterie/viewpoint/checkCalculate.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("varietyId", varietyId));
+    }
+
+    /**
+     * 获取品种简介
+     *
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietyTradeIntroduce(int varietyId) {
+        return new API("/order/order/getVarietytradeIntro.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
+
+    /**
+     * 获取品种交易所状态
+     *
+     * @param exchangeId
+     * @return
+     */
+    public static API getExchangeStatus(int exchangeId) {
+        return new API("/order/order/getExchangeStatus.do",
+                new ApiParams()
+                        .put("exchangeId", exchangeId));
+    }
 }
