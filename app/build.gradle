@@ -17,6 +17,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            ext.enableCrashlytics = false
+        }
     }
 
     packagingOptions {
@@ -32,6 +35,29 @@ android {
             def file = output.outputFile
             def newFileName = file.name.replace(".apk", "-${variant.versionName}.apk")
             output.outputFile = new File(file.parent, newFileName)
+        }
+    }
+
+    aaptOptions {
+        cruncherEnabled true // !!set true when package release apk
+    }
+
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount 8
+        javaMaxHeapSize '2g'
+    }
+
+    productFlavors {
+        dev {
+            minSdkVersion 21
+            versionNameSuffix '-dev'
+            applicationIdSuffix '.dev'
+            resConfigs "xxhdpi"
+        }
+
+        prod {
+
         }
     }
 }
