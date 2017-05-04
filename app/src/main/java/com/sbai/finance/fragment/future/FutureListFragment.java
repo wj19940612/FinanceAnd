@@ -21,7 +21,9 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.FutureData;
+import com.sbai.finance.model.ListWrapper;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -29,6 +31,8 @@ import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.httplib.ApiCallback;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -41,10 +45,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener {
+public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,SwipeRefreshLayout.OnRefreshListener,CustomSwipeRefreshLayout.OnLoadMoreListener {
 
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.rate)
     TextView mRate;
     @BindView(R.id.listView)
@@ -57,8 +61,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     private FutureListAdapter mFutureListAdapter;
 
     private String mFutureType;
-    private int mPage = 0;
-    private int mPageSize = 15;
+    private int mPage;
 
     public static FutureListFragment newInstance(String type) {
         FutureListFragment futureListFragment = new FutureListFragment();
@@ -88,19 +91,15 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPage = 0;
-        mPageSize = 10;
 
         initView();
     }
 
     private void initView() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestVarietyList();
-            }
-        });
         mFutureListAdapter = new FutureListAdapter(getActivity());
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setAdapter(mListView,mFutureListAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mFutureListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -113,12 +112,12 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                 }
             }
         });
-        mListView.setOnScrollListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        reset();
         requestVarietyList();
         Netty.get().addHandler(mNettyHandler);
     }
@@ -180,8 +179,12 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
             return;
         }
         stopRefreshAnimation();
-        mFutureListAdapter.clear();
         mFutureListAdapter.addAll(varietyList);
+        if (varietyList.size() < 15) {
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
+        }
         mFutureListAdapter.notifyDataSetChanged();
     }
 
@@ -192,11 +195,12 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     public void requestVarietyList() {
-        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mFutureType).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+        Client.getVarietyList(Variety.VAR_FUTURE, mPage, mFutureType).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ListWrapper<Variety>>, ListWrapper<Variety>>() {
+
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
-                        updateFutureData(data);
+                    protected void onRespSuccessData(ListWrapper<Variety> data) {
+                        updateFutureData(data.getData());
                     }
 
                     @Override
@@ -210,6 +214,9 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
     }
 
     @Override
@@ -222,6 +229,23 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
+    @Override
+    public void onRefresh() {
+        reset();
+        requestVarietyList();
+    }
+
+    private void reset() {
+        mPage = 0;
+        mFutureListAdapter.clear();
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+
+    @Override
+    public void onLoadMore() {
+        requestVarietyList();
     }
 
     public static class FutureListAdapter extends ArrayAdapter<Variety> {
@@ -273,7 +297,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
             private void bindingData(Variety item, HashMap<String, FutureData> map, Context context) {
                 mFutureName.setText(item.getVarietyName());
-                mFutureCode.setText(item.getContractsCode());
+                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+                    mFutureCode.setText(item.getContractsCode());
+                }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+                    mFutureCode.setText(item.getVarietyType());
+                }
 
                 FutureData futureData = map.get(item.getContractsCode());
                 if (futureData != null) {

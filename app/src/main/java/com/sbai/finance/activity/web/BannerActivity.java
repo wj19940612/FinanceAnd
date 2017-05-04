@@ -28,7 +28,7 @@ public class BannerActivity extends WebActivity {
         String content;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             getWebView().getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            content = INFO_HTML_META + "<body>" + "<br></br>" + mPureHtml + "</body>";
+            content = INFO_HTML_META + "<body>" + mPureHtml + "</body>";
         } else {
             getWebView().getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             content = getHtmlData(urlData);
@@ -38,6 +38,6 @@ public class BannerActivity extends WebActivity {
 
     private String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
-        return "<html>" + head + "<br></br>" + bodyHTML + "</html>";
+        return "<html>" + head  + bodyHTML + "</html>";
     }
 }

@@ -230,16 +230,15 @@ public class Client {
      *
      * @param bigVarietyTypeCode
      * @param page
-     * @param pageSize
      * @param smallVarietyTypeCode
      * @return
      */
-    public static API getVarietyList(String bigVarietyTypeCode, int page, int pageSize, String smallVarietyTypeCode) {
+    public static API getVarietyList(String bigVarietyTypeCode, int page, String smallVarietyTypeCode) {
         return new API("/order/order/getVariety.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("page", page)
-                        .put("pageSize", pageSize)
+                        .put("pageSize", 15)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
 

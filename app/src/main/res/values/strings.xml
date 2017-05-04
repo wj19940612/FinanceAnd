@@ -43,6 +43,8 @@
     <string name="stock">股票</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
+
+    <string name="banner_detail">活动详情</string>
     <!--Future-->
     <string name="future_foreign">国外期货</string>
     <string name="future_china">国内期货</string>

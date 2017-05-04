@@ -39,13 +39,16 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  */
 
 public class EventDetailActivity extends BaseActivity {
+<<<<<<< HEAD
 
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
 
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";
+=======
+    public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
+>>>>>>> 10fa11271d3807d40078b35f7ddf2e49ce935f37
     public static String EX_RAW_COOKIE = "rawCookie";
-    public static final String EX_HTML = "html";
     public static final String EX_EVENT = "event";
 
     @BindView(R.id.eventTitle)
@@ -187,24 +190,22 @@ public class EventDetailActivity extends BaseActivity {
             openWebView(mPureHtml);
         }
     }
-
+    
     private void openWebView(String urlData) {
         String content;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             getWebView().getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            content = INFO_HTML_META + "<body>" + "<br></br>" + mPureHtml + "</body>";
+            content = INFO_HTML_META + "<body>"+ mPureHtml + "</body>";
         } else {
             getWebView().getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             content = getHtmlData(urlData);
         }
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
-
     private String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
-        return "<html>" + head + "<br></br>" + bodyHTML + "</html>";
+        return "<html>" + head + bodyHTML + "</html>";
     }
-
     protected void initCookies(String rawCookie, String pageUrl) {
         if (!TextUtils.isEmpty(rawCookie) && !TextUtils.isEmpty(pageUrl)) {
             String[] cookies = rawCookie.split("\n");

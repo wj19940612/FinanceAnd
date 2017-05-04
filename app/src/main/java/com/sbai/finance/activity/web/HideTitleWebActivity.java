@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;
@@ -120,7 +121,8 @@ public class HideTitleWebActivity extends BaseActivity {
     private void tryToFixPageUrl() {
         if (!TextUtils.isEmpty(mPageUrl)) {
             if (!mPageUrl.startsWith("http")) { // http or https
-                mPageUrl = "http://" + mPageUrl;
+               // mPageUrl = "http://" + mPageUrl;
+                mPageUrl = API.getHost()+ mPageUrl;
             }
         }
     }
