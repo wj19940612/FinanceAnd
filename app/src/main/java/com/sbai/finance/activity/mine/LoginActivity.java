@@ -58,10 +58,14 @@ public class LoginActivity extends BaseActivity {
     RelativeLayout mShowLayout;
     @BindView(R.id.hideLayout)
     TextView mHideLayout;
+    @BindView(R.id.codeClear)
+    AppCompatImageView mCodeClear;
 
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
     private int mCounter;
+    //获取验证是否开始
+    private boolean mFreezeObtainAuthCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +159,7 @@ public class LoginActivity extends BaseActivity {
 
     private boolean checkObtainAuthCodeEnable() {
         String phone = getPhoneNumber();
-        return (!TextUtils.isEmpty(phone) && phone.length() > 10);
+        return (!TextUtils.isEmpty(phone) && phone.length() > 10 && !mFreezeObtainAuthCode);
     }
 
 
@@ -166,6 +170,12 @@ public class LoginActivity extends BaseActivity {
                 mErrorHint.setVisibility(View.INVISIBLE);
             }
             boolean enable = checkSignInButtonEnable();
+            String authCode = mAuthCode.getText().toString().trim();
+            if (!TextUtils.isEmpty(authCode) && authCode.length() > 3) {
+                mCodeClear.setVisibility(View.VISIBLE);
+            } else {
+                mCodeClear.setVisibility(View.INVISIBLE);
+            }
             if (enable != mLogin.isEnabled()) {
                 mLogin.setEnabled(enable);
             }
@@ -187,7 +197,7 @@ public class LoginActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login})
+    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.codeClear, R.id.getAuthCode, R.id.login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deletePage:
@@ -195,6 +205,9 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.phoneNumberClear:
                 mPhoneNumber.setText("");
+                break;
+            case R.id.codeClear:
+                mAuthCode.setText("");
                 break;
             case R.id.getAuthCode:
                 getAuthCode();
@@ -240,6 +253,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
+                            mFreezeObtainAuthCode = true;
                             startScheduleJob(1000);
                             mCounter = 60;
                             mGetAuthCode.setEnabled(false);
@@ -254,6 +268,7 @@ public class LoginActivity extends BaseActivity {
     public void onTimeUp(int count) {
         mCounter--;
         if (mCounter <= 0) {
+            mFreezeObtainAuthCode = false;
             mGetAuthCode.setEnabled(true);
             mGetAuthCode.setText(R.string.obtain_auth_code_continue);
             stopScheduleJob();
@@ -261,4 +276,5 @@ public class LoginActivity extends BaseActivity {
             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
         }
     }
+
 }

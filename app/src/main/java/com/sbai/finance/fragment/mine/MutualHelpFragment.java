@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.mine;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -241,6 +242,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             if (mNotReadNewsNumber == 0) {
                 mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, 0);
             }
+            getActivity().setResult(Activity.RESULT_OK);
             Client.updateMsgReadStatus(item.getId())
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<JsonObject>>() {
@@ -311,12 +313,12 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                             .into(mUserHeadImage);
                     if (item.isAlreadyRead()) {
 //                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getMsg(),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
                                 ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     } else {
 //                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getMsg(),
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
                                 ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     }

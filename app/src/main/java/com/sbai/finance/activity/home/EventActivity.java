@@ -21,11 +21,16 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.web.BannerActivity;
+import com.sbai.finance.activity.web.EventDetailActivity;
+import com.sbai.finance.activity.web.HideTitleWebActivity;
 import com.sbai.finance.model.EventModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,7 +52,6 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	SwipeRefreshLayout mSwipeRefreshLayout;
 
 	private EventListAdapter mEventListAdapter;
-	private List<EventModel> mListEvent;
 
 	private TextView mFootView;
 	private int mPageSize = 15;
@@ -69,7 +73,11 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				mEventListAdapter.getItem(position).getUrl();
+				EventModel.DataBean dataBean = mEventListAdapter.getItem(position);
+				Launcher.with(getActivity(), EventDetailActivity.class)
+							.putExtra(EventDetailActivity.EX_EVENT, dataBean)
+							.putExtra(EventDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+							.execute();
 			}
 		});
 		mListView.setOnScrollListener(this);
@@ -97,18 +105,15 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 				}).fire();
 	}
     private void updateEventInfo(ArrayList<EventModel.DataBean> eventList){
-        if (eventList.isEmpty()){
-			stopRefreshAnimation();
-			return;
-		}
+		stopRefreshAnimation();
 		if (mFootView == null){
 			mFootView = new TextView(this);
 			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
 			mFootView.setPadding(padding, padding, padding, padding);
 			mFootView.setText(getText(R.string.load_more));
 			mFootView.setGravity(Gravity.CENTER);
-			mFootView.setTextColor(Color.WHITE);
-			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+			mFootView.setTextColor(ContextCompat.getColor(this, R.color.assistText));
+			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.greyLightAssist));
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

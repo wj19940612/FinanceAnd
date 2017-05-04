@@ -2,6 +2,7 @@ package com.sbai.finance.view;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,11 +27,17 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     private ListView mListView;
 
+    //暂不支持RecyclerView
+    private RecyclerView mRecyclerView;
+
     private int mYdown;
 
     private int mYlast;
 
     private boolean isLoading = false;
+
+    //滑动到底部的时候手动设置不允许loadMore
+    private boolean loadMoreEnable = true;
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
@@ -55,7 +62,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     protected void onLayout(boolean changed, int left, int top, int right,
                             int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        //获取listview
+        //只存在两种情况  不是ListView就是RecyclerView
         if (mListView == null) {
             getListView();
         }
@@ -73,6 +80,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
             }
         }
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -107,7 +115,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private boolean canLoad() {
-        return !isLoading && isPullup() && isBottom();
+        return loadMoreEnable && !isLoading && isPullup() && isBottom();
     }
 
     private boolean enableBottomLoad() {
@@ -144,6 +152,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     }
 
+    public boolean isLoading(){
+        return isLoading;
+    }
+
     public void setLoadingContent(String string) {
         mTvLoadMore.setText(string);
     }
@@ -159,11 +171,19 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
                          int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition =
+                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+        setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+
         mVisibleItemCount = visibleItemCount;
         mTotalItemCount = totalItemCount;
         if (visibleItemCount < totalItemCount && enableBottomLoad()) {
             loadData();
         }
+    }
+
+    public void setLoadMoreEnable(boolean enable){
+        loadMoreEnable = enable;
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {

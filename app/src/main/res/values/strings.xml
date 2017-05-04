@@ -53,6 +53,10 @@
     <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="idea_title">观点大神</string>
     <string name="idea_detail">眼光奇准,跟着混，准没错</string>
+    <!--Stock-->
+    <string name="ShangHaiStockExchange">上证</string>
+    <string name="ShenzhenStockExchange">深证</string>
+    <string name="GrowthEnterpriseMarket">创业板</string>
     <!--help-->
     <string name="borrow_in">我的借入</string>
     <string name="borrow_out">我的借出</string>
@@ -69,7 +73,7 @@
     <string name="highest">最高</string>
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
-    <string name="add_optional">自选</string>
+    <string name="add_optional">+ 自选</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
@@ -83,6 +87,7 @@
     <string name="introduce">简介</string>
     <string name="stock_news">新闻</string>
     <string name="stock_finance">财务</string>
+    <string name="market_close">休市</string>
 
     <!-- 我的界面 -->
     <string name="attention">关注</string>
@@ -141,6 +146,9 @@
     <string name="cancel_attention_dialog_title">是否对“%1$s”\n取消关注?</string>
     <string name="cancel_attention">取消关注</string>
 
+    <string name="if_not_attention">是否不再关注%1$s?</string>
+    <string name="if_attention">是否关注%1$s?</string>
+
     <string name="new_notification">新消息通知</string>
     <string name="want_to_help_you">     想要帮助你</string>
     <string name="accept_your_help">     接受了你的帮助</string>
@@ -149,6 +157,7 @@
     <string name="replay_you">      评论了你</string>
     <string name="attention_you">      关注了你</string>
     <string name="like_your_publish">      喜欢了你的发表</string>
+
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
@@ -262,4 +271,7 @@
 
     <string name="borrow_failure">借款失败</string>
 
+    <string name="network_error_please_reload">网络连接失败 请重新加载</string>
+    <string name="refresh">刷新</string>
+    <string name="android_web_agent">ANDROID_AGENT</string>
 </resources>

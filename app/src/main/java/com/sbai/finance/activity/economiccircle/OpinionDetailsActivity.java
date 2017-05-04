@@ -48,6 +48,7 @@ import butterknife.OnClick;
 
 public class OpinionDetailsActivity extends BaseActivity {
 
+
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
 	@BindView(R.id.avatar)

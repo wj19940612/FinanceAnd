@@ -28,6 +28,7 @@ import com.sbai.finance.model.mine.UserPublishModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.view.TitleBar;
 
@@ -70,7 +71,8 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, 0)
+        // TODO: 2017/5/3 目前使用春泉的账号id  
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, 98)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<UserPublishModel>, UserPublishModel>() {
                     @Override
@@ -208,7 +210,10 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                         .into(mAvatar);
                 mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
                 mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
-                mOpinionContent.setText( item.getContent());
+                mOpinionContent.setText(item.getContent());
+                mVarietyName.setText(item.getVarietyName());
+                mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+
             }
         }
     }

@@ -3,7 +3,7 @@
           package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- Storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -44,7 +44,7 @@
             android:name=".activity.mine.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.future.FutureActivity"
+            android:name=".activity.future.FutureListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mutual.MutualActivity"
@@ -63,7 +63,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.stock.StockActivity"
+            android:name=".activity.stock.StockListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.stock.SearchStockActivity"
@@ -134,6 +134,16 @@
             android:name=".activity.trade.TradeWebActivity"
             android:screenOrientation="portrait"
             />
+
+        <activity
+            android:name=".activity.web.BannerActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.HideTitleWebActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.EventDetailActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -64,62 +64,78 @@ public class UserPublishModel {
     }
 
     public static class DataBean {
+
         /**
-         * followStatus : 0
-         * userName : 溺水的鱼
-         * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493707651242.png
+         * auditStatus : 1
+         * bigVarietyTypeCode : future
+         * calcuId : 49
+         * content : 好多话好多好多的话感动好的环境
+         * createTime : 1493800236000
+         * direction : 1
+         * guessPass : 0
+         * id : 96
+         * lastPrice : 48.010
+         * praiseCount : 0
+         * replyCount : 0
+         * risePre : +0.73%
+         * risePrice : +0.35
+         * updateTime : 1493800236000
+         * userId : 98
+         * userName : 我想自己
+         * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493793238368.png
+         * varietyId : 1
+         * varietyName : 美原油
+         * varietyType : CL
          */
 
-        private int followStatus;
+        private int auditStatus;
+        private String bigVarietyTypeCode;
+        private int calcuId;
+        private String content;
+        private long createTime;
+        private int direction;
+        private int guessPass;
+        private int id;
+        //	最新价
+        private String lastPrice;
+        //点赞数
+        private int praiseCount;
+        //回复数
+        private int replyCount;
+        //涨幅百分比
+        private String risePre;
+        //
+        private String risePrice;
+        private long updateTime;
+        private int userId;
         private String userName;
         private String userPortrait;
-        /**
-         * emptyIdentifier : 1
-         * content : 测试内容2818
-         * praiseCount : 80780
-         * replyCount : 42008
-         * userName : 1
-         * varietyId : 16018
-         * varietyType : 测试内容1lqe
-         */
-
-        private int emptyIdentifier;
-        private String content;
-        private int praiseCount;
-        private int replyCount;
         private int varietyId;
+        private String varietyName;
         private String varietyType;
 
-        public int getFollowStatus() {
-            return followStatus;
+        public int getAuditStatus() {
+            return auditStatus;
         }
 
-        public void setFollowStatus(int followStatus) {
-            this.followStatus = followStatus;
+        public void setAuditStatus(int auditStatus) {
+            this.auditStatus = auditStatus;
         }
 
-        public String getUserName() {
-            return userName;
+        public String getBigVarietyTypeCode() {
+            return bigVarietyTypeCode;
         }
 
-        public void setUserName(String userName) {
-            this.userName = userName;
+        public void setBigVarietyTypeCode(String bigVarietyTypeCode) {
+            this.bigVarietyTypeCode = bigVarietyTypeCode;
         }
 
-        public String getUserPortrait() {
-            return userPortrait;
+        public int getCalcuId() {
+            return calcuId;
         }
 
-        public void setUserPortrait(String userPortrait) {
-            this.userPortrait = userPortrait;
-        }
-
-        public int getEmptyIdentifier() {
-            return emptyIdentifier;
-        }
-
-        public void setEmptyIdentifier(int emptyIdentifier) {
-            this.emptyIdentifier = emptyIdentifier;
+        public void setCalcuId(int calcuId) {
+            this.calcuId = calcuId;
         }
 
         public String getContent() {
@@ -128,6 +144,46 @@ public class UserPublishModel {
 
         public void setContent(String content) {
             this.content = content;
+        }
+
+        public long getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(long createTime) {
+            this.createTime = createTime;
+        }
+
+        public int getDirection() {
+            return direction;
+        }
+
+        public void setDirection(int direction) {
+            this.direction = direction;
+        }
+
+        public int getGuessPass() {
+            return guessPass;
+        }
+
+        public void setGuessPass(int guessPass) {
+            this.guessPass = guessPass;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getLastPrice() {
+            return lastPrice;
+        }
+
+        public void setLastPrice(String lastPrice) {
+            this.lastPrice = lastPrice;
         }
 
         public int getPraiseCount() {
@@ -146,6 +202,54 @@ public class UserPublishModel {
             this.replyCount = replyCount;
         }
 
+        public String getRisePre() {
+            return risePre;
+        }
+
+        public void setRisePre(String risePre) {
+            this.risePre = risePre;
+        }
+
+        public String getRisePrice() {
+            return risePrice;
+        }
+
+        public void setRisePrice(String risePrice) {
+            this.risePrice = risePrice;
+        }
+
+        public long getUpdateTime() {
+            return updateTime;
+        }
+
+        public void setUpdateTime(long updateTime) {
+            this.updateTime = updateTime;
+        }
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getUserPortrait() {
+            return userPortrait;
+        }
+
+        public void setUserPortrait(String userPortrait) {
+            this.userPortrait = userPortrait;
+        }
+
         public int getVarietyId() {
             return varietyId;
         }
@@ -154,27 +258,20 @@ public class UserPublishModel {
             this.varietyId = varietyId;
         }
 
+        public String getVarietyName() {
+            return varietyName;
+        }
+
+        public void setVarietyName(String varietyName) {
+            this.varietyName = varietyName;
+        }
+
         public String getVarietyType() {
             return varietyType;
         }
 
         public void setVarietyType(String varietyType) {
             this.varietyType = varietyType;
-        }
-
-        @Override
-        public String toString() {
-            return "DataBean{" +
-                    "followStatus=" + followStatus +
-                    ", userName='" + userName + '\'' +
-                    ", userPortrait='" + userPortrait + '\'' +
-                    ", emptyIdentifier=" + emptyIdentifier +
-                    ", content='" + content + '\'' +
-                    ", praiseCount=" + praiseCount +
-                    ", replyCount=" + replyCount +
-                    ", varietyId=" + varietyId +
-                    ", varietyType='" + varietyType + '\'' +
-                    '}';
         }
     }
 }

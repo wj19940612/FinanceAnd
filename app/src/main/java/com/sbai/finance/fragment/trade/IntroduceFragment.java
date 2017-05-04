@@ -56,35 +56,41 @@ public class IntroduceFragment extends BaseFragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mVariety = getArguments().getParcelable(Launcher.EX_PAYLOAD);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_introduce, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mVariety = getArguments().getParcelable(Launcher.EX_PAYLOAD);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        requestVarietyTradeIntrouce();
+        requestVarietyTradeIntroduce();
     }
 
-    private void requestVarietyTradeIntrouce(){
-        Client.getVarietytradeIntrouce(mVariety.getVarietyId())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<FutureIntroduce>,FutureIntroduce>() {
+    private void requestVarietyTradeIntroduce() {
+        Client.getVarietyTradeIntroduce(mVariety.getVarietyId())
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>() {
                     @Override
                     protected void onRespSuccessData(FutureIntroduce data) {
-                        updateFutureIntrouce(data);
+                        updateFutureIntroduce(data);
                     }
                 })
                 .fire();
     }
 
-    private void updateFutureIntrouce(FutureIntroduce data) {
+    private void updateFutureIntroduce(FutureIntroduce data) {
         mTradeCategory.setText(data.getVarietyName());
         mTradeCode.setText(String.valueOf(data.getVarietyType()));
         mTradeTimeSummerWinter.setText(data.getTradeTime());
@@ -97,7 +103,6 @@ public class IntroduceFragment extends BaseFragment {
         mDeliveryTime.setText(data.getDeliveryTime());
         mDailyPriceMaximumVolatilityLimit.setText(data.getEverydayPriceMaxFluctuateLimit());
     }
-
 
     @Override
     public void onDestroyView() {

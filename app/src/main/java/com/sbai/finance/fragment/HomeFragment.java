@@ -16,13 +16,16 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.future.FutureActivity;
+import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
-import com.sbai.finance.activity.stock.StockActivity;
+import com.sbai.finance.activity.web.BannerActivity;
+import com.sbai.finance.activity.web.HideTitleWebActivity;
+import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.net.Callback2D;
@@ -33,6 +36,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
+import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,18 +101,30 @@ public class HomeFragment extends BaseFragment {
         mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
             @Override
             public void onBannerClick(BannerModel information) {
-
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), HideTitleWebActivity.class)
+                            .putExtra(HideTitleWebActivity.EX_URL, information.getContent())
+                            .putExtra(HideTitleWebActivity.EX_TITLE, information.getTitle())
+                            .putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), BannerActivity.class)
+                            .putExtra(BannerActivity.EX_HTML, information.getContent())
+                            .putExtra(BannerActivity.EX_TITLE, information.getTitle())
+                            .putExtra(BannerActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                }
             }
         });
         mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
             @Override
             public void onFutureClick() {
-                Launcher.with(getActivity(), FutureActivity.class).execute();
+                Launcher.with(getActivity(), FutureListActivity.class).execute();
             }
 
             @Override
             public void onStockClick() {
-                Launcher.with(getActivity(), StockActivity.class).execute();
+                Launcher.with(getActivity(), StockListActivity.class).execute();
             }
 
             @Override
@@ -263,7 +279,7 @@ public class HomeFragment extends BaseFragment {
             public void bindingData(Topic item) {
                 mTopicTitle.setText(item.getTitle());
                 mTopicDetail.setText(item.getSubTitle());
-                mTopicImg.setBackgroundResource(R.drawable.bg_topic);
+                Glide.with(mContext).load(item.getBackgroundImg()).placeholder(R.drawable.bg_topic).into(mTopicImg);
             }
         }
     }

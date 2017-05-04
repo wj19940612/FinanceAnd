@@ -52,11 +52,11 @@ public class PredictionFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bullishButton:
-                mOnPredictButtonListener.onBullish();
+                mOnPredictButtonListener.onBullishButtonClick();
                 this.dismiss();
                 break;
             case R.id.bearishButton:
-                mOnPredictButtonListener.onBearish();
+                mOnPredictButtonListener.onBearishButtonClick();
                 this.dismiss();
                 break;
             case R.id.predictionRule:
@@ -76,13 +76,13 @@ public class PredictionFragment extends DialogFragment {
         unbinder.unbind();
     }
 
-    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener l){
-        this.mOnPredictButtonListener = l;
+    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener listener){
+        this.mOnPredictButtonListener = listener;
         return this;
     }
 
     public interface OnPredictButtonListener{
-        void onBullish();
-        void onBearish();
+        void onBullishButtonClick();
+        void onBearishButtonClick();
     }
 }

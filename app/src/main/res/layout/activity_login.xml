@@ -133,6 +133,15 @@
                     android:inputType="number"
                     android:maxLength="10"
                     android:paddingTop="10dp"/>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/codeClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="98dp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_login_label_delete"/>
             </android.support.v7.widget.LinearLayoutCompat>
 
             <View

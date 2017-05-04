@@ -38,15 +38,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:lineSpacingExtra="3dp"
-            android:textColor="@color/secondaryText"
-            android:textSize="13sp"
-            tools:text="国内这种很麻烦的撒大胜靠德快乐撒娇时间点就开始刷卡的撒"/>
+            android:textColor="@color/already_read_or_not_read_text_color"
+            android:textSize="13sp"/>
 
         <android.support.v7.widget.AppCompatTextView
+            android:layout_marginTop="@dimen/dp_10"
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             tools:text="2017/12/12"/>
     </LinearLayout>
 

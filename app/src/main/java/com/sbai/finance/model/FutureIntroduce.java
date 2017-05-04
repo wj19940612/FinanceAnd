@@ -3,7 +3,6 @@ package com.sbai.finance.model;
 /**
  * Created by linrongfang on 2017/5/2.
  */
-
 public class FutureIntroduce {
 
     /**
@@ -21,7 +20,6 @@ public class FutureIntroduce {
      * varietyName : 美原油
      * varietyType : 1
      */
-
     private String deliveryTime;
     private String everydayPriceMaxFluctuateLimit;
     private int id;
@@ -34,7 +32,7 @@ public class FutureIntroduce {
     private String tradeUnit;
     private int varietyId;
     private String varietyName;
-    private int varietyType;
+    private String varietyType;
 
     public String getDeliveryTime() {
         return deliveryTime;
@@ -132,11 +130,11 @@ public class FutureIntroduce {
         this.varietyName = varietyName;
     }
 
-    public int getVarietyType() {
+    public String getVarietyType() {
         return varietyType;
     }
 
-    public void setVarietyType(int varietyType) {
+    public void setVarietyType(String varietyType) {
         this.varietyType = varietyType;
     }
 }

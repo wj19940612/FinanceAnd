@@ -18,9 +18,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.FutureFragment;
 import com.sbai.finance.model.FutureHq;
-import com.sbai.finance.model.Variety;
 
 import java.util.ArrayList;
 import java.util.List;
