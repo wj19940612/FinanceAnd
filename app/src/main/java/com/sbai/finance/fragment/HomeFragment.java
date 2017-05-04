@@ -22,11 +22,13 @@ import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.home.TopicActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -129,12 +131,20 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onHelpClick() {
-                Launcher.with(getActivity(), MutualActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), MutualActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
 
             @Override
             public void onSelfChoiceClick() {
-                Launcher.with(getActivity(), OptionActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), OptionActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
     }

@@ -63,15 +63,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:headerDividersEnabled="true"
-                android:visibility="visible"/>
-
             <TextView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
@@ -86,6 +77,15 @@
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
                 android:visibility="gone"/>
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:headerDividersEnabled="true"
+                android:visibility="visible"/>
         </LinearLayout>
 
     </com.sbai.finance.view.CustomSwipeRefreshLayout>

@@ -26,7 +26,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -48,7 +47,6 @@ public class OpinionFragment extends BaseFragment {
 
     Unbinder unbinder;
     TextView mFootView;
-    View mBottomView;
 
     private OpinionAdapter mOpinionAdapter;
     private List<Opinion> mOpinionList;
@@ -85,21 +83,15 @@ public class OpinionFragment extends BaseFragment {
     }
 
     private void initViewWithAdapter() {
-        mBottomView = new View(getActivity());
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) Display.dp2Px(55, getResources()));
-        mBottomView.setLayoutParams(layoutParams);
-
         mFootView = new TextView(getActivity());
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        mFootView.setPadding(padding, padding, padding, 4 * padding);
+        mFootView.setPadding(padding, padding, padding, padding);
         mFootView.setText(getText(R.string.load_all));
         mFootView.setGravity(Gravity.CENTER);
         mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
         mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
 
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
-        mOpinionAdapter.setFooterView(mBottomView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
@@ -150,7 +142,6 @@ public class OpinionFragment extends BaseFragment {
                 mLoadMore = false;
             } else {
                 mOpinionAdapter.removeAllFooterView();
-                mOpinionAdapter.addFooterView(mBottomView);
                 mLoadMore = true;
                 mPage++;
             }

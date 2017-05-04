@@ -24,7 +24,7 @@ public class Opinion {
 
     private String content;
     private String contractsCode;
-    private int createTime;
+    private long createTime;
     private int direction;
     private int guessPass;
     private int id;
@@ -52,11 +52,11 @@ public class Opinion {
         this.contractsCode = contractsCode;
     }
 
-    public int getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
@@ -138,5 +138,24 @@ public class Opinion {
 
     public void setVarietyId(int varietyId) {
         this.varietyId = varietyId;
+    }
+
+    @Override
+    public String toString() {
+        return "Opinion{" +
+                "content='" + content + '\'' +
+                ", contractsCode='" + contractsCode + '\'' +
+                ", createTime=" + createTime +
+                ", direction=" + direction +
+                ", guessPass=" + guessPass +
+                ", id=" + id +
+                ", isAttention=" + isAttention +
+                ", praiseCount=" + praiseCount +
+                ", replyCount=" + replyCount +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
+                ", varietyId=" + varietyId +
+                '}';
     }
 }
