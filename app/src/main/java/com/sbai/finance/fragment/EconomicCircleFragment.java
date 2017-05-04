@@ -131,14 +131,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         }
     }
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
         mSwipeRefreshLayout.setRefreshing(true);
         mSet.clear();
         mPage = 0;
         requestEconomicCircleList();
-    }
+    }*/
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
