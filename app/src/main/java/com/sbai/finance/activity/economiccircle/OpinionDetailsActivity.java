@@ -133,7 +133,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 	}
 
 
-
 	private void initSwipeRefreshLayout() {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
@@ -147,35 +146,20 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 	private void requestOpinionReplyList() {
 		if (mOpinionDetails != null) {
-			if (mReplyId == -1) {
-				Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId()).setTag(TAG)
-						.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
-							@Override
-							protected void onRespSuccessData(OpinionReply opinionReply) {
-								updateEconomicCircleList(opinionReply.getData());
-							}
+			Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId(),
+					mReplyId != -1 ? mReplyId : null).setTag(TAG)
+					.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
+						@Override
+						protected void onRespSuccessData(OpinionReply opinionReply) {
+							updateEconomicCircleList(opinionReply.getData());
+						}
 
-							@Override
-							public void onFailure(VolleyError volleyError) {
-								super.onFailure(volleyError);
-								stopRefreshAnimation();
-							}
-						}).fire();
-			} else {
-				Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId(), mReplyId).setTag(TAG)
-						.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
-							@Override
-							protected void onRespSuccessData(OpinionReply opinionReply) {
-								updateEconomicCircleList(opinionReply.getData());
-							}
-
-							@Override
-							public void onFailure(VolleyError volleyError) {
-								super.onFailure(volleyError);
-								stopRefreshAnimation();
-							}
-						}).fire();
-			}
+						@Override
+						public void onFailure(VolleyError volleyError) {
+							super.onFailure(volleyError);
+							stopRefreshAnimation();
+						}
+					}).fire();
 		}
 	}
 
