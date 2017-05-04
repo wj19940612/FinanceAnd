@@ -57,6 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
 
@@ -136,6 +137,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         Netty.get().addHandler(mNettyHandler);
 
         requestExchangeStatus();
+        requestOptionalStatus();
     }
 
     @Override
@@ -230,7 +232,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             @Override
             public void onAddOptionalButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    addOptional();
+                    checkOpitionStatusAndDo();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -268,21 +270,12 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                 .show(getSupportFragmentManager());
     }
 
-    private void addOptional() {
-        Client.addOptional(mVariety.getVarietyId())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            // TODO: 2017/4/28 更新UI
-                        } else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                })
-                .fire();
+    private void checkOpitionStatusAndDo() {
+        if (mTradeFloatButtons.isHasAddInOpition()) {
+            requestDeleteOpition();
+        } else {
+            requestAddOpition();
+        }
     }
 
     private void registerRefreshReceiver() {
@@ -308,6 +301,58 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                     }).fire();
         }
     }
+
+    private void requestOptionalStatus() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.checkOptional(mVariety.getVarietyId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<Integer>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Integer> resp) {
+                            int result = resp.getData();
+                            boolean hasAddInOpition = (result == HAS_ADD_OPITION);
+                            mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
+                        }
+                    })
+                    .fire();
+        }
+    }
+
+    private void requestAddOpition() {
+        Client.addOptional(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void requestDeleteOpition() {
+        Client.delOptional(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                              mTradeFloatButtons.setHasAddInOpition(false);
+                        }else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                })
+                .fire();
+    }
+
 
     private class SubPageAdapter extends FragmentPagerAdapter {
 

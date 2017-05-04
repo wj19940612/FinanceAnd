@@ -2,6 +2,7 @@ package com.sbai.finance.fragment;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
@@ -60,5 +61,19 @@ public class BaseFragment extends Fragment implements
         if (getActivity() != null && getActivity() instanceof BaseActivity) {
             ((BaseActivity) getActivity()).onHttpUiDismiss(tag);
         }
+    }
+
+    protected void addTopPaddingWithStatusBar(View view) {
+        int paddingTop = getStatusBarHeight();
+        view.setPadding(0, paddingTop, 0, 0);
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

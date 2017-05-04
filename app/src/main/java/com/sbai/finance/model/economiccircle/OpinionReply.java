@@ -75,13 +75,14 @@ public class OpinionReply {
 		 */
 
 		private String content;
-		private int createTime;
+		private long createTime;
 		private int id;
 		private int isAttention;
 		private int praiseCount;
 		private int userId;
 		private String userName;
 		private String userPortrait;
+		private int isPraise;
 
 		public String getContent() {
 			return content;
@@ -91,11 +92,11 @@ public class OpinionReply {
 			this.content = content;
 		}
 
-		public int getCreateTime() {
+		public long getCreateTime() {
 			return createTime;
 		}
 
-		public void setCreateTime(int createTime) {
+		public void setCreateTime(long createTime) {
 			this.createTime = createTime;
 		}
 
@@ -145,6 +146,29 @@ public class OpinionReply {
 
 		public void setUserPortrait(String userPortrait) {
 			this.userPortrait = userPortrait;
+		}
+
+		public int getIsPraise() {
+			return isPraise;
+		}
+
+		public void setIsPraise(int isPraise) {
+			this.isPraise = isPraise;
+		}
+
+		@Override
+		public String toString() {
+			return "DataBean{" +
+					"content='" + content + '\'' +
+					", createTime=" + createTime +
+					", id=" + id +
+					", isAttention=" + isAttention +
+					", praiseCount=" + praiseCount +
+					", userId=" + userId +
+					", userName='" + userName + '\'' +
+					", userPortrait='" + userPortrait + '\'' +
+					", isPraise=" + isPraise +
+					'}';
 		}
 	}
 

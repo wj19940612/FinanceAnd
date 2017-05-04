@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.UserFansModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -65,33 +66,36 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
         mListView.setOnScrollListener(this);
         mUserFansAdapter.setOnUserFansClickListener(new UserFansAdapter.OnUserFansClickListener() {
             @Override
-            public void onFansClick(final UserFansModel userFansModel) {
-                if(userFansModel.isNotAttention()){
-                    SmartDialog.with(getActivity(), "关注", "是否关注")
+            public void onFansClick(final UserFansModel userFansModel, final int position) {
+                if (userFansModel.isNotAttention()) {
+                    SmartDialog.with(getActivity(),
+                            getActivity().getString(R.string.if_attention, userFansModel.getUserName()))
                             .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     dialog.dismiss();
-                                    relieveAttentionUser(userFansModel);
+                                    relieveAttentionUser(userFansModel, position);
                                 }
                             })
-                            .setTitleMaxLines(2)
+                            .setMessageTextSize(16)
                             .setNegative(android.R.string.cancel)
                             .show();
-                }else {
-                    SmartDialog.with(getActivity(), "取消关注", "是否取消关注")
+                } else {
+                    SmartDialog.with(getActivity(),
+                            getActivity().getString(R.string.if_not_attention, userFansModel.getUserName()))
                             .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     dialog.dismiss();
-                                    relieveAttentionUser(userFansModel);
+                                    relieveAttentionUser(userFansModel, position);
                                 }
                             })
-                            .setTitleMaxLines(2)
+                            .setMessageTextSize(16)
                             .setNegative(android.R.string.cancel)
-                            .show(); 
+                            .show();
                 }
             }
+
         });
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -103,20 +107,21 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
         });
         requestUserAttentionList();
     }
-    // TODO: 2017/5/2 取消或者关注用户
-    private void relieveAttentionUser(UserFansModel userFansModel) {
-//        Client.attentionOrRelieveAttentionUser(userAttentionModel.getFollowUserId(), 1)
-//                .setTag(TAG)
-//                .setIndeterminate(this)
-//                .setCallback(new Callback<Resp<Object>>() {
-//                    @Override
-//                    protected void onRespSuccess(Resp<Object> resp) {
-//                        if (resp.isSuccess()) {
-//                            mRelieveAttentionAdapter.remove(userAttentionModel);
-//                        }
-//                    }
-//                })
-//                .fire();
+
+    private void relieveAttentionUser(final UserFansModel userFansModel, final int position) {
+        Client.attentionOrRelieveAttentionUser(userFansModel.getUserId(),
+                userFansModel.isNotAttention() ? 0 : 1)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        mUserFansAdapter.remove(userFansModel);
+                        userFansModel.setOther(userFansModel.isNotAttention() ? 0 : 1);
+                        mUserFansAdapter.insert(userFansModel, position);
+                    }
+                })
+                .fire();
     }
 
 
@@ -203,7 +208,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
     static class UserFansAdapter extends ArrayAdapter<UserFansModel> {
 
         interface OnUserFansClickListener {
-            void onFansClick(UserFansModel userFansModel);
+            void onFansClick(UserFansModel userFansModel, int position);
         }
 
         public void setOnUserFansClickListener(OnUserFansClickListener onUserFansClickListener) {
@@ -229,7 +234,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindViewWithData(getItem(position), mContext, mOnUserFansClickListener);
+            viewHolder.bindViewWithData(getItem(position), mContext, mOnUserFansClickListener, position);
             return convertView;
         }
 
@@ -245,7 +250,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener) {
+            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener, final int position) {
                 if (item == null) return;
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
@@ -265,7 +270,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                     @Override
                     public void onClick(View v) {
                         if (onUserFansClickListener != null) {
-                            onUserFansClickListener.onFansClick(item);
+                            onUserFansClickListener.onFansClick(item, position);
                         }
                     }
                 });

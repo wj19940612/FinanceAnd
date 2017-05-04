@@ -44,14 +44,10 @@ public class OpinionDetails implements Serializable{
 	private String varietyName;
 	private String varietyType;
 	private int isAttention;
-
-	public int getIsAttention() {
-		return isAttention;
-	}
-
-	public void setIsAttention(int isAttention) {
-		this.isAttention = isAttention;
-	}
+	private String lastPrice;
+	private String risePre;
+	private String  risePrice;
+	private int isPraise;
 
 	public String getBigVarietyTypeCode() {
 		return bigVarietyTypeCode;
@@ -181,6 +177,46 @@ public class OpinionDetails implements Serializable{
 		this.varietyType = varietyType;
 	}
 
+	public int getIsAttention() {
+		return isAttention;
+	}
+
+	public void setIsAttention(int isAttention) {
+		this.isAttention = isAttention;
+	}
+
+	public String getLastPrice() {
+		return lastPrice;
+	}
+
+	public void setLastPrice(String lastPrice) {
+		this.lastPrice = lastPrice;
+	}
+
+	public String getRisePre() {
+		return risePre;
+	}
+
+	public void setRisePre(String risePre) {
+		this.risePre = risePre;
+	}
+
+	public String getRisePrice() {
+		return risePrice;
+	}
+
+	public void setRisePrice(String risePrice) {
+		this.risePrice = risePrice;
+	}
+
+	public int getIsPraise() {
+		return isPraise;
+	}
+
+	public void setIsPraise(int isPraise) {
+		this.isPraise = isPraise;
+	}
+
 	@Override
 	public String toString() {
 		return "OpinionDetails{" +
@@ -201,6 +237,10 @@ public class OpinionDetails implements Serializable{
 				", varietyName='" + varietyName + '\'' +
 				", varietyType='" + varietyType + '\'' +
 				", isAttention=" + isAttention +
+				", lastPrice='" + lastPrice + '\'' +
+				", risePre='" + risePre + '\'' +
+				", risePrice='" + risePrice + '\'' +
+				", isPraise=" + isPraise +
 				'}';
 	}
 }

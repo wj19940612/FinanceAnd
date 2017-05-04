@@ -212,7 +212,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
             mSelectAgeListIndex = 100 - LocalUser.getUser().getUserInfo().getAge();
         }
         picker.setSelectedItem(mAgeList[mSelectAgeListIndex]);
-        picker.setLineConfig(new WheelView.LineConfig(0));//使用最长的线
+        picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
+        WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
+        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+        picker.setLineConfig(lineConfig);
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
@@ -274,9 +277,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
         } else if (LocalUser.getUser().getUserInfo().getUserSex() == UserInfo.SEX_GIRL) {
             picker.setSelectedItem(sexData[1]);
         }
-//        picker.setTopPadding(toDp(10));
-//                picker.setTextSize(11);
-        picker.setLineConfig(new WheelView.LineConfig(0));//使用最长的线
+        picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
+        WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
+        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+        picker.setLineConfig(lineConfig);
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
@@ -384,9 +388,9 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
                 picker.setAnimationStyle(R.style.BottomDialogAnimation);
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
+                picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-                lineConfig.setColor(Color.RED);
-//            lineConfig.setColor(R.color.lucky);//设置分割线颜色
+                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override

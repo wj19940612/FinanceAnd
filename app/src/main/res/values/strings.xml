@@ -74,6 +74,7 @@
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
     <string name="add_optional">+ 自选</string>
+    <string name="delete_optional">取消自选</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
@@ -146,6 +147,9 @@
     <string name="cancel_attention_dialog_title">是否对“%1$s”\n取消关注?</string>
     <string name="cancel_attention">取消关注</string>
 
+    <string name="if_not_attention">是否不再关注%1$s?</string>
+    <string name="if_attention">是否关注%1$s?</string>
+
     <string name="new_notification">新消息通知</string>
     <string name="want_to_help_you">     想要帮助你</string>
     <string name="accept_your_help">     接受了你的帮助</string>
@@ -154,6 +158,7 @@
     <string name="replay_you">      评论了你</string>
     <string name="attention_you">      关注了你</string>
     <string name="like_your_publish">      喜欢了你的发表</string>
+
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>

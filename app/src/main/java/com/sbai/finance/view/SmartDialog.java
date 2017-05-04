@@ -53,6 +53,7 @@ public class SmartDialog {
     private int mPositiveTextColor = Color.WHITE;
     private int mSingleButtonBg = R.drawable.btn_dialog_single;
     private int mMessageGravity = Gravity.CENTER;
+    private int mMessageTextSize = 10;
     private int mTitleMargin = 15;
     private int mTitleTextColor = Color.BLACK;
     private int mMessageTextColor = Color.BLACK;
@@ -219,6 +220,11 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setMessageTextSize(int messageTextSize) {
+        mMessageTextSize = messageTextSize;
+        return this;
+    }
+
 
     public SmartDialog setTitle(int titleId) {
         mTitleText = mActivity.getText(titleId).toString();
@@ -308,6 +314,8 @@ public class SmartDialog {
         mMessage.setGravity(mMessageGravity);
         mMessage.setMaxLines(mMessageTextMaxLines);
         mMessage.setTextColor(mMessageTextColor);
+//        mMessage.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mMessageTextSize, mActivity.getResources().getDisplayMetrics()));
+        mMessage.setTextSize(mMessageTextSize);
         if (TextUtils.isEmpty(mTitleText)) {
             mTitle.setVisibility(View.GONE);
         } else {
