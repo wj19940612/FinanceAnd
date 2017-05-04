@@ -38,7 +38,6 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -88,7 +87,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
 
-	private List<OpinionReply.DataBean> mOpinionReplyList;
+
 	private OpinionReplyAdapter mOpinionReplyAdapter;
 	private OpinionDetails mOpinionDetails;
 	private TextView mFootView;
@@ -96,6 +95,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 	private int mPage = 0;
 	private int mPageSize = 15;
 	private HashSet<Integer> mSet;
+	private int mDataId;
+	private int mReplyId = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,21 +106,33 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		initData(getIntent());
 
-		initView();
-
-		mOpinionReplyList = new ArrayList<>();
 		mSet = new HashSet<>();
 		mOpinionReplyAdapter = new OpinionReplyAdapter(this);
 		mMyListView.setEmptyView(mEmpty);
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
-		requestOpinionReplyList();
+		requestOpinionDetails();
 		initSwipeRefreshLayout();
 	}
 
 	private void initData(Intent intent) {
-		mOpinionDetails = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+		mReplyId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
+
+	private void requestOpinionDetails() {
+		Client.getOpinionDetails(mDataId).setTag(TAG).setIndeterminate(this)
+				.setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
+					@Override
+					protected void onRespSuccessData(OpinionDetails opinionDetails) {
+						mOpinionDetails = opinionDetails;
+						updateOpinionDetails();
+						requestOpinionReplyList();
+					}
+				}).fire();
+	}
+
+
 
 	private void initSwipeRefreshLayout() {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -134,19 +147,35 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 	private void requestOpinionReplyList() {
 		if (mOpinionDetails != null) {
-			Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId()).setTag(TAG)
-					.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
-						@Override
-						protected void onRespSuccessData(OpinionReply opinionReply) {
-							updateEconomicCircleList(opinionReply.getData());
-						}
+			if (mReplyId == -1) {
+				Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId()).setTag(TAG)
+						.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
+							@Override
+							protected void onRespSuccessData(OpinionReply opinionReply) {
+								updateEconomicCircleList(opinionReply.getData());
+							}
 
-						@Override
-						public void onFailure(VolleyError volleyError) {
-							super.onFailure(volleyError);
-							stopRefreshAnimation();
-						}
-					}).fire();
+							@Override
+							public void onFailure(VolleyError volleyError) {
+								super.onFailure(volleyError);
+								stopRefreshAnimation();
+							}
+						}).fire();
+			} else {
+				Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId(), mReplyId).setTag(TAG)
+						.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
+							@Override
+							protected void onRespSuccessData(OpinionReply opinionReply) {
+								updateEconomicCircleList(opinionReply.getData());
+							}
+
+							@Override
+							public void onFailure(VolleyError volleyError) {
+								super.onFailure(volleyError);
+								stopRefreshAnimation();
+							}
+						}).fire();
+			}
 		}
 	}
 
@@ -201,7 +230,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	}
 
 
-	private void initView() {
+	private void updateOpinionDetails() {
 		if (mOpinionDetails != null) {
 
 			mUserName.setText(mOpinionDetails.getUserName());

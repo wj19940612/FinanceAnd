@@ -1,6 +1,8 @@
 package com.sbai.finance.model.economiccircle;
 
-public class EconomicCircle {
+import java.io.Serializable;
+
+public class EconomicCircle implements Serializable{
 
 	/**
 	 * auditStatus : 1

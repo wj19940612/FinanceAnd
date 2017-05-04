@@ -228,7 +228,7 @@ public class OpinionFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
+                            .putExtra(Launcher.EX_PAYLOAD, item.getId())
                             .execute();
                 }
             });
@@ -236,7 +236,7 @@ public class OpinionFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
+                            .putExtra(Launcher.EX_PAYLOAD, item.getId())
                             .execute();
                 }
             });

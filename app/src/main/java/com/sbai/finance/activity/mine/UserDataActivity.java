@@ -44,7 +44,7 @@ public class UserDataActivity extends BaseActivity {
 	@BindView(R.id.attentionNum)
 	TextView mAttentionNum;
 	@BindView(R.id.diagonal)
-	TextView mdiagonal;
+	TextView mDiagonal;
 	@BindView(R.id.fansNum)
 	TextView mFansNum;
 	@BindView(R.id.hisPublish)
@@ -139,7 +139,7 @@ public class UserDataActivity extends BaseActivity {
 		}
 
 		if (mAttentionAndFansNum != null) {
-			mdiagonal.setText(" / ");
+			mDiagonal.setText(" / ");
 			mAttentionNum.setText(getString(R.string.attention_number, String.valueOf(mAttentionAndFansNum.getAttention())));
 			mFansNum.setText(getString(R.string.fans_number, String.valueOf(mAttentionAndFansNum.getFollower())));
 		}
