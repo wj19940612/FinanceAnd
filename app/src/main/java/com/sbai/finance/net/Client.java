@@ -648,7 +648,7 @@ public class Client {
 	 * @param replyId
 	 * @return
 	 */
-	public static API getOpinionReplyList(int page, int pageSize, int viewpointId, int replyId) {
+	public static API getOpinionReplyList(int page, int pageSize, int viewpointId, Integer replyId) {
 		return new API("/coterie/viewpoint/findViewpointReply.do",
 				new ApiParams()
 						.put("page", page)
