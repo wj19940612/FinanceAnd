@@ -357,7 +357,7 @@ public class Client {
      * @return
      */
     public static API shieldOrRelieveShieldUser(int shieldId, int status) {
-        return new API(POST, "/coterie/userDetail/shield.do", new ApiParams()
+        return new API(POST, "/coterie/userInterest/shield.do", new ApiParams()
                 .put("shieldId", shieldId)
                 .put("status", status));
     }
