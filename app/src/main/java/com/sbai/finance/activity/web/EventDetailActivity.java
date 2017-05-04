@@ -85,7 +85,7 @@ public class EventDetailActivity extends BaseActivity {
         initWebView();
     }
     protected void initData(Intent intent) {
-        EventModel.DataBean  event = (EventModel.DataBean) intent.getSerializableExtra(EX_EVENT);
+        EventModel  event = (EventModel) intent.getSerializableExtra(EX_EVENT);
         if (event!=null&&!event.isH5Style()){
             mEventTitleInfo.setVisibility(View.VISIBLE);
             mEventTitle.setText(event.getTitle());

@@ -75,7 +75,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				EventModel.DataBean dataBean = mEventListAdapter.getItem(position);
+				EventModel dataBean = mEventListAdapter.getItem(position);
 				Launcher.with(getActivity(), EventDetailActivity.class)
 							.putExtra(EventDetailActivity.EX_EVENT, dataBean)
 							.putExtra(EventDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
@@ -96,10 +96,10 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 
 	private void requestEventList() {
 		Client.getBreakingNewsData(mPageNo,mPageSize).setTag(TAG)
-				.setCallback(new Callback2D<Resp<EventModel>,EventModel>() {
+				.setCallback(new Callback2D<Resp<List<EventModel>>,List<EventModel>>() {
 					@Override
-					protected void onRespSuccessData(EventModel data) {
-						updateEventInfo((ArrayList<EventModel.DataBean>) data.getData());
+					protected void onRespSuccessData(List<EventModel> data) {
+						updateEventInfo(data);
 					}
 					@Override
 					public void onFailure(VolleyError volleyError) {
@@ -108,7 +108,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 					}
 				}).fire();
 	}
-    private void updateEventInfo(ArrayList<EventModel.DataBean> eventList){
+    private void updateEventInfo(List<EventModel> eventList){
 		if (eventList == null) {
 			return;
 		}
@@ -174,7 +174,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	}
 
 
-	static class EventListAdapter extends ArrayAdapter<EventModel.DataBean> {
+	static class EventListAdapter extends ArrayAdapter<EventModel> {
 		Context mContext;
 		public EventListAdapter(@NonNull Context context){
 			super(context,0);
@@ -206,8 +206,8 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
-			private void bindDataWithView(EventModel.DataBean item, int position, Context context) {
-				mEventSource.setText(item.getSource());
+			private void bindDataWithView(EventModel item, int position, Context context) {
+			//	mEventSource.setText(item.getSource());
 				mEventTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				mEventTitle.setText(item.getTitle());
 			}
