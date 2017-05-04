@@ -82,7 +82,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 							.execute();
 			}
 		});
-		mListView.setOnScrollListener(this);
+	//	mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
 
 		reset();

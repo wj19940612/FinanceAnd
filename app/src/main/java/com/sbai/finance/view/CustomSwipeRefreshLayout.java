@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -74,11 +75,27 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
                 if (child instanceof ListView) {
-                    mListView = (ListView)child;
+                    mListView = (ListView) child;
                     mListView.setOnScrollListener(this);
+                }
+                if (child instanceof ViewGroup){
+                    findListView((ViewGroup) child);
                 }
             }
         }
+    }
+
+    private void findListView(ViewGroup childView)  {
+            int childCount= ((ViewGroup) childView).getChildCount();
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View child = childView.getChildAt(i);
+                    if (child instanceof ListView) {
+                        mListView = (ListView) child;
+                        mListView.setOnScrollListener(this);
+                    }
+                }
+            }
     }
 
 
@@ -115,7 +132,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private boolean canLoad() {
-        return loadMoreEnable && !isLoading && isPullup() && isBottom();
+        return loadMoreEnable&&!isLoading && isPullup() && isBottom();
     }
 
     private boolean enableBottomLoad() {
@@ -134,7 +151,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private void loadData() {
-        if (mOnLoadMoreListener != null) {
+        if (mOnLoadMoreListener != null&&loadMoreEnable) {
             setLoading(true);
             mOnLoadMoreListener.onLoadMore();
         }

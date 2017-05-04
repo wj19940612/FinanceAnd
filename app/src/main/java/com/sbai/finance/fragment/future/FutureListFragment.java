@@ -22,6 +22,8 @@ import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.VarietyData;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -30,6 +32,7 @@ import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.httplib.ApiCallback;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -111,7 +114,6 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                 }
             }
         });
-        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -196,10 +198,10 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     public void requestVarietyList() {
         Client.getVarietyList(Variety.VAR_FUTURE, mPage, mPageSize, mFutureType).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+                .setCallback(new Callback2D<Resp<VarietyData>, VarietyData>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
-                        updateFutureData(data);
+                    protected void onRespSuccessData(VarietyData data) {
+                        updateFutureData(data.getData());
                     }
 
                     @Override
@@ -296,7 +298,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
             private void bindingData(Variety item, HashMap<String, FutureData> map, Context context) {
                 mFutureName.setText(item.getVarietyName());
-                mFutureCode.setText(item.getContractsCode());
+                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+                    mFutureCode.setText(item.getContractsCode());
+                }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+                    mFutureCode.setText(item.getVarietyType());
+                }
 
                 FutureData futureData = map.get(item.getContractsCode());
                 if (futureData != null) {
