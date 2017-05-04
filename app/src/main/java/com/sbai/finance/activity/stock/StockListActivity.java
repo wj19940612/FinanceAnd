@@ -88,7 +88,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mListView.setEmptyView(mEmpty);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setAdapte(mListView,mListAdapter);
+        mSwipeRefreshLayout.setAdapter(mListView,mListAdapter);
 
         //测试数据 后期删除
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor("上证",
