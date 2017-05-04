@@ -82,6 +82,7 @@ public class OpinionReply {
 		private int userId;
 		private String userName;
 		private String userPortrait;
+		private int isPraise;
 
 		public String getContent() {
 			return content;
@@ -147,6 +148,14 @@ public class OpinionReply {
 			this.userPortrait = userPortrait;
 		}
 
+		public int getIsPraise() {
+			return isPraise;
+		}
+
+		public void setIsPraise(int isPraise) {
+			this.isPraise = isPraise;
+		}
+
 		@Override
 		public String toString() {
 			return "DataBean{" +
@@ -158,6 +167,7 @@ public class OpinionReply {
 					", userId=" + userId +
 					", userName='" + userName + '\'' +
 					", userPortrait='" + userPortrait + '\'' +
+					", isPraise=" + isPraise +
 					'}';
 		}
 	}

@@ -109,7 +109,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		mOpinionReplyList = new ArrayList<>();
 		mSet = new HashSet<>();
-		mOpinionReplyAdapter = new OpinionReplyAdapter(this, mOpinionReplyList);
+		mOpinionReplyAdapter = new OpinionReplyAdapter(this);
 		mMyListView.setEmptyView(mEmpty);
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
@@ -217,7 +217,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 					.bitmapTransform(new GlideCircleTransform(this))
 					.into(mAvatar);
 
-			if (mOpinionDetails.getIsAttention() == 1) {
+			if (mOpinionDetails.getIsAttention() == 2) {
 				mIsAttention.setText(R.string.is_attention);
 			}
 
@@ -232,25 +232,56 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mBigVarietyName.setText(mOpinionDetails.getBigVarietyTypeName());
 			mVarietyName.setText(mOpinionDetails.getVarietyName());
 
-			mLastPrice.setText("88.88");
-			mUpDownPrice.setText("+8.8");
-			mUpDownPercent.setText("+10%");
 
+			if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
+				mLastPrice.setText("--");
+			} else {
+				if (mOpinionDetails.getRisePrice().startsWith("+")) {
+					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
+				} else {
+					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				}
+				mLastPrice.setText(mOpinionDetails.getLastPrice());
+			}
+
+			if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
+				mUpDownPrice.setText("--");
+			} else {
+				if (mOpinionDetails.getRisePrice().startsWith("+")) {
+					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
+				} else {
+					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				}
+				mUpDownPrice.setText(mOpinionDetails.getRisePrice());
+			}
+
+			if (TextUtils.isEmpty(mOpinionDetails.getRisePre())) {
+				mUpDownPercent.setText("--");
+			} else {
+				if (mOpinionDetails.getRisePre().startsWith("+")) {
+					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
+				} else {
+					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				}
+				mUpDownPercent.setText(mOpinionDetails.getRisePre());
+			}
+
+			if (mOpinionDetails.getIsPraise() == 1) {
+				mLoveNum.setSelected(true);
+			}
 			mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
-
 			mScrollView.smoothScrollTo(0, 0);
 		}
 	}
 
 	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply.DataBean> {
-		private Context mContext;
-		private List<OpinionReply.DataBean> mOpinionReplyList;
 
-		private OpinionReplyAdapter(Context context, List<OpinionReply.DataBean> opinionReplyList) {
+		private Context mContext;
+
+		private OpinionReplyAdapter(Context context) {
 			super(context, 0);
 			this.mContext = context;
-			this.mOpinionReplyList = opinionReplyList;
 		}
 
 		@Override
@@ -285,7 +316,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(Context context, OpinionReply.DataBean item) {
+			private void bindingData(Context context, final OpinionReply.DataBean item) {
 				mUserName.setText(item.getUserName());
 
 				Glide.with(context).load(item.getUserPortrait())
@@ -293,21 +324,35 @@ public class OpinionDetailsActivity extends BaseActivity {
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
 
-				if (item.getIsAttention() == 1) {
+				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
 				}
 
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				mOpinionContent.setText(item.getContent());
+
+				if (item.getIsPraise() == 1) {
+					mLoveNum.setSelected(true);
+				}
 				mLoveNum.setText(String.valueOf(item.getPraiseCount()));
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (mLoveNum.isSelected()) {
-							mLoveNum.setSelected(false);
-						} else {
-							mLoveNum.setSelected(true);
-						}
+						Client.opinionReplyPraise(item.getId())
+								.setCallback(new Callback<Resp<JsonPrimitive>>() {
+									@Override
+									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+										if (resp.isSuccess()) {
+											if (mLoveNum.isSelected()) {
+												mLoveNum.setSelected(false);
+												mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+											} else {
+												mLoveNum.setSelected(true);
+												mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+											}
+										}
+									}
+								}).fire();
 					}
 				});
 			}
@@ -318,12 +363,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.loveNum:
-
 				Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
 						.setCallback(new Callback<Resp<JsonPrimitive>>() {
 							@Override
 							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								int praiseCount = mOpinionDetails.getPraiseCount();
 								if (resp.isSuccess()) {
 									if (mLoveNum.isSelected()) {
 										mLoveNum.setSelected(false);
@@ -335,8 +378,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 								}
 							}
 						}).fire();
-
 				break;
+
 			case R.id.reply:
 				String commentContent = mCommentContent.getText().toString().trim();
 				if (TextUtils.isEmpty(commentContent)) {

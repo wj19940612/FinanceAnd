@@ -524,7 +524,7 @@ public class Client {
 	 * @return
 	 */
 	public static API opinionReplyPraise(int replyId) {
-		return new API(POST, "/coterie/viewpoint/viewpointPraise.do",
+		return new API(POST, "/coterie/viewpoint/viewpointReplyPraise.do",
 				new ApiParams()
 						.put("replyId", replyId));
 	}
