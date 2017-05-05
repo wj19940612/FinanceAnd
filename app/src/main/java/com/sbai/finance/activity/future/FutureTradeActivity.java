@@ -232,7 +232,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             @Override
             public void onAddOptionalButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    checkOpitionStatusAndDo();
+                    checkOptionalStatus();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -270,9 +270,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                 .show(getSupportFragmentManager());
     }
 
-    private void checkOpitionStatusAndDo() {
-        if (mTradeFloatButtons.isHasAddInOpition()) {
-            requestDeleteOpition();
+    private void checkOptionalStatus() {
+        if (mTradeFloatButtons.isHasAddInOptional()) {
+            requestDeleteOptional();
         } else {
             requestAddOpition();
         }
@@ -304,9 +304,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private void requestOptionalStatus() {
         if (LocalUser.getUser().isLogin()) {
-            Client.checkOption(mVariety.getVarietyId())
-                    .setTag(TAG)
-                    .setIndeterminate(this)
+            Client.checkOptional(mVariety.getVarietyId())
+                    .setTag(TAG).setIndeterminate(this)
                     .setCallback(new Callback<Resp<Integer>>() {
                         @Override
                         protected void onRespSuccess(Resp<Integer> resp) {
@@ -316,8 +315,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                                 mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
                             }
                         }
-                    })
-                    .fire();
+                    }).fire();
         }
     }
 
@@ -338,8 +336,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                 .fire();
     }
 
-    private void requestDeleteOpition() {
-        Client.delOption(mVariety.getVarietyId())
+    private void requestDeleteOptional() {
+        Client.delOptional(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {

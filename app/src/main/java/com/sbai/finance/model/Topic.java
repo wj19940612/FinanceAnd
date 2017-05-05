@@ -1,12 +1,15 @@
 package com.sbai.finance.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Administrator on 2017-04-25.
  */
 
-public class Topic implements Serializable{
+public class Topic implements Parcelable {
+
+
 	/**
 	 * backgroundImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493709712809021409.png
 	 * count : 2
@@ -140,4 +143,57 @@ public class Topic implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.backgroundImg);
+		dest.writeInt(this.count);
+		dest.writeInt(this.createActor);
+		dest.writeLong(this.createDate);
+		dest.writeInt(this.id);
+		dest.writeString(this.introduction);
+		dest.writeInt(this.modifyActor);
+		dest.writeLong(this.modifyDate);
+		dest.writeInt(this.sort);
+		dest.writeInt(this.status);
+		dest.writeString(this.subTitle);
+		dest.writeString(this.title);
+		dest.writeString(this.type);
+	}
+
+	public Topic() {
+	}
+
+	protected Topic(Parcel in) {
+		this.backgroundImg = in.readString();
+		this.count = in.readInt();
+		this.createActor = in.readInt();
+		this.createDate = in.readLong();
+		this.id = in.readInt();
+		this.introduction = in.readString();
+		this.modifyActor = in.readInt();
+		this.modifyDate = in.readLong();
+		this.sort = in.readInt();
+		this.status = in.readInt();
+		this.subTitle = in.readString();
+		this.title = in.readString();
+		this.type = in.readString();
+	}
+
+	public static final Parcelable.Creator<Topic> CREATOR = new Parcelable.Creator<Topic>() {
+		@Override
+		public Topic createFromParcel(Parcel source) {
+			return new Topic(source);
+		}
+
+		@Override
+		public Topic[] newArray(int size) {
+			return new Topic[size];
+		}
+	};
 }

@@ -11,11 +11,11 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class Launcher {
+
 	public static final String EX_PAYLOAD = "payload";
 	public static final String EX_PAYLOAD_1 = "payload1";
 	public static final String EX_PAYLOAD_2 = "payload2";
 
-	public static final String KEY_TOPIC = "topic";
 	public static final String USER_ID = "userId";
 
 	public static final int REQ_CODE_LOGIN = 620;
@@ -66,6 +66,12 @@ public class Launcher {
 		return this;
 	}
 
+	/**
+	 * @deprecated
+	 * @param key
+	 * @param data
+	 * @return
+	 */
 	public Launcher putExtra(String key, Serializable data) {
 		mIntent.putExtra(key, data);
 		return this;
