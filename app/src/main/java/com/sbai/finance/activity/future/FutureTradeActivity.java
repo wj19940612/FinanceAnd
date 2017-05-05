@@ -35,6 +35,7 @@ import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -103,6 +104,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private OpinionFragment mOpinionFragment;
     private IntroduceFragment mIntroduceFragment;
+    private PredictionFragment mPredictionFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
     private Prediction mPrediction;
@@ -240,7 +242,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
             @Override
             public void onTradeButtonClick() {
-                Launcher.with(getActivity(), TradeWebActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), TradeWebActivity.class).execute();
+                }else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
     }
@@ -266,8 +272,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
     private void showPredictDialog() {
-        PredictionFragment.newInstance().setOnPredictButtonListener(this)
-                .show(getSupportFragmentManager());
+        if (mPredictionFragment == null) {
+            mPredictionFragment = PredictionFragment.newInstance().setOnPredictButtonListener(this);
+        } else {
+            mPredictionFragment.show(getSupportFragmentManager());
+        }
     }
 
     private void checkOptionalStatus() {
@@ -545,7 +554,12 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     private class RefreshPointReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mOpinionFragment.refreshPointList();
+            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+            if (details != null) {
+                mOpinionFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else {
+                mOpinionFragment.refreshPointList();
+            }
         }
     }
 }
