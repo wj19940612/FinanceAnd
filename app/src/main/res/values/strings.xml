@@ -283,4 +283,5 @@
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
+    <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
 </resources>
