@@ -37,10 +37,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Administrator on 2017-04-27.
- */
-
 public class BorrowInActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
