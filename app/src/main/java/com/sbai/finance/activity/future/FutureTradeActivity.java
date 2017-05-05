@@ -272,7 +272,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private void checkOptionalStatus() {
         if (mTradeFloatButtons.isHasAddInOptional()) {
-            requestDeleteOpition();
+            requestDeleteOptional();
         } else {
             requestAddOpition();
         }
@@ -309,16 +309,18 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                     .setCallback(new Callback<Resp<Integer>>() {
                         @Override
                         protected void onRespSuccess(Resp<Integer> resp) {
-                            int result = resp.getData();
-                            boolean hasAddInOpition = (result == HAS_ADD_OPITION);
-                            mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
+                            Integer result = resp.getData();
+                            if (result != null) {
+                                boolean hasAddInOpition = (result == HAS_ADD_OPITION);
+                                mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
+                            }
                         }
                     }).fire();
         }
     }
 
     private void requestAddOpition() {
-        Client.addOptional(mVariety.getVarietyId())
+        Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
@@ -334,7 +336,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                 .fire();
     }
 
-    private void requestDeleteOpition() {
+    private void requestDeleteOptional() {
         Client.delOptional(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)

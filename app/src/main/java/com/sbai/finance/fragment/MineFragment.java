@@ -112,6 +112,15 @@ public class MineFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(LoginBroadcastReceiver);
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&isAdded()){
+            requestUserAttentionAndroidFansNumber();
+        }
+    }
+
     private void requestNoReadNewsNumber() {
         Client.getNoReadMessageNumber()
                 .setTag(TAG)

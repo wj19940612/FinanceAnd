@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
@@ -31,11 +30,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,9 +73,8 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                         .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-                                ToastUtil.curt("移除 " + shieldedUserModel.getShielduserName());
                                 relieveShield(shieldedUserModel);
+                                dialog.dismiss();
                             }
                         })
                         .setTitleMaxLines(2)
@@ -97,15 +94,13 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
     }
 
     private void relieveShield(final ShieldedUserModel shieldedUserModel) {
-        Client.shieldOrRelieveShieldUser(100, 1)
+        Client.shieldOrRelieveShieldUser(shieldedUserModel.getShielduserId(), 1)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
+                .setCallback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            mShieldRelieveAdapter.remove(shieldedUserModel);
-                        }
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        mShieldRelieveAdapter.remove(shieldedUserModel);
                     }
                 })
                 .fire();
@@ -114,11 +109,12 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
     private void requestShieldUserList() {
         Client.getShieldList(mPage, mPageSize)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArrayList<ShieldedUserModel>>, ArrayList<ShieldedUserModel>>() {
+                .setCallback(new Callback2D<Resp<List<ShieldedUserModel>>, List<ShieldedUserModel>>(false) {
                     @Override
-                    protected void onRespSuccessData(ArrayList<ShieldedUserModel> data) {
+                    protected void onRespSuccessData(List<ShieldedUserModel> data) {
                         updateShieldUserData(data);
                     }
+
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
@@ -130,7 +126,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
     }
 
 
-    private void updateShieldUserData(ArrayList<ShieldedUserModel> shieldUserList) {
+    private void updateShieldUserData(List<ShieldedUserModel> shieldUserList) {
         if (shieldUserList == null) {
             stopRefreshAnimation();
             return;
