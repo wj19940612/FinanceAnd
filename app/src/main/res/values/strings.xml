@@ -66,7 +66,7 @@
     <string name="borrow">我要借款</string>
     <string name="help_borrow">互助-借款</string>
     <!--event-->
-    <string name="no_event_record">还没有大事发生哦!</string>
+    <string name="no_event_record">还没有大事发生!</string>
     <string name="event_title">大事件</string>
 
     <!--Trade page-->
@@ -92,7 +92,8 @@
     <string name="stock_news">新闻</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
-
+    <!--option-->
+    <string name="no_option">暂无自选</string>
     <!-- 我的界面 -->
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
@@ -107,6 +108,7 @@
     <string name="feed_back">意见反馈</string>
     <string name="new_message">新消息</string>
     <string name="item">条</string>
+    <string name="now_not_has_data">暂无消息</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
