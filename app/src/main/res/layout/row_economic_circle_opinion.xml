@@ -110,7 +110,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:layout_toLeftOf="@+id/upDownArea"
-                android:textColor="@color/redPrimary"
+                android:textColor="@color/up_or_down_price_color"
                 android:textSize="14sp"
                 tools:text="88.88"/>
 
@@ -128,7 +128,7 @@
                     android:id="@+id/upDownPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/redPrimary"
+                    android:textColor="@color/up_or_down_price_color"
                     android:textSize="9sp"
                     tools:text="+8.88"/>
 
@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:textColor="@color/redPrimary"
+                    android:textColor="@color/up_or_down_price_color"
                     android:textSize="9sp"
                     tools:text="+10.00%"/>
             </LinearLayout>

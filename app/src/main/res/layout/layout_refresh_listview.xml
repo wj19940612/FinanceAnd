@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@android:id/empty"
@@ -28,8 +28,7 @@
             android:drawableTop="@drawable/img_no_data"
             android:gravity="center"
             android:paddingTop="100dp"
-            android:text="数据为空"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
