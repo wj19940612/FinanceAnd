@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/event_title"/>
+        app:titleText="@string/banner_detail"/>
     <LinearLayout
         android:id="@+id/eventTitleInfo"
         android:layout_width="match_parent"
@@ -31,13 +31,13 @@
            tool:text="证监会李主席发言:鼓励上市公司"
            />
         <TextView
-            android:id="@+id/timeAndSource"
+            android:id="@+id/time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="11sp"
             android:textColor="@color/assistText"
-            tool:text="中国财经网   2017/03/26  12:31" />
+            tool:text="2017/03/26 12:31" />
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,8 +47,8 @@
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greyLightAssist"
             android:layout_below="@+id/progress"
+            android:scrollbars="vertical"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
 

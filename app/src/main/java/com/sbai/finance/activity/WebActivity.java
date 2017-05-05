@@ -32,10 +32,6 @@ import butterknife.OnClick;
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
-/**
- * Created by Administrator on 2017-05-03.
- */
-
 public class WebActivity extends BaseActivity {
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";

@@ -43,6 +43,8 @@
     <string name="stock">股票</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
+
+    <string name="banner_detail">活动详情</string>
     <!--Future-->
     <string name="future_foreign">国外期货</string>
     <string name="future_china">国内期货</string>
@@ -53,6 +55,7 @@
     <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="idea_title">观点大神</string>
     <string name="idea_detail">眼光奇准,跟着混，准没错</string>
+    <string name="no_opinion">暂无观点</string>
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证</string>
     <string name="ShenzhenStockExchange">深证</string>

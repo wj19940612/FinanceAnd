@@ -35,13 +35,10 @@ import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class TopicActivity extends BaseActivity {
 

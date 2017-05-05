@@ -19,6 +19,11 @@ public class Resp<T> {
 
     private int code;
     private String msg;
+    private int page;
+    private int pageSize;
+    private int resultCount;
+    private int total;
+
     private T data;
 
     public int getCode() {

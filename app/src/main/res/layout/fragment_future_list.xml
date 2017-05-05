@@ -7,7 +7,7 @@
 
     <include layout="@layout/layout_hq_header"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -40,5 +40,5 @@
                 android:textSize="@dimen/list_title_size"
                 android:visibility="gone"/>
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>
