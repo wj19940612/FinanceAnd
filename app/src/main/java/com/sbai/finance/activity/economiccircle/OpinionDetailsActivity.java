@@ -246,10 +246,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLastPrice.setText("--");
 				mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
-				if (mOpinionDetails.getRisePrice().startsWith("+")) {
-					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-				} else {
+				if (mOpinionDetails.getRisePrice().startsWith("-")) {
 					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				} else {
+					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 				}
 				mLastPrice.setText(mOpinionDetails.getLastPrice());
 			}
@@ -258,10 +258,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mUpDownPrice.setText("--");
 				mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
-				if (mOpinionDetails.getRisePrice().startsWith("+")) {
-					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-				} else {
+				if (mOpinionDetails.getRisePrice().startsWith("-")) {
 					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				} else {
+					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 				}
 				mUpDownPrice.setText(mOpinionDetails.getRisePrice());
 			}
@@ -270,10 +270,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mUpDownPercent.setText("--");
 				mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
-				if (mOpinionDetails.getRisePre().startsWith("+")) {
-					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-				} else {
+				if (mOpinionDetails.getRisePre().startsWith("-")) {
 					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
+				} else {
+					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 				}
 				mUpDownPercent.setText(mOpinionDetails.getRisePre());
 			}

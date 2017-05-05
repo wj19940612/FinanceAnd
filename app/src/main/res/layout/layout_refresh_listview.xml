@@ -22,12 +22,12 @@
         <android.support.v7.widget.AppCompatTextView
             android:id="@android:id/empty"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:drawablePadding="20dp"
+            android:drawablePadding="10dp"
             android:drawableTop="@drawable/img_no_data"
-            android:gravity="center"
-            android:paddingTop="100dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="150dp"
             android:visibility="visible"/>
     </LinearLayout>
 

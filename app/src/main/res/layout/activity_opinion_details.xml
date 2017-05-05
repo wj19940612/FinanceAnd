@@ -244,7 +244,7 @@
                         android:drawableTop="@drawable/img_no_data"
                         android:gravity="center_horizontal"
                         android:paddingTop="50dp"
-                        android:text="@string/no_data"
+                        android:text="@string/quick_to_express_your_opinion"
                         android:textColor="@color/assistText"
                         android:textSize="20sp"/>
                 </LinearLayout>
