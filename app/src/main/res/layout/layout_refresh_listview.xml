@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@android:id/empty"
@@ -28,7 +28,7 @@
             android:drawableTop="@drawable/img_no_data"
             android:gravity="center_horizontal"
             android:paddingTop="150dp"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
     </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

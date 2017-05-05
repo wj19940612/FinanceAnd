@@ -71,7 +71,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 SmartDialog.with(getActivity(),
                         getString(R.string.relieve_shield_dialog_content, userAttentionModel.getFollowuserName())
                         , getString(R.string.relieve_shield_dialog_title, userAttentionModel.getFollowuserName()))
-                        .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
@@ -79,7 +79,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                             }
                         })
                         .setTitleMaxLines(2)
-                        .setNegative(android.R.string.cancel)
+                        .setNegative(R.string.cancel)
                         .show();
             }
         });

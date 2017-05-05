@@ -70,7 +70,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 if (userFansModel.isNotAttention()) {
                     SmartDialog.with(getActivity(),
                             getActivity().getString(R.string.if_attention, userFansModel.getUserName()))
-                            .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                            .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     dialog.dismiss();
@@ -78,12 +78,12 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                                 }
                             })
                             .setMessageTextSize(16)
-                            .setNegative(android.R.string.cancel)
+                            .setNegative(R.string.cancel)
                             .show();
                 } else {
                     SmartDialog.with(getActivity(),
                             getActivity().getString(R.string.if_not_attention, userFansModel.getUserName()))
-                            .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                            .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     dialog.dismiss();
@@ -91,7 +91,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                                 }
                             })
                             .setMessageTextSize(16)
-                            .setNegative(android.R.string.cancel)
+                            .setNegative(R.string.cancel)
                             .show();
                 }
             }
