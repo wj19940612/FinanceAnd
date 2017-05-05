@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.AvatarFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.UserData;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
@@ -30,6 +32,8 @@ import com.sbai.finance.view.TitleBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class UserDataActivity extends BaseActivity {
 
@@ -58,6 +62,10 @@ public class UserDataActivity extends BaseActivity {
 	TextView mAttention;
 	@BindView(R.id.shield)
 	TextView mShield;
+	@BindView(R.id.hisPublishText)
+	TextView mHisPublishText;
+	@BindView(R.id.attentionShieldArea)
+	LinearLayout mAttentionShieldArea;
 
 	private int mUserId;
 	private UserData mUserData;
@@ -140,6 +148,10 @@ public class UserDataActivity extends BaseActivity {
 		}
 
 		if (mAttentionAndFansNum != null) {
+			if (mAttentionAndFansNum.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+				mAttentionShieldArea.setVisibility(View.GONE);
+				mHisPublishText.setText(R.string.mine_publish);
+			}
 			mDiagonal.setText(" / ");
 			mAttentionNum.setText(getString(R.string.attention_number, String.valueOf(mAttentionAndFansNum.getAttention())));
 			mFansNum.setText(getString(R.string.fans_number, String.valueOf(mAttentionAndFansNum.getFollower())));
