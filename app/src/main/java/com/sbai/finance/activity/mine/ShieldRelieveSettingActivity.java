@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
@@ -98,12 +98,10 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
         Client.shieldOrRelieveShieldUser(100, 1)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
+                .setCallback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            mShieldRelieveAdapter.remove(shieldedUserModel);
-                        }
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        Log.d(TAG, "onRespSuccess: 屏蔽 " + resp.toString());
                     }
                 })
                 .fire();

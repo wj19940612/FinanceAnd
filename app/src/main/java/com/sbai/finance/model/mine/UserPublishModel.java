@@ -1,7 +1,5 @@
 package com.sbai.finance.model.mine;
 
-import java.util.List;
-
 /**
  * Created by ${wangJie} on 2017/4/19.
  */
@@ -16,54 +14,6 @@ public class UserPublishModel {
      * total : 0
      */
 
-    private int pageSize;
-    private int resultCount;
-    private int start;
-    private int total;
-    private List<DataBean> data;
-
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getResultCount() {
-        return resultCount;
-    }
-
-    public void setResultCount(int resultCount) {
-        this.resultCount = resultCount;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public List<DataBean> getData() {
-        return data;
-    }
-
-    public void setData(List<DataBean> data) {
-        this.data = data;
-    }
-
-    public static class DataBean {
 
         /**
          * auditStatus : 1
@@ -292,32 +242,6 @@ public class UserPublishModel {
             this.varietyType = varietyType;
         }
 
-        @Override
-        public String toString() {
-            return "DataBean{" +
-                    "auditStatus=" + auditStatus +
-                    ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
-                    ", calcuId=" + calcuId +
-                    ", content='" + content + '\'' +
-                    ", createTime=" + createTime +
-                    ", direction=" + direction +
-                    ", guessPass=" + guessPass +
-                    ", id=" + id +
-                    ", lastPrice='" + lastPrice + '\'' +
-                    ", praiseCount=" + praiseCount +
-                    ", replyCount=" + replyCount +
-                    ", risePre='" + risePre + '\'' +
-                    ", risePrice='" + risePrice + '\'' +
-                    ", updateTime=" + updateTime +
-                    ", userId=" + userId +
-                    ", userName='" + userName + '\'' +
-                    ", userPortrait='" + userPortrait + '\'' +
-                    ", varietyId=" + varietyId +
-                    ", varietyName='" + varietyName + '\'' +
-                    ", varietyType='" + varietyType + '\'' +
-                    '}';
-        }
-
         public String getBigVarietyTypeName() {
             return bigVarietyTypeName;
         }
@@ -333,16 +257,32 @@ public class UserPublishModel {
         public void setIsAttention(int isAttention) {
             this.isAttention = isAttention;
         }
-    }
 
     @Override
     public String toString() {
         return "UserPublishModel{" +
-                "pageSize=" + pageSize +
-                ", resultCount=" + resultCount +
-                ", start=" + start +
-                ", total=" + total +
-                ", data=" + data +
+                "auditStatus=" + auditStatus +
+                ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+                ", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
+                ", calcuId=" + calcuId +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                ", direction=" + direction +
+                ", guessPass=" + guessPass +
+                ", id=" + id +
+                ", lastPrice='" + lastPrice + '\'' +
+                ", praiseCount=" + praiseCount +
+                ", replyCount=" + replyCount +
+                ", risePre='" + risePre + '\'' +
+                ", risePrice='" + risePrice + '\'' +
+                ", updateTime=" + updateTime +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", isAttention=" + isAttention +
                 '}';
     }
 }

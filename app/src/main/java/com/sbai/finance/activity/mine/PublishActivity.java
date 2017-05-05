@@ -33,10 +33,12 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 
 public class PublishActivity extends BaseActivity implements AbsListView.OnScrollListener {
 
@@ -53,6 +55,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     private PublishAdapter mPublishAdapter;
     private int mPage;
     private int mUserId;
+    private HashSet<Integer> mSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         setContentView(R.layout.activity_publish);
         ButterKnife.bind(this);
         mListView.setEmptyView(mEmpty);
-
+        mSet = new HashSet<Integer>();
         mPublishAdapter = new PublishAdapter(getActivity());
         mListView.setAdapter(mPublishAdapter);
         mListView.setOnScrollListener(this);
@@ -77,6 +80,8 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mPage = 0;
+                mSet.clear();
                 requestUserPublishList();
             }
         });
@@ -86,10 +91,10 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     private void requestUserPublishList() {
         Client.getUserPublishList(mPage, Client.PAGE_SIZE, mUserId != -1 ? mUserId : null)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserPublishModel>, UserPublishModel>() {
+                .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
-                    protected void onRespSuccessData(UserPublishModel data) {
-                        updateUserPublishData(data.getData());
+                    protected void onRespSuccessData(List<UserPublishModel> data) {
+                        updateUserPublishData(data);
                     }
 
                     @Override
@@ -101,7 +106,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 .fire();
     }
 
-    private void updateUserPublishData(List<UserPublishModel.DataBean> userPublishModelList) {
+    private void updateUserPublishData(List<UserPublishModel> userPublishModelList) {
         if (userPublishModelList == null) {
             stopRefreshAnimation();
             return;
@@ -136,7 +141,11 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             }
             stopRefreshAnimation();
         }
-        mPublishAdapter.addAll(userPublishModelList);
+        for (UserPublishModel data : userPublishModelList) {
+            if (mSet.add(data.getId())) {
+                mPublishAdapter.add(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -157,7 +166,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class PublishAdapter extends ArrayAdapter<UserPublishModel.DataBean> {
+    static class PublishAdapter extends ArrayAdapter<UserPublishModel> {
 
         private Context mContext;
         private boolean isHimSelf;
@@ -220,7 +229,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(UserPublishModel.DataBean item, Context context, boolean isHimSelf) {
+            public void bindDataWithView(UserPublishModel item, Context context, boolean isHimSelf) {
                 mUserName.setText(item.getUserName());
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)

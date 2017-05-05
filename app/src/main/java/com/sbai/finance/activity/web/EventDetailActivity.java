@@ -39,15 +39,10 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  */
 
 public class EventDetailActivity extends BaseActivity {
-<<<<<<< HEAD
-
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
 
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";
-=======
-    public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
->>>>>>> 10fa11271d3807d40078b35f7ddf2e49ce935f37
     public static String EX_RAW_COOKIE = "rawCookie";
     public static final String EX_EVENT = "event";
 
@@ -190,7 +185,7 @@ public class EventDetailActivity extends BaseActivity {
             openWebView(mPureHtml);
         }
     }
-    
+
     private void openWebView(String urlData) {
         String content;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {

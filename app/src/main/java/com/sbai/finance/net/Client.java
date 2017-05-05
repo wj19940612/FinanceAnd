@@ -182,7 +182,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone)
                 .put("deviceId", Preference.get().getPushClientId())
@@ -422,12 +422,12 @@ public class Client {
     /**
      * 接口名称 关注,粉丝数量
      * 请求类型 get
-     * 请求Url  coterie/userDetail/getAttentionFollow
+     * 请求Url   /coterie/userInterest/getStatistics.do
      *
      * @param userId 点击查看的用户ID
      * @return
      */
-    public static API getAttentionFollowUserNumber(int userId) {
+    public static API getAttentionFollowUserNumber(Integer userId) {
         return new API("/coterie/userInterest/getStatistics.do", new ApiParams().put("userId", userId));
     }
 

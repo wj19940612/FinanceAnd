@@ -127,6 +127,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(UserDetailInfo data) {
                         Log.d(TAG, "onRespSuccessData:  " + data.toString());
+                        if (!TextUtils.isEmpty(data.getUserPortrait()) &&
+                                !data.getUserPortrait().equalsIgnoreCase(LocalUser.getUser().getUserInfo().getUserPortrait())) {
+                            setResult(RESULT_OK);
+                        }
                         LocalUser.getUser().getUserInfo().updateLocalUserInfo(data);
                         updateUserInfo();
                         updateUserImage();
