@@ -89,7 +89,7 @@ public class EventDetailActivity extends BaseActivity {
         if (event!=null&&!event.isH5Style()){
             mEventTitleInfo.setVisibility(View.VISIBLE);
             mEventTitle.setText(event.getTitle());
-            mTimeAndSource.setText(event.getSource()+"  "+ DateUtil.formatSlash(event.getCreateTime()));
+            mTimeAndSource.setText(DateUtil.formatSlash(event.getCreateTime()));
             mPureHtml  = event.getContent();
         }else{
             mEventTitleInfo.setVisibility(View.GONE);
@@ -122,13 +122,12 @@ public class EventDetailActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-
+        mWebView.setBackgroundColor(0);
         if (Build.VERSION.SDK_INT >= 19) {
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WebChromeClient() {
