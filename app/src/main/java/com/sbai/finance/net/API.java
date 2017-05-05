@@ -22,7 +22,7 @@ import java.util.Set;
 public class API extends RequestManager {
 
     // private final static String HOST = "http://forex2.esongbai.xyz";
-    private final static String HOST = "http://var.esongbai.xyz";
+    private final static String HOST = "http://fanli.esongbai.xyz";
     private static String mHost;
 
     private static Set<String> sCurrentUrls = new HashSet<>();
