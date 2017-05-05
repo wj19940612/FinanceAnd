@@ -491,9 +491,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             if (data.getCode() == Netty.REQ_QUOTA) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
+                updateChartView(mFutureData);
             }
         }
     };
+
+    private void updateChartView(FutureData futureData) {
+
+    }
 
     private void updateMarketDataView(FutureData data) {
         mLastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), mVariety.getPriceScale()));
