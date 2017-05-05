@@ -342,7 +342,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						Launcher.with(context, UserDataActivity.class)
-								.putExtra("userId", item.getUserId())
+								.putExtra(Launcher.USER_ID, item.getUserId())
 								.execute();
 					}
 				});
@@ -434,7 +434,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			case R.id.avatar:
 				Launcher.with(this, UserDataActivity.class)
-						.putExtra("userId", mOpinionDetails.getUserId())
+						.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
 						.execute();
 				break;
 		}
