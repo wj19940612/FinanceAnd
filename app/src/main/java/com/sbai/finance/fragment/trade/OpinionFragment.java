@@ -18,8 +18,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Opinion;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
@@ -169,6 +171,22 @@ public class OpinionFragment extends BaseFragment {
     }
 
 
+    //局部刷新
+    public void updateItemById(int id, int replyCount, int praiseCount) {
+        int position = 0;
+        for (Opinion opinion : mOpinionList) {
+            if (opinion.getId() == id) {
+                break;
+            } else {
+                position++;
+            }
+        }
+        mOpinionList.get(position).setReplyCount(replyCount);
+        mOpinionList.get(position).setPraiseCount(praiseCount);
+        mOpinionAdapter.notifyItemChanged(position);
+    }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -210,9 +228,13 @@ public class OpinionFragment extends BaseFragment {
             helper.getView(R.id.avatar).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, item.getUserId())
-                            .execute();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, item.getUserId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             });
             helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {

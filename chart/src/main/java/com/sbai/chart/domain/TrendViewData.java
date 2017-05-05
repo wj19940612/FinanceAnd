@@ -11,6 +11,11 @@ public class TrendViewData {
     private float closePrice;
     private String time;
 
+    public TrendViewData(float closePrice, String time) {
+        this.closePrice = closePrice;
+        this.time = time;
+    }
+
     public String getHHmm() {
         int hourIndex = DATE_FORMAT.indexOf("HH");
         String result = "";
