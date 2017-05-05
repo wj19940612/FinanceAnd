@@ -93,6 +93,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
+        mEmpty.setText(R.string.now_not_has_data);
         mListView.setEmptyView(mEmpty);
         mSet = new HashSet<>();
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());

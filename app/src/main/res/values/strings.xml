@@ -108,6 +108,7 @@
     <string name="feed_back">意见反馈</string>
     <string name="new_message">新消息</string>
     <string name="item">条</string>
+    <string name="now_not_has_data">暂无消息</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
