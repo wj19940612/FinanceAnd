@@ -42,6 +42,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
@@ -57,6 +58,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.R.id.trendView;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
@@ -78,7 +80,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(R.id.trendView)
+    @BindView(trendView)
     TrendView mTrendView;
     @BindView(R.id.klineView)
     KlineView mKlineView;
@@ -500,9 +502,25 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             if (data.getCode() == Netty.REQ_QUOTA) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
+                updateChartView(mFutureData);
             }
         }
     };
+
+    private void updateChartView(FutureData futureData) {
+        List<TrendViewData> dataList = mTrendView.getDataList();
+        if (dataList != null && dataList.size() > 0) {
+            TrendViewData lastData = dataList.get(dataList.size() - 1);
+            String date = DateUtil.addOneMinute(lastData.getTime(), TrendViewData.DATE_FORMAT);
+            String hhmm = DateUtil.format(date, TrendViewData.DATE_FORMAT, "HH:mm");
+            TrendView.Settings settings = mTrendView.getSettings();
+            if (TrendView.Util.isValidDate(hhmm, settings.getOpenMarketTimes())) {
+                float lastPrice = (float) futureData.getLastPrice();
+                TrendViewData unstableData = new TrendViewData(lastPrice, date);
+                mTrendView.setUnstableData(unstableData);
+            }
+        }
+    }
 
     private void updateMarketDataView(FutureData data) {
         mLastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), mVariety.getPriceScale()));

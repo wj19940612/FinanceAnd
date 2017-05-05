@@ -167,7 +167,7 @@ public class KlineChart extends ChartView {
     }
 
     protected void setTouchLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartColor.WHITE.get()));
+        paint.setColor(Color.parseColor(ChartColor.RED.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
     }
