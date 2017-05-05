@@ -122,6 +122,12 @@ public class TopicActivity extends BaseActivity {
 			variety.setVarietyId(subject.getVarietyId());
 			variety.setVarietyType(subject.getVarietyType());
 			variety.setContractsCode(subject.getContractsCode());
+			variety.setExchangeStatus(subject.getExchangeStatus());
+			variety.setExchangeId(subject.getExchangeId());
+			variety.setBaseline(subject.getBaseline());
+			variety.setDisplayMarketTimes(subject.getDisplayMarketTimes());
+			variety.setOpenMarketTime(subject.getOpenMarketTime());
+			variety.setFlashChartPriceInterval(subject.getFlashChartPriceInterval());
 			mTopicListAdapter.add(variety);
            if (variety.getContractsCode()!=null){
 			 codes.append(variety.getContractsCode()).append(",");
