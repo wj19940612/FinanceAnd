@@ -225,11 +225,13 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 //点赞帖子
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
                     //.点赞动态，点击可跳转至观点页面
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).execute();
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
                     break;
                 //点赞评论
                 case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).execute();
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
@@ -352,12 +354,12 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                         mContent.setSelected(true);
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
-                                ContextCompat.getColor(context, R.color.primaryText));
+                                ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     } else {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
-                                ContextCompat.getColor(context, R.color.secondaryText));
+                                ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                         mContent.setSelected(false);
                     }

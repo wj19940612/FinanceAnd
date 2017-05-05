@@ -117,6 +117,9 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         mUserFansAdapter.remove(userFansModel);
+                        if (userFansModel.isNotAttention()) {
+                            setResult(RESULT_OK);
+                        }
                         userFansModel.setOther(userFansModel.isNotAttention() ? 0 : 1);
                         mUserFansAdapter.insert(userFansModel, position);
                     }

@@ -51,8 +51,8 @@ public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
     private static final int REQ_CODE_NEW_NEWS = 18;
-
-    Unbinder unbinder;
+    private static final int REQ_CODE_FANS_PAGE = 322;
+    private static final int REQ_CODE_ATTENTION_PAGE = 4555;
 
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
@@ -78,6 +78,8 @@ public class MineFragment extends BaseFragment {
     LinearLayoutCompat mHeadImageLayout;
     @BindView(R.id.logoutImage)
     AppCompatImageView mLogoutImage;
+
+    Unbinder unbinder;
 
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
@@ -117,6 +119,7 @@ public class MineFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
+            requestNoReadNewsNumber();
             requestUserAttentionAndroidFansNumber();
         }
     }
@@ -200,14 +203,14 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.attention:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), AttentionActivity.class).execute();
+                    startActivityForResult(new Intent(getActivity(), AttentionActivity.class), REQ_CODE_ATTENTION_PAGE);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.fans:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), FansActivity.class).execute();
+                    startActivityForResult(new Intent(getActivity(), FansActivity.class), REQ_CODE_FANS_PAGE);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -276,6 +279,12 @@ public class MineFragment extends BaseFragment {
                     break;
                 case REQ_CODE_NEW_NEWS:
                     requestNoReadNewsNumber();
+                    break;
+                case REQ_CODE_FANS_PAGE:
+                    requestUserAttentionAndroidFansNumber();
+                    break;
+                case REQ_CODE_ATTENTION_PAGE:
+                    requestUserAttentionAndroidFansNumber();
                     break;
             }
         }

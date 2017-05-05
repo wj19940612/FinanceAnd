@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -75,7 +76,8 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mListView.setOnItemClickListener(this);
         mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
         int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-        if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
+        Log.d(TAG, "onCreate:  发表观点 " + LocalUser.getUser().getUserInfo().toString() + " \n " + mUserId);
+        if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
             mPublishAdapter.setIsHimSelf(true);
             mTitleBar.setTitle(R.string.mine_publish);
         } else {
@@ -95,7 +97,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, mUserId != LocalUser.getUser().getUserInfo().getId() ? mUserId : null)
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, (mUserId!=-1&&mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
@@ -176,7 +178,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         UserPublishModel item = (UserPublishModel) parent.getAdapter().getItem(position);
         if (item != null) {
-            Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getUserId()).execute();
+            Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
         }
     }
 
