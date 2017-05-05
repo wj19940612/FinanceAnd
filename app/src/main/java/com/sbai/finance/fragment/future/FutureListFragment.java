@@ -21,9 +21,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.FutureData;
-import com.sbai.finance.model.ListWrapper;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -32,7 +30,6 @@ import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.httplib.ApiCallback;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -41,11 +38,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,SwipeRefreshLayout.OnRefreshListener,CustomSwipeRefreshLayout.OnLoadMoreListener {
+public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,
+        SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -99,7 +96,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         mFutureListAdapter = new FutureListAdapter(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setAdapter(mListView,mFutureListAdapter);
+        mSwipeRefreshLayout.setAdapter(mListView, mFutureListAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mFutureListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,20 +114,15 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onResume() {
         super.onResume();
+        Netty.get().addHandler(mNettyHandler);
         reset();
         requestVarietyList();
-        Netty.get().addHandler(mNettyHandler);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Netty.get().removeHandler(mNettyHandler);
-    }
-
-    @OnClick(R.id.rate)
-    public void onClick(View view) {
-
     }
 
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
@@ -196,11 +188,10 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     public void requestVarietyList() {
         Client.getVarietyList(Variety.VAR_FUTURE, mPage, mFutureType).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ListWrapper<Variety>>, ListWrapper<Variety>>() {
-
+                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
-                    protected void onRespSuccessData(ListWrapper<Variety> data) {
-                        updateFutureData(data.getData());
+                    protected void onRespSuccessData(List<Variety> data) {
+                        updateFutureData(data);
                     }
 
                     @Override
@@ -208,8 +199,10 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         super.onFailure(volleyError);
                         stopRefreshAnimation();
                     }
+
                 }).fireSync();
     }
+
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -297,9 +290,9 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
             private void bindingData(Variety item, HashMap<String, FutureData> map, Context context) {
                 mFutureName.setText(item.getVarietyName());
-                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     mFutureCode.setText(item.getContractsCode());
-                }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+                } else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
                     mFutureCode.setText(item.getVarietyType());
                 }
 

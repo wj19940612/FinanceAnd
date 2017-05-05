@@ -1,7 +1,5 @@
 package com.sbai.finance.model.mine;
 
-import java.util.List;
-
 /**
  * Created by ${wangJie} on 2017/4/19.
  * 被屏蔽的用户model
@@ -16,53 +14,53 @@ public class ShieldedUserModel {
      * total : 1
      */
 
-    private int pageSize;
-    private int resultCount;
-    private int start;
-    private int total;
-    private List<DataBean> data;
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getResultCount() {
-        return resultCount;
-    }
-
-    public void setResultCount(int resultCount) {
-        this.resultCount = resultCount;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public List<DataBean> getData() {
-        return data;
-    }
-
-    public void setData(List<DataBean> data) {
-        this.data = data;
-    }
-
-    public static class DataBean {
+//    private int pageSize;
+//    private int resultCount;
+//    private int start;
+//    private int total;
+//    private List<DataBean> data;
+//
+//    public int getPageSize() {
+//        return pageSize;
+//    }
+//
+//    public void setPageSize(int pageSize) {
+//        this.pageSize = pageSize;
+//    }
+//
+//    public int getResultCount() {
+//        return resultCount;
+//    }
+//
+//    public void setResultCount(int resultCount) {
+//        this.resultCount = resultCount;
+//    }
+//
+//    public int getStart() {
+//        return start;
+//    }
+//
+//    public void setStart(int start) {
+//        this.start = start;
+//    }
+//
+//    public int getTotal() {
+//        return total;
+//    }
+//
+//    public void setTotal(int total) {
+//        this.total = total;
+//    }
+//
+//    public List<DataBean> getData() {
+//        return data;
+//    }
+//
+//    public void setData(List<DataBean> data) {
+//        this.data = data;
+//    }
+//
+//    public static class DataBean {
         /**
          * createTime : 1493827200000
          * id : 88
@@ -116,7 +114,7 @@ public class ShieldedUserModel {
         public void setShielduserPortrait(String shielduserPortrait) {
             this.shielduserPortrait = shielduserPortrait;
         }
-    }
+//    }
 
     /**
      * createTime : 74861

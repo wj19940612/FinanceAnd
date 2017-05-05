@@ -49,7 +49,7 @@ public class OpinionFragment extends BaseFragment {
     TextView mFootView;
 
     private OpinionAdapter mOpinionAdapter;
-    private List<Opinion.OpinionBean> mOpinionList;
+    private List<Opinion> mOpinionList;
 
     private int mPage = 0;
     private int mPageSize = 15;
@@ -124,16 +124,16 @@ public class OpinionFragment extends BaseFragment {
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Opinion>, Opinion>() {
+                .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
-                    protected void onRespSuccessData(Opinion data) {
-                        updateViewWithData(data.getData());
+                    protected void onRespSuccessData(List<Opinion> data) {
+                        updateViewWithData(data);
                     }
                 })
                 .fire();
     }
 
-    private void updateViewWithData(List<Opinion.OpinionBean> data) {
+    private void updateViewWithData(List<Opinion> data) {
         if (data != null && data.size() > 0) {
             mOpinionList.addAll(data);
             if (data.size() < mPageSize) {
@@ -159,10 +159,10 @@ public class OpinionFragment extends BaseFragment {
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Opinion>, Opinion>() {
+                .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
-                    protected void onRespSuccessData(Opinion data) {
-                        updateViewWithData(data.getData());
+                    protected void onRespSuccessData(List<Opinion> data) {
+                        updateViewWithData(data);
                     }
                 })
                 .fire();
@@ -176,18 +176,18 @@ public class OpinionFragment extends BaseFragment {
     }
 
 
-    private class OpinionAdapter extends BaseQuickAdapter<Opinion.OpinionBean, BaseViewHolder> {
+    private class OpinionAdapter extends BaseQuickAdapter<Opinion, BaseViewHolder> {
 
-        private OpinionAdapter(int layoutResId, List<Opinion.OpinionBean> data) {
+        private OpinionAdapter(int layoutResId, List<Opinion> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, Opinion.OpinionBean item) {
+        protected void convert(BaseViewHolder helper, Opinion item) {
             bindDataWithView(helper, item);
         }
 
-        private void bindDataWithView(BaseViewHolder helper, final Opinion.OpinionBean item) {
+        private void bindDataWithView(BaseViewHolder helper, final Opinion item) {
             String attend = item.getIsAttention() == 1 ? "" : getString(R.string.is_attention);
             String format = "yyyy/MM/dd HH:mm";
             String time = DateUtil.format(item.getCreateTime(), format);
