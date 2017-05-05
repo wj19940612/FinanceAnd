@@ -568,7 +568,7 @@ public class Client {
      * @return
      */
     public static API checkOptional(int varietyId) {
-        return new API(POST, "/order/optional/checkOptional.do",
+        return new API("/order/optional/checkOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
     }

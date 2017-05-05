@@ -232,7 +232,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             @Override
             public void onAddOptionalButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    checkOpitionStatusAndDo();
+                    checkOptionalStatus();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -270,8 +270,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                 .show(getSupportFragmentManager());
     }
 
-    private void checkOpitionStatusAndDo() {
-        if (mTradeFloatButtons.isHasAddInOpition()) {
+    private void checkOptionalStatus() {
+        if (mTradeFloatButtons.isHasAddInOptional()) {
             requestDeleteOpition();
         } else {
             requestAddOpition();
@@ -305,8 +305,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     private void requestOptionalStatus() {
         if (LocalUser.getUser().isLogin()) {
             Client.checkOptional(mVariety.getVarietyId())
-                    .setTag(TAG)
-                    .setIndeterminate(this)
+                    .setTag(TAG).setIndeterminate(this)
                     .setCallback(new Callback<Resp<Integer>>() {
                         @Override
                         protected void onRespSuccess(Resp<Integer> resp) {
@@ -314,8 +313,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                             boolean hasAddInOpition = (result == HAS_ADD_OPITION);
                             mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
                         }
-                    })
-                    .fire();
+                    }).fire();
         }
     }
 
