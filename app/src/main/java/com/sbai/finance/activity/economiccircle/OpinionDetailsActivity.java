@@ -148,10 +148,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 		if (mOpinionDetails != null) {
 			Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId(),
 					mReplyId != -1 ? mReplyId : null).setTag(TAG)
-					.setCallback(new Callback2D<Resp<OpinionReply>, OpinionReply>() {
+					.setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
 						@Override
-						protected void onRespSuccessData(OpinionReply opinionReply) {
-							updateEconomicCircleList(opinionReply.getData());
+						protected void onRespSuccessData(List<OpinionReply> opinionReplyList) {
+							updateEconomicCircleList(opinionReplyList);
 						}
 
 						@Override
@@ -169,7 +169,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	private void updateEconomicCircleList(List<OpinionReply.DataBean> opinionReplyList) {
+	private void updateEconomicCircleList(List<OpinionReply> opinionReplyList) {
 		if (opinionReplyList == null) {
 			stopRefreshAnimation();
 			return;
@@ -206,7 +206,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			stopRefreshAnimation();
 		}
 
-		for (OpinionReply.DataBean opinionReply : opinionReplyList) {
+		for (OpinionReply opinionReply : opinionReplyList) {
 			if (mSet.add(opinionReply.getId())) {
 				mOpinionReplyAdapter.add(opinionReply);
 			}
@@ -289,7 +289,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply.DataBean> {
+	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply> {
 
 		private Context mContext;
 
@@ -330,7 +330,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(final Context context, final OpinionReply.DataBean item) {
+			private void bindingData(final Context context, final OpinionReply item) {
 				mUserName.setText(item.getUserName());
 
 				Glide.with(context).load(item.getUserPortrait())
