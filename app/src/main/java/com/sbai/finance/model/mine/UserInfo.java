@@ -52,6 +52,10 @@ public class UserInfo implements Parcelable {
     private int userSex;
     private String chinaSex;
 
+    public static boolean isGril(int userSex) {
+        return userSex == 1;
+    }
+
     public String getUserName() {
         return userName;
     }

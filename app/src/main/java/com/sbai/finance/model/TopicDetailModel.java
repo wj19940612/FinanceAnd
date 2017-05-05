@@ -14,7 +14,7 @@ public class TopicDetailModel {
 	 */
 
 	private SubjectModelBean subjectModel;
-	private List<SubjectDetailModelListBean> SubjectDetailModelList;
+	private List<Variety> SubjectDetailModelList;
 
 	public SubjectModelBean getSubjectModel() {
 		return subjectModel;
@@ -24,11 +24,11 @@ public class TopicDetailModel {
 		this.subjectModel = subjectModel;
 	}
 
-	public List<SubjectDetailModelListBean> getSubjectDetailModelList() {
+	public List<Variety> getSubjectDetailModelList() {
 		return SubjectDetailModelList;
 	}
 
-	public void setSubjectDetailModelList(List<SubjectDetailModelListBean> SubjectDetailModelList) {
+	public void setSubjectDetailModelList(List<Variety> SubjectDetailModelList) {
 		this.SubjectDetailModelList = SubjectDetailModelList;
 	}
 
@@ -165,162 +165,6 @@ public class TopicDetailModel {
 
 		public void setType(String type) {
 			this.type = type;
-		}
-	}
-
-	public static class SubjectDetailModelListBean {
-		/**
-		 * displayMarketTimes : 06:00;05:00
-		 * smallVarietyTypeCode : foreign
-		 * decimalScale : 0.2
-		 * varietyType : CL
-		 * bigVarietyTypeCode : future
-		 * sort : 1
-		 * baseline : 2
-		 * exchangeId : 1
-		 * openMarketTime : 07:00;06:00
-		 * flashChartPriceInterval : 14
-		 * varietyId : 1
-		 * exchangeStatus : 1
-		 * contractsCode : CL1706
-		 * marketPoint : 3
-		 * varietyName : 美原油
-		 */
-
-		private String displayMarketTimes;
-		private String smallVarietyTypeCode;
-		private double decimalScale;
-		private String varietyType;
-		private String bigVarietyTypeCode;
-		private int sort;
-		private int baseline;
-		private int exchangeId;
-		private String openMarketTime;
-		private int flashChartPriceInterval;
-		private int varietyId;
-		private int exchangeStatus;
-		private String contractsCode;
-		private int marketPoint;
-		private String varietyName;
-
-		public String getDisplayMarketTimes() {
-			return displayMarketTimes;
-		}
-
-		public void setDisplayMarketTimes(String displayMarketTimes) {
-			this.displayMarketTimes = displayMarketTimes;
-		}
-
-		public String getSmallVarietyTypeCode() {
-			return smallVarietyTypeCode;
-		}
-
-		public void setSmallVarietyTypeCode(String smallVarietyTypeCode) {
-			this.smallVarietyTypeCode = smallVarietyTypeCode;
-		}
-
-		public double getDecimalScale() {
-			return decimalScale;
-		}
-
-		public void setDecimalScale(double decimalScale) {
-			this.decimalScale = decimalScale;
-		}
-
-		public String getVarietyType() {
-			return varietyType;
-		}
-
-		public void setVarietyType(String varietyType) {
-			this.varietyType = varietyType;
-		}
-
-		public String getBigVarietyTypeCode() {
-			return bigVarietyTypeCode;
-		}
-
-		public void setBigVarietyTypeCode(String bigVarietyTypeCode) {
-			this.bigVarietyTypeCode = bigVarietyTypeCode;
-		}
-
-		public int getSort() {
-			return sort;
-		}
-
-		public void setSort(int sort) {
-			this.sort = sort;
-		}
-
-		public int getBaseline() {
-			return baseline;
-		}
-
-		public void setBaseline(int baseline) {
-			this.baseline = baseline;
-		}
-
-		public int getExchangeId() {
-			return exchangeId;
-		}
-
-		public void setExchangeId(int exchangeId) {
-			this.exchangeId = exchangeId;
-		}
-
-		public String getOpenMarketTime() {
-			return openMarketTime;
-		}
-
-		public void setOpenMarketTime(String openMarketTime) {
-			this.openMarketTime = openMarketTime;
-		}
-
-		public int getFlashChartPriceInterval() {
-			return flashChartPriceInterval;
-		}
-
-		public void setFlashChartPriceInterval(int flashChartPriceInterval) {
-			this.flashChartPriceInterval = flashChartPriceInterval;
-		}
-
-		public int getVarietyId() {
-			return varietyId;
-		}
-
-		public void setVarietyId(int varietyId) {
-			this.varietyId = varietyId;
-		}
-
-		public int getExchangeStatus() {
-			return exchangeStatus;
-		}
-
-		public void setExchangeStatus(int exchangeStatus) {
-			this.exchangeStatus = exchangeStatus;
-		}
-
-		public String getContractsCode() {
-			return contractsCode;
-		}
-
-		public void setContractsCode(String contractsCode) {
-			this.contractsCode = contractsCode;
-		}
-
-		public int getMarketPoint() {
-			return marketPoint;
-		}
-
-		public void setMarketPoint(int marketPoint) {
-			this.marketPoint = marketPoint;
-		}
-
-		public String getVarietyName() {
-			return varietyName;
-		}
-
-		public void setVarietyName(String varietyName) {
-			this.varietyName = varietyName;
 		}
 	}
 }
