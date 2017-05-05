@@ -567,7 +567,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API checkOptional(int varietyId) {
+    public static API checkOption(int varietyId) {
         return new API(POST, "/order/optional/checkOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
@@ -579,7 +579,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API addOptional(int varietyId) {
+    public static API addOption(int varietyId) {
         return new API("/order/optional/addOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
@@ -591,7 +591,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API delOptional(Integer varietyId) {
+    public static API delOption(Integer varietyId) {
         return new API("/order/optional/deleteOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
