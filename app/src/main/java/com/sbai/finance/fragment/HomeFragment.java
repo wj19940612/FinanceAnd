@@ -70,6 +70,7 @@ public class HomeFragment extends BaseFragment {
     TextView mIdeaTitle;
     @BindView(R.id.bigEvent)
     LinearLayout mBigEvent;
+
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
 
@@ -95,7 +96,7 @@ public class HomeFragment extends BaseFragment {
                 Topic topic = (Topic) parent.getItemAtPosition(position);
                 if (topic != null) {
                     Launcher.with(getContext(), TopicActivity.class)
-                            .putExtra(Launcher.KEY_TOPIC, topic)
+                            .putExtra(Launcher.EX_PAYLOAD, topic)
                             .execute();
                 }
             }
