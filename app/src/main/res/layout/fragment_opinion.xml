@@ -18,7 +18,7 @@
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center_horizontal"
         android:paddingTop="150dp"
-        android:text="@string/no_opinion"
+        android:text="@string/quick_publish"
         android:textColor="@color/assistText"
         android:textSize="20sp"/>
 </LinearLayout>
