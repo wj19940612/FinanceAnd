@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.mine.UserPublishModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -69,11 +70,12 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mListView.setOnScrollListener(this);
 
         mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
         if (mUserId == -1) {
             mPublishAdapter.setIsHimSelf(true);
             mTitleBar.setTitle(R.string.mine_publish);
         } else {
-            mTitleBar.setTitle(R.string.his_publish);
+            mTitleBar.setTitle(UserInfo.isGril(userSex) ? R.string.her_publish : R.string.his_publish);
             mPublishAdapter.setIsHimSelf(false);
         }
 
@@ -242,7 +244,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mBigVarietyName.setText(item.getBigVarietyTypeName());
                 if (!isHimSelf) {
-                    mIsAttention.setText(item.isAttention() ? R.string.is_attention : R.string.is_not_attention);
+                    mIsAttention.setText(item.isAttention() ? context.getString(R.string.is_attention) : "");
                 }
                 mLastPrice.setText(item.getLastPrice());
                 mUpDownPrice.setText(item.getRisePrice());
