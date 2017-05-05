@@ -90,7 +90,7 @@ public class EventDetailActivity extends BaseActivity {
     protected void initData(Intent intent) {
         EventModel event = (EventModel) intent.getSerializableExtra(EX_EVENT);
         if (event != null) {
-            if (event.isH5Style()) {
+            if (!event.isH5Style()) {
                 mEventTitleInfo.setVisibility(View.VISIBLE);
                 mEventTitle.setText(event.getTitle());
                 mTimeAndSource.setText(DateUtil.formatSlash(event.getCreateTime()));
