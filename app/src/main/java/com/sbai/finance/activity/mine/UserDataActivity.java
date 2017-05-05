@@ -80,7 +80,7 @@ public class UserDataActivity extends BaseActivity {
 	}
 
 	private void initData(Intent intent) {
-		mUserId = intent.getIntExtra("userId", 0);
+		mUserId = intent.getIntExtra(Launcher.USER_ID, 0);
 	}
 
 	private void requestUserData() {
