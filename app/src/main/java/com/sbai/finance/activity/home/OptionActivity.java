@@ -116,7 +116,7 @@ public class OptionActivity extends BaseActivity implements AbsListView.OnScroll
 				}).fireSync();
 	}
 	private void requestDelOptionalData(Integer varietyId ) {
-		Client.delOptional(varietyId).setTag(TAG)
+		Client.delOption(varietyId).setTag(TAG)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {

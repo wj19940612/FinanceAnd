@@ -1,10 +1,10 @@
-package com.sbai.finance.model.mine;
+package com.sbai.finance.model;
 
 /**
  * Created by Administrator on 2017-04-28.
  */
 
-public class BorrowOutHis {
+public class BorrowOutHistory {
     public static final int STATUST_6=6;
     public static final int STATUST_7=7;
     public static final int STATUST_8=8;

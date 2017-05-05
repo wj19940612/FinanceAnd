@@ -97,6 +97,8 @@
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
     <string name="mine_publish">我的发表</string>
+    <string name="his_publish">他的发表</string>
+    <string name="her_publish">她的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
@@ -165,6 +167,7 @@
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
+    <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
@@ -278,4 +281,5 @@
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
+    <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
 </resources>

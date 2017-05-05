@@ -23,11 +23,9 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.model.EventModel;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Network;
-import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +40,9 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 public class EventDetailActivity extends BaseActivity {
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
+
+    public static final String EX_URL = "url";
+    public static final String EX_TITLE = "title";
     public static String EX_RAW_COOKIE = "rawCookie";
     public static final String EX_EVENT = "event";
 
@@ -74,6 +75,7 @@ public class EventDetailActivity extends BaseActivity {
     public WebView getWebView() {
         return mWebView;
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,19 +86,23 @@ public class EventDetailActivity extends BaseActivity {
         initData(getIntent());
         initWebView();
     }
+
     protected void initData(Intent intent) {
-        EventModel  event = (EventModel) intent.getSerializableExtra(EX_EVENT);
-        if (event!=null&&!event.isH5Style()){
-            mEventTitleInfo.setVisibility(View.VISIBLE);
-            mEventTitle.setText(event.getTitle());
-            mTimeAndSource.setText(event.getSource()+"  "+ DateUtil.formatSlash(event.getCreateTime()));
-            mPureHtml  = event.getContent();
-        }else{
-            mEventTitleInfo.setVisibility(View.GONE);
-            mPageUrl = event.getUrl();
+        EventModel event = (EventModel) intent.getSerializableExtra(EX_EVENT);
+        if (event != null) {
+            if (!event.isH5Style()) {
+                mEventTitleInfo.setVisibility(View.VISIBLE);
+                mEventTitle.setText(event.getTitle());
+                mTimeAndSource.setText(DateUtil.formatSlash(event.getCreateTime()));
+                mPureHtml = event.getContent();
+            } else {
+                mEventTitleInfo.setVisibility(View.GONE);
+                mPageUrl = event.getUrl();
+            }
         }
         mRawCookie = intent.getStringExtra(EX_RAW_COOKIE);
     }
+
     protected void initWebView() {
         // init cookies
         initCookies(mRawCookie, mPageUrl);
@@ -122,13 +128,12 @@ public class EventDetailActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-
-        if (Build.VERSION.SDK_INT >= 19) {
+        mWebView.setBackgroundColor(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -173,6 +178,7 @@ public class EventDetailActivity extends BaseActivity {
 
         loadPage();
     }
+
     protected void loadPage() {
         if (!TextUtils.isEmpty(mPageUrl)) {
             mWebView.loadUrl(mPageUrl);
@@ -180,21 +186,24 @@ public class EventDetailActivity extends BaseActivity {
             openWebView(mPureHtml);
         }
     }
+
     private void openWebView(String urlData) {
         String content;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             getWebView().getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            content = INFO_HTML_META + "<body>"+ mPureHtml + "</body>";
+            content = INFO_HTML_META + "<body>" + mPureHtml + "</body>";
         } else {
             getWebView().getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             content = getHtmlData(urlData);
         }
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
+
     private String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
         return "<html>" + head + bodyHTML + "</html>";
     }
+
     protected void initCookies(String rawCookie, String pageUrl) {
         if (!TextUtils.isEmpty(rawCookie) && !TextUtils.isEmpty(pageUrl)) {
             String[] cookies = rawCookie.split("\n");
@@ -214,6 +223,7 @@ public class EventDetailActivity extends BaseActivity {
             }
         }
     }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -226,6 +236,7 @@ public class EventDetailActivity extends BaseActivity {
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
         mWebView.onPause();
     }
+
     @OnClick(R.id.refreshButton)
     public void onClick() {
         mWebView.reload();

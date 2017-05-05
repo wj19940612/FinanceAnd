@@ -75,7 +75,7 @@ public class IntroduceFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        requestVarietyTradeIntroduce();
+      //  requestVarietyTradeIntroduce();
     }
 
     private void requestVarietyTradeIntroduce() {

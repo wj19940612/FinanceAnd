@@ -182,7 +182,7 @@ public class Client {
      * @return
      */
     public static API login(String msgCode, String phone) {
-        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("msgCode", msgCode)
                 .put("phone", phone)
                 .put("deviceId", Preference.get().getPushClientId())
@@ -422,12 +422,12 @@ public class Client {
     /**
      * 接口名称 关注,粉丝数量
      * 请求类型 get
-     * 请求Url  coterie/userDetail/getAttentionFollow
+     * 请求Url   /coterie/userInterest/getStatistics.do
      *
      * @param userId 点击查看的用户ID
      * @return
      */
-    public static API getAttentionFollowUserNumber(int userId) {
+    public static API getAttentionFollowUserNumber(Integer userId) {
         return new API("/coterie/userInterest/getStatistics.do", new ApiParams().put("userId", userId));
     }
 
@@ -461,7 +461,7 @@ public class Client {
      * @param userId   用户id
      * @return
      */
-    public static API getUserPublishList(int page, int pageSize, int userId) {
+    public static API getUserPublishList(int page, int pageSize, Integer userId) {
         return new API("/coterie/userInterest/queryClickUserViewPoint.do", new ApiParams()
                 .put("page", page)
                 .put("pageSize", pageSize)
@@ -567,7 +567,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API checkOptional(int varietyId) {
+    public static API checkOption(int varietyId) {
         return new API(POST, "/order/optional/checkOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
@@ -579,7 +579,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API addOptional(int varietyId) {
+    public static API addOption(int varietyId) {
         return new API("/order/optional/addOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));
@@ -591,7 +591,7 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API delOptional(Integer varietyId) {
+    public static API delOption(Integer varietyId) {
         return new API("/order/optional/deleteOptional.do",
                 new ApiParams()
                         .put("varietyId", varietyId));

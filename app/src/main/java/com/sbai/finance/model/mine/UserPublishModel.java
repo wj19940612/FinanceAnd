@@ -1,7 +1,5 @@
 package com.sbai.finance.model.mine;
 
-import java.util.List;
-
 /**
  * Created by ${wangJie} on 2017/4/19.
  */
@@ -16,54 +14,6 @@ public class UserPublishModel {
      * total : 0
      */
 
-    private int pageSize;
-    private int resultCount;
-    private int start;
-    private int total;
-    private List<DataBean> data;
-
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getResultCount() {
-        return resultCount;
-    }
-
-    public void setResultCount(int resultCount) {
-        this.resultCount = resultCount;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public List<DataBean> getData() {
-        return data;
-    }
-
-    public void setData(List<DataBean> data) {
-        this.data = data;
-    }
-
-    public static class DataBean {
 
         /**
          * auditStatus : 1
@@ -89,11 +39,15 @@ public class UserPublishModel {
          */
 
         private int auditStatus;
+        //大类代码
         private String bigVarietyTypeCode;
+        //大类名称
+        private String bigVarietyTypeName;
         private int calcuId;
         private String content;
         private long createTime;
         private int direction;
+        //        预测状态 0等待结果 1成功 2失败
         private int guessPass;
         private int id;
         //	最新价
@@ -113,6 +67,20 @@ public class UserPublishModel {
         private int varietyId;
         private String varietyName;
         private String varietyType;
+        /**
+         * bigVarietyTypeName : 测试内容3z0m
+         * createTime : 测试内容051b
+         * isAttention : 18117
+         * lastPrice : 84672
+         * risePre : 16208
+         */
+
+        //2 关注 1不关注
+        private int isAttention;
+
+        public boolean isAttention() {
+            return getIsAttention() == 2;
+        }
 
         public int getAuditStatus() {
             return auditStatus;
@@ -273,5 +241,48 @@ public class UserPublishModel {
         public void setVarietyType(String varietyType) {
             this.varietyType = varietyType;
         }
+
+        public String getBigVarietyTypeName() {
+            return bigVarietyTypeName;
+        }
+
+        public void setBigVarietyTypeName(String bigVarietyTypeName) {
+            this.bigVarietyTypeName = bigVarietyTypeName;
+        }
+
+        public int getIsAttention() {
+            return isAttention;
+        }
+
+        public void setIsAttention(int isAttention) {
+            this.isAttention = isAttention;
+        }
+
+    @Override
+    public String toString() {
+        return "UserPublishModel{" +
+                "auditStatus=" + auditStatus +
+                ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+                ", bigVarietyTypeName='" + bigVarietyTypeName + '\'' +
+                ", calcuId=" + calcuId +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                ", direction=" + direction +
+                ", guessPass=" + guessPass +
+                ", id=" + id +
+                ", lastPrice='" + lastPrice + '\'' +
+                ", praiseCount=" + praiseCount +
+                ", replyCount=" + replyCount +
+                ", risePre='" + risePre + '\'' +
+                ", risePrice='" + risePrice + '\'' +
+                ", updateTime=" + updateTime +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPortrait='" + userPortrait + '\'' +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", isAttention=" + isAttention +
+                '}';
     }
 }

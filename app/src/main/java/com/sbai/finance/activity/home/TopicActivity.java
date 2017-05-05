@@ -97,8 +97,6 @@ public class TopicActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		requestTopicDetailInfo();
-		Netty.get().subscribe(Netty.REQ_SUB_ALL);
-		Netty.get().addHandler(mNettyHandler);
 	}
 
 	private void requestTopicDetailInfo() {
@@ -111,24 +109,14 @@ public class TopicActivity extends BaseActivity {
 				}).fire();
 	}
 
-	private void updateTopicInfo(List<TopicDetailModel.SubjectDetailModelListBean> subjectLists) {
+	private void updateTopicInfo(List<Variety> subjectLists) {
 		StringBuilder codes = new StringBuilder();
 		mTopicListAdapter.clear();
-		for (TopicDetailModel.SubjectDetailModelListBean subject:subjectLists){
-			Variety variety = new Variety();
-			variety.setBigVarietyTypeCode(subject.getBigVarietyTypeCode());
-			variety.setSmallVarietyTypeCode(subject.getSmallVarietyTypeCode());
-			variety.setVarietyName(subject.getVarietyName());
-			variety.setVarietyId(subject.getVarietyId());
-			variety.setVarietyType(subject.getVarietyType());
-			variety.setContractsCode(subject.getContractsCode());
-			mTopicListAdapter.add(variety);
-           if (variety.getContractsCode()!=null){
-			 codes.append(variety.getContractsCode()).append(",");
-           }
-		}
+		mTopicListAdapter.addAll(subjectLists);
 		mTopicListAdapter.notifyDataSetChanged();
-
+		for (Variety variety:subjectLists){
+			codes.append(variety.getContractsCode()).append(",");
+		}
 		String codesWithSplit = codes.toString();
 		if (codesWithSplit.endsWith(",")){
 			String code = codes.toString().substring(0,codesWithSplit.length()-1);
@@ -149,23 +137,14 @@ public class TopicActivity extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Netty.get().removeHandler(mNettyHandler);
-		Netty.get().subscribe(Netty.REQ_UNSUB_ALL);
 	}
-	private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
-		@Override
-		public void onReceiveData(Resp<FutureData> data) {
-			if (data.getCode() == Netty.REQ_QUOTA) {
-				updateListViewVisibleItem(data.getData());
-				mTopicListAdapter.addFutureData(data.getData());
-			}
-		}
-	};
     private void updateQuota(List<FutureData> futureDatas){
 		for (FutureData data:futureDatas){
 			mTopicListAdapter.addFutureData(data);
+			updateListViewVisibleItem(data);
 		}
 		mTopicListAdapter.notifyDataSetChanged();
+
 	}
 	private void updateListViewVisibleItem(FutureData data) {
 		if (mListView != null && mTopicListAdapter != null) {

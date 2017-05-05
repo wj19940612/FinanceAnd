@@ -2,10 +2,6 @@ package com.sbai.finance.model;
 
 import java.io.Serializable;
 
-/**
- * Created by Administrator on 2017-04-25.
- */
-
 public class EventModel implements Serializable{
 
 	/**
