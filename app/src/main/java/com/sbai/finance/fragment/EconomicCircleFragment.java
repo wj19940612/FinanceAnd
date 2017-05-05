@@ -107,7 +107,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             @Override
             public void onAvatarOpinionClick(EconomicCircle economicCircle) {
                 Launcher.with(getContext(), UserDataActivity.class)
-                        .putExtra("userId", economicCircle.getUserId())
+                        .putExtra(Launcher.USER_ID, economicCircle.getUserId())
                         .execute();
             }
 
