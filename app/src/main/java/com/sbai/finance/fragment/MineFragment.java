@@ -116,7 +116,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser&&isAdded()){
+        if (isVisibleToUser && isAdded()) {
             requestUserAttentionAndroidFansNumber();
         }
     }
@@ -213,7 +213,11 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.minePublish:
-                Launcher.with(getActivity(), PublishActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), PublishActivity.class).putExtra(Launcher.EX_PAYLOAD_1, LocalUser.getUser().getUserInfo().getUserSex()).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.news:
                 startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_NEW_NEWS);
@@ -232,7 +236,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void requestUserAttentionAndroidFansNumber() {
-        Client.getAttentionFollowUserNumber(0)
+        Client.getAttentionFollowUserNumber(null)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
