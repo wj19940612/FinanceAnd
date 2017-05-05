@@ -157,7 +157,7 @@ public class HomeBanner extends FrameLayout {
         public Object instantiateItem(ViewGroup container, int position) {
             int pos = position;
             ImageView imageView = new ImageView(mContext);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             final BannerModel information = mList.get(pos);
             container.addView(imageView, 0);
             if (!TextUtils.isEmpty(information.getCover())) {

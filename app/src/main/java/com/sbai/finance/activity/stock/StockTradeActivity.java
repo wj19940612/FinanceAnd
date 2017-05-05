@@ -97,7 +97,7 @@ public class StockTradeActivity extends BaseActivity {
         initView();
         initTabLayout();
         initChartViews();
-        initSlidingTab();
+      //  initSlidingTab();
     }
 
     private void initView() {
