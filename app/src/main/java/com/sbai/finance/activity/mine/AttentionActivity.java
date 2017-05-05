@@ -69,8 +69,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             @Override
             public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
                 SmartDialog.with(getActivity(),
-                        getString(R.string.relieve_shield_dialog_content, userAttentionModel.getFollowuserName())
-                        , getString(R.string.relieve_shield_dialog_title, userAttentionModel.getFollowuserName()))
+                        getString(R.string.if_not_attention, userAttentionModel.getFollowuserName()))
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
@@ -78,7 +77,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                                 relieveAttentionUser(userAttentionModel);
                             }
                         })
-                        .setTitleMaxLines(2)
+                        .setMessageTextSize(16)
                         .setNegative(R.string.cancel)
                         .show();
             }
@@ -109,6 +108,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             mRelieveAttentionAdapter.remove(userAttentionModel);
+                            setResult(RESULT_OK);
                         }
                     }
                 })
