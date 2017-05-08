@@ -101,7 +101,8 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
+                Log.d(TAG, "onUserHeadImageClick: " + historyNewsModel.toString());
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getSourceUserId()).execute();
             }
         });
         mListView.setOnItemClickListener(this);
