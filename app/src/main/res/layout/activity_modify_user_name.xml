@@ -23,7 +23,7 @@
         android:layout_gravity="center_vertical"
         android:background="@android:color/white"
         android:hint="@string/please_input_user_name"
-        android:maxLength="6"
+        android:maxLength="8"
         android:paddingLeft="@dimen/common_margin"
         android:textColorHint="@color/hintText"
         android:textSize="16sp"/>

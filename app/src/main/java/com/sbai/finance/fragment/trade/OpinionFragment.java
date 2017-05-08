@@ -171,7 +171,7 @@ public class OpinionFragment extends BaseFragment {
     }
 
 
-    //局部刷新
+    //刷新某条点赞和评论
     public void updateItemById(int id, int replyCount, int praiseCount) {
         int position = 0;
         for (Opinion opinion : mOpinionList) {
@@ -186,6 +186,16 @@ public class OpinionFragment extends BaseFragment {
         mOpinionAdapter.notifyItemChanged(position);
     }
 
+    //根据user id刷新关注
+    public void updateItemByUserId(int userId, boolean isAttention) {
+        int attentionStatus = isAttention ? 2 : 1;  //2已关注 1 未关注
+        for (Opinion opinion : mOpinionList) {
+            if (opinion.getUserId() == userId) {
+                opinion.setIsAttention(attentionStatus);
+            }
+        }
+        mOpinionAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onDestroyView() {

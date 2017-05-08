@@ -20,9 +20,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class API extends RequestManager {
-
-//     private final static String HOST = "http://forex2.esongbai.xyz";
-    private final static String HOST = "http://fanli.esongbai.xyz";
+    private final static String HOST = com.sbai.finance.BuildConfig.HOST;
     private static String mHost;
 
     private static Set<String> sCurrentUrls = new HashSet<>();
@@ -42,9 +40,11 @@ public class API extends RequestManager {
     public API(String uri, ApiParams apiParams) {
         this(Request.Method.GET, uri, apiParams, 0);
     }
+
     public API(int method, String uri) {
         this(method, uri, null, 0);
     }
+
     public API(int method, String uri, ApiParams apiParams) {
         this(method, uri, apiParams, 0);
     }
@@ -169,6 +169,7 @@ public class API extends RequestManager {
             }
         }
     }
+
     public static void cancel(String tag) {
         RequestManager.cancel(tag);
         Iterator<String> iterator = sCurrentUrls.iterator();

@@ -165,7 +165,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(1 * 1000);
+        startScheduleJob(5 * 1000);
         updateHomeInfo();
     }
 
@@ -174,9 +174,7 @@ public class HomeFragment extends BaseFragment {
     public void onTimeUp(int count) {
         super.onTimeUp(count);
         if (getUserVisibleHint()) {
-            if (count % 5 == 0) {
-                mHomeBanner.nextAdvertisement();
-            }
+            mHomeBanner.nextAdvertisement();
         }
     }
 
@@ -189,7 +187,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            startScheduleJob(1 * 1000);
+            startScheduleJob(5 * 1000);
         } else {
             stopScheduleJob();
         }

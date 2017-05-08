@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,9 +34,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 
 public class UserDataActivity extends BaseActivity {
+
 
 
 	@BindView(R.id.titleBar)
@@ -284,6 +286,8 @@ public class UserDataActivity extends BaseActivity {
 							mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.greenAssist));
 							mWhetherAttentionShieldOrNot.setFollow(true);
 							ToastUtil.curt("已关注" + mUserData.getUserName());
+
+							refreshAttention();
 						}
 					}
 				}).fire();
@@ -305,6 +309,7 @@ public class UserDataActivity extends BaseActivity {
 											mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.redPrimary));
 											mWhetherAttentionShieldOrNot.setFollow(false);
 											ToastUtil.curt("取消关注" + mUserData.getUserName());
+											refreshAttention();
 										}
 									}
 								}).fire();
@@ -316,5 +321,13 @@ public class UserDataActivity extends BaseActivity {
 				.setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
 				.setNegative(R.string.cancel)
 				.show();
+	}
+
+	private void refreshAttention() {
+		Intent intent = new Intent(REFRESH_ATTENTION);
+		intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
+		intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNum);
+		LocalBroadcastManager.getInstance(UserDataActivity.this)
+				.sendBroadcast(intent);
 	}
 }

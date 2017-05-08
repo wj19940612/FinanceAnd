@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_help"
+            android:background="@drawable/bg_borrow_money"
             android:gravity="center"
             android:text="@string/borrow_money"
             android:textColor="@android:color/white"

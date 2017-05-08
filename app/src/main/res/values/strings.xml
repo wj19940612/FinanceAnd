@@ -28,6 +28,8 @@
     <string name="people_want_help_him_number">(%1$s)</string>
     <string name="give_help">给予帮助</string>
     <string name="borrow_money_details">借款详情</string>
+    <item  name="tag_opinion"  type="id">1</item>
+    <item  name="tag_borrow_money"  type="id">2</item>
 
     <!--login   page-->
     <string name="phone_number">手机号</string>
@@ -53,7 +55,7 @@
     <string name="accuracy_rate">看盘准确率</string>
     <string name="no_opinion">暂无观点</string>
     <!--Future-->
-    <string name="future_foreign">国外期货</string>
+    <string name="future_foreign">国际期货</string>
     <string name="future_china">国内期货</string>
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
@@ -130,7 +132,7 @@
     <string name="please_input_user_name">请输入用户名</string>
     <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-    <string name="nick_name_hint">昵称最多6个字符,请勿使用不良词汇</string>
+    <string name="nick_name_hint">昵称最多8个字符,请勿使用不良词汇</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
@@ -230,7 +232,7 @@
     <string name="bullish">看涨</string>
     <string name="bearish">看跌</string>
     <string name="prediction_rule">预测规则</string>
-    <string name="big_god_to_predict_the_market_today">大神,来预测一下今天的行情吧!</string>
+    <string name="big_god_to_predict_the_market_next_day">大神,来预测下一个交易日的涨跌</string>
     <string name="prediction_rule1">1.每日开市到闭市之间(中午休市包含在内):预测下一个交易日的价格涨跌</string>
     <string name="prediction_rule2">2.每日闭市到下一次开市之前:预测下一次开盘后的价格涨跌</string>
     <string name="prediction_rule3">3.每次预测时间段内预测一次后,将不能进行重复预测</string>

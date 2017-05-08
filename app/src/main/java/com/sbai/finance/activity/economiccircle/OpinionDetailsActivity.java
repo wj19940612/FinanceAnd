@@ -1,9 +1,12 @@
 package com.sbai.finance.activity.economiccircle;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -11,7 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,9 +27,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.OpinionReply;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -38,6 +45,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -45,8 +53,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+
 public class OpinionDetailsActivity extends BaseActivity {
 
+	public static final String REFRESH_ATTENTION = "refresh_attention";
 
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
@@ -90,7 +101,9 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 	private OpinionReplyAdapter mOpinionReplyAdapter;
 	private OpinionDetails mOpinionDetails;
+	private List<OpinionReply> mOpinionReplyList;
 	private TextView mFootView;
+	private RefreshAttentionReceiver mReceiver;
 
 	private int mPage = 0;
 	private int mPageSize = 15;
@@ -107,12 +120,15 @@ public class OpinionDetailsActivity extends BaseActivity {
 		initData(getIntent());
 
 		mSet = new HashSet<>();
-		mOpinionReplyAdapter = new OpinionReplyAdapter(this);
+		mOpinionReplyList = new ArrayList<>();
+		mOpinionReplyAdapter = new OpinionReplyAdapter(this, mOpinionReplyList);
 		mMyListView.setEmptyView(mEmpty);
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
-		requestOpinionDetails();
+		requestOpinionDetails(false);
 		initSwipeRefreshLayout();
+
+		registerRefreshReceiver();
 	}
 
 	private void initData(Intent intent) {
@@ -120,7 +136,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		mReplyId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
 
-	private void requestOpinionDetails() {
+	private void requestOpinionDetails(final boolean isSendBroadcast) {
 		Client.getOpinionDetails(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
 					@Override
@@ -128,6 +144,13 @@ public class OpinionDetailsActivity extends BaseActivity {
 						mOpinionDetails = opinionDetails;
 						updateOpinionDetails();
 						requestOpinionReplyList();
+
+						if (isSendBroadcast) {
+							Intent intent = new Intent(REFRESH_POINT);
+							intent.putExtra(Launcher.EX_PAYLOAD,mOpinionDetails);
+							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
+									.sendBroadcast(intent);
+						}
 					}
 				}).fire();
 	}
@@ -139,7 +162,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			public void onRefresh() {
 				mSet.clear();
 				mPage = 0;
-				requestOpinionReplyList();
+				requestOpinionDetails(false);
 			}
 		});
 	}
@@ -151,7 +174,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 					.setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
 						@Override
 						protected void onRespSuccessData(List<OpinionReply> opinionReplyList) {
-							updateEconomicCircleList(opinionReplyList);
+							mOpinionReplyList = opinionReplyList;
+							updateEconomicCircleList(mOpinionReplyList);
 						}
 
 						@Override
@@ -289,13 +313,39 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply> {
+	static class OpinionReplyAdapter extends BaseAdapter {
 
 		private Context mContext;
+		private List<OpinionReply> mOpinionReplyList;
 
-		private OpinionReplyAdapter(Context context) {
-			super(context, 0);
+		private OpinionReplyAdapter(Context context, List<OpinionReply> opinionReplyList) {
 			this.mContext = context;
+			this.mOpinionReplyList = opinionReplyList;
+		}
+
+		public void clear() {
+			mOpinionReplyList.clear();
+			notifyDataSetChanged();
+		}
+
+		public void add(OpinionReply opinionReply) {
+			mOpinionReplyList.add(opinionReply);
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public int getCount() {
+			return mOpinionReplyList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mOpinionReplyList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
 		}
 
 		@Override
@@ -308,9 +358,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position));
+			viewHolder.bindingData(mContext, (OpinionReply) getItem(position));
 			return convertView;
 		}
+
+
+
 
 		static class ViewHolder {
 			@BindView(R.id.avatar)
@@ -341,9 +394,13 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Launcher.with(context, UserDataActivity.class)
-								.putExtra(Launcher.USER_ID, item.getUserId())
-								.execute();
+						if (LocalUser.getUser().isLogin()) {
+							Launcher.with(context, UserDataActivity.class)
+									.putExtra(Launcher.USER_ID, item.getUserId())
+									.execute();
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
 					}
 				});
 
@@ -365,78 +422,151 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Client.opinionReplyPraise(item.getId())
-								.setCallback(new Callback<Resp<JsonPrimitive>>() {
-									@Override
-									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-										if (resp.isSuccess()) {
-											if (mLoveNum.isSelected()) {
-												mLoveNum.setSelected(false);
-												mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
-											} else {
-												mLoveNum.setSelected(true);
-												mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+						if (LocalUser.getUser().isLogin()) {
+							Client.opinionReplyPraise(item.getId())
+									.setCallback(new Callback<Resp<JsonPrimitive>>() {
+										@Override
+										protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+											if (resp.isSuccess()) {
+												if (mLoveNum.isSelected()) {
+													mLoveNum.setSelected(false);
+													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+												} else {
+													mLoveNum.setSelected(true);
+													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+												}
 											}
 										}
-									}
-								}).fire();
+									}).fire();
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
 					}
 				});
 			}
 		}
 	}
 
-	@OnClick({R.id.loveNum, R.id.reply, R.id.avatar})
+	@OnClick({R.id.loveNum, R.id.commentContent, R.id.reply, R.id.avatar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.loveNum:
-				Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
-						.setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									if (mLoveNum.isSelected()) {
-										mLoveNum.setSelected(false);
-										mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
-									} else {
-										mLoveNum.setSelected(true);
-										mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+				if (LocalUser.getUser().isLogin()) {
+					Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
+							.setCallback(new Callback<Resp<JsonPrimitive>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+									if (resp.isSuccess()) {
+										if (mLoveNum.isSelected()) {
+											mLoveNum.setSelected(false);
+											mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+											mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+										} else {
+											mLoveNum.setSelected(true);
+											mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+											mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+										}
+										Intent intent = new Intent(REFRESH_POINT);
+										intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+										LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
+												.sendBroadcast(intent);
+
 									}
 								}
-							}
-						}).fire();
+							}).fire();
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
+				break;
+
+			case R.id.commentContent:
+				if (LocalUser.getUser().isLogin()) {
+
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
 				break;
 
 			case R.id.reply:
-				String commentContent = mCommentContent.getText().toString().trim();
-				if (TextUtils.isEmpty(commentContent)) {
-					ToastUtil.curt("评论内容不能为空");
-					return;
-				}
+				if (LocalUser.getUser().isLogin()) {
+					String commentContent = mCommentContent.getText().toString().trim();
+					if (TextUtils.isEmpty(commentContent)) {
+						ToastUtil.curt("评论内容不能为空");
+						return;
+					}
 
-				Client.opinionReply(commentContent, mOpinionDetails.getId())
-						.setTag(TAG)
-						.setIndeterminate(this)
-						.setCallback(new Callback<Resp<JsonObject>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonObject> resp) {
-								if (resp.isSuccess()) {
-									mSet.clear();
-									mPage = 0;
-									mSwipeRefreshLayout.setRefreshing(true);
-									requestOpinionReplyList();
-									mCommentContent.setText("");
-									mScrollView.smoothScrollTo(0, 0);
+					Client.opinionReply(commentContent, mOpinionDetails.getId())
+							.setTag(TAG)
+							.setIndeterminate(this)
+							.setCallback(new Callback<Resp<JsonObject>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonObject> resp) {
+									if (resp.isSuccess()) {
+										mSet.clear();
+										mPage = 0;
+										mSwipeRefreshLayout.setRefreshing(true);
+										requestOpinionReplyList();
+										requestOpinionDetails(true);
+										mCommentContent.setText("");
+										mScrollView.smoothScrollTo(0, 0);
+									}
 								}
-							}
-						}).fire();
+							}).fire();
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
 				break;
 
 			case R.id.avatar:
-				Launcher.with(this, UserDataActivity.class)
-						.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
-						.execute();
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(this, UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
+							.execute();
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
 				break;
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mReceiver = new RefreshAttentionReceiver();
+		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+	}
+
+	private class RefreshAttentionReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+			AttentionAndFansNumberModel attentionAndFansNumberModel =
+					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+
+
+			if (whetherAttentionShieldOrNot != null) {
+				if (whetherAttentionShieldOrNot.isFollow()) {
+					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
+				}
+			}
+
+			if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+				for (OpinionReply opinionReply : mOpinionReplyList) {
+					if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
+						if (whetherAttentionShieldOrNot.isFollow()) {
+							opinionReply.setIsAttention(2);
+							mOpinionReplyAdapter.notifyDataSetChanged();
+						} else {
+							opinionReply.setIsAttention(1);
+							mOpinionReplyAdapter.notifyDataSetChanged();
+						}
+						break;
+					}
+				}
+			}
 		}
 	}
 }
