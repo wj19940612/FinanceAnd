@@ -46,6 +46,12 @@
     <string name="self_choice">自选</string>
 
     <string name="banner_detail">活动详情</string>
+
+    <!--opinion-->
+    <string name="opinion">观点大神</string>
+    <string name="skilled">擅长类型</string>
+    <string name="accuracy_rate">看盘准确率</string>
+    <string name="no_opinion">暂无观点</string>
     <!--Future-->
     <string name="future_foreign">国外期货</string>
     <string name="future_china">国内期货</string>

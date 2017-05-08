@@ -102,7 +102,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void requestStockData() {
         //获取股票列表
-        Client.getStockVariety(mPage,mPageSize).setTag(TAG)
+        Client.getStockVariety(mPage,mPageSize,"").setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
