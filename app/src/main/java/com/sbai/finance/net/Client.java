@@ -850,4 +850,32 @@ public class Client {
                 new ApiParams()
                         .put("exchangeId", exchangeId));
     }
+
+	/**
+	 * 查看反馈和回复
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getFeedback(int page, int pageSize) {
+		return new API("/user/userFeedback/seeFeedback.do",
+				new ApiParams()
+						.put("pageSize", pageSize)
+						.put("page", page));
+	}
+
+	/**
+	 * 用户发送反馈
+	 * @param content
+	 * @param contentType
+	 * @return
+	 */
+	public static API addFeedback(String content, int contentType) {
+		return new API("/user/userFeedback/seeFeedback.do",
+				new ApiParams()
+						.put("content", content)
+						.put("contentType", contentType));
+	}
+
+
 }

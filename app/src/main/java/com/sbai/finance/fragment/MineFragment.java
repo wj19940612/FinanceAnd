@@ -24,6 +24,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.AttentionActivity;
 import com.sbai.finance.activity.mine.FansActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
@@ -234,6 +235,7 @@ public class MineFragment extends BaseFragment {
             case R.id.detail:
                 break;
             case R.id.feedBack:
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }
     }
