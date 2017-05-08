@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -126,10 +127,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
-//                        HistoryNewsModel historyNewsModel = new HistoryNewsModel();
-//                        historyNewsModel.setType(1);
-//                        historyNewsModel.setTitle("哈哈哈哈哈哈");
-//                        data.add(5,historyNewsModel);
                         updateEconomicCircleData(data);
                     }
 
@@ -217,6 +214,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         HistoryNewsModel historyNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (historyNewsModel != null) {
             updateNewsReadStatus(position, historyNewsModel);
+            Log.d(TAG, "onItemClick: " + historyNewsModel.toString());
 
             switch (historyNewsModel.getType()) {
                 //关注
@@ -224,21 +222,23 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     break;
                 //点赞帖子
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                    //.点赞动态，点击可跳转至观点页面
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
-                    break;
-                //点赞评论
+                    //点赞评论
                 case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+                    //.点赞动态，点击可跳转至观点页面  viewPointId为0
+                    if (historyNewsModel.getViewpointId() != 0) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+                    } else {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+                    }
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
                     //观点详情页面  将选择的这条评论置顶显示，
                     Launcher.with(getActivity(), OpinionDetailsActivity.class).
                             putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
-                            .putExtra(Launcher.EX_PAYLOAD_1,  historyNewsModel.getDataId())
+                            .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
                             .execute();
                     break;
             }
