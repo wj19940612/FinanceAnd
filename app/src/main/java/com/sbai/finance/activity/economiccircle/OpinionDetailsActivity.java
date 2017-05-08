@@ -11,7 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +24,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.OpinionReply;
 import com.sbai.finance.net.Callback;
@@ -38,6 +40,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -90,6 +93,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 	private OpinionReplyAdapter mOpinionReplyAdapter;
 	private OpinionDetails mOpinionDetails;
+	private List<OpinionReply> mOpinionReplyList;
 	private TextView mFootView;
 
 	private int mPage = 0;
@@ -107,7 +111,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 		initData(getIntent());
 
 		mSet = new HashSet<>();
-		mOpinionReplyAdapter = new OpinionReplyAdapter(this);
+		mOpinionReplyList = new ArrayList<>();
+		mOpinionReplyAdapter = new OpinionReplyAdapter(this, mOpinionReplyList);
 		mMyListView.setEmptyView(mEmpty);
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
@@ -289,13 +294,39 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	static class OpinionReplyAdapter extends ArrayAdapter<OpinionReply> {
+	static class OpinionReplyAdapter extends BaseAdapter {
 
 		private Context mContext;
+		private List<OpinionReply> mOpinionReplyList;
 
-		private OpinionReplyAdapter(Context context) {
-			super(context, 0);
+		private OpinionReplyAdapter(Context context, List<OpinionReply> opinionReplyList) {
 			this.mContext = context;
+			this.mOpinionReplyList = opinionReplyList;
+		}
+
+		public void clear() {
+			mOpinionReplyList.clear();
+			notifyDataSetChanged();
+		}
+
+		public void add(OpinionReply opinionReply) {
+			mOpinionReplyList.add(opinionReply);
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public int getCount() {
+			return mOpinionReplyList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mOpinionReplyList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
 		}
 
 		@Override
@@ -308,9 +339,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position));
+			viewHolder.bindingData(mContext, (OpinionReply) getItem(position));
 			return convertView;
 		}
+
+
+
 
 		static class ViewHolder {
 			@BindView(R.id.avatar)
@@ -341,9 +375,13 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Launcher.with(context, UserDataActivity.class)
-								.putExtra(Launcher.USER_ID, item.getUserId())
-								.execute();
+						if (LocalUser.getUser().isLogin()) {
+							Launcher.with(context, UserDataActivity.class)
+									.putExtra(Launcher.USER_ID, item.getUserId())
+									.execute();
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
 					}
 				});
 
@@ -365,77 +403,103 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Client.opinionReplyPraise(item.getId())
-								.setCallback(new Callback<Resp<JsonPrimitive>>() {
-									@Override
-									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-										if (resp.isSuccess()) {
-											if (mLoveNum.isSelected()) {
-												mLoveNum.setSelected(false);
-												mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
-											} else {
-												mLoveNum.setSelected(true);
-												mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+						if (LocalUser.getUser().isLogin()) {
+							Client.opinionReplyPraise(item.getId())
+									.setCallback(new Callback<Resp<JsonPrimitive>>() {
+										@Override
+										protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+											if (resp.isSuccess()) {
+												if (mLoveNum.isSelected()) {
+													mLoveNum.setSelected(false);
+													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+												} else {
+													mLoveNum.setSelected(true);
+													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+												}
 											}
 										}
-									}
-								}).fire();
+									}).fire();
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
 					}
 				});
 			}
 		}
 	}
 
-	@OnClick({R.id.loveNum, R.id.reply, R.id.avatar})
+	@OnClick({R.id.loveNum, R.id.commentContent, R.id.reply, R.id.avatar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.loveNum:
-				Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
-						.setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									if (mLoveNum.isSelected()) {
-										mLoveNum.setSelected(false);
-										mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
-									} else {
-										mLoveNum.setSelected(true);
-										mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+				if (LocalUser.getUser().isLogin()) {
+					Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
+							.setCallback(new Callback<Resp<JsonPrimitive>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+									if (resp.isSuccess()) {
+										if (mLoveNum.isSelected()) {
+											mLoveNum.setSelected(false);
+											mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+										} else {
+											mLoveNum.setSelected(true);
+											mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+										}
 									}
 								}
-							}
-						}).fire();
+							}).fire();
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
+				break;
+
+			case R.id.commentContent:
+				if (LocalUser.getUser().isLogin()) {
+
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
 				break;
 
 			case R.id.reply:
-				String commentContent = mCommentContent.getText().toString().trim();
-				if (TextUtils.isEmpty(commentContent)) {
-					ToastUtil.curt("评论内容不能为空");
-					return;
-				}
+				if (LocalUser.getUser().isLogin()) {
+					String commentContent = mCommentContent.getText().toString().trim();
+					if (TextUtils.isEmpty(commentContent)) {
+						ToastUtil.curt("评论内容不能为空");
+						return;
+					}
 
-				Client.opinionReply(commentContent, mOpinionDetails.getId())
-						.setTag(TAG)
-						.setIndeterminate(this)
-						.setCallback(new Callback<Resp<JsonObject>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonObject> resp) {
-								if (resp.isSuccess()) {
-									mSet.clear();
-									mPage = 0;
-									mSwipeRefreshLayout.setRefreshing(true);
-									requestOpinionReplyList();
-									mCommentContent.setText("");
-									mScrollView.smoothScrollTo(0, 0);
+					Client.opinionReply(commentContent, mOpinionDetails.getId())
+							.setTag(TAG)
+							.setIndeterminate(this)
+							.setCallback(new Callback<Resp<JsonObject>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonObject> resp) {
+									if (resp.isSuccess()) {
+										mSet.clear();
+										mPage = 0;
+										mSwipeRefreshLayout.setRefreshing(true);
+										requestOpinionReplyList();
+										requestOpinionDetails();
+										mCommentContent.setText("");
+										mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
+										mScrollView.smoothScrollTo(0, 0);
+									}
 								}
-							}
-						}).fire();
+							}).fire();
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
 				break;
 
 			case R.id.avatar:
-				Launcher.with(this, UserDataActivity.class)
-						.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
-						.execute();
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(this, UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
+							.execute();
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
 				break;
 		}
 	}
