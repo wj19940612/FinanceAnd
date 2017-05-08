@@ -131,7 +131,6 @@ public class BorrowActivity extends BaseActivity {
 			}
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
-
 	}
 	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
