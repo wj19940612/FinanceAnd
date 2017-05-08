@@ -67,7 +67,6 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     private Unbinder mBind;
     private File mFile;
 
-
     public UploadUserImageDialogFragment() {
 
     }
