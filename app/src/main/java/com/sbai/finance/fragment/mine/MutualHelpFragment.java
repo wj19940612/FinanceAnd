@@ -103,7 +103,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getId()).execute();
                 getActivity().finish();
             }
         });

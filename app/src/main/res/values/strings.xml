@@ -126,7 +126,7 @@
     <string name="please_input_user_name">请输入用户名</string>
     <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-    <string name="nick_name_hint">昵称最多6个字符,请勿使用不良词汇</string>
+    <string name="nick_name_hint">昵称最多8个字符,请勿使用不良词汇</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
