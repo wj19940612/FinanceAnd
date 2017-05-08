@@ -36,6 +36,8 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -59,6 +61,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.trendView;
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
@@ -292,6 +295,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     private void registerRefreshReceiver() {
         mReceiver = new RefreshPointReceiver();
         IntentFilter filter = new IntentFilter(REFRESH_POINT);
+        filter.addAction(REFRESH_ATTENTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
@@ -573,8 +577,16 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         @Override
         public void onReceive(Context context, Intent intent) {
             OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+            AttentionAndFansNumberModel attentionAndFansNumberModel =
+                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
             if (details != null) {
                 mOpinionFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                mOpinionFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isFollow());
             } else {
                 mOpinionFragment.refreshPointList();
             }

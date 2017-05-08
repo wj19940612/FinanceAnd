@@ -1,10 +1,12 @@
 package com.sbai.finance.model.mine;
 
+import java.io.Serializable;
+
 /**
  * Created by ${wangJie} on 2017/4/26.
  */
 
-public class AttentionAndFansNumberModel {
+public class AttentionAndFansNumberModel implements Serializable{
 
     /**
      * attention : 72025
