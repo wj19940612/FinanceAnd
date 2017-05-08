@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -401,7 +400,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				mBigVarietyName.setText(item.getBigVarietyTypeName());
 				mVarietyName.setText(item.getVarietyName());
 
-				if (TextUtils.isEmpty(item.getLastPrice())) {
+			/*	if (TextUtils.isEmpty(item.getLastPrice())) {
 					mLastPrice.setText("--");
 					mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 				} else {
@@ -433,7 +432,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 					}
 					mUpDownPercent.setText(item.getRisePre());
-				}
+				}*/
 
 
 				mAvatar.setOnClickListener(new View.OnClickListener() {
