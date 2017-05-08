@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.model.FutureData;
-import com.sbai.finance.model.FutureHq;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -49,6 +47,7 @@ import butterknife.ButterKnife;
  */
 
 public class OptionActivity extends BaseActivity implements AbsListView.OnScrollListener {
+
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.listView)
@@ -106,6 +105,13 @@ public class OptionActivity extends BaseActivity implements AbsListView.OnScroll
 		Netty.get().addHandler(mNettyHandler);
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Netty.get().subscribe(Netty.REQ_UNSUB_ALL);
+		Netty.get().removeHandler(mNettyHandler);
+	}
+
 	private void requestOptionalData() {
 		Client.getOptional(Variety.VAR_FUTURE).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
@@ -115,8 +121,9 @@ public class OptionActivity extends BaseActivity implements AbsListView.OnScroll
 					}
 				}).fireSync();
 	}
+
 	private void requestDelOptionalData(Integer varietyId ) {
-		Client.delOption(varietyId).setTag(TAG)
+		Client.delOptional(varietyId).setTag(TAG)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {
@@ -129,12 +136,7 @@ public class OptionActivity extends BaseActivity implements AbsListView.OnScroll
 					}
 				}).fire();
 	}
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Netty.get().removeHandler(mNettyHandler);
-		Netty.get().subscribe(Netty.REQ_UNSUB_ALL);
-	}
+
 	private void updateOptionInfo(ArrayList<Variety> data) {
 		stopRefreshAnimation();
 		mSlideListAdapter.clear();

@@ -1,16 +1,10 @@
 package com.sbai.finance.activity.home;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,8 +15,8 @@ import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.model.FutureData;
-import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Topic;
+import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -54,7 +48,7 @@ public class TopicActivity extends BaseActivity {
 	TextView mEmpty;
 
 	private FutureListFragment.FutureListAdapter mTopicListAdapter;
-	private Integer id;
+	private Topic mTopic;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,17 +57,18 @@ public class TopicActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		translucentStatusBar();
 
-		Bundle bundle = this.getIntent().getExtras();
-		Topic topic = (Topic) bundle.getSerializable(Launcher.KEY_TOPIC);
-		if (topic !=null){
-		   id = topic.getId();
-			mTitle.setTitle(topic.getTitle());
-			mTopicTitle.setText(topic.getIntroduction());
-		}
+		initData();
 		initView();
 	}
 
+	private void initData() {
+		mTopic = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+	}
+
 	private void initView() {
+		mTitle.setTitle(mTopic.getTitle());
+		mTopicTitle.setText(mTopic.getIntroduction());
+
 		mTopicListAdapter = new FutureListFragment.FutureListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mTopicListAdapter);
@@ -100,7 +95,7 @@ public class TopicActivity extends BaseActivity {
 	}
 
 	private void requestTopicDetailInfo() {
-		Client.getTopicDetailData(id).setTag(TAG)
+		Client.getTopicDetailData(mTopic.getId()).setTag(TAG)
 				.setCallback(new Callback2D<Resp<TopicDetailModel>,TopicDetailModel>() {
 					@Override
 					protected void onRespSuccessData(TopicDetailModel data) {
@@ -134,10 +129,6 @@ public class TopicActivity extends BaseActivity {
 				  }).fire();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
     private void updateQuota(List<FutureData> futureDatas){
 		for (FutureData data:futureDatas){
 			mTopicListAdapter.addFutureData(data);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,13 @@ import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
+import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
-import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -70,6 +72,7 @@ public class HomeFragment extends BaseFragment {
     TextView mIdeaTitle;
     @BindView(R.id.bigEvent)
     LinearLayout mBigEvent;
+
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
 
@@ -95,7 +98,7 @@ public class HomeFragment extends BaseFragment {
                 Topic topic = (Topic) parent.getItemAtPosition(position);
                 if (topic != null) {
                     Launcher.with(getContext(), TopicActivity.class)
-                            .putExtra(Launcher.KEY_TOPIC, topic)
+                            .putExtra(Launcher.EX_PAYLOAD, topic)
                             .execute();
                 }
             }
@@ -203,10 +206,12 @@ public class HomeFragment extends BaseFragment {
 
         //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<String>, String>() {
+                .setCallback(new Callback<Resp<String>>() {
                     @Override
-                    protected void onRespSuccessData(String data) {
-                        updateEventInfo(data);
+                    protected void onRespSuccess(Resp<String> resp) {
+                        if (!TextUtils.isEmpty(resp.getData())) {
+                            updateEventInfo(resp.getData());
+                        }
                     }
                 }).fire();
         //获取主题信息

@@ -36,6 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.R.attr.data;
+
 public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnScrollListener{
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -76,12 +78,11 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
 
     private void requestBorrowOutData() {
         Client.getBorrowOutList().setTag(TAG)
-                .setCallback(new Callback2D<List<Resp<List<BorrowOut>>>,List<BorrowOut>>() {
+                .setCallback(new Callback2D<Resp<List<BorrowOut>>,List<BorrowOut>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowOut> data) {
                         updateBorrowOut(data);
                     }
-
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);

@@ -313,14 +313,12 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
                     if (item.isAlreadyRead()) {
-//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
-                                ContextCompat.getColor(context, R.color.primaryText));
-                        mUserAction.setText(spannableString);
-                    } else {
-//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
                                 ContextCompat.getColor(context, R.color.secondaryText));
+                        mUserAction.setText(spannableString);
+                    } else {
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
+                                ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     }
                 }

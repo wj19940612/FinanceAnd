@@ -9,12 +9,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.mine.UserPublishModel;
@@ -43,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class PublishActivity extends BaseActivity implements AbsListView.OnScrollListener {
+public class PublishActivity extends BaseActivity implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -70,9 +73,11 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mPublishAdapter = new PublishAdapter(getActivity());
         mListView.setAdapter(mPublishAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(this);
         mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
         int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-        if ( mUserId == LocalUser.getUser().getUserInfo().getId()) {
+        Log.d(TAG, "onCreate:  发表观点 " + LocalUser.getUser().getUserInfo().toString() + " \n " + mUserId);
+        if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
             mPublishAdapter.setIsHimSelf(true);
             mTitleBar.setTitle(R.string.mine_publish);
         } else {
@@ -92,7 +97,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, mUserId != LocalUser.getUser().getUserInfo().getId() ? mUserId : null)
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, (mUserId!=-1&&mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
@@ -167,6 +172,14 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        UserPublishModel item = (UserPublishModel) parent.getAdapter().getItem(position);
+        if (item != null) {
+            Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+        }
     }
 
     static class PublishAdapter extends ArrayAdapter<UserPublishModel> {

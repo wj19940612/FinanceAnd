@@ -70,7 +70,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity implements AbsLis
                 SmartDialog.with(getActivity(),
                         getString(R.string.relieve_shield_dialog_content, shieldedUserModel.getShielduserName())
                         , getString(R.string.relieve_shield_dialog_title, shieldedUserModel.getShielduserName()))
-                        .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 relieveShield(shieldedUserModel);
