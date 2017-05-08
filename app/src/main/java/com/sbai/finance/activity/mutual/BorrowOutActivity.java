@@ -137,7 +137,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),position,getContext());
+            viewHolder.bindDataWithView(getItem(position),getContext());
             return convertView;
         }
 
@@ -169,8 +169,9 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOut item, int position, Context context){
+            private void bindDataWithView(BorrowOut item, Context context){
                 loadImage(context,item.getPortrait(),mUserPortrait);
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getCreateTime())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));

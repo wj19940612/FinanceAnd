@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class API extends RequestManager {
-
     private final static String HOST = com.sbai.finance.BuildConfig.HOST;
     private static String mHost;
 
