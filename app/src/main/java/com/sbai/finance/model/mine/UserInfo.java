@@ -3,6 +3,8 @@ package com.sbai.finance.model.mine;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.model.LocalUser;
+
 /**
  * Created by ${wangJie} on 2017/4/17.
  */
@@ -110,9 +112,9 @@ public class UserInfo implements Parcelable {
         setbIsSetNickName(userDetailInfo.isBIsSetNickName());
         setLand(userDetailInfo.getLand());
         setUserPortrait(userDetailInfo.getUserPortrait());
-        setChinaSex(userDetailInfo.getChinaSex());
         setUserSex(userDetailInfo.getUserSex());
         setStatus(userDetailInfo.getStatus());
+        LocalUser.getUser().setUserInfo(this);
     }
 
     public int getAgencyId() {
