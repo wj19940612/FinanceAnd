@@ -39,7 +39,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled false // !!set true when package release apk
+        cruncherEnabled true // !!set true when package release apk
     }
 
     dexOptions {
@@ -59,6 +59,8 @@ android {
         }
 
         alpha {
+            versionCode 2
+            versionName "1.1"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
         }
     }
