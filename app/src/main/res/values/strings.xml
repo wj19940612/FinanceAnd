@@ -28,6 +28,8 @@
     <string name="people_want_help_him_number">(%1$s)</string>
     <string name="give_help">给予帮助</string>
     <string name="borrow_money_details">借款详情</string>
+    <item  name="tag_opinion"  type="id">1</item>
+    <item  name="tag_borrow_money"  type="id">2</item>
 
     <!--login   page-->
     <string name="phone_number">手机号</string>

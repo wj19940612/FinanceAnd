@@ -25,8 +25,8 @@ public class EconomicCircle implements Serializable {
 	private String varietyType;
 	private String content;
 	private String land;
-	private int money;
-	private int interest;
+	private double money;
+	private double interest;
 	private int days;
 	private String lastPrice;
 	private String risePre;
@@ -200,19 +200,19 @@ public class EconomicCircle implements Serializable {
 		this.land = land;
 	}
 
-	public int getMoney() {
+	public double getMoney() {
 		return money;
 	}
 
-	public void setMoney(int money) {
+	public void setMoney(double money) {
 		this.money = money;
 	}
 
-	public int getInterest() {
+	public double getInterest() {
 		return interest;
 	}
 
-	public void setInterest(int interest) {
+	public void setInterest(double interest) {
 		this.interest = interest;
 	}
 

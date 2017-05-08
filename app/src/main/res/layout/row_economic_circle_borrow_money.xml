@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/redPrimary"
             android:textSize="15sp"
             tools:text="吴彦祖"/>
 
@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_help"
+            android:background="@drawable/bg_borrow_money"
             android:gravity="center"
             android:text="@string/borrow_money"
             android:textColor="@android:color/white"
@@ -147,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/colorRed"
+                    android:textColor="@color/redPrimary"
                     tools:text="@string/RMB"/>
 
             </LinearLayout>
