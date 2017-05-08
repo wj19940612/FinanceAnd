@@ -49,7 +49,7 @@
 
     <string name="banner_detail">活动详情</string>
     <!--Future-->
-    <string name="future_foreign">国外期货</string>
+    <string name="future_foreign">国际期货</string>
     <string name="future_china">国内期货</string>
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
