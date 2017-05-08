@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +36,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.HashSet;
@@ -76,7 +76,6 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mListView.setOnItemClickListener(this);
         mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
         int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-        Log.d(TAG, "onCreate:  发表观点 " + LocalUser.getUser().getUserInfo().toString() + " \n " + mUserId);
         if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
             mPublishAdapter.setIsHimSelf(true);
             mTitleBar.setTitle(R.string.mine_publish);
@@ -253,13 +252,19 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                         .into(mAvatar);
                 mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
                 mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
-                mOpinionContent.setText(item.getContent());
                 mVarietyName.setText(item.getVarietyName());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mBigVarietyName.setText(item.getBigVarietyTypeName());
                 if (!isHimSelf) {
                     mIsAttention.setText(item.isAttention() ? context.getString(R.string.is_attention) : "");
                 }
+
+                if (item.getDirection() == 1) {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                } else {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                }
+
                 if (!TextUtils.isEmpty(item.getRisePrice()) && item.getRisePrice().startsWith("-")) {
                     mUpDownPrice.setSelected(true);
                     mLastPrice.setSelected(true);
