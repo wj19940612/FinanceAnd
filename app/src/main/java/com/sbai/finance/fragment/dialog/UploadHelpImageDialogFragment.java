@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.ClipHeadImageActivity;
 import com.sbai.finance.utils.ToastUtil;
@@ -38,8 +39,7 @@ import butterknife.Unbinder;
  * 上传用户头像
  */
 
-public class UploadUserImageDialogFragment extends DialogFragment {
-    private static final String TAG = "UploadUserImageDialogFr";
+public class UploadHelpImageDialogFragment extends DialogFragment {
 
     /**
      * 打开相机的请求码
@@ -57,23 +57,23 @@ public class UploadUserImageDialogFragment extends DialogFragment {
      * 打开自定义裁剪页面的请求码
      */
     public static final int REQ_CLIP_HEAD_IMAGE_PAGE = 144;
-    @BindView(R.id.takePhoneFromCamera)
-    AppCompatTextView mTakePhoneFromCamera;
-    @BindView(R.id.takePhoneFromGallery)
-    AppCompatTextView mTakePhoneFromGallery;
-    @BindView(R.id.takePhoneCancel)
-    AppCompatTextView mTakePhoneCancel;
-
     private Unbinder mBind;
     private File mFile;
-
-    public UploadUserImageDialogFragment() {
+    private OnDismissListener mOnDismissListener;
+    public interface OnDismissListener{
+         void onGetImagePath(String path);
+    }
+    public UploadHelpImageDialogFragment setOnDismissListener(OnDismissListener onDismissListener){
+        mOnDismissListener = onDismissListener;
+        return this;
+    }
+    public UploadHelpImageDialogFragment() {
 
     }
 
-    public static UploadUserImageDialogFragment newInstance() {
+    public static UploadHelpImageDialogFragment newInstance() {
         Bundle args = new Bundle();
-        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
+        UploadHelpImageDialogFragment fragment = new UploadHelpImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -142,7 +142,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, UploadUserImageDialogFragment.class.getSimpleName());
+        this.show(manager, UploadHelpImageDialogFragment.class.getSimpleName());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
                         Uri mMBitmapUri = Uri.fromFile(mFile);
                         if (mMBitmapUri != null) {
                             if (!TextUtils.isEmpty(mMBitmapUri.getPath())) {
-                                openClipImagePage(mMBitmapUri.getPath());
+                                saveImagePage(mMBitmapUri.getPath());
                             }
                         }
                     }
@@ -164,7 +164,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
                 case REQ_CODE_TAKE_PHONE_FROM_PHONES:
                     String galleryBitmapPath = getGalleryBitmapPath(data);
                     if (!TextUtils.isEmpty(galleryBitmapPath)) {
-                        openClipImagePage(galleryBitmapPath);
+                        saveImagePage(galleryBitmapPath);
                     }
                     break;
             }
@@ -195,24 +195,10 @@ public class UploadUserImageDialogFragment extends DialogFragment {
         return null;
     }
 
-    private void openClipImagePage(String imaUri) {
-        Intent intent = new Intent(getActivity(), ClipHeadImageActivity.class);
-        intent.putExtra(ClipHeadImageActivity.KEY_CLIP_USER_IMAGE, imaUri);
-        getActivity().startActivityForResult(intent, REQ_CLIP_HEAD_IMAGE_PAGE);
+    private void saveImagePage(String imaUri) {
+        //修复米5的图片显示问题
+        String forMi5 = imaUri.replace("/raw//", "");
+        mOnDismissListener.onGetImagePath(forMi5);
         dismiss();
-    }
-
-    //调用系统裁剪，有问题，有些手机不支持裁剪后获取图片
-    private void cropImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");// crop=true 有这句才能出来最后的裁剪页面.
-        intent.putExtra("aspectX", 1);// 这两项为裁剪框的比例.
-        intent.putExtra("aspectY", 1);// x:y=1:1
-        intent.putExtra("outputX", 600);//图片输出大小
-        intent.putExtra("outputY", 600);
-        intent.putExtra("output", uri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 返回格式
-        startActivityForResult(intent, REQ_CODE_CROP_IMAGE);
     }
 }

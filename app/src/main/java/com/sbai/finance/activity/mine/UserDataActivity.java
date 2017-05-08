@@ -325,8 +325,8 @@ public class UserDataActivity extends BaseActivity {
 
 	private void refreshAttention() {
 		Intent intent = new Intent(REFRESH_ATTENTION);
-		intent.putExtra(Launcher.EX_PAYLOAD, mWhetherAttentionShieldOrNot);
-		intent.putExtra(Launcher.EX_PAYLOAD_1, mAttentionAndFansNum);
+		intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
+		intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNum);
 		LocalBroadcastManager.getInstance(UserDataActivity.this)
 				.sendBroadcast(intent);
 	}

@@ -539,10 +539,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
 			AttentionAndFansNumberModel attentionAndFansNumberModel =
-					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
 
 			if (whetherAttentionShieldOrNot != null) {
