@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "1.1"
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -39,7 +39,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled true // !!set true when package release apk
+        cruncherEnabled false // !!set true when package release apk
     }
 
     dexOptions {
