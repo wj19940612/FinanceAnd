@@ -7,164 +7,167 @@ import com.sbai.httplib.ApiParams;
 
 public class Client {
 
-	private static final int POST = Request.Method.POST;
-	public static final int PAGE_SIZE = 15;
+    private static final int POST = Request.Method.POST;
+    public static final int PAGE_SIZE = 15;
 
-	/**
-	 * 获取服务器系统时间
-	 *
-	 * @return
-	 */
-	public static API getSystemTime() {
-		return new API("/user/user/getSystemTime.do");
-	}
+    /**
+     * 获取服务器系统时间
+     *
+     * @return
+     */
+    public static API getSystemTime() {
+        return new API("/user/user/getSystemTime.do");
+    }
 
-	public static API getSocketAddress() {
-		return new API("/fut/ip/list.do",
-				new ApiParams().put("type", "app"));
-	}
+    public static API getSocketAddress() {
+        return new API("/fut/ip/list.do",
+                new ApiParams().put("type", "app"));
+    }
 
-	/**
-	 * 获取分时图数据
-	 *
-	 * @param code
-	 * @return
-	 */
-	public static API getTrendData(String code) {
-		return new API("/fut/k/timeSharing.do",
-				new ApiParams().put("code", code));
-	}
+    /**
+     * 获取分时图数据
+     *
+     * @param code
+     * @return
+     */
+    public static API getTrendData(String code) {
+        return new API("/fut/k/timeSharing.do",
+                new ApiParams().put("code", code));
+    }
 
-	/**
-	 * 获取 k 线数据
-	 *
-	 * @param varietyType
-	 * @param type
-	 * @return
-	 */
-	public static API getKlineData(String varietyType, String type, String endTime) {
-		return new API("/fut/k/data.do",
-				new ApiParams()
-						.put("contractsCode", varietyType)
-						.put("limit", 100)
-						.put("endTime", endTime)
-						.put("type", type));
-	}
+    /**
+     * 获取 k 线数据
+     *
+     * @param varietyType
+     * @param type
+     * @return
+     */
+    public static API getKlineData(String varietyType, String type, String endTime) {
+        return new API("/fut/k/data.do",
+                new ApiParams()
+                        .put("contractsCode", varietyType)
+                        .put("limit", 100)
+                        .put("endTime", endTime)
+                        .put("type", type));
+    }
 
 
-	/**
-	 * 观点回复
-	 * @param content
-	 * @param viewpointId
-	 * @return
-	 */
-	public static API opinionReply(String content, int viewpointId) {
-		return new API(POST, "/coterie/viewpoint/viewpointReply.do",
-				new ApiParams()
-						.put("content", content)
-						.put("viewpointId", viewpointId));
-	}
+    /**
+     * 观点回复
+     *
+     * @param content
+     * @param viewpointId
+     * @return
+     */
+    public static API opinionReply(String content, int viewpointId) {
+        return new API(POST, "/coterie/viewpoint/viewpointReply.do",
+                new ApiParams()
+                        .put("content", content)
+                        .put("viewpointId", viewpointId));
+    }
 
-	/**
-	 * 观点点赞
-	 * @param viewpointId
-	 * @return
-	 */
-	public static API opinionPraise(int viewpointId) {
-		return new API(POST, "/coterie/viewpoint/viewpointPraise.do",
-				new ApiParams()
-						.put("viewpointId", viewpointId));
-	}
+    /**
+     * 观点点赞
+     *
+     * @param viewpointId
+     * @return
+     */
+    public static API opinionPraise(int viewpointId) {
+        return new API(POST, "/coterie/viewpoint/viewpointPraise.do",
+                new ApiParams()
+                        .put("viewpointId", viewpointId));
+    }
 
-	/**
-	 * 发表观点
-	 *
-	 * @param bigVarietyTypeCode
-	 * @param content
-	 * @param direction
-	 * @param varietyId
-	 * @param varietyType
-	 * @return
-	 */
-	public static API saveViewPoint(String bigVarietyTypeCode, int calcuId, String content, int direction, int varietyId, String varietyType) {
-		return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
-				new ApiParams()
-						.put("bigVarietyTypeCode", bigVarietyTypeCode)
-						.put("calcuId", calcuId)
-						.put("content", content)
-						.put("direction", direction)
-						.put("varietyId", varietyId)
-						.put("varietyType", varietyType));
-	}
+    /**
+     * 发表观点
+     *
+     * @param bigVarietyTypeCode
+     * @param content
+     * @param direction
+     * @param varietyId
+     * @param varietyType
+     * @return
+     */
+    public static API saveViewPoint(String bigVarietyTypeCode, int calcuId, String content, int direction, int varietyId, String varietyType) {
+        return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("calcuId", calcuId)
+                        .put("content", content)
+                        .put("direction", direction)
+                        .put("varietyId", varietyId)
+                        .put("varietyType", varietyType));
+    }
 
-	/**
-	 * 发表观点
-	 *
-	 * @param bigVarietyTypeCode
-	 * @param content
-	 * @param direction
-	 * @param varietyId
-	 * @param varietyType
-	 * @return
-	 */
-	public static API saveViewPoint(String bigVarietyTypeCode, String content, int direction, int varietyId, String varietyType) {
-		return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
-				new ApiParams()
-						.put("bigVarietyTypeCode", bigVarietyTypeCode)
-						.put("content", content)
-						.put("direction", direction)
-						.put("varietyId", varietyId)
-						.put("varietyType", varietyType));
-	}
+    /**
+     * 发表观点
+     *
+     * @param bigVarietyTypeCode
+     * @param content
+     * @param direction
+     * @param varietyId
+     * @param varietyType
+     * @return
+     */
+    public static API saveViewPoint(String bigVarietyTypeCode, String content, int direction, int varietyId, String varietyType) {
+        return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("content", content)
+                        .put("direction", direction)
+                        .put("varietyId", varietyId)
+                        .put("varietyType", varietyType));
+    }
 
-	/**
-	 * 查询观点
-	 *
-	 * @param page
-	 * @param pageSize
-	 * @param varietyId
-	 * @return
-	 */
-	public static API findViewpoint(int page, int pageSize, int varietyId) {
-		return new API("/coterie/viewpoint/findViewpoint.do",
-				new ApiParams()
-						.put("page", page)
-						.put("pageSize", pageSize)
-						.put("varietyId", varietyId));
-	}
+    /**
+     * 查询观点
+     *
+     * @param page
+     * @param pageSize
+     * @param varietyId
+     * @return
+     */
+    public static API findViewpoint(int page, int pageSize, int varietyId) {
+        return new API("/coterie/viewpoint/findViewpoint.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("varietyId", varietyId));
+    }
 
-	/**
-	 * 检测是否已经预测'看涨'看跌'
-	 *
-	 * @param bigVarietyTypeCode
-	 * @param varietyId
-	 * @return
-	 */
-	public static API checkViewpoint(String bigVarietyTypeCode, int varietyId) {
-		return new API(POST, "/coterie/viewpoint/checkCalculate.do",
-				new ApiParams()
-						.put("bigVarietyTypeCode", bigVarietyTypeCode)
-						.put("varietyId", varietyId));
-	}
+    /**
+     * 检测是否已经预测'看涨'看跌'
+     *
+     * @param bigVarietyTypeCode
+     * @param varietyId
+     * @return
+     */
+    public static API checkViewpoint(String bigVarietyTypeCode, int varietyId) {
+        return new API(POST, "/coterie/viewpoint/checkCalculate.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("varietyId", varietyId));
+    }
 
-	/**
-	 * 获取品种简介
-	 *
-	 * @param varietyId
-	 * @return
-	 */
-	public static API getVarietytradeIntrouce(int varietyId) {
-		return new API("/order/order/getVarietytradeIntro.do",
-				new ApiParams()
-						.put("varietyId", varietyId));
-	}
+    /**
+     * 获取品种简介
+     *
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietytradeIntrouce(int varietyId) {
+        return new API("/order/order/getVarietytradeIntro.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
 
     /**
      * 获取多个行情
+     *
      * @param codes
      * @return
      */
-    public static API getQuotaList(String codes){
+    public static API getQuotaList(String codes) {
         return new API("/fut/quota/list.do",
                 new ApiParams()
                         .put("codes", codes));
@@ -214,16 +217,17 @@ public class Client {
         return new API(POST, "/user/user/updatePic.do", new ApiParams().put("pic", pic));
     }
 
-	/**
-	 * 观点回复点赞
-	 * @param replyId
-	 * @return
-	 */
-	public static API opinionReplyPraise(int replyId) {
-		return new API(POST, "/coterie/viewpoint/viewpointReplyPraise.do",
-				new ApiParams()
-						.put("replyId", replyId));
-	}
+    /**
+     * 观点回复点赞
+     *
+     * @param replyId
+     * @return
+     */
+    public static API opinionReplyPraise(int replyId) {
+        return new API(POST, "/coterie/viewpoint/viewpointReplyPraise.do",
+                new ApiParams()
+                        .put("replyId", replyId));
+    }
 
     /**
      * 获取品种列表
@@ -452,6 +456,26 @@ public class Client {
     }
 
     /**
+     * 接口名称 填写实名认证信息提交
+     * 请求类型 post
+     * 请求Url  /user/user/updateUserCertification.do
+     * 接口描述 实名认证
+     *
+     * @param Back     身份证反面
+     * @param Positive 身份证正面
+     * @param certCode 身份证号码
+     * @param realName 真实姓名
+     * @return
+     */
+    public static API submitUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
+        return new API(POST, "/user/user/updateUserCertification.do", new ApiParams()
+                .put("Back", Back)
+                .put("Positive", Positive)
+                .put("certCode", certCode)
+                .put("realName", realName));
+    }
+
+    /**
      * 接口名称 查看点击用户观点
      * 请求类型 post
      * 请求Url  /coterie/userInterest/queryClickUserViewPoint.do
@@ -534,12 +558,12 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getStockVariety(Integer page, Integer pageSize,String search) {
+    public static API getStockVariety(Integer page, Integer pageSize, String search) {
         return new API("/order/order/getStockVariety.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize)
-		                .put("search",search));
+                        .put("search", search));
     }
 
     /**
@@ -565,6 +589,7 @@ public class Client {
 
     /**
      * 检测是否已添加
+     *
      * @param varietyId
      * @return
      */
@@ -640,22 +665,23 @@ public class Client {
                         .put("viewpointId", viewpointId));
     }
 
-	/**
-	 * 获取观点回复列表,在消息里面的回复列表里的置顶回复id
-	 * @param page
-	 * @param pageSize
-	 * @param viewpointId
-	 * @param replyId
-	 * @return
-	 */
-	public static API getOpinionReplyList(int page, int pageSize, int viewpointId, Integer replyId) {
-		return new API("/coterie/viewpoint/findViewpointReply.do",
-				new ApiParams()
-						.put("page", page)
-						.put("pageSize", pageSize)
-						.put("viewpointId", viewpointId)
-						.put("replyId", replyId));
-	}
+    /**
+     * 获取观点回复列表,在消息里面的回复列表里的置顶回复id
+     *
+     * @param page
+     * @param pageSize
+     * @param viewpointId
+     * @param replyId
+     * @return
+     */
+    public static API getOpinionReplyList(int page, int pageSize, int viewpointId, Integer replyId) {
+        return new API("/coterie/viewpoint/findViewpointReply.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("viewpointId", viewpointId)
+                        .put("replyId", replyId));
+    }
 
     /**
      * 获取用户资料

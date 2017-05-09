@@ -10,10 +10,15 @@ import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideRoundTransform;
+import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import java.util.ArrayList;
@@ -27,7 +32,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     private static final int IDENTITY_CARD_FONT = 0;
     private static final int IDENTITY_CARD_REVERSE = 1;
-
     @BindView(R.id.realNameInput)
     AppCompatEditText mRealNameInput;
     @BindView(R.id.nameClear)
@@ -36,10 +40,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     AppCompatEditText mIdentityCardNumber;
     @BindView(R.id.identityCardNumberClear)
     AppCompatImageView mIdentityCardNumberClear;
-    @BindView(R.id.addIdentityCardFront)
-    AppCompatTextView mAddIdentityCardFront;
-    @BindView(R.id.addIdentityCardReverse)
-    AppCompatTextView mAddIdentityCardReverse;
     @BindView(R.id.identityCardFrontImage)
     AppCompatImageView mIdentityCardFrontImage;
     @BindView(R.id.identityCardReverseImage)
@@ -48,6 +48,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     AppCompatTextView mErrorHint;
     @BindView(R.id.submit)
     AppCompatTextView mSubmit;
+
 
     private ArrayList<String> mImagePath;
 
@@ -105,7 +106,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         return mIdentityCardNumber.getText().toString().trim();
     }
 
-    @OnClick({R.id.nameClear, R.id.identityCardNumberClear, R.id.addIdentityCardFront, R.id.addIdentityCardReverse, R.id.submit})
+    @OnClick({R.id.nameClear, R.id.identityCardNumberClear, R.id.identityCardFrontImage, R.id.identityCardReverseImage, R.id.submit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.nameClear:
@@ -114,10 +115,10 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             case R.id.identityCardNumberClear:
                 mIdentityCardNumber.setText("");
                 break;
-            case R.id.addIdentityCardFront:
+            case R.id.identityCardFrontImage:
                 UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_FONT, false).show(getSupportFragmentManager());
                 break;
-            case R.id.addIdentityCardReverse:
+            case R.id.identityCardReverseImage:
                 UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_REVERSE, false).show(getSupportFragmentManager());
                 break;
             case R.id.submit:
@@ -127,7 +128,27 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     }
 
     private void submitUserCreditApprove() {
+        String realName = getRealName();
+        String identityCard = getIdentityCard();
+        if (!mImagePath.isEmpty() && mImagePath.size() > 1) {
+//            String imageFront = ImageUtils.bitmapToBase64(BitmapFactory.decodeFile(mImagePath.get(0)));
+//            String imageReserve = ImageUtils.bitmapToBase64(BitmapFactory.decodeFile(mImagePath.get(1)));
 
+            String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
+            String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
+//            Log.d(TAG, "submitUserCreditApprove: " + imageFront.length() + "  压缩后的 " + imageToBase64.length() +
+//                    " \n 反面 " + imageReserve.length() + " 压缩后的  " + base64.length());
+            Client.submitUserCreditApproveInfo(imageFront, imageReserve, identityCard, realName)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            Log.d(TAG, "onRespSuccess: " + resp.toString());
+                        }
+                    })
+                    .fire();
+
+        }
     }
 
     @Override
@@ -135,17 +156,17 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         Log.d(TAG, "onImagePath: " + index + "  地址 " + imagePath);
         mImagePath.add(index, imagePath);
         if (index == IDENTITY_CARD_FONT) {
-            mAddIdentityCardFront.setVisibility(View.GONE);
-            mIdentityCardFrontImage.setVisibility(View.VISIBLE);
-            Glide.with(this).load(imagePath).fitCenter().bitmapTransform(new GlideRoundTransform(this)).into(mIdentityCardFrontImage);
+            Glide.with(this).load(imagePath).fitCenter()
+                    .bitmapTransform(new GlideRoundTransform(this))
+                    .placeholder(R.drawable.bg_add_identity_card_font)
+                    .into(mIdentityCardFrontImage);
         } else if (index == IDENTITY_CARD_REVERSE) {
-            mAddIdentityCardReverse.setVisibility(View.GONE);
-            mIdentityCardReverseImage.setVisibility(View.VISIBLE);
-            Glide.with(this).load(imagePath).fitCenter().bitmapTransform(new GlideRoundTransform(this)).into(mIdentityCardReverseImage);
-
+            Glide.with(this).load(imagePath).fitCenter()
+                    .bitmapTransform(new GlideRoundTransform(this))
+                    .placeholder(R.drawable.bg_add_identity_card_reserve)
+                    .into(mIdentityCardReverseImage);
         }
         changeSubmitEnable();
-
     }
 
     private void changeSubmitEnable() {

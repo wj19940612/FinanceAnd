@@ -107,8 +107,7 @@
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
     <string name="mine_publish">我的发表</string>
-    <string name="his_publish">他的发表</string>
-    <string name="her_publish">她的发表</string>
+    <string name="her_publish">TA的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
@@ -171,9 +170,6 @@
     <string name="accept_your_help">     接受了你的帮助</string>
     <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
 
-    <string name="replay_you">      评论了你</string>
-    <string name="attention_you">      关注了你</string>
-    <string name="like_your_publish">      喜欢了你的发表</string>
 
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
