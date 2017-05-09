@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.economiccircle;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -28,6 +29,7 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
@@ -54,6 +56,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+
 
 public class OpinionDetailsActivity extends BaseActivity {
 
@@ -147,7 +150,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 						if (isSendBroadcast) {
 							Intent intent = new Intent(REFRESH_POINT);
-							intent.putExtra(Launcher.EX_PAYLOAD,mOpinionDetails);
+							intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
 							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
 									.sendBroadcast(intent);
 						}
@@ -257,16 +260,25 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
 
 			if (mOpinionDetails.getDirection() == 1) {
+				if (mOpinionDetails.getGuessPass() == 1) {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_succeed));
+				} else if(mOpinionDetails.getGuessPass() == 2){
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_failed));
+				}
 				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up));
 			} else {
+				if (mOpinionDetails.getGuessPass() == 1) {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_succeed));
+				} else if(mOpinionDetails.getGuessPass() == 2){
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_failed));
+				}
 				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down));
 			}
 
 			mBigVarietyName.setText(mOpinionDetails.getBigVarietyTypeName());
 			mVarietyName.setText(mOpinionDetails.getVarietyName());
 
-
-			if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
+			/*if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
 				mLastPrice.setText("--");
 				mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
@@ -278,7 +290,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLastPrice.setText(mOpinionDetails.getLastPrice());
 			}
 
-		/*	if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
+			if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
 				mUpDownPrice.setText("--");
 				mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
@@ -361,8 +373,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 			viewHolder.bindingData(mContext, (OpinionReply) getItem(position));
 			return convertView;
 		}
-
-
 
 
 		static class ViewHolder {
@@ -511,6 +521,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			case R.id.avatar:
 				if (LocalUser.getUser().isLogin()) {
+                    ComponentName callingActivity = getCallingActivity();
+                    if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
+                        return;
+                    }
 					Launcher.with(this, UserDataActivity.class)
 							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
 							.execute();
