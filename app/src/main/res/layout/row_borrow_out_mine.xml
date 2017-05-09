@@ -15,8 +15,8 @@
         android:gravity="center_vertical">
         <ImageView
             android:id="@+id/userPortrait"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_default_avatar"/>
         <TextView
@@ -164,19 +164,14 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/image1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/help"/>
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_weight="1"
-            android:src="@drawable/help"/>
-
-        <ImageView
+            android:id="@+id/image2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
@@ -184,6 +179,15 @@
             android:src="@drawable/help"/>
 
         <ImageView
+            android:id="@+id/image3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_weight="1"
+            android:src="@drawable/help"/>
+
+        <ImageView
+            android:id="@+id/image4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
@@ -213,7 +217,7 @@
             android:layout_marginRight="10dp"
             android:textSize="@dimen/navigate_size"
             android:textColor="@color/opinionText"
-            tools:text="@string/end_time"/>
+            android:text="@string/end_time"/>
         <TextView
             android:id="@+id/endLineTime"
             android:layout_width="wrap_content"

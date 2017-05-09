@@ -278,7 +278,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLastPrice.setText(mOpinionDetails.getLastPrice());
 			}
 
-			if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
+		/*	if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
 				mUpDownPrice.setText("--");
 				mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
@@ -300,7 +300,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 				}
 				mUpDownPercent.setText(mOpinionDetails.getRisePre());
-			}
+			}*/
 
 			if (mOpinionDetails.getIsPraise() == 1) {
 				mLoveNum.setSelected(true);
@@ -474,14 +474,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 									}
 								}
 							}).fire();
-				} else {
-					Launcher.with(this, LoginActivity.class).execute();
-				}
-				break;
-
-			case R.id.commentContent:
-				if (LocalUser.getUser().isLogin()) {
-
 				} else {
 					Launcher.with(this, LoginActivity.class).execute();
 				}

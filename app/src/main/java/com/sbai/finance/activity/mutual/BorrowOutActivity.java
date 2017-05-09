@@ -27,6 +27,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 
@@ -170,8 +171,11 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(BorrowOut item, Context context){
-                loadImage(context,item.getPortrait(),mUserPortrait);
-                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getCreateTime())));
+                Glide.with(context).load(item.getContentImg())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .into(mUserPortrait);
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getConfirmTime())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
@@ -230,7 +234,9 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 }
             }
             private void loadImage(Context context,String src,ImageView image){
-                Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
+                Glide.with(context).load(src)
+                        .placeholder(R.drawable.help)
+                        .into(image);
             }
 
         }
