@@ -92,21 +92,33 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     }
 
     private void updateUserCreditStatus(UserIdentityCardInfo data) {
-        switch (data.getStatus()) {
-            case UserInfo.CREDIT_IS_NOT_APPROVE:
-                mSubmit.setText(R.string.submit_has_empty);
-                break;
-            case UserInfo.CREDIT_IS_APPROVE_ING:
-                mSubmit.setText(R.string.is_auditing);
-                break;
-            case UserInfo.CREDIT_IS_ALREADY_APPROVE:
-                mSubmit.setVisibility(View.GONE);
-                break;
+        if (data.getStatus() != null) {
+            switch (data.getStatus()) {
+                case UserInfo.CREDIT_IS_NOT_APPROVE:
+                    setViewEnable(true);
+                    mSubmit.setText(R.string.submit_has_empty);
+                    break;
+                case UserInfo.CREDIT_IS_APPROVE_ING:
+                    mSubmit.setText(R.string.is_auditing);
+                    setViewEnable(false);
+                    break;
+                case UserInfo.CREDIT_IS_ALREADY_APPROVE:
+                    setViewEnable(false);
+                    mSubmit.setVisibility(View.GONE);
+                    break;
+            }
         }
         mRealNameInput.setText(data.getRealName());
         mIdentityCardNumber.setText(data.getCertCode());
         loadIdentityCardFontImage(data.getCertPositive());
         loadIdentityCardReserveImage(data.getCertBack());
+    }
+
+    private void setViewEnable(boolean enable) {
+        mRealNameInput.setEnabled(enable);
+        mIdentityCardNumber.setEnabled(enable);
+        mIdentityCardFrontImage.setEnabled(enable);
+        mIdentityCardReverseImage.setEnabled(enable);
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
