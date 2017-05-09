@@ -396,7 +396,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				}
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
-
 				if (item.getDirection() == 1) {
 					if (item.getGuessPass() == 1) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
@@ -406,7 +405,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
 					}
 
-				} else if (item.getDirection() == 0) {
+				} else {
 					if (item.getGuessPass() == 1) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
 					} else if(item.getGuessPass() == 2){

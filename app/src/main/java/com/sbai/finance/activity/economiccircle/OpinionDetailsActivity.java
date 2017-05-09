@@ -264,15 +264,17 @@ public class OpinionDetailsActivity extends BaseActivity {
 					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_succeed));
 				} else if(mOpinionDetails.getGuessPass() == 2){
 					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_failed));
+				} else {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up));
 				}
-				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up));
 			} else {
 				if (mOpinionDetails.getGuessPass() == 1) {
 					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_succeed));
 				} else if(mOpinionDetails.getGuessPass() == 2){
 					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_failed));
+				} else {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down));
 				}
-				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down));
 			}
 
 			mBigVarietyName.setText(mOpinionDetails.getBigVarietyTypeName());

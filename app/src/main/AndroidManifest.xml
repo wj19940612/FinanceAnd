@@ -36,7 +36,7 @@
         <activity
             android:name=".activity.economiccircle.OpinionDetailsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity
             android:name=".activity.economiccircle.BorrowMoneyDetailsActivity"
             android:screenOrientation="portrait"/>
