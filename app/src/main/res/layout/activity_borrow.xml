@@ -161,10 +161,7 @@
                 android:horizontalSpacing="8dp"
                 android:verticalSpacing="8dp"
                 android:layout_marginLeft="@dimen/common_padding"
-                android:layout_marginRight="@dimen/common_padding"
-                android:drawableTop="@drawable/ic_add_pic"
-                android:textColor="@color/assistText"
-                android:text="@string/borrow_add_photo"/>
+                android:layout_marginRight="@dimen/common_padding"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="98dp"

@@ -128,7 +128,6 @@ public class MineFragment extends BaseFragment {
     private void requestNoReadNewsNumber() {
         Client.getNoReadMessageNumber()
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
@@ -243,7 +242,6 @@ public class MineFragment extends BaseFragment {
     private void requestUserAttentionAndroidFansNumber() {
         Client.getAttentionFollowUserNumber(null)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
                     @Override
                     protected void onRespSuccessData(AttentionAndFansNumberModel data) {

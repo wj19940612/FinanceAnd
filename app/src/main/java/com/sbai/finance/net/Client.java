@@ -534,11 +534,12 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getStockVariety(Integer page, Integer pageSize) {
+    public static API getStockVariety(Integer page, Integer pageSize,String search) {
         return new API("/order/order/getStockVariety.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+		                .put("search",search));
     }
 
     /**

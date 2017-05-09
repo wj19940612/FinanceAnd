@@ -26,7 +26,7 @@
     </style>
 
     <style name="SignEditText.PhoneNum">
-        <item name="android:inputType">phone</item>
+        <item name="android:inputType">number</item>
         <item name="android:maxLength">13</item>
     </style>
 

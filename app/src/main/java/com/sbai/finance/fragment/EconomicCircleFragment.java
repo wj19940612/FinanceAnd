@@ -1,12 +1,15 @@
 package com.sbai.finance.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -29,6 +32,8 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -45,6 +50,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener {
 
@@ -64,6 +71,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	private List<EconomicCircle> mEconomicCircleList;
 	private EconomicCircleAdapter mEconomicCircleAdapter;
 	private TextView mFootView;
+	private RefreshAttentionReceiver mReceiver;
 
 	private int mPage = 0;
 	private int mPageSize = 15;
@@ -92,9 +100,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				EconomicCircle economicCircle = (EconomicCircle) parent.getItemAtPosition(position);
 				if (economicCircle.getType() == 2) {
-						Launcher.with(getContext(), OpinionDetailsActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, economicCircle.getDataId())
-								.execute();
+					Launcher.with(getContext(), OpinionDetailsActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, economicCircle.getDataId())
+							.execute();
 				} else {
 					Launcher.with(getContext(), BorrowMoneyDetailsActivity.class)
 							.execute();
@@ -126,6 +134,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 		requestEconomicCircleList();
 		initSwipeRefreshLayout();
+
+		registerRefreshReceiver();
 	}
 
 	@Override
@@ -304,22 +314,20 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		@NonNull
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			OpinionViewHolder opinionViewHolder;
-			BorrowMoneyViewHolder borrowMoneyViewHolder;
+			OpinionViewHolder opinionViewHolder = null;
+			BorrowMoneyViewHolder borrowMoneyViewHolder = null;
 			int type = getItemViewType(position);
 			if (convertView == null) {
 				switch (type) {
 					case TYPE_OPINION:
 						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, null);
 						opinionViewHolder = new OpinionViewHolder(convertView);
-						opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						convertView.setTag(R.id.tag_opinion, opinionViewHolder);
 						break;
 
 					case TYPE_BORROW_MONEY:
 						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_borrow_money, null);
 						borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
-						borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						convertView.setTag(R.id.tag_borrow_money, borrowMoneyViewHolder);
 						break;
 				}
@@ -327,19 +335,26 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				switch (type) {
 					case TYPE_OPINION:
 						opinionViewHolder = (OpinionViewHolder) convertView.getTag(R.id.tag_opinion);
-						opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						break;
 					case TYPE_BORROW_MONEY:
 						borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag(R.id.tag_borrow_money);
-						borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						break;
 				}
+			}
+
+			switch (type) {
+				case TYPE_OPINION:
+					opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
+					break;
+				case TYPE_BORROW_MONEY:
+					borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
+					break;
 			}
 
 			return convertView;
 		}
 
-	static class OpinionViewHolder {
+		static class OpinionViewHolder {
 			@BindView(R.id.avatar)
 			ImageView mAvatar;
 			@BindView(R.id.userName)
@@ -390,7 +405,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				mBigVarietyName.setText(item.getBigVarietyTypeName());
 				mVarietyName.setText(item.getVarietyName());
 
-				if (TextUtils.isEmpty(item.getLastPrice())) {
+			/*	if (TextUtils.isEmpty(item.getLastPrice())) {
 					mLastPrice.setText("--");
 					mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 				} else {
@@ -422,7 +437,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 					}
 					mUpDownPercent.setText(item.getRisePre());
-				}
+				}*/
 
 
 				mAvatar.setOnClickListener(new View.OnClickListener() {
@@ -477,6 +492,37 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					}
 				});
+			}
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mReceiver = new RefreshAttentionReceiver();
+		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+		LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, filter);
+	}
+
+	private class RefreshAttentionReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+			AttentionAndFansNumberModel attentionAndFansNumberModel =
+					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+
+			if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+				for (EconomicCircle economicCircle : mEconomicCircleList) {
+					if (economicCircle.getUserId() == attentionAndFansNumberModel.getUserId()) {
+						if (whetherAttentionShieldOrNot.isFollow()) {
+							economicCircle.setIsAttention(2);
+							mEconomicCircleAdapter.notifyDataSetChanged();
+						} else {
+							economicCircle.setIsAttention(1);
+							mEconomicCircleAdapter.notifyDataSetChanged();
+						}
+					}
+				}
 			}
 		}
 	}

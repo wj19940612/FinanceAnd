@@ -1,10 +1,12 @@
 package com.sbai.finance.model.economiccircle;
 
+import java.io.Serializable;
+
 /**
  * Created by lixiaokuan0819 on 2017/5/2.
  */
 
-public class WhetherAttentionShieldOrNot {
+public class WhetherAttentionShieldOrNot implements Serializable{
 
 	/**
 	 * follow : 1

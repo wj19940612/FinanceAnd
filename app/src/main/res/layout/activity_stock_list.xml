@@ -87,7 +87,5 @@
                 android:headerDividersEnabled="true"
                 android:visibility="visible"/>
         </LinearLayout>
-
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
-
 </LinearLayout>
