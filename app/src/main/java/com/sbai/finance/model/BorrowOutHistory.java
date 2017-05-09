@@ -5,11 +5,12 @@ package com.sbai.finance.model;
  */
 
 public class BorrowOutHistory {
-    public static final int STATUST_6=6;
-    public static final int STATUST_7=7;
-    public static final int STATUST_8=8;
+    public static final int STATUS_PAY_INTENTION=6;
+    public static final int STATUS_SUCCESS=7;
+    public static final int STATUS_ALREADY_REPAY=8;
 
     /**
+     * confirmTime : 77055
      * content : 我要借钱
      * contentImg : ssa
      * createDate : 1493021623000
@@ -18,12 +19,16 @@ public class BorrowOutHistory {
      * failMsg : 借单撤销
      * id : 2
      * interest : 100
+     * location : 测试内容6z1p
      * modifyDate : 1493103894000
      * money : 2000
+     * portrait : 测试内容l022
      * status : 8
      * userId : 10
+     * userName : 测试内容iw7c
      */
 
+    private int confirmTime;
     private String content;
     private String contentImg;
     private long createDate;
@@ -32,10 +37,21 @@ public class BorrowOutHistory {
     private String failMsg;
     private int id;
     private int interest;
+    private String location;
     private long modifyDate;
     private int money;
+    private String portrait;
     private int status;
     private int userId;
+    private String userName;
+
+    public int getConfirmTime() {
+        return confirmTime;
+    }
+
+    public void setConfirmTime(int confirmTime) {
+        this.confirmTime = confirmTime;
+    }
 
     public String getContent() {
         return content;
@@ -101,6 +117,14 @@ public class BorrowOutHistory {
         this.interest = interest;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public long getModifyDate() {
         return modifyDate;
     }
@@ -117,6 +141,14 @@ public class BorrowOutHistory {
         this.money = money;
     }
 
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -131,5 +163,13 @@ public class BorrowOutHistory {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

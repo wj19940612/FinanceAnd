@@ -90,6 +90,7 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
+		mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
         mAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -145,7 +146,7 @@ public class BorrowActivity extends BaseActivity {
 		boolean isCanHideWarn = false;
 		String borrowMoney = mBorrowLimit.getText().toString().trim();
 		boolean isEmpty = TextUtils.isEmpty(borrowMoney);
-		if (isEmpty|| Integer.parseInt(borrowMoney)>2000) {
+		if (isEmpty|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
              if (!isEmpty){
 				 mWarn.setVisibility(View.VISIBLE);
 				 mWarn.setText(getString(R.string.borrow_over_money));
@@ -156,7 +157,7 @@ public class BorrowActivity extends BaseActivity {
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty|| Integer.parseInt(borrowInterest)>200){
+		if (isEmpty|| Integer.parseInt(borrowInterest)<1){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_over_interest));
@@ -182,7 +183,7 @@ public class BorrowActivity extends BaseActivity {
 		if (!mAgree.isChecked()){
 			result = false;
 		}
-		if (mPhotoGridAdapter.getCount()<2){
+		if (TextUtils.isEmpty(mBorrowRemark.getText())){
 			result = false;
 		}
 		return result;
@@ -194,6 +195,7 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowLimit.removeTextChangedListener(mBorrowMoneyValidationWatcher);
 		mBorrowInterest.removeTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.removeTextChangedListener(mBorrowTimeLimitValidationWatcher);
+		mBorrowRemark.removeTextChangedListener(mBorrowRemarkValidationWatcher);
 	}
 	private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)){
@@ -215,6 +217,12 @@ public class BorrowActivity extends BaseActivity {
 		}
 	};
 	private ValidationWatcher mBorrowTimeLimitValidationWatcher = new ValidationWatcher() {
+		@Override
+		public void afterTextChanged(Editable s) {
+			setPublishStatus();
+		}
+	};
+	private ValidationWatcher mBorrowRemarkValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
 			setPublishStatus();
