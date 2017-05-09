@@ -288,7 +288,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         if (mTradeFloatButtons.isHasAddInOptional()) {
             requestDeleteOptional();
         } else {
-            requestAddOpition();
+            requestAddOptional();
         }
     }
 
@@ -334,7 +334,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         }
     }
 
-    private void requestAddOpition() {
+    private void requestAddOptional() {
         Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -503,7 +503,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
         @Override
         public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA) {
+            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
@@ -555,6 +555,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
             mExchangeCloseView.setVisibility(View.VISIBLE);
             mPriceDataArea.setVisibility(View.GONE);
+            mTodayOpen.setText("--");
         } else {
             mExchangeCloseView.setVisibility(View.GONE);
             mPriceDataArea.setVisibility(View.VISIBLE);

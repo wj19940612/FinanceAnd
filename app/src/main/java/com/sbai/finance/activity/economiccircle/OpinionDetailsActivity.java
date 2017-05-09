@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.economiccircle;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -28,6 +29,7 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
@@ -54,6 +56,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+
 
 public class OpinionDetailsActivity extends BaseActivity {
 
@@ -518,6 +521,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			case R.id.avatar:
 				if (LocalUser.getUser().isLogin()) {
+                    ComponentName callingActivity = getCallingActivity();
+                    if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
+                        return;
+                    }
 					Launcher.with(this, UserDataActivity.class)
 							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
 							.execute();
