@@ -53,7 +53,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.string.item;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 
 public class OpinionDetailsActivity extends BaseActivity {
