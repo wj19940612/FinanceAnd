@@ -322,7 +322,7 @@ public class Client {
      * @return
      */
 
-    public static API updateUserInfo(int age, String land, int userSex) {
+    public static API updateUserInfo(int age, String land, Integer userSex) {
         return new API(POST, "/user/user/updateUser.do", new ApiParams()
                 .put("age", age)
                 .put("land", land)
@@ -458,7 +458,7 @@ public class Client {
     /**
      * 接口名称 填写实名认证信息提交
      * 请求类型 post
-     * 请求Url  /user/user/updateUserCertification.do
+     * 请求Url  /user/user/saveUserCertification.do
      * 接口描述 实名认证
      *
      * @param Back     身份证反面
@@ -468,7 +468,7 @@ public class Client {
      * @return
      */
     public static API submitUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
-        return new API(POST, "/user/user/updateUserCertification.do", new ApiParams()
+        return new API(POST, "/user/user/saveUserCertification.do", new ApiParams()
                 .put("Back", Back)
                 .put("Positive", Positive)
                 .put("certCode", certCode)

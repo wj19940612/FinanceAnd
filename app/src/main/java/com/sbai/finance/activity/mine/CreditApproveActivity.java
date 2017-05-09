@@ -14,7 +14,11 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserIdentityCardInfo;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideRoundTransform;
@@ -60,6 +64,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         mImagePath = new ArrayList<>();
         mRealNameInput.addTextChangedListener(mValidationWatcher);
         mIdentityCardNumber.addTextChangedListener(mIdentityCardApproveWatcher);
+        requestUserCreditApproveStatus();
     }
 
 
@@ -68,6 +73,40 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         super.onDestroy();
         mRealNameInput.removeTextChangedListener(mValidationWatcher);
         mIdentityCardNumber.removeTextChangedListener(mIdentityCardApproveWatcher);
+    }
+
+    private void requestUserCreditApproveStatus() {
+        Client.getUserCreditApproveStatus()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
+                    @Override
+                    protected void onRespSuccessData(UserIdentityCardInfo data) {
+                        UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                        userInfo.setStatus(data.getStatus());
+                        LocalUser.getUser().setUserInfo(userInfo);
+                        updateUserCreditStatus(data);
+                    }
+                })
+                .fireSync();
+    }
+
+    private void updateUserCreditStatus(UserIdentityCardInfo data) {
+        switch (data.getStatus()) {
+            case UserInfo.CREDIT_IS_NOT_APPROVE:
+                mSubmit.setText(R.string.submit_has_empty);
+                break;
+            case UserInfo.CREDIT_IS_APPROVE_ING:
+                mSubmit.setText(R.string.is_auditing);
+                break;
+            case UserInfo.CREDIT_IS_ALREADY_APPROVE:
+                mSubmit.setVisibility(View.GONE);
+                break;
+        }
+        mRealNameInput.setText(data.getRealName());
+        mIdentityCardNumber.setText(data.getCertCode());
+        loadIdentityCardFontImage(data.getCertPositive());
+        loadIdentityCardReserveImage(data.getCertBack());
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -95,7 +134,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     };
 
     private boolean checkSubmitEnable() {
-        return mImagePath.size() == 2 && !TextUtils.isEmpty(getRealName()) && getIdentityCard().length() > 14;
+        return mImagePath.size() > 1 && !TextUtils.isEmpty(getRealName()) && getIdentityCard().length() > 14;
     }
 
     private String getRealName() {
@@ -128,26 +167,24 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     }
 
     private void submitUserCreditApprove() {
-        String realName = getRealName();
+        final String realName = getRealName();
         String identityCard = getIdentityCard();
         if (!mImagePath.isEmpty() && mImagePath.size() > 1) {
-//            String imageFront = ImageUtils.bitmapToBase64(BitmapFactory.decodeFile(mImagePath.get(0)));
-//            String imageReserve = ImageUtils.bitmapToBase64(BitmapFactory.decodeFile(mImagePath.get(1)));
-
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
             String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
-//            Log.d(TAG, "submitUserCreditApprove: " + imageFront.length() + "  压缩后的 " + imageToBase64.length() +
-//                    " \n 反面 " + imageReserve.length() + " 压缩后的  " + base64.length());
             Client.submitUserCreditApproveInfo(imageFront, imageReserve, identityCard, realName)
                     .setIndeterminate(this)
                     .setCallback(new Callback<Resp<JsonObject>>() {
                         @Override
                         protected void onRespSuccess(Resp<JsonObject> resp) {
-                            Log.d(TAG, "onRespSuccess: " + resp.toString());
+                            setResult(RESULT_OK);
+                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                            userInfo.setStatus(UserInfo.CREDIT_IS_APPROVE_ING);
+                            LocalUser.getUser().setUserInfo(userInfo);
+                            mSubmit.setText(R.string.is_auditing);
                         }
                     })
                     .fire();
-
         }
     }
 
@@ -156,17 +193,25 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         Log.d(TAG, "onImagePath: " + index + "  地址 " + imagePath);
         mImagePath.add(index, imagePath);
         if (index == IDENTITY_CARD_FONT) {
-            Glide.with(this).load(imagePath).fitCenter()
-                    .bitmapTransform(new GlideRoundTransform(this))
-                    .placeholder(R.drawable.bg_add_identity_card_font)
-                    .into(mIdentityCardFrontImage);
+            loadIdentityCardFontImage(imagePath);
         } else if (index == IDENTITY_CARD_REVERSE) {
-            Glide.with(this).load(imagePath).fitCenter()
-                    .bitmapTransform(new GlideRoundTransform(this))
-                    .placeholder(R.drawable.bg_add_identity_card_reserve)
-                    .into(mIdentityCardReverseImage);
+            loadIdentityCardReserveImage(imagePath);
         }
         changeSubmitEnable();
+    }
+
+    private void loadIdentityCardReserveImage(String imagePath) {
+        Glide.with(this).load(imagePath).fitCenter()
+                .bitmapTransform(new GlideRoundTransform(this))
+                .placeholder(R.drawable.bg_add_identity_card_reserve)
+                .into(mIdentityCardReverseImage);
+    }
+
+    private void loadIdentityCardFontImage(String imagePath) {
+        Glide.with(this).load(imagePath).fitCenter()
+                .bitmapTransform(new GlideRoundTransform(this))
+                .placeholder(R.drawable.bg_add_identity_card_font)
+                .into(mIdentityCardFrontImage);
     }
 
     private void changeSubmitEnable() {

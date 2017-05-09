@@ -63,7 +63,6 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:hint="@string/identity_card_number"
-                android:inputType="number"
                 android:maxLines="1"
                 android:textColor="@color/primaryText"
                 android:textColorHint="@color/hintText"
