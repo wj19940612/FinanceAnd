@@ -479,14 +479,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 				}
 				break;
 
-			case R.id.commentContent:
-				if (LocalUser.getUser().isLogin()) {
-
-				} else {
-					Launcher.with(this, LoginActivity.class).execute();
-				}
-				break;
-
 			case R.id.reply:
 				if (LocalUser.getUser().isLogin()) {
 					String commentContent = mCommentContent.getText().toString().trim();

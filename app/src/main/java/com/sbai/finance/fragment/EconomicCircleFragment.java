@@ -314,22 +314,20 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		@NonNull
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			OpinionViewHolder opinionViewHolder;
-			BorrowMoneyViewHolder borrowMoneyViewHolder;
+			OpinionViewHolder opinionViewHolder = null;
+			BorrowMoneyViewHolder borrowMoneyViewHolder = null;
 			int type = getItemViewType(position);
 			if (convertView == null) {
 				switch (type) {
 					case TYPE_OPINION:
 						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, null);
 						opinionViewHolder = new OpinionViewHolder(convertView);
-						opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						convertView.setTag(R.id.tag_opinion, opinionViewHolder);
 						break;
 
 					case TYPE_BORROW_MONEY:
 						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_borrow_money, null);
 						borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
-						borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						convertView.setTag(R.id.tag_borrow_money, borrowMoneyViewHolder);
 						break;
 				}
@@ -337,13 +335,20 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				switch (type) {
 					case TYPE_OPINION:
 						opinionViewHolder = (OpinionViewHolder) convertView.getTag(R.id.tag_opinion);
-						opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						break;
 					case TYPE_BORROW_MONEY:
 						borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag(R.id.tag_borrow_money);
-						borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 						break;
 				}
+			}
+
+			switch (type) {
+				case TYPE_OPINION:
+					opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
+					break;
+				case TYPE_BORROW_MONEY:
+					borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
+					break;
 			}
 
 			return convertView;
