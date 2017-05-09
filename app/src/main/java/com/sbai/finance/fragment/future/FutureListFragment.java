@@ -128,7 +128,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
         @Override
         public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA) {
+            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
                 updateListViewVisibleItem(data.getData());
                 mFutureListAdapter.addFutureData(data.getData());
             }
