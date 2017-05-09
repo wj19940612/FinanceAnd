@@ -36,7 +36,7 @@
         <activity
             android:name=".activity.economiccircle.OpinionDetailsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity
             android:name=".activity.economiccircle.BorrowMoneyDetailsActivity"
             android:screenOrientation="portrait"/>
@@ -87,8 +87,9 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
-        <!--观点大神-->
-        <activity android:name=".activity.opinion.OpinionActivity"
+        <!-- 观点大神 -->
+        <activity
+            android:name=".activity.opinion.OpinionActivity"
             android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
@@ -140,9 +141,7 @@
         <!-- 交易 H5 -->
         <activity
             android:name=".activity.trade.TradeWebActivity"
-            android:screenOrientation="portrait"
-            />
-
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.web.BannerActivity"
             android:screenOrientation="portrait"/>
@@ -152,6 +151,8 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.home.BorrowMoneyActivity">
+        </activity>
     </application>
 
 </manifest>
