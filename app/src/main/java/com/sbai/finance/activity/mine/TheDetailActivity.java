@@ -14,6 +14,11 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Detail;
+import com.sbai.finance.model.local.SysTime;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -50,6 +55,7 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
         ButterKnife.bind(this);
 
         initViews();
+        requestDetailList();
     }
 
     private void initViews() {
@@ -62,7 +68,20 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
         mSwipeRefreshLayout.setAdapter(mListView, mDetailAdapter);
     }
 
-    private void updateDetail(List<Detail> detailList) {
+    private void requestDetailList() {
+        Client.getDetail(mPageNo, mPageSize)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Detail>>, List<Detail>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Detail> data) {
+                        updateDetailList(data);
+                    }
+                })
+                .fire();
+    }
+
+    private void updateDetailList(List<Detail> detailList) {
         if (detailList == null) {
             return;
         }
@@ -79,12 +98,12 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
     @Override
     public void onRefresh() {
         reset();
-        //request
+        requestDetailList();
     }
 
     @Override
     public void onLoadMore() {
-        //request
+        requestDetailList();
     }
 
     private void stopRefreshAnimation() {
@@ -103,7 +122,8 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
     }
 
 
-    private static class DetailAdapter extends BaseAdapter {
+    static class DetailAdapter extends BaseAdapter {
+        private static long sCurTime = SysTime.getSysTime().getSystemTimestamp();
         private Context mContext;
         private List<Detail> mList;
 
@@ -160,10 +180,16 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
             if (position < 0) {
                 return false;
             }
+
             Detail pre = mList.get(position - 1);
             Detail next = mList.get(position);
-            //判断两个bean 相差的时间 如果跨了一个月就要显示标题  时间格式转为yyyyMM
-            return false;
+            //判断两个时间在不在一个月内  不是就要显示标题
+            long preTime = pre.getCreateTime();
+            long nextTime = next.getCreateTime();
+            if (DateUtil.isInThisMonth(nextTime, preTime)) {
+                return false;
+            }
+            return true;
         }
 
         static class ViewHolder {
@@ -183,6 +209,29 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
             }
 
             private void bindDataWithView(Detail detail, boolean needTitle) {
+
+                if (needTitle) {
+                    mHead.setVisibility(View.VISIBLE);
+                    mHead.setText(DateUtil.getFormatMonth(detail.getCreateTime()));
+                } else {
+                    mHead.setVisibility(View.GONE);
+                }
+
+                //内部时间标签
+                if (DateUtil.isToday(detail.getCreateTime(), sCurTime)) {
+                    //今天 xx:xx
+                    mPaymentTime.setText("今天" + DateUtil.getFormatTime(detail.getCreateTime()));
+                } else {
+                    //xx日 xx:xx
+                    //昨日 xx:xx
+                    mPaymentTime.setText(DateUtil.getFormatTime(detail.getCreateTime()));
+                }
+
+                String payType = detail.getType() == 2 ? "微信" : "支付宝";
+
+                mPaymentContent.setText(detail.getRemark());
+                mPaymentType.setText(payType);
+                mPaymentNum.setText(String.valueOf(detail.getMoney()));
 
             }
         }

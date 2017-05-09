@@ -871,11 +871,24 @@ public class Client {
 	 * @param contentType
 	 * @return
 	 */
-	public static API addFeedback(String content, int contentType) {
+	public static API sendFeedback(String content, int contentType) {
 		return new API("/user/userFeedback/seeFeedback.do",
 				new ApiParams()
 						.put("content", content)
 						.put("contentType", contentType));
+	}
+
+	/**
+	 * 查询明细
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getDetail(int page, int pageSize) {
+		return new API("/user/userFlow/queryUserFlow.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize));
 	}
 
 

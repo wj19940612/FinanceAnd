@@ -3,6 +3,8 @@ package com.sbai.finance.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.sbai.finance.model.local.SysTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -94,6 +96,21 @@ public class DateUtil {
         calendar.setTime(date);
         todayCalendar.add(Calendar.WEEK_OF_YEAR, 1);
         return calendar.get(Calendar.WEEK_OF_YEAR) == todayCalendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public static boolean isInThisMonth(long time, long today) {
+        Date date = new Date(time);
+        Date todayDate = new Date(today);
+        return isInThisMonth(date, todayDate);
+    }
+
+    public static boolean isInThisMonth(Date date, Date todayDate) {
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTime(todayDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
+                && calendar.get(Calendar.WEEK_OF_YEAR) == todayCalendar.get(Calendar.WEEK_OF_YEAR);
     }
 
     public static boolean isInThisYear(long time) {
@@ -306,6 +323,25 @@ public class DateUtil {
         } else {
             return DateUtil.format(createTime, DateUtil.FORMAT_YEAR_MONTH_DAY);
         }
+    }
+
+    /**
+     * 格式化月份  如果是当月 则显示本月
+     * 如果是当年中的其他月份  显示x月
+     * 如果是跨年月份   则显示xxxx年xx月
+     * @param createTime
+     * @return
+     */
+    public static String getFormatMonth(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (DateUtil.isInThisMonth(createTime, systemTime)) {
+            return "本月";
+        } else if (DateUtil.isInThisYear(createTime)) {
+            return DateUtil.format(createTime, "M月");
+        } else {
+            return DateUtil.format(createTime, "yyyy年MM月");
+        }
+
     }
 
     /**
