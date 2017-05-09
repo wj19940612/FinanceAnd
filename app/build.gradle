@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -39,7 +39,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled false // !!set true when package release apk
+        cruncherEnabled true // !!set true when package release apk
     }
 
     dexOptions {
@@ -54,10 +54,14 @@ android {
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
+//            buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
+            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
         }
 
-        prod {
-
+        alpha {
+            versionCode 2
+            versionName "1.1"
+            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
         }
     }
 }

@@ -25,6 +25,7 @@ import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
+import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
@@ -164,7 +165,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(1 * 1000);
+        startScheduleJob(5 * 1000);
         updateHomeInfo();
     }
 
@@ -173,9 +174,7 @@ public class HomeFragment extends BaseFragment {
     public void onTimeUp(int count) {
         super.onTimeUp(count);
         if (getUserVisibleHint()) {
-            if (count % 5 == 0) {
-                mHomeBanner.nextAdvertisement();
-            }
+            mHomeBanner.nextAdvertisement();
         }
     }
 
@@ -188,7 +187,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            startScheduleJob(1 * 1000);
+            startScheduleJob(5 * 1000);
         } else {
             stopScheduleJob();
         }
@@ -249,6 +248,7 @@ public class HomeFragment extends BaseFragment {
             case R.id.borrowMoney:
                 break;
             case R.id.idea:
+                Launcher.with(getActivity(), OpinionActivity.class).execute();
                 break;
             default:
                 break;

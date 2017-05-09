@@ -11,6 +11,7 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -70,7 +71,9 @@ public class ClipHeadImageActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(String data) {
                         if (!TextUtils.isEmpty(data)) {
-                            LocalUser.getUser().getUserInfo().setUserPortrait(data);
+                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                            userInfo.setUserPortrait(data);
+                            LocalUser.getUser().setUserInfo(userInfo);
                         }
                         setResult(RESULT_OK);
                         finish();

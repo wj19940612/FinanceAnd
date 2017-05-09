@@ -506,10 +506,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
 			AttentionAndFansNumberModel attentionAndFansNumberModel =
-					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
 			if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
 				for (EconomicCircle economicCircle : mEconomicCircleList) {

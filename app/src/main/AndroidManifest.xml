@@ -87,6 +87,9 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
+        <!--观点大神-->
+        <activity android:name=".activity.opinion.OpinionActivity"
+            android:screenOrientation="portrait"/>
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.ModifyUserInfoActivity"
