@@ -128,7 +128,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
         @Override
         public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA) {
+            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
                 updateListViewVisibleItem(data.getData());
                 mFutureListAdapter.addFutureData(data.getData());
             }
@@ -158,7 +158,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         } else {
                             lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
                             rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                            rate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
+                            rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                         }
                     }
                 }
@@ -167,9 +167,6 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void updateFutureData(List<Variety> varietyList) {
-        if (varietyList == null) {
-            return;
-        }
         stopRefreshAnimation();
         mFutureListAdapter.addAll(varietyList);
         if (varietyList.size() < 15) {

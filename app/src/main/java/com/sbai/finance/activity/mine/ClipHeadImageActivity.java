@@ -64,6 +64,7 @@ public class ClipHeadImageActivity extends BaseActivity {
     }
 
     private void confirmUserNewHeadImage(String bitmapToBase64) {
+        Log.d(TAG, "confirmUserNewHeadImage: "+bitmapToBase64.length());
         Client.updateUserHeadImage(bitmapToBase64)
                 .setIndeterminate(this)
                 .setTag(TAG)

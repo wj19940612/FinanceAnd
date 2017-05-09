@@ -33,15 +33,16 @@ public class HomeBanner extends FrameLayout {
     PageIndicator mPageIndicator;
 
     private AdvertisementAdapter mAdapter;
+    private int mInnerCounter;
 
     public interface OnViewClickListener {
         void onBannerClick(BannerModel information);
     }
 
-    private OnViewClickListener mListener;
+    private OnViewClickListener mOnViewClickListener;
 
-    public void setListener(OnViewClickListener listener) {
-        mListener = listener;
+    public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
+        mOnViewClickListener = onViewClickListener;
     }
 
     public HomeBanner(Context context) {
@@ -82,12 +83,26 @@ public class HomeBanner extends FrameLayout {
 
         @Override
         public void onPageScrollStateChanged(int state) {
+            if (state == ViewPager.SCROLL_STATE_IDLE) {
+                setInnerCounter(0);
+            }
         }
     };
 
     public void nextAdvertisement() {
         if (mAdapter != null && mAdapter.getCount() > 1) {
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+        }
+    }
+
+    public int getInnerCounter() {
+        return mInnerCounter;
+    }
+
+    public void setInnerCounter(int innerCounter) {
+        mInnerCounter = innerCounter;
+        if (mInnerCounter == 5) { // 5 seconds
+            nextAdvertisement();
         }
     }
 
@@ -104,7 +119,7 @@ public class HomeBanner extends FrameLayout {
             mPageIndicator.setCount(size);
 
             if (mAdapter == null) {
-                mAdapter = new AdvertisementAdapter(getContext(), informationList, mListener);
+                mAdapter = new AdvertisementAdapter(getContext(), informationList, mOnViewClickListener);
                 mViewPager.addOnPageChangeListener(mOnPageChangeListener);
                 mViewPager.setAdapter(mAdapter);
             } else {

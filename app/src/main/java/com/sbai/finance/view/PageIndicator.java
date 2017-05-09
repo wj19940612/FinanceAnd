@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.sbai.finance.R;
 
+
 public class PageIndicator extends View {
 
     private int mCount;
@@ -90,7 +91,7 @@ public class PageIndicator extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = measureDimension(widthMeasureSpec, (mPointRadius * 2 * mCount + (mCount - 1) * mInterval));
+        int width = measureDimension(widthMeasureSpec, mPointRadius * 2 * mCount + (mCount - 1) * mInterval);
         int height = measureDimension(heightMeasureSpec, mPointRadius * 2);
 
         setMeasuredDimension(width, height);
@@ -142,6 +143,7 @@ public class PageIndicator extends View {
         if (mCount != count) {
             mCount = count;
             invalidate();
+            requestLayout();
         }
     }
 

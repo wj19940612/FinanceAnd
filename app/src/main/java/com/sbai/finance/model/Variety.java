@@ -40,7 +40,7 @@ public class Variety implements Parcelable {
     private String displayMarketTimes;
     private int exchangeId;
     private int exchangeStatus;
-    private int flashChartPriceInterval;
+    private double flashChartPriceInterval;
     private int marketPoint;
     private String openMarketTime;
     private String smallVarietyTypeCode; //期货小类 smallVarietyTypeCode china 国内 foreign 国外 //外汇小类 directPlate 直盘 noDirectPlate 非直盘 crossPlate 交叉盘 //股票 exponent 指数
@@ -97,11 +97,11 @@ public class Variety implements Parcelable {
         this.exchangeStatus = exchangeStatus;
     }
 
-    public int getFlashChartPriceInterval() {
+    public double getFlashChartPriceInterval() {
         return flashChartPriceInterval;
     }
 
-    public void setFlashChartPriceInterval(int flashChartPriceInterval) {
+    public void setFlashChartPriceInterval(double flashChartPriceInterval) {
         this.flashChartPriceInterval = flashChartPriceInterval;
     }
 
@@ -175,7 +175,7 @@ public class Variety implements Parcelable {
         dest.writeString(this.displayMarketTimes);
         dest.writeInt(this.exchangeId);
         dest.writeInt(this.exchangeStatus);
-        dest.writeInt(this.flashChartPriceInterval);
+        dest.writeDouble(this.flashChartPriceInterval);
         dest.writeInt(this.marketPoint);
         dest.writeString(this.openMarketTime);
         dest.writeString(this.smallVarietyTypeCode);
@@ -196,7 +196,7 @@ public class Variety implements Parcelable {
         this.displayMarketTimes = in.readString();
         this.exchangeId = in.readInt();
         this.exchangeStatus = in.readInt();
-        this.flashChartPriceInterval = in.readInt();
+        this.flashChartPriceInterval = in.readDouble();
         this.marketPoint = in.readInt();
         this.openMarketTime = in.readString();
         this.smallVarietyTypeCode = in.readString();
