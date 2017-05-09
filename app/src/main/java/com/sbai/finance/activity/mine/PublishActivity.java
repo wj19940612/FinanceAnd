@@ -28,7 +28,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.mine.UserPublishModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -80,7 +79,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             mPublishAdapter.setIsHimSelf(true);
             mTitleBar.setTitle(R.string.mine_publish);
         } else {
-            mTitleBar.setTitle(UserInfo.isGril(userSex) ? R.string.her_publish : R.string.his_publish);
+            mTitleBar.setTitle(R.string.her_publish);
             mPublishAdapter.setIsHimSelf(false);
         }
 
@@ -96,7 +95,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, (mUserId!=-1&&mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, (mUserId != -1 && mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
@@ -179,7 +178,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         if (item != null) {
             Launcher.with(getActivity(), OpinionDetailsActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                    .putExtra(Launcher.EX_PAYLOAD_2,false)
+                    .putExtra(Launcher.EX_PAYLOAD_2, false)
                     .executeForResult(100);
         }
     }

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -395,21 +396,23 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				}
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
-
 				if (item.getDirection() == 1) {
 					if (item.getGuessPass() == 1) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
 					} else if(item.getGuessPass() == 2){
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
+					} else {
+						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
 					}
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+
 				} else {
 					if (item.getGuessPass() == 1) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
 					} else if(item.getGuessPass() == 2){
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
+					} else {
+						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
 					}
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
 				}
 
 				mBigVarietyName.setText(item.getBigVarietyTypeName());
@@ -489,7 +492,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				if (item == null) return;
 				mUserName.setText(item.getUserName());
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-				mLocation.setText(item.getLand());
+				if (TextUtils.isEmpty(item.getLand())) {
+					mLocation.setText(R.string.no_location_information);
+				} else {
+					mLocation.setText(item.getLand());
+				}
+
 				mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(item.getMoney())));
 				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
 				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));

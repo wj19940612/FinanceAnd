@@ -178,7 +178,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
-                UploadUserImageDialogFragment.newInstance().show(getSupportFragmentManager());
+                UploadUserImageDialogFragment.newInstance(true).show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
                 Launcher.with(getActivity(), ModifyUserNameActivity.class).executeForResult(REQ_CODE_USER_NAME);
