@@ -67,6 +67,8 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="12dp"
             android:textColor="@color/opinionText"
+            android:lines="2"
+            android:ellipsize="end"
             android:textSize="14sp"
             tools:text="           黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
     </RelativeLayout>

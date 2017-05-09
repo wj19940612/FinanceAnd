@@ -6,33 +6,68 @@ package com.sbai.finance.model;
 
 public class BorrowOut {
 
+
     /**
-     * content : 测试内容4tsw
-     * contentImg : 测试内容7814
-     * createTime : 51854
-     * days : 34432
-     * interest : 45666
-     * loanId : 33244
-     * location : 1
-     * money : 40768
-     * portrait : 测试内容7ye6
-     * status : 32604
-     * userId : 25508
-     * userName : 测试内容44k1
+     * auditActorId : 0
+     * auditTime : 1494232710000
+     * confirmTime : 1494232604000
+     * content : 再来一辆，two
+     * contentImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494232604479.png
+     * createDate : 1494232604000
+     * days : 30
+     * endlineTime : 1494319110000
+     * id : 52
+     * intentionCount : 1
+     * intentionTime : 2017-05-08 16:39:34.0
+     * interest : 201
+     * modifyDate : 1494232774000
+     * money : 2000
+     * status : 3
+     * userId : 157
+     * userName : 用户1670
      */
 
+    private int auditActorId;
+    private long auditTime;
+    private long confirmTime;
     private String content;
     private String contentImg;
-    private int createTime;
+    private long createDate;
     private int days;
+    private long endlineTime;
+    private int id;
+    private int intentionCount;
+    private String intentionTime;
     private int interest;
-    private int loanId;
-    private int location;
+    private long modifyDate;
     private int money;
-    private String portrait;
     private int status;
     private int userId;
     private String userName;
+
+    public int getAuditActorId() {
+        return auditActorId;
+    }
+
+    public void setAuditActorId(int auditActorId) {
+        this.auditActorId = auditActorId;
+    }
+
+    public long getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(long auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public long getConfirmTime() {
+        return confirmTime;
+    }
+
+    public void setConfirmTime(long confirmTime) {
+        this.confirmTime = confirmTime;
+    }
 
     public String getContent() {
         return content;
@@ -50,12 +85,12 @@ public class BorrowOut {
         this.contentImg = contentImg;
     }
 
-    public int getCreateTime() {
-        return createTime;
+    public long getCreateDate() {
+        return createDate;
     }
 
-    public void setCreateTime(int createTime) {
-        this.createTime = createTime;
+    public void setCreateDate(long createDate) {
+        this.createDate = createDate;
     }
 
     public int getDays() {
@@ -66,6 +101,38 @@ public class BorrowOut {
         this.days = days;
     }
 
+    public long getEndlineTime() {
+        return endlineTime;
+    }
+
+    public void setEndlineTime(long endlineTime) {
+        this.endlineTime = endlineTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getIntentionCount() {
+        return intentionCount;
+    }
+
+    public void setIntentionCount(int intentionCount) {
+        this.intentionCount = intentionCount;
+    }
+
+    public String getIntentionTime() {
+        return intentionTime;
+    }
+
+    public void setIntentionTime(String intentionTime) {
+        this.intentionTime = intentionTime;
+    }
+
     public int getInterest() {
         return interest;
     }
@@ -74,20 +141,12 @@ public class BorrowOut {
         this.interest = interest;
     }
 
-    public int getLoanId() {
-        return loanId;
+    public long getModifyDate() {
+        return modifyDate;
     }
 
-    public void setLoanId(int loanId) {
-        this.loanId = loanId;
-    }
-
-    public int getLocation() {
-        return location;
-    }
-
-    public void setLocation(int location) {
-        this.location = location;
+    public void setModifyDate(long modifyDate) {
+        this.modifyDate = modifyDate;
     }
 
     public int getMoney() {
@@ -96,14 +155,6 @@ public class BorrowOut {
 
     public void setMoney(int money) {
         this.money = money;
-    }
-
-    public String getPortrait() {
-        return portrait;
-    }
-
-    public void setPortrait(String portrait) {
-        this.portrait = portrait;
     }
 
     public int getStatus() {

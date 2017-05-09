@@ -1,9 +1,13 @@
 package com.sbai.finance.activity.economiccircle;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -25,10 +29,13 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.OpinionReply;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -48,8 +55,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+
+
 public class OpinionDetailsActivity extends BaseActivity {
 
+	public static final String REFRESH_ATTENTION = "refresh_attention";
 
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
@@ -95,6 +106,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	private OpinionDetails mOpinionDetails;
 	private List<OpinionReply> mOpinionReplyList;
 	private TextView mFootView;
+	private RefreshAttentionReceiver mReceiver;
 
 	private int mPage = 0;
 	private int mPageSize = 15;
@@ -116,8 +128,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 		mMyListView.setEmptyView(mEmpty);
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
-		requestOpinionDetails();
+		requestOpinionDetails(false);
 		initSwipeRefreshLayout();
+
+		registerRefreshReceiver();
 	}
 
 	private void initData(Intent intent) {
@@ -125,7 +139,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		mReplyId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
 
-	private void requestOpinionDetails() {
+	private void requestOpinionDetails(final boolean isSendBroadcast) {
 		Client.getOpinionDetails(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
 					@Override
@@ -133,6 +147,13 @@ public class OpinionDetailsActivity extends BaseActivity {
 						mOpinionDetails = opinionDetails;
 						updateOpinionDetails();
 						requestOpinionReplyList();
+
+						if (isSendBroadcast) {
+							Intent intent = new Intent(REFRESH_POINT);
+							intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
+									.sendBroadcast(intent);
+						}
 					}
 				}).fire();
 	}
@@ -144,7 +165,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			public void onRefresh() {
 				mSet.clear();
 				mPage = 0;
-				requestOpinionReplyList();
+				requestOpinionDetails(false);
 			}
 		});
 	}
@@ -156,7 +177,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 					.setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
 						@Override
 						protected void onRespSuccessData(List<OpinionReply> opinionReplyList) {
-							updateEconomicCircleList(opinionReplyList);
+							mOpinionReplyList = opinionReplyList;
+							updateEconomicCircleList(mOpinionReplyList);
 						}
 
 						@Override
@@ -238,16 +260,25 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
 
 			if (mOpinionDetails.getDirection() == 1) {
+				if (mOpinionDetails.getGuessPass() == 1) {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_succeed));
+				} else if(mOpinionDetails.getGuessPass() == 2){
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_failed));
+				}
 				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up));
 			} else {
+				if (mOpinionDetails.getGuessPass() == 1) {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_succeed));
+				} else if(mOpinionDetails.getGuessPass() == 2){
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_failed));
+				}
 				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down));
 			}
 
 			mBigVarietyName.setText(mOpinionDetails.getBigVarietyTypeName());
 			mVarietyName.setText(mOpinionDetails.getVarietyName());
 
-
-			if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
+			/*if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
 				mLastPrice.setText("--");
 				mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
@@ -281,7 +312,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 				}
 				mUpDownPercent.setText(mOpinionDetails.getRisePre());
-			}
+			}*/
 
 			if (mOpinionDetails.getIsPraise() == 1) {
 				mLoveNum.setSelected(true);
@@ -342,8 +373,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 			viewHolder.bindingData(mContext, (OpinionReply) getItem(position));
 			return convertView;
 		}
-
-
 
 
 		static class ViewHolder {
@@ -440,22 +469,21 @@ public class OpinionDetailsActivity extends BaseActivity {
 									if (resp.isSuccess()) {
 										if (mLoveNum.isSelected()) {
 											mLoveNum.setSelected(false);
-											mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+											mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+											mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 										} else {
 											mLoveNum.setSelected(true);
-											mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+											mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+											mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 										}
+										Intent intent = new Intent(REFRESH_POINT);
+										intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+										LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
+												.sendBroadcast(intent);
+
 									}
 								}
 							}).fire();
-				} else {
-					Launcher.with(this, LoginActivity.class).execute();
-				}
-				break;
-
-			case R.id.commentContent:
-				if (LocalUser.getUser().isLogin()) {
-
 				} else {
 					Launcher.with(this, LoginActivity.class).execute();
 				}
@@ -480,9 +508,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 										mPage = 0;
 										mSwipeRefreshLayout.setRefreshing(true);
 										requestOpinionReplyList();
-										requestOpinionDetails();
+										requestOpinionDetails(true);
 										mCommentContent.setText("");
-										mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
 										mScrollView.smoothScrollTo(0, 0);
 									}
 								}
@@ -494,6 +521,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			case R.id.avatar:
 				if (LocalUser.getUser().isLogin()) {
+                    ComponentName callingActivity = getCallingActivity();
+                    if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
+                        return;
+                    }
 					Launcher.with(this, UserDataActivity.class)
 							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
 							.execute();
@@ -501,6 +532,47 @@ public class OpinionDetailsActivity extends BaseActivity {
 					Launcher.with(this, LoginActivity.class).execute();
 				}
 				break;
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mReceiver = new RefreshAttentionReceiver();
+		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+	}
+
+	private class RefreshAttentionReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+			AttentionAndFansNumberModel attentionAndFansNumberModel =
+					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+
+
+			if (whetherAttentionShieldOrNot != null) {
+				if (whetherAttentionShieldOrNot.isFollow()) {
+					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
+				}
+			}
+
+			if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+				for (OpinionReply opinionReply : mOpinionReplyList) {
+					if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
+						if (whetherAttentionShieldOrNot.isFollow()) {
+							opinionReply.setIsAttention(2);
+							mOpinionReplyAdapter.notifyDataSetChanged();
+						} else {
+							opinionReply.setIsAttention(1);
+							mOpinionReplyAdapter.notifyDataSetChanged();
+						}
+						break;
+					}
+				}
+			}
 		}
 	}
 }

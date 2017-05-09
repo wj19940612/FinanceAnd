@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2017-04-19.
  */
 
-public class StockListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,CustomSwipeRefreshLayout.OnLoadMoreListener {
+public class StockListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -88,7 +88,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mListView.setEmptyView(mEmpty);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setAdapter(mListView,mListAdapter);
+        mSwipeRefreshLayout.setAdapter(mListView, mListAdapter);
 
         //测试数据 后期删除
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor("上证",
@@ -102,8 +102,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void requestStockData() {
         //获取股票列表
-        Client.getStockVariety(mPage,mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+        Client.getStockVariety(mPage, mPageSize,"").setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockData((ArrayList<Variety>) data);
@@ -114,7 +114,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private void requestStockIndexData() {
         //获取股票指数
         Client.getStockIndexVariety().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockIndexData((ArrayList<Variety>) data);
@@ -130,7 +130,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     // TODO: 2017/5/3 这边还没做完
     private SpannableString getSpannableStringByData(ArrayList<Variety> data, String market) {
-       //1. 获取当前Variety
+        //1. 获取当前Variety
         Variety variety = null;
         // 2.判断涨跌
         int s2Color = R.color.redPrimary;
@@ -145,9 +145,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
 
     private void updateStockData(ArrayList<Variety> data) {
-        if (data == null){
-            return;
-        }
         stopRefreshAnimation();
         mListAdapter.addAll(data);
         if (data.size() < mPageSize) {
@@ -185,7 +182,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     @Override
     public void onLoadMore() {
-         requestStockData();
+        requestStockData();
     }
 
     private void stopRefreshAnimation() {

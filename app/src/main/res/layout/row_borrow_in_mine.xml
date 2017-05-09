@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              xmlns:tool="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -212,7 +213,13 @@
             android:textSize="14sp"
             android:text="@string/helper"/>
         <com.sbai.finance.view.MyGridView
+            android:id="@+id/gridView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:minHeight="69dp"
+            android:numColumns="4"
+            android:horizontalSpacing="8dp"
+            android:verticalSpacing="8dp"
+            />
     </LinearLayout>
 </LinearLayout>

@@ -1,6 +1,13 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
+<<<<<<< HEAD
+=======
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+>>>>>>> dev
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,8 +24,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
@@ -56,6 +65,7 @@ public class BorrowActivity extends BaseActivity {
 	CheckBox mAgree;
 
 	private PhotoGridAdapter mPhotoGridAdapter;
+	private String mImagePath;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,10 +76,22 @@ public class BorrowActivity extends BaseActivity {
 
 	private void initView() {
 		mPhotoGridAdapter = new PhotoGridAdapter(this);
+		mPhotoGridAdapter.add("");
 		mPhotoGridAdapter.setOnItemClickListener(new PhotoGridAdapter.OnItemClickListener() {
 			@Override
 			public void onClick(int position) {
-				UploadUserImageDialogFragment.newInstance(true).show(getSupportFragmentManager());
+				if (mPhotoGridAdapter.getCount()>4){
+					return;
+				}
+				UploadHelpImageDialogFragment.newInstance()
+						.setOnDismissListener(new UploadHelpImageDialogFragment.OnDismissListener() {
+							@Override
+							public void onGetImagePath(String path) {
+								mImagePath= path;
+								updateHelpImage(mImagePath);
+							}
+						})
+				        .show(getSupportFragmentManager());
 			}
 		});
 		mPhotoGv.setFocusable(false);
@@ -83,17 +105,6 @@ public class BorrowActivity extends BaseActivity {
 				    setPublishStatus();
 				}
 		});
-
-
-        if(LocalUser.getUser().isLogin()){
-			String photo1 = LocalUser.getUser().getUserInfo().getUserPortrait();
-			mPhotoGridAdapter.add(photo1);
-			mPhotoGridAdapter.add(photo1);
-			mPhotoGridAdapter.add(photo1);
-			mPhotoGridAdapter.add(photo1);
-		}
-		mPhotoGridAdapter.add(" ");
-		mPhotoGridAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -107,18 +118,17 @@ public class BorrowActivity extends BaseActivity {
 		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
 		String content = mBorrowRemark.getText().toString();
 		StringBuilder contentImg = new StringBuilder();
-		int phontAmount =mPhotoGridAdapter.getCount();
-		for (int i = 0; i<phontAmount-1;i++){
+		int phoneAmount =mPhotoGridAdapter.getCount();
+		for (int i = 0; i<phoneAmount-1;i++){
 			ImageView imageView = (ImageView) mPhotoGv.getChildAt(i).findViewById(R.id.photoImg);
 			String bitmapToBase64 = ImageUtils.bitmapToBase64(imageView.getDrawingCache());
-			if (i<=phontAmount-1){
+			if (i<=phoneAmount-1){
 				contentImg.append(bitmapToBase64+",");
 			}else{
 				contentImg.append(bitmapToBase64);
 			}
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
-
 	}
 	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
@@ -194,6 +204,13 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowInterest.removeTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.removeTextChangedListener(mBorrowTimeLimitValidationWatcher);
 	}
+	private void updateHelpImage(String helpImagePath) {
+        if (!TextUtils.isEmpty(helpImagePath)){
+			mPhotoGridAdapter.insert(helpImagePath,mPhotoGridAdapter.getCount()-1);
+			mPhotoGridAdapter.notifyDataSetChanged();
+		}
+	}
+
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
@@ -239,31 +256,11 @@ public class BorrowActivity extends BaseActivity {
 					}
 				});
 			}else{
-				ViewHolder viewHolder;
-				if (convertView == null) {
-					convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_photo, null);
-					viewHolder = new ViewHolder(convertView, getContext());
-					convertView.setTag(viewHolder);
-				} else {
-					viewHolder = (ViewHolder) convertView.getTag();
-				}
-				viewHolder.bindingData(getItem(position));
+				 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_photo, null);
+				 ImageView mPhotoImg = (ImageView) convertView.findViewById(R.id.photoImg);
+				 Glide.with(getContext()).load(getItem(position)).into(mPhotoImg);
 			}
 			return convertView;
-		}
-		static class ViewHolder {
-			@BindView(R.id.photoImg)
-			ImageView mPhotoImg;
-			private Context mContext;
-			ViewHolder(View view, Context context) {
-				mContext = context;
-				ButterKnife.bind(this, view);
-				view.setClickable(false);
-			}
-
-			public void bindingData(String item) {
-				Glide.with(mContext).load(item).into(mPhotoImg);
-			}
 		}
 	}
 }

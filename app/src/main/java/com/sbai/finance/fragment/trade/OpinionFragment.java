@@ -171,7 +171,7 @@ public class OpinionFragment extends BaseFragment {
     }
 
 
-    //局部刷新
+    //刷新某条点赞和评论
     public void updateItemById(int id, int replyCount, int praiseCount) {
         int position = 0;
         for (Opinion opinion : mOpinionList) {
@@ -186,6 +186,16 @@ public class OpinionFragment extends BaseFragment {
         mOpinionAdapter.notifyItemChanged(position);
     }
 
+    //根据user id刷新关注
+    public void updateItemByUserId(int userId, boolean isAttention) {
+        int attentionStatus = isAttention ? 2 : 1;  //2已关注 1 未关注
+        for (Opinion opinion : mOpinionList) {
+            if (opinion.getUserId() == userId) {
+                opinion.setIsAttention(attentionStatus);
+            }
+        }
+        mOpinionAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onDestroyView() {
@@ -218,12 +228,30 @@ public class OpinionFragment extends BaseFragment {
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_default_avatar_big)
                     .into((ImageView) helper.getView(R.id.avatar));
-            if (item.getDirection() == 1) {
-                ((TextView) helper.getView(R.id.opinion))
-                        .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up));
+            if (item.getGuessPass() == 0) {
+                if (item.getDirection() == 1) {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up));
+                } else {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down));
+                }
+            } else if (item.getGuessPass() == 1) {
+                if (item.getDirection() == 1) {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up_succeed));
+                } else {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down_succeed));
+                }
             } else {
-                ((TextView) helper.getView(R.id.opinion))
-                        .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down));
+                if (item.getDirection() == 1) {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up_failed));
+                } else {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down_failed));
+                }
             }
             helper.getView(R.id.avatar).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -240,17 +268,25 @@ public class OpinionFragment extends BaseFragment {
             helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                            .execute();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             });
             helper.getView(R.id.commentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                            .execute();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             });
         }

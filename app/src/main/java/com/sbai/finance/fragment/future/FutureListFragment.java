@@ -158,7 +158,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         } else {
                             lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
                             rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                            rate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
+                            rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                         }
                     }
                 }
@@ -309,11 +309,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                     } else {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                         mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
+                        mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                     }
                 } else {
                     mLastPrice.setText("--");
-                    mRate.setText("--.--%");
+                    mRate.setText("--");
                 }
 
                 if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {

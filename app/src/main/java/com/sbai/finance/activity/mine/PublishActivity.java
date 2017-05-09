@@ -177,7 +177,10 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         UserPublishModel item = (UserPublishModel) parent.getAdapter().getItem(position);
         if (item != null) {
-            Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+            Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                    .putExtra(Launcher.EX_PAYLOAD_2,false)
+                    .executeForResult(100);
         }
     }
 
