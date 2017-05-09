@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -100,6 +101,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
         if (data.size() < mPageSize) {
             mSwipeRefreshLayout.setEnabled(false);
+        } else {
+            mPage++;
+            mFeedbackAdapter.addFeedbackList(data);
         }
         mFeedbackAdapter.addFeedbackList(data);
 
@@ -118,7 +122,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
     }
 
     @Override
@@ -129,7 +132,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     @OnClick(R.id.reply)
-    public void onClick(View view){
+    public void onClick(View view) {
         requestSubmitReply();
     }
 
@@ -152,7 +155,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
 
         public void addFeedbackList(List<Feedback> list) {
-            mFeedbackList.addAll(list);
+            int length = list.size();
+            for (int i = length - 1; i > 0; i--) {
+                mFeedbackList.add(0, list.get(i));
+            }
             notifyDataSetChanged();
         }
 
@@ -187,7 +193,52 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            UserViewHolder userViewHolder = null;
+            CustomerViewHolder customerViewHolder = null;
+            switch (getItemViewType(position)) {
+                case TYPE_USER:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_feedback_user, null, false);
+                        userViewHolder = new UserViewHolder(convertView);
+                        convertView.setTag(userViewHolder);
+                    } else {
+                        userViewHolder = (UserViewHolder) convertView.getTag();
+                    }
+                    userViewHolder.bindingData(position, mFeedbackList);
+                    break;
+                case TYPE_CUSTOMER:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_feedback_user, null, false);
+                        customerViewHolder = new CustomerViewHolder(convertView);
+                        convertView.setTag(customerViewHolder);
+                    } else {
+                        customerViewHolder = (CustomerViewHolder) convertView.getTag();
+                    }
+                    customerViewHolder.bindingData(position, mFeedbackList);
+                    break;
+            }
+            return convertView;
+        }
+
+        static class UserViewHolder {
+            public UserViewHolder(View view) {
+
+            }
+
+            private void bindingData(int position, List<Feedback> list) {
+
+            }
+        }
+
+        static class CustomerViewHolder {
+            public CustomerViewHolder(View view) {
+
+            }
+
+            private void bindingData(int position, List<Feedback> list) {
+
+            }
         }
     }
+
 }

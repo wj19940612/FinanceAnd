@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.AttentionActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/detail"/>
+
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyLightAssist">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:stackFromBottom="true"
+                android:transcriptMode="normal"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/img_no_data"
+                android:gravity="center_horizontal"
+                android:paddingTop="150dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
+
+</LinearLayout>
