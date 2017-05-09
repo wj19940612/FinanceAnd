@@ -7,14 +7,14 @@ package com.sbai.finance.model;
 public class BorrowHelper {
 
     /**
-     * location : 测试内容iiuq
-     * portrait : 1
-     * userId : 71548
-     * userName : 测试内容5bts
+     * location : 天津市-天津市-静海县
+     * portrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494305494899.png
+     * userId : 150
+     * userName : 三十个黄三
      */
 
     private String location;
-    private int portrait;
+    private String portrait;
     private int userId;
     private String userName;
 
@@ -26,11 +26,11 @@ public class BorrowHelper {
         this.location = location;
     }
 
-    public int getPortrait() {
+    public String getPortrait() {
         return portrait;
     }
 
-    public void setPortrait(int portrait) {
+    public void setPortrait(String portrait) {
         this.portrait = portrait;
     }
 

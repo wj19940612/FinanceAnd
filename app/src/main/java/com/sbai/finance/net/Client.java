@@ -787,6 +787,11 @@ public class Client {
     public static API getBorrowOutHisList() {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
+    public static API getPhone(Integer loanId){
+		return new API("coterie/help/loan/callPhone.do",
+				new ApiParams()
+						.put("loanId", loanId));
+	}
 
     /**
      * 发表观点
@@ -814,6 +819,13 @@ public class Client {
                         .put("varietyType", varietyType));
     }
 
+	/**
+	 * 获取观点大神
+	 * @return
+	 */
+	public static API getViewPointMaster() {
+		return new API("/statistics/statistics/viewpointGod.do");
+	}
     /**
      * 检测是否已经预测'看涨'看跌'
      *

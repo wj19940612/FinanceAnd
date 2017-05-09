@@ -25,6 +25,7 @@ public class BorrowOut {
      * status : 3
      * userId : 157
      * userName : 用户1670
+     * location:杭州
      */
 
     private int auditActorId;
@@ -44,6 +45,15 @@ public class BorrowOut {
     private int status;
     private int userId;
     private String userName;
+    private String location;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public int getAuditActorId() {
         return auditActorId;
