@@ -53,6 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.R.string.item;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 
 public class OpinionDetailsActivity extends BaseActivity {
@@ -147,7 +148,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 						if (isSendBroadcast) {
 							Intent intent = new Intent(REFRESH_POINT);
-							intent.putExtra(Launcher.EX_PAYLOAD,mOpinionDetails);
+							intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
 							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
 									.sendBroadcast(intent);
 						}
@@ -257,16 +258,25 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
 
 			if (mOpinionDetails.getDirection() == 1) {
+				if (mOpinionDetails.getGuessPass() == 1) {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_succeed));
+				} else if(mOpinionDetails.getGuessPass() == 2){
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_failed));
+				}
 				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up));
 			} else {
+				if (mOpinionDetails.getGuessPass() == 1) {
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_succeed));
+				} else if(mOpinionDetails.getGuessPass() == 2){
+					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_failed));
+				}
 				mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down));
 			}
 
 			mBigVarietyName.setText(mOpinionDetails.getBigVarietyTypeName());
 			mVarietyName.setText(mOpinionDetails.getVarietyName());
 
-
-			if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
+			/*if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
 				mLastPrice.setText("--");
 				mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
@@ -278,7 +288,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLastPrice.setText(mOpinionDetails.getLastPrice());
 			}
 
-		/*	if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
+			if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
 				mUpDownPrice.setText("--");
 				mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
 			} else {
@@ -361,8 +371,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 			viewHolder.bindingData(mContext, (OpinionReply) getItem(position));
 			return convertView;
 		}
-
-
 
 
 		static class ViewHolder {

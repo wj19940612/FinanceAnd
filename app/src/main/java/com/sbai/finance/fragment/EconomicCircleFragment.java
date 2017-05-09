@@ -397,8 +397,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 
 				if (item.getDirection() == 1) {
+					if (item.getGuessPass() == 1) {
+						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
+					} else if(item.getGuessPass() == 2){
+						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
+					}
 					mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
 				} else {
+					if (item.getGuessPass() == 1) {
+						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
+					} else if(item.getGuessPass() == 2){
+						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
+					}
 					mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
 				}
 
