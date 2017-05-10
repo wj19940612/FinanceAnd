@@ -31,7 +31,7 @@ import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
-import com.sbai.finance.model.FutureData;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;

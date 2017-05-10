@@ -53,6 +53,9 @@
             android:name=".activity.home.EventActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.home.BorrowMoneyActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.home.OptionActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -151,7 +154,7 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.home.BorrowMoneyActivity">
+        <activity android:name=".activity.ContentImgActivity">
         </activity>
     </application>
 

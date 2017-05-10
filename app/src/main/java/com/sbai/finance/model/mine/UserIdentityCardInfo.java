@@ -32,7 +32,7 @@ public class UserIdentityCardInfo {
     private long createDate;
     private String realName;
     //	待审核0、审核通过1、审核未通过 2
-    private int status;
+    private Integer status;
 
     public int getAuditeDate() {
         return auditeDate;
@@ -90,11 +90,11 @@ public class UserIdentityCardInfo {
         this.realName = realName;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
