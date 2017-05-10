@@ -57,6 +57,8 @@ public abstract class Callback<T> extends ApiCallback<T> {
             } else {
                 onReceive(t);
             }
+        } else {
+            onReceive(t);
         }
     }
 
