@@ -70,7 +70,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:drawablePadding="16dp"
-                android:drawableTop="@drawable/img_no_data"
+                android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
                 android:text="暂无行情数据"
