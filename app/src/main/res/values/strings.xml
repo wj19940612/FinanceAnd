@@ -61,7 +61,7 @@
     <string name="future_china">国内期货</string>
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
-    <string name="rate">涨幅榜</string>
+    <string name="rate">涨跌幅</string>
     <string name="borrow_title">借款有道</string>
     <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="idea_title">观点大神</string>
@@ -89,6 +89,7 @@
     <string name="publish_point">发表观点</string>
     <string name="add_optional">+ 自选</string>
     <string name="delete_optional">取消自选</string>
+    <string name="whether_to_cancel_optional">是否要取消自选</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
@@ -168,16 +169,14 @@
     <string name="if_attention">是否关注%1$s?</string>
 
     <string name="new_notification">新消息通知</string>
-    <string name="want_to_help_you">     想要帮助你</string>
-    <string name="accept_your_help">     接受了你的帮助</string>
-    <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
-
+    <string name="submit_success">提交成功</string>
 
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
     <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
+    <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
@@ -258,6 +257,7 @@
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">阅读并同意</string>
     <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
+    <string name="publish_success">发布成功</string>
 
     <!--mutual-->
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>

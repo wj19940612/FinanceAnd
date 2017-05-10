@@ -20,7 +20,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.FutureData;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;

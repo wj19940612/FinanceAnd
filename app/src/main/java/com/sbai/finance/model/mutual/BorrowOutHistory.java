@@ -1,79 +1,55 @@
-package com.sbai.finance.model;
+package com.sbai.finance.model.mutual;
 
 /**
  * Created by Administrator on 2017-04-28.
  */
 
-public class BorrowInHis {
-    public static final int STATUS_FAIL_CHECK=2;
-    public static final int STATUS_FAIL=4;
+public class BorrowOutHistory {
     public static final int STATUS_PAY_INTENTION=6;
     public static final int STATUS_SUCCESS=7;
     public static final int STATUS_ALREADY_REPAY=8;
 
     /**
-     * auditActorId : 0
-     * auditTime : 1493945778000
-     * confirmTime : 1493956164000
-     * content : 开奖了
-     * contentImg : http://p3.music.126.net/Pn49qeCkJnXJ-HzJqne-RQ==/109951162920777044.jpg
-     * createDate : 1493890409000
-     * days : 20
-     * failMsg :
-     * id : 42
-     * intentionCount : 0
-     * interest : 200
-     * location :
-     * modifyDate : 1493976242000
+     * confirmTime : 77055
+     * content : 我要借钱
+     * contentImg : ssa
+     * createDate : 1493021623000
+     * days : 40
+     * endlineTime : 1493064823000
+     * failMsg : 借单撤销
+     * id : 2
+     * interest : 100
+     * location : 测试内容6z1p
+     * modifyDate : 1493103894000
      * money : 2000
-     * portrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493890323050.png
-     * selectedUserId : 19
-     * status : 7
-     * userId : 111
-     * userName : 用户2340
+     * portrait : 测试内容l022
+     * status : 8
+     * userId : 10
+     * userName : 测试内容iw7c
      */
 
-    private int auditActorId;
-    private long auditTime;
-    private long confirmTime;
+    private int confirmTime;
     private String content;
     private String contentImg;
     private long createDate;
     private int days;
+    private long endlineTime;
     private String failMsg;
     private int id;
-    private int intentionCount;
     private int interest;
     private String location;
     private long modifyDate;
     private int money;
     private String portrait;
-    private int selectedUserId;
     private int status;
     private int userId;
     private String userName;
 
-    public int getAuditActorId() {
-        return auditActorId;
-    }
-
-    public void setAuditActorId(int auditActorId) {
-        this.auditActorId = auditActorId;
-    }
-
-    public long getAuditTime() {
-        return auditTime;
-    }
-
-    public void setAuditTime(long auditTime) {
-        this.auditTime = auditTime;
-    }
-
-    public long getConfirmTime() {
+    public int getConfirmTime() {
         return confirmTime;
     }
 
-    public void setConfirmTime(long confirmTime) {
+    public void setConfirmTime(int confirmTime) {
         this.confirmTime = confirmTime;
     }
 
@@ -109,6 +85,14 @@ public class BorrowInHis {
         this.days = days;
     }
 
+    public long getEndlineTime() {
+        return endlineTime;
+    }
+
+    public void setEndlineTime(long endlineTime) {
+        this.endlineTime = endlineTime;
+    }
+
     public String getFailMsg() {
         return failMsg;
     }
@@ -123,14 +107,6 @@ public class BorrowInHis {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getIntentionCount() {
-        return intentionCount;
-    }
-
-    public void setIntentionCount(int intentionCount) {
-        this.intentionCount = intentionCount;
     }
 
     public int getInterest() {
@@ -171,14 +147,6 @@ public class BorrowInHis {
 
     public void setPortrait(String portrait) {
         this.portrait = portrait;
-    }
-
-    public int getSelectedUserId() {
-        return selectedUserId;
-    }
-
-    public void setSelectedUserId(int selectedUserId) {
-        this.selectedUserId = selectedUserId;
     }
 
     public int getStatus() {

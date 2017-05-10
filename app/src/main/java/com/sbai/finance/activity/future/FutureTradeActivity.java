@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.future;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,12 +32,12 @@ import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
-import com.sbai.finance.model.FutureData;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -49,6 +50,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -249,7 +251,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             public void onTradeButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), TradeWebActivity.class).execute();
-                }else {
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
@@ -352,20 +354,33 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
     private void requestDeleteOptional() {
-        Client.delOptional(mVariety.getVarietyId())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
+                .setMessageTextSize(15)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                              mTradeFloatButtons.setHasAddInOpition(false);
-                        }else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
+                    public void onClick(Dialog dialog) {
+                        Client.delOptional(mVariety.getVarietyId())
+                                .setTag(TAG)
+                                .setIndeterminate(FutureTradeActivity.this)
+                                .setCallback(new Callback<Resp<JsonObject>>() {
+                                    @Override
+                                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                                        if (resp.isSuccess()) {
+                                            mTradeFloatButtons.setHasAddInOpition(false);
+                                        } else {
+                                            ToastUtil.curt(resp.getMsg());
+                                        }
+                                    }
+                                })
+                                .fire();
+                        dialog.dismiss();
                     }
                 })
-                .fire();
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setNegative(R.string.cancel)
+                .show();
     }
 
 
@@ -587,7 +602,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             if (details != null) {
                 mOpinionFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
             } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                mOpinionFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isFollow());
+                mOpinionFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
             } else {
                 mOpinionFragment.refreshPointList();
             }

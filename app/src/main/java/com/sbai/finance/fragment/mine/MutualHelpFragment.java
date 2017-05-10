@@ -333,23 +333,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 });
 
             }
-
-            /**
-             * @param context
-             * @param historyNewsModel
-             * @return 用户对应的动作的resId
-             */
-            private String getUserAction(Context context, HistoryNewsModel historyNewsModel) {
-                switch (historyNewsModel.getType()) {
-                    case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                        return context.getString(R.string.want_to_help_you);
-                    case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
-                        return context.getString(R.string.refuse_your_help);
-                    case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
-                        return context.getString(R.string.accept_your_help);
-                }
-                return "";
-            }
         }
     }
 }

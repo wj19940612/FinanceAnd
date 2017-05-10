@@ -434,7 +434,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 				} else {
 					mLoveNum.setSelected(false);
 				}
-				mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+				if (item.getPraiseCount() > 999) {
+					mLoveNum.setText("999+");
+				} else {
+					mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+				}
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -446,10 +450,22 @@ public class OpinionDetailsActivity extends BaseActivity {
 											if (resp.isSuccess()) {
 												if (mLoveNum.isSelected()) {
 													mLoveNum.setSelected(false);
-													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+													if (item.getPraiseCount() >= 999) {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+														mLoveNum.setText("999+");
+													} else {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													}
 												} else {
 													mLoveNum.setSelected(true);
-													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+													if (item.getPraiseCount() > 1000) {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+														mLoveNum.setText("999+");
+													} else {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													}
 												}
 											}
 										}
@@ -476,18 +492,19 @@ public class OpinionDetailsActivity extends BaseActivity {
 										if (mLoveNum.isSelected()) {
 											mLoveNum.setSelected(false);
 											if (mOpinionDetails.getPraiseCount() >= 999) {
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
 												mLoveNum.setText("999+");
 											} else {
 												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
 												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 											}
-
 										} else {
 											mLoveNum.setSelected(true);
 											if (mOpinionDetails.getPraiseCount() > 1000) {
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
 												mLoveNum.setText("999+");
 											} else {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
 												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 											}
 										}

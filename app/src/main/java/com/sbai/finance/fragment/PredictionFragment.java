@@ -20,9 +20,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * Created by lixiaokuan0819 on 2017/4/24.
+ * Modified by John on 2017/5/10.
  */
-
 public class PredictionFragment extends DialogFragment {
 
     @BindView(R.id.bullishButton)
