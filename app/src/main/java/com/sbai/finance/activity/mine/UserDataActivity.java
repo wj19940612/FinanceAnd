@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.AvatarFragment;
+import com.sbai.finance.fragment.AvatarDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.UserData;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
@@ -205,7 +205,7 @@ public class UserDataActivity extends BaseActivity {
 
 			case R.id.avatar:
 				if (mUserData != null) {
-					AvatarFragment.newInstance(mUserData.getUserPortrait())
+					AvatarDialogFragment.newInstance(mUserData.getUserPortrait())
 							.show(getSupportFragmentManager());
 				}
 				break;

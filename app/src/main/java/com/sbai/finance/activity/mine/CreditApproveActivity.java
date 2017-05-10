@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
@@ -24,6 +25,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideRoundTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
 
@@ -146,6 +148,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     };
 
     private boolean checkSubmitEnable() {
+        Log.d(TAG, "checkSubmitEnable:  地址大小 " + mImagePath.size() + " 真实姓名 " + getRealName() + " 身份证 " + getIdentityCard().length());
         return mImagePath.size() > 1 && !TextUtils.isEmpty(getRealName()) && getIdentityCard().length() > 14;
     }
 
@@ -173,7 +176,17 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_REVERSE, false).show(getSupportFragmentManager());
                 break;
             case R.id.submit:
-                submitUserCreditApprove();
+                SmartDialog.with(this, R.string.if_submit_credit_approve)
+                        .setNegative(R.string.cancel)
+                        .setMessageTextSize(16)
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                submitUserCreditApprove();
+                            }
+                        }).show();
+
                 break;
         }
     }

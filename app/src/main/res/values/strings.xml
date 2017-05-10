@@ -178,6 +178,7 @@
     <string name="is_attention">已关注</string>
     <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
+    <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
