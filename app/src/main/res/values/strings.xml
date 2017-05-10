@@ -231,10 +231,10 @@
     <string name="bearish">看跌</string>
     <string name="prediction_rule">预测规则</string>
     <string name="big_god_to_predict_the_market_next_day">大神,来预测下一个交易日的涨跌</string>
-    <string name="prediction_rule1">1.每日开市到闭市之间(中午休市包含在内):预测下一个交易日的价格涨跌</string>
-    <string name="prediction_rule2">2.每日闭市到下一次开市之前:预测下一次开盘后的价格涨跌</string>
-    <string name="prediction_rule3">3.每次预测时间段内预测一次后,将不能进行重复预测</string>
-    <string name="prediction_rule4">4.预测成功率高的用户,将会登上我们的观点大神排行榜</string>
+    <string name="prediction_rule1">1.当前交易日开市后到下一个交易日开市前，预测下一个交易日的价格涨跌</string>
+    <string name="prediction_rule2">2.价格涨跌以开盘价与收盘价对比，开盘价高于收盘价则价格跌，开盘价低于收盘价，则价格涨</string>
+    <string name="prediction_rule3">3.每个预测时间段内预测一次后，将不能进行重复预测</string>
+    <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
     <string name="submit_has_empty">提  交</string>
     <string name="please_enter_the_text">请输入文字</string>
