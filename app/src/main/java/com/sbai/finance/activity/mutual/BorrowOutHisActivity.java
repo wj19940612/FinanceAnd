@@ -21,10 +21,9 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.sbai.finance.CallPhone;
+import com.sbai.finance.model.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.BorrowOutHistory;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;

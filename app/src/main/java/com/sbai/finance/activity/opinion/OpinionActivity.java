@@ -17,11 +17,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.ViewPointMater;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +52,12 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             }
         });
         mOpinionListAdapter = new OpinionListAdapter(this);
+        mOpinionListAdapter.setOnClickListener(new OpinionListAdapter.OnClickListener() {
+            @Override
+            public void onClick(int userId) {
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
+        });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mOpinionListAdapter);
         mListView.setOnScrollListener(this);
@@ -99,12 +108,26 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             super(context,0);
             mContext = context;
         }
+        interface OnClickListener{
+            void onClick(int userId);
+        }
+        private OnClickListener mOnClickListener;
+        public void setOnClickListener(OnClickListener onClickListener){
+            mOnClickListener = onClickListener;
+        }
         @NonNull
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_opinion_master, parent, false);
+                ImageView userImage= (ImageView) convertView.findViewById(R.id.userImg);
+                userImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnClickListener.onClick(getItem(position).getUserId());
+                    }
+                });
                 viewHolder = new  ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
