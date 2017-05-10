@@ -81,13 +81,12 @@ public class IntroduceFragment extends BaseFragment {
     private void requestVarietyTradeIntroduce() {
         Client.getVarietyTradeIntroduce(mVariety.getVarietyId())
                 .setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>() {
+                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>(false) {
                     @Override
                     protected void onRespSuccessData(FutureIntroduce data) {
                         updateFutureIntroduce(data);
                     }
-                })
-                .fire();
+                }).fireSync();
     }
 
     private void updateFutureIntroduce(FutureIntroduce data) {
