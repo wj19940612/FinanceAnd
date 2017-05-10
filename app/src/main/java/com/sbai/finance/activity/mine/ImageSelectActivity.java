@@ -2,6 +2,7 @@ package com.sbai.finance.activity.mine;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -100,6 +102,12 @@ public class ImageSelectActivity extends BaseActivity {
         mImageSelectAdapter = new ImageSelectAdapter(this, listPath);
         mRecyclerView.setAdapter(mImageSelectAdapter);
         mImageSelectAdapter.setOnCheckedChangedListener(onCheckedChangedListener);
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notifyRefresh();
+            }
+        });
     }
 
     //选择图片变化的监听
@@ -237,6 +245,28 @@ public class ImageSelectActivity extends BaseActivity {
             else
                 list.add(imageData);
         }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == FragmentActivity.RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_TAKE_PHONE_FROM_PREVIEW:
+                    notifyRefresh();
+                    break;
+            }
+        }
+    }
+
+    //通知前一个页面刷新
+    private void notifyRefresh() {
+        Intent intent = new Intent();
+        intent.putExtra(Launcher.EX_PAYLOAD, listSelectedPath.get(0));
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 

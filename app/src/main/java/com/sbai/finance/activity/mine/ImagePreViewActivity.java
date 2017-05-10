@@ -44,9 +44,17 @@ public class ImagePreViewActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //直接发送反馈信息 发送完通知上一个页面
+                //通知上一个页面
+                notifyRefresh();
             }
         });
 
     }
+
+    private void notifyRefresh() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+
 }

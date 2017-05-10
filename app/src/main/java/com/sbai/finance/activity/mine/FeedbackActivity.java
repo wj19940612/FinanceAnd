@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,13 +16,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
 import com.sbai.finance.model.mine.Feedback;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -30,6 +37,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_PICTURE;
+import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_TEXT;
 
 /**
  * Created by linrongfang on 2017/5/8.
@@ -140,7 +150,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.send:
-                requestSubmitReply();
+                String content = mCommentContent.getText().toString().trim();
+                requestSendFeedback(content, CONTENT_TYPE_TEXT);
                 break;
             case R.id.addPic:
                 sendPicToCustomer();
@@ -148,19 +159,44 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
     }
 
-    private void requestSubmitReply() {
-        // TODO: 2017/5/8 内容未定
+    private void requestSendFeedback(String content, int contentType) {
+        Client.sendFeedback(content, contentType)
+                .setTag(TAG)
+                .setIndeterminate(FeedbackActivity.this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        // TODO: 2017/5/10 刷新界面
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                    }
+                })
+                .fireSync();
     }
 
-    private void sendPicToCustomer(){
+    private void sendPicToCustomer() {
         UploadFeedbackImageDialogFragment.newInstance()
                 .setOnDismissListener(new UploadFeedbackImageDialogFragment.OnDismissListener() {
                     @Override
                     public void onGetImagePath(String path) {
-
+                        requestSendFeedbackImage(path);
                     }
                 })
                 .show(getSupportFragmentManager());
+    }
+
+    private void requestSendFeedbackImage(String path) {
+        Glide.with(this).load("file://" + path).asBitmap().into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                String content = ImageUtils.bitmapToBase64(resource);
+                int contentType = CONTENT_TYPE_PICTURE;
+                requestSendFeedback(content, contentType);
+            }
+        });
     }
 
 

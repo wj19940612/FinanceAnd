@@ -6,6 +6,9 @@ package com.sbai.finance.model.mine;
 
 public class Feedback {
 
+    public static int CONTENT_TYPE_TEXT = 1;
+    public static int CONTENT_TYPE_PICTURE = 2;
+
     /**
      * contentType : 84125
      * content : 哈哈哈

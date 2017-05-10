@@ -21,6 +21,7 @@ import android.view.WindowManager;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.ImageSelectActivity;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.io.File;
@@ -137,6 +138,8 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+
         if (resultCode == FragmentActivity.RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_TAKE_PHONE_FROM_CAMERA:
@@ -150,7 +153,8 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
                     }
                     break;
                 case REQ_CODE_TAKE_PHONE_FROM_GALLERY:
-
+                    String mImagePath = data.getStringExtra(Launcher.EX_PAYLOAD);
+                    saveImagePage(mImagePath);
                     break;
             }
         }
