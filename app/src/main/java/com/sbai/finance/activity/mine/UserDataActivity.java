@@ -128,6 +128,7 @@ public class UserDataActivity extends BaseActivity {
 			Glide.with(getActivity()).load(mUserData.getUserPortrait())
 					.placeholder(R.drawable.ic_default_avatar_big)
 					.transform(new GlideCircleTransform(this))
+					.dontAnimate()
 					.into(mAvatar);
 
 			mUserName.setText(mUserData.getUserName());
