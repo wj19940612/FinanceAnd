@@ -23,7 +23,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/white"
                 android:headerDividersEnabled="true"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/empty"
@@ -34,11 +34,11 @@
                 android:drawablePadding="16dp"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
-                android:drawableTop="@drawable/img_no_record"
+                android:drawableTop="@drawable/img_no_message"
                 android:text="暂无行情数据"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
         </LinearLayout>
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

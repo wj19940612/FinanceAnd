@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -21,8 +20,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowOut;
-import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -36,8 +34,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.R.attr.data;
 
 public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnScrollListener{
     @BindView(R.id.swipeRefreshLayout)

@@ -1,8 +1,6 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,8 +18,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowHelper;
-import com.sbai.finance.model.BorrowIn;
+import com.sbai.finance.model.mutual.BorrowHelper;
+import com.sbai.finance.model.mutual.BorrowIn;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
