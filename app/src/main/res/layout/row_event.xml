@@ -31,7 +31,7 @@
             android:paddingRight="25dp"
             android:textSize="@dimen/list_hint_size"
             tool:text="中国财经网"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
         <TextView
             android:id="@+id/eventTime"
             android:layout_width="match_parent"

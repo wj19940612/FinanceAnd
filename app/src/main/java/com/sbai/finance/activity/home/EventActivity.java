@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -207,7 +208,12 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 				ButterKnife.bind(this, view);
 			}
 			private void bindDataWithView(EventModel item, int position, Context context) {
-			//	mEventSource.setText(item.getSource());
+				if (TextUtils.isEmpty(item.getSource())){
+					mEventSource.setVisibility(View.GONE);
+				}else{
+					mEventSource.setVisibility(View.VISIBLE);
+				}
+				mEventSource.setText(item.getSource());
 				mEventTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				mEventTitle.setText(item.getTitle());
 			}
