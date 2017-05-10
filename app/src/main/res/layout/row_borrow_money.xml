@@ -168,20 +168,14 @@
         android:textSize="14sp"
         tools:text="狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!"/>
 
-    <HorizontalScrollView
+    <LinearLayout
+        android:id="@+id/contentImg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/contentImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        </LinearLayout>
-    </HorizontalScrollView>
+    </LinearLayout>
 </LinearLayout>
