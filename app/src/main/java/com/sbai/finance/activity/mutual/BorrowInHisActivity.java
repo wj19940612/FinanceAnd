@@ -1,6 +1,8 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -20,14 +22,17 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.BorrowInHis;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -68,7 +73,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
         mBorrowInHisAdapter.setCallback(new BorrowInHisAdapter.Callback() {
             @Override
             public void OnItemCallClick(Integer id) {
-
+                requestPhone(id);
             }
 
             @Override
@@ -114,6 +119,27 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                        }
                    }
                }).fire();
+   }
+   private void requestPhone(Integer id){
+       Client.getPhone(id).setTag(TAG)
+               .setCallback(new Callback<Resp<CallPhone>>() {
+                   @Override
+                   protected void onRespSuccess(Resp<CallPhone> resp) {
+                       if (resp.isSuccess()){
+                           callPhone(resp.getData());
+                       }else {
+                           ToastUtil.curt(resp.getMsg());
+                       }
+                   }
+               }).fire();
+   }
+   private void callPhone(CallPhone phone){
+       if (phone.getSelectedPhone()!=null){
+           Intent intent=new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone.getSelectedPhone()));
+           startActivity(intent);
+       }else {
+           ToastUtil.curt(getString(R.string.no_phone));
+       }
    }
    private void updateBorrowHis(List<BorrowInHis> data){
        stopRefreshAnimation();
@@ -171,13 +197,13 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.OnItemCallClick(getItem(position).getUserId());
+                    mCallback.OnItemCallClick(getItem(position).getId());
                 }
             });
             mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.OnItemRepayClick(getItem(position).getUserId());
+                    mCallback.OnItemRepayClick(getItem(position).getId());
                 }
             });
             return convertView;
@@ -200,6 +226,8 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             TextView mAlreadyRepayment;
             @BindView(R.id.borrowStatus)
             LinearLayout mBorrowStatus;
+            @BindView(R.id.success)
+            LinearLayout mSuccess;
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
@@ -207,28 +235,57 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                SpannableString attentionSpannableString = null;
+                SpannableString attentionSpannableString;
+                String location =LocalUser.getUser().getUserInfo().getLand();
+                if (location==null){
+                    location = context.getString(R.string.no_location);
+                }
                 switch (item.getStatus()){
+                    case BorrowInHis.STATUS_FAIL_CHECK:
+                        mUserPortrait.setVisibility(View.GONE);
+                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.borrow_failure),
+                                " "+context.getString(R.string.not_allow),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
+                        mUserNameLand.setText(attentionSpannableString);
+                        mPublishTime.setText(context.getString(R.string.borrow_in_time,
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getConfirmTime())));
+                        mBorrowStatus.setVisibility(View.GONE);
+                        break;
                     case BorrowInHis.STATUS_FAIL:
                         mUserPortrait.setVisibility(View.GONE);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.borrow_failure),
                                 " "+item.getFailMsg(),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyTime())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getConfirmTime())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
-                    case BorrowInHis.STATUS_SUCCESS:
-                    case BorrowInHis.STATUS_PAY_INTENTION:
+                    case BorrowInHis.STATUS_SUCCESS:case BorrowInHis.STATUS_PAY_INTENTION:
                         mUserPortrait.setVisibility(View.VISIBLE);
-                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+"佛山",0.73f,
+                        Glide.with(context).load(item.getPortrait())
+                                .bitmapTransform(new GlideCircleTransform(context))
+                                .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
+                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+ location,0.73f,
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getModifyTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
                         mBorrowStatus.setVisibility(View.VISIBLE);
+                        mSuccess.setVisibility(View.VISIBLE);
                         mAlreadyRepayment.setVisibility(View.GONE);
                         break;
+                    case BorrowInHis.STATUS_ALREADY_REPAY:
+                        mUserPortrait.setVisibility(View.VISIBLE);
+                        Glide.with(context).load(item.getPortrait())
+                                .bitmapTransform(new GlideCircleTransform(context))
+                                .placeholder(R.drawable.help).into(mUserPortrait);
+                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,
+                                ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
+                        mUserNameLand.setText(attentionSpannableString);
+                        mPublishTime.setText(context.getString(R.string.borrow_in_time,
+                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                        mBorrowStatus.setVisibility(View.VISIBLE);
+                        mSuccess.setVisibility(View.GONE);
+                        mAlreadyRepayment.setVisibility(View.VISIBLE);
                     default:
                         break;
                 }

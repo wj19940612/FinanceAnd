@@ -41,7 +41,7 @@
                 android:drawablePadding="16dp"
                 android:drawableTop="@drawable/img_no_record"
                 android:gravity="center_horizontal"
-                android:paddingTop="150dp"
+                android:paddingTop="180dp"
                 android:textColor="@color/assistText"
                 android:textSize="20sp"/>
         </LinearLayout>

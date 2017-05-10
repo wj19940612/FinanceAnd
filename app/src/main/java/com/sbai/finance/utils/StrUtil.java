@@ -164,7 +164,7 @@ public class StrUtil {
             }
             res.setSpan(new RelativeSizeSpan(ratio2), start2, end2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             if (s3Color != Color.TRANSPARENT) {
-                res.setSpan(new ForegroundColorSpan(s2Color), start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                res.setSpan(new ForegroundColorSpan(s3Color), start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         return res;
@@ -187,6 +187,26 @@ public class StrUtil {
             res = new SpannableString(s1);
             if (s2Color != Color.TRANSPARENT) {
                 res.setSpan(new ForegroundColorSpan(s2Color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return res;
+    }
+    /**
+     * 设置 s1 颜色和字体大小
+     *
+     * @param s1
+     * @param ratio1
+     * @param s1Color
+     * @return 处理后的字符串
+     */
+    public static SpannableString mergeTextWithColor(String s1, float ratio1, int s1Color) {
+        SpannableString res = new SpannableString("");
+        if (!TextUtils.isEmpty(s1)) {
+            int end = s1.length();
+            res = new SpannableString(s1);
+            res.setSpan(new RelativeSizeSpan(ratio1), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (s1Color != Color.TRANSPARENT) {
+                res.setSpan(new ForegroundColorSpan(s1Color), 0, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         return res;

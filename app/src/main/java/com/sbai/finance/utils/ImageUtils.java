@@ -56,6 +56,11 @@ public class ImageUtils {
         return bitmapToBase64(compressScale(urlPath));
     }
 
+    public static String compressImageToBase64(Bitmap bitmap) {
+        return bitmapToBase64(compressScale(bitmap));
+    }
+
+
     /**
      * base64转为bitmap
      *

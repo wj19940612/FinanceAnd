@@ -137,9 +137,10 @@
                     android:id="@+id/borrowRemark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:gravity="left"
                     android:background="@null"
                     android:textColorHint="@color/hintText"
+                    android:textColor="@color/blackAssist"
                     android:textSize="@dimen/list_title_size"
                     android:hint="@string/borrow_remark_hint"/>
             </LinearLayout>

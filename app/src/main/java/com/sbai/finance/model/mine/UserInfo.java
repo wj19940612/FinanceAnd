@@ -10,9 +10,10 @@ import com.sbai.finance.model.LocalUser;
  */
 
 public class UserInfo implements Parcelable {
-
+    //	待审核0、审核通过1、审核未通过 2
+    public static final int CREDIT_IS_APPROVE_ING = 0;
     public static final int CREDIT_IS_ALREADY_APPROVE = 1;
-    public static final int CREDIT_IS_APPROVEING = 2;
+    public static final int CREDIT_IS_NOT_APPROVE = 2;
 
     public static final int SEX_BOY = 2;
     public static final int SEX_GIRL = 1;
@@ -39,7 +40,8 @@ public class UserInfo implements Parcelable {
     //用户头像网址
     private String userPortrait;
     private int agencyId;
-    private int certificationStatus;
+    //认证状态
+    private Integer certificationStatus;
     private long createTime;
     private int id;
     private long lastLoginTime;
@@ -48,7 +50,7 @@ public class UserInfo implements Parcelable {
     private int loginNum;
     private int modifyNickNameTimes;
     private String registrationIp;
-    //	0 未认证 1以认证 2待审核
+    //	待审核0、审核通过1、审核未通过 2
     private int status;
     //1 女 2男
     private int userSex;
@@ -125,11 +127,11 @@ public class UserInfo implements Parcelable {
         this.agencyId = agencyId;
     }
 
-    public int getCertificationStatus() {
+    public Integer getCertificationStatus() {
         return certificationStatus;
     }
 
-    public void setCertificationStatus(int certificationStatus) {
+    public void setCertificationStatus(Integer certificationStatus) {
         this.certificationStatus = certificationStatus;
     }
 

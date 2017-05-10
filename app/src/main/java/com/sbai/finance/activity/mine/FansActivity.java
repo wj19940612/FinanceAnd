@@ -30,6 +30,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -251,12 +252,19 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener, final int position) {
+            public void bindViewWithData(final UserFansModel item, final Context context, final OnUserFansClickListener onUserFansClickListener, final int position) {
                 if (item == null) return;
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
+
+                mUserHeadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context,UserDataActivity.class).putExtra(Launcher.USER_ID,item.getUserId()).execute();
+                    }
+                });
 
                 if (item.isNotAttention()) {
                     mRelive.setText(R.string.attention);

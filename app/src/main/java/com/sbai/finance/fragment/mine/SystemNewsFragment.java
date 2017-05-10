@@ -220,7 +220,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     break;
                 // 22.实名认证未通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
-                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_APPROVEING);
+                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
                     Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     break;
                 //   30.意向金支付成功

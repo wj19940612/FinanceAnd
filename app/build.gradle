@@ -50,7 +50,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 21
+//            minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
@@ -62,6 +62,7 @@ android {
             versionCode 3
             versionName "1.2"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+//            buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
         }
     }
 }
