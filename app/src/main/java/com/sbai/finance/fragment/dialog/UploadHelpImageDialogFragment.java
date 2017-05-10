@@ -3,7 +3,6 @@ package com.sbai.finance.fragment.dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -22,14 +20,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.ClipHeadImageActivity;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.io.File;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;

@@ -40,6 +40,12 @@ public class PredictionFragment extends DialogFragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, 0);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,13 +82,14 @@ public class PredictionFragment extends DialogFragment {
         unbinder.unbind();
     }
 
-    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener listener){
+    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener listener) {
         this.mOnPredictButtonListener = listener;
         return this;
     }
 
-    public interface OnPredictButtonListener{
+    public interface OnPredictButtonListener {
         void onBullishButtonClick();
+
         void onBearishButtonClick();
     }
 }

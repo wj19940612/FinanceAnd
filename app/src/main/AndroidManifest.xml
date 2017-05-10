@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.sbai.finance">
-
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- Storage -->
@@ -36,7 +36,7 @@
         <activity
             android:name=".activity.economiccircle.OpinionDetailsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity
             android:name=".activity.economiccircle.BorrowMoneyDetailsActivity"
             android:screenOrientation="portrait"/>
@@ -87,7 +87,8 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
-        <!--观点大神-->
+        
+        <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"
             android:screenOrientation="portrait"/>
@@ -129,6 +130,11 @@
         <activity android:name=".activity.trade.PublishOpinionActivity">
         </activity>
         <activity android:name=".activity.mine.CreditApproveActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
         </activity>
         <activity android:name=".activity.mine.CreditActivity">
         </activity>
@@ -136,9 +142,7 @@
         <!-- 交易 H5 -->
         <activity
             android:name=".activity.trade.TradeWebActivity"
-            android:screenOrientation="portrait"
-            />
-
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.web.BannerActivity"
             android:screenOrientation="portrait"/>
@@ -158,6 +162,8 @@
         <activity
             android:name=".activity.mine.TheDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.home.BorrowMoneyActivity">
+        </activity>
     </application>
 
 </manifest>

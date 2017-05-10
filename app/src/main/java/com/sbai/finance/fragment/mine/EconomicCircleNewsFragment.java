@@ -152,7 +152,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
             mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -223,16 +223,18 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     break;
                 //点赞帖子
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                    //点赞评论
-                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+
                     //.点赞动态，点击可跳转至观点页面  viewPointId为0
-                    if (historyNewsModel.getViewpointId() != 0) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
-                    } else {
+//                    if (historyNewsModel.getViewpointId() != 0) {
+//                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+//                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+//                    } else {
                         Launcher.with(getActivity(), OpinionDetailsActivity.class).
                                 putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
-                    }
+//                    }
+                    break;
+                //点赞评论
+                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
@@ -327,23 +329,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
 
-                switch (item.getType()) {
-                    //关注
-                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                        mContent.setVisibility(View.GONE);
-                        break;
-                    //点赞帖子
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                        mContent.setVisibility(View.GONE);
-                        break;
-                    //点赞评论
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                        mContent.setVisibility(View.VISIBLE);
-                        break;
-                    //评论
-                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
-                        mContent.setVisibility(View.VISIBLE);
-                        break;
+                if(TextUtils.isEmpty(item.getMsg())){
+                    mContent.setVisibility(View.GONE);
+                }else {
+                    mContent.setVisibility(View.VISIBLE);
                 }
 
                 if (userInfo != null) {
@@ -383,24 +372,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     }
                 });
 
-            }
-
-            private String getUserAction(Context context, HistoryNewsModel item) {
-                switch (item.getType()) {
-                    //关注
-                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                        return context.getString(R.string.attention_you);
-                    //点赞帖子
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                        return context.getString(R.string.like_your_publish);
-                    //点赞评论
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                        return context.getString(R.string.like_your_publish);
-                    //评论
-                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
-                        return context.getString(R.string.replay_you);
-                }
-                return "";
             }
         }
 

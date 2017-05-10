@@ -96,7 +96,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 })
                 .fire();
     }
-    private void requestHelper(final Integer id, final int position){
+    private void requestHelper(final int id, final int position){
         Client.getHelper(id).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowHelper>>,List<BorrowHelper>>() {
                     @Override
@@ -124,6 +124,33 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mBorrowInAdapter.clear();
         mBorrowInAdapter.addAll(data);
         mBorrowInAdapter.notifyDataSetChanged();
+        startScheduleJob(1000*60);
+    }
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        if (mListView!=null&&mBorrowInAdapter!=null&&mBorrowInAdapter.getCount()==0){
+            stopScheduleJob();
+            return;
+        }
+        updateEndLineData();
+    }
+    private void updateEndLineData(){
+        if(mListView!=null&&mBorrowInAdapter!=null){
+            int first = mListView.getFirstVisiblePosition();
+            int last = mListView.getLastVisiblePosition();
+            for (int i = first; i <= last; i++) {
+                BorrowIn borrowIn = mBorrowInAdapter.getItem(i);
+                View childView = mListView.getChildAt(i);
+                if (borrowIn!=null&&borrowIn.getStatus()==BorrowIn.STATUS_CHECKED&&childView!=null){
+                    TextView mEndLineTime = (TextView) childView.findViewById(R.id.endLineTime);
+                    SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getActivity().getString(R.string.call_helper),
+                            "\n" +getActivity().getString(R.string.end_line),"  "+DateUtil.compareTime(borrowIn.getEndlineTime()), 1.455f,1.455f,
+                            ContextCompat.getColor(getActivity(),R.color.opinionText), ContextCompat.getColor(getActivity(),R.color.redPrimary));
+                    mEndLineTime.setText(attentionSpannableString);
+                }
+            }
+        }
     }
     private void updateHelperData(Integer id, List<BorrowHelper> data, int position){
          if(mListView!=null&&mBorrowInAdapter!=null){
@@ -199,16 +226,6 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         mOnItemClickListener.onClick(getItem(position));
                     }
                 });
-                MyGridView mGridView= (MyGridView) convertView.findViewById(R.id.gridView);
-                ImageGridAdapter imageGridAdapter = new ImageGridAdapter(getContext());
-                imageGridAdapter.setOnItemClickListener(new ImageGridAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(BorrowHelper item) {
-                        ToastUtil.show(item.getUserName());
-                    }
-                });
-                mGridView.setAdapter(imageGridAdapter);
-
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
@@ -259,6 +276,15 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         mCallback.OnItemCancelBorrowClick(getItem(position).getId());
                     }
                 });
+                MyGridView mGridView= (MyGridView) convertView.findViewById(R.id.gridView);
+                ImageGridAdapter imageGridAdapter = new ImageGridAdapter(getContext());
+                imageGridAdapter.setOnItemClickListener(new ImageGridAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(BorrowHelper item) {
+                        ToastUtil.show(item.getUserName());
+                    }
+                });
+                mGridView.setAdapter(imageGridAdapter);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
@@ -282,6 +308,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
             TextView mEndLineTime;
             @BindView(R.id.opinion)
             TextView mOption;
+            @BindView(R.id.cancelBorrowIn)
+            TextView mCancelBorrowIn;
             @BindView(R.id.image1)
             ImageView mImage1;
             @BindView(R.id.image2)
@@ -300,12 +328,24 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mOption.setText(item.getContent());
-
-                SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.call_helper),
-                        "\n" +context.getString(R.string.end_line)," "+item.getEndlineTime(), 1.455f,1.455f,
-                        ContextCompat.getColor(context,R.color.opinionText), ContextCompat.getColor(context,R.color.redPrimary));
-                mEndLineTime.setText(attentionSpannableString);
-
+                SpannableString attentionSpannableString;
+                switch (item.getStatus()){
+                    case BorrowIn.STATUS_CHECKED:
+                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.call_helper),
+                                "\n" +context.getString(R.string.end_line),"  "+DateUtil.compareTime(item.getEndlineTime()), 1.455f,1.455f,
+                                ContextCompat.getColor(context,R.color.opinionText), ContextCompat.getColor(context,R.color.redPrimary));
+                        mEndLineTime.setText(attentionSpannableString);
+                        mCancelBorrowIn.setVisibility(View.VISIBLE);
+                        break;
+                    case BorrowIn.STATUS_NO_CHECK:
+                        attentionSpannableString = StrUtil.mergeTextWithColor(context.getString(R.string.on_checking),1.455f,
+                                ContextCompat.getColor(context,R.color.opinionText));
+                        mEndLineTime.setText(attentionSpannableString);
+                        mCancelBorrowIn.setVisibility(View.GONE);
+                        break;
+                    default:
+                        break;
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
                     case 0:

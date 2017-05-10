@@ -145,27 +145,30 @@ public class ModifyUserInfoActivity extends BaseActivity {
             age = Integer.parseInt(mAge.getSubText().trim());
         }
 
-        String land = "";
+        String land = null;
         if (!TextUtils.isEmpty(mLocation.getText())) {
             land = mLocation.getText().toString().trim();
         }
 
-        int sex = 0;
+        Integer sex = null;
         if (!TextUtils.isEmpty(mSex.getSubText().trim())) {
             sex = mSex.getSubText().equalsIgnoreCase(SEX_BOY) ? 2 : 1;
         }
-        Client.updateUserInfo(age, land, sex)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.hasData()) {
-                            Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
+        if (age != 0 || !TextUtils.isEmpty(land) || sex != null) {
+            Client.updateUserInfo(age, land, sex)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            setResult(RESULT_OK);
+                            if (resp.hasData()) {
+                                Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
+                            }
                         }
-                    }
-                })
-                .fireSync();
+                    })
+                    .fireSync();
+        }
     }
 
     @Override
@@ -178,7 +181,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
-                UploadUserImageDialogFragment.newInstance().show(getSupportFragmentManager());
+                UploadUserImageDialogFragment.newInstance(true).show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
                 Launcher.with(getActivity(), ModifyUserNameActivity.class).executeForResult(REQ_CODE_USER_NAME);
