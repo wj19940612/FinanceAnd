@@ -2,7 +2,7 @@ package com.sbai.finance.activity.mine;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.widget.CompoundButton;
 
 import com.sbai.finance.R;
@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 public class SetNotificationSwitchActivity extends AppCompatActivity {
 
     @BindView(R.id.acceptNewsSwitch)
-    SwitchCompat mAcceptNewsSwitch;
+    AppCompatCheckBox mAcceptNewsSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class SetNotificationSwitchActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 confirmAcceptNotification();
+                mAcceptNewsSwitch.setChecked(false);
             }
         });
     }
