@@ -1,12 +1,13 @@
 package com.sbai.finance.activity.mine;
 
+import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +25,8 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideRoundTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.CustomToast;
+import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
 
@@ -53,8 +56,9 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     @BindView(R.id.submit)
     AppCompatTextView mSubmit;
 
-
+    private boolean mEnable;
     private ArrayList<String> mImagePath;
+    private UserIdentityCardInfo mUserIdentityCardInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +66,11 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         setContentView(R.layout.activity_credit_approve);
         ButterKnife.bind(this);
         mImagePath = new ArrayList<>();
+        requestUserCreditApproveStatus();
         mRealNameInput.addTextChangedListener(mValidationWatcher);
         mIdentityCardNumber.addTextChangedListener(mIdentityCardApproveWatcher);
-        requestUserCreditApproveStatus();
+//        loadIdentityCardReserveImage("");
+//        loadIdentityCardFontImage("");
     }
 
 
@@ -86,22 +92,35 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                         userInfo.setStatus(data.getStatus());
                         LocalUser.getUser().setUserInfo(userInfo);
                         updateUserCreditStatus(data);
+                        mUserIdentityCardInfo = data;
                     }
                 })
                 .fireSync();
     }
 
     private void updateUserCreditStatus(UserIdentityCardInfo data) {
-        switch (data.getStatus()) {
-            case UserInfo.CREDIT_IS_NOT_APPROVE:
-                mSubmit.setText(R.string.submit_has_empty);
-                break;
-            case UserInfo.CREDIT_IS_APPROVE_ING:
-                mSubmit.setText(R.string.is_auditing);
-                break;
-            case UserInfo.CREDIT_IS_ALREADY_APPROVE:
-                mSubmit.setVisibility(View.GONE);
-                break;
+        if (data.getStatus() != null) {
+            switch (data.getStatus()) {
+                case UserInfo.CREDIT_IS_NOT_APPROVE:
+                    setViewEnable(true);
+                    mEnable = true;
+                    mSubmit.setText(R.string.submit_has_empty);
+                    break;
+                case UserInfo.CREDIT_IS_APPROVE_ING:
+                    mRealNameInput.removeTextChangedListener(mValidationWatcher);
+                    mIdentityCardNumber.removeTextChangedListener(mIdentityCardApproveWatcher);
+                    mSubmit.setText(R.string.is_auditing);
+                    mEnable = false;
+                    setViewEnable(false);
+                    break;
+                case UserInfo.CREDIT_IS_ALREADY_APPROVE:
+                    mRealNameInput.removeTextChangedListener(mValidationWatcher);
+                    mIdentityCardNumber.removeTextChangedListener(mIdentityCardApproveWatcher);
+                    setViewEnable(false);
+                    mEnable = false;
+                    mSubmit.setVisibility(View.GONE);
+                    break;
+            }
         }
         mRealNameInput.setText(data.getRealName());
         mIdentityCardNumber.setText(data.getCertCode());
@@ -109,9 +128,22 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         loadIdentityCardReserveImage(data.getCertBack());
     }
 
+    private void setViewEnable(boolean enable) {
+        mRealNameInput.setEnabled(enable);
+        mIdentityCardNumber.setEnabled(enable);
+        mIdentityCardFrontImage.setEnabled(enable);
+        mIdentityCardReverseImage.setEnabled(enable);
+        if (!enable) {
+            mNameClear.setVisibility(View.INVISIBLE);
+            mIdentityCardNumberClear.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            if (mUserIdentityCardInfo != null && mUserIdentityCardInfo.getStatus() != UserInfo.CREDIT_IS_NOT_APPROVE)
+                return;
             changeSubmitEnable();
             if (!TextUtils.isEmpty(s.toString())) {
                 mNameClear.setVisibility(View.VISIBLE);
@@ -161,7 +193,17 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_REVERSE, false).show(getSupportFragmentManager());
                 break;
             case R.id.submit:
-                submitUserCreditApprove();
+                SmartDialog.with(this, R.string.if_submit_credit_approve)
+                        .setNegative(R.string.cancel)
+                        .setMessageTextSize(16)
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                submitUserCreditApprove();
+                            }
+                        }).show();
+
                 break;
         }
     }
@@ -178,10 +220,13 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                         @Override
                         protected void onRespSuccess(Resp<JsonObject> resp) {
                             setResult(RESULT_OK);
+                            CustomToast.getInstance().showText(CreditApproveActivity.this, R.string.submit_success);
                             UserInfo userInfo = LocalUser.getUser().getUserInfo();
                             userInfo.setStatus(UserInfo.CREDIT_IS_APPROVE_ING);
                             LocalUser.getUser().setUserInfo(userInfo);
                             mSubmit.setText(R.string.is_auditing);
+                            mSubmit.setEnabled(false);
+                            setViewEnable(false);
                         }
                     })
                     .fire();
@@ -190,7 +235,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     @Override
     public void onImagePath(int index, String imagePath) {
-        Log.d(TAG, "onImagePath: " + index + "  地址 " + imagePath);
         mImagePath.add(index, imagePath);
         if (index == IDENTITY_CARD_FONT) {
             loadIdentityCardFontImage(imagePath);
@@ -201,17 +245,30 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     }
 
     private void loadIdentityCardReserveImage(String imagePath) {
-        Glide.with(this).load(imagePath).fitCenter()
-                .bitmapTransform(new GlideRoundTransform(this))
-                .placeholder(R.drawable.bg_add_identity_card_reserve)
-                .into(mIdentityCardReverseImage);
+        if (!TextUtils.isEmpty(imagePath)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                mIdentityCardReverseImage.setBackground(null);
+            }
+            Glide.with(this).load(imagePath)
+                    .centerCrop()
+                    .bitmapTransform(new GlideRoundTransform(this, 8))
+                    .error(R.drawable.bg_add_identity_card_reserve)
+                    .placeholder(R.drawable.bg_add_identity_card_reserve)
+                    .into(mIdentityCardReverseImage);
+        }
     }
 
     private void loadIdentityCardFontImage(String imagePath) {
-        Glide.with(this).load(imagePath).fitCenter()
-                .bitmapTransform(new GlideRoundTransform(this))
-                .placeholder(R.drawable.bg_add_identity_card_font)
-                .into(mIdentityCardFrontImage);
+        if (!TextUtils.isEmpty(imagePath)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                mIdentityCardFrontImage.setBackground(null);
+            }
+            Glide.with(this).load(imagePath)
+                    .bitmapTransform(new GlideRoundTransform(this, 8))
+                    .error(R.drawable.bg_add_identity_card_font)
+                    .placeholder(R.drawable.bg_add_identity_card_font)
+                    .into(mIdentityCardFrontImage);
+        }
     }
 
     private void changeSubmitEnable() {

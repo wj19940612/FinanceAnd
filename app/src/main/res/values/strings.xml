@@ -168,16 +168,14 @@
     <string name="if_attention">是否关注%1$s?</string>
 
     <string name="new_notification">新消息通知</string>
-    <string name="want_to_help_you">     想要帮助你</string>
-    <string name="accept_your_help">     接受了你的帮助</string>
-    <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
-
+    <string name="submit_success">提交成功</string>
 
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
     <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
+    <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>

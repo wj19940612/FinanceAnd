@@ -16,9 +16,12 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.market.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.net.stock.StockCallback;
+import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -90,12 +93,27 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockData() {
-        //获取股票列表
         Client.getStockVariety(mPage, mPageSize, null).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
-                        updateStockData((ArrayList<Variety>) data);
+                        updateStockData(data);
+                        requestStockMarketData(data);
+                    }
+                }).fireSync();
+    }
+
+    private void requestStockMarketData(List<Variety> data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Variety variety : data) {
+            stringBuilder.append(variety.getVarietyType()).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        Client.getStockMarketData(stringBuilder.toString())
+                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+                    @Override
+                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+
                     }
                 }).fireSync();
     }
@@ -133,7 +151,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
 
-    private void updateStockData(ArrayList<Variety> data) {
+    private void updateStockData(List<Variety> data) {
         stopRefreshAnimation();
         mListAdapter.addAll(data);
         if (data.size() < mPageSize) {
