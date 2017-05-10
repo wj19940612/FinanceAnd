@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
 import com.sbai.finance.model.mine.Feedback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -46,8 +48,11 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.commentContent)
     EditText mCommentContent;
-    @BindView(R.id.reply)
-    TextView mReply;
+    @BindView(R.id.addPic)
+    ImageButton mAddPic;
+    @BindView(R.id.send)
+    TextView mSend;
+
 
     private int mPage = 0;
     private int mPageSize = 15;
@@ -131,13 +136,31 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    @OnClick(R.id.reply)
+    @OnClick({R.id.send, R.id.addPic})
     public void onClick(View view) {
-        requestSubmitReply();
+        switch (view.getId()) {
+            case R.id.send:
+                requestSubmitReply();
+                break;
+            case R.id.addPic:
+                sendPicToCustomer();
+                break;
+        }
     }
 
     private void requestSubmitReply() {
         // TODO: 2017/5/8 内容未定
+    }
+
+    private void sendPicToCustomer(){
+        UploadFeedbackImageDialogFragment.newInstance()
+                .setOnDismissListener(new UploadFeedbackImageDialogFragment.OnDismissListener() {
+                    @Override
+                    public void onGetImagePath(String path) {
+
+                    }
+                })
+                .show(getSupportFragmentManager());
     }
 
 

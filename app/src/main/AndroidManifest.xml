@@ -87,7 +87,7 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
-        
+
         <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"
@@ -164,6 +164,10 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.home.BorrowMoneyActivity">
         </activity>
+        <!-- 选择相册图片 -->
+        <activity android:name=".activity.mine.ImageSelectActivity"/>
+        <!-- 相册图片预览 -->
+        <activity android:name=".activity.mine.ImagePreViewActivity"/>
     </application>
 
 </manifest>

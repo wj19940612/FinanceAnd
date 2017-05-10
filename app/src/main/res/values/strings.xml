@@ -297,4 +297,11 @@
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
     <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
+
+    <!-- feedback-->
+    <string name="send">发送</string>
+    <string name="gallery">相册</string>
+    <string name="preview">预览</string>
+    <string name="all_image">所有图片</string>
+
 </resources>
