@@ -19,7 +19,7 @@
           android:clickable="true"
           android:src="@drawable/help"/>
       <TextView
-          android:id="@+id/opinion"
+          android:id="@+id/userName"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:paddingRight="@dimen/common_padding"

@@ -30,7 +30,7 @@ import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
-import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.mutual.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.net.Callback;
