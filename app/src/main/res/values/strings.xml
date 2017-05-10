@@ -161,7 +161,7 @@
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
-    <string name="cancel_attention_dialog_title">是否不在关注“%1$s”\n取消关注?</string>
+    <string name="cancel_attention_dialog_title">是否不再关注%1$s?</string>
     <string name="cancel_attention">取消关注</string>
 
     <string name="if_not_attention">是否不再关注%1$s?</string>
