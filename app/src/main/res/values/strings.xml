@@ -168,10 +168,7 @@
     <string name="if_attention">是否关注%1$s?</string>
 
     <string name="new_notification">新消息通知</string>
-    <string name="want_to_help_you">     想要帮助你</string>
-    <string name="accept_your_help">     接受了你的帮助</string>
-    <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
-
+    <string name="submit_success">提交成功</string>
 
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
