@@ -93,7 +93,7 @@ public class IntroduceFragment extends BaseFragment {
         mTradeCategory.setText(data.getVarietyName());
         mTradeCode.setText(String.valueOf(data.getVarietyType()));
         mTradeTimeSummerWinter.setText(data.getTradeTime());
-        mHoldingTime.setText(data.getTradeTime());
+        mHoldingTime.setText(data.getOpsitionTime());
         mTradeUnit.setText(data.getTradeUnit());
         mQuoteUnit.setText(data.getReportPriceUnit());
         mLowestMargin.setText(data.getLowestMargin());

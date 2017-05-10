@@ -27,7 +27,7 @@
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/img_no_data"
+                android:drawableTop="@drawable/img_no_message"
                 android:adjustViewBounds="true"
                 android:paddingTop="150dp"
                 android:gravity="center_horizontal"
