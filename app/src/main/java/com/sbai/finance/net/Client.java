@@ -535,24 +535,19 @@ public class Client {
     }
 
     /**
-     * 获取期货品种
      *
-     * @param page
-     * @param pageSize
-     * @param smallVarietyTypeCode
+     *
+     * @param stockCodes
      * @return
      */
-    public static API getFutureVariety(Integer page, Integer pageSize, String smallVarietyTypeCode) {
-        return new API("/order/order/getVariety.do",
+    public static API getStockMarketData(String stockCodes) {
+        return new API("/stock/comb",
                 new ApiParams()
-                        .put("bigVarietyTypeCode", "future")
-                        .put("page", page)
-                        .put("pageSize", pageSize)
-                        .put("smallVarietyTypeCode", smallVarietyTypeCode));
+                        .put("stock_code", stockCodes));
     }
 
     /**
-     * 股票除指数品种
+     * 获取股票列表
      *
      * @param page
      * @param pageSize
