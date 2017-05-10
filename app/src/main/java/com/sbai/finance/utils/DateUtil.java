@@ -343,4 +343,26 @@ public class DateUtil {
     public static String getTodayEndTime(long timestamp) {
         return format(timestamp, "yyyy-MM-dd") + " 24:00:00";
     }
+    /**
+     * 比较两个时间相差的分钟 返回格式为11:40
+     */
+    public static String compareTime(long timestamp){
+        String resultHour;
+        String resultMin;
+        long systemTime = System.currentTimeMillis();
+        long minutes = (timestamp - systemTime)/(1000*60);
+        long hours=  minutes/60;
+        long minute = minutes%60;
+        if (hours<10){
+            resultHour ="0"+String.valueOf(hours);
+        }else{
+            resultHour = String.valueOf(hours);
+        }
+        if (minute<10){
+            resultMin ="0"+String.valueOf(minute);
+        }else{
+            resultMin =String.valueOf(minute);
+        }
+        return resultHour+":"+resultMin;
+    }
 }

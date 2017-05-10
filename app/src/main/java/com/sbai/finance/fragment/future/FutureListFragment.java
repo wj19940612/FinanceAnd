@@ -167,9 +167,6 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void updateFutureData(List<Variety> varietyList) {
-        if (varietyList == null) {
-            return;
-        }
         stopRefreshAnimation();
         mFutureListAdapter.addAll(varietyList);
         if (varietyList.size() < 15) {

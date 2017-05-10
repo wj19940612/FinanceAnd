@@ -105,7 +105,7 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         });
-        mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
+        mHomeBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
             @Override
             public void onBannerClick(BannerModel information) {
                 if (information.isH5Style()) {
@@ -166,7 +166,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(5 * 1000);
+        startScheduleJob(1 * 1000);
         updateHomeInfo();
     }
 
@@ -175,7 +175,8 @@ public class HomeFragment extends BaseFragment {
     public void onTimeUp(int count) {
         super.onTimeUp(count);
         if (getUserVisibleHint()) {
-            mHomeBanner.nextAdvertisement();
+            int counter = mHomeBanner.getInnerCounter();
+            mHomeBanner.setInnerCounter(++counter);
         }
     }
 
@@ -188,7 +189,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            startScheduleJob(5 * 1000);
+            startScheduleJob(1 * 1000);
         } else {
             stopScheduleJob();
         }

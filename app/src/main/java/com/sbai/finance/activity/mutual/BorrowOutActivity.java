@@ -99,8 +99,31 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         mBorrowOutAdapter.clear();
         mBorrowOutAdapter.addAll( data);
         mBorrowOutAdapter.notifyDataSetChanged();
+        startScheduleJob(1000*60);
     }
-
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        if (mListView!=null&&mBorrowOutAdapter!=null&&mBorrowOutAdapter.getCount()==0){
+            stopScheduleJob();
+            return;
+        }
+        updateEndLineData();
+    }
+    private void updateEndLineData(){
+        if(mListView!=null&&mBorrowOutAdapter!=null){
+            int first = mListView.getFirstVisiblePosition();
+            int last = mListView.getLastVisiblePosition();
+            for (int i = first; i <= last; i++) {
+                BorrowOut borrowOut = mBorrowOutAdapter.getItem(i);
+                View childView = mListView.getChildAt(i);
+                if (borrowOut!=null&&childView!=null){
+                    TextView mEndLineTime = (TextView) childView.findViewById(R.id.endLineTime);
+                    mEndLineTime.setText(DateUtil.compareTime(borrowOut.getEndlineTime()));
+                }
+            }
+        }
+    }
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -180,11 +203,14 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mOption.setText(item.getContent());
-
+                String location = item.getLocation();
+                if(location==null){
+                    location = context.getString(R.string.no_location);
+                }
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        "\n" +"吴彦祖", 0.733f, ContextCompat.getColor(context,R.color.assistText));
+                        "\n" +location, 0.733f, ContextCompat.getColor(context,R.color.assistText));
                 mUserNameLand.setText(attentionSpannableString);
-                mEndLineTime.setText("11:44");
+                mEndLineTime.setText(DateUtil.compareTime(item.getEndlineTime()));
 
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){

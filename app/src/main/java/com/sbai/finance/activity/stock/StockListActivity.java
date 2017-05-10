@@ -31,9 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Administrator on 2017-04-19.
+ * Modified by John on 2017-05-9.
  */
-
 public class StockListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
 
     @BindView(R.id.swipeRefreshLayout)
@@ -71,16 +70,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         requestStockIndexData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     private void initView() {
         mStock.setFocusable(false);
         mListAdapter = new FutureListFragment.FutureListAdapter(this);
@@ -102,13 +91,13 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void requestStockData() {
         //获取股票列表
-        Client.getStockVariety(mPage, mPageSize,"").setTag(TAG)
+        Client.getStockVariety(mPage, mPageSize, null).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockData((ArrayList<Variety>) data);
                     }
-                }).fire();
+                }).fireSync();
     }
 
     private void requestStockIndexData() {

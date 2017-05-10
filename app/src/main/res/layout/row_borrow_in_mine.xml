@@ -176,16 +176,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_padding"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/endLineTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
-            android:textSize="11sp"
+            android:layout_weight="1"
             android:lineSpacingExtra="10dp"
             android:textColor="@color/assistText"
+            android:textSize="11sp"
             tools:text="@string/end_line_time"/>
+
         <TextView
             android:id="@+id/cancelBorrowIn"
             android:layout_width="93dp"
@@ -216,10 +218,9 @@
             android:id="@+id/gridView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="69dp"
-            android:numColumns="4"
+            android:layout_marginTop="18dp"
+            android:numColumns="8"
             android:horizontalSpacing="8dp"
-            android:verticalSpacing="8dp"
             />
     </LinearLayout>
 </LinearLayout>
