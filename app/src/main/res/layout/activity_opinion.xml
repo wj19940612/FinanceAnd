@@ -16,6 +16,7 @@
         android:orientation="horizontal"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
+        android:layout_marginBottom="0.5dp"
         android:background="@android:color/white">
         <TextView
             style="@style/futureListTitle"
@@ -65,7 +66,7 @@
                 android:drawablePadding="16dp"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
-                android:drawableTop="@drawable/img_no_data"
+                android:drawableTop="@drawable/img_no_record"
                 android:text="@string/no_opinion"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"

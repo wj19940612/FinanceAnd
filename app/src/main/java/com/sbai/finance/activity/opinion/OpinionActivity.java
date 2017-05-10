@@ -23,14 +23,8 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by Administrator on 2017-05-08.
- */
-
 public class OpinionActivity extends BaseActivity implements AbsListView.OnScrollListener  {
     @BindView(R.id.listView)
     ListView mListView;
@@ -124,8 +118,8 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
         static class ViewHolder{
             @BindView(R.id.userImg)
             ImageView mUserImg;
-            @BindView(R.id.opinion)
-            TextView mOpinion;
+            @BindView(R.id.userName)
+            TextView mUserName;
             @BindView(R.id.skilledType)
             TextView mSkilledType;
             @BindView(R.id.accuracyRate)
@@ -138,7 +132,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                         .bitmapTransform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserImg);
-                mOpinion.setText(item.getUserSign());
+                mUserName.setText(item.getUserName());
                 if(item.getAdeptType()!=null){
                     switch (item.getAdeptType()){
                         case ViewPointMater.TYPE_FUTURE:

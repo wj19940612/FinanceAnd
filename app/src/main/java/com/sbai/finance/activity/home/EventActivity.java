@@ -53,7 +53,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
 	private EventListAdapter mEventListAdapter;
-	private int mPageSize = 15;
+	private int mPageSize = 30;
 	private int mPageNo = 0;
 	private HashSet<String> mSet;
 	@Override

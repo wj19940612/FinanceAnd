@@ -35,7 +35,7 @@
                 android:drawablePadding="16dp"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
-                android:drawableTop="@drawable/img_no_data"
+                android:drawableTop="@drawable/img_no_record"
                 android:text="@string/no_option"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"

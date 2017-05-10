@@ -215,10 +215,10 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
                     case 0:
-                        mImage1.setVisibility(View.INVISIBLE);
-                        mImage2.setVisibility(View.INVISIBLE);
-                        mImage3.setVisibility(View.INVISIBLE);
-                        mImage4.setVisibility(View.INVISIBLE);
+                        mImage1.setVisibility(View.GONE);
+                        mImage2.setVisibility(View.GONE);
+                        mImage3.setVisibility(View.GONE);
+                        mImage4.setVisibility(View.GONE);
                         break;
                     case 1:
                         mImage1.setVisibility(View.VISIBLE);
