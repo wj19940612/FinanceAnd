@@ -1,4 +1,4 @@
-package com.sbai.finance.model;
+package com.sbai.finance.model.market;
 
 import android.os.Parcel;
 import android.os.Parcelable;

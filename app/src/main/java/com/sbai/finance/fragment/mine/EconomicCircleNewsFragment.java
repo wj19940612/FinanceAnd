@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -93,13 +94,15 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
+        mEmpty.setText(R.string.now_not_has_data);
         mListView.setEmptyView(mEmpty);
         mSet = new HashSet<>();
         mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(getActivity());
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
+                Log.d(TAG, "onUserHeadImageClick: " + historyNewsModel.toString());
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getSourceUserId()).execute();
             }
         });
         mListView.setOnItemClickListener(this);
@@ -125,10 +128,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
-//                        HistoryNewsModel historyNewsModel = new HistoryNewsModel();
-//                        historyNewsModel.setType(1);
-//                        historyNewsModel.setTitle("哈哈哈哈哈哈");
-//                        data.add(5,historyNewsModel);
                         updateEconomicCircleData(data);
                     }
 
@@ -153,7 +152,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
             mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -216,6 +215,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         HistoryNewsModel historyNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (historyNewsModel != null) {
             updateNewsReadStatus(position, historyNewsModel);
+            Log.d(TAG, "onItemClick: " + historyNewsModel.toString());
 
             switch (historyNewsModel.getType()) {
                 //关注
@@ -223,17 +223,26 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     break;
                 //点赞帖子
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                    //.点赞动态，点击可跳转至观点页面
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).execute();
+
+                    //.点赞动态，点击可跳转至观点页面  viewPointId为0
+//                    if (historyNewsModel.getViewpointId() != 0) {
+//                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+//                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+//                    } else {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+//                    }
                     break;
                 //点赞评论
                 case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).execute();
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
                     //观点详情页面  将选择的这条评论置顶显示，
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
+                            .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
+                            .execute();
                     break;
             }
 
@@ -320,23 +329,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
 
-                switch (item.getType()) {
-                    //关注
-                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                        mContent.setVisibility(View.GONE);
-                        break;
-                    //点赞帖子
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                        mContent.setVisibility(View.GONE);
-                        break;
-                    //点赞评论
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                        mContent.setVisibility(View.VISIBLE);
-                        break;
-                    //评论
-                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
-                        mContent.setVisibility(View.VISIBLE);
-                        break;
+                if(TextUtils.isEmpty(item.getMsg())){
+                    mContent.setVisibility(View.GONE);
+                }else {
+                    mContent.setVisibility(View.VISIBLE);
                 }
 
                 if (userInfo != null) {
@@ -348,12 +344,12 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                         mContent.setSelected(true);
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
-                                ContextCompat.getColor(context, R.color.primaryText));
+                                ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     } else {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
-                                ContextCompat.getColor(context, R.color.secondaryText));
+                                ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                         mContent.setSelected(false);
                     }
@@ -376,24 +372,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                     }
                 });
 
-            }
-
-            private String getUserAction(Context context, HistoryNewsModel item) {
-                switch (item.getType()) {
-                    //关注
-                    case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                        return context.getString(R.string.attention_you);
-                    //点赞帖子
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
-                        return context.getString(R.string.like_your_publish);
-                    //点赞评论
-                    case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                        return context.getString(R.string.like_your_publish);
-                    //评论
-                    case HistoryNewsModel.ACTION_TYPE_COMMENT:
-                        return context.getString(R.string.replay_you);
-                }
-                return "";
             }
         }
 

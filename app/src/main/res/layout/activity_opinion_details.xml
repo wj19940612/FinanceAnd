@@ -45,8 +45,8 @@
 
                     <ImageView
                         android:id="@+id/avatar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:src="@drawable/ic_default_avatar"/>
 
                     <TextView
@@ -56,7 +56,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@+id/avatar"
-                        android:textColor="@color/colorRed"
+                        android:textColor="@color/redPrimary"
                         android:textSize="15sp"
                         tools:text="刘亦菲"/>
 
@@ -137,7 +137,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="12dp"
                             android:layout_toLeftOf="@+id/upDownArea"
-                            android:textColor="@color/colorRed"
+                            android:textColor="@color/redPrimary"
                             android:textSize="14sp"
                             tools:text="88.88"/>
 
@@ -154,7 +154,7 @@
                                 android:id="@+id/upDownPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/colorRed"
+                                android:textColor="@color/redPrimary"
                                 android:textSize="9sp"
                                 tools:text="+8.88"/>
 
@@ -163,7 +163,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
-                                android:textColor="@color/colorRed"
+                                android:textColor="@color/redPrimary"
                                 android:textSize="9sp"
                                 tools:text="+10.00%"/>
                         </LinearLayout>
@@ -241,10 +241,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:drawablePadding="16dp"
-                        android:drawableTop="@drawable/img_no_data"
+                        android:drawableTop="@drawable/img_no_message"
                         android:gravity="center_horizontal"
                         android:paddingTop="50dp"
-                        android:text="@string/no_data"
+                        android:text="@string/quick_to_express_your_opinion"
                         android:textColor="@color/assistText"
                         android:textSize="20sp"/>
                 </LinearLayout>
@@ -261,7 +261,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/comment"
+            android:id="@+id/commentContent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"

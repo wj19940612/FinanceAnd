@@ -3,14 +3,17 @@ package com.sbai.finance.model.mine;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.model.LocalUser;
+
 /**
  * Created by ${wangJie} on 2017/4/17.
  */
 
 public class UserInfo implements Parcelable {
-
+    //	待审核0、审核通过1、审核未通过 2
+    public static final int CREDIT_IS_APPROVE_ING = 0;
     public static final int CREDIT_IS_ALREADY_APPROVE = 1;
-    public static final int CREDIT_IS_APPROVEING = 2;
+    public static final int CREDIT_IS_NOT_APPROVE = 2;
 
     public static final int SEX_BOY = 2;
     public static final int SEX_GIRL = 1;
@@ -37,7 +40,8 @@ public class UserInfo implements Parcelable {
     //用户头像网址
     private String userPortrait;
     private int agencyId;
-    private int certificationStatus;
+    //认证状态
+    private Integer certificationStatus;
     private long createTime;
     private int id;
     private long lastLoginTime;
@@ -46,11 +50,15 @@ public class UserInfo implements Parcelable {
     private int loginNum;
     private int modifyNickNameTimes;
     private String registrationIp;
-    //	0 未认证 1以认证 2待审核
+    //	待审核0、审核通过1、审核未通过 2
     private int status;
     //1 女 2男
     private int userSex;
     private String chinaSex;
+
+    public static boolean isGril(int userSex) {
+        return userSex == 1;
+    }
 
     public String getUserName() {
         return userName;
@@ -106,9 +114,9 @@ public class UserInfo implements Parcelable {
         setbIsSetNickName(userDetailInfo.isBIsSetNickName());
         setLand(userDetailInfo.getLand());
         setUserPortrait(userDetailInfo.getUserPortrait());
-        setChinaSex(userDetailInfo.getChinaSex());
         setUserSex(userDetailInfo.getUserSex());
         setStatus(userDetailInfo.getStatus());
+        LocalUser.getUser().setUserInfo(this);
     }
 
     public int getAgencyId() {
@@ -119,11 +127,11 @@ public class UserInfo implements Parcelable {
         this.agencyId = agencyId;
     }
 
-    public int getCertificationStatus() {
+    public Integer getCertificationStatus() {
         return certificationStatus;
     }
 
-    public void setCertificationStatus(int certificationStatus) {
+    public void setCertificationStatus(Integer certificationStatus) {
         this.certificationStatus = certificationStatus;
     }
 

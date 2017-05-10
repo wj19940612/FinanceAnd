@@ -7,7 +7,7 @@
 
     <include layout="@layout/layout_hq_header"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -34,11 +34,11 @@
                 android:drawablePadding="16dp"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
-                android:drawableTop="@drawable/img_no_data"
+                android:drawableTop="@drawable/img_no_message"
                 android:text="暂无行情数据"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
                 android:visibility="gone"/>
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

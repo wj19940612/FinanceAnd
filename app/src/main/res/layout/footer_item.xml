@@ -20,5 +20,4 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
         android:text="@string/up_load_more"/>
-
 </LinearLayout>

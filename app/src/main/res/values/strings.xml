@@ -1,11 +1,12 @@
 <resources>
-    <string name="app_name">泛理金融</string>
+    <string name="app_name">泛理 DEV</string>
 
     <!-- Dialog -->
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
 
     <!-- Main -->
+    <string name="home">泛理</string>
     <string name="economic_circle">经济圈</string>
     <string name="mine">我的</string>
 
@@ -27,6 +28,9 @@
     <string name="people_want_help_him_number">(%1$s)</string>
     <string name="give_help">给予帮助</string>
     <string name="borrow_money_details">借款详情</string>
+    <string name="no_location_information">暂无位置信息</string>
+    <item name="tag_opinion" type="id">1</item>
+    <item name="tag_borrow_money" type="id">2</item>
 
     <!--login   page-->
     <string name="phone_number">手机号</string>
@@ -41,10 +45,19 @@
     <!--Home-->
     <string name="future">期货</string>
     <string name="stock">股票</string>
+    <string name="forex">外汇</string>
     <string name="help">互助</string>
     <string name="self_choice">自选</string>
+
+    <string name="banner_detail">活动详情</string>
+
+    <!--opinion-->
+    <string name="opinion">观点大神</string>
+    <string name="skilled">擅长类型</string>
+    <string name="accuracy_rate">看盘准确率</string>
+    <string name="no_opinion">暂无观点</string>
     <!--Future-->
-    <string name="future_foreign">国外期货</string>
+    <string name="future_foreign">国际期货</string>
     <string name="future_china">国内期货</string>
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
@@ -52,7 +65,8 @@
     <string name="borrow_title">借款有道</string>
     <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="idea_title">观点大神</string>
-    <string name="idea_detail">眼光奇准,跟着混，准没错</string>
+    <string name="idea_detail">眼光准，跟着做准没错</string>
+    <string name="quick_publish">快来发表你的观点吧!</string>
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证</string>
     <string name="ShenzhenStockExchange">深证</string>
@@ -63,7 +77,7 @@
     <string name="borrow">我要借款</string>
     <string name="help_borrow">互助-借款</string>
     <!--event-->
-    <string name="no_event_record">还没有大事发生哦!</string>
+    <string name="no_event_record">还没有大事发生!</string>
     <string name="event_title">大事件</string>
 
     <!--Trade page-->
@@ -74,6 +88,7 @@
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
     <string name="add_optional">+ 自选</string>
+    <string name="delete_optional">取消自选</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
@@ -88,11 +103,13 @@
     <string name="stock_news">新闻</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
-
+    <!--option-->
+    <string name="no_option">暂无自选</string>
     <!-- 我的界面 -->
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
     <string name="mine_publish">我的发表</string>
+    <string name="her_publish">TA的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
@@ -101,6 +118,7 @@
     <string name="feed_back">意见反馈</string>
     <string name="new_message">新消息</string>
     <string name="item">条</string>
+    <string name="now_not_has_data">暂无消息</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -115,7 +133,7 @@
     <string name="please_input_user_name">请输入用户名</string>
     <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-    <string name="nick_name_hint">昵称最多6个字符,请勿使用不良词汇</string>
+    <string name="nick_name_hint">昵称最多8个字符,请勿使用不良词汇</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
@@ -143,25 +161,21 @@
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
-    <string name="cancel_attention_dialog_title">是否对“%1$s”\n取消关注?</string>
+    <string name="cancel_attention_dialog_title">是否不在关注“%1$s”\n取消关注?</string>
     <string name="cancel_attention">取消关注</string>
 
     <string name="if_not_attention">是否不再关注%1$s?</string>
     <string name="if_attention">是否关注%1$s?</string>
 
     <string name="new_notification">新消息通知</string>
-    <string name="want_to_help_you">     想要帮助你</string>
-    <string name="accept_your_help">     接受了你的帮助</string>
-    <string name="refuse_your_help">     感谢并婉拒了你的帮助</string>
-
-    <string name="replay_you">      评论了你</string>
-    <string name="attention_you">      关注了你</string>
-    <string name="like_your_publish">      喜欢了你的发表</string>
+    <string name="submit_success">提交成功</string>
 
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
+    <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
+    <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
@@ -214,11 +228,11 @@
     <string name="bullish">看涨</string>
     <string name="bearish">看跌</string>
     <string name="prediction_rule">预测规则</string>
-    <string name="big_god_to_predict_the_market_today">大神,来预测一下今天的行情吧!</string>
-    <string name="prediction_rule1">1.每日开市到闭市之间(中午休市包含在内):预测下一个交易日的价格涨跌</string>
-    <string name="prediction_rule2">2.每日闭市到下一次开市之前:预测下一次开盘后的价格涨跌</string>
-    <string name="prediction_rule3">3.每次预测时间段内预测一次后,将不能进行重复预测</string>
-    <string name="prediction_rule4">4.预测成功率高的用户,将会登上我们的观点大神排行榜</string>
+    <string name="big_god_to_predict_the_market_next_day">大神,来预测下一个交易日的涨跌</string>
+    <string name="prediction_rule1">1.当前交易日开市后到下一个交易日开市前，预测下一个交易日的价格涨跌</string>
+    <string name="prediction_rule2">2.价格涨跌以开盘价与收盘价对比，开盘价高于收盘价则价格跌，开盘价低于收盘价，则价格涨</string>
+    <string name="prediction_rule3">3.每个预测时间段内预测一次后，将不能进行重复预测</string>
+    <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
     <string name="submit_has_empty">提  交</string>
     <string name="please_enter_the_text">请输入文字</string>
@@ -226,8 +240,8 @@
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="borrow_limit">借款金额</string>
-    <string name="borrow_amount">最高2000元</string>
-    <string name="borrow_interest_amount">最高200元</string>
+    <string name="borrow_amount">500~2000元</string>
+    <string name="borrow_interest_amount">最低1元</string>
     <string name="borrow_day_limit">借款期限</string>
     <string name="borrow_day_limit_hint">1~60</string>
     <string name="borrow_remark">备注</string>
@@ -238,8 +252,8 @@
     <string name="borrow_publish">确认发布</string>
     <string name="want_borrow">我要借款</string>
     <string name="borrow_overdue">超出借款期限</string>
-    <string name="borrow_over_money">超出借款金额</string>
-    <string name="borrow_over_interest">超出愿付利息</string>
+    <string name="borrow_over_money">借款金额不符合要求</string>
+    <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">阅读并同意</string>
     <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
 
@@ -255,6 +269,7 @@
     <string name="publish_time">发布于 %1$s</string>
     <string name="end_line_time">正在需求帮助\n 倒计时 11:59</string>
     <string name="call_helper">正在需求帮助</string>
+    <string name="on_checking">审核中</string>
     <string name="end_line">倒计时</string>
     <string name="cancel_borrow_in">取消借款</string>
     <string name="helper">想要帮助你的人 (%1$d)</string>
@@ -265,13 +280,17 @@
     <string name="call">联系对方</string>
     <string name="already_repay">已经还款</string>
     <string name="already_repayment">已还款</string>
+    <string name="intention">已支付意向金</string>
+    <string name="not_allow">审批未通过</string>
     <string name="user_address">这里是用户名\n杭州 萧山</string>
     <string name="wait_confirm">等待确认中</string>
     <string name="end_time">倒计时</string>
-
+    <string name="no_location">暂无位置信息</string>
+    <string name="no_phone">暂无联系电话</string>
     <string name="borrow_failure">借款失败</string>
 
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
+    <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
 </resources>

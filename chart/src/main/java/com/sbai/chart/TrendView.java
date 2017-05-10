@@ -158,22 +158,16 @@ public class TrendView extends FrameLayout {
 //            return !hashSet.add(dateWithHourMinute);
 //        }
 //
-//        /**
-//         * check if trendView data.date is valid
-//         *
-//         * @param date
-//         * @param openMarketTime
-//         * @return
-//         */
-//        public static boolean isValidDate(String date, String[] openMarketTime) {
-//            //String hhmm = date.substring(date.indexOf(" ")).substring(1, 6); // yyyy-MM-dd HH:mm:ss -> hh:mm
-//            if (date.length() != 14) {
-//                return false;
-//            }
-//
-//            String hhmm = date.substring(8, 10) + ":" + date.substring(10, 12); // yyyyMMddHHmmss -> hh:mm
-//            return Util.isBetweenTimes(openMarketTime, hhmm);
-//        }
+        /**
+         * check if trendView data.date is valid
+         *
+         * @param date
+         * @param openMarketTime
+         * @return
+         */
+        public static boolean isValidDate(String date, String[] openMarketTime) {
+            return Util.isBetweenTimes(openMarketTime, date);
+        }
 
         /**
          * check if time is between times[i] and times[i + 1] (open interval)

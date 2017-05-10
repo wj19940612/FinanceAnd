@@ -51,8 +51,8 @@ public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
     private static final int REQ_CODE_NEW_NEWS = 18;
-
-    Unbinder unbinder;
+    private static final int REQ_CODE_FANS_PAGE = 322;
+    private static final int REQ_CODE_ATTENTION_PAGE = 4555;
 
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
@@ -78,6 +78,8 @@ public class MineFragment extends BaseFragment {
     LinearLayoutCompat mHeadImageLayout;
     @BindView(R.id.logoutImage)
     AppCompatImageView mLogoutImage;
+
+    Unbinder unbinder;
 
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
@@ -112,10 +114,19 @@ public class MineFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(LoginBroadcastReceiver);
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            requestNoReadNewsNumber();
+            requestUserAttentionAndroidFansNumber();
+        }
+    }
+
     private void requestNoReadNewsNumber() {
         Client.getNoReadMessageNumber()
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
@@ -181,30 +192,42 @@ public class MineFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
-                startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                if (LocalUser.getUser().isLogin()) {
+                    startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.logoutImage:
                 Launcher.with(getActivity(), LoginActivity.class).execute();
                 break;
             case R.id.userHeadImage:
-                startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                if (LocalUser.getUser().isLogin()) {
+                    startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.attention:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), AttentionActivity.class).execute();
+                    startActivityForResult(new Intent(getActivity(), AttentionActivity.class), REQ_CODE_ATTENTION_PAGE);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.fans:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), FansActivity.class).execute();
+                    startActivityForResult(new Intent(getActivity(), FansActivity.class), REQ_CODE_FANS_PAGE);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.minePublish:
-                Launcher.with(getActivity(), PublishActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), PublishActivity.class).putExtra(Launcher.EX_PAYLOAD_1, LocalUser.getUser().getUserInfo().getUserSex()).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.news:
                 startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_NEW_NEWS);
@@ -223,9 +246,8 @@ public class MineFragment extends BaseFragment {
     }
 
     private void requestUserAttentionAndroidFansNumber() {
-        Client.getAttentionFollowUserNumber(0)
+        Client.getAttentionFollowUserNumber(null)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
                     @Override
                     protected void onRespSuccessData(AttentionAndFansNumberModel data) {
@@ -263,6 +285,12 @@ public class MineFragment extends BaseFragment {
                     break;
                 case REQ_CODE_NEW_NEWS:
                     requestNoReadNewsNumber();
+                    break;
+                case REQ_CODE_FANS_PAGE:
+                    requestUserAttentionAndroidFansNumber();
+                    break;
+                case REQ_CODE_ATTENTION_PAGE:
+                    requestUserAttentionAndroidFansNumber();
                     break;
             }
         }

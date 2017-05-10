@@ -1,172 +1,111 @@
 package com.sbai.finance.model;
 
 import java.io.Serializable;
-import java.util.List;
-
-/**
- * Created by Administrator on 2017-04-25.
- */
 
 public class EventModel implements Serializable{
+
 	/**
-	 * data : [{"clicks":2001,"source":"测试内容2268","url":"测试内容hsj2","content":"sjahshagshga8suh","createTime":1492565130496,"format":1,"id":"58f6bc8a3c81657096b37e07","operator":"admin","status":1,"title":"萨斯往往"},{"clicks":2001,"source":"测试内容2268","url":"测试内容hsj2","content":"OOXXXX","createTime":1492494448142,"format":1,"id":"58f5a870ca2920e93b639018","operator":"admin","status":1,"title":"shuishuishui"}]
-	 * pageSize : 10
-	 * resultCount : 2
-	 * start : 0
-	 * total : 1
+	 * clicks : 221
+	 * content : <p>1</p>
+	 * createTime : 1493885840106
+	 * format : 1
+	 * id : 590ae39055ce5b00c9f272b1
+	 * operator : admin
+	 * status : 1
+	 * title : 特朗普访菲，两大嘴炮对轰
 	 */
+	private int clicks;
+	private String content;
+	private long createTime;
+	private int format;
+	private String id;
+	private String operator;
+	private int status;
+	private String title;
 
-	private int pageSize;
-	private int resultCount;
-	private int start;
-	private int total;
-	private List<DataBean> data;
+	private String source;
+	private String url;
 
-	public int getPageSize() {
-		return pageSize;
+	public String getSource() {
+		return source;
 	}
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
+	public void setSource(String source) {
+		this.source = source;
 	}
 
-	public int getResultCount() {
-		return resultCount;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setResultCount(int resultCount) {
-		this.resultCount = resultCount;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public int getStart() {
-		return start;
+	public boolean isH5Style(){
+		return this.format == 2;
+	}
+	public int getClicks() {
+		return clicks;
 	}
 
-	public void setStart(int start) {
-		this.start = start;
+	public void setClicks(int clicks) {
+		this.clicks = clicks;
 	}
 
-	public int getTotal() {
-		return total;
+	public String getContent() {
+		return content;
 	}
 
-	public void setTotal(int total) {
-		this.total = total;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public List<DataBean> getData() {
-		return data;
+	public long getCreateTime() {
+		return createTime;
 	}
 
-	public void setData(List<DataBean> data) {
-		this.data = data;
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
 	}
 
-	public static class DataBean implements Serializable  {
-		/**
-		 * clicks : 2001
-		 * source : 测试内容2268
-		 * url : 测试内容hsj2
-		 * content : sjahshagshga8suh
-		 * createTime : 1492565130496
-		 * format : 1
-		 * id : 58f6bc8a3c81657096b37e07
-		 * operator : admin
-		 * status : 1
-		 * title : 萨斯往往
-		 */
+	public int getFormat() {
+		return format;
+	}
 
-		private int clicks;
-		private String source;
-		private String url;
-		private String content;
-		private long createTime;
-		private int format;
-		private String id;
-		private String operator;
-		private int status;
-		private String title;
-		public boolean isH5Style() {
-			return this.format == 2;
-		}
-		public int getClicks() {
-			return clicks;
-		}
+	public void setFormat(int format) {
+		this.format = format;
+	}
 
-		public void setClicks(int clicks) {
-			this.clicks = clicks;
-		}
+	public String getId() {
+		return id;
+	}
 
-		public String getSource() {
-			return source;
-		}
+	public void setId(String id) {
+		this.id = id;
+	}
 
-		public void setSource(String source) {
-			this.source = source;
-		}
+	public String getOperator() {
+		return operator;
+	}
 
-		public String getUrl() {
-			return url;
-		}
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
 
-		public void setUrl(String url) {
-			this.url = url;
-		}
+	public int getStatus() {
+		return status;
+	}
 
-		public String getContent() {
-			return content;
-		}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
-		public void setContent(String content) {
-			this.content = content;
-		}
+	public String getTitle() {
+		return title;
+	}
 
-		public long getCreateTime() {
-			return createTime;
-		}
-
-		public void setCreateTime(long createTime) {
-			this.createTime = createTime;
-		}
-
-		public int getFormat() {
-			return format;
-		}
-
-		public void setFormat(int format) {
-			this.format = format;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getOperator() {
-			return operator;
-		}
-
-		public void setOperator(String operator) {
-			this.operator = operator;
-		}
-
-		public int getStatus() {
-			return status;
-		}
-
-		public void setStatus(int status) {
-			this.status = status;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

@@ -1,8 +1,9 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,17 +21,17 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowInHis;
-import com.sbai.finance.model.BorrowOut;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.BorrowOutHis;
+import com.sbai.finance.model.BorrowOutHistory;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -71,6 +72,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         mBorrowOutHisAdapter.setCallback(new BorrowOutHisAdapter.Callback() {
             @Override
             public void OnItemCallClick(Integer id) {
+                requestPhone(id);
             }
             @Override
             public void OnItemRepayClick(Integer id) {
@@ -104,9 +106,9 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
 
     private void requestBorrowOutHisData() {
         Client.getBorrowOutHisList().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<BorrowOutHis>>,List<BorrowOutHis>>() {
+                .setCallback(new Callback2D<Resp<List<BorrowOutHistory>>,List<BorrowOutHistory>>() {
                     @Override
-                    protected void onRespSuccessData(List<BorrowOutHis> data) {
+                    protected void onRespSuccessData(List<BorrowOutHistory> data) {
                         updateBorrowOutHis(data);
                     }
 
@@ -117,8 +119,29 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                     }
                 }).fire();
     }
+    private void requestPhone(Integer id){
+        Client.getPhone(id).setTag(TAG)
+                .setCallback(new Callback<Resp<CallPhone>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<CallPhone> resp) {
+                        if (resp.isSuccess()){
+                            callPhone(resp.getData());
+                        }else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                }).fire();
+    }
+    private void callPhone(CallPhone phone){
+        if (phone.getLoanUserPhone()!=null){
+            Intent intent=new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone.getLoanUserPhone()));
+            startActivity(intent);
+        }else {
+            ToastUtil.curt(getString(R.string.no_phone));
+        }
+    }
 
-    private void updateBorrowOutHis(List<BorrowOutHis> data) {
+    private void updateBorrowOutHis(List<BorrowOutHistory> data) {
         if (data.isEmpty()){
             stopRefreshAnimation();
         }
@@ -145,7 +168,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class BorrowOutHisAdapter  extends ArrayAdapter<BorrowOutHis>{
+    static class BorrowOutHisAdapter  extends ArrayAdapter<BorrowOutHistory>{
         Context mContext;
         private Callback mCallback;
         interface Callback{
@@ -170,19 +193,19 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),position,mContext);
+            viewHolder.bindDataWithView(getItem(position),mContext);
             TextView mCall = (TextView) convertView.findViewById(R.id.call);
             TextView mAlreadyRepay = (TextView) convertView.findViewById(R.id.alreadyRepay);
             mCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.OnItemCallClick(getItem(position).getUserId());
+                    mCallback.OnItemCallClick(getItem(position).getId());
                 }
             });
             mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.OnItemRepayClick(getItem(position).getUserId());
+                    mCallback.OnItemRepayClick(getItem(position).getId());
                 }
             });
             return convertView;
@@ -204,28 +227,36 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             TextView mAlreadyRepayment;
             @BindView(R.id.borrowStatus)
             LinearLayout mBorrowStatus;
+            @BindView(R.id.success)
+            LinearLayout mSuccess;
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOutHis item, int position, Context context){
-                if (LocalUser.getUser().isLogin()){
-                    Glide.with(context).load(LocalUser.getUser().getUserInfo().getUserPortrait()).into(mUserPortrait);
+            private void bindDataWithView(BorrowOutHistory item, Context context){
+                Glide.with(context).load(item.getPortrait())
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .into(mUserPortrait);
+                String location = item.getLocation();
+                if (location==null){
+                    location = context.getString(R.string.no_location);
                 }
+                SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,
+                        ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
+                mUserNameLand.setText(attentionSpannableString);
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor("猪猪猪",
-                        "\n" +"吴彦祖", 0.733f, ContextCompat.getColor(context,R.color.assistText));
-                mUserNameLand.setText(attentionSpannableString);
                 mPublishTime.setText(context.getString(R.string.borrow_in_time,
                         context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
                 switch (item.getStatus()){
-                    case BorrowOutHis.STATUST_6:
-                        break;
-                    case BorrowOutHis.STATUST_7:
-                    case BorrowOutHis.STATUST_8:
-                        mBorrowStatus.setVisibility(View.VISIBLE);
+                    case BorrowOutHistory.STATUS_PAY_INTENTION:case BorrowOutHistory.STATUS_SUCCESS:
+                        mSuccess.setVisibility(View.VISIBLE);
                         mAlreadyRepayment.setVisibility(View.GONE);
+                        break;
+                    case BorrowOutHistory.STATUS_ALREADY_REPAY:
+                        mSuccess.setVisibility(View.GONE);
+                        mAlreadyRepayment.setVisibility(View.VISIBLE);
                         break;
                     default:
                         break;

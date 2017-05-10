@@ -31,16 +31,20 @@ import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.fragment.PredictionFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
-import com.sbai.finance.model.FutureData;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
@@ -56,7 +60,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.R.id.trendView;
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
 
@@ -76,7 +83,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(R.id.trendView)
+    @BindView(trendView)
     TrendView mTrendView;
     @BindView(R.id.klineView)
     KlineView mKlineView;
@@ -102,6 +109,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private OpinionFragment mOpinionFragment;
     private IntroduceFragment mIntroduceFragment;
+    private PredictionFragment mPredictionFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
     private Prediction mPrediction;
@@ -136,6 +144,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         Netty.get().addHandler(mNettyHandler);
 
         requestExchangeStatus();
+        requestOptionalStatus();
     }
 
     @Override
@@ -230,7 +239,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
             @Override
             public void onAddOptionalButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    addOptional();
+                    checkOptionalStatus();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -238,7 +247,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
             @Override
             public void onTradeButtonClick() {
-                Launcher.with(getActivity(), TradeWebActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), TradeWebActivity.class).execute();
+                }else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
     }
@@ -264,30 +277,25 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
     private void showPredictDialog() {
-        PredictionFragment.newInstance().setOnPredictButtonListener(this)
-                .show(getSupportFragmentManager());
+        if (mPredictionFragment == null) {
+            mPredictionFragment = PredictionFragment.newInstance().setOnPredictButtonListener(this);
+        } else {
+            mPredictionFragment.show(getSupportFragmentManager());
+        }
     }
 
-    private void addOptional() {
-        Client.addOptional(mVariety.getVarietyId())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            // TODO: 2017/4/28 更新UI
-                        } else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                })
-                .fire();
+    private void checkOptionalStatus() {
+        if (mTradeFloatButtons.isHasAddInOptional()) {
+            requestDeleteOptional();
+        } else {
+            requestAddOptional();
+        }
     }
 
     private void registerRefreshReceiver() {
         mReceiver = new RefreshPointReceiver();
         IntentFilter filter = new IntentFilter(REFRESH_POINT);
+        filter.addAction(REFRESH_ATTENTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
@@ -308,6 +316,58 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                     }).fire();
         }
     }
+
+    private void requestOptionalStatus() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.checkOptional(mVariety.getVarietyId())
+                    .setTag(TAG).setIndeterminate(this)
+                    .setCallback(new Callback<Resp<Integer>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Integer> resp) {
+                            Integer result = resp.getData();
+                            if (result != null) {
+                                boolean hasAddInOpition = (result == HAS_ADD_OPITION);
+                                mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
+                            }
+                        }
+                    }).fire();
+        }
+    }
+
+    private void requestAddOptional() {
+        Client.addOption(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void requestDeleteOptional() {
+        Client.delOptional(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                              mTradeFloatButtons.setHasAddInOpition(false);
+                        }else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                })
+                .fire();
+    }
+
 
     private class SubPageAdapter extends FragmentPagerAdapter {
 
@@ -443,12 +503,28 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
         @Override
         public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA) {
+            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
+                updateChartView(mFutureData);
             }
         }
     };
+
+    private void updateChartView(FutureData futureData) {
+        List<TrendViewData> dataList = mTrendView.getDataList();
+        if (dataList != null && dataList.size() > 0) {
+            TrendViewData lastData = dataList.get(dataList.size() - 1);
+            String date = DateUtil.addOneMinute(lastData.getTime(), TrendViewData.DATE_FORMAT);
+            String hhmm = DateUtil.format(date, TrendViewData.DATE_FORMAT, "HH:mm");
+            TrendView.Settings settings = mTrendView.getSettings();
+            if (TrendView.Util.isValidDate(hhmm, settings.getOpenMarketTimes())) {
+                float lastPrice = (float) futureData.getLastPrice();
+                TrendViewData unstableData = new TrendViewData(lastPrice, date);
+                mTrendView.setUnstableData(unstableData);
+            }
+        }
+    }
 
     private void updateMarketDataView(FutureData data) {
         mLastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), mVariety.getPriceScale()));
@@ -479,6 +555,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
             mExchangeCloseView.setVisibility(View.VISIBLE);
             mPriceDataArea.setVisibility(View.GONE);
+            mTodayOpen.setText("--");
         } else {
             mExchangeCloseView.setVisibility(View.GONE);
             mPriceDataArea.setVisibility(View.VISIBLE);
@@ -500,7 +577,20 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     private class RefreshPointReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mOpinionFragment.refreshPointList();
+            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+            AttentionAndFansNumberModel attentionAndFansNumberModel =
+                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+            if (details != null) {
+                mOpinionFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                mOpinionFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isFollow());
+            } else {
+                mOpinionFragment.refreshPointList();
+            }
         }
     }
 }

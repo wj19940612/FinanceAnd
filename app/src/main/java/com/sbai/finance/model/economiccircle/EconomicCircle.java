@@ -1,29 +1,8 @@
 package com.sbai.finance.model.economiccircle;
 
-public class EconomicCircle {
+import java.io.Serializable;
 
-
-	/**
-	 * auditStatus : 1
-	 * bigVarietyTypeCode : future
-	 * bigVarietyTypeName : 期货
-	 * contractsCode : CL1706
-	 * createTime : 1493212327046
-	 * dataId : 8
-	 * direction : 1
-	 * guessPass : 0
-	 * id : 59009ca755ce743b88e08e4f
-	 * isAttention : 1
-	 * praiseCount : 0
-	 * replyCount : 0
-	 * type : 2
-	 * userId : 21
-	 * userName : 用户65
-	 * userPortrait : shanghai.aliyuncs.com/ueditor/1493109274765.png
-	 * varietyId : 1
-	 * varietyName : CL
-	 * varietyType : CL
-	 */
+public class EconomicCircle implements Serializable {
 
 	private int auditStatus;
 	private String bigVarietyTypeCode;
@@ -46,26 +25,12 @@ public class EconomicCircle {
 	private String varietyType;
 	private String content;
 	private String land;
-	private int money;
-	private int interest;
-
-	public int getInterest() {
-		return interest;
-	}
-
-	public void setInterest(int interest) {
-		this.interest = interest;
-	}
-
-	public int getDays() {
-		return days;
-	}
-
-	public void setDays(int days) {
-		this.days = days;
-	}
-
+	private double money;
+	private double interest;
 	private int days;
+	private String lastPrice;
+	private String risePre;
+	private String risePrice;
 
 	public int getAuditStatus() {
 		return auditStatus;
@@ -235,12 +200,52 @@ public class EconomicCircle {
 		this.land = land;
 	}
 
-	public int getMoney() {
+	public double getMoney() {
 		return money;
 	}
 
-	public void setMoney(int money) {
+	public void setMoney(double money) {
 		this.money = money;
+	}
+
+	public double getInterest() {
+		return interest;
+	}
+
+	public void setInterest(double interest) {
+		this.interest = interest;
+	}
+
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+
+	public String getLastPrice() {
+		return lastPrice;
+	}
+
+	public void setLastPrice(String lastPrice) {
+		this.lastPrice = lastPrice;
+	}
+
+	public String getRisePre() {
+		return risePre;
+	}
+
+	public void setRisePre(String risePre) {
+		this.risePre = risePre;
+	}
+
+	public String getRisePrice() {
+		return risePrice;
+	}
+
+	public void setRisePrice(String risePrice) {
+		this.risePrice = risePrice;
 	}
 
 	@Override
@@ -270,6 +275,9 @@ public class EconomicCircle {
 				", money=" + money +
 				", interest=" + interest +
 				", days=" + days +
+				", lastPrice='" + lastPrice + '\'' +
+				", risePre='" + risePre + '\'' +
+				", risePrice='" + risePrice + '\'' +
 				'}';
 	}
 }

@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.NullResponseError;
@@ -37,6 +38,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
         if (t instanceof Resp) {
             if (((Resp) t).isTokenExpired()) {
+                LocalUser.getUser().logout();
                 sendTokenExpiredBroadcast(((Resp) t).getMsg());
                 onFailure(null);
             } else {
@@ -55,6 +57,8 @@ public abstract class Callback<T> extends ApiCallback<T> {
             } else {
                 onReceive(t);
             }
+        } else {
+            onReceive(t);
         }
     }
 

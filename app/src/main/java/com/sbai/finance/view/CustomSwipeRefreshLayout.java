@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -21,7 +22,7 @@ import com.sbai.finance.R;
 
 public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsListView.OnScrollListener {
 
-    private int mTounchslop;
+    private int mTouchSlop;
 
     private View mListViewFooter;
 
@@ -41,21 +42,21 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    private TextView mTvLoadMore;
+    private TextView mLoadMoreTv;
 
     private int mVisibleItemCount;
 
     private int mTotalItemCount;
 
     public CustomSwipeRefreshLayout(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mTounchslop = ViewConfiguration.get(context).getScaledTouchSlop();
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mListViewFooter = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
-        mTvLoadMore = (TextView) mListViewFooter.findViewById(R.id.loadMore);
+        mLoadMoreTv = (TextView) mListViewFooter.findViewById(R.id.loadMore);
     }
 
     @Override
@@ -74,24 +75,38 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
                 if (child instanceof ListView) {
-                    mListView = (ListView)child;
+                    mListView = (ListView) child;
                     mListView.setOnScrollListener(this);
+                }
+                if (child instanceof ViewGroup){
+                    findListView((ViewGroup) child);
                 }
             }
         }
     }
 
-
+    private void findListView(ViewGroup childView)  {
+            int childCount= ((ViewGroup) childView).getChildCount();
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View child = childView.getChildAt(i);
+                    if (child instanceof ListView) {
+                        mListView = (ListView) child;
+                        mListView.setOnScrollListener(this);
+                    }
+                }
+            }
+    }
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mYdown = (int)ev.getY();
+                mYdown = (int) ev.getY();
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                mYlast = (int)ev.getY();
+                mYlast = (int) ev.getY();
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -106,7 +121,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         return super.dispatchTouchEvent(ev);
     }
 
-    public void setAdapte(ListView listView, ListAdapter adapter) {
+    public void setAdapter(ListView listView, ListAdapter adapter) {
         if (listView != null) {
             listView.addFooterView(mListViewFooter);
             listView.setAdapter(adapter);
@@ -115,7 +130,8 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private boolean canLoad() {
-        return loadMoreEnable && !isLoading && isPullup() && isBottom();
+
+        return loadMoreEnable && !isLoading && isPullUp() && isBottom();
     }
 
     private boolean enableBottomLoad() {
@@ -124,17 +140,17 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     private boolean isBottom() {
         if (mListView != null && mListView.getAdapter() != null) {
-            return mVisibleItemCount < mTotalItemCount && mListView.getLastVisiblePosition() == mListView.getAdapter().getCount()-1;
+            return mVisibleItemCount < mTotalItemCount && mListView.getLastVisiblePosition() == mListView.getAdapter().getCount() - 1;
         }
         return false;
     }
 
-    private boolean isPullup() {
-        return mYdown-mYlast >= mTounchslop;
+    private boolean isPullUp() {
+        return mYdown - mYlast >= mTouchSlop;
     }
 
     private void loadData() {
-        if (mOnLoadMoreListener != null) {
+        if (mOnLoadMoreListener != null&&loadMoreEnable) {
             setLoading(true);
             mOnLoadMoreListener.onLoadMore();
         }
@@ -152,15 +168,16 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     }
 
-    public boolean isLoading(){
+    public boolean isLoading() {
         return isLoading;
     }
 
     public void setLoadingContent(String string) {
-        mTvLoadMore.setText(string);
+        mLoadMoreTv.setText(string);
     }
+
     public void setLoadingContent(int resId) {
-        mTvLoadMore.setText(resId);
+        mLoadMoreTv.setText(resId);
     }
 
     @Override
@@ -182,7 +199,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         }
     }
 
-    public void setLoadMoreEnable(boolean enable){
+    public void setLoadMoreEnable(boolean enable) {
         loadMoreEnable = enable;
     }
 

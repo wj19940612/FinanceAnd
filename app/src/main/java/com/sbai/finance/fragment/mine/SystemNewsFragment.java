@@ -86,6 +86,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
+        mEmpty.setText(R.string.now_not_has_data);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
@@ -219,7 +220,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     break;
                 // 22.实名认证未通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
-                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_APPROVEING);
+                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
                     Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     break;
                 //   30.意向金支付成功

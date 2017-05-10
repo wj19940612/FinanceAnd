@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              xmlns:tool="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -26,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_help"
+            android:background="@drawable/bg_borrow_money"
             android:gravity="center"
             android:text="@string/borrow_money"
             android:textColor="@android:color/white"
@@ -175,16 +176,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_padding"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/endLineTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
-            android:textSize="11sp"
+            android:layout_weight="1"
             android:lineSpacingExtra="10dp"
             android:textColor="@color/assistText"
+            android:textSize="11sp"
             tools:text="@string/end_line_time"/>
+
         <TextView
             android:id="@+id/cancelBorrowIn"
             android:layout_width="93dp"
@@ -212,7 +215,12 @@
             android:textSize="14sp"
             android:text="@string/helper"/>
         <com.sbai.finance.view.MyGridView
+            android:id="@+id/gridView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:numColumns="8"
+            android:horizontalSpacing="8dp"
+            />
     </LinearLayout>
 </LinearLayout>

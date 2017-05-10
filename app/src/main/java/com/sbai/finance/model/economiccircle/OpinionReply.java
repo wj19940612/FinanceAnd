@@ -1,161 +1,195 @@
 package com.sbai.finance.model.economiccircle;
 
-import java.util.List;
-
 /**
  * Created by lixiaokuan0819 on 2017/4/28.
  */
 
 public class OpinionReply {
 
+
 	/**
-	 * data : [{"content":"好好好","createTime":1,"id":1,"isAttention":1,"praiseCount":10,"userId":1,"userName":"yehx","userPortrait":"order/order.png"}]
-	 * pageSize : 10
-	 * resultCount : 1
-	 * start : 0
-	 * total : 1
+	 * auditActorId : 0
+	 * auditStatus : 2
+	 * auditTime : 1493894671000
+	 * content : 转账中
+	 * createTime : 1493894566000
+	 * id : 212
+	 * isAttention : 1
+	 * isPraise : 0
+	 * praiseCount : 0
+	 * replyCount : 0
+	 * type : 1
+	 * updateTime : 1493895431000
+	 * userId : 104
+	 * userName : 用户313
+	 * viewpointId : 106
+	 * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493791711157.png
 	 */
 
-	private int pageSize;
-	private int resultCount;
-	private int start;
-	private int total;
-	private List<DataBean> data;
+	private int auditActorId;
+	private int auditStatus;
+	private long auditTime;
+	private String content;
+	private long createTime;
+	private int id;
+	private int isAttention;
+	private int isPraise;
+	private int praiseCount;
+	private int replyCount;
+	private int type;
+	private long updateTime;
+	private int userId;
+	private String userName;
+	private int viewpointId;
+	private String userPortrait;
 
-	public int getPageSize() {
-		return pageSize;
+	public int getAuditActorId() {
+		return auditActorId;
 	}
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
+	public void setAuditActorId(int auditActorId) {
+		this.auditActorId = auditActorId;
 	}
 
-	public int getResultCount() {
-		return resultCount;
+	public int getAuditStatus() {
+		return auditStatus;
 	}
 
-	public void setResultCount(int resultCount) {
-		this.resultCount = resultCount;
+	public void setAuditStatus(int auditStatus) {
+		this.auditStatus = auditStatus;
 	}
 
-	public int getStart() {
-		return start;
+	public long getAuditTime() {
+		return auditTime;
 	}
 
-	public void setStart(int start) {
-		this.start = start;
+	public void setAuditTime(long auditTime) {
+		this.auditTime = auditTime;
 	}
 
-	public int getTotal() {
-		return total;
+	public String getContent() {
+		return content;
 	}
 
-	public void setTotal(int total) {
-		this.total = total;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public List<DataBean> getData() {
-		return data;
+	public long getCreateTime() {
+		return createTime;
 	}
 
-	public void setData(List<DataBean> data) {
-		this.data = data;
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
 	}
 
-	public static class DataBean {
-		/**
-		 * content : 好好好
-		 * createTime : 1
-		 * id : 1
-		 * isAttention : 1
-		 * praiseCount : 10
-		 * userId : 1
-		 * userName : yehx
-		 * userPortrait : order/order.png
-		 */
+	public int getId() {
+		return id;
+	}
 
-		private String content;
-		private int createTime;
-		private int id;
-		private int isAttention;
-		private int praiseCount;
-		private int userId;
-		private String userName;
-		private String userPortrait;
+	public void setId(int id) {
+		this.id = id;
+	}
 
-		public String getContent() {
-			return content;
-		}
+	public int getIsAttention() {
+		return isAttention;
+	}
 
-		public void setContent(String content) {
-			this.content = content;
-		}
+	public void setIsAttention(int isAttention) {
+		this.isAttention = isAttention;
+	}
 
-		public int getCreateTime() {
-			return createTime;
-		}
+	public int getIsPraise() {
+		return isPraise;
+	}
 
-		public void setCreateTime(int createTime) {
-			this.createTime = createTime;
-		}
+	public void setIsPraise(int isPraise) {
+		this.isPraise = isPraise;
+	}
 
-		public int getId() {
-			return id;
-		}
+	public int getPraiseCount() {
+		return praiseCount;
+	}
 
-		public void setId(int id) {
-			this.id = id;
-		}
+	public void setPraiseCount(int praiseCount) {
+		this.praiseCount = praiseCount;
+	}
 
-		public int getIsAttention() {
-			return isAttention;
-		}
+	public int getReplyCount() {
+		return replyCount;
+	}
 
-		public void setIsAttention(int isAttention) {
-			this.isAttention = isAttention;
-		}
+	public void setReplyCount(int replyCount) {
+		this.replyCount = replyCount;
+	}
 
-		public int getPraiseCount() {
-			return praiseCount;
-		}
+	public int getType() {
+		return type;
+	}
 
-		public void setPraiseCount(int praiseCount) {
-			this.praiseCount = praiseCount;
-		}
+	public void setType(int type) {
+		this.type = type;
+	}
 
-		public int getUserId() {
-			return userId;
-		}
+	public long getUpdateTime() {
+		return updateTime;
+	}
 
-		public void setUserId(int userId) {
-			this.userId = userId;
-		}
+	public void setUpdateTime(long updateTime) {
+		this.updateTime = updateTime;
+	}
 
-		public String getUserName() {
-			return userName;
-		}
+	public int getUserId() {
+		return userId;
+	}
 
-		public void setUserName(String userName) {
-			this.userName = userName;
-		}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
-		public String getUserPortrait() {
-			return userPortrait;
-		}
+	public String getUserName() {
+		return userName;
+	}
 
-		public void setUserPortrait(String userPortrait) {
-			this.userPortrait = userPortrait;
-		}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public int getViewpointId() {
+		return viewpointId;
+	}
+
+	public void setViewpointId(int viewpointId) {
+		this.viewpointId = viewpointId;
+	}
+
+	public String getUserPortrait() {
+		return userPortrait;
+	}
+
+	public void setUserPortrait(String userPortrait) {
+		this.userPortrait = userPortrait;
 	}
 
 	@Override
 	public String toString() {
 		return "OpinionReply{" +
-				"pageSize=" + pageSize +
-				", resultCount=" + resultCount +
-				", start=" + start +
-				", total=" + total +
-				", data=" + data +
+				"auditActorId=" + auditActorId +
+				", auditStatus=" + auditStatus +
+				", auditTime=" + auditTime +
+				", content='" + content + '\'' +
+				", createTime=" + createTime +
+				", id=" + id +
+				", isAttention=" + isAttention +
+				", isPraise=" + isPraise +
+				", praiseCount=" + praiseCount +
+				", replyCount=" + replyCount +
+				", type=" + type +
+				", updateTime=" + updateTime +
+				", userId=" + userId +
+				", userName='" + userName + '\'' +
+				", viewpointId=" + viewpointId +
+				", userPortrait='" + userPortrait + '\'' +
 				'}';
 	}
 }

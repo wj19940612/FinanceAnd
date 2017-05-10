@@ -1,9 +1,12 @@
 package com.sbai.finance.view.clipimage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.RelativeLayout;
 
@@ -16,6 +19,8 @@ public class ClipImageLayout extends RelativeLayout {
     private static final String TAG = "ClipImageLayout";
 
     private ClipZoomImageView mZoomImageView;
+    private int mWidthPixels;
+    private int mHeightPixels;
 
     /**
      * 这里测试，直接写死了大小，真正使用过程中，可以提取为自定义属性
@@ -47,6 +52,12 @@ public class ClipImageLayout extends RelativeLayout {
                         .getDisplayMetrics());
         mZoomImageView.setHorizontalPadding(mHorizontalPadding);
         clipImageView.setHorizontalPadding(mHorizontalPadding);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        mWidthPixels = dm.widthPixels;
+        mHeightPixels = dm.heightPixels;
+        Log.d(TAG, "ClipImageLayout: " + mWidthPixels + " 高 " + mHeightPixels);
     }
 
     public void setZoomImageViewImage(Bitmap bitmap) {
@@ -54,7 +65,10 @@ public class ClipImageLayout extends RelativeLayout {
     }
 
     public void setZoomImageViewImage(String bitmapUrl) {
-        Glide.with(getContext()).load(bitmapUrl).into(mZoomImageView);
+//        int width = getImageWidthHeight(bitmapUrl)[0];
+//        int height = getImageWidthHeight(bitmapUrl)[1];
+
+        Glide.with(getContext()).load(bitmapUrl).fitCenter().into(mZoomImageView);
     }
 
     public static int[] getImageWidthHeight(String path) {

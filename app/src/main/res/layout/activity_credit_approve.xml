@@ -9,6 +9,7 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.CreditApproveActivity">
 
+
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:hint="@string/real_name"
+            android:inputType="text"
             android:maxLines="1"
             android:textColor="@color/primaryText"
             android:textColorHint="@color/hintText"
@@ -40,8 +42,9 @@
             android:id="@+id/nameClear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:srcCompat="@drawable/ic_login_label_delete"/>
+            android:padding="@dimen/common_padding"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
     </LinearLayout>
 
     <LinearLayout
@@ -69,55 +72,54 @@
             android:id="@+id/identityCardNumberClear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:srcCompat="@drawable/ic_login_label_delete"/>
+            android:padding="@dimen/common_padding"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
         android:layout_marginTop="15dp"
         android:gravity="center">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/addIdentityCardFront"
-            android:layout_width="117dp"
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginRight="15dp"
-            android:background="@drawable/bg_dotted_line_gray"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/ic_release_help_addpic"
-            android:gravity="center_horizontal"
-            android:paddingTop="22dp"
-            android:text="@string/identity_card_font"/>
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/addIdentityCardReverse"
-            android:layout_width="117dp"
-            android:layout_height="100dp"
-            android:background="@drawable/bg_dotted_line_gray"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/ic_release_help_addpic"
-            android:gravity="center_horizontal"
-            android:paddingTop="22dp"
-            android:text="@string/identity_card_reverse"/>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/identityCardFrontImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_add_identity_card_font"
+                android:gravity="center"
+                android:scaleType="centerCrop"/>
+        </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/identityCardFrontImage"
-            android:layout_width="117dp"
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/bg_dotted_line_gray"
-            android:gravity="center"
-            android:visibility="gone"/>
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/identityCardReverseImage"
-            android:layout_width="117dp"
-            android:layout_height="100dp"
-            android:background="@drawable/bg_dotted_line_gray"
-            android:gravity="center"
-            android:visibility="gone"/>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/identityCardReverseImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_add_identity_card_reserve"/>
+        </android.support.v7.widget.CardView>
+
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatTextView
@@ -134,13 +136,13 @@
         android:textColor="@color/warningText"
         android:visibility="invisible"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/submit"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:background="@drawable/btn_login_rounded"
+        android:background="@drawable/btn_red_rounded"
         android:enabled="false"
         android:gravity="center"
         android:text="@string/submit_has_empty"

@@ -30,6 +30,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
@@ -43,17 +44,15 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class EventActivity extends BaseActivity  implements AbsListView.OnScrollListener{
+public class EventActivity extends BaseActivity  implements AbsListView.OnScrollListener,CustomSwipeRefreshLayout.OnLoadMoreListener,SwipeRefreshLayout.OnRefreshListener{
 	@BindView(R.id.listView)
 	ListView mListView;
 	@BindView(R.id.empty)
 	TextView mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
+	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
 	private EventListAdapter mEventListAdapter;
-
-	private TextView mFootView;
 	private int mPageSize = 15;
 	private int mPageNo = 0;
 	private HashSet<String> mSet;
@@ -68,34 +67,39 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	private void initView() {
 		mSet = new HashSet<>();
 		mEventListAdapter = new EventListAdapter(this);
+		mSwipeRefreshLayout.setOnRefreshListener(this);
+		mSwipeRefreshLayout.setOnLoadMoreListener(this);
+		mSwipeRefreshLayout.setAdapter(mListView,mEventListAdapter);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEventListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				EventModel.DataBean dataBean = mEventListAdapter.getItem(position);
+				EventModel dataBean = mEventListAdapter.getItem(position);
 				Launcher.with(getActivity(), EventDetailActivity.class)
 							.putExtra(EventDetailActivity.EX_EVENT, dataBean)
 							.putExtra(EventDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
 							.execute();
 			}
 		});
-		mListView.setOnScrollListener(this);
+	//	mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
+
+		reset();
+		requestEventList();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		requestEventList();
 	}
 
 	private void requestEventList() {
 		Client.getBreakingNewsData(mPageNo,mPageSize).setTag(TAG)
-				.setCallback(new Callback2D<Resp<EventModel>,EventModel>() {
+				.setCallback(new Callback2D<Resp<List<EventModel>>,List<EventModel>>() {
 					@Override
-					protected void onRespSuccessData(EventModel data) {
-						updateEventInfo((ArrayList<EventModel.DataBean>) data.getData());
+					protected void onRespSuccessData(List<EventModel> data) {
+						updateEventInfo(data);
 					}
 					@Override
 					public void onFailure(VolleyError volleyError) {
@@ -104,43 +108,16 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 					}
 				}).fire();
 	}
-    private void updateEventInfo(ArrayList<EventModel.DataBean> eventList){
+    private void updateEventInfo(List<EventModel> eventList){
+		if (eventList == null) {
+			return;
+		}
 		stopRefreshAnimation();
-		if (mFootView == null){
-			mFootView = new TextView(this);
-			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-			mFootView.setPadding(padding, padding, padding, padding);
-			mFootView.setText(getText(R.string.load_more));
-			mFootView.setGravity(Gravity.CENTER);
-			mFootView.setTextColor(ContextCompat.getColor(this, R.color.assistText));
-			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.greyLightAssist));
-			mFootView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mPageNo++;
-					requestEventList();
-				}
-			});
-			mListView.addFooterView(mFootView);
-		}
-		if (eventList.size()<mPageSize){
-			mListView.removeFooterView(mFootView);
-			mFootView = null;
-		}
-		if (mSwipeRefreshLayout.isRefreshing()) {
-			if (mEventListAdapter != null) {
-				mEventListAdapter.clear();
-				mEventListAdapter.notifyDataSetChanged();
-			}
-			stopRefreshAnimation();
-		}
-		for (EventModel.DataBean data : eventList) {
-			if (mSet.add(data.getId())) {
-				if (mEventListAdapter != null) {
-					mEventListAdapter.add(data);
-				}
-			}
+		mEventListAdapter.addAll(eventList);
+		if (eventList.size() < mPageSize) {
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mPageNo++;
 		}
 		mEventListAdapter.notifyDataSetChanged();
 	}
@@ -153,6 +130,9 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -160,15 +140,6 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 			@Override
 			public void run() {
 				mSwipeRefreshLayout.setRefreshing(true);
-			}
-		});
-
-		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				mSet.clear();
-				mPageNo = 0;
-				requestEventList();
 			}
 		});
 	}
@@ -185,8 +156,25 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
 	}
 
+	@Override
+	public void onLoadMore() {
+		requestEventList();
+	}
 
-	static class EventListAdapter extends ArrayAdapter<EventModel.DataBean> {
+	@Override
+	public void onRefresh() {
+		reset();
+		requestEventList();
+	}
+
+	private void reset() {
+		mPageNo = 0;
+		mEventListAdapter.clear();
+		mSwipeRefreshLayout.setLoadMoreEnable(true);
+	}
+
+
+	static class EventListAdapter extends ArrayAdapter<EventModel> {
 		Context mContext;
 		public EventListAdapter(@NonNull Context context){
 			super(context,0);
@@ -218,8 +206,8 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
-			private void bindDataWithView(EventModel.DataBean item, int position, Context context) {
-				mEventSource.setText(item.getSource());
+			private void bindDataWithView(EventModel item, int position, Context context) {
+			//	mEventSource.setText(item.getSource());
 				mEventTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				mEventTitle.setText(item.getTitle());
 			}

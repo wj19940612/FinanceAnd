@@ -18,15 +18,16 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Opinion;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -48,10 +49,9 @@ public class OpinionFragment extends BaseFragment {
 
     Unbinder unbinder;
     TextView mFootView;
-    View mBottomView;
 
     private OpinionAdapter mOpinionAdapter;
-    private List<Opinion.OpinionBean> mOpinionList;
+    private List<Opinion> mOpinionList;
 
     private int mPage = 0;
     private int mPageSize = 15;
@@ -85,21 +85,15 @@ public class OpinionFragment extends BaseFragment {
     }
 
     private void initViewWithAdapter() {
-        mBottomView = new View(getActivity());
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) Display.dp2Px(55, getResources()));
-        mBottomView.setLayoutParams(layoutParams);
-
         mFootView = new TextView(getActivity());
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        mFootView.setPadding(padding, padding, padding, 4 * padding);
+        mFootView.setPadding(padding, padding, padding, padding);
         mFootView.setText(getText(R.string.load_all));
         mFootView.setGravity(Gravity.CENTER);
         mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
         mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
 
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
-        mOpinionAdapter.setFooterView(mBottomView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
@@ -132,16 +126,16 @@ public class OpinionFragment extends BaseFragment {
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Opinion>, Opinion>() {
+                .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
-                    protected void onRespSuccessData(Opinion data) {
-                        updateViewWithData(data.getData());
+                    protected void onRespSuccessData(List<Opinion> data) {
+                        updateViewWithData(data);
                     }
                 })
                 .fire();
     }
 
-    private void updateViewWithData(List<Opinion.OpinionBean> data) {
+    private void updateViewWithData(List<Opinion> data) {
         if (data != null && data.size() > 0) {
             mOpinionList.addAll(data);
             if (data.size() < mPageSize) {
@@ -150,7 +144,6 @@ public class OpinionFragment extends BaseFragment {
                 mLoadMore = false;
             } else {
                 mOpinionAdapter.removeAllFooterView();
-                mOpinionAdapter.addFooterView(mBottomView);
                 mLoadMore = true;
                 mPage++;
             }
@@ -168,15 +161,41 @@ public class OpinionFragment extends BaseFragment {
         Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Opinion>, Opinion>() {
+                .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
-                    protected void onRespSuccessData(Opinion data) {
-                        updateViewWithData(data.getData());
+                    protected void onRespSuccessData(List<Opinion> data) {
+                        updateViewWithData(data);
                     }
                 })
                 .fire();
     }
 
+
+    //刷新某条点赞和评论
+    public void updateItemById(int id, int replyCount, int praiseCount) {
+        int position = 0;
+        for (Opinion opinion : mOpinionList) {
+            if (opinion.getId() == id) {
+                break;
+            } else {
+                position++;
+            }
+        }
+        mOpinionList.get(position).setReplyCount(replyCount);
+        mOpinionList.get(position).setPraiseCount(praiseCount);
+        mOpinionAdapter.notifyItemChanged(position);
+    }
+
+    //根据user id刷新关注
+    public void updateItemByUserId(int userId, boolean isAttention) {
+        int attentionStatus = isAttention ? 2 : 1;  //2已关注 1 未关注
+        for (Opinion opinion : mOpinionList) {
+            if (opinion.getUserId() == userId) {
+                opinion.setIsAttention(attentionStatus);
+            }
+        }
+        mOpinionAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onDestroyView() {
@@ -185,21 +204,20 @@ public class OpinionFragment extends BaseFragment {
     }
 
 
-    private class OpinionAdapter extends BaseQuickAdapter<Opinion.OpinionBean, BaseViewHolder> {
+    private class OpinionAdapter extends BaseQuickAdapter<Opinion, BaseViewHolder> {
 
-        private OpinionAdapter(int layoutResId, List<Opinion.OpinionBean> data) {
+        private OpinionAdapter(int layoutResId, List<Opinion> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, Opinion.OpinionBean item) {
+        protected void convert(BaseViewHolder helper, Opinion item) {
             bindDataWithView(helper, item);
         }
 
-        private void bindDataWithView(BaseViewHolder helper, final Opinion.OpinionBean item) {
+        private void bindDataWithView(BaseViewHolder helper, final Opinion item) {
             String attend = item.getIsAttention() == 1 ? "" : getString(R.string.is_attention);
-            String format = "yyyy/MM/dd HH:mm";
-            String time = DateUtil.format(item.getCreateTime(), format);
+            String time = DateUtil.getFormatTime(item.getCreateTime());
             helper.setText(R.id.userName, item.getUserName())
                     .setText(R.id.followed, attend)
                     .setText(R.id.publishTime, time)
@@ -209,35 +227,65 @@ public class OpinionFragment extends BaseFragment {
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_default_avatar_big)
                     .into((ImageView) helper.getView(R.id.avatar));
-            if (item.getDirection() == 1) {
-                ((TextView) helper.getView(R.id.opinion))
-                        .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up));
+            if (item.getGuessPass() == 0) {
+                if (item.getDirection() == 1) {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up));
+                } else {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down));
+                }
+            } else if (item.getGuessPass() == 1) {
+                if (item.getDirection() == 1) {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up_succeed));
+                } else {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down_succeed));
+                }
             } else {
-                ((TextView) helper.getView(R.id.opinion))
-                        .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down));
+                if (item.getDirection() == 1) {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up_failed));
+                } else {
+                    ((TextView) helper.getView(R.id.opinion))
+                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down_failed));
+                }
             }
             helper.getView(R.id.avatar).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
-                            .execute();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, item.getUserId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             });
             helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
-                            .execute();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             });
             helper.getView(R.id.commentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                            .putExtra(Launcher.KEY_USER_ID, item.getUserId())
-                            .execute();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             });
         }

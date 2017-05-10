@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,20 +25,26 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserPublishModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PublishActivity extends BaseActivity implements AbsListView.OnScrollListener {
+
+public class PublishActivity extends BaseActivity implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -51,6 +58,8 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     private TextView mFootView;
     private PublishAdapter mPublishAdapter;
     private int mPage;
+    private int mUserId;
+    private HashSet<Integer> mSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +67,26 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         setContentView(R.layout.activity_publish);
         ButterKnife.bind(this);
         mListView.setEmptyView(mEmpty);
+        mSet = new HashSet<Integer>();
         mPublishAdapter = new PublishAdapter(getActivity());
         mListView.setAdapter(mPublishAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(this);
+        mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+        if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
+            mPublishAdapter.setIsHimSelf(true);
+            mTitleBar.setTitle(R.string.mine_publish);
+        } else {
+            mTitleBar.setTitle(R.string.her_publish);
+            mPublishAdapter.setIsHimSelf(false);
+        }
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mPage = 0;
+                mSet.clear();
                 requestUserPublishList();
             }
         });
@@ -71,13 +94,12 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        // TODO: 2017/5/3 目前使用春泉的账号id  
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, 98)
+        Client.getUserPublishList(mPage, Client.PAGE_SIZE, (mUserId != -1 && mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserPublishModel>, UserPublishModel>() {
+                .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
-                    protected void onRespSuccessData(UserPublishModel data) {
-                        updateUserPublishData(data.getData());
+                    protected void onRespSuccessData(List<UserPublishModel> data) {
+                        updateUserPublishData(data);
                     }
 
                     @Override
@@ -89,7 +111,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 .fire();
     }
 
-    private void updateUserPublishData(List<UserPublishModel.DataBean> userPublishModelList) {
+    private void updateUserPublishData(List<UserPublishModel> userPublishModelList) {
         if (userPublishModelList == null) {
             stopRefreshAnimation();
             return;
@@ -124,7 +146,11 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             }
             stopRefreshAnimation();
         }
-        mPublishAdapter.addAll(userPublishModelList);
+        for (UserPublishModel data : userPublishModelList) {
+            if (mSet.add(data.getId())) {
+                mPublishAdapter.add(data);
+            }
+        }
     }
 
     private void stopRefreshAnimation() {
@@ -145,12 +171,29 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    static class PublishAdapter extends ArrayAdapter<UserPublishModel.DataBean> {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        UserPublishModel item = (UserPublishModel) parent.getAdapter().getItem(position);
+        if (item != null) {
+            Launcher.with(getActivity(), OpinionDetailsActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                    .putExtra(Launcher.EX_PAYLOAD_2, false)
+                    .executeForResult(100);
+        }
+    }
+
+    static class PublishAdapter extends ArrayAdapter<UserPublishModel> {
+
         private Context mContext;
+        private boolean isHimSelf;
 
         public PublishAdapter(@NonNull Context context) {
             super(context, 0);
             this.mContext = context;
+        }
+
+        public void setIsHimSelf(boolean isUserSelf) {
+            this.isHimSelf = isUserSelf;
         }
 
         @NonNull
@@ -164,7 +207,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mContext);
+            viewHolder.bindDataWithView(getItem(position), mContext, isHimSelf);
             return convertView;
 
         }
@@ -202,7 +245,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(UserPublishModel.DataBean item, Context context) {
+            public void bindDataWithView(UserPublishModel item, Context context, boolean isHimSelf) {
                 mUserName.setText(item.getUserName());
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
@@ -210,10 +253,38 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                         .into(mAvatar);
                 mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
                 mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
-                mOpinionContent.setText(item.getContent());
                 mVarietyName.setText(item.getVarietyName());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+                mBigVarietyName.setText(item.getBigVarietyTypeName());
+                if (!isHimSelf) {
+                    mIsAttention.setText(item.isAttention() ? context.getString(R.string.is_attention) : "");
+                }
 
+                if (item.getDirection() == 1) {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                } else {
+                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                }
+
+//                if (!TextUtils.isEmpty(item.getRisePrice()) && item.getRisePrice().startsWith("-")) {
+//                    mUpDownPrice.setSelected(true);
+//                    mLastPrice.setSelected(true);
+//                } else {
+//                    mUpDownPrice.setSelected(false);
+//                    mLastPrice.setSelected(false);
+//                }
+//                mUpDownPrice.setText(item.getRisePrice());
+//                if (!TextUtils.isEmpty(item.getRisePre()) && item.getRisePre().startsWith("-")) {
+//                    mUpDownPercent.setSelected(true);
+//                } else {
+//                    mUpDownPercent.setSelected(false);
+//                }
+//                mUpDownPercent.setText(item.getRisePre());
+//                if (TextUtils.isEmpty(item.getLastPrice())) {
+//                    mLastPrice.setText("--");
+//                } else {
+//                    mLastPrice.setText(item.getLastPrice());
+//                }
             }
         }
     }

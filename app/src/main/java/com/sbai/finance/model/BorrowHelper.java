@@ -7,24 +7,16 @@ package com.sbai.finance.model;
 public class BorrowHelper {
 
     /**
-     * intentionTime : 17861
-     * location : 测试内容md55
-     * userId : 33340
-     * userName : 测试内容k765
+     * location : 天津市-天津市-静海县
+     * portrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494305494899.png
+     * userId : 150
+     * userName : 三十个黄三
      */
 
-    private int intentionTime;
     private String location;
+    private String portrait;
     private int userId;
     private String userName;
-
-    public int getIntentionTime() {
-        return intentionTime;
-    }
-
-    public void setIntentionTime(int intentionTime) {
-        this.intentionTime = intentionTime;
-    }
 
     public String getLocation() {
         return location;
@@ -32,6 +24,14 @@ public class BorrowHelper {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
     }
 
     public int getUserId() {

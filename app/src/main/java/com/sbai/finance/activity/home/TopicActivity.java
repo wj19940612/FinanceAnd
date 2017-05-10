@@ -1,16 +1,10 @@
 package com.sbai.finance.activity.home;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,28 +14,23 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
-import com.sbai.finance.model.FutureData;
-import com.sbai.finance.model.TopicDetailModel;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.Topic;
+import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.netty.Netty;
-import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class TopicActivity extends BaseActivity {
 
@@ -57,7 +46,7 @@ public class TopicActivity extends BaseActivity {
 	TextView mEmpty;
 
 	private FutureListFragment.FutureListAdapter mTopicListAdapter;
-	private Integer id;
+	private Topic mTopic;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,17 +55,18 @@ public class TopicActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		translucentStatusBar();
 
-		Bundle bundle = this.getIntent().getExtras();
-		Topic topic = (Topic) bundle.getSerializable(Launcher.KEY_TOPIC);
-		if (topic !=null){
-		   id = topic.getId();
-			mTitle.setTitle(topic.getTitle());
-			mTopicTitle.setText(topic.getIntroduction());
-		}
+		initData();
 		initView();
 	}
 
+	private void initData() {
+		mTopic = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+	}
+
 	private void initView() {
+		mTitle.setTitle(mTopic.getTitle());
+		mTopicTitle.setText(mTopic.getIntroduction());
+
 		mTopicListAdapter = new FutureListFragment.FutureListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mTopicListAdapter);
@@ -100,12 +90,10 @@ public class TopicActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		requestTopicDetailInfo();
-		Netty.get().subscribe(Netty.REQ_SUB_ALL);
-		Netty.get().addHandler(mNettyHandler);
 	}
 
 	private void requestTopicDetailInfo() {
-		Client.getTopicDetailData(id).setTag(TAG)
+		Client.getTopicDetailData(mTopic.getId()).setTag(TAG)
 				.setCallback(new Callback2D<Resp<TopicDetailModel>,TopicDetailModel>() {
 					@Override
 					protected void onRespSuccessData(TopicDetailModel data) {
@@ -114,24 +102,14 @@ public class TopicActivity extends BaseActivity {
 				}).fire();
 	}
 
-	private void updateTopicInfo(List<TopicDetailModel.SubjectDetailModelListBean> subjectLists) {
+	private void updateTopicInfo(List<Variety> subjectLists) {
 		StringBuilder codes = new StringBuilder();
 		mTopicListAdapter.clear();
-		for (TopicDetailModel.SubjectDetailModelListBean subject:subjectLists){
-			Variety variety = new Variety();
-			variety.setBigVarietyTypeCode(subject.getBigVarietyTypeCode());
-			variety.setSmallVarietyTypeCode(subject.getSmallVarietyTypeCode());
-			variety.setVarietyName(subject.getVarietyName());
-			variety.setVarietyId(subject.getVarietyId());
-			variety.setVarietyType(subject.getVarietyType());
-			variety.setContractsCode(subject.getContractsCode());
-			mTopicListAdapter.add(variety);
-           if (variety.getContractsCode()!=null){
-			 codes.append(variety.getContractsCode()).append(",");
-           }
-		}
+		mTopicListAdapter.addAll(subjectLists);
 		mTopicListAdapter.notifyDataSetChanged();
-
+		for (Variety variety:subjectLists){
+			codes.append(variety.getContractsCode()).append(",");
+		}
 		String codesWithSplit = codes.toString();
 		if (codesWithSplit.endsWith(",")){
 			String code = codes.toString().substring(0,codesWithSplit.length()-1);
@@ -149,26 +127,13 @@ public class TopicActivity extends BaseActivity {
 				  }).fire();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Netty.get().removeHandler(mNettyHandler);
-		Netty.get().subscribe(Netty.REQ_UNSUB_ALL);
-	}
-	private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
-		@Override
-		public void onReceiveData(Resp<FutureData> data) {
-			if (data.getCode() == Netty.REQ_QUOTA) {
-				updateListViewVisibleItem(data.getData());
-				mTopicListAdapter.addFutureData(data.getData());
-			}
-		}
-	};
     private void updateQuota(List<FutureData> futureDatas){
 		for (FutureData data:futureDatas){
 			mTopicListAdapter.addFutureData(data);
+			updateListViewVisibleItem(data);
 		}
 		mTopicListAdapter.notifyDataSetChanged();
+
 	}
 	private void updateListViewVisibleItem(FutureData data) {
 		if (mListView != null && mTopicListAdapter != null) {

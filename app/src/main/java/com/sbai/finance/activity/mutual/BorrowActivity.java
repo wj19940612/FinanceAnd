@@ -1,17 +1,11 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +19,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
+import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -38,7 +31,6 @@ import com.sbai.finance.view.MyGridView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 /**
@@ -64,6 +56,7 @@ public class BorrowActivity extends BaseActivity {
 	CheckBox mAgree;
 
 	private PhotoGridAdapter mPhotoGridAdapter;
+	private String mImagePath;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,10 +67,22 @@ public class BorrowActivity extends BaseActivity {
 
 	private void initView() {
 		mPhotoGridAdapter = new PhotoGridAdapter(this);
+		mPhotoGridAdapter.add("");
 		mPhotoGridAdapter.setOnItemClickListener(new PhotoGridAdapter.OnItemClickListener() {
 			@Override
 			public void onClick(int position) {
-				UploadUserImageDialogFragment.newInstance().show(getSupportFragmentManager());
+				if (mPhotoGridAdapter.getCount()>4){
+					return;
+				}
+				UploadHelpImageDialogFragment.newInstance()
+						.setOnDismissListener(new UploadHelpImageDialogFragment.OnDismissListener() {
+							@Override
+							public void onGetImagePath(String path) {
+								mImagePath= path;
+								updateHelpImage(mImagePath);
+							}
+						})
+				        .show(getSupportFragmentManager());
 			}
 		});
 		mPhotoGv.setFocusable(false);
@@ -85,23 +90,13 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
+		mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
         mAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				    setPublishStatus();
 				}
 		});
-
-
-        if(LocalUser.getUser().isLogin()){
-			String photo1 = LocalUser.getUser().getUserInfo().getUserPortrait();
-			mPhotoGridAdapter.add(photo1);
-			mPhotoGridAdapter.add(photo1);
-			mPhotoGridAdapter.add(photo1);
-			mPhotoGridAdapter.add(photo1);
-		}
-		mPhotoGridAdapter.add(" ");
-		mPhotoGridAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -115,18 +110,17 @@ public class BorrowActivity extends BaseActivity {
 		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
 		String content = mBorrowRemark.getText().toString();
 		StringBuilder contentImg = new StringBuilder();
-		int phontAmount =mPhotoGridAdapter.getCount();
-		for (int i = 0; i<phontAmount-1;i++){
+		int phoneAmount =mPhotoGridAdapter.getCount();
+		for (int i = 0; i<phoneAmount-1;i++){
 			ImageView imageView = (ImageView) mPhotoGv.getChildAt(i).findViewById(R.id.photoImg);
 			String bitmapToBase64 = ImageUtils.bitmapToBase64(imageView.getDrawingCache());
-			if (i<=phontAmount-1){
+			if (i<=phoneAmount-1){
 				contentImg.append(bitmapToBase64+",");
 			}else{
 				contentImg.append(bitmapToBase64);
 			}
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
-
 	}
 	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
@@ -152,7 +146,7 @@ public class BorrowActivity extends BaseActivity {
 		boolean isCanHideWarn = false;
 		String borrowMoney = mBorrowLimit.getText().toString().trim();
 		boolean isEmpty = TextUtils.isEmpty(borrowMoney);
-		if (isEmpty|| Integer.parseInt(borrowMoney)>2000) {
+		if (isEmpty|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
              if (!isEmpty){
 				 mWarn.setVisibility(View.VISIBLE);
 				 mWarn.setText(getString(R.string.borrow_over_money));
@@ -163,7 +157,7 @@ public class BorrowActivity extends BaseActivity {
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty|| Integer.parseInt(borrowInterest)>200){
+		if (isEmpty|| Integer.parseInt(borrowInterest)<1){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_over_interest));
@@ -189,7 +183,7 @@ public class BorrowActivity extends BaseActivity {
 		if (!mAgree.isChecked()){
 			result = false;
 		}
-		if (mPhotoGridAdapter.getCount()<2){
+		if (TextUtils.isEmpty(mBorrowRemark.getText())){
 			result = false;
 		}
 		return result;
@@ -201,7 +195,15 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowLimit.removeTextChangedListener(mBorrowMoneyValidationWatcher);
 		mBorrowInterest.removeTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.removeTextChangedListener(mBorrowTimeLimitValidationWatcher);
+		mBorrowRemark.removeTextChangedListener(mBorrowRemarkValidationWatcher);
 	}
+	private void updateHelpImage(String helpImagePath) {
+        if (!TextUtils.isEmpty(helpImagePath)){
+			mPhotoGridAdapter.insert(helpImagePath,mPhotoGridAdapter.getCount()-1);
+			mPhotoGridAdapter.notifyDataSetChanged();
+		}
+	}
+
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
@@ -215,6 +217,12 @@ public class BorrowActivity extends BaseActivity {
 		}
 	};
 	private ValidationWatcher mBorrowTimeLimitValidationWatcher = new ValidationWatcher() {
+		@Override
+		public void afterTextChanged(Editable s) {
+			setPublishStatus();
+		}
+	};
+	private ValidationWatcher mBorrowRemarkValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
 			setPublishStatus();
@@ -247,31 +255,11 @@ public class BorrowActivity extends BaseActivity {
 					}
 				});
 			}else{
-				ViewHolder viewHolder;
-				if (convertView == null) {
-					convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_photo, null);
-					viewHolder = new ViewHolder(convertView, getContext());
-					convertView.setTag(viewHolder);
-				} else {
-					viewHolder = (ViewHolder) convertView.getTag();
-				}
-				viewHolder.bindingData(getItem(position));
+				 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_photo, null);
+				 ImageView mPhotoImg = (ImageView) convertView.findViewById(R.id.photoImg);
+				 Glide.with(getContext()).load(getItem(position)).into(mPhotoImg);
 			}
 			return convertView;
-		}
-		static class ViewHolder {
-			@BindView(R.id.photoImg)
-			ImageView mPhotoImg;
-			private Context mContext;
-			ViewHolder(View view, Context context) {
-				mContext = context;
-				ButterKnife.bind(this, view);
-				view.setClickable(false);
-			}
-
-			public void bindingData(String item) {
-				Glide.with(mContext).load(item).into(mPhotoImg);
-			}
 		}
 	}
 }

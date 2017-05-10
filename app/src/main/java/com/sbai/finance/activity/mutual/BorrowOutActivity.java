@@ -27,6 +27,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 
@@ -35,6 +36,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.R.attr.data;
 
 public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnScrollListener{
     @BindView(R.id.swipeRefreshLayout)
@@ -76,12 +79,11 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
 
     private void requestBorrowOutData() {
         Client.getBorrowOutList().setTag(TAG)
-                .setCallback(new Callback2D<List<Resp<List<BorrowOut>>>,List<BorrowOut>>() {
+                .setCallback(new Callback2D<Resp<List<BorrowOut>>,List<BorrowOut>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowOut> data) {
                         updateBorrowOut(data);
                     }
-
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
@@ -97,8 +99,31 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         mBorrowOutAdapter.clear();
         mBorrowOutAdapter.addAll( data);
         mBorrowOutAdapter.notifyDataSetChanged();
+        startScheduleJob(1000*60);
     }
-
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        if (mListView!=null&&mBorrowOutAdapter!=null&&mBorrowOutAdapter.getCount()==0){
+            stopScheduleJob();
+            return;
+        }
+        updateEndLineData();
+    }
+    private void updateEndLineData(){
+        if(mListView!=null&&mBorrowOutAdapter!=null){
+            int first = mListView.getFirstVisiblePosition();
+            int last = mListView.getLastVisiblePosition();
+            for (int i = first; i <= last; i++) {
+                BorrowOut borrowOut = mBorrowOutAdapter.getItem(i);
+                View childView = mListView.getChildAt(i);
+                if (borrowOut!=null&&childView!=null){
+                    TextView mEndLineTime = (TextView) childView.findViewById(R.id.endLineTime);
+                    mEndLineTime.setText(DateUtil.compareTime(borrowOut.getEndlineTime()));
+                }
+            }
+        }
+    }
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -136,7 +161,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),position,getContext());
+            viewHolder.bindDataWithView(getItem(position),getContext());
             return convertView;
         }
 
@@ -168,17 +193,24 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOut item, int position, Context context){
-                loadImage(context,item.getPortrait(),mUserPortrait);
+            private void bindDataWithView(BorrowOut item, Context context){
+                Glide.with(context).load(item.getContentImg())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .into(mUserPortrait);
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getConfirmTime())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mOption.setText(item.getContent());
-
+                String location = item.getLocation();
+                if(location==null){
+                    location = context.getString(R.string.no_location);
+                }
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        "\n" +"吴彦祖", 0.733f, ContextCompat.getColor(context,R.color.assistText));
+                        "\n" +location, 0.733f, ContextCompat.getColor(context,R.color.assistText));
                 mUserNameLand.setText(attentionSpannableString);
-                mEndLineTime.setText("11:44");
+                mEndLineTime.setText(DateUtil.compareTime(item.getEndlineTime()));
 
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
@@ -228,7 +260,9 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 }
             }
             private void loadImage(Context context,String src,ImageView image){
-                Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
+                Glide.with(context).load(src)
+                        .placeholder(R.drawable.help)
+                        .into(image);
             }
 
         }

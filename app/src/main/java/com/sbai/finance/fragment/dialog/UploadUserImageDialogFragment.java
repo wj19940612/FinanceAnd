@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.dialog;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -41,6 +42,9 @@ import butterknife.Unbinder;
 public class UploadUserImageDialogFragment extends DialogFragment {
     private static final String TAG = "UploadUserImageDialogFr";
 
+    private static final String KEY_IF_CLIP_IMAGE = "IF_CLIP_IMAGE";
+    private static final String KEY_IMAGE_URL_INDEX = "KEY_IMAGE_URL_INDEX";
+
     /**
      * 打开相机的请求码
      */
@@ -66,22 +70,51 @@ public class UploadUserImageDialogFragment extends DialogFragment {
 
     private Unbinder mBind;
     private File mFile;
+    private boolean mNeedClipImage;
+    //用来标记传回的图片地址加载到哪一个image
+    private int mImagePathIndex;
+    private OnImagePathListener mOnImagePathListener;
 
+    public interface OnImagePathListener {
+        void onImagePath(int index, String imagePath);
+    }
 
     public UploadUserImageDialogFragment() {
 
     }
 
-    public static UploadUserImageDialogFragment newInstance() {
+    public static UploadUserImageDialogFragment newInstance(boolean ifClipImage) {
         Bundle args = new Bundle();
+        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
+        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int index, boolean ifClipImage) {
+        Bundle args = new Bundle();
+        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
+        args.putInt(KEY_IMAGE_URL_INDEX,index);
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnImagePathListener) {
+            mOnImagePathListener = (OnImagePathListener) context;
+        }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mNeedClipImage = getArguments().getBoolean(KEY_IF_CLIP_IMAGE, true);
+            mImagePathIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
+        }
         setStyle(STYLE_NO_TITLE, R.style.UpLoadHeadImageDialog);
     }
 
@@ -119,7 +152,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
                     Intent openCameraIntent = new Intent(
                             MediaStore.ACTION_IMAGE_CAPTURE);
                     mFile = new File(Environment
-                            .getExternalStorageDirectory(), "image.jpg");
+                            .getExternalStorageDirectory(), System.currentTimeMillis() + "image.jpg");
                     // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
                     Uri mMBitmapUri = Uri.fromFile(mFile);
                     openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
@@ -162,14 +195,6 @@ public class UploadUserImageDialogFragment extends DialogFragment {
                         }
                     }
                     break;
-
-                case REQ_CODE_CROP_IMAGE:
-                    Uri uri = data.getData();
-                    if (uri != null) {
-                        if (!TextUtils.isEmpty(uri.getPath())) {
-                        }
-                    }
-                    break;
                 case REQ_CODE_TAKE_PHONE_FROM_PHONES:
                     String galleryBitmapPath = getGalleryBitmapPath(data);
                     if (!TextUtils.isEmpty(galleryBitmapPath)) {
@@ -205,9 +230,15 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     }
 
     private void openClipImagePage(String imaUri) {
-        Intent intent = new Intent(getActivity(), ClipHeadImageActivity.class);
-        intent.putExtra(ClipHeadImageActivity.KEY_CLIP_USER_IMAGE, imaUri);
-        getActivity().startActivityForResult(intent, REQ_CLIP_HEAD_IMAGE_PAGE);
+        if (mNeedClipImage) {
+            Intent intent = new Intent(getActivity(), ClipHeadImageActivity.class);
+            intent.putExtra(ClipHeadImageActivity.KEY_CLIP_USER_IMAGE, imaUri);
+            getActivity().startActivityForResult(intent, REQ_CLIP_HEAD_IMAGE_PAGE);
+        } else {
+            if (mOnImagePathListener != null) {
+                mOnImagePathListener.onImagePath(mImagePathIndex,imaUri.replace("/raw//",""));
+            }
+        }
         dismiss();
     }
 

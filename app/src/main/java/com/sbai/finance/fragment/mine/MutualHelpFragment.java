@@ -93,6 +93,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
+        mEmpty.setText(R.string.now_not_has_data);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mListView.setEmptyView(mEmpty);
         mMutualHelpAdapter = new MutualHelpAdapter(getActivity());
@@ -102,7 +103,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getId()).execute();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getId()).execute();
                 getActivity().finish();
             }
         });
@@ -312,14 +313,12 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
                     if (item.isAlreadyRead()) {
-//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
-                                ContextCompat.getColor(context, R.color.primaryText));
-                        mUserAction.setText(spannableString);
-                    } else {
-//                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName(), getUserAction(context, item),
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
                                 ContextCompat.getColor(context, R.color.secondaryText));
+                        mUserAction.setText(spannableString);
+                    } else {
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName()+"  ", item.getTitle(),
+                                ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     }
                 }
@@ -333,23 +332,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                     }
                 });
 
-            }
-
-            /**
-             * @param context
-             * @param historyNewsModel
-             * @return 用户对应的动作的resId
-             */
-            private String getUserAction(Context context, HistoryNewsModel historyNewsModel) {
-                switch (historyNewsModel.getType()) {
-                    case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                        return context.getString(R.string.want_to_help_you);
-                    case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
-                        return context.getString(R.string.refuse_your_help);
-                    case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
-                        return context.getString(R.string.accept_your_help);
-                }
-                return "";
             }
         }
     }

@@ -35,8 +35,8 @@
                 android:drawablePadding="16dp"
                 android:gravity="center_horizontal"
                 android:paddingTop="180dp"
-                android:drawableTop="@drawable/img_no_data"
-                android:text="快去添加你心仪的产品吧~"
+                android:drawableTop="@drawable/img_no_message"
+                android:text="@string/no_option"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
                 android:visibility="visible"/>

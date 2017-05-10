@@ -27,19 +27,17 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.MyGridView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-/**
- * Created by Administrator on 2017-04-27.
- */
 
 public class BorrowInActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
@@ -98,12 +96,12 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 })
                 .fire();
     }
-    private void requestHelper(Integer id, final int position){
+    private void requestHelper(final int id, final int position){
         Client.getHelper(id).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowHelper>>,List<BorrowHelper>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowHelper> data) {
-                        updateHelperData(data,position);
+                        updateHelperData(id,data,position);
                     }
                 }).fire();
     }
@@ -126,9 +124,60 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mBorrowInAdapter.clear();
         mBorrowInAdapter.addAll(data);
         mBorrowInAdapter.notifyDataSetChanged();
+        startScheduleJob(1000*60);
     }
-    private void updateHelperData(List<BorrowHelper> data,int position){
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        if (mListView!=null&&mBorrowInAdapter!=null&&mBorrowInAdapter.getCount()==0){
+            stopScheduleJob();
+            return;
+        }
+        updateEndLineData();
+    }
+    private void updateEndLineData(){
+        if(mListView!=null&&mBorrowInAdapter!=null){
+            int first = mListView.getFirstVisiblePosition();
+            int last = mListView.getLastVisiblePosition();
+            for (int i = first; i <= last; i++) {
+                BorrowIn borrowIn = mBorrowInAdapter.getItem(i);
+                View childView = mListView.getChildAt(i);
+                if (borrowIn!=null&&borrowIn.getStatus()==BorrowIn.STATUS_CHECKED&&childView!=null){
+                    TextView mEndLineTime = (TextView) childView.findViewById(R.id.endLineTime);
+                    SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getActivity().getString(R.string.call_helper),
+                            "\n" +getActivity().getString(R.string.end_line),"  "+DateUtil.compareTime(borrowIn.getEndlineTime()), 1.455f,1.455f,
+                            ContextCompat.getColor(getActivity(),R.color.opinionText), ContextCompat.getColor(getActivity(),R.color.redPrimary));
+                    mEndLineTime.setText(attentionSpannableString);
+                }
+            }
+        }
+    }
+    private void updateHelperData(Integer id, List<BorrowHelper> data, int position){
+         if(mListView!=null&&mBorrowInAdapter!=null){
+             BorrowIn borrowIn = mBorrowInAdapter.getItem(position);
+             View childView = mListView.getChildAt(position);
+             if(borrowIn!=null&&borrowIn.getId()==id&&childView!=null){
+                 TextView helperAmount = (TextView) childView.findViewById(R.id.helperAmount);
+                 MyGridView mGridView= (MyGridView) childView.findViewById(R.id.gridView);
+                 helperAmount.setText(getActivity().getString(R.string.helper,data.size()));
 
+                 ImageGridAdapter imageGridAdapter= (ImageGridAdapter) mGridView.getAdapter();
+                 if (imageGridAdapter==null){
+                     imageGridAdapter = new ImageGridAdapter(this);
+                     imageGridAdapter.setOnItemClickListener(new ImageGridAdapter.OnItemClickListener() {
+                         @Override
+                         public void onClick(BorrowHelper item) {
+                             ToastUtil.show(item.getUserName());
+                         }
+                     });
+                     mGridView.setAdapter(imageGridAdapter);
+                 }
+                 imageGridAdapter.clear();
+                 imageGridAdapter.addAll(data);
+                 imageGridAdapter.notifyDataSetChanged();
+
+             }
+         }
     }
 
     private void stopRefreshAnimation() {
@@ -152,7 +201,53 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
+    static class ImageGridAdapter extends ArrayAdapter<BorrowHelper> {
 
+        public ImageGridAdapter(@NonNull Context context) {
+            super(context, 0);
+        }
+        interface OnItemClickListener{
+            void onClick(BorrowHelper item);
+        }
+        private OnItemClickListener mOnItemClickListener;
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+            mOnItemClickListener = onItemClickListener;
+        }
+        @NonNull
+        @Override
+        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null){
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_helper_image, null);
+                ImageView userImage = (ImageView) convertView.findViewById(R.id.userImg);
+                userImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.onClick(getItem(position));
+                    }
+                });
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            }else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.bindDataWithView(getItem(position),getContext());
+            return convertView;
+        }
+        static class ViewHolder{
+            @BindView(R.id.userImg)
+            ImageView mUserImg;
+            ViewHolder(View view){
+                ButterKnife.bind(this, view);
+            }
+            private void bindDataWithView(BorrowHelper item, Context context){
+                Glide.with(context).load(item.getPortrait())
+                        .bitmapTransform(new GlideCircleTransform(context))
+                        .placeholder(R.drawable.help)
+                        .into(mUserImg);
+            }
+        }
+    }
 
     static class BorrowInAdapter extends ArrayAdapter<BorrowIn>{
         Context mContext;
@@ -174,19 +269,28 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_in_mine, parent, false);
+                TextView cancelBorrow = (TextView) convertView.findViewById(R.id.cancelBorrowIn);
+                cancelBorrow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemCancelBorrowClick(getItem(position).getId());
+                    }
+                });
+                MyGridView mGridView= (MyGridView) convertView.findViewById(R.id.gridView);
+                ImageGridAdapter imageGridAdapter = new ImageGridAdapter(getContext());
+                imageGridAdapter.setOnItemClickListener(new ImageGridAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(BorrowHelper item) {
+                        ToastUtil.show(item.getUserName());
+                    }
+                });
+                mGridView.setAdapter(imageGridAdapter);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.bindDataWithView(getItem(position),position,getContext());
-            TextView cancelBorrow = (TextView) convertView.findViewById(R.id.cancelBorrowIn);
-            cancelBorrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemCancelBorrowClick(getItem(position).getId());
-                }
-            });
             mCallback.OnItemGetHelper(getItem(position).getId(),position);
             return convertView;
         }
@@ -204,6 +308,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
             TextView mEndLineTime;
             @BindView(R.id.opinion)
             TextView mOption;
+            @BindView(R.id.cancelBorrowIn)
+            TextView mCancelBorrowIn;
             @BindView(R.id.image1)
             ImageView mImage1;
             @BindView(R.id.image2)
@@ -216,17 +322,30 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(BorrowIn item, int position, Context context){
-                mPublishTime.setText(DateUtil.formatSlash(item.getCreateDate()));
+
+                mPublishTime.setText(context.getString(R.string.publish_time,DateUtil.formatSlash(item.getCreateDate())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mOption.setText(item.getContent());
-
-                SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.call_helper),
-                        "\n" +context.getString(R.string.end_line)," "+item.getEndlineTime(), 1.455f,1.455f,
-                        ContextCompat.getColor(context,R.color.opinionText), ContextCompat.getColor(context,R.color.redPrimary));
-                mEndLineTime.setText(attentionSpannableString);
-
+                SpannableString attentionSpannableString;
+                switch (item.getStatus()){
+                    case BorrowIn.STATUS_CHECKED:
+                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.call_helper),
+                                "\n" +context.getString(R.string.end_line),"  "+DateUtil.compareTime(item.getEndlineTime()), 1.455f,1.455f,
+                                ContextCompat.getColor(context,R.color.opinionText), ContextCompat.getColor(context,R.color.redPrimary));
+                        mEndLineTime.setText(attentionSpannableString);
+                        mCancelBorrowIn.setVisibility(View.VISIBLE);
+                        break;
+                    case BorrowIn.STATUS_NO_CHECK:
+                        attentionSpannableString = StrUtil.mergeTextWithColor(context.getString(R.string.on_checking),1.455f,
+                                ContextCompat.getColor(context,R.color.opinionText));
+                        mEndLineTime.setText(attentionSpannableString);
+                        mCancelBorrowIn.setVisibility(View.GONE);
+                        break;
+                    default:
+                        break;
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
                     case 0:

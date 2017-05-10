@@ -1,10 +1,12 @@
 package com.sbai.finance.model.economiccircle;
 
+import java.io.Serializable;
+
 /**
  * Created by lixiaokuan0819 on 2017/5/2.
  */
 
-public class WhetherAttentionShieldOrNot {
+public class WhetherAttentionShieldOrNot implements Serializable{
 
 	/**
 	 * follow : 1
@@ -15,7 +17,7 @@ public class WhetherAttentionShieldOrNot {
 
 	private boolean follow;
 	private boolean followMutual;
-	private boolean sheild;
+	private boolean shield;
 	private boolean shieldMutual;
 
 	public boolean isFollow() {
@@ -34,12 +36,12 @@ public class WhetherAttentionShieldOrNot {
 		this.followMutual = followMutual;
 	}
 
-	public boolean isSheild() {
-		return sheild;
+	public boolean isShield() {
+		return shield;
 	}
 
-	public void setSheild(boolean sheild) {
-		this.sheild = sheild;
+	public void setShield(boolean shield) {
+		this.shield = shield;
 	}
 
 	public boolean isShieldMutual() {
@@ -55,7 +57,7 @@ public class WhetherAttentionShieldOrNot {
 		return "WhetherAttentionShieldOrNot{" +
 				"follow=" + follow +
 				", followMutual=" + followMutual +
-				", sheild=" + sheild +
+				", sheild=" + shield +
 				", shieldMutual=" + shieldMutual +
 				'}';
 	}

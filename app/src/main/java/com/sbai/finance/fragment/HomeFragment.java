@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureListActivity;
+import com.sbai.finance.activity.home.BorrowMoneyActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.home.TopicActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
+import com.sbai.finance.activity.opinion.OpinionActivity;
+import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
-import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -68,6 +74,7 @@ public class HomeFragment extends BaseFragment {
     TextView mIdeaTitle;
     @BindView(R.id.bigEvent)
     LinearLayout mBigEvent;
+
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
 
@@ -93,12 +100,12 @@ public class HomeFragment extends BaseFragment {
                 Topic topic = (Topic) parent.getItemAtPosition(position);
                 if (topic != null) {
                     Launcher.with(getContext(), TopicActivity.class)
-                            .putExtra(Launcher.KEY_TOPIC, topic)
+                            .putExtra(Launcher.EX_PAYLOAD, topic)
                             .execute();
                 }
             }
         });
-        mHomeBanner.setListener(new HomeBanner.OnViewClickListener() {
+        mHomeBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
             @Override
             public void onBannerClick(BannerModel information) {
                 if (information.isH5Style()) {
@@ -129,12 +136,20 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onHelpClick() {
-                Launcher.with(getActivity(), MutualActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), MutualActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
 
             @Override
             public void onSelfChoiceClick() {
-                Launcher.with(getActivity(), OptionActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), OptionActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
     }
@@ -160,9 +175,8 @@ public class HomeFragment extends BaseFragment {
     public void onTimeUp(int count) {
         super.onTimeUp(count);
         if (getUserVisibleHint()) {
-            if (count % 5 == 0) {
-                mHomeBanner.nextAdvertisement();
-            }
+            int counter = mHomeBanner.getInnerCounter();
+            mHomeBanner.setInnerCounter(++counter);
         }
     }
 
@@ -193,10 +207,12 @@ public class HomeFragment extends BaseFragment {
 
         //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<String>, String>() {
+                .setCallback(new Callback<Resp<String>>() {
                     @Override
-                    protected void onRespSuccessData(String data) {
-                        updateEventInfo(data);
+                    protected void onRespSuccess(Resp<String> resp) {
+                        if (!TextUtils.isEmpty(resp.getData())) {
+                            updateEventInfo(resp.getData());
+                        }
                     }
                 }).fire();
         //获取主题信息
@@ -232,8 +248,10 @@ public class HomeFragment extends BaseFragment {
                 Launcher.with(getActivity(), EventActivity.class).execute();
                 break;
             case R.id.borrowMoney:
+                Launcher.with(getActivity(), BorrowMoneyActivity.class).execute();
                 break;
             case R.id.idea:
+                Launcher.with(getActivity(), OpinionActivity.class).execute();
                 break;
             default:
                 break;

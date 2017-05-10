@@ -30,6 +30,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 if (userFansModel.isNotAttention()) {
                     SmartDialog.with(getActivity(),
                             getActivity().getString(R.string.if_attention, userFansModel.getUserName()))
-                            .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                            .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     dialog.dismiss();
@@ -78,12 +79,12 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                                 }
                             })
                             .setMessageTextSize(16)
-                            .setNegative(android.R.string.cancel)
+                            .setNegative(R.string.cancel)
                             .show();
                 } else {
                     SmartDialog.with(getActivity(),
                             getActivity().getString(R.string.if_not_attention, userFansModel.getUserName()))
-                            .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                            .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
                                     dialog.dismiss();
@@ -91,7 +92,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                                 }
                             })
                             .setMessageTextSize(16)
-                            .setNegative(android.R.string.cancel)
+                            .setNegative(R.string.cancel)
                             .show();
                 }
             }
@@ -119,6 +120,7 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                         mUserFansAdapter.remove(userFansModel);
                         userFansModel.setOther(userFansModel.isNotAttention() ? 0 : 1);
                         mUserFansAdapter.insert(userFansModel, position);
+                        setResult(RESULT_OK);
                     }
                 })
                 .fire();
@@ -250,12 +252,19 @@ public class FansActivity extends BaseActivity implements AbsListView.OnScrollLi
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserFansModel item, Context context, final OnUserFansClickListener onUserFansClickListener, final int position) {
+            public void bindViewWithData(final UserFansModel item, final Context context, final OnUserFansClickListener onUserFansClickListener, final int position) {
                 if (item == null) return;
                 Glide.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
+
+                mUserHeadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context,UserDataActivity.class).putExtra(Launcher.USER_ID,item.getUserId()).execute();
+                    }
+                });
 
                 if (item.isNotAttention()) {
                     mRelive.setText(R.string.attention);

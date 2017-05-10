@@ -16,6 +16,8 @@ import com.sbai.finance.R;
 
 public class TradeFloatButtons extends LinearLayout {
 
+    public static final int HAS_ADD_OPITION =  1;//添加自选 1 已添加  0 未添加
+
     private LinearLayout mPublishPoint;
     private LinearLayout mAddOptional;
     private LinearLayout mTrade;
@@ -28,6 +30,7 @@ public class TradeFloatButtons extends LinearLayout {
         void onTradeButtonClick();
     }
 
+    private boolean mHasAddInOpition;
     private boolean mHasTradeButton;
     private OnViewClickListener mOnViewClickListener;
 
@@ -107,6 +110,23 @@ public class TradeFloatButtons extends LinearLayout {
 
     public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
         mOnViewClickListener = onViewClickListener;
+    }
+
+    public boolean isHasAddInOptional() {
+        return mHasAddInOpition;
+    }
+
+    public void setHasAddInOpition(boolean hasAddInOpition) {
+        mHasAddInOpition = hasAddInOpition;
+        updateOpitionalStatus();
+    }
+
+    private void updateOpitionalStatus() {
+        if (mHasAddInOpition) {
+            ((TextView) mAddOptional.getChildAt(0)).setText(R.string.delete_optional);
+        } else {
+            ((TextView) mAddOptional.getChildAt(0)).setText(R.string.add_optional);
+        }
     }
 
     public void setHasTradeButton(boolean hasTradeButton) {

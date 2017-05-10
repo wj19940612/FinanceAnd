@@ -7,6 +7,7 @@
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:barBackground="@color/blackAssist"
@@ -37,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawablePadding="16dp"
-                android:drawableTop="@drawable/img_no_data"
+                android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="150dp"
                 android:text="@string/no_data"

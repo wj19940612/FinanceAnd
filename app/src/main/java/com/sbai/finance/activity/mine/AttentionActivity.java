@@ -31,6 +31,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.HashSet;
@@ -69,17 +70,16 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             @Override
             public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
                 SmartDialog.with(getActivity(),
-                        getString(R.string.relieve_shield_dialog_content, userAttentionModel.getFollowuserName())
-                        , getString(R.string.relieve_shield_dialog_title, userAttentionModel.getFollowuserName()))
-                        .setPositive(android.R.string.ok, new SmartDialog.OnClickListener() {
+                        getString(R.string.if_not_attention, userAttentionModel.getFollowuserName()))
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
                                 relieveAttentionUser(userAttentionModel);
                             }
                         })
-                        .setTitleMaxLines(2)
-                        .setNegative(android.R.string.cancel)
+                        .setMessageTextSize(16)
+                        .setNegative(R.string.cancel)
                         .show();
             }
         });
@@ -109,6 +109,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             mRelieveAttentionAdapter.remove(userAttentionModel);
+                            setResult(RESULT_OK);
                         }
                     }
                 })
@@ -242,7 +243,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserAttentionModel item, Context context, final OnRelieveAttentionClickListener onRelieveAttentionClickListener) {
+            public void bindViewWithData(final UserAttentionModel item, final Context context, final OnRelieveAttentionClickListener onRelieveAttentionClickListener) {
                 if (item == null) return;
                 Glide.with(context).load(item.getFollowUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
@@ -250,6 +251,12 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                         .into(mUserHeadImage);
                 mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
                 mUserName.setText(item.getFollowuserName());
+                mUserHeadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context,UserDataActivity.class).putExtra(Launcher.USER_ID,item.getFollowUserId()).execute();
+                    }
+                });
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
