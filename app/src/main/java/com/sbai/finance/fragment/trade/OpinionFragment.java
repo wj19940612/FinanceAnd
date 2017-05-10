@@ -217,8 +217,7 @@ public class OpinionFragment extends BaseFragment {
 
         private void bindDataWithView(BaseViewHolder helper, final Opinion item) {
             String attend = item.getIsAttention() == 1 ? "" : getString(R.string.is_attention);
-            String format = "yyyy/MM/dd HH:mm";
-            String time = DateUtil.format(item.getCreateTime(), format);
+            String time = DateUtil.getFormatTime(item.getCreateTime());
             helper.setText(R.id.userName, item.getUserName())
                     .setText(R.id.followed, attend)
                     .setText(R.id.publishTime, time)
