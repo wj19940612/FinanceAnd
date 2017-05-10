@@ -18,7 +18,9 @@
     <dimen name="common_margin">15dp</dimen>
     <dimen name="user_head_image">32dp</dimen>
     <dimen name="common_default_size">15sp</dimen>
-
+    <dimen name="contentImg_width">79dp</dimen>
+    <dimen name="contentImg_height">69dp</dimen>
     <dimen name="identity_card_width">117dp</dimen>
     <dimen name="identity_card_height">100dp</dimen>
+
 </resources>

@@ -637,6 +637,13 @@ public class Client {
                         .put("pageSize", pageSize));
     }
 
+    public static API getBorrowMoneyList (int page, int pageSize) {
+	    return new API(POST, "/coterie/help/loan/showList.do",
+			    new ApiParams()
+					    .put("page", page)
+					    .put("pageSize", pageSize));
+    }
+
     /**
      * 获取观点详情
      *
