@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -171,7 +170,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				requestEconomicCircleList();
 			}
 		});
-
 	}
 
 	private void requestEconomicCircleList() {
@@ -180,9 +178,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					@Override
 					protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
 						mEconomicCircleList = economicCircleList;
-						for (EconomicCircle data : economicCircleList) {
-							Log.d(TAG, "onRespSuccessData: type  " + data.getType());
-						}
 						updateEconomicCircleList(mEconomicCircleList);
 					}
 
@@ -241,7 +236,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		for (EconomicCircle economicCircle : economicCircleList) {
 			if (mSet.add(economicCircle.getId())) {
 				mEconomicCircleAdapter.add(economicCircle);
-
 			}
 		}
 	}
@@ -327,7 +321,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 
 					case TYPE_BORROW_MONEY:
-						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_borrow_money, null);
+						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_borrow_money, null);
 						borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
 						convertView.setTag(R.id.tag_borrow_money, borrowMoneyViewHolder);
 						break;

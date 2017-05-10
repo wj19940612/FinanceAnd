@@ -168,7 +168,7 @@
         android:textSize="14sp"
         tools:text="狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!"/>
 
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -177,29 +177,11 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/contentImg"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/help"/>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/help"/>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/help"/>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/help"/>
-
-    </LinearLayout>
+            android:orientation="horizontal">
+        </LinearLayout>
+    </HorizontalScrollView>
 </LinearLayout>

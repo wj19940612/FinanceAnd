@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureListActivity;
+import com.sbai.finance.activity.home.BorrowMoneyActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionActivity;
 import com.sbai.finance.activity.home.TopicActivity;
@@ -246,6 +247,7 @@ public class HomeFragment extends BaseFragment {
                 Launcher.with(getActivity(), EventActivity.class).execute();
                 break;
             case R.id.borrowMoney:
+                Launcher.with(getActivity(), BorrowMoneyActivity.class).execute();
                 break;
             case R.id.idea:
                 Launcher.with(getActivity(), OpinionActivity.class).execute();
