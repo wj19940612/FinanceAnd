@@ -84,7 +84,6 @@
             android:layout_marginRight="@dimen/common_margin"
             android:layout_marginTop="15dp"
             android:gravity="center">
-
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/identityCardFrontImage"
                 android:layout_width="0dp"
@@ -100,9 +99,9 @@
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
+                android:scaleType="centerCrop"
                 android:background="@drawable/bg_add_identity_card_reserve"
-                android:gravity="center"
-                android:scaleType="centerCrop"/>
+                android:gravity="center"/>
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatTextView
