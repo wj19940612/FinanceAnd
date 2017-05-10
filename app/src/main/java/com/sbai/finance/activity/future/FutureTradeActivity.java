@@ -354,7 +354,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
     private void requestDeleteOptional() {
-        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancle_opition))
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
                 .setMessageTextSize(15)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
