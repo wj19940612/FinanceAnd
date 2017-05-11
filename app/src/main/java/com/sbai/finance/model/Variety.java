@@ -32,22 +32,26 @@ public class Variety implements Parcelable {
      * varietyName : 沪银
      * varietyType : ag
      */
-
+    //	基线
     private int baseline;
     private String bigVarietyTypeCode; // 期货：future 外汇：forex 股票：stock
-    private String contractsCode;
-    private double decimalScale;
-    private String displayMarketTimes;
-    private int exchangeId;
-    private int exchangeStatus;
-    private double flashChartPriceInterval;
-    private int marketPoint;
-    private String openMarketTime;
+    private String contractsCode;   //	合约代码（只对期货有用）
+    private double decimalScale;     //	分时图曲线比例
+    private String displayMarketTimes;      //	可显示的开闭市时间
+    private int exchangeId;            //	交易所id
+    private int exchangeStatus;          //市场状态0：休市 1 开市
+    private double flashChartPriceInterval;   //	闪电图区间
+    private int marketPoint;                //	行情小数位数
+    private String openMarketTime;            //交易所时间
     private String smallVarietyTypeCode; //期货小类 smallVarietyTypeCode china 国内 foreign 国外 //外汇小类 directPlate 直盘 noDirectPlate 非直盘 crossPlate 交叉盘 //股票 exponent 指数
-    private int sort;
+    private int sort;               //	排序
     private int varietyId;
     private String varietyName;
     private String varietyType;
+
+    public boolean ifProductIsStock(){
+        return getBigVarietyTypeCode().equalsIgnoreCase(VAR_STOCK);
+    }
 
     public int getBaseline() {
         return baseline;

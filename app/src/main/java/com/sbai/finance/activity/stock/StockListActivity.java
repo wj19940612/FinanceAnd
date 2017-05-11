@@ -208,7 +208,10 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Launcher.with(getActivity(), StockTradeActivity.class).execute();
+        Variety variety = (Variety) parent.getAdapter().getItem(position);
+        if (variety != null) {
+            Launcher.with(getActivity(), StockTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
+        }
     }
 
     public static class StockListAdapter extends ArrayAdapter<Variety> {

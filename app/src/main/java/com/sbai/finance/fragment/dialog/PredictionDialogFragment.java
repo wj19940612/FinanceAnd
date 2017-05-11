@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.PredictionRuleActivity;
+import com.sbai.finance.model.Prediction;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -37,8 +38,7 @@ public class PredictionDialogFragment extends DialogFragment {
     OnPredictButtonListener mOnPredictButtonListener;
 
     public static PredictionDialogFragment newInstance() {
-        PredictionDialogFragment fragment = new PredictionDialogFragment();
-        return fragment;
+        return new PredictionDialogFragment();
     }
 
     @Override
@@ -59,11 +59,11 @@ public class PredictionDialogFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bullishButton:
-                mOnPredictButtonListener.onBullishButtonClick();
+                mOnPredictButtonListener.onBullishButtonClick(Prediction.DIRECTION_LONG);
                 this.dismiss();
                 break;
             case R.id.bearishButton:
-                mOnPredictButtonListener.onBearishButtonClick();
+                mOnPredictButtonListener.onBearishButtonClick(Prediction.DIRECTION_SHORT);
                 this.dismiss();
                 break;
             case R.id.predictionRule:
@@ -89,8 +89,8 @@ public class PredictionDialogFragment extends DialogFragment {
     }
 
     public interface OnPredictButtonListener {
-        void onBullishButtonClick();
+        void onBullishButtonClick(int directionLong);
 
-        void onBearishButtonClick();
+        void onBearishButtonClick(int directionShort);
     }
 }

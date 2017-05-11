@@ -173,7 +173,8 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                 }else{
                     mSkilledType.setText(context.getString(R.string.future));
                 }
-                mAccuracyRate.setText("+"+String.valueOf(item.getPassRat()*100)+"%");
+                String s = item.getPassRat() * 100 + "%";
+                mAccuracyRate.setText(s);
 
             }
         }
