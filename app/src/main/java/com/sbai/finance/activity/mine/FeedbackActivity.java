@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.Feedback;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -89,23 +90,27 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
-    private void requestFeedbackList() {
-        Client.getFeedback(mPage, mPageSize)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Feedback> data) {
-                        updateFeedbackList(data);
-                    }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        stopRefreshAnimation();
-                    }
-                })
-                .fire();
+    //只有在登录的情况下 才请求记录
+    private void requestFeedbackList() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.getFeedback(mPage, mPageSize)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Feedback> data) {
+                            updateFeedbackList(data);
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            stopRefreshAnimation();
+                        }
+                    })
+                    .fire();
+        }
     }
 
     private void updateFeedbackList(List<Feedback> data) {
