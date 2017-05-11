@@ -787,7 +787,7 @@ public class Client {
      * @return
      */
     public static API borrowIn(String content, String contentImg, Integer days, Integer interest, Integer money, String userId) {
-        return new API("/coterie/help/loan/addLoan.do",
+        return new API(POST,"/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
                         .put("contentImg", contentImg)

@@ -268,9 +268,9 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
                                 context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                        mAlreadyRepayment.setVisibility(View.GONE);
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.VISIBLE);
-                        mAlreadyRepayment.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_ALREADY_REPAY:
                         mUserPortrait.setVisibility(View.VISIBLE);

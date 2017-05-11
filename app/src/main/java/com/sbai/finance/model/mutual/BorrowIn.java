@@ -32,6 +32,15 @@ public class BorrowIn {
     private int money;
     private int status;
     private int userId;
+    private int intentionCount;
+
+    public int getIntentionCount() {
+        return intentionCount;
+    }
+
+    public void setIntentionCount(int intentionCount) {
+        this.intentionCount = intentionCount;
+    }
 
     public String getContent() {
         return content;

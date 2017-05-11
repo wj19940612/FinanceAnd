@@ -127,7 +127,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			public void onClick(View v) {
 				if (LocalUser.getUser().isLogin()) {
 					Launcher.with(context, UserDataActivity.class)
-							.putExtra(Launcher.USER_ID,borrowMoneyDetails .getUserId())
+							.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
 							.execute();
 				} else {
 					Launcher.with(context, LoginActivity.class).execute();
@@ -192,29 +192,27 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 		String[] images = borrowMoneyDetails.getContentImg().split(",");
 		switch (images.length) {
-			case 0:
-				mImage1.setVisibility(View.GONE);
-				mImage2.setVisibility(View.GONE);
-				mImage3.setVisibility(View.GONE);
-				mImage4.setVisibility(View.GONE);
-				break;
 			case 1:
-				mImage1.setVisibility(View.VISIBLE);
-				loadImage(context, images[0], mImage1);
-				mImage2.setVisibility(View.INVISIBLE);
-				mImage3.setVisibility(View.INVISIBLE);
-				mImage4.setVisibility(View.INVISIBLE);
-				imageClick(context, images, mImage1, 0);
+				if (TextUtils.isEmpty(images[0])) {
+					mImage1.setVisibility(View.GONE);
+					mImage2.setVisibility(View.GONE);
+					mImage3.setVisibility(View.GONE);
+					mImage4.setVisibility(View.GONE);
+				} else {
+					mImage1.setVisibility(View.VISIBLE);
+					loadImage(context, images[0], mImage1);
+					mImage2.setVisibility(View.INVISIBLE);
+					mImage3.setVisibility(View.INVISIBLE);
+					mImage4.setVisibility(View.INVISIBLE);
+				}
 				break;
 			case 2:
 				mImage1.setVisibility(View.VISIBLE);
 				loadImage(context, images[0], mImage1);
 				mImage2.setVisibility(View.VISIBLE);
 				loadImage(context, images[1], mImage2);
-				mImage3.setVisibility(View.INVISIBLE);
-				mImage4.setVisibility(View.INVISIBLE);
-				imageClick(context, images, mImage1, 0);
-				imageClick(context, images, mImage2, 1);
+				mImage3.setVisibility(View.GONE);
+				mImage4.setVisibility(View.GONE);
 				break;
 			case 3:
 				mImage1.setVisibility(View.VISIBLE);
@@ -223,10 +221,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				loadImage(context, images[1], mImage2);
 				mImage3.setVisibility(View.VISIBLE);
 				loadImage(context, images[2], mImage3);
-				mImage4.setVisibility(View.INVISIBLE);
-				imageClick(context, images, mImage1, 0);
-				imageClick(context, images, mImage2, 1);
-				imageClick(context, images, mImage3, 2);
+				mImage4.setVisibility(View.GONE);
 				break;
 			case 4:
 				mImage1.setVisibility(View.VISIBLE);
@@ -237,28 +232,25 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				loadImage(context, images[2], mImage3);
 				mImage4.setVisibility(View.VISIBLE);
 				loadImage(context, images[3], mImage4);
-				imageClick(context, images, mImage1, 0);
-				imageClick(context, images, mImage2, 1);
-				imageClick(context, images, mImage3, 2);
-				imageClick(context, images, mImage3, 3);
 				break;
 			default:
 				break;
 
-		}}
+		}
+	}
 
-	private void loadImage(Context context, String src, ImageView image){
+	private void loadImage(Context context, String src, ImageView image) {
 		Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
 	}
 
-	private void imageClick (final Context context, final String[] images,
-	                         ImageView imageView, final int i) {
+	private void imageClick(final Context context, final String[] images,
+	                        ImageView imageView, final int i) {
 		imageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context,ContentImgActivity.class);
+				Intent intent = new Intent(context, ContentImgActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, images);
-				intent.putExtra(Launcher.EX_PAYLOAD_1,i);
+				intent.putExtra(Launcher.EX_PAYLOAD_1, i);
 				context.startActivity(intent);
 			}
 		});

@@ -129,6 +129,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockIndexData((ArrayList<Variety>) data);
+//                        requestStockIndexMarketData(ArrayList<Variety>) data);
                     }
                 }).fire();
     }
@@ -145,7 +146,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         Variety variety = null;
         // 2.判断涨跌
         int s2Color = R.color.redPrimary;
-        int s3Color = R.color.redPrimary;
+        int s3Color = R.color.greenPrimary;
         // 3.生成SpannableString
         SpannableString spannableString = StrUtil.mergeTextWithRatioColor(market,
                 "\n" + "24396.26", "\n50.39 +0.21%", 1.133f, 0.667f,
