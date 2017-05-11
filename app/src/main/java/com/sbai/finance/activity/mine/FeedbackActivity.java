@@ -230,10 +230,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         } else {
             feedback.setContent("file://" + imagePath);
         }
+        feedback.setCreateDate(System.currentTimeMillis());
         feedback.setUserPortrait(LocalUser.getUser().getUserInfo().getUserPortrait());
 
         mFeedbackAdapter.addFeedbackItem(feedback);
-
     }
 
 
@@ -266,6 +266,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         public void addFeedbackItem(Feedback feedback) {
             mFeedbackList.add(feedback);
             notifyDataSetChanged();
+
         }
 
         @Override
