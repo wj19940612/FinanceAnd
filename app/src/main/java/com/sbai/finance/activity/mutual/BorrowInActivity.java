@@ -371,8 +371,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         loadImage(context,images[0],mImage1);
                         mImage2.setVisibility(View.VISIBLE);
                         loadImage(context,images[1],mImage2);
-                        mImage3.setVisibility(View.GONE);
-                        mImage4.setVisibility(View.GONE);
+                        mImage3.setVisibility(View.INVISIBLE);
+                        mImage4.setVisibility(View.INVISIBLE);
                         break;
                     case 3:
                         mImage1.setVisibility(View.VISIBLE);
@@ -381,7 +381,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         loadImage(context,images[1],mImage2);
                         mImage3.setVisibility(View.VISIBLE);
                         loadImage(context,images[2],mImage3);
-                        mImage4.setVisibility(View.GONE);
+                        mImage4.setVisibility(View.INVISIBLE);
                         break;
                     case 4:
                         mImage1.setVisibility(View.VISIBLE);
