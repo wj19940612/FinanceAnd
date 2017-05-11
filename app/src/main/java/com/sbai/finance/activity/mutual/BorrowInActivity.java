@@ -38,6 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class BorrowInActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -369,8 +371,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         loadImage(context,images[0],mImage1);
                         mImage2.setVisibility(View.VISIBLE);
                         loadImage(context,images[1],mImage2);
-                        mImage3.setVisibility(View.INVISIBLE);
-                        mImage4.setVisibility(View.INVISIBLE);
+                        mImage3.setVisibility(View.GONE);
+                        mImage4.setVisibility(View.GONE);
                         break;
                     case 3:
                         mImage1.setVisibility(View.VISIBLE);
@@ -379,7 +381,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         loadImage(context,images[1],mImage2);
                         mImage3.setVisibility(View.VISIBLE);
                         loadImage(context,images[2],mImage3);
-                        mImage4.setVisibility(View.INVISIBLE);
+                        mImage4.setVisibility(View.GONE);
                         break;
                     case 4:
                         mImage1.setVisibility(View.VISIBLE);
