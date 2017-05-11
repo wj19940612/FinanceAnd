@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -122,8 +121,8 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             mFootView.setPadding(padding, padding, padding, padding);
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

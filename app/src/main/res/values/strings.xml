@@ -176,6 +176,7 @@
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
+    <string name="is_already_attention_other">已经互相关注</string>
     <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
@@ -238,7 +239,7 @@
     <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
     <string name="submit_has_empty">提  交</string>
-    <string name="please_enter_the_text">请输入文字</string>
+    <string name="please_enter_the_text">请输入文字...</string>
 
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>

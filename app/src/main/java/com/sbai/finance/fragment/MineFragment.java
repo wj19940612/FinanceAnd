@@ -156,6 +156,7 @@ public class MineFragment extends BaseFragment {
             mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
+            mNews.setSubText("");
             mHeadImageLayout.setVisibility(View.GONE);
             mLogoutImage.setVisibility(View.VISIBLE);
             SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, Color.WHITE);
