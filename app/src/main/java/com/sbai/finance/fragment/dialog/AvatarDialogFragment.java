@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment;
+package com.sbai.finance.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;

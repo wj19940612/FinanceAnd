@@ -29,7 +29,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.activity.trade.TradeWebActivity;
-import com.sbai.finance.fragment.PredictionFragment;
+import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.OpinionFragment;
 import com.sbai.finance.model.LocalUser;
@@ -67,7 +67,7 @@ import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.RE
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
-public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
+public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -111,7 +111,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private OpinionFragment mOpinionFragment;
     private IntroduceFragment mIntroduceFragment;
-    private PredictionFragment mPredictionFragment;
+    private PredictionDialogFragment mPredictionFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
     private Prediction mPrediction;
@@ -280,7 +280,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private void showPredictDialog() {
         if (mPredictionFragment == null) {
-            mPredictionFragment = PredictionFragment.newInstance().setOnPredictButtonListener(this);
+            mPredictionFragment = PredictionDialogFragment.newInstance().setOnPredictButtonListener(this);
         } else {
             mPredictionFragment.show(getSupportFragmentManager());
         }

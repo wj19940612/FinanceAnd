@@ -23,7 +23,7 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.stock.FiveMarketFragment;
-import com.sbai.finance.fragment.trade.IntroduceFragment;
+import com.sbai.finance.fragment.stock.ViewPointFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -97,7 +97,7 @@ public class StockTradeActivity extends BaseActivity {
         initView();
         initTabLayout();
         initChartViews();
-      //  initSlidingTab();
+        initSlidingTab();
     }
 
     private void initView() {
@@ -134,10 +134,9 @@ public class StockTradeActivity extends BaseActivity {
     }
 
     private void initSlidingTab() {
-        mViewPager.setOffscreenPageLimit(2);
+//        mViewPager.setOffscreenPageLimit(2);
         mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mSubPageAdapter);
-
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
@@ -174,11 +173,11 @@ public class StockTradeActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new IntroduceFragment();
+                    return new ViewPointFragment();
                 case 1:
-                    return new IntroduceFragment();
+                    return new ViewPointFragment();
                 case 2:
-                    return new IntroduceFragment();
+                    return new ViewPointFragment();
             }
             return null;
         }

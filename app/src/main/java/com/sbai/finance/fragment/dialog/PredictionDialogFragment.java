@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment;
+package com.sbai.finance.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +23,7 @@ import butterknife.Unbinder;
  * Created by lixiaokuan0819 on 2017/4/24.
  */
 
-public class PredictionFragment extends DialogFragment {
+public class PredictionDialogFragment extends DialogFragment {
 
     @BindView(R.id.bullishButton)
     Button mBullishButton;
@@ -35,8 +35,8 @@ public class PredictionFragment extends DialogFragment {
 
     OnPredictButtonListener mOnPredictButtonListener;
 
-    public static PredictionFragment newInstance() {
-        PredictionFragment fragment = new PredictionFragment();
+    public static PredictionDialogFragment newInstance() {
+        PredictionDialogFragment fragment = new PredictionDialogFragment();
         return fragment;
     }
 
@@ -73,7 +73,7 @@ public class PredictionFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, PredictionFragment.class.getSimpleName());
+        this.show(manager, PredictionDialogFragment.class.getSimpleName());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class PredictionFragment extends DialogFragment {
         unbinder.unbind();
     }
 
-    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener listener) {
+    public PredictionDialogFragment setOnPredictButtonListener(OnPredictButtonListener listener) {
         this.mOnPredictButtonListener = listener;
         return this;
     }

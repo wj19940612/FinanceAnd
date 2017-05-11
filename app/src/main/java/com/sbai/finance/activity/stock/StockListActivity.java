@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,7 +42,7 @@ import butterknife.OnClick;
 /**
  * Modified by John on 2017-05-9.
  */
-public class StockListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
+public class StockListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -83,6 +84,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mStockListAdapter = new StockListAdapter(this);
         mListView.setAdapter(mStockListAdapter);
         mListView.setEmptyView(mEmpty);
+        mListView.setOnItemClickListener(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setAdapter(mListView, mStockListAdapter);
@@ -202,6 +204,11 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Launcher.with(getActivity(), StockTradeActivity.class).execute();
     }
 
     public static class StockListAdapter extends ArrayAdapter<Variety> {
