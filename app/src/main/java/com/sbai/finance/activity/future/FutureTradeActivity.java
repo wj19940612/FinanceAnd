@@ -615,6 +615,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
                 mOpinionFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
             } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
                 mOpinionFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+                mOpinionFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isShield());
             } else {
                 mOpinionFragment.refreshPointList();
             }
