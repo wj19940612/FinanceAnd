@@ -176,7 +176,7 @@
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
-    <string name="is_already_attention_other">已经互相关注</string>
+    <string name="is_already_attention_other">已互相关注</string>
     <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>

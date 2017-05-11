@@ -260,9 +260,22 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 }
 
                 if (item.getDirection() == 1) {
-                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                    if (item.getGuessPass() == 1) {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
+                    } else if(item.getGuessPass() == 2){
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
+                    } else {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                    }
+
                 } else {
-                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                    if (item.getGuessPass() == 1) {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
+                    } else if(item.getGuessPass() == 2){
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
+                    } else {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                    }
                 }
 
 //                if (!TextUtils.isEmpty(item.getRisePrice()) && item.getRisePrice().startsWith("-")) {

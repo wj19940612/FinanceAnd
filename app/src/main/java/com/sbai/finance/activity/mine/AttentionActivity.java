@@ -252,8 +252,8 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                         .into(mUserHeadImage);
                 mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
                 if (item.isAttention()) {
-                    mUserName.setText(StrUtil.mergeTextWithColor(item.getFollowuserName(),
-                            "\n" + context.getString(R.string.is_already_attention_other),
+                    mUserName.setText(StrUtil.mergeTextWithRatioColor(item.getFollowuserName(),
+                            "\n" + context.getString(R.string.is_already_attention_other),0.8f,
                             ContextCompat.getColor(context, R.color.secondaryText)));
                 } else {
                     mUserName.setText(item.getFollowuserName());
