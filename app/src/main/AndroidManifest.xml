@@ -57,7 +57,7 @@
             android:name=".activity.home.BorrowMoneyActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.OptionActivity"
+            android:name=".activity.home.OptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.TopicActivity"

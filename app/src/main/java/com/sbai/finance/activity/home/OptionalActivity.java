@@ -46,7 +46,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class OptionActivity extends BaseActivity implements AbsListView.OnScrollListener {
+public class OptionalActivity extends BaseActivity implements AbsListView.OnScrollListener {
 
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -60,7 +60,7 @@ public class OptionActivity extends BaseActivity implements AbsListView.OnScroll
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_option);
+        setContentView(R.layout.activity_optional);
         ButterKnife.bind(this);
         initView();
     }

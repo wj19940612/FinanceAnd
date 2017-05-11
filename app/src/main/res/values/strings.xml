@@ -90,6 +90,8 @@
     <string name="add_optional">+ 自选</string>
     <string name="delete_optional">取消自选</string>
     <string name="whether_to_cancel_optional">是否要取消自选</string>
+    <string name="add_option_succeed">添加自选成功</string>
+    <string name="delete_option_succeed">取消自选成功</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>

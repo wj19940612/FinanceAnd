@@ -22,7 +22,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.BorrowMoneyActivity;
 import com.sbai.finance.activity.home.EventActivity;
-import com.sbai.finance.activity.home.OptionActivity;
+import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
@@ -146,7 +146,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onSelfChoiceClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), OptionActivity.class).execute();
+                    Launcher.with(getActivity(), OptionalActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
