@@ -69,6 +69,8 @@ import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
 
+    private final static int SCHEDULE_TIME = 60;
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -156,6 +158,13 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         Netty.get().removeHandler(mNettyHandler);
     }
 
+    @Override
+    public void onTimeUp(int count) {
+        if (count % SCHEDULE_TIME == 0) {
+            requestTrendDataAndSet();
+        }
+    }
+
     private void requestExchangeStatus() {
         Client.getExchangeStatus(mVariety.getExchangeId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Integer>, Integer>() {
@@ -205,6 +214,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
 
+        requestTrendDataAndSet();
+    }
+
+    private void requestTrendDataAndSet() {
         Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
                     @Override
