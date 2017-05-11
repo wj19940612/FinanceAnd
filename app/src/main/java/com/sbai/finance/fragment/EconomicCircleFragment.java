@@ -46,6 +46,7 @@ import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -127,7 +128,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			@Override
 			public void onAvatarBorrowMoneyClick(EconomicCircle economicCircle) {
 				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getContext(), UserDataActivity.class).execute();
+					Launcher.with(getContext(), UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, economicCircle.getUserId())
+							.execute();
 				} else {
 					Launcher.with(getContext(), LoginActivity.class).execute();
 				}
@@ -280,6 +283,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			notifyDataSetChanged();
 		}
 
+		public void addAll(List<EconomicCircle> economicCircleList) {
+			mEconomicCircleList.clear();
+			mEconomicCircleList.addAll(economicCircleList);
+			notifyDataSetChanged();
+		}
+
 		@Override
 		public int getCount() {
 			return mEconomicCircleList.size();
@@ -395,7 +404,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				if (item.getDirection() == 1) {
 					if (item.getGuessPass() == 1) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
-					} else if(item.getGuessPass() == 2){
+					} else if (item.getGuessPass() == 2) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
 					} else {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
@@ -404,7 +413,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				} else {
 					if (item.getGuessPass() == 1) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
-					} else if(item.getGuessPass() == 2){
+					} else if (item.getGuessPass() == 2) {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
 					} else {
 						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
@@ -534,19 +543,20 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 				String[] images = item.getContentImg().split(",");
 				switch (images.length) {
-					case 0:
-						mImage1.setVisibility(View.GONE);
-						mImage2.setVisibility(View.GONE);
-						mImage3.setVisibility(View.GONE);
-						mImage4.setVisibility(View.GONE);
-						break;
 					case 1:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.INVISIBLE);
-						mImage3.setVisibility(View.INVISIBLE);
-						mImage4.setVisibility(View.INVISIBLE);
-						imageClick(context, images, mImage1, 0);
+						if (TextUtils.isEmpty(images[0])) {
+							mImage1.setVisibility(View.GONE);
+							mImage2.setVisibility(View.GONE);
+							mImage3.setVisibility(View.GONE);
+							mImage4.setVisibility(View.GONE);
+						} else {
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.INVISIBLE);
+							mImage3.setVisibility(View.INVISIBLE);
+							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
+						}
 						break;
 					case 2:
 						mImage1.setVisibility(View.VISIBLE);
@@ -587,20 +597,21 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					default:
 						break;
 
-				}}
+				}
+			}
 
-			private void loadImage(Context context,String src,ImageView image){
+			private void loadImage(Context context, String src, ImageView image) {
 				Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
 			}
 
-			private void imageClick (final Context context, final String[] images,
-			                         ImageView imageView, final int i) {
+			private void imageClick(final Context context, final String[] images,
+			                        ImageView imageView, final int i) {
 				imageView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(context,ContentImgActivity.class);
+						Intent intent = new Intent(context, ContentImgActivity.class);
 						intent.putExtra(Launcher.EX_PAYLOAD, images);
-						intent.putExtra(Launcher.EX_PAYLOAD_1,i);
+						intent.putExtra(Launcher.EX_PAYLOAD_1, i);
 						context.startActivity(intent);
 					}
 				});
@@ -631,9 +642,19 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							mEconomicCircleAdapter.notifyDataSetChanged();
 						} else {
 							economicCircle.setIsAttention(1);
-							mEconomicCircleAdapter.notifyDataSetChanged();
+
 						}
 					}
+				}
+				if (whetherAttentionShieldOrNot.isShield()) {
+					for (Iterator it = mEconomicCircleList.iterator(); it.hasNext(); ) {
+						EconomicCircle economicCircle = (EconomicCircle) it.next();
+						if (economicCircle.getUserId() == attentionAndFansNumberModel.getUserId()) {
+							it.remove();
+						}
+					}
+					mEconomicCircleAdapter.addAll(mEconomicCircleList);
+					mEconomicCircleAdapter.notifyDataSetChanged();
 				}
 			}
 		}

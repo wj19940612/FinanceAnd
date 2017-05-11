@@ -341,6 +341,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 							mImage2.setVisibility(View.INVISIBLE);
 							mImage3.setVisibility(View.INVISIBLE);
 							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
 						}
 						break;
 					case 2:
@@ -348,8 +349,10 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 						loadImage(context, images[0], mImage1);
 						mImage2.setVisibility(View.VISIBLE);
 						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.GONE);
-						mImage4.setVisibility(View.GONE);
+						mImage3.setVisibility(View.INVISIBLE);
+						mImage4.setVisibility(View.INVISIBLE);
+						imageClick(context, images, mImage1, 0);
+						imageClick(context, images, mImage2, 1);
 						break;
 					case 3:
 						mImage1.setVisibility(View.VISIBLE);
@@ -358,7 +361,10 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 						loadImage(context, images[1], mImage2);
 						mImage3.setVisibility(View.VISIBLE);
 						loadImage(context, images[2], mImage3);
-						mImage4.setVisibility(View.GONE);
+						mImage4.setVisibility(View.INVISIBLE);
+						imageClick(context, images, mImage1, 0);
+						imageClick(context, images, mImage2, 1);
+						imageClick(context, images, mImage3, 2);
 						break;
 					case 4:
 						mImage1.setVisibility(View.VISIBLE);
@@ -369,6 +375,10 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 						loadImage(context, images[2], mImage3);
 						mImage4.setVisibility(View.VISIBLE);
 						loadImage(context, images[3], mImage4);
+						imageClick(context, images, mImage1, 0);
+						imageClick(context, images, mImage2, 1);
+						imageClick(context, images, mImage3, 2);
+						imageClick(context, images, mImage3, 3);
 						break;
 					default:
 						break;

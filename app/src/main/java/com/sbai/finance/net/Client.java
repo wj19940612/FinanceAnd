@@ -71,7 +71,7 @@ public class Client {
 	 * @param id
 	 * @return
 	 */
-	public static API getWantHelpHimList(int id) {
+	public static API getWantHelpHimOrYouList(int id) {
 		return new API(POST, "/coterie/help/loan/intentionCount.do",
 				new ApiParams()
 						.put("id", id));
