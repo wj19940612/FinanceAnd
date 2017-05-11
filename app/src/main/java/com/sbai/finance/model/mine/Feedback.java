@@ -9,34 +9,37 @@ public class Feedback {
     public static int CONTENT_TYPE_TEXT = 1;
     public static int CONTENT_TYPE_PICTURE = 2;
 
+
     /**
-     * contentType : 84125
-     * content : 哈哈哈
-     * createDate : 1492157398000
-     * id : 232
-     * status : 1
-     * type : 1
-     * userId : 18
-     * userName : 用户55
-     * userPhone : 15067061864
+     * replyName : 1
+     * content : 的撒多
+     * contentType : 1
+     * createDate : 1494235551000
+     * id : 258
+     * status : 0
+     * type : 0
+     * userName : 用户2408
+     * userPhone : 13458962548
+     * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494233728845.png
      */
 
-    private int contentType;
+    private int replyName;
     private String content;
+    private int contentType;
     private long createDate;
     private int id;
     private int status;
     private int type;
-    private int userId;
     private String userName;
     private String userPhone;
+    private String userPortrait;
 
-    public int getContentType() {
-        return contentType;
+    public int getReplyName() {
+        return replyName;
     }
 
-    public void setContentType(int contentType) {
-        this.contentType = contentType;
+    public void setReplyName(int replyName) {
+        this.replyName = replyName;
     }
 
     public String getContent() {
@@ -45,6 +48,14 @@ public class Feedback {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(int contentType) {
+        this.contentType = contentType;
     }
 
     public long getCreateDate() {
@@ -79,14 +90,6 @@ public class Feedback {
         this.type = type;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -101,5 +104,13 @@ public class Feedback {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 }

@@ -909,12 +909,12 @@ public class Client {
 	 * @param contentType
 	 * @return
 	 */
-	public static API sendFeedback(String content, int contentType) {
-		return new API("/user/userFeedback/seeFeedback.do",
-				new ApiParams()
-						.put("content", content)
-						.put("contentType", contentType));
-	}
+    public static API sendFeedback(String content, int contentType) {
+        return new API(POST, "/user/userFeedback/addFeedback.do",
+                new ApiParams()
+                        .put("content", content)
+                        .put("contentType", contentType));
+    }
 
 	/**
 	 * 查询明细

@@ -2,6 +2,10 @@ package com.sbai.finance.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -44,6 +48,13 @@ public class GlideThumbTransform extends BitmapTransformation {
         if (result == null) {
             result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         }
+
+        Canvas canvas = new Canvas(result);
+        Paint paint = new Paint();
+        paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+        paint.setAntiAlias(true);
+        RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
+        canvas.drawRect(rectF, paint);
         return result;
 
     }

@@ -20,6 +20,7 @@ public class DateUtil {
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
+    public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
         return dateFormat.format(new Date(time));
