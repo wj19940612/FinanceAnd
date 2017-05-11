@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
@@ -111,25 +113,27 @@ public class BorrowActivity extends BaseActivity {
 		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
 		String content = mBorrowRemark.getText().toString();
 		StringBuilder contentImg = new StringBuilder();
-		int phoneAmount =mPhotoGridAdapter.getCount();
-		for (int i = 0; i<phoneAmount-1;i++){
-			ImageView imageView = (ImageView) mPhotoGv.getChildAt(i).findViewById(R.id.photoImg);
-			String bitmapToBase64 = ImageUtils.bitmapToBase64(imageView.getDrawingCache());
-			if (i<=phoneAmount-1){
-				contentImg.append(bitmapToBase64+",");
-			}else{
-				contentImg.append(bitmapToBase64);
-			}
+		int photoAmount =mPhotoGridAdapter.getCount();
+		for (int i = 0; i<photoAmount-1;i++){
+			String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),400f);
+			Log.d(TAG, "image: "+image.length());
+			contentImg.append(image+",");
+		}
+		if(contentImg.length()>0){
+			contentImg.deleteCharAt(contentImg.length()-1);
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 	}
 	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
+				.setIndeterminate(this)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {
 						if (resp.isSuccess()){
 							CustomToast.getInstance().showText(getActivity(),getString(R.string.publish_success));
+							Launcher.with(getActivity(),BorrowInActivity.class).execute();
+							finish();
 						}else{
 							ToastUtil.curt(resp.getMsg());
 						}

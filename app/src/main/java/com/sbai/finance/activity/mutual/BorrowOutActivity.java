@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -207,21 +208,21 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                         "\n" +location, 0.733f, ContextCompat.getColor(context,R.color.assistText));
                 mUserNameLand.setText(attentionSpannableString);
                 mEndLineTime.setText(DateUtil.compareTime(item.getEndlineTime()));
-
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
-                    case 0:
-                        mImage1.setVisibility(View.GONE);
-                        mImage2.setVisibility(View.GONE);
-                        mImage3.setVisibility(View.GONE);
-                        mImage4.setVisibility(View.GONE);
-                        break;
                     case 1:
-                        mImage1.setVisibility(View.VISIBLE);
-                        loadImage(context,images[0],mImage1);
-                        mImage2.setVisibility(View.INVISIBLE);
-                        mImage3.setVisibility(View.INVISIBLE);
-                        mImage4.setVisibility(View.INVISIBLE);
+                        if (TextUtils.isEmpty(images[0])){
+                            mImage1.setVisibility(View.GONE);
+                            mImage2.setVisibility(View.GONE);
+                            mImage3.setVisibility(View.GONE);
+                            mImage4.setVisibility(View.GONE);
+                        }else{
+                            mImage1.setVisibility(View.VISIBLE);
+                            loadImage(context,images[0],mImage1);
+                            mImage2.setVisibility(View.INVISIBLE);
+                            mImage3.setVisibility(View.INVISIBLE);
+                            mImage4.setVisibility(View.INVISIBLE);
+                        }
                         break;
                     case 2:
                         mImage1.setVisibility(View.VISIBLE);
