@@ -39,6 +39,17 @@
             tools:text="吴彦祖"/>
 
         <TextView
+            android:id="@+id/isAttention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/userName"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/userName"
+            android:textColor="@color/assistText"
+            android:textSize="11sp"
+            tools:text="@string/is_attention"/>
+
+        <TextView
             android:id="@+id/publishTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -181,28 +192,32 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
-
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/image1"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
             android:src="@drawable/help"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
+            android:id="@+id/image2"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
             android:src="@drawable/help"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
+            android:id="@+id/image3"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
             android:src="@drawable/help"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
+            android:id="@+id/image4"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
             android:src="@drawable/help"/>
     </LinearLayout>
 

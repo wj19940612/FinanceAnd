@@ -174,7 +174,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white"
             android:gravity="center"
-            android:text="@string/attention"
+            tools:text="@string/attention"
             android:textColor="@color/redPrimary"
             android:textSize="16sp"/>
 
@@ -192,7 +192,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white"
             android:gravity="center"
-            android:text="@string/shield_him"
+            tools:text="@string/shield_him"
             android:textColor="@color/primaryText"
             android:textSize="16sp"/>
     </LinearLayout>
