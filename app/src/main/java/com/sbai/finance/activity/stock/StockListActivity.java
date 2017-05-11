@@ -66,7 +66,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private int mPageSize = 15;
 
     private StockListAdapter mStockListAdapter;
-
+    private List<Variety> mStockIndexData;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,21 +89,48 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
         //测试数据 后期删除
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor("上证",
-                "\n" + "24396.26", "\n50.39 +0.21%", 1.133f, 0.667f,
+                "\n" + "--.--", "\n-- --", 1.133f, 0.667f,
                 ContextCompat.getColor(this, R.color.redPrimary),
                 ContextCompat.getColor(this, R.color.redPrimary));
         mShangHai.setText(attentionSpannableString);
         mShenZhen.setText(attentionSpannableString);
         mBoard.setText(attentionSpannableString);
     }
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestVisibleStockMarket();
+    }
+
+    private void requestVisibleStockMarket() {
+        if (mListView!=null&&mStockListAdapter!=null){
+            int first = mListView.getFirstVisiblePosition();
+            int last = mListView.getLastVisiblePosition();
+            List<Variety>  varietyList = new ArrayList<>();
+            for (int i = first; i <= last; i++) {
+                Variety  variety = mStockListAdapter.getItem(i);
+                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN){
+                    varietyList.add(variety);
+                }
+            }
+            if (varietyList.size()>0){
+                requestStockMarketData(varietyList);
+                requestStockIndexMarketData(mStockIndexData);
+            }else{
+                stopScheduleJob();
+            }
+        }
+    }
 
     private void requestStockData() {
+        stopScheduleJob();
         Client.getStockVariety(mPage, mPageSize).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockData(data);
                         requestStockMarketData(data);
+                        startScheduleJob(1000);
                     }
                 }).fireSync();
     }
@@ -122,37 +149,69 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     }
                 }).fireSync();
     }
-
+    private void requestStockIndexMarketData( List<Variety> data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Variety variety : data) {
+            stringBuilder.append(variety.getVarietyType()).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        Client.getStockMarketData(stringBuilder.toString())
+                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+                    @Override
+                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+                        updateStockIndexMarketData(result);
+                    }
+                }).fireSync();
+    }
     private void requestStockIndexData() {
         Client.getStockIndexVariety().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
-                        updateStockIndexData((ArrayList<Variety>) data);
-//                        requestStockIndexMarketData(ArrayList<Variety>) data);
+                        mStockIndexData = data;
+                        requestStockIndexMarketData(data);
                     }
                 }).fire();
     }
 
-    private void updateStockIndexData(ArrayList<Variety> data) {
-        mShangHai.setText(getSpannableStringByData(data, getString(R.string.ShangHaiStockExchange)));
-        mShenZhen.setText(getSpannableStringByData(data, getString(R.string.ShenzhenStockExchange)));
-        mBoard.setText(getSpannableStringByData(data, getString(R.string.GrowthEnterpriseMarket)));
-    }
-
-    // TODO: 2017/5/3 这边还没做完
-    private SpannableString getSpannableStringByData(ArrayList<Variety> data, String market) {
-        //1. 获取当前Variety
-        Variety variety = null;
+    private void updateStockIndexMarketData(List<StockData> data) {
         // 2.判断涨跌
-        int s2Color = R.color.redPrimary;
-        int s3Color = R.color.greenPrimary;
-        // 3.生成SpannableString
-        SpannableString spannableString = StrUtil.mergeTextWithRatioColor(market,
-                "\n" + "24396.26", "\n50.39 +0.21%", 1.133f, 0.667f,
-                ContextCompat.getColor(this, s2Color),
-                ContextCompat.getColor(this, s3Color));
-        return spannableString;
+        int s2Color = ContextCompat.getColor(this,R.color.redPrimary);
+        int s3Color = ContextCompat.getColor(this,R.color.greenPrimary);
+        int color;
+        TextView textView=null;
+        String market="";
+        for (StockData stockData:data){
+            String rateChange = stockData.getRise_pre();
+            if (rateChange.startsWith("-")) {
+                color = s3Color;
+                rateChange =rateChange+"%";
+            }else{
+                color = s2Color;
+                rateChange = "+"+rateChange+"%";
+            }
+            switch (stockData.getStock_code()){
+                case Variety.STOCK_EXPONENT_SH:
+                    textView = mShangHai;
+                    market = getString(R.string.ShangHaiStockExchange);
+                    break;
+                case Variety.STOCK_EXPONENT_SZ:
+                    textView =mShenZhen;
+                    market = getString(R.string.ShenzhenStockExchange);
+                    break;
+                case Variety.STOCK_EXPONENT_GE:
+                    textView = mBoard;
+                    market = getString(R.string.GrowthEnterpriseMarket);
+                    break;
+                default:
+                    break;
+            }
+            if (textView!=null){
+                SpannableString  spannableString = StrUtil.mergeTextWithRatioColor(market,
+                        "\n" +stockData.getLast_price() , "\n"+stockData.getRise_price()+" "+rateChange, 1.133f, 0.667f, color,color);
+                textView.setText(spannableString);
+            }
+        }
     }
 
     private void updateStockData(List<Variety> data) {
@@ -218,6 +277,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
             for (StockData data : stockDataList) {
                 mStockDataList.put(data.getStock_code(), data);
             }
+            notifyDataSetChanged();
         }
 
         @NonNull

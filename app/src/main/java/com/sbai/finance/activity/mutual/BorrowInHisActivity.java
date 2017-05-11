@@ -235,7 +235,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 SpannableString attentionSpannableString;
-                String location =LocalUser.getUser().getUserInfo().getLand();
+                String location =item.getLocation();
                 if (location==null){
                     location = context.getString(R.string.no_location);
                 }
