@@ -105,6 +105,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							.execute();
 				} else {
 					Launcher.with(getContext(), BorrowMoneyDetailsActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, economicCircle.getDataId())
 							.execute();
 				}
 			}

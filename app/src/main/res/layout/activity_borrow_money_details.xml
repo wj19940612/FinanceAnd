@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/white"
@@ -49,7 +49,7 @@
             tools:text="2008/08/08 08:00"/>
 
         <TextView
-            android:id="@+id/address"
+            android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName"
@@ -162,7 +162,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/opinion"
+        android:id="@+id/borrowMoneyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="13dp"
@@ -241,6 +241,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/wantHelpHimArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
@@ -254,21 +255,17 @@
 
         </LinearLayout>
 
-        <Button
+        <TextView
             android:id="@+id/giveHelp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_height="48dp"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="13dp"
             android:layout_marginTop="60dp"
-            android:background="@drawable/bg_give_help"
+            tools:background="@drawable/bg_give_help"
             android:gravity="center"
-            android:minHeight="48dp"
-            android:text="@string/give_help"
+            tools:text="@string/give_help"
             android:textColor="@android:color/white"
             android:textSize="16sp"/>
-
-
     </LinearLayout>
 </LinearLayout>

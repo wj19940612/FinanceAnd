@@ -57,7 +57,7 @@
             android:name=".activity.home.BorrowMoneyActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.OptionActivity"
+            android:name=".activity.home.OptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.TopicActivity"
@@ -126,21 +126,25 @@
         <activity
             android:name=".activity.mine.FansActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.PublishActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.trade.PredictionRuleActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.trade.PublishOpinionActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.CreditApproveActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.CreditActivity"
-            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.mine.PublishActivity">
+        </activity>
+        <activity android:name=".activity.trade.PredictionRuleActivity">
+        </activity>
+        <activity android:name=".activity.trade.PublishOpinionActivity">
+        </activity>
+        <activity android:name=".activity.mine.CreditApproveActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".activity.mine.CreditActivity">
+        </activity>
+
 
         <activity
             android:name=".activity.ContentImgActivity"
@@ -160,6 +164,7 @@
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activity.economiccircle.WantHelpHimActivity">
+        </activity>
     </application>
-
 </manifest>

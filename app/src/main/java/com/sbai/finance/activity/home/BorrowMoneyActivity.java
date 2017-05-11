@@ -42,8 +42,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.R.id.contentImg;
-
 public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnScrollListener {
 
 	@BindView(android.R.id.list)
@@ -76,7 +74,10 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Launcher.with(BorrowMoneyActivity.this, BorrowMoneyDetailsActivity.class).execute();
+				BorrowMoney borrowMoney = (BorrowMoney) parent.getItemAtPosition(position);
+				Launcher.with(BorrowMoneyActivity.this, BorrowMoneyDetailsActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, borrowMoney.getDataId())
+						.execute();
 			}
 		});
 
@@ -261,7 +262,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			TextView mBorrowInterest;
 			@BindView(R.id.borrowMoneyContent)
 			TextView mBorrowMoneyContent;
-			@BindView(contentImg)
+			@BindView(R.id.contentImg)
 			LinearLayout mContentImg;
 
 			ViewHolder(View view) {
@@ -291,15 +292,16 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					}
 				});
 
+				int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
-				int width = context.getResources().getDimensionPixelSize(R.dimen.contentImg_width);
-				int height = context.getResources().getDimensionPixelSize(R.dimen.contentImg_height);
+				int width = (screenWidth) / 4;
 				int margin = context.getResources().getDimensionPixelSize(R.dimen.common_split);
-				final String[] contentImgArray = item.getContentImg().split(",");
+				 final String[] contentImgArray = item.getContentImg().split(",");
 				for (int i = 0; i < contentImgArray.length; i++) {
 					ImageView imageView = new ImageView(context);
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
-					params.leftMargin = (i == 0 ? 0 : margin);
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+					//params.leftMargin = (i == 0 ? 0 : margin);
+
 					Glide.with(context).load(contentImgArray[i])
 							.placeholder(R.drawable.help)
 							.into(imageView);

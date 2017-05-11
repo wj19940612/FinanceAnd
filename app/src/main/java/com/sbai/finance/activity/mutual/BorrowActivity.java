@@ -27,6 +27,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.MyGridView;
 
 import butterknife.BindView;
@@ -128,7 +129,7 @@ public class BorrowActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {
 						if (resp.isSuccess()){
-							ToastUtil.curt("发布借款成功");
+							CustomToast.getInstance().showText(getActivity(),getString(R.string.publish_success));
 						}else{
 							ToastUtil.curt(resp.getMsg());
 						}

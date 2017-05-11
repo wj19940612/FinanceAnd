@@ -17,20 +17,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.ViewPointMater;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
-import java.util.List;
+import com.sbai.finance.utils.Launcher;
 
+import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by Administrator on 2017-05-08.
- */
-
 public class OpinionActivity extends BaseActivity implements AbsListView.OnScrollListener  {
     @BindView(R.id.listView)
     ListView mListView;
@@ -55,6 +52,12 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             }
         });
         mOpinionListAdapter = new OpinionListAdapter(this);
+        mOpinionListAdapter.setOnClickListener(new OpinionListAdapter.OnClickListener() {
+            @Override
+            public void onClick(int userId) {
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
+        });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mOpinionListAdapter);
         mListView.setOnScrollListener(this);
@@ -105,12 +108,26 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             super(context,0);
             mContext = context;
         }
+        interface OnClickListener{
+            void onClick(int userId);
+        }
+        private OnClickListener mOnClickListener;
+        public void setOnClickListener(OnClickListener onClickListener){
+            mOnClickListener = onClickListener;
+        }
         @NonNull
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_opinion_master, parent, false);
+                ImageView userImage= (ImageView) convertView.findViewById(R.id.userImg);
+                userImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnClickListener.onClick(getItem(position).getUserId());
+                    }
+                });
                 viewHolder = new  ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -124,8 +141,8 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
         static class ViewHolder{
             @BindView(R.id.userImg)
             ImageView mUserImg;
-            @BindView(R.id.opinion)
-            TextView mOpinion;
+            @BindView(R.id.userName)
+            TextView mUserName;
             @BindView(R.id.skilledType)
             TextView mSkilledType;
             @BindView(R.id.accuracyRate)
@@ -138,7 +155,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                         .bitmapTransform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserImg);
-                mOpinion.setText(item.getUserSign());
+                mUserName.setText(item.getUserName());
                 if(item.getAdeptType()!=null){
                     switch (item.getAdeptType()){
                         case ViewPointMater.TYPE_FUTURE:

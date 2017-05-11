@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowIn;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
 

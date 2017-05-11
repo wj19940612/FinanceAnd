@@ -1,4 +1,4 @@
-package com.sbai.finance;
+package com.sbai.finance.model.mutual;
 
 /**
  * Created by Administrator on 2017-05-09.

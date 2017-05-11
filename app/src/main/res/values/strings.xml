@@ -61,7 +61,7 @@
     <string name="future_china">国内期货</string>
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
-    <string name="rate">涨幅榜</string>
+    <string name="rate">涨跌幅</string>
     <string name="borrow_title">借款有道</string>
     <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="idea_title">观点大神</string>
@@ -89,7 +89,7 @@
     <string name="publish_point">发表观点</string>
     <string name="add_optional">+ 自选</string>
     <string name="delete_optional">取消自选</string>
-    <string name="whether_to_cancle_opition">是否要取消自选</string>
+    <string name="whether_to_cancel_optional">是否要取消自选</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
@@ -162,7 +162,7 @@
     <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
-    <string name="cancel_attention_dialog_title">是否不在关注“%1$s”\n取消关注?</string>
+    <string name="cancel_attention_dialog_title">是否不再关注%1$s?</string>
     <string name="cancel_attention">取消关注</string>
 
     <string name="if_not_attention">是否不再关注%1$s?</string>
@@ -257,6 +257,7 @@
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">阅读并同意</string>
     <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
+    <string name="publish_success">发布成功</string>
 
     <!--mutual-->
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
@@ -294,4 +295,10 @@
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
     <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
+
+    <!--借款有道-->
+    <string name="give_help_dialog_title">是否要帮助%1$s?</string>
+    <string name="give_help_dialog_content">注意:平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="wait_to_confirm">等待确认中</string>
+    <string name="want_help_him">想要帮助TA的人</string>
 </resources>
