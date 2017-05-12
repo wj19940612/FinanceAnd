@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -15,20 +16,27 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.trade.PublishOpinionActivity;
+import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.FiveMarketFragment;
-import com.sbai.finance.fragment.trade.IntroduceFragment;
+import com.sbai.finance.fragment.trade.ViewpointFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -80,8 +88,13 @@ public class StockTradeActivity extends BaseActivity {
     TextView mSplitHq;
     @BindView(R.id.detailMarket)
     LinearLayout mDetailMarket;
+
+
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
+    private FutureData mFutureData;
+    private Prediction mPrediction;
+    PredictionDialogFragment mPredictionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,16 +106,44 @@ public class StockTradeActivity extends BaseActivity {
             addStatusBarHeightTopPadding(mTitleBar);
         }
 
-        mVariety = new Gson().fromJson("{\"displayMarketTimes\": \"06:00;12:00;18:00;00:00;05:00\",\"decimalScale\": 0.2,\"sign\": \"$\",\"varietyType\": \"CL\",\"baseline\": 9,\"isDomestic\": 0,\"tags\": 0,\"exchangeId\": 9,\"openMarketTime\": \"06:00;05:00\",\"flashChartPriceInterval\": 2,\"varietyId\": 10,\"exchangeStatus\": 1,\"contractsCode\": \"CL1706\",\"advertisement\": \" \",\"currency\": \"USD\",\"marketPoint\": 2,\"varietyName\": \"美原油\",\"eachPointMoney\": 1000,\"currencyUnit\": \"美元\",\"ratio\": 7.3,\"varietyId\": 1}", Variety.class);
+//        mVariety = new Gson().fromJson("{\"displayMarketTimes\": \"06:00;12:00;18:00;00:00;05:00\",\"decimalScale\": 0.2,\"sign\": \"$\",\"varietyType\": \"CL\",\"baseline\": 9,\"isDomestic\": 0,\"tags\": 0,\"exchangeId\": 9,\"openMarketTime\": \"06:00;05:00\",\"flashChartPriceInterval\": 2,\"varietyId\": 10,\"exchangeStatus\": 1,\"contractsCode\": \"CL1706\",\"advertisement\": \" \",\"currency\": \"USD\",\"marketPoint\": 2,\"varietyName\": \"美原油\",\"eachPointMoney\": 1000,\"currencyUnit\": \"美元\",\"ratio\": 7.3,\"varietyId\": 1}", Variety.class);
+        mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         initView();
         initTabLayout();
         initChartViews();
-      //  initSlidingTab();
+        initSlidingTab();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
     private void initView() {
         mFiveHq.setSelected(true);
-        getSupportFragmentManager().beginTransaction().add(R.id.detailView,new FiveMarketFragment()).commit();
+        mTitleBar.setTitle(getString(R.string.stock_code, mVariety.getVarietyName(), mVariety.getVarietyType()));
+        getSupportFragmentManager().beginTransaction().add(R.id.detailView, new FiveMarketFragment()).commit();
+        mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
+            @Override
+            public void onPublishPointButtonClick() {
+                if (LocalUser.getUser().isLogin()) {
+                    requestPrediction();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+
+            @Override
+            public void onAddOptionalButtonClick() {
+
+            }
+
+            @Override
+            public void onTradeButtonClick() {
+
+            }
+        });
     }
 
     private void initTabLayout() {
@@ -134,10 +175,9 @@ public class StockTradeActivity extends BaseActivity {
     }
 
     private void initSlidingTab() {
-        mViewPager.setOffscreenPageLimit(2);
+//        mViewPager.setOffscreenPageLimit(2);
         mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mSubPageAdapter);
-
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
@@ -146,7 +186,50 @@ public class StockTradeActivity extends BaseActivity {
         mSlidingTab.setViewPager(mViewPager);
     }
 
-    private static class SubPageAdapter extends FragmentPagerAdapter {
+    private void requestPrediction() {
+        Client.getPrediction(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Prediction>, Prediction>() {
+                    @Override
+                    protected void onRespSuccessData(Prediction data) {
+                        mPrediction = data;
+                        if (mPrediction.isCalculate()) {
+                            openPublishPointPage();
+                        } else {
+                            showPredictDialog();
+                        }
+                    }
+                }).fire();
+    }
+
+    private void showPredictDialog() {
+        if (mPredictionFragment == null) {
+            mPredictionFragment = PredictionDialogFragment.newInstance().setOnPredictButtonListener(new PredictionDialogFragment.OnPredictButtonListener() {
+                @Override
+                public void onBullishButtonClick(int directionLong) {
+                    mPrediction.setDirection(directionLong);
+                    openPublishPointPage();
+                }
+
+                @Override
+                public void onBearishButtonClick(int directionShort) {
+                    mPrediction.setDirection(directionShort);
+                    openPublishPointPage();
+                }
+            });
+        }
+        mPredictionFragment.show(getSupportFragmentManager());
+    }
+
+    private void openPublishPointPage() {
+        Launcher.with(getActivity(), PublishOpinionActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD, mVariety)
+                .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
+                .putExtra(Launcher.EX_PAYLOAD_2, mFutureData)
+                .execute();
+    }
+
+    private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
         Context mContext;
@@ -174,11 +257,11 @@ public class StockTradeActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new IntroduceFragment();
+                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return new IntroduceFragment();
+                    return new ListFragment();
                 case 2:
-                    return new IntroduceFragment();
+                    return new FinanceFragment();
             }
             return null;
         }
@@ -232,12 +315,6 @@ public class StockTradeActivity extends BaseActivity {
         mTrendView.setVisibility(View.GONE);
         mKlineView.setVisibility(View.VISIBLE);
         mDetailMarket.setVisibility(View.GONE);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
     private void requestKlineDataAndSet(final String type) {

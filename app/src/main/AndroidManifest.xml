@@ -57,7 +57,7 @@
             android:name=".activity.home.BorrowMoneyActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.OptionActivity"
+            android:name=".activity.home.OptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.TopicActivity"
@@ -91,6 +91,7 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
+
         <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"
@@ -126,21 +127,35 @@
         <activity
             android:name=".activity.mine.FansActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.PublishActivity">
-        </activity>
-        <activity android:name=".activity.trade.PredictionRuleActivity">
-        </activity>
-        <activity android:name=".activity.trade.PublishOpinionActivity">
-        </activity>
-        <activity android:name=".activity.mine.CreditApproveActivity">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN"/>-->
 
-            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity android:name=".activity.mine.CreditActivity">
-        </activity>
+        <activity
+            android:name=".activity.mine.PublishActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.PredictionRuleActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.PublishOpinionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.CreditApproveActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.CreditActivity"
+            android:screenOrientation="portrait"/>
+        <!-- 反馈 -->
+        <activity
+            android:name=".activity.mine.FeedbackActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+        <!-- 明细 -->
+        <activity
+            android:name=".activity.mine.TheDetailActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.ContentImgActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activity.ContentImgActivity"
@@ -159,6 +174,12 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.economiccircle.WantHelpHimActivity"/>
+        <!-- 选择相册图片 -->
+        <activity android:name=".activity.mine.ImageSelectActivity"/>
+        <!-- 相册图片预览 -->
+        <activity android:name=".activity.mine.ImagePreViewActivity"/>
+
 
         <!--      service       -->
         <service android:name=".service.PushIntentService"/>
@@ -168,5 +189,4 @@
             android:label="PushService"
             android:process=":pushservice"/>
     </application>
-
 </manifest>

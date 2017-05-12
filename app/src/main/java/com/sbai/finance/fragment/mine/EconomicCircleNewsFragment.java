@@ -2,7 +2,6 @@ package com.sbai.finance.fragment.mine;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -151,8 +150,8 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             mFootView.setPadding(padding, padding, padding, padding);
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,16 +224,17 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
 
                     //.点赞动态，点击可跳转至观点页面  viewPointId为0
-//                    if (historyNewsModel.getViewpointId() != 0) {
-//                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
-//                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
-//                    } else {
+
+//                    break;
+                    //点赞评论
+                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                    if (historyNewsModel.getViewpointId() != 0) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+                    } else {
                         Launcher.with(getActivity(), OpinionDetailsActivity.class).
                                 putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
-//                    }
-                    break;
-                //点赞评论
-                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                    }
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
@@ -329,9 +329,9 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
 
-                if(TextUtils.isEmpty(item.getMsg())){
+                if (TextUtils.isEmpty(item.getMsg())) {
                     mContent.setVisibility(View.GONE);
-                }else {
+                } else {
                     mContent.setVisibility(View.VISIBLE);
                 }
 

@@ -24,11 +24,13 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.AttentionActivity;
 import com.sbai.finance.activity.mine.FansActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.SettingActivity;
+import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -156,6 +158,7 @@ public class MineFragment extends BaseFragment {
             mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
+            mNews.setSubText("");
             mHeadImageLayout.setVisibility(View.GONE);
             mLogoutImage.setVisibility(View.VISIBLE);
             SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, Color.WHITE);
@@ -239,8 +242,18 @@ public class MineFragment extends BaseFragment {
 //                Launcher.with(getActivity(), UserDataActivity.class).execute();
                 break;
             case R.id.detail:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.feedBack:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
     }

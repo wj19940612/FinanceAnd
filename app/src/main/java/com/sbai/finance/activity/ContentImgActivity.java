@@ -15,6 +15,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.viewPager;
+import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
+import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 
 
 public class ContentImgActivity extends BaseActivity {
@@ -30,8 +32,8 @@ public class ContentImgActivity extends BaseActivity {
 		ButterKnife.bind(this);
 
 
-		String[] contentImgArray = getIntent().getStringArrayExtra("urlList");
-		int currentItem = getIntent().getIntExtra("currentItem", 0);
+		String[] contentImgArray = getIntent().getStringArrayExtra(EX_PAYLOAD);
+		int currentItem = getIntent().getIntExtra(EX_PAYLOAD_1, 0);
 
 		mContentImgAdapter = new ContentImgAdapter(this, contentImgArray);
 		mViewPager.setAdapter(mContentImgAdapter);

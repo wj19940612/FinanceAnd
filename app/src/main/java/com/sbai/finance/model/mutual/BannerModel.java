@@ -1,4 +1,4 @@
-package com.sbai.finance.model;
+package com.sbai.finance.model.mutual;
 import com.sbai.finance.net.API;
 
 import java.io.Serializable;

@@ -100,6 +100,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
             if (resp.isSuccess()) {
                 onRespSuccess(t);
             } else {
+                onFailure(null);
                 onErrorMessageShow(resp.getMsg());
             }
         } else {

@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.trade;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -23,7 +24,6 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Opinion;
-import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -31,39 +31,44 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class OpinionFragment extends BaseFragment {
+public class ViewpointFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
-    EmptyRecyclerView mRecyclerView;
-    @BindView(android.R.id.empty)
-    TextView mEmpty;
+    RecyclerView mRecyclerView;
 
     Unbinder unbinder;
     TextView mFootView;
+    TextView mEmpty;
 
     private OpinionAdapter mOpinionAdapter;
     private List<Opinion> mOpinionList;
 
     private int mPage = 0;
     private int mPageSize = 15;
-    private Variety mVariety;
+    private int mVarietyId;
     boolean mLoadMore = true;
 
-    public static OpinionFragment newInstance(Variety variety) {
-        OpinionFragment fragment = new OpinionFragment();
+    public static ViewpointFragment newInstance(int varietyId) {
+        ViewpointFragment fragment = new ViewpointFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        args.putInt(Launcher.EX_PAYLOAD, varietyId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mVarietyId = getArguments().getInt(Launcher.EX_PAYLOAD);
     }
 
     @Nullable
@@ -71,7 +76,6 @@ public class OpinionFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_opinion, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mVariety = getArguments().getParcelable(Launcher.EX_PAYLOAD);
         return view;
     }
 
@@ -93,11 +97,20 @@ public class OpinionFragment extends BaseFragment {
         mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
         mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
 
+        mEmpty = new TextView(getActivity());
+        mEmpty.setText(getText(R.string.quick_publish));
+        mEmpty.setPadding(0, 10 * padding, 0, 0);
+        mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
+        mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
+        mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        mEmpty.setCompoundDrawablePadding(padding);
+        Drawable top = getActivity().getDrawable(R.drawable.img_no_message);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        mRecyclerView.setEmptyView(mEmpty);
     }
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -123,19 +136,25 @@ public class OpinionFragment extends BaseFragment {
     }
 
     private void getPointList() {
-        Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
+        Client.findViewpoint(mPage, mPageSize, mVarietyId)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
                     protected void onRespSuccessData(List<Opinion> data) {
-                        updateViewWithData(data);
+                        updateViewWithData(data, false);
                     }
                 })
                 .fire();
     }
 
-    private void updateViewWithData(List<Opinion> data) {
+    private void updateViewWithData(List<Opinion> data,boolean needScrollToTop) {
+        //获取的数据为空 并且原来就无数据 则显示空view
+        if (data == null || data.size() == 0 && mOpinionList.size() == 0) {
+            mOpinionAdapter.removeAllFooterView();
+            mOpinionAdapter.addFooterView(mEmpty);
+            mOpinionAdapter.notifyDataSetChanged();
+        }
         if (data != null && data.size() > 0) {
             mOpinionList.addAll(data);
             if (data.size() < mPageSize) {
@@ -148,6 +167,9 @@ public class OpinionFragment extends BaseFragment {
                 mPage++;
             }
             mOpinionAdapter.notifyDataSetChanged();
+            if (needScrollToTop){
+                mRecyclerView.scrollToPosition(0);
+            }
         }
     }
 
@@ -158,13 +180,13 @@ public class OpinionFragment extends BaseFragment {
     private void getNewPointList() {
         mPage = 0;
         mOpinionList.clear();
-        Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
+        Client.findViewpoint(mPage, mPageSize, mVarietyId)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
                     protected void onRespSuccessData(List<Opinion> data) {
-                        updateViewWithData(data);
+                        updateViewWithData(data, true);
                     }
                 })
                 .fire();
@@ -197,6 +219,23 @@ public class OpinionFragment extends BaseFragment {
         mOpinionAdapter.notifyDataSetChanged();
     }
 
+    public void shieldUserByUserId(int userId, boolean isShield) {
+        if (isShield) {
+            for (Iterator it = mOpinionList.iterator(); it.hasNext(); ) {
+                Opinion opinion = (Opinion) it.next();
+                if (opinion.getUserId() == userId) {
+                    it.remove();
+                }
+            }
+            mOpinionAdapter.notifyDataSetChanged();
+            if (mOpinionList.size() == 0) {
+                mOpinionAdapter.removeAllFooterView();
+                mOpinionAdapter.addFooterView(mEmpty);
+                mOpinionAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -220,9 +259,23 @@ public class OpinionFragment extends BaseFragment {
             String time = DateUtil.getFormatTime(item.getCreateTime());
             helper.setText(R.id.userName, item.getUserName())
                     .setText(R.id.followed, attend)
-                    .setText(R.id.publishTime, time)
-                    .setText(R.id.commentNum, String.valueOf(item.getReplyCount()))
-                    .setText(R.id.likeNum, String.valueOf(item.getPraiseCount()));
+                    .setText(R.id.publishTime, time);
+
+            if (item.getReplyCount() > 999) {
+                ((TextView) helper.getView(R.id.commentNum))
+                        .setText(String.valueOf(item.getPraiseCount()) + "+");
+            }else {
+                ((TextView) helper.getView(R.id.commentNum))
+                        .setText(String.valueOf(item.getPraiseCount()));
+            }
+
+            if (item.getPraiseCount() > 999) {
+                ((TextView) helper.getView(R.id.likeNum))
+                        .setText(String.valueOf(item.getPraiseCount()) + "+");
+            }else {
+                ((TextView) helper.getView(R.id.likeNum))
+                        .setText(String.valueOf(item.getPraiseCount()));
+            }
             Glide.with(getActivity()).load(item.getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_default_avatar_big)

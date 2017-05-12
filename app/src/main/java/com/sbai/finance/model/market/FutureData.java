@@ -335,4 +335,35 @@ public class FutureData implements Parcelable {
             return new FutureData[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "FutureData{" +
+                "askPrice=" + askPrice +
+                ", askVolume=" + askVolume +
+                ", bidPrice=" + bidPrice +
+                ", bidVolume=" + bidVolume +
+                ", downLimitPrice=" + downLimitPrice +
+                ", exchangeId='" + exchangeId + '\'' +
+                ", highestPrice=" + highestPrice +
+                ", instrumentId='" + instrumentId + '\'' +
+                ", inventory=" + inventory +
+                ", lastPrice=" + lastPrice +
+                ", lastVolume=" + lastVolume +
+                ", lowestPrice=" + lowestPrice +
+                ", openPrice=" + openPrice +
+                ", preClsPrice=" + preClsPrice +
+                ", preInventory=" + preInventory +
+                ", preSetPrice=" + preSetPrice +
+                ", settlePrice=" + settlePrice +
+                ", tradeDay='" + tradeDay + '\'' +
+                ", turnover=" + turnover +
+                ", upDropPrice=" + upDropPrice +
+                ", upDropSpeed=" + upDropSpeed +
+                ", upLimitPrice=" + upLimitPrice +
+                ", upTime=" + upTime +
+                ", upTimeFormat='" + upTimeFormat + '\'' +
+                ", volume=" + volume +
+                '}';
+    }
 }

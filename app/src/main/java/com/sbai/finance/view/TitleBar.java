@@ -229,6 +229,10 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
+    public void setRightViewEnable(boolean enable){
+        mRightView.setEnabled(enable);
+    }
+
     public View getCustomView() {
         return mCustomView;
     }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/companyFinancePublishTime"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    android:background="@color/secondaryText"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/common_padding"
+    tools:text="2017年第4季度，(截止日期:2016-12-12)">
+</android.support.v7.widget.AppCompatTextView>
