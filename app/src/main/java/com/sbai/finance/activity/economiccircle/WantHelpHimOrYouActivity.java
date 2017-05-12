@@ -1,14 +1,17 @@
 package com.sbai.finance.activity.economiccircle;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -26,6 +29,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
@@ -34,7 +38,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class WantHelpHimActivity extends BaseActivity {
+public class WantHelpHimOrYouActivity extends BaseActivity {
+
+	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1001;
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -42,17 +48,60 @@ public class WantHelpHimActivity extends BaseActivity {
 	ListView mListView;
 	@BindView(android.R.id.empty)
 	TextView mEmpty;
+	@BindView(R.id.payIntention)
+	TextView mPayIntention;
+
 	private int mDataId;
+	private int mUserId;
 	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
 	private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_want_help_him);
+		setContentView(R.layout.activity_want_help_him_or_you);
 		ButterKnife.bind(this);
 
 		initData(getIntent());
+
+		if (LocalUser.getUser().isLogin()) {
+			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
+				mTitleBar.setTitle(R.string.people_want_help_you);
+				mPayIntention.setVisibility(View.VISIBLE);
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						final WantHelpHimOrYou wantHelpHimOrYou = (WantHelpHimOrYou) parent.getItemAtPosition(position);
+						mPayIntention.setEnabled(true);
+						mWantHelpHimOrYouAdapter.setChecked(position);
+						mWantHelpHimOrYouAdapter.notifyDataSetInvalidated();
+
+						mPayIntention.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								SmartDialog.with(getActivity(),
+										getString(R.string.select_help, wantHelpHimOrYou.getUserName()))
+										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+											@Override
+											public void onClick(Dialog dialog) {
+												dialog.dismiss();
+												Launcher.with(getActivity(),PayIntentionActivity.class).execute();
+											}
+										})
+										.setMessageTextSize(16)
+										.setMessageTextColor(ContextCompat.getColor(WantHelpHimOrYouActivity.this, R.color.blackAssist))
+										.setNegative(R.string.cancel)
+										.show();
+
+							}
+						});
+					}
+				});
+			} else {
+				mTitleBar.setTitle(R.string.want_help_him);
+				mPayIntention.setVisibility(View.GONE);
+			}
+		}
 
 		mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this);
 		mListView.setEmptyView(mEmpty);
@@ -63,6 +112,7 @@ public class WantHelpHimActivity extends BaseActivity {
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
 	}
 
 	private void requestWantHelpHimList() {
@@ -85,10 +135,15 @@ public class WantHelpHimActivity extends BaseActivity {
 	static class WantHelpHimOrYouAdapter extends ArrayAdapter<WantHelpHimOrYou> {
 
 		private Context mContext;
+		private int mChecked = -1;
 
 		private WantHelpHimOrYouAdapter(Context context) {
 			super(context, 0);
 			mContext = context;
+		}
+
+		private void setChecked(int checked) {
+			this.mChecked = checked;
 		}
 
 		@NonNull
@@ -102,7 +157,7 @@ public class WantHelpHimActivity extends BaseActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position));
+			viewHolder.bindingData(mContext, getItem(position), mChecked, position);
 			return convertView;
 		}
 
@@ -120,7 +175,7 @@ public class WantHelpHimActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			public void bindingData(final Context context, final WantHelpHimOrYou item) {
+			private void bindingData(final Context context, final WantHelpHimOrYou item, int checked, int position) {
 				if (item == null) return;
 				Glide.with(context).load(item.getPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -143,11 +198,40 @@ public class WantHelpHimActivity extends BaseActivity {
 									.putExtra(Launcher.USER_ID, item.getUserId())
 									.execute();
 						} else {
-							Launcher.with(context, LoginActivity.class).execute();
+							Launcher.with(context, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 						}
 					}
 				});
 
+				if (checked == position) {
+					mCheckboxClick.setVisibility(View.VISIBLE);
+				} else {
+					mCheckboxClick.setVisibility(View.GONE);
+				}
+
+			}
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_WANT_HELP_HIM_OR_YOU && resultCode == RESULT_OK) {
+			setResult(RESULT_OK);
+			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
+				mTitleBar.setTitle(R.string.people_want_help_you);
+				mPayIntention.setVisibility(View.VISIBLE);
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						mPayIntention.setEnabled(true);
+						mWantHelpHimOrYouAdapter.setChecked(position);
+						mWantHelpHimOrYouAdapter.notifyDataSetInvalidated();
+					}
+				});
+			} else {
+				mTitleBar.setTitle(R.string.people_want_help_him);
+				mPayIntention.setVisibility(View.GONE);
 			}
 		}
 	}

@@ -126,7 +126,6 @@
         <activity
             android:name=".activity.mine.FansActivity"
             android:screenOrientation="portrait"/>
-
         <activity android:name=".activity.mine.PublishActivity">
         </activity>
         <activity android:name=".activity.trade.PredictionRuleActivity">
@@ -144,12 +143,10 @@
         </activity>
         <activity android:name=".activity.mine.CreditActivity">
         </activity>
-
-
         <activity
-            android:name=".activity.ContentImgActivity"
+            android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
-        
+
         <!-- 交易 H5 -->
         <activity
             android:name=".activity.trade.TradeWebActivity"
@@ -163,8 +160,10 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.economiccircle.WantHelpHimActivity">
+        <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
+        </activity>
+        <activity android:name=".activity.economiccircle.PayIntentionActivity">
         </activity>
     </application>
+
 </manifest>

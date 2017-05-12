@@ -233,6 +233,7 @@ public class LoginActivity extends BaseActivity {
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
+                            setResult(RESULT_OK);
                             finish();
 
                         } else {
