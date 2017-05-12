@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.trade;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +32,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,12 +44,11 @@ import butterknife.Unbinder;
 public class OpinionFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
-    EmptyRecyclerView mRecyclerView;
-    @BindView(android.R.id.empty)
-    TextView mEmpty;
+    RecyclerView mRecyclerView;
 
     Unbinder unbinder;
     TextView mFootView;
+    TextView mEmpty;
 
     private OpinionAdapter mOpinionAdapter;
     private List<Opinion> mOpinionList;
@@ -94,11 +93,20 @@ public class OpinionFragment extends BaseFragment {
         mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
         mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
 
+        mEmpty = new TextView(getActivity());
+        mEmpty.setText(getText(R.string.quick_publish));
+        mEmpty.setPadding(0, 10 * padding, 0, 0);
+        mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
+        mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
+        mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        mEmpty.setCompoundDrawablePadding(padding);
+        Drawable top = getActivity().getDrawable(R.drawable.img_no_message);
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        mRecyclerView.setEmptyView(mEmpty);
     }
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -137,6 +145,12 @@ public class OpinionFragment extends BaseFragment {
     }
 
     private void updateViewWithData(List<Opinion> data) {
+        //获取的数据为空 并且原来就无数据 则显示空view
+        if (data == null || data.size() == 0 && mOpinionList.size() == 0) {
+            mOpinionAdapter.removeAllFooterView();
+            mOpinionAdapter.addFooterView(mEmpty);
+            mOpinionAdapter.notifyDataSetChanged();
+        }
         if (data != null && data.size() > 0) {
             mOpinionList.addAll(data);
             if (data.size() < mPageSize) {
@@ -209,6 +223,8 @@ public class OpinionFragment extends BaseFragment {
             mOpinionAdapter.notifyDataSetChanged();
             if (mOpinionList.size() == 0) {
                 mOpinionAdapter.removeAllFooterView();
+                mOpinionAdapter.addFooterView(mEmpty);
+                mOpinionAdapter.notifyDataSetChanged();
             }
         }
     }
