@@ -25,6 +25,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.FiveMarketFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
@@ -45,8 +46,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sbai.finance.R.id.tradeFloatButtons;
 
 public class StockTradeActivity extends BaseActivity {
 
@@ -69,7 +68,7 @@ public class StockTradeActivity extends BaseActivity {
     @BindView(R.id.klineView)
     KlineView mKlineView;
 
-    @BindView(tradeFloatButtons)
+    @BindView(R.id.tradeFloatButtons)
     TradeFloatButtons mTradeFloatButtons;
 
     @BindView(R.id.slidingTab)
@@ -262,7 +261,7 @@ public class StockTradeActivity extends BaseActivity {
                 case 1:
                     return new ListFragment();
                 case 2:
-                    return new ListFragment();
+                    return new FinanceFragment();
             }
             return null;
         }

@@ -22,7 +22,6 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.GlideRoundTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
@@ -251,7 +250,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             }
             Glide.with(this).load(imagePath)
                     .centerCrop()
-                    .bitmapTransform(new GlideRoundTransform(this, 8))
                     .error(R.drawable.bg_add_identity_card_reserve)
                     .placeholder(R.drawable.bg_add_identity_card_reserve)
                     .into(mIdentityCardReverseImage);
@@ -264,7 +262,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 mIdentityCardFrontImage.setBackground(null);
             }
             Glide.with(this).load(imagePath)
-                    .bitmapTransform(new GlideRoundTransform(this, 8))
                     .error(R.drawable.bg_add_identity_card_font)
                     .placeholder(R.drawable.bg_add_identity_card_font)
                     .into(mIdentityCardFrontImage);
