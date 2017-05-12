@@ -31,7 +31,9 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/white"
+                android:background="@color/greyLightAssist"
+                android:paddingBottom="@dimen/dp_10"
+                android:clipToPadding="false"
                 android:divider="@null"
                 android:visibility="visible"/>
 

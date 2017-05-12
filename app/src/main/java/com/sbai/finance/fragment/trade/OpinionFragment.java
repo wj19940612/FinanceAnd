@@ -138,13 +138,13 @@ public class OpinionFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
                     protected void onRespSuccessData(List<Opinion> data) {
-                        updateViewWithData(data);
+                        updateViewWithData(data, false);
                     }
                 })
                 .fire();
     }
 
-    private void updateViewWithData(List<Opinion> data) {
+    private void updateViewWithData(List<Opinion> data,boolean needScrollToTop) {
         //获取的数据为空 并且原来就无数据 则显示空view
         if (data == null || data.size() == 0 && mOpinionList.size() == 0) {
             mOpinionAdapter.removeAllFooterView();
@@ -163,6 +163,9 @@ public class OpinionFragment extends BaseFragment {
                 mPage++;
             }
             mOpinionAdapter.notifyDataSetChanged();
+            if (needScrollToTop){
+                mRecyclerView.scrollToPosition(0);
+            }
         }
     }
 
@@ -179,7 +182,7 @@ public class OpinionFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
                     protected void onRespSuccessData(List<Opinion> data) {
-                        updateViewWithData(data);
+                        updateViewWithData(data, true);
                     }
                 })
                 .fire();
@@ -252,9 +255,23 @@ public class OpinionFragment extends BaseFragment {
             String time = DateUtil.getFormatTime(item.getCreateTime());
             helper.setText(R.id.userName, item.getUserName())
                     .setText(R.id.followed, attend)
-                    .setText(R.id.publishTime, time)
-                    .setText(R.id.commentNum, String.valueOf(item.getReplyCount()))
-                    .setText(R.id.likeNum, String.valueOf(item.getPraiseCount()));
+                    .setText(R.id.publishTime, time);
+
+            if (item.getReplyCount() > 999) {
+                ((TextView) helper.getView(R.id.commentNum))
+                        .setText(String.valueOf(item.getPraiseCount()) + "+");
+            }else {
+                ((TextView) helper.getView(R.id.commentNum))
+                        .setText(String.valueOf(item.getPraiseCount()));
+            }
+
+            if (item.getPraiseCount() > 999) {
+                ((TextView) helper.getView(R.id.likeNum))
+                        .setText(String.valueOf(item.getPraiseCount()) + "+");
+            }else {
+                ((TextView) helper.getView(R.id.likeNum))
+                        .setText(String.valueOf(item.getPraiseCount()));
+            }
             Glide.with(getActivity()).load(item.getUserPortrait())
                     .bitmapTransform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_default_avatar_big)

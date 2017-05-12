@@ -23,7 +23,7 @@ public class Feedback {
      * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494233728845.png
      */
 
-    private int replyName;
+    private String replyName;
     private String content;
     private int contentType;
     private long createDate;
@@ -34,11 +34,11 @@ public class Feedback {
     private String userPhone;
     private String userPortrait;
 
-    public int getReplyName() {
+    public String getReplyName() {
         return replyName;
     }
 
-    public void setReplyName(int replyName) {
+    public void setReplyName(String replyName) {
         this.replyName = replyName;
     }
 
