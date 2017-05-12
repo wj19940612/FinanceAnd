@@ -19,7 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
-import com.sbai.finance.model.market.FutureData;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;

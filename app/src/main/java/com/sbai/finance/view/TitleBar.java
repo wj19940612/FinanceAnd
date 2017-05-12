@@ -7,7 +7,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -160,7 +159,6 @@ public class TitleBar extends RelativeLayout {
         if (mTitleView == null) return;
 
         mTitle = title;
-        if (TextUtils.isEmpty(mTitle)) return;
         mTitleView.setText(mTitle);
     }
 

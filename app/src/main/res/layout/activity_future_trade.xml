@@ -168,22 +168,20 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:layout_below="@id/tabLayout">
+                        android:layout_height="240dp">
 
                         <com.sbai.chart.TrendView
-                            android:id="@+id/trendView"
+                            android:id="@+id/stockTrendView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"/>
 
                         <com.sbai.chart.KlineView
-                            android:id="@+id/klineView"
+                            android:id="@+id/stockKlineView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="gone"/>
                     </FrameLayout>
                 </LinearLayout>
-
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
@@ -207,9 +205,9 @@
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"
-                android:layout_marginBottom="55dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="55dp"/>
         </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 

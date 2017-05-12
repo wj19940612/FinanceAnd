@@ -37,7 +37,7 @@ import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
-import com.sbai.finance.model.market.FutureData;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -49,6 +49,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -62,14 +63,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.R.id.trendView;
+import static com.sbai.finance.R.id.stockTrendView;
 import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
-
-    private final static int SCHEDULE_TIME = 60;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -87,9 +86,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(trendView)
+    @BindView(stockTrendView)
     TrendView mTrendView;
-    @BindView(R.id.klineView)
+    @BindView(R.id.stockKlineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -160,7 +159,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     @Override
     public void onTimeUp(int count) {
-        if (count % SCHEDULE_TIME == 0) {
+        if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
             requestTrendDataAndSet();
         }
     }

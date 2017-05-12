@@ -1,4 +1,4 @@
-package com.sbai.finance.model.market;
+package com.sbai.finance.model.stock;
 
 public class StockData {
 

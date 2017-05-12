@@ -12,15 +12,14 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backFeature="true"
-        app:titleText="@string/stock_code"/>
+        app:backFeature="true"/>
 
     <LinearLayout
         android:id="@+id/marketArea"
         android:layout_width="match_parent"
         android:layout_height="97dp"
         android:layout_below="@id/titleBar"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/redPrimary"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -32,18 +31,20 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/lastPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorRed"
-                android:textSize="38sp"
-                tools:text="46.24"/>
+                android:text="--"
+                android:textColor="@android:color/white"
+                android:textSize="38sp"/>
 
             <TextView
+                android:id="@+id/priceChange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorRed"
+                android:textColor="@android:color/white"
                 android:textSize="14sp"
-                tools:text="+0.32     +0.65%"/>
+                tools:text="--     --"/>
         </LinearLayout>
 
         <LinearLayout
@@ -56,28 +57,30 @@
                 style="@style/MarketDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/today_open"/>
+                android:text="@string/today_open"
+                android:textColor="@color/fortyPercentWhite"/>
 
             <TextView
                 android:id="@+id/todayOpen"
                 style="@style/MarketData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="458681"/>
+                android:text="--"/>
 
             <TextView
                 style="@style/MarketDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@string/pre_close"/>
+                android:text="@string/pre_close"
+                android:textColor="@color/fortyPercentWhite"/>
 
             <TextView
                 android:id="@+id/preClose"
                 style="@style/MarketData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="458681"/>
+                android:text="--"/>
         </LinearLayout>
 
         <View
@@ -85,7 +88,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"
-            android:background="@color/greyAssist"/>
+            android:background="@color/pinkAssist"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -98,28 +101,30 @@
                 style="@style/MarketDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/highest"/>
+                android:text="@string/highest"
+                android:textColor="@color/fortyPercentWhite"/>
 
             <TextView
                 android:id="@+id/highest"
                 style="@style/MarketData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="458681"/>
+                android:text="--"/>
 
             <TextView
                 style="@style/MarketDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@string/lowest"/>
+                android:text="@string/lowest"
+                android:textColor="@color/fortyPercentWhite"/>
 
             <TextView
                 android:id="@+id/lowest"
                 style="@style/MarketData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="458681"/>
+                android:text="--"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -151,69 +156,23 @@
                         style="@style/TradeFixedTab"
                         android:layout_width="match_parent"
                         android:layout_height="38dp"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="@dimen/common_padding">
-                        <FrameLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_below="@id/tabLayout">
-                            <com.sbai.chart.TrendView
-                                android:id="@+id/trendView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
-                            <com.sbai.chart.KlineView
-                                android:id="@+id/klineView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:visibility="gone"/>
-                        </FrameLayout>
-                        <LinearLayout
-                            android:id="@+id/detailMarket"
-                            android:layout_width="100dp"
-                            android:layout_height="240dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="@dimen/common_padding"
-                            android:orientation="vertical"
-                            android:visibility="visible">
-                            <FrameLayout
-                                android:id="@+id/detailView"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1">
-                            </FrameLayout>
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="18dp"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:id="@+id/fiveHq"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:background="@drawable/bg_selected"
-                                    android:textSize="10sp"
-                                    android:textColor="@color/blackAssist"
-                                    android:text="五档"/>
-                                <TextView
-                                    android:id="@+id/splitHq"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:background="@drawable/bg_selected"
-                                    android:textSize="10sp"
-                                    android:textColor="@color/blackAssist"
-                                    android:text="明细"/>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
 
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp">
+
+                        <com.sbai.finance.view.stock.StockTrendView
+                            android:id="@+id/stockTrendView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                        <com.sbai.chart.KlineView
+                            android:id="@+id/stockKlineView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="gone"/>
+                    </FrameLayout>
+                </LinearLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
@@ -234,7 +193,9 @@
                 android:id="@+id/slidingTab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
             <include layout="@layout/split_line_grey_light"/>
+
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"

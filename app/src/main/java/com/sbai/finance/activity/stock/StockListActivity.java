@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.market.StockData;
+import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -65,6 +66,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private int mPage = 0;
     private int mPageSize = 15;
 
+    private Variety mVariety;
+
     private StockListAdapter mStockListAdapter;
 
     @Override
@@ -83,6 +86,16 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mStockListAdapter = new StockListAdapter(this);
         mListView.setAdapter(mStockListAdapter);
         mListView.setEmptyView(mEmpty);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Variety variety = (Variety) parent.getItemAtPosition(position);
+                if (variety != null) {
+                    Launcher.with(getActivity(), StockTradeActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                }
+            }
+        });
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setAdapter(mListView, mStockListAdapter);
