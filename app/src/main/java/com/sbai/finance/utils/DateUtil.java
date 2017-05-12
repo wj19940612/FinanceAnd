@@ -3,6 +3,8 @@ package com.sbai.finance.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.sbai.finance.model.local.SysTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +20,7 @@ public class DateUtil {
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
+    public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
         return dateFormat.format(new Date(time));
@@ -94,6 +97,21 @@ public class DateUtil {
         calendar.setTime(date);
         todayCalendar.add(Calendar.WEEK_OF_YEAR, 1);
         return calendar.get(Calendar.WEEK_OF_YEAR) == todayCalendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public static boolean isInThisMonth(long time, long today) {
+        Date date = new Date(time);
+        Date todayDate = new Date(today);
+        return isInThisMonth(date, todayDate);
+    }
+
+    public static boolean isInThisMonth(Date date, Date todayDate) {
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTime(todayDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
+                && calendar.get(Calendar.WEEK_OF_YEAR) == todayCalendar.get(Calendar.WEEK_OF_YEAR);
     }
 
     public static boolean isInThisYear(long time) {
@@ -309,6 +327,45 @@ public class DateUtil {
     }
 
     /**
+     * 获取明细页面的格式化时间
+     * 日期显示：
+     * 本日记录：今日00:00；
+     * 昨日记录：昨日00:00
+     * 两日以前记录：XX日00:00
+     * @param createTime
+     * @return
+     */
+    public static String getDetailFormatTime(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (isToday(createTime, systemTime)) {
+            return "今日" + DateUtil.format(createTime, "HH:mm");
+        }
+        if (isYesterday(createTime, systemTime)) {
+            return "昨日" + DateUtil.format(createTime, "HH:mm");
+        }
+        return DateUtil.format(createTime, "dd日HH:mm");
+    }
+
+    /**
+     * 格式化月份  如果是当月 则显示本月
+     * 如果是当年中的其他月份  显示x月
+     * 如果是跨年月份   则显示xxxx年xx月
+     * @param createTime
+     * @return
+     */
+    public static String getFormatMonth(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (DateUtil.isInThisMonth(createTime, systemTime)) {
+            return "本月";
+        } else if (DateUtil.isInThisYear(createTime)) {
+            return DateUtil.format(createTime, "M月");
+        } else {
+            return DateUtil.format(createTime, "yyyy年MM月");
+        }
+
+    }
+
+    /**
      * 计算传入的时间与当前时间的相差天数
      *
      * @param date 服务器所传递的时间
@@ -364,5 +421,47 @@ public class DateUtil {
             resultMin =String.valueOf(minute);
         }
         return resultHour+":"+resultMin;
+    }
+
+
+    /**
+     * string类型转换为long类型  strTime的时间格式和formatType的时间格式必须相同
+     * @param strTime 要转换的String类型的时间
+     * @param formatType 时间格式
+     * @return
+     * @throws ParseException
+     */
+    public static long stringToLong(String strTime, String formatType) {
+        Date date = stringToDate(strTime, formatType); // String类型转成date类型
+        if (date == null) {
+            return 0;
+        } else {
+            long currentTime = dateToLong(date); // date类型转成long类型
+            return currentTime;
+        }
+    }
+
+
+    /**
+     * string类型转换为date类型
+     * @param strTime 要转换的string类型的时间
+     * @param formatType 要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
+     * @return
+     * @throws ParseException
+     */
+    public static Date stringToDate(String strTime, String formatType) {
+        SimpleDateFormat formatter = new SimpleDateFormat(formatType);
+        Date date = null;
+        try {
+            date = formatter.parse(strTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
+    public static long dateToLong(Date date) {
+        return date.getTime();
     }
 }

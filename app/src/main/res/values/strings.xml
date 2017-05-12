@@ -122,6 +122,8 @@
     <string name="new_message">新消息</string>
     <string name="item">条</string>
     <string name="now_not_has_data">暂无消息</string>
+    <string name="please_input_here">请在此输入......</string>
+    <string name="you_dont_have_trade">你还没有交易过哦</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -304,6 +306,11 @@
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
     <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
+
+    <string name="send">发送</string>
+    <string name="gallery">相册</string>
+    <string name="preview">预览</string>
+    <string name="all_image">所有图片</string>
 
     <!--借款有道-->
     <string name="give_help_dialog_title">是否要帮助%1$s?</string>

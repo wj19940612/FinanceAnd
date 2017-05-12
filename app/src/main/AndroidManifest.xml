@@ -176,7 +176,22 @@
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
 
+        <!-- 反馈 -->
+        <activity
+            android:name=".activity.mine.FeedbackActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
+        <!-- 明细 -->
+        <activity
+            android:name=".activity.mine.TheDetailActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".activity.economiccircle.WantHelpHimActivity">
+
         </activity>
+        <!-- 选择相册图片 -->
+        <activity android:name=".activity.mine.ImageSelectActivity"/>
+        <!-- 相册图片预览 -->
+        <activity android:name=".activity.mine.ImagePreViewActivity"/>
     </application>
 </manifest>

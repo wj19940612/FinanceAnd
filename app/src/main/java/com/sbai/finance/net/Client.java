@@ -952,6 +952,47 @@ public class Client {
 						.put("varietyId", varietyId));
 	}
 
+
+	/**
+	 * 查看反馈和回复
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getFeedback(int page, int pageSize) {
+		return new API("/user/userFeedback/seeFeedback.do",
+				new ApiParams()
+						.put("pageSize", pageSize)
+						.put("page", page));
+	}
+
+	/**
+	 * 用户发送反馈
+	 * @param content
+	 * @param contentType
+	 * @return
+	 */
+    public static API sendFeedback(String content, int contentType) {
+        return new API(POST, "/user/userFeedback/addFeedback.do",
+                new ApiParams()
+                        .put("content", content)
+                        .put("contentType", contentType));
+    }
+
+	/**
+	 * 查询明细
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getDetail(int page, int pageSize) {
+		return new API("/user/userFlow/queryUserFlow.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize));
+	}
+
+
 	/**
 	 * 获取品种简介
 	 *
