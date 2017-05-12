@@ -12,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,7 +43,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.activity.mine.FeedbackActivity.FeedbackAdapter.TYPE_USER;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_PICTURE;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_TEXT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
@@ -135,7 +133,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             mPage++;
         }
         mFeedbackAdapter.addFeedbackList(data);
-
     }
 
     @Override
@@ -220,20 +217,37 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     //刷新列表
-    private void refreshChatList(String content, int contentType, String imagePath) {
-        Feedback feedback = new Feedback();
-        feedback.setContentType(contentType);
-        feedback.setType(TYPE_USER);
+    private void refreshChatList(final String content, final int contentType, String imagePath) {
+        //请求最新的服务器数据  并取最后一条
+        Client.getFeedback(0, mPageSize)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Feedback> data) {
+                        updateTheLastMessage(data, content, contentType);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
+    }
+
+    private void updateTheLastMessage(List<Feedback> data, String content, int contentType) {
+        if (data == null) {
+            return;
+        }
+        Feedback feedback = data.get(data.size() - 1);
+        mFeedbackAdapter.addFeedbackItem(feedback);
+        mListView.setSelection(mFeedbackAdapter.getCount() - 1);
         if (contentType == CONTENT_TYPE_TEXT) {
             feedback.setContent(content);
             mCommentContent.setText("");
-        } else {
-            feedback.setContent("file://" + imagePath);
         }
-        feedback.setCreateDate(System.currentTimeMillis());
-        feedback.setUserPortrait(LocalUser.getUser().getUserInfo().getUserPortrait());
-
-        mFeedbackAdapter.addFeedbackItem(feedback);
     }
 
 
@@ -408,7 +422,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             @BindView(R.id.endLineTime)
             TextView mEndLineTime;
             @BindView(R.id.timeLayout)
-            LinearLayout mTimeLayout;
+            RelativeLayout mTimeLayout;
             @BindView(R.id.headImage)
             ImageView mHeadImage;
             @BindView(R.id.timestamp)

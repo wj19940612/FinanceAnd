@@ -174,10 +174,9 @@
         <activity
             android:name=".activity.mine.TheDetailActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.home.BorrowMoneyActivity">
 
-        </activity>
         <activity android:name=".activity.economiccircle.WantHelpHimActivity">
+
         </activity>
         <!-- 选择相册图片 -->
         <activity android:name=".activity.mine.ImageSelectActivity"/>

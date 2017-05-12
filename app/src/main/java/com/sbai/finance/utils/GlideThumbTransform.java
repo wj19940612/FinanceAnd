@@ -53,7 +53,7 @@ public class GlideThumbTransform extends BitmapTransformation {
         Paint paint = new Paint();
         paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
         paint.setAntiAlias(true);
-        RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
+        RectF rectF = new RectF(0f, 0f, width, height);
         canvas.drawRect(rectF, paint);
         return result;
 

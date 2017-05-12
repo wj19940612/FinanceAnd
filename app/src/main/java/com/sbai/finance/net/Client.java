@@ -935,7 +935,7 @@ public class Client {
 						.put("bigVarietyTypeCode", bigVarietyTypeCode)
 						.put("varietyId", varietyId));
 	}
-    
+
 
 	/**
 	 * 查看反馈和回复
