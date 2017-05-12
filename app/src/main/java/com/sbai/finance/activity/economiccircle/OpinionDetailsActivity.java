@@ -49,6 +49,7 @@ import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -351,6 +352,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 			notifyDataSetChanged();
 		}
 
+		public void addAll(List<OpinionReply> opinionReplyList) {
+			mOpinionReplyList.clear();
+			mOpinionReplyList.addAll(opinionReplyList);
+			notifyDataSetChanged();
+		}
+
 		@Override
 		public int getCount() {
 			return mOpinionReplyList.size();
@@ -603,6 +610,19 @@ public class OpinionDetailsActivity extends BaseActivity {
 						}
 						break;
 					}
+				}
+
+				if (whetherAttentionShieldOrNot.isShield()) {
+					for (Iterator it = mOpinionReplyList.iterator(); it.hasNext(); ) {
+						OpinionReply opinionReply = (OpinionReply) it.next();
+						if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
+							it.remove();
+						}
+					}
+
+					mOpinionReplyAdapter.addAll(mOpinionReplyList);
+					mOpinionReplyAdapter.notifyDataSetChanged();
+					mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionReplyList.size())));
 				}
 			}
 		}

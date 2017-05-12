@@ -33,6 +33,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -199,6 +200,21 @@ public class ViewpointFragment extends BaseFragment {
             }
         }
         mOpinionAdapter.notifyDataSetChanged();
+    }
+
+    public void shieldUserByUserId(int userId, boolean isShield) {
+        if (isShield) {
+            for (Iterator it = mOpinionList.iterator(); it.hasNext(); ) {
+                Opinion opinion = (Opinion) it.next();
+                if (opinion.getUserId() == userId) {
+                    it.remove();
+                }
+            }
+            mOpinionAdapter.notifyDataSetChanged();
+            if (mOpinionList.size() == 0) {
+                mOpinionAdapter.removeAllFooterView();
+            }
+        }
     }
 
     @Override

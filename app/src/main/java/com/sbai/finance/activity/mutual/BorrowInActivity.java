@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.android.volley.Request.Method.HEAD;
 
 public class BorrowInActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
@@ -327,7 +330,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                mHelperAmount.setText(context.getString(R.string.helper,0));
+                mHelperAmount.setText(context.getString(R.string.helper,item.getIntentionCount()));
                 mOption.setText(item.getContent());
                 SpannableString attentionSpannableString;
                 switch (item.getStatus()){
@@ -349,18 +352,19 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
-                    case 0:
-                        mImage1.setVisibility(View.GONE);
-                        mImage2.setVisibility(View.GONE);
-                        mImage3.setVisibility(View.GONE);
-                        mImage4.setVisibility(View.GONE);
-                        break;
                     case 1:
-                        mImage1.setVisibility(View.VISIBLE);
-                        loadImage(context,images[0],mImage1);
-                        mImage2.setVisibility(View.INVISIBLE);
-                        mImage3.setVisibility(View.INVISIBLE);
-                        mImage4.setVisibility(View.INVISIBLE);
+                        if (TextUtils.isEmpty(images[0])){
+                            mImage1.setVisibility(View.GONE);
+                            mImage2.setVisibility(View.GONE);
+                            mImage3.setVisibility(View.GONE);
+                            mImage4.setVisibility(View.GONE);
+                        }else{
+                            mImage1.setVisibility(View.VISIBLE);
+                            loadImage(context,images[0],mImage1);
+                            mImage2.setVisibility(View.INVISIBLE);
+                            mImage3.setVisibility(View.INVISIBLE);
+                            mImage4.setVisibility(View.INVISIBLE);
+                        }
                         break;
                     case 2:
                         mImage1.setVisibility(View.VISIBLE);

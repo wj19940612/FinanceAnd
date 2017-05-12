@@ -16,12 +16,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.market.FutureData;
-import com.sbai.finance.model.market.StockData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
@@ -140,24 +137,25 @@ public class PublishOpinionActivity extends BaseActivity {
             }
             submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
         } else {
-            Client.getStockMarketData(mVariety.getVarietyType())
-                    .setTag(TAG)
-                    .setCallback(new StockCallback<StockResp, StockData>() {
-                        @Override
-                        public void onDataMsg(StockData result, StockResp.Msg msg) {
-                            Log.d(TAG, "onDataMsg: " + result.toString());
-                            String lastPriceStr = null;
-                            //	涨幅
-                            String risePriceStr = null;
-                            //涨幅百分比
-                            String risePercentStr = null;
-                            lastPriceStr = String.valueOf(result.getLast_price());
-                            risePriceStr = String.valueOf(result.getRise_price());
-                            risePercentStr = String.valueOf(result.getRise_pre());
-                            submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
-                        }
-                    })
-                    .fire();
+            // TODO: 2017/5/12  获取股票的实时行情 未建对应的moedl  
+//            Client.getStockRealTimeQuotes(mVariety.getVarietyType())
+//                    .setTag(TAG)
+//                    .setCallback(new StockCallback<StockResp, StockData>() {
+//                        @Override
+//                        public void onDataMsg(StockData result, StockResp.Msg msg) {
+//                            Log.d(TAG, "onDataMsg: " + result.toString());
+//                            String lastPriceStr = null;
+//                            //	涨幅
+//                            String risePriceStr = null;
+//                            //涨幅百分比
+//                            String risePercentStr = null;
+//                            lastPriceStr = String.valueOf(result.getLast_price());
+//                            risePriceStr = String.valueOf(result.getRise_price());
+//                            risePercentStr = String.valueOf(result.getRise_pre());
+//                            submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
+//                        }
+//                    })
+//                    .fire();
         }
 
 

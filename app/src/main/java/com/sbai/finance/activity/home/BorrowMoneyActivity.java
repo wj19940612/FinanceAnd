@@ -1,9 +1,12 @@
 package com.sbai.finance.activity.home;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -15,7 +18,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,10 +31,13 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoney;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
@@ -41,6 +46,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 
 public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnScrollListener {
 
@@ -58,6 +65,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 	private int mPage = 0;
 	private int mPageSize = 15;
 	private HashSet<String> mSet;
+	private RefreshAttentionReceiver mReceiver;
 
 
 	@Override
@@ -85,7 +93,9 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			@Override
 			public void onAvatarBorrowMoneyClick(BorrowMoney borrowMoney) {
 				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(BorrowMoneyActivity.this, UserDataActivity.class).execute();
+					Launcher.with(BorrowMoneyActivity.this, UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, borrowMoney.getUserId())
+							.execute();
 				} else {
 					Launcher.with(BorrowMoneyActivity.this, LoginActivity.class).execute();
 				}
@@ -94,6 +104,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 
 		requestBorrowMoneyList();
 		initSwipeRefreshLayout();
+		registerRefreshReceiver();
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -262,8 +273,16 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			TextView mBorrowInterest;
 			@BindView(R.id.borrowMoneyContent)
 			TextView mBorrowMoneyContent;
-			@BindView(R.id.contentImg)
-			LinearLayout mContentImg;
+			@BindView(R.id.isAttention)
+			TextView mIsAttention;
+			@BindView(R.id.image1)
+			ImageView mImage1;
+			@BindView(R.id.image2)
+			ImageView mImage2;
+			@BindView(R.id.image3)
+			ImageView mImage3;
+			@BindView(R.id.image4)
+			ImageView mImage4;
 
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
@@ -271,8 +290,21 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 
 			private void bindingData(final Context context, final BorrowMoney item, final Callback callback) {
 				if (item == null) return;
+
+				Glide.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mAvatar);
+
 				mUserName.setText(item.getUserName());
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+
+				if (item.getIsAttention() == 2) {
+					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
+				}
+
 				if (TextUtils.isEmpty(item.getLand())) {
 					mLocation.setText(R.string.no_location_information);
 				} else {
@@ -283,6 +315,8 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
 				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));
 				mBorrowMoneyContent.setText(item.getContent());
+
+
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -292,32 +326,111 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					}
 				});
 
-				int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
 
-				int width = (screenWidth) / 4;
-				int margin = context.getResources().getDimensionPixelSize(R.dimen.common_split);
-				 final String[] contentImgArray = item.getContentImg().split(",");
-				for (int i = 0; i < contentImgArray.length; i++) {
-					ImageView imageView = new ImageView(context);
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-					//params.leftMargin = (i == 0 ? 0 : margin);
-
-					Glide.with(context).load(contentImgArray[i])
-							.placeholder(R.drawable.help)
-							.into(imageView);
-					imageView.setLayoutParams(params);
-					mContentImg.addView(imageView);
-
-					final int temp = i;
-					imageView.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent(context,ContentImgActivity.class);
-							intent.putExtra("urlList", contentImgArray);
-							intent.putExtra("currentItem",temp);
-							context.startActivity(intent);
+				String[] images = item.getContentImg().split(",");
+				switch (images.length) {
+					case 1:
+						if (TextUtils.isEmpty(images[0])) {
+							mImage1.setVisibility(View.GONE);
+							mImage2.setVisibility(View.GONE);
+							mImage3.setVisibility(View.GONE);
+							mImage4.setVisibility(View.GONE);
+						} else {
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.INVISIBLE);
+							mImage3.setVisibility(View.INVISIBLE);
+							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
 						}
-					});
+						break;
+					case 2:
+						mImage1.setVisibility(View.VISIBLE);
+						loadImage(context, images[0], mImage1);
+						mImage2.setVisibility(View.VISIBLE);
+						loadImage(context, images[1], mImage2);
+						mImage3.setVisibility(View.INVISIBLE);
+						mImage4.setVisibility(View.INVISIBLE);
+						imageClick(context, images, mImage1, 0);
+						imageClick(context, images, mImage2, 1);
+						break;
+					case 3:
+						mImage1.setVisibility(View.VISIBLE);
+						loadImage(context, images[0], mImage1);
+						mImage2.setVisibility(View.VISIBLE);
+						loadImage(context, images[1], mImage2);
+						mImage3.setVisibility(View.VISIBLE);
+						loadImage(context, images[2], mImage3);
+						mImage4.setVisibility(View.INVISIBLE);
+						imageClick(context, images, mImage1, 0);
+						imageClick(context, images, mImage2, 1);
+						imageClick(context, images, mImage3, 2);
+						break;
+					case 4:
+						mImage1.setVisibility(View.VISIBLE);
+						loadImage(context, images[0], mImage1);
+						mImage2.setVisibility(View.VISIBLE);
+						loadImage(context, images[1], mImage2);
+						mImage3.setVisibility(View.VISIBLE);
+						loadImage(context, images[2], mImage3);
+						mImage4.setVisibility(View.VISIBLE);
+						loadImage(context, images[3], mImage4);
+						imageClick(context, images, mImage1, 0);
+						imageClick(context, images, mImage2, 1);
+						imageClick(context, images, mImage3, 2);
+						imageClick(context, images, mImage3, 3);
+						break;
+					default:
+						break;
+
+				}
+			}
+
+			private void loadImage(Context context, String src, ImageView image) {
+				Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
+			}
+
+			private void imageClick(final Context context, final String[] images,
+			                        ImageView imageView, final int i) {
+				imageView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(context, ContentImgActivity.class);
+						intent.putExtra(Launcher.EX_PAYLOAD, images);
+						intent.putExtra(Launcher.EX_PAYLOAD_1, i);
+						context.startActivity(intent);
+					}
+				});
+			}
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mReceiver = new RefreshAttentionReceiver();
+		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+	}
+
+	private class RefreshAttentionReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+			AttentionAndFansNumberModel attentionAndFansNumberModel =
+					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+
+			if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+				for (BorrowMoney borrowMoney : mBorrowMoneyList) {
+					if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()) {
+						if (whetherAttentionShieldOrNot.isFollow()) {
+							borrowMoney.setIsAttention(2);
+							mBorrowMoneyAdapter.notifyDataSetChanged();
+						} else {
+							borrowMoney.setIsAttention(1);
+							mBorrowMoneyAdapter.notifyDataSetChanged();
+						}
+					}
 				}
 			}
 		}

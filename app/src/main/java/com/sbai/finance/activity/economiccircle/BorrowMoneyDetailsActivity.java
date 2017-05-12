@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.economiccircle;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -10,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.ContentImgActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.net.Callback;
@@ -21,6 +25,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -51,6 +56,16 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	LinearLayout mWantHelpHimArea;
 	@BindView(R.id.giveHelp)
 	TextView mGiveHelp;
+	@BindView(R.id.isAttention)
+	TextView mIsAttention;
+	@BindView(R.id.image1)
+	ImageView mImage1;
+	@BindView(R.id.image2)
+	ImageView mImage2;
+	@BindView(R.id.image3)
+	ImageView mImage3;
+	@BindView(R.id.image4)
+	ImageView mImage4;
 
 	private int mDataId;
 
@@ -74,12 +89,19 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<BorrowMoneyDetails>, BorrowMoneyDetails>() {
 					@Override
 					protected void onRespSuccessData(BorrowMoneyDetails borrowMoneyDetails) {
-						updateBorrowDetails(borrowMoneyDetails);
+						updateBorrowDetails(BorrowMoneyDetailsActivity.this, borrowMoneyDetails);
 					}
 				}).fire();
 	}
 
-	private void updateBorrowDetails(final BorrowMoneyDetails borrowMoneyDetails) {
+	private void updateBorrowDetails(final Context context, final BorrowMoneyDetails borrowMoneyDetails) {
+		if (borrowMoneyDetails == null) return;
+
+		Glide.with(context).load(borrowMoneyDetails.getPortrait())
+				.placeholder(R.drawable.ic_default_avatar)
+				.transform(new GlideCircleTransform(context))
+				.into(mAvatar);
+
 		mUserName.setText(borrowMoneyDetails.getUserName());
 		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getCreateDate()));
 
@@ -89,12 +111,29 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			mLocation.setText(borrowMoneyDetails.getLocation());
 		}
 
+		if (borrowMoneyDetails.getIsAttention() == 2) {
+			mIsAttention.setText(R.string.is_attention);
+		} else {
+			mIsAttention.setText("");
+		}
+
 		mBorrowMoneyContent.setText(borrowMoneyDetails.getContent());
-
-
 		mNeedAmount.setText(this.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getMoney())));
 		mBorrowTime.setText(this.getString(R.string.day, String.valueOf(borrowMoneyDetails.getDays())));
 		mBorrowInterest.setText(this.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getInterest())));
+
+		mAvatar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(context, UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
+							.execute();
+				} else {
+					Launcher.with(context, LoginActivity.class).execute();
+				}
+			}
+		});
 
 		if (borrowMoneyDetails.getIsIntention() == 1) {
 			mGiveHelp.setBackgroundResource(R.drawable.bg_to_confirm);
@@ -150,6 +189,80 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				}
 			}
 		});
+
+		String[] images = borrowMoneyDetails.getContentImg().split(",");
+		switch (images.length) {
+			case 1:
+				if (TextUtils.isEmpty(images[0])) {
+					mImage1.setVisibility(View.GONE);
+					mImage2.setVisibility(View.GONE);
+					mImage3.setVisibility(View.GONE);
+					mImage4.setVisibility(View.GONE);
+				} else {
+					mImage1.setVisibility(View.VISIBLE);
+					loadImage(context, images[0], mImage1);
+					mImage2.setVisibility(View.INVISIBLE);
+					mImage3.setVisibility(View.INVISIBLE);
+					mImage4.setVisibility(View.INVISIBLE);
+					imageClick(context, images, mImage1, 0);
+				}
+				break;
+			case 2:
+				mImage1.setVisibility(View.VISIBLE);
+				loadImage(context, images[0], mImage1);
+				mImage2.setVisibility(View.VISIBLE);
+				loadImage(context, images[1], mImage2);
+				mImage3.setVisibility(View.INVISIBLE);
+				mImage4.setVisibility(View.INVISIBLE);
+				imageClick(context, images, mImage1, 0);
+				imageClick(context, images, mImage2, 1);
+				break;
+			case 3:
+				mImage1.setVisibility(View.VISIBLE);
+				loadImage(context, images[0], mImage1);
+				mImage2.setVisibility(View.VISIBLE);
+				loadImage(context, images[1], mImage2);
+				mImage3.setVisibility(View.VISIBLE);
+				loadImage(context, images[2], mImage3);
+				mImage4.setVisibility(View.INVISIBLE);
+				imageClick(context, images, mImage1, 0);
+				imageClick(context, images, mImage2, 1);
+				imageClick(context, images, mImage3, 2);
+				break;
+			case 4:
+				mImage1.setVisibility(View.VISIBLE);
+				loadImage(context, images[0], mImage1);
+				mImage2.setVisibility(View.VISIBLE);
+				loadImage(context, images[1], mImage2);
+				mImage3.setVisibility(View.VISIBLE);
+				loadImage(context, images[2], mImage3);
+				mImage4.setVisibility(View.VISIBLE);
+				loadImage(context, images[3], mImage4);
+				imageClick(context, images, mImage1, 0);
+				imageClick(context, images, mImage2, 1);
+				imageClick(context, images, mImage3, 2);
+				imageClick(context, images, mImage3, 3);
+				break;
+			default:
+				break;
+
+		}
 	}
 
+	private void loadImage(Context context, String src, ImageView image) {
+		Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
+	}
+
+	private void imageClick(final Context context, final String[] images,
+	                        ImageView imageView, final int i) {
+		imageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, ContentImgActivity.class);
+				intent.putExtra(Launcher.EX_PAYLOAD, images);
+				intent.putExtra(Launcher.EX_PAYLOAD_1, i);
+				context.startActivity(intent);
+			}
+		});
+	}
 }

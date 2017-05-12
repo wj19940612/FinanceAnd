@@ -31,6 +31,15 @@ public class EconomicCircle implements Serializable {
 	private String lastPrice;
 	private String risePre;
 	private String risePrice;
+	private String contentImg;
+
+	public String getContentImg() {
+		return contentImg;
+	}
+
+	public void setContentImg(String contentImg) {
+		this.contentImg = contentImg;
+	}
 
 	public int getAuditStatus() {
 		return auditStatus;
@@ -278,6 +287,7 @@ public class EconomicCircle implements Serializable {
 				", lastPrice='" + lastPrice + '\'' +
 				", risePre='" + risePre + '\'' +
 				", risePrice='" + risePrice + '\'' +
+				", contentImg='" + contentImg + '\'' +
 				'}';
 	}
 }

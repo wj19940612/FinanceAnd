@@ -325,6 +325,16 @@ public class UserDataActivity extends BaseActivity {
 	}
 
 	private void refreshAttention() {
+		sendBroadcast();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		sendBroadcast();
+	}
+
+	private void sendBroadcast() {
 		Intent intent = new Intent(REFRESH_ATTENTION);
 		intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
 		intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNum);

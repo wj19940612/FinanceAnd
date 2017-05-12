@@ -50,6 +50,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
@@ -335,8 +336,18 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOpition(true);
+                            CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+
+                    @Override
+                    protected void onReceive(Resp<JsonObject> resp) {
+                        super.onReceive(resp);
+                        // 701 代表已经添加过
+                        if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
                         }
                     }
                 })
@@ -357,6 +368,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                     protected void onRespSuccess(Resp<JsonObject> resp) {
                                         if (resp.isSuccess()) {
                                             mTradeFloatButtons.setHasAddInOpition(false);
+                                            CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
                                         } else {
                                             ToastUtil.curt(resp.getMsg());
                                         }
@@ -606,6 +618,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 } else {
                     viewpointFragment.refreshPointList();
                 }
+
             }
         }
     }

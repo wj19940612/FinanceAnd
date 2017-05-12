@@ -15,6 +15,8 @@ public class Launcher {
 	public static final String EX_PAYLOAD = "payload";
 	public static final String EX_PAYLOAD_1 = "payload1";
 	public static final String EX_PAYLOAD_2 = "payload2";
+	public static final String EX_PAYLOAD_3= "payload3";
+	public static final String EX_PAYLOAD_4 = "payload4";
 
 	public static final String USER_ID = "userId";
 

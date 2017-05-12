@@ -127,7 +127,7 @@ public class EventDetailActivity extends BaseActivity {
         webSettings.setEnableSmoothTransition(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUseWideViewPort(true);
-
+        webSettings.setBlockNetworkImage(false);//解决图片不显示
         mWebView.clearHistory();
         mWebView.clearCache(true);
         mWebView.clearFormData();

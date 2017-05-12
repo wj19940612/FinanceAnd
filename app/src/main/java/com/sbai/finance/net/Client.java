@@ -7,76 +7,77 @@ import com.sbai.httplib.ApiParams;
 
 public class Client {
 
-    private static final int POST = Request.Method.POST;
-    public static final int PAGE_SIZE = 15;
 
-    /**
-     * 获取期货品种
-     *
-     * @param page
-     * @param pageSize
-     * @param smallVarietyTypeCode
-     * @return
-     */
-    public static API getFutureVariety(Integer page, Integer pageSize, String smallVarietyTypeCode) {
-        return new API("/order/order/getVariety.do",
-                new ApiParams()
-                        .put("bigVarietyTypeCode", "future")
-                        .put("page", page)
-                        .put("pageSize", pageSize)
-                        .put("smallVarietyTypeCode", smallVarietyTypeCode));
-    }
+	private static final int POST = Request.Method.POST;
+	public static final int PAGE_SIZE = 15;
 
-    /**
-     * 股票除指数品种
-     *
-     * @param page
-     * @param pageSize
-     * @return
-     */
-    public static API getStockVariety(Integer page, Integer pageSize, String search) {
-        return new API("/order/order/getStockVariety.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize)
-                        .put("search", search));
-    }
+	/**
+	 * 获取期货品种
+	 *
+	 * @param page
+	 * @param pageSize
+	 * @param smallVarietyTypeCode
+	 * @return
+	 */
+	public static API getFutureVariety(Integer page, Integer pageSize, String smallVarietyTypeCode) {
+		return new API("/order/order/getVariety.do",
+				new ApiParams()
+						.put("bigVarietyTypeCode", "future")
+						.put("page", page)
+						.put("pageSize", pageSize)
+						.put("smallVarietyTypeCode", smallVarietyTypeCode));
+	}
 
-    /**
-     * 获取借款详情
-     *
-     * @param id
-     * @return
-     */
-    public static API getBorrowMoneyDetail(int id) {
-        return new API(POST, "/coterie/help/loan/showDetails.do",
-                new ApiParams()
-                        .put("id", id));
-    }
+	/**
+	 * 股票除指数品种
+	 *
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getStockVariety(Integer page, Integer pageSize, String search) {
+		return new API("/order/order/getStockVariety.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize)
+						.put("search", search));
+	}
 
-    /**
-     * 给予帮助
-     *
-     * @param id
-     * @return
-     */
-    public static API giveHelp(int id) {
-        return new API(POST, "/coterie/help/loan/intention.do",
-                new ApiParams()
-                        .put("id", id));
-    }
+	/**
+	 * 获取借款详情
+	 *
+	 * @param id
+	 * @return
+	 */
+	public static API getBorrowMoneyDetail(int id) {
+		return new API(POST, "/coterie/help/loan/showDetails.do",
+				new ApiParams()
+						.put("id", id));
+	}
 
-    /**
-     * 想要帮助他/我的人列表
-     *
-     * @param id
-     * @return
-     */
-    public static API getWantHelpHimList(int id) {
-        return new API(POST, "/coterie/help/loan/intentionCount.do",
-                new ApiParams()
-                        .put("id", id));
-    }
+	/**
+	 * 给予帮助
+	 *
+	 * @param id
+	 * @return
+	 */
+	public static API giveHelp(int id) {
+		return new API(POST, "/coterie/help/loan/intention.do",
+				new ApiParams()
+						.put("id", id));
+	}
+
+	/**
+	 * 想要帮助他/我的人列表
+	 * @param id
+	 * @return
+	 */
+	public static API getWantHelpHimOrYouList(int id) {
+		return new API(POST, "/coterie/help/loan/intentionCount.do",
+				new ApiParams()
+						.put("id", id));
+	}
+
 
     /**
      * 获取服务器系统时间
@@ -799,7 +800,7 @@ public class Client {
      * @return
      */
     public static API borrowIn(String content, String contentImg, Integer days, Integer interest, Integer money, String userId) {
-        return new API("/coterie/help/loan/addLoan.do",
+        return new API(POST,"/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
                         .put("contentImg", contentImg)
