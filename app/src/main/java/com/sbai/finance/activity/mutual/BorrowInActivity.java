@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,8 +39,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.android.volley.Request.Method.HEAD;
-
 public class BorrowInActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -54,6 +53,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         setContentView(R.layout.activity_borrow_in_mine);
         ButterKnife.bind(this);
         initView();
+        requestBorrowInData();
     }
 
     private void initView() {
@@ -78,13 +78,20 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowInAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getActivity(),BorrowInDetailsActivity.class)
+                        .putExtra(BorrowInDetailsActivity.BORROW_IN,mBorrowInAdapter.getItem(position))
+                        .execute();
+            }
+        });
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestBorrowInData();
     }
 
     private void requestBorrowInData(){
@@ -244,7 +251,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
             private void bindDataWithView(BorrowHelper item, Context context){
                 Glide.with(context).load(item.getPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
-                        .placeholder(R.drawable.help)
+                        .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserImg);
             }
         }
@@ -277,6 +284,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         mCallback.OnItemCancelBorrowClick(getItem(position).getId());
                     }
                 });
+
                 MyGridView mGridView= (MyGridView) convertView.findViewById(R.id.gridView);
                 ImageGridAdapter imageGridAdapter = new ImageGridAdapter(getContext());
                 imageGridAdapter.setOnItemClickListener(new ImageGridAdapter.OnItemClickListener() {
@@ -399,7 +407,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 }
             }
             private void loadImage(Context context,String src,ImageView image){
-                Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
+                Glide.with(context).load(src).placeholder(R.drawable.ic_default_avatar).into(image);
             }
         }
     }

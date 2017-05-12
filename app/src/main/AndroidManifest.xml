@@ -91,6 +91,18 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowInDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowInHisDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowOutDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowOutHisDetailActivity"
+            android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"

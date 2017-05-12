@@ -635,6 +635,11 @@ public class Client {
     public static API getStockIndexVariety() {
         return new API("/order/order/getStockExponentVariety.do");
     }
+    public static API stockSearch(String key){
+        return new API("/stk/quota/search.do",
+                new ApiParams()
+                        .put("key", key));
+    }
 
     /**
      * 查询自选gu
@@ -882,10 +887,21 @@ public class Client {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
     public static API getPhone(Integer loanId){
-		return new API("coterie/help/loan/callPhone.do",
+		return new API("/coterie/help/loan/callPhone.do",
 				new ApiParams()
 						.put("loanId", loanId));
 	}
+
+    /**
+     * 借单详情（含性别）
+     * @param id
+     * @return
+     */
+    public static API getBorrowDetails(int id){
+        return new API("/coterie/help/loan/showDetails.do",
+                new ApiParams()
+                        .put("id", id));
+    }
 
 	/**
 	 * 发表观点

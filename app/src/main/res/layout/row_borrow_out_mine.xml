@@ -169,6 +169,7 @@
             android:layout_height="69dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
+            android:clickable="true"
             tools:src="@drawable/help"/>
 
         <ImageView
@@ -178,6 +179,7 @@
             android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
+            android:clickable="true"
             tools:src="@drawable/help"/>
 
         <ImageView
@@ -186,6 +188,7 @@
             android:layout_height="69dp"
             android:layout_marginLeft="14dp"
             android:layout_weight="1"
+            android:clickable="true"
             android:scaleType="fitXY"
             tools:src="@drawable/help"/>
 
@@ -196,6 +199,7 @@
             android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
+            android:clickable="true"
             tools:src="@drawable/help"/>
 
     </LinearLayout>
