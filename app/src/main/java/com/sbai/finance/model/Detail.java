@@ -6,24 +6,39 @@ package com.sbai.finance.model;
 
 public class Detail {
 
+
    /**
-    * createTime : 1
-    * money : 42818
-    * remark : 测试内容i7h7
-    * type : 11543
+    * createTime : 2017-04-13 16:14:12
+    * id : 5
+    * money : 5
+    * remark : 111
+    * type : 1
+    * typeDetail : 1
+    * userId : 98
     */
 
-   private int createTime;
+   private String createTime;
+   private int id;
    private int money;
    private String remark;
    private int type;
+   private int typeDetail;
+   private int userId;
 
-   public int getCreateTime() {
+   public String getCreateTime() {
       return createTime;
    }
 
-   public void setCreateTime(int createTime) {
+   public void setCreateTime(String createTime) {
       this.createTime = createTime;
+   }
+
+   public int getId() {
+      return id;
+   }
+
+   public void setId(int id) {
+      this.id = id;
    }
 
    public int getMoney() {
@@ -48,5 +63,21 @@ public class Detail {
 
    public void setType(int type) {
       this.type = type;
+   }
+
+   public int getTypeDetail() {
+      return typeDetail;
+   }
+
+   public void setTypeDetail(int typeDetail) {
+      this.typeDetail = typeDetail;
+   }
+
+   public int getUserId() {
+      return userId;
+   }
+
+   public void setUserId(int userId) {
+      this.userId = userId;
    }
 }
