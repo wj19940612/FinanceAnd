@@ -34,6 +34,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -197,6 +198,21 @@ public class OpinionFragment extends BaseFragment {
         mOpinionAdapter.notifyDataSetChanged();
     }
 
+    public void shieldUserByUserId(int userId, boolean isShield) {
+        if (isShield) {
+            for (Iterator it = mOpinionList.iterator(); it.hasNext(); ) {
+                Opinion opinion = (Opinion) it.next();
+                if (opinion.getUserId() == userId) {
+                    it.remove();
+                }
+            }
+            mOpinionAdapter.notifyDataSetChanged();
+            if (mOpinionList.size() == 0) {
+                mOpinionAdapter.removeAllFooterView();
+            }
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -217,8 +233,7 @@ public class OpinionFragment extends BaseFragment {
 
         private void bindDataWithView(BaseViewHolder helper, final Opinion item) {
             String attend = item.getIsAttention() == 1 ? "" : getString(R.string.is_attention);
-            String format = "yyyy/MM/dd HH:mm";
-            String time = DateUtil.format(item.getCreateTime(), format);
+            String time = DateUtil.getFormatTime(item.getCreateTime());
             helper.setText(R.id.userName, item.getUserName())
                     .setText(R.id.followed, attend)
                     .setText(R.id.publishTime, time)

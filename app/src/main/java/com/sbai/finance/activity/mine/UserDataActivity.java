@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.AvatarFragment;
+import com.sbai.finance.fragment.dialog.AvatarDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.UserData;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
@@ -128,6 +128,7 @@ public class UserDataActivity extends BaseActivity {
 			Glide.with(getActivity()).load(mUserData.getUserPortrait())
 					.placeholder(R.drawable.ic_default_avatar_big)
 					.transform(new GlideCircleTransform(this))
+					.dontAnimate()
 					.into(mAvatar);
 
 			mUserName.setText(mUserData.getUserName());
@@ -205,7 +206,7 @@ public class UserDataActivity extends BaseActivity {
 
 			case R.id.avatar:
 				if (mUserData != null) {
-					AvatarFragment.newInstance(mUserData.getUserPortrait())
+					AvatarDialogFragment.newInstance(mUserData.getUserPortrait())
 							.show(getSupportFragmentManager());
 				}
 				break;
@@ -324,6 +325,16 @@ public class UserDataActivity extends BaseActivity {
 	}
 
 	private void refreshAttention() {
+		sendBroadcast();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		sendBroadcast();
+	}
+
+	private void sendBroadcast() {
 		Intent intent = new Intent(REFRESH_ATTENTION);
 		intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
 		intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNum);

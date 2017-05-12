@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mine;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,6 +31,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.HashSet;
@@ -91,6 +91,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 requestUserAttentionList();
             }
         });
+
         requestUserAttentionList();
     }
 
@@ -148,8 +149,8 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             mFootView.setPadding(padding, padding, padding, padding);
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -250,11 +251,17 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
                 mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
-                mUserName.setText(item.getFollowuserName());
+                if (item.isAttention()) {
+                    mUserName.setText(StrUtil.mergeTextWithRatioColor(item.getFollowuserName(),
+                            "\n" + context.getString(R.string.is_already_attention_other),0.8f,
+                            ContextCompat.getColor(context, R.color.secondaryText)));
+                } else {
+                    mUserName.setText(item.getFollowuserName());
+                }
                 mUserHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(context,UserDataActivity.class).putExtra(Launcher.USER_ID,item.getFollowUserId()).execute();
+                        Launcher.with(context, UserDataActivity.class).putExtra(Launcher.USER_ID, item.getFollowUserId()).execute();
                     }
                 });
                 mRelive.setOnClickListener(new View.OnClickListener() {

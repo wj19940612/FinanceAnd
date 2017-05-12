@@ -20,8 +20,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureListActivity;
+import com.sbai.finance.activity.home.BorrowMoneyActivity;
 import com.sbai.finance.activity.home.EventActivity;
-import com.sbai.finance.activity.home.OptionActivity;
+import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
@@ -29,7 +30,7 @@ import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
-import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.mutual.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.net.Callback;
@@ -145,7 +146,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onSelfChoiceClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), OptionActivity.class).execute();
+                    Launcher.with(getActivity(), OptionalActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -247,6 +248,7 @@ public class HomeFragment extends BaseFragment {
                 Launcher.with(getActivity(), EventActivity.class).execute();
                 break;
             case R.id.borrowMoney:
+                Launcher.with(getActivity(), BorrowMoneyActivity.class).execute();
                 break;
             case R.id.idea:
                 Launcher.with(getActivity(), OpinionActivity.class).execute();

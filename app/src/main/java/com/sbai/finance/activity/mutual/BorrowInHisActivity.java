@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -22,10 +21,10 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.sbai.finance.CallPhone;
+import com.sbai.finance.model.mutual.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowInHis;
+import com.sbai.finance.model.mutual.BorrowInHis;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -236,7 +235,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 SpannableString attentionSpannableString;
-                String location =LocalUser.getUser().getUserInfo().getLand();
+                String location =item.getLocation();
                 if (location==null){
                     location = context.getString(R.string.no_location);
                 }
@@ -269,9 +268,9 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
                                 context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                        mAlreadyRepayment.setVisibility(View.GONE);
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.VISIBLE);
-                        mAlreadyRepayment.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_ALREADY_REPAY:
                         mUserPortrait.setVisibility(View.VISIBLE);

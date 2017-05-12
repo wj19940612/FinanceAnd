@@ -293,7 +293,11 @@ public class ModifyUserInfoActivity extends BaseActivity {
             public void onOptionPicked(int index, String item) {
                 if (!TextUtils.isEmpty(item)) {
                     mSex.setSubText(item);
-                    LocalUser.getUser().getUserInfo().setChinaSex(item);
+                    if (item.equalsIgnoreCase(SEX_BOY)) {
+                        LocalUser.getUser().getUserInfo().setUserSex(UserInfo.SEX_BOY);
+                    } else {
+                        LocalUser.getUser().getUserInfo().setUserSex(UserInfo.SEX_GIRL);
+                    }
                 }
             }
         });

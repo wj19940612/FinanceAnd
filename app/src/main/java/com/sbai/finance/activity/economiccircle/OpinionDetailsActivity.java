@@ -49,6 +49,7 @@ import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -321,7 +322,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 			} else {
 				mLoveNum.setSelected(false);
 			}
-			mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+			if (mOpinionDetails.getPraiseCount() > 999) {
+				mLoveNum.setText("999+");
+			} else {
+				mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+			}
 			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
 			mScrollView.smoothScrollTo(0, 0);
 		}
@@ -344,6 +349,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		public void add(OpinionReply opinionReply) {
 			mOpinionReplyList.add(opinionReply);
+			notifyDataSetChanged();
+		}
+
+		public void addAll(List<OpinionReply> opinionReplyList) {
+			mOpinionReplyList.clear();
+			mOpinionReplyList.addAll(opinionReplyList);
 			notifyDataSetChanged();
 		}
 
@@ -430,7 +441,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 				} else {
 					mLoveNum.setSelected(false);
 				}
-				mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+				if (item.getPraiseCount() > 999) {
+					mLoveNum.setText("999+");
+				} else {
+					mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+				}
 				mLoveNum.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -442,10 +457,22 @@ public class OpinionDetailsActivity extends BaseActivity {
 											if (resp.isSuccess()) {
 												if (mLoveNum.isSelected()) {
 													mLoveNum.setSelected(false);
-													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) - 1));
+													if (item.getPraiseCount() >= 999) {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+														mLoveNum.setText("999+");
+													} else {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													}
 												} else {
 													mLoveNum.setSelected(true);
-													mLoveNum.setText(String.valueOf(Integer.parseInt(mLoveNum.getText().toString()) + 1));
+													if (item.getPraiseCount() > 1000) {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+														mLoveNum.setText("999+");
+													} else {
+														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													}
 												}
 											}
 										}
@@ -471,12 +498,22 @@ public class OpinionDetailsActivity extends BaseActivity {
 									if (resp.isSuccess()) {
 										if (mLoveNum.isSelected()) {
 											mLoveNum.setSelected(false);
-											mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-											mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											if (mOpinionDetails.getPraiseCount() >= 999) {
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+												mLoveNum.setText("999+");
+											} else {
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
+												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											}
 										} else {
 											mLoveNum.setSelected(true);
-											mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-											mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											if (mOpinionDetails.getPraiseCount() > 1000) {
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+												mLoveNum.setText("999+");
+											} else {
+												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
+												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											}
 										}
 										Intent intent = new Intent(REFRESH_POINT);
 										intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
@@ -573,6 +610,19 @@ public class OpinionDetailsActivity extends BaseActivity {
 						}
 						break;
 					}
+				}
+
+				if (whetherAttentionShieldOrNot.isShield()) {
+					for (Iterator it = mOpinionReplyList.iterator(); it.hasNext(); ) {
+						OpinionReply opinionReply = (OpinionReply) it.next();
+						if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
+							it.remove();
+						}
+					}
+
+					mOpinionReplyAdapter.addAll(mOpinionReplyList);
+					mOpinionReplyAdapter.notifyDataSetChanged();
+					mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionReplyList.size())));
 				}
 			}
 		}

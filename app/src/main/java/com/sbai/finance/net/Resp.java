@@ -13,7 +13,9 @@ public class Resp<T> {
     public static final int CODE_FUND_NOT_ENOUGH = 704;
     // 资金不足，部分买入
     public static final int CODE_FUND_NOT_ENOUGH_AND_PART_DEAL = 702;
-    
+    // 自选重复添加
+    public static final int CODE_REPEAT_ADD = 701;
+
     //闪电下单已失效
     public static final int CODE_LIGHTNING_ORDER_INVALID = 703;
 

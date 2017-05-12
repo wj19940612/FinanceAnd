@@ -20,7 +20,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.FutureData;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -140,25 +140,27 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
             int first = mListView.getFirstVisiblePosition();
             int last = mListView.getLastVisiblePosition();
             for (int i = first; i <= last; i++) {
-                Variety variety = mFutureListAdapter.getItem(i);
-                if (variety != null
-                        && data.getInstrumentId().equalsIgnoreCase(variety.getContractsCode())) {
-                    View childView = mListView.getChildAt(i - mListView.getFirstVisiblePosition());
-                    if (childView != null) {
-                        TextView lastPrice = ButterKnife.findById(childView, R.id.lastPrice);
-                        TextView rate = ButterKnife.findById(childView, R.id.rate);
-                        double priceChange = FinanceUtil.subtraction(data.getLastPrice(), data.getPreSetPrice())
-                                .divide(new BigDecimal(data.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
-                                .multiply(new BigDecimal(100)).doubleValue();
-                        lastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), variety.getPriceScale()));
-                        if (priceChange >= 0) {
-                            lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                            rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                            rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
-                        } else {
-                            lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                            rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                            rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
+                if (i < mFutureListAdapter.getCount()) {
+                    Variety variety = mFutureListAdapter.getItem(i);
+                    if (variety != null
+                            && data.getInstrumentId().equalsIgnoreCase(variety.getContractsCode())) {
+                        View childView = mListView.getChildAt(i - mListView.getFirstVisiblePosition());
+                        if (childView != null) {
+                            TextView lastPrice = ButterKnife.findById(childView, R.id.lastPrice);
+                            TextView rate = ButterKnife.findById(childView, R.id.rate);
+                            double priceChange = FinanceUtil.subtraction(data.getLastPrice(), data.getPreSetPrice())
+                                    .divide(new BigDecimal(data.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
+                                    .multiply(new BigDecimal(100)).doubleValue();
+                            lastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), variety.getPriceScale()));
+                            if (priceChange >= 0) {
+                                lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+                                rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+                                rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
+                            } else {
+                                lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+                                rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+                                rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
+                            }
                         }
                     }
                 }

@@ -1,14 +1,12 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -123,8 +121,8 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             mFootView.setPadding(padding, padding, padding, padding);
             mFootView.setText(getText(R.string.load_more));
             mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(Color.WHITE);
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,30 +260,43 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 }
 
                 if (item.getDirection() == 1) {
-                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                    if (item.getGuessPass() == 1) {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
+                    } else if(item.getGuessPass() == 2){
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
+                    } else {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+                    }
+
                 } else {
-                    mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                    if (item.getGuessPass() == 1) {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
+                    } else if(item.getGuessPass() == 2){
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
+                    } else {
+                        mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+                    }
                 }
 
-                if (!TextUtils.isEmpty(item.getRisePrice()) && item.getRisePrice().startsWith("-")) {
-                    mUpDownPrice.setSelected(true);
-                    mLastPrice.setSelected(true);
-                } else {
-                    mUpDownPrice.setSelected(false);
-                    mLastPrice.setSelected(false);
-                }
-                mUpDownPrice.setText(item.getRisePrice());
-                if (!TextUtils.isEmpty(item.getRisePre()) && item.getRisePre().startsWith("-")) {
-                    mUpDownPercent.setSelected(true);
-                } else {
-                    mUpDownPercent.setSelected(false);
-                }
-                mUpDownPercent.setText(item.getRisePre());
-                if (TextUtils.isEmpty(item.getLastPrice())) {
-                    mLastPrice.setText("--");
-                } else {
-                    mLastPrice.setText(item.getLastPrice());
-                }
+//                if (!TextUtils.isEmpty(item.getRisePrice()) && item.getRisePrice().startsWith("-")) {
+//                    mUpDownPrice.setSelected(true);
+//                    mLastPrice.setSelected(true);
+//                } else {
+//                    mUpDownPrice.setSelected(false);
+//                    mLastPrice.setSelected(false);
+//                }
+//                mUpDownPrice.setText(item.getRisePrice());
+//                if (!TextUtils.isEmpty(item.getRisePre()) && item.getRisePre().startsWith("-")) {
+//                    mUpDownPercent.setSelected(true);
+//                } else {
+//                    mUpDownPercent.setSelected(false);
+//                }
+//                mUpDownPercent.setText(item.getRisePre());
+//                if (TextUtils.isEmpty(item.getLastPrice())) {
+//                    mLastPrice.setText("--");
+//                } else {
+//                    mLastPrice.setText(item.getLastPrice());
+//                }
             }
         }
     }

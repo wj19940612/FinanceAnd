@@ -1,14 +1,13 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.BorrowHelper;
-import com.sbai.finance.model.BorrowIn;
+import com.sbai.finance.model.mutual.BorrowHelper;
+import com.sbai.finance.model.mutual.BorrowIn;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -38,6 +37,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.android.volley.Request.Method.HEAD;
 
 public class BorrowInActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.swipeRefreshLayout)
@@ -310,6 +311,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
             TextView mOption;
             @BindView(R.id.cancelBorrowIn)
             TextView mCancelBorrowIn;
+            @BindView(R.id.helperAmount)
+            TextView mHelperAmount;
             @BindView(R.id.image1)
             ImageView mImage1;
             @BindView(R.id.image2)
@@ -327,6 +330,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
+                mHelperAmount.setText(context.getString(R.string.helper,item.getIntentionCount()));
                 mOption.setText(item.getContent());
                 SpannableString attentionSpannableString;
                 switch (item.getStatus()){
@@ -348,18 +352,19 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
-                    case 0:
-                        mImage1.setVisibility(View.INVISIBLE);
-                        mImage2.setVisibility(View.INVISIBLE);
-                        mImage3.setVisibility(View.INVISIBLE);
-                        mImage4.setVisibility(View.INVISIBLE);
-                        break;
                     case 1:
-                        mImage1.setVisibility(View.VISIBLE);
-                        loadImage(context,images[0],mImage1);
-                        mImage2.setVisibility(View.INVISIBLE);
-                        mImage3.setVisibility(View.INVISIBLE);
-                        mImage4.setVisibility(View.INVISIBLE);
+                        if (TextUtils.isEmpty(images[0])){
+                            mImage1.setVisibility(View.GONE);
+                            mImage2.setVisibility(View.GONE);
+                            mImage3.setVisibility(View.GONE);
+                            mImage4.setVisibility(View.GONE);
+                        }else{
+                            mImage1.setVisibility(View.VISIBLE);
+                            loadImage(context,images[0],mImage1);
+                            mImage2.setVisibility(View.INVISIBLE);
+                            mImage3.setVisibility(View.INVISIBLE);
+                            mImage4.setVisibility(View.INVISIBLE);
+                        }
                         break;
                     case 2:
                         mImage1.setVisibility(View.VISIBLE);

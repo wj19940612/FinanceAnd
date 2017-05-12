@@ -24,6 +24,20 @@ public class UserAttentionModel {
     private int userId;
     private String userName;
     private String userPortrait;
+    //	是否互相关注 0以关注1未关注
+    private int status;
+
+    public boolean isAttention() {
+        return getStatus() == 0;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public long getCreateTime() {
         return createTime;
@@ -100,6 +114,7 @@ public class UserAttentionModel {
                 ", userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", userPortrait='" + userPortrait + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

@@ -39,9 +39,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawablePadding="16dp"
-                android:drawableTop="@drawable/img_no_record"
+                android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
-                android:paddingTop="150dp"
+                android:paddingTop="180dp"
                 android:textColor="@color/assistText"
                 android:textSize="20sp"/>
         </LinearLayout>

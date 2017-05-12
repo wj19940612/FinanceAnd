@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserIdentityCardInfo;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
@@ -31,13 +30,13 @@ public class CreditActivity extends BaseActivity {
         setContentView(R.layout.activity_credit);
         ButterKnife.bind(this);
 
-        updateUserCreditStatus();
+        mCredit.setSubText(R.string.unauthorized);
         requestUserCreditApproveStatus();
 
     }
 
-    private void updateUserCreditStatus() {
-        switch (LocalUser.getUser().getUserInfo().getCertificationStatus()) {
+    private void updateUserCreditStatus(Integer status) {
+        switch (status) {
             case UserInfo.CREDIT_IS_ALREADY_APPROVE:
                 mCredit.setSubText(R.string.authenticated);
                 break;
@@ -57,10 +56,9 @@ public class CreditActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
                     @Override
                     protected void onRespSuccessData(UserIdentityCardInfo data) {
-                        UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                        userInfo.setCertificationStatus(data.getStatus());
-                        LocalUser.getUser().setUserInfo(userInfo);
-                        updateUserCreditStatus();
+                        if (data.getStatus() != null) {
+                            updateUserCreditStatus(data.getStatus());
+                        }
                     }
                 })
                 .fireSync();
@@ -75,7 +73,7 @@ public class CreditActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_CREDIT_APPROVE && resultCode == RESULT_OK) {
-            updateUserCreditStatus();
+            updateUserCreditStatus(0);
         }
     }
 }

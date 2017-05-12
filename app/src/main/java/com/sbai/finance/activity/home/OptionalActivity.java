@@ -19,7 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
-import com.sbai.finance.model.FutureData;
+import com.sbai.finance.model.market.FutureData;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -46,7 +46,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class OptionActivity extends BaseActivity implements AbsListView.OnScrollListener {
+public class OptionalActivity extends BaseActivity implements AbsListView.OnScrollListener {
 
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -60,7 +60,7 @@ public class OptionActivity extends BaseActivity implements AbsListView.OnScroll
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_option);
+        setContentView(R.layout.activity_optional);
         ButterKnife.bind(this);
         initView();
     }

@@ -10,124 +10,141 @@
     tools:context="com.sbai.finance.activity.mine.CreditApproveActivity">
 
 
-        <com.sbai.finance.view.TitleBar
-            android:layout_width="match_parent"
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/real_name_authentication"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_line_division_center"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/realNameInput"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:backFeature="true"
-            app:titleText="@string/real_name_authentication"/>
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/real_name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/primaryText"
+            android:textColorHint="@color/hintText"
+            android:textSize="15sp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/nameClear"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_line_division_center"
-            android:gravity="center_vertical"
-            android:minHeight="60dp"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding">
+            android:padding="@dimen/common_padding"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
+    </LinearLayout>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/realNameInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="@string/real_name"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@color/primaryText"
-                android:textColorHint="@color/hintText"
-                android:textSize="15sp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_line_division_center"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/nameClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/common_padding"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/identityCardNumber"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_line_division_center"
-            android:gravity="center_vertical"
-            android:minHeight="60dp"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding">
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/identity_card_number"
+            android:maxLines="1"
+            android:textColor="@color/primaryText"
+            android:textColorHint="@color/hintText"
+            android:textSize="15sp"/>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/identityCardNumber"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="@string/identity_card_number"
-                android:maxLines="1"
-                android:textColor="@color/primaryText"
-                android:textColorHint="@color/hintText"
-                android:textSize="15sp"/>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/identityCardNumberClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/common_padding"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/identityCardNumberClear"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:layout_marginRight="@dimen/common_margin"
-            android:layout_marginTop="15dp"
-            android:gravity="center">
+            android:padding="@dimen/common_padding"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="15dp"
+        android:gravity="center">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/identityCardFrontImage"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_marginRight="15dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@drawable/bg_add_identity_card_font"
                 android:gravity="center"
                 android:scaleType="centerCrop"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/identityCardReverseImage"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_add_identity_card_reserve"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:scaleType="centerCrop"/>
-        </LinearLayout>
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_add_identity_card_reserve"/>
+        </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/errorHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="25dp"
-            android:drawableLeft="@drawable/ic_errow_hint"
-            android:drawablePadding="5dp"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding"
-            android:textColor="@color/warningText"
-            android:visibility="invisible"/>
+    </LinearLayout>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/submit"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:layout_marginRight="@dimen/common_margin"
-            android:background="@drawable/btn_red_rounded"
-            android:enabled="false"
-            android:gravity="center"
-            android:text="@string/submit_has_empty"
-            android:textColor="@android:color/white"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/errorHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="25dp"
+        android:drawableLeft="@drawable/ic_errow_hint"
+        android:drawablePadding="5dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        android:textColor="@color/warningText"
+        android:visibility="invisible"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:background="@drawable/btn_red_rounded"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/submit_has_empty"
+        android:textColor="@android:color/white"/>
 </LinearLayout>

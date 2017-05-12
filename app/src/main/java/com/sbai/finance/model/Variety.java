@@ -11,7 +11,9 @@ public class Variety implements Parcelable {
 
     public static final String FUTURE_CHINA = "china";
     public static final String FUTURE_FOREIGN = "foreign";
-
+    public static final String STOCK_EXPONENT_SH="000001";
+    public static final String STOCK_EXPONENT_GE="399006";
+    public static final String STOCK_EXPONENT_SZ="399001";
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
 
