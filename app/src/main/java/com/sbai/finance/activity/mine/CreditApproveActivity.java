@@ -8,9 +8,11 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -68,8 +70,19 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         requestUserCreditApproveStatus();
         mRealNameInput.addTextChangedListener(mValidationWatcher);
         mIdentityCardNumber.addTextChangedListener(mIdentityCardApproveWatcher);
-//        loadIdentityCardReserveImage("");
-//        loadIdentityCardFontImage("");
+        mRealNameInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideErrorView();
+            }
+        });
+
+        mIdentityCardNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideErrorView();
+            }
+        });
     }
 
 
@@ -87,6 +100,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
                     @Override
                     protected void onRespSuccessData(UserIdentityCardInfo data) {
+                        Log.d(TAG, "onRespSuccessData: 用户实名 "+data.toString());
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setStatus(data.getStatus());
                         LocalUser.getUser().setUserInfo(userInfo);
@@ -168,6 +182,12 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         return mImagePath.size() > 1 && !TextUtils.isEmpty(getRealName()) && getIdentityCard().length() > 14;
     }
 
+    private void hideErrorView(){
+        if(mErrorHint.getVisibility()==View.VISIBLE){
+            mErrorHint.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private String getRealName() {
         return mRealNameInput.getText().toString().trim();
     }
@@ -218,14 +238,19 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     .setCallback(new Callback<Resp<JsonObject>>() {
                         @Override
                         protected void onRespSuccess(Resp<JsonObject> resp) {
-                            setResult(RESULT_OK);
-                            CustomToast.getInstance().showText(CreditApproveActivity.this, R.string.submit_success);
-                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                            userInfo.setStatus(UserInfo.CREDIT_IS_APPROVE_ING);
-                            LocalUser.getUser().setUserInfo(userInfo);
-                            mSubmit.setText(R.string.is_auditing);
-                            mSubmit.setEnabled(false);
-                            setViewEnable(false);
+                            if (resp.isSuccess()) {
+                                setResult(RESULT_OK);
+                                CustomToast.getInstance().showText(CreditApproveActivity.this, R.string.submit_success);
+                                UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                                userInfo.setStatus(UserInfo.CREDIT_IS_APPROVE_ING);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                                mSubmit.setText(R.string.is_auditing);
+                                mSubmit.setEnabled(false);
+                                setViewEnable(false);
+                            } else {
+                                mErrorHint.setVisibility(View.INVISIBLE);
+                                mErrorHint.setText(resp.getMsg());
+                            }
                         }
                     })
                     .fire();
@@ -234,6 +259,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     @Override
     public void onImagePath(int index, String imagePath) {
+        hideErrorView();
         mImagePath.add(index, imagePath);
         if (index == IDENTITY_CARD_FONT) {
             loadIdentityCardFontImage(imagePath);
@@ -250,8 +276,9 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             }
             Glide.with(this).load(imagePath)
                     .centerCrop()
-                    .error(R.drawable.bg_add_identity_card_reserve)
-                    .placeholder(R.drawable.bg_add_identity_card_reserve)
+//                    .error(R.drawable.bg_add_identity_card_reserve)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(mIdentityCardReverseImage);
         }
     }
@@ -262,8 +289,9 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 mIdentityCardFrontImage.setBackground(null);
             }
             Glide.with(this).load(imagePath)
-                    .error(R.drawable.bg_add_identity_card_font)
-                    .placeholder(R.drawable.bg_add_identity_card_font)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                    .error(R.drawable.bg_add_identity_card_font)
                     .into(mIdentityCardFrontImage);
         }
     }
