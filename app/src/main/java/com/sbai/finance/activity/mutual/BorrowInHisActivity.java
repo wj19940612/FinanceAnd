@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -32,6 +34,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -59,6 +62,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
         setContentView(R.layout.activity_borrow_in_mine_his);
         ButterKnife.bind(this);
         initView();
+        requestBorrowHisData();
     }
 
     private void initView() {
@@ -79,16 +83,34 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             public void OnItemRepayClick(Integer id) {
                 requestRepay(id);
             }
+
+            @Override
+            public void OnItemUserClick(int userId) {
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
         });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowInHisAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BorrowInHis borrowInHis = mBorrowInHisAdapter.getItem(position);
+                int status =borrowInHis.getStatus();
+                int loadId = borrowInHis.getId();
+                if (status == BorrowInHis.STATUS_ALREADY_REPAY||status == BorrowInHis.STATUS_PAY_INTENTION
+                        ||status== BorrowInHis.STATUS_SUCCESS){
+                    Launcher.with(getActivity(),BorrowInHisDetailActivity.class)
+                            .putExtra(BorrowInHisDetailActivity.BORROW_IN_HIS,loadId)
+                            .execute();
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestBorrowHisData();
     }
 
     private void requestBorrowHisData(){
@@ -170,6 +192,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
         interface Callback{
             void OnItemCallClick(Integer id);
             void OnItemRepayClick(Integer id);
+            void OnItemUserClick(int userId);
         }
         public void setCallback(Callback callback){
             mCallback = callback;
@@ -185,6 +208,13 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_in_mine_his, parent, false);
+                ImageView mUserPortrait = (ImageView) convertView.findViewById(R.id.userPortrait);
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemUserClick(getItem(position).getSelectedUserId());
+                    }
+                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
@@ -235,7 +265,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 SpannableString attentionSpannableString;
-                String location =LocalUser.getUser().getUserInfo().getLand();
+                String location =item.getLocation();
                 if (location==null){
                     location = context.getString(R.string.no_location);
                 }
@@ -276,7 +306,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mUserPortrait.setVisibility(View.VISIBLE);
                         Glide.with(context).load(item.getPortrait())
                                 .bitmapTransform(new GlideCircleTransform(context))
-                                .placeholder(R.drawable.help).into(mUserPortrait);
+                                .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);

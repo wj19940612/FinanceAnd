@@ -635,6 +635,11 @@ public class Client {
     public static API getStockIndexVariety() {
         return new API("/order/order/getStockExponentVariety.do");
     }
+    public static API stockSearch(String key){
+        return new API("/stk/quota/search.do",
+                new ApiParams()
+                        .put("key", key));
+    }
 
     /**
      * 查询自选gu
@@ -882,10 +887,21 @@ public class Client {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
     public static API getPhone(Integer loanId){
-		return new API("coterie/help/loan/callPhone.do",
+		return new API("/coterie/help/loan/callPhone.do",
 				new ApiParams()
 						.put("loanId", loanId));
 	}
+
+    /**
+     * 借单详情（含性别）
+     * @param id
+     * @return
+     */
+    public static API getBorrowDetails(int id){
+        return new API("/coterie/help/loan/showDetails.do",
+                new ApiParams()
+                        .put("id", id));
+    }
 
 	/**
 	 * 发表观点
@@ -935,6 +951,47 @@ public class Client {
 						.put("bigVarietyTypeCode", bigVarietyTypeCode)
 						.put("varietyId", varietyId));
 	}
+
+
+	/**
+	 * 查看反馈和回复
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getFeedback(int page, int pageSize) {
+		return new API("/user/userFeedback/seeFeedback.do",
+				new ApiParams()
+						.put("pageSize", pageSize)
+						.put("page", page));
+	}
+
+	/**
+	 * 用户发送反馈
+	 * @param content
+	 * @param contentType
+	 * @return
+	 */
+    public static API sendFeedback(String content, int contentType) {
+        return new API(POST, "/user/userFeedback/addFeedback.do",
+                new ApiParams()
+                        .put("content", content)
+                        .put("contentType", contentType));
+    }
+
+	/**
+	 * 查询明细
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static API getDetail(int page, int pageSize) {
+		return new API("/user/userFlow/queryUserFlow.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize));
+	}
+
 
 	/**
 	 * 获取品种简介

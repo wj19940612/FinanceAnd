@@ -1,10 +1,13 @@
 package com.sbai.finance.model.mutual;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Administrator on 2017-04-27.
  */
 
-public class BorrowIn {
+public class BorrowIn implements Parcelable {
     public static final int STATUS_NO_CHECK=1;
     public static final int STATUS_CHECKED=3;
     /**
@@ -129,4 +132,55 @@ public class BorrowIn {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.content);
+        dest.writeString(this.contentImg);
+        dest.writeLong(this.createDate);
+        dest.writeInt(this.days);
+        dest.writeLong(this.endlineTime);
+        dest.writeInt(this.id);
+        dest.writeInt(this.interest);
+        dest.writeLong(this.modifyDate);
+        dest.writeInt(this.money);
+        dest.writeInt(this.status);
+        dest.writeInt(this.userId);
+        dest.writeInt(this.intentionCount);
+    }
+
+    public BorrowIn() {
+    }
+
+    protected BorrowIn(Parcel in) {
+        this.content = in.readString();
+        this.contentImg = in.readString();
+        this.createDate = in.readLong();
+        this.days = in.readInt();
+        this.endlineTime = in.readLong();
+        this.id = in.readInt();
+        this.interest = in.readInt();
+        this.modifyDate = in.readLong();
+        this.money = in.readInt();
+        this.status = in.readInt();
+        this.userId = in.readInt();
+        this.intentionCount = in.readInt();
+    }
+
+    public static final Parcelable.Creator<BorrowIn> CREATOR = new Parcelable.Creator<BorrowIn>() {
+        @Override
+        public BorrowIn createFromParcel(Parcel source) {
+            return new BorrowIn(source);
+        }
+
+        @Override
+        public BorrowIn[] newArray(int size) {
+            return new BorrowIn[size];
+        }
+    };
 }
