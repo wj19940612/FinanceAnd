@@ -358,6 +358,9 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                     default:
                         break;
                 }
+                if (item.getContentImg()==null){
+                    item.setContentImg("");
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
                     case 1:
