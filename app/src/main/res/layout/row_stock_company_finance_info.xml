@@ -1,43 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+
+              android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/oneStockNetAsset"
-            style="@style/StockCompanyInfoClause"
-            android:paddingTop="20dp"
-            android:text="@string/one_stock_net_asset"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/oneStockNetAssetNumber"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/oneStockEarnings"
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/one_stock_earnings"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/oneStockEarningsNumber"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
     <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/oneStockNetAsset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/one_stock_net_asset"
+        app:info_text="哈哈哈哈哈"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/one_stock_earnings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/one_stock_earnings"/>
 </LinearLayout>

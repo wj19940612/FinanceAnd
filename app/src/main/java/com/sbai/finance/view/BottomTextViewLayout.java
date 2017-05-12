@@ -81,4 +81,12 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         mDefault = typedArray.getString(R.styleable.BottomTextViewLayout_default_text);
         typedArray.recycle();
     }
+
+    public void setInfoText(CharSequence infoText) {
+        mInfoTextView.setText(infoText);
+    }
+
+    public void setInfoText(int infoTextResId) {
+        mInfoTextView.setText(infoTextResId);
+    }
 }

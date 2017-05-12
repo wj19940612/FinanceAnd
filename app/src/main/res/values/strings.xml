@@ -316,4 +316,13 @@
 
     <string name="one_stock_net_asset">每股净资产</string>
     <string name="one_stock_earnings">每股收益</string>
+    <string name="one_stock_cash_content">每股现金含量</string>
+    <string name="one_stock_capital_accumulation_fund">每股资本公积金</string>
+    <string name="fixation_capital_count">固定资产合计</string>
+    <string name="flow_capital_count">流动资产合计</string>
+    <string name="capital_count">资产合计</string>
+    <string name="long_liabilities_count">长期负债合计</string>
+    <string name="normal_business_earnings">主营业务收入</string>
+    <string name="finance_charge">财务费用</string>
+    <string name="earn_profit">净利润</string>
 </resources>
