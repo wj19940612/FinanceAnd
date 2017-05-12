@@ -242,10 +242,18 @@ public class MineFragment extends BaseFragment {
 //                Launcher.with(getActivity(), UserDataActivity.class).execute();
                 break;
             case R.id.detail:
-                Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.feedBack:
-                Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
     }
