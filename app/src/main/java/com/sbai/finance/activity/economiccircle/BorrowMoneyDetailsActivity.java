@@ -149,7 +149,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			public void onClick(View v) {
 				Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimActivity.class)
 						.putExtra(Launcher.EX_PAYLOAD, mDataId)
-						.execute();
+						.executeForResult(10);
 			}
 		});
 

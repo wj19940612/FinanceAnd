@@ -17,7 +17,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_pressable"
-        app:rightIcon="@drawable/ic_more"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/borrow_in"
         app:rowTextColor="@color/blackAssist"
         app:rowTextSize="@dimen/list_title_size"/>
@@ -28,7 +28,7 @@
         android:layout_height="60dp"
         android:background="@drawable/bg_pressable"
         android:layout_marginTop="0.5dp"
-        app:rightIcon="@drawable/ic_more"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowTextColor="@color/blackAssist"
         app:rowTextSize="@dimen/list_title_size"
         app:rowText="@string/borrow_out"/>

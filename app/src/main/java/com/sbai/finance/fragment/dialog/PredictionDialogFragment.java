@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment;
+package com.sbai.finance.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.PredictionRuleActivity;
+import com.sbai.finance.model.Prediction;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -22,7 +23,9 @@ import butterknife.Unbinder;
 /**
  * Modified by John on 2017/5/10.
  */
-public class PredictionFragment extends DialogFragment {
+
+public class PredictionDialogFragment extends DialogFragment {
+
 
     @BindView(R.id.bullishButton)
     Button mBullishButton;
@@ -34,9 +37,8 @@ public class PredictionFragment extends DialogFragment {
 
     OnPredictButtonListener mOnPredictButtonListener;
 
-    public static PredictionFragment newInstance() {
-        PredictionFragment fragment = new PredictionFragment();
-        return fragment;
+    public static PredictionDialogFragment newInstance() {
+        return new PredictionDialogFragment();
     }
 
     @Override
@@ -57,11 +59,11 @@ public class PredictionFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bullishButton:
-                mOnPredictButtonListener.onBullishButtonClick();
+                mOnPredictButtonListener.onBullishButtonClick(Prediction.DIRECTION_LONG);
                 this.dismiss();
                 break;
             case R.id.bearishButton:
-                mOnPredictButtonListener.onBearishButtonClick();
+                mOnPredictButtonListener.onBearishButtonClick(Prediction.DIRECTION_SHORT);
                 this.dismiss();
                 break;
             case R.id.predictionRule:
@@ -72,7 +74,7 @@ public class PredictionFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, PredictionFragment.class.getSimpleName());
+        this.show(manager, PredictionDialogFragment.class.getSimpleName());
     }
 
     @Override
@@ -81,14 +83,14 @@ public class PredictionFragment extends DialogFragment {
         unbinder.unbind();
     }
 
-    public PredictionFragment setOnPredictButtonListener(OnPredictButtonListener listener) {
+    public PredictionDialogFragment setOnPredictButtonListener(OnPredictButtonListener listener) {
         this.mOnPredictButtonListener = listener;
         return this;
     }
 
     public interface OnPredictButtonListener {
-        void onBullishButtonClick();
+        void onBullishButtonClick(int directionLong);
 
-        void onBearishButtonClick();
+        void onBearishButtonClick(int directionShort);
     }
 }

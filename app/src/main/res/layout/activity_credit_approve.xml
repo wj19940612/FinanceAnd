@@ -100,7 +100,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_add_identity_card_font"
                 android:gravity="center"
-                android:scaleType="centerCrop"/>
+                android:scaleType="fitXY"/>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:background="@drawable/bg_add_identity_card_reserve"/>
         </android.support.v7.widget.CardView>
 

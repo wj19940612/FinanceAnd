@@ -29,9 +29,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.activity.trade.TradeWebActivity;
-import com.sbai.finance.fragment.PredictionFragment;
+import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
-import com.sbai.finance.fragment.trade.OpinionFragment;
+import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
@@ -63,12 +63,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.R.id.trendView;
 import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
-public class FutureTradeActivity extends BaseActivity implements PredictionFragment.OnPredictButtonListener {
+public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -86,7 +85,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(trendView)
+    @BindView(R.id.trendView)
     TrendView mTrendView;
     @BindView(R.id.klineView)
     KlineView mKlineView;
@@ -110,9 +109,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     @BindView(R.id.priceDataArea)
     LinearLayout mPriceDataArea;
 
-    private OpinionFragment mOpinionFragment;
-    private IntroduceFragment mIntroduceFragment;
-    private PredictionFragment mPredictionFragment;
+    private PredictionDialogFragment mPredictionFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
     private Prediction mPrediction;
@@ -131,7 +128,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         initTabLayout();
         initChartViews();
         initSlidingTab();
-        initFragments();
         initFloatBar();
 
         updateTitleBar();
@@ -174,10 +170,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
-    private void initFragments() {
-        mOpinionFragment = OpinionFragment.newInstance(mVariety);
-        mIntroduceFragment = IntroduceFragment.newInstance(mVariety);
-    }
 
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
@@ -260,14 +252,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
     @Override
-    public void onBullishButtonClick() {
-        mPrediction.setDirection(Prediction.DIRECTION_LONG);
+    public void onBullishButtonClick(int directionLong) {
+        mPrediction.setDirection(directionLong);
         startPublishPointPage();
     }
 
     @Override
-    public void onBearishButtonClick() {
-        mPrediction.setDirection(Prediction.DIRECTION_SHORT);
+    public void onBearishButtonClick(int directionShort) {
+        mPrediction.setDirection(directionShort);
         startPublishPointPage();
     }
 
@@ -281,7 +273,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
     private void showPredictDialog() {
         if (mPredictionFragment == null) {
-            mPredictionFragment = PredictionFragment.newInstance().setOnPredictButtonListener(this);
+            mPredictionFragment = PredictionDialogFragment.newInstance().setOnPredictButtonListener(this);
         } else {
             mPredictionFragment.show(getSupportFragmentManager());
         }
@@ -303,21 +295,19 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
     private void requestPrediction() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.getPrediction(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
-                    .setTag(TAG).setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<Prediction>, Prediction>() {
-                        @Override
-                        protected void onRespSuccessData(Prediction data) {
-                            mPrediction = data;
-                            if (mPrediction.isCalculate()) {
-                                startPublishPointPage();
-                            } else {
-                                showPredictDialog();
-                            }
+        Client.getPrediction(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Prediction>, Prediction>() {
+                    @Override
+                    protected void onRespSuccessData(Prediction data) {
+                        mPrediction = data;
+                        if (mPrediction.isCalculate()) {
+                            startPublishPointPage();
+                        } else {
+                            showPredictDialog();
                         }
-                    }).fire();
-        }
+                    }
+                }).fire();
     }
 
     private void requestOptionalStatus() {
@@ -396,6 +386,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
     }
 
 
+    private ViewpointFragment getViewpointFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(0);
+        if (fragment instanceof ViewpointFragment) {
+            return (ViewpointFragment) (fragment);
+        }
+        return null;
+    }
+
     private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
@@ -422,9 +420,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return mOpinionFragment;
+                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return mIntroduceFragment;
+                    return IntroduceFragment.newInstance(mVariety);
             }
             return null;
         }
@@ -447,10 +445,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
         @Override
         public void onPageSelected(int position) {
-            if (mSubPageAdapter.getPageTitle(position).equals(getString(R.string.point))) {
-                mOpinionFragment.refreshPointList();
-            } else {
-                //简介没接口暂时不刷新
+            if (position == 1) {
+                if (getViewpointFragment() != null) {
+                    getViewpointFragment().refreshPointList();
+                }
             }
         }
 
@@ -611,13 +609,16 @@ public class FutureTradeActivity extends BaseActivity implements PredictionFragm
 
             AttentionAndFansNumberModel attentionAndFansNumberModel =
                     (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-            if (details != null) {
-                mOpinionFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
-            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                mOpinionFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
-                mOpinionFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isShield());
-            } else {
-                mOpinionFragment.refreshPointList();
+            ViewpointFragment viewpointFragment = getViewpointFragment();
+            if (viewpointFragment != null) {
+                if (details != null) {
+                    viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+                } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                    viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+                } else {
+                    viewpointFragment.refreshPointList();
+                }
+
             }
         }
     }

@@ -23,8 +23,8 @@
             android:id="@+id/toastText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="26dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="18dp"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             tools:text="用户名修改成功"/>

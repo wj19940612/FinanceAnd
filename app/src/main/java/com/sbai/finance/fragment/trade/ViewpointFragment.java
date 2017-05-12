@@ -24,7 +24,6 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Opinion;
-import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -41,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class OpinionFragment extends BaseFragment {
+public class ViewpointFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -55,15 +54,21 @@ public class OpinionFragment extends BaseFragment {
 
     private int mPage = 0;
     private int mPageSize = 15;
-    private Variety mVariety;
+    private int mVarietyId;
     boolean mLoadMore = true;
 
-    public static OpinionFragment newInstance(Variety variety) {
-        OpinionFragment fragment = new OpinionFragment();
+    public static ViewpointFragment newInstance(int varietyId) {
+        ViewpointFragment fragment = new ViewpointFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Launcher.EX_PAYLOAD, variety);
+        args.putInt(Launcher.EX_PAYLOAD, varietyId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mVarietyId = getArguments().getInt(Launcher.EX_PAYLOAD);
     }
 
     @Nullable
@@ -71,7 +76,6 @@ public class OpinionFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_opinion, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mVariety = getArguments().getParcelable(Launcher.EX_PAYLOAD);
         return view;
     }
 
@@ -132,7 +136,7 @@ public class OpinionFragment extends BaseFragment {
     }
 
     private void getPointList() {
-        Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
+        Client.findViewpoint(mPage, mPageSize, mVarietyId)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
@@ -173,7 +177,7 @@ public class OpinionFragment extends BaseFragment {
     private void getNewPointList() {
         mPage = 0;
         mOpinionList.clear();
-        Client.findViewpoint(mPage, mPageSize, mVariety.getVarietyId())
+        Client.findViewpoint(mPage, mPageSize, mVarietyId)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
