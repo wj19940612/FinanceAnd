@@ -7,18 +7,25 @@ package com.sbai.finance.model.push;
 public class PushMessageModel {
 
     /**
-     * classify : 51047
-     * createTime : 测试内容fuv2
-     * msg : 测试内容i1c6
-     * title : 测试内容ptms
-     * type : 14450
+     * classify : 14761
+     * createTime : 54111
+     * data : {}
+     * dataId : 10734
+     * iconUrl : 测试内容q9s8
+     * msg : 测试内容ln2q
+     * title : 测试内容84hj
+     * type : 64687
+     * url : 测试内容cn15
      */
 
     private int classify;
-    private long createTime;
+    private int createTime;
+    private int dataId;
+    private String iconUrl;
     private String msg;
     private String title;
     private int type;
+    private String url;
 
     public int getClassify() {
         return classify;
@@ -28,12 +35,29 @@ public class PushMessageModel {
         this.classify = classify;
     }
 
-    public long getCreateTime() {
+    public int getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(int createTime) {
         this.createTime = createTime;
+    }
+
+
+    public int getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
     public String getMsg() {
@@ -58,5 +82,27 @@ public class PushMessageModel {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "PushMessageModel{" +
+                "classify=" + classify +
+                ", createTime=" + createTime +
+                ", dataId=" + dataId +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", msg='" + msg + '\'' +
+                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", url='" + url + '\'' +
+                '}';
     }
 }
