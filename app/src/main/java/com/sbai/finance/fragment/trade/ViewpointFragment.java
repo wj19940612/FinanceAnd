@@ -104,7 +104,7 @@ public class ViewpointFragment extends BaseFragment {
         mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
         mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         mEmpty.setCompoundDrawablePadding(padding);
-        Drawable top = getActivity().getDrawable(R.drawable.img_no_message);
+        Drawable top = getActivity().getResources().getDrawable(R.drawable.img_no_message);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
 
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
@@ -263,16 +263,16 @@ public class ViewpointFragment extends BaseFragment {
 
             if (item.getReplyCount() > 999) {
                 ((TextView) helper.getView(R.id.commentNum))
-                        .setText(String.valueOf(item.getPraiseCount()) + "+");
-            }else {
+                        .setText("999+");
+            } else {
                 ((TextView) helper.getView(R.id.commentNum))
-                        .setText(String.valueOf(item.getPraiseCount()));
+                        .setText(String.valueOf(item.getReplyCount()));
             }
 
             if (item.getPraiseCount() > 999) {
                 ((TextView) helper.getView(R.id.likeNum))
-                        .setText(String.valueOf(item.getPraiseCount()) + "+");
-            }else {
+                        .setText("999+");
+            } else {
                 ((TextView) helper.getView(R.id.likeNum))
                         .setText(String.valueOf(item.getPraiseCount()));
             }
