@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Detail;
-import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -27,8 +26,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sbai.finance.utils.DateUtil.DEFAULT_FORMAT;
 
 /**
  * Created by linrongfang on 2017/5/8.
@@ -125,7 +122,6 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
 
 
     static class DetailAdapter extends BaseAdapter {
-        private static long sCurTime = SysTime.getSysTime().getSystemTimestamp();
         private Context mContext;
         private List<Detail> mList;
 
@@ -186,8 +182,8 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
             Detail pre = mList.get(position - 1);
             Detail next = mList.get(position);
             //判断两个时间在不在一个月内  不是就要显示标题
-            long preTime = DateUtil.stringToLong(pre.getCreateTime(), DEFAULT_FORMAT);
-            long nextTime = DateUtil.stringToLong(next.getCreateTime(), DEFAULT_FORMAT);
+            long preTime = pre.getCreateTime();
+            long nextTime = next.getCreateTime();
             if (DateUtil.isInThisMonth(nextTime, preTime)) {
                 return false;
             }
@@ -214,12 +210,12 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
 
                 if (needTitle) {
                     mHead.setVisibility(View.VISIBLE);
-                    mHead.setText(DateUtil.getFormatMonth(DateUtil.stringToLong(detail.getCreateTime(), DEFAULT_FORMAT)));
+                    mHead.setText(DateUtil.getFormatMonth(detail.getCreateTime()));
                 } else {
                     mHead.setVisibility(View.GONE);
                 }
 
-                mPaymentTime.setText(DateUtil.getDetailFormatTime(DateUtil.stringToLong(detail.getCreateTime(), DEFAULT_FORMAT)));
+                mPaymentTime.setText(DateUtil.getDetailFormatTime(detail.getCreateTime()));
 
                 String payType = detail.getType() == 2 ? "微信" : "支付宝";
 
