@@ -37,6 +37,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 
@@ -311,9 +312,9 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					mLocation.setText(item.getLand());
 				}
 
-				mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(item.getMoney())));
-				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
-				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));
+				mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getMoney()))));
+				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getDays()))));
+				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getInterest()))));
 				mBorrowMoneyContent.setText(item.getContent());
 
 

@@ -24,6 +24,9 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.CreditApproveActivity;
+import com.sbai.finance.activity.mine.TheDetailActivity;
+import com.sbai.finance.activity.mutual.BorrowInActivity;
+import com.sbai.finance.activity.mutual.BorrowInHisActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
@@ -107,7 +110,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, Client.PAGE_SIZE)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -151,7 +154,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-        if (systemNewsModels.size() < Client.PAGE_SIZE) {
+        if (systemNewsModels.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -203,10 +206,12 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                 //借款单审核未通过
                 case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
                     // TODO: 2017/5/2  历史借入
+                    Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
                     break;
                 // 14.借款发布成功 *
                 case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
                     // TODO: 2017/5/2 我的借入
+                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
                 //// 20.成为观点大神
                 case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
@@ -224,7 +229,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     break;
                 //   30.意向金支付成功
                 case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
-                    // TODO: 2017/5/2 跳转明细
+                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     break;
             }
         }
