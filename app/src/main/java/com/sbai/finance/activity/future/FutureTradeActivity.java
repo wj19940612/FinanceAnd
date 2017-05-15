@@ -37,7 +37,7 @@ import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
-import com.sbai.finance.model.market.FutureData;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -49,6 +49,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
@@ -153,6 +154,13 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         Netty.get().removeHandler(mNettyHandler);
     }
 
+    @Override
+    public void onTimeUp(int count) {
+        if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
+            requestTrendDataAndSet();
+        }
+    }
+
     private void requestExchangeStatus() {
         Client.getExchangeStatus(mVariety.getExchangeId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Integer>, Integer>() {
@@ -198,6 +206,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
 
+        requestTrendDataAndSet();
+    }
+
+    private void requestTrendDataAndSet() {
         Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
                     @Override
