@@ -54,6 +54,8 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
     SlideListView mListView;
     @BindView(R.id.empty)
     TextView mEmpty;
+    @BindView(R.id.varietyTitle)
+    LinearLayout mVarietyTitle;
 
     private SlideListAdapter mSlideListAdapter;
 
@@ -66,6 +68,7 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
     }
 
     private void initView() {
+        mVarietyTitle.setVisibility(View.GONE);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -139,6 +142,11 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
+        if (data.isEmpty()){
+            mVarietyTitle.setVisibility(View.GONE);
+        }else{
+            mVarietyTitle.setVisibility(View.VISIBLE);
+        }
         stopRefreshAnimation();
         mSlideListAdapter.clear();
         mSlideListAdapter.addAll(data);

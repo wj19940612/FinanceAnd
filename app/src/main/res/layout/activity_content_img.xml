@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sbai.finance.activity.ContentImgActivity">
+    tools:context="com.sbai.finance.activity.economiccircle.ContentImgActivity">
 
     <android.support.v4.view.ViewPager
+        android:background="@android:color/black"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

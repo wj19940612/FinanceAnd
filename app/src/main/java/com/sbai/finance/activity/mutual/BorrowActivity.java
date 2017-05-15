@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
@@ -58,6 +60,12 @@ public class BorrowActivity extends BaseActivity {
 
 	private PhotoGridAdapter mPhotoGridAdapter;
 	private String mImagePath;
+	private int MAX_MONEY=2000;
+	private int MIN_MONEY=500;
+	private int MAX_INTEREST=Integer.MAX_VALUE;
+	private int MIN_INTEREST=1;
+	private int MAX_DAYS=60;
+	private int MIN_DAYS=1;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,27 +117,29 @@ public class BorrowActivity extends BaseActivity {
 		int money = Integer.valueOf( mBorrowLimit.getText().toString());
 		int interest =  Integer.valueOf( mBorrowInterest.getText().toString());
 		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
-		String content = mBorrowRemark.getText().toString();
+		String content = mBorrowRemark.getText().toString().substring(0,300);
 		StringBuilder contentImg = new StringBuilder();
-		int phoneAmount =mPhotoGridAdapter.getCount();
-		for (int i = 0; i<phoneAmount-1;i++){
-			ImageView imageView = (ImageView) mPhotoGv.getChildAt(i).findViewById(R.id.photoImg);
-			String bitmapToBase64 = ImageUtils.bitmapToBase64(imageView.getDrawingCache());
-			if (i<=phoneAmount-1){
-				contentImg.append(bitmapToBase64+",");
-			}else{
-				contentImg.append(bitmapToBase64);
-			}
+		int photoAmount =mPhotoGridAdapter.getCount();
+		for (int i = 0; i<photoAmount-1;i++){
+			String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),400f);
+			Log.d(TAG, "image: "+image.length());
+			contentImg.append(image+",");
+		}
+		if(contentImg.length()>0){
+			contentImg.deleteCharAt(contentImg.length()-1);
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 	}
 	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
+				.setIndeterminate(this)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {
 						if (resp.isSuccess()){
 							CustomToast.getInstance().showText(getActivity(),getString(R.string.publish_success));
+							Launcher.with(getActivity(),BorrowInActivity.class).execute();
+							finish();
 						}else{
 							ToastUtil.curt(resp.getMsg());
 						}
@@ -143,51 +153,46 @@ public class BorrowActivity extends BaseActivity {
 	    }
 	}
 	private boolean checkPublishButtonEnable(){
-		boolean result = true;
-		boolean isCanHideWarn = false;
 		String borrowMoney = mBorrowLimit.getText().toString().trim();
 		boolean isEmpty = TextUtils.isEmpty(borrowMoney);
-		if (isEmpty|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
+		if (isEmpty||borrowMoney.length()>4|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
              if (!isEmpty){
 				 mWarn.setVisibility(View.VISIBLE);
 				 mWarn.setText(getString(R.string.borrow_over_money));
-			 }else{
-				 isCanHideWarn = true;
 			 }
-             result = false;
+			return false;
+		}else{
+			mWarn.setVisibility(View.INVISIBLE);
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty|| Integer.parseInt(borrowInterest)<1){
+		if (isEmpty|| borrowInterest.equalsIgnoreCase("0")){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_over_interest));
-			}else{
-				isCanHideWarn = true;
 			}
-			result = false;
+			return false;
+		}else{
+			mWarn.setVisibility(View.INVISIBLE);
 		}
 		String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowTimeLimit);
-		if (isEmpty|| Integer.parseInt(borrowTimeLimit)>60){
+		if (isEmpty||borrowTimeLimit.length()>3|| Integer.parseInt(borrowTimeLimit)>60){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_overdue));
-			}else{
-				isCanHideWarn = true;
 			}
-			result = false;
-		}
-		if (result || isCanHideWarn){
+			return false;
+		}else{
 			mWarn.setVisibility(View.INVISIBLE);
 		}
 		if (!mAgree.isChecked()){
-			result = false;
+			return false;
 		}
 		if (TextUtils.isEmpty(mBorrowRemark.getText())){
-			result = false;
+			return false;
 		}
-		return result;
+		return true;
 	}
 
 	@Override
@@ -207,10 +212,10 @@ public class BorrowActivity extends BaseActivity {
 
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
 		@Override
-		public void afterTextChanged(Editable s) {
-			setPublishStatus();
-		}
-	};
+	public void afterTextChanged(Editable s) {
+		setPublishStatus();
+	}
+};
 	private ValidationWatcher mBorrowInterestValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {

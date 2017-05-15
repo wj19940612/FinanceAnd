@@ -88,7 +88,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"
-            android:background="@color/pinkAssist"/>
+            android:background="@color/fortyPercentWhite"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -31,6 +33,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -58,6 +61,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         setContentView(R.layout.activity_borrow_out_mine_his);
         ButterKnife.bind(this);
         initView();
+        requestBorrowOutHisData();
     }
 
     private void initView() {
@@ -77,16 +81,33 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             public void OnItemRepayClick(Integer id) {
                 requestRepay(id);
             }
+
+            @Override
+            public void OnItemUserClick(int userId) {
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
         });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowOutHisAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Launcher.with(getActivity(),BorrowOutHisDetailActivity.class)
+                                    .putExtra(BorrowOutHisDetailActivity.BORROW_OUT_HIS,mBorrowOutHisAdapter.getItem(position).getId())
+                                    .execute();
+                    }
+                });
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestBorrowOutHisData();
     }
 
     private void requestRepay(Integer id) {
@@ -141,9 +162,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
     }
 
     private void updateBorrowOutHis(List<BorrowOutHistory> data) {
-        if (data.isEmpty()){
-            stopRefreshAnimation();
-        }
+        stopRefreshAnimation();
         mBorrowOutHisAdapter.clear();
         mBorrowOutHisAdapter.addAll(data);
         mBorrowOutHisAdapter.notifyDataSetChanged();
@@ -173,6 +192,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         interface Callback{
             void OnItemCallClick(Integer id);
             void OnItemRepayClick(Integer id);
+            void OnItemUserClick(int userId);
         }
         public void setCallback(Callback callback){
             mCallback = callback;
@@ -187,6 +207,13 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_out_mine_his, parent, false);
+                ImageView mUserPortrait = (ImageView) convertView.findViewById(R.id.userPortrait);
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemUserClick(getItem(position).getUserId());
+                    }
+                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
@@ -249,7 +276,9 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 mPublishTime.setText(context.getString(R.string.borrow_in_time,
                         context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
                 switch (item.getStatus()){
-                    case BorrowOutHistory.STATUS_PAY_INTENTION:case BorrowOutHistory.STATUS_SUCCESS:
+                    case BorrowOutHistory.STATUS_PAY_INTENTION:
+                    case BorrowOutHistory.STATUS_SUCCESS:
+                    case BorrowOutHistory.STATUS_PAY_FIVE:
                         mSuccess.setVisibility(View.VISIBLE);
                         mAlreadyRepayment.setVisibility(View.GONE);
                         break;

@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:background="@android:color/white"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
@@ -28,6 +27,7 @@
         <TextView
             android:id="@+id/shangHai"
             style="@style/MarketDataStock"
+            android:background="@drawable/bg_pressable"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
 
         <View
@@ -38,6 +38,7 @@
         <TextView
             android:id="@+id/shenZhen"
             style="@style/MarketDataStock"
+            android:background="@drawable/bg_pressable"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
 
         <View
@@ -48,6 +49,7 @@
         <TextView
             android:id="@+id/board"
             style="@style/MarketDataStock"
+            android:background="@drawable/bg_pressable"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
     </LinearLayout>
 
@@ -62,7 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
@@ -72,12 +73,11 @@
                 android:drawablePadding="16dp"
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
-                android:paddingTop="180dp"
+                android:paddingTop="100dp"
                 android:text="暂无行情数据"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
                 android:visibility="gone"/>
-
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
@@ -85,6 +85,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/white"
                 android:headerDividersEnabled="true"
+                android:scrollbars="none"
                 android:visibility="visible"/>
         </LinearLayout>
     </com.sbai.finance.view.CustomSwipeRefreshLayout>

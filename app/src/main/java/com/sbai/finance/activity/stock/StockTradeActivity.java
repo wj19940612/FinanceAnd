@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,11 +21,10 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
-import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
@@ -37,7 +35,7 @@ import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.finance.view.stock.StockTrendView;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -179,7 +177,6 @@ public class StockTradeActivity extends BaseActivity {
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.day_k_line));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.five_day_k_line));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.week_k_line));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.month_k_line));
         mTabLayout.addOnTabSelectedListener(mOnTabSelectedListener);
@@ -199,6 +196,7 @@ public class StockTradeActivity extends BaseActivity {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        mStockKlineView.setDayLine(true);
         mStockKlineView.setSettings(settings2);
         mStockKlineView.setOnAchieveTheLastListener(null);
 
@@ -280,14 +278,14 @@ public class StockTradeActivity extends BaseActivity {
         public void onTabSelected(TabLayout.Tab tab) {
             String tabText = tab.getText().toString();
             if (tabText.equals(getString(R.string.day_k_line))) {
-                requestKlineDataAndSet(null);
+                requestKlineDataAndSet(StockKlineData.PERIOD_DAY);
                 showKlineView();
-            } else if (tabText.equals(getString(R.string.five_day_k_line))) {
-
             } else if (tabText.equals(getString(R.string.week_k_line))) {
-
+                requestKlineDataAndSet(StockKlineData.PERIOD_WEEK);
+                showKlineView();
             } else if (tabText.equals(getString(R.string.month_k_line))) {
-
+                requestKlineDataAndSet(StockKlineData.PERIOD_MONTH);
+                showKlineView();
             } else {
                 showTrendView();
             }
@@ -320,18 +318,14 @@ public class StockTradeActivity extends BaseActivity {
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
-    private void requestKlineDataAndSet(final String type) {
-        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+    private void requestKlineDataAndSet(int type) {
+        Client.getStockKlineData(mVariety.getVarietyType(), type)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new StockCallback<StockResp, List<StockKlineData>>() {
                     @Override
-                    protected void onRespSuccessData(List<KlineViewData> data) {
-                        if (TextUtils.isEmpty(type)) { // dayK
-                            mStockKlineView.setDayLine(true);
-                        } else {
-                            mStockKlineView.setDayLine(false);
-                        }
-                        Collections.reverse(data);
-                        mStockKlineView.setDataList(data);
+                    public void onDataMsg(List<StockKlineData> result, StockResp.Msg msg) {
+                        List<KlineViewData> dataList = new ArrayList<KlineViewData>(result);
+                        mStockKlineView.setDataList(dataList);
                     }
                 }).fire();
     }

@@ -49,6 +49,7 @@ import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -326,7 +327,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 			} else {
 				mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			}
-			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
+			if (mOpinionDetails.getReplyCount() > 999) {
+				mCommentNum.setText("999+");
+			} else {
+				mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
+			}
 			mScrollView.smoothScrollTo(0, 0);
 		}
 	}
@@ -348,6 +353,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		public void add(OpinionReply opinionReply) {
 			mOpinionReplyList.add(opinionReply);
+			notifyDataSetChanged();
+		}
+
+		public void addAll(List<OpinionReply> opinionReplyList) {
+			mOpinionReplyList.clear();
+			mOpinionReplyList.addAll(opinionReplyList);
 			notifyDataSetChanged();
 		}
 
@@ -603,6 +614,19 @@ public class OpinionDetailsActivity extends BaseActivity {
 						}
 						break;
 					}
+				}
+
+				if (whetherAttentionShieldOrNot.isShield()) {
+					for (Iterator it = mOpinionReplyList.iterator(); it.hasNext(); ) {
+						OpinionReply opinionReply = (OpinionReply) it.next();
+						if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
+							it.remove();
+						}
+					}
+
+					mOpinionReplyAdapter.addAll(mOpinionReplyList);
+					mOpinionReplyAdapter.notifyDataSetChanged();
+					mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionReplyList.size())));
 				}
 			}
 		}

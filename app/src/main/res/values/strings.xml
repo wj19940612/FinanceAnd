@@ -22,9 +22,11 @@
     <string name="comment_number">(%1$s)</string>
     <string name="share">分享</string>
     <string name="borrow_money">借款</string>
-    <string name="comment">评论......</string>
+    <string name="comment">评论....</string>
     <string name="reply">回复</string>
     <string name="people_want_help_him">想要帮助他的人</string>
+    <string name="people_want_help_her">想要帮助她的人</string>
+    <string name="people_want_help_you">想要帮助你的人</string>
     <string name="people_want_help_him_number">(%1$s)</string>
     <string name="give_help">给予帮助</string>
     <string name="borrow_money_details">借款详情</string>
@@ -95,13 +97,14 @@
     <string name="add_optional">+ 自选</string>
     <string name="delete_optional">取消自选</string>
     <string name="whether_to_cancel_optional">是否要取消自选</string>
+    <string name="add_option_succeed">添加自选成功</string>
+    <string name="delete_option_succeed">取消自选成功</string>
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
     <string name="fifteen_min_k">15分钟</string>
     <string name="thirty_min_k">30分钟</string>
     <string name="sixty_min_k">60分钟</string>
-    <string name="five_day_k_line">五日</string>
     <string name="week_k_line">周K</string>
     <string name="month_k_line">月K</string>
     <string name="point">观点</string>
@@ -110,7 +113,18 @@
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="no_option">暂无自选</string>
-
+    <string name="ask_5">卖5</string>
+    <string name="ask_4">卖4</string>
+    <string name="ask_3">卖3</string>
+    <string name="ask_2">卖2</string>
+    <string name="ask_1">卖1</string>
+    <string name="bid_1">买1</string>
+    <string name="bid_2">买2</string>
+    <string name="bid_3">买3</string>
+    <string name="bid_4">买4</string>
+    <string name="bid_5">买5</string>
+    <string name="five_market">五档</string>
+    <string name="market_detail">明细</string>
 
     <!-- 我的界面 -->
     <string name="attention">关注</string>
@@ -126,6 +140,8 @@
     <string name="new_message">新消息</string>
     <string name="item">条</string>
     <string name="now_not_has_data">暂无消息</string>
+    <string name="please_input_here">请在此输入......</string>
+    <string name="you_dont_have_trade">你还没有交易过哦</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -165,7 +181,7 @@
     <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
 
-    <string name="shield_dialog_title">是否对"%1$s"\n屏蔽?</string>
+    <string name="shield_dialog_title">是否对“%1$s”\n屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再次展示在你的经济圈。</string>
 
     <string name="cancel_attention_dialog_title">是否不再关注%1$s?</string>
@@ -180,6 +196,7 @@
     <!-- USER DATA-->
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
+    <string name="is_already_attention_other">已互相关注</string>
     <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
@@ -242,7 +259,7 @@
     <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
     <string name="submit_has_empty">提  交</string>
-    <string name="please_enter_the_text">请输入文字</string>
+    <string name="please_enter_the_text">请输入文字...</string>
 
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
@@ -271,6 +288,10 @@
     <string name="borrow_in_his">历史借入</string>
     <string name="borrow_out_his">历史借出</string>
     <string name="borrow_in_mine">我的借入</string>
+    <string name="borrow_in_mine_detail">借入详情</string>
+    <string name="borrow_in_mine_his_detail">历史借入详情</string>
+    <string name="borrow_out_mine_detail">借出详情</string>
+    <string name="borrow_out_mine_his_detail">历史借出详情</string>
     <string name="borrow_out_mine">我的借出</string>
     <string name="borrow_in__mine_his">历史借入</string>
     <string name="borrow_out_mine_his">历史借出</string>
@@ -281,6 +302,8 @@
     <string name="end_line">倒计时</string>
     <string name="cancel_borrow_in">取消借款</string>
     <string name="helper">想要帮助你的人 (%1$d)</string>
+    <string name="helper_her">想要帮助她的人 (%1$d)</string>
+    <string name="helper_his">想要帮助他的人 (%1$d)</string>
     <string name="borrow_in_time">%1$s时间\n%2$s</string>
     <string name="borrow_out_time">借出时间\n%1$s</string>
     <string name="borrow_in_time_success">借入</string>
@@ -288,7 +311,7 @@
     <string name="call">联系对方</string>
     <string name="already_repay">已经还款</string>
     <string name="already_repayment">已还款</string>
-    <string name="intention">已支付意向金</string>
+    <string name="is_pay_intention">已支付意向金</string>
     <string name="not_allow">审批未通过</string>
     <string name="user_address">这里是用户名\n杭州 萧山</string>
     <string name="wait_confirm">等待确认中</string>
@@ -302,22 +325,20 @@
     <string name="android_web_agent">ANDROID_AGENT</string>
     <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
 
+    <string name="send">发送</string>
+    <string name="gallery">相册</string>
+    <string name="preview">预览</string>
+    <string name="all_image">所有图片</string>
+
     <!--借款有道-->
     <string name="give_help_dialog_title">是否要帮助%1$s?</string>
     <string name="give_help_dialog_content">注意:平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="wait_to_confirm">等待确认中</string>
     <string name="want_help_him">想要帮助TA的人</string>
 
-    <string name="ask_5">卖5</string>
-    <string name="ask_4">卖4</string>
-    <string name="ask_3">卖3</string>
-    <string name="ask_2">卖2</string>
-    <string name="ask_1">卖1</string>
-    <string name="bid_1">买1</string>
-    <string name="bid_2">买2</string>
-    <string name="bid_3">买3</string>
-    <string name="bid_4">买4</string>
-    <string name="bid_5">买5</string>
-    <string name="five_market">五档</string>
-    <string name="market_detail">明细</string>
+    <string name="pay_intention">支付意向金</string>
+    <string name="intention">意向金</string>
+    <string name="we_chat_pay">微信支付</string>
+    <string name="alipay">支付宝支付</string>
+    <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
 </resources>
