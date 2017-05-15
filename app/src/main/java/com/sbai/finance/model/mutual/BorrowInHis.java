@@ -7,6 +7,9 @@ package com.sbai.finance.model.mutual;
 public class BorrowInHis {
     public static final int STATUS_FAIL_CHECK=2;
     public static final int STATUS_FAIL=4;
+    public static final int STATUS_TIMEOUT=41;
+    public static final int STATUS_NO_CHOICE=42;
+    public static final int STATUS_CANCEL=43;
     public static final int STATUS_PAY_INTENTION=6;
     public static final int STATUS_SUCCESS=7;
     public static final int STATUS_ALREADY_REPAY=8;

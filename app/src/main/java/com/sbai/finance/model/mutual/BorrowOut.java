@@ -40,6 +40,16 @@ public class BorrowOut implements Parcelable {
     private int days;
     private long endlineTime;
     private int id;
+
+    public int getLoadId() {
+        return loadId;
+    }
+
+    public void setLoadId(int loadId) {
+        this.loadId = loadId;
+    }
+
+    private int loadId;
     private int intentionCount;
     private String intentionTime;
     private int interest;

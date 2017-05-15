@@ -804,7 +804,7 @@ public class Client {
      * @param userId
      * @return
      */
-    public static API borrowIn(String content, String contentImg, Integer days, Integer interest, Integer money, String userId) {
+    public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money, String userId) {
         return new API(POST,"/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
