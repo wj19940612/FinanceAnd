@@ -40,7 +40,11 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     //滑动到底部的时候手动设置不允许loadMore
     private boolean loadMoreEnable = true;
 
+    private boolean isFlingOrTouch = true;
+
     private OnLoadMoreListener mOnLoadMoreListener;
+
+    private OnScrollStateListener mOnScrollStateListener;
 
     private TextView mLoadMoreTv;
 
@@ -182,7 +186,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+        if (mOnScrollStateListener != null) {
+            mOnScrollStateListener.scrollStateChange(scrollState);
+        }
+        isFlingOrTouch = (scrollState != SCROLL_STATE_IDLE);
     }
 
     @Override
@@ -199,6 +206,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         }
     }
 
+    public boolean canLoadData() {
+        return !isFlingOrTouch;
+    }
+
     public void setLoadMoreEnable(boolean enable) {
         loadMoreEnable = enable;
     }
@@ -207,7 +218,16 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         mOnLoadMoreListener = listener;
     }
 
+    //滚动监听 一般在滚动结束后才发起请求
+    public void setOnScrollStateListener(OnScrollStateListener listener) {
+        mOnScrollStateListener = listener;
+    }
+
     public interface OnLoadMoreListener {
         void onLoadMore();
+    }
+
+    public interface OnScrollStateListener {
+        int scrollStateChange(int scrollState);
     }
 }
