@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.BorrowDetails;
 import com.sbai.finance.model.mutual.BorrowHelper;
@@ -69,7 +70,7 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
     MyGridView mGridView;
     private ImageGridAdapter mImageGridAdapter;
     private int mSex;
-    private int userId;
+    private BorrowDetails mBorrowDetails;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +108,7 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
                 }).fire();
     }
     private void updateBorrowDetailData(BorrowDetails data) {
-        userId = data.getUserId();
+        mBorrowDetails =data;
         Glide.with(this).load(data.getPortrait())
                 .bitmapTransform(new GlideCircleTransform(this))
                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
@@ -181,9 +182,33 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
         }
 
     }
-    @OnClick(R.id.userPortrait)
+    private void launcherImageView(int index){
+        Launcher.with(getActivity(), ContentImgActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD,mBorrowDetails.getContentImg().split(","))
+                .putExtra(Launcher.EX_PAYLOAD_1,index)
+                .execute();
+    }
+    @OnClick({R.id.userPortrait,R.id.image1,R.id.image2,R.id.image3,R.id.image4})
     public void onClick(View view){
-        Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+        switch (view.getId()){
+            case R.id.userPortrait:
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,mBorrowDetails.getUserId()).execute();
+                break;
+            case R.id.image1:
+                launcherImageView(0);
+                break;
+            case R.id.image2:
+                launcherImageView(1);
+                break;
+            case R.id.image3:
+                launcherImageView(2);
+                break;
+            case R.id.image4:
+                launcherImageView(3);
+                break;
+            default:
+                break;
+        }
     }
     private void loadImage(String src,ImageView image){
         Glide.with(this).load(src).placeholder(R.drawable.help).into(image);

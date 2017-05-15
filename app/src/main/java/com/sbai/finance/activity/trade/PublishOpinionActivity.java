@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,9 +13,9 @@ import android.widget.ImageView;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -82,6 +83,8 @@ public class PublishOpinionActivity extends BaseActivity {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mPredict = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
         mFutureData = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_2);
+
+        Log.d(TAG, "mVariety: " + mVariety.toString());
     }
 
     private void initViews() {
@@ -106,27 +109,59 @@ public class PublishOpinionActivity extends BaseActivity {
 
     @OnClick(R.id.submitButton)
     public void onClick(View view) {
-        String content = mOpinionContent.getText().toString().trim();
-        String calcuId = mPredict.isCalculate() ? String.valueOf(mPredict.getCalcuId()) : null;
-        String lastPriceStr = null;
-        String risePriceStr = null;
-        String risePercentStr = null;
+        final String content = mOpinionContent.getText().toString().trim();
+        final String calcuId = mPredict.isCalculate() ? String.valueOf(mPredict.getCalcuId()) : null;
 
-        if (mFutureData != null) {
-            double lastPrice = mFutureData.getLastPrice();
-            double risePrice = FinanceUtil.subtraction(lastPrice, mFutureData.getPreSetPrice()).doubleValue();
-            double priceChangePercent = FinanceUtil.divide(risePrice, mFutureData.getPreSetPrice(), 4)
-                    .multiply(new BigDecimal(100)).doubleValue();
 
-            lastPriceStr = FinanceUtil.formatWithScale(lastPrice, mVariety.getPriceScale());
-            risePriceStr = FinanceUtil.formatWithScale(risePrice, mVariety.getPriceScale());
-            risePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
-            if (risePrice >= 0) {
-                risePriceStr = "+" + risePriceStr;
-                risePercentStr = "+" + risePercentStr;
+        //股票的时候是轮训
+        if (!mVariety.ifProductIsStock()) {
+            //最新价
+            String lastPriceStr = null;
+            //	涨幅
+            String risePriceStr = null;
+            //涨幅百分比
+            String risePercentStr = null;
+            if (mFutureData != null) {
+                double lastPrice = mFutureData.getLastPrice();
+                double risePrice = FinanceUtil.subtraction(lastPrice, mFutureData.getPreSetPrice()).doubleValue();
+                double priceChangePercent = FinanceUtil.divide(risePrice, mFutureData.getPreSetPrice(), 4)
+                        .multiply(new BigDecimal(100)).doubleValue();
+
+                lastPriceStr = FinanceUtil.formatWithScale(lastPrice, mVariety.getPriceScale());
+                risePriceStr = FinanceUtil.formatWithScale(risePrice, mVariety.getPriceScale());
+                risePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
+                if (risePrice >= 0) {
+                    risePriceStr = "+" + risePriceStr;
+                    risePercentStr = "+" + risePercentStr;
+                }
             }
+            submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
+        } else {
+            // TODO: 2017/5/12  获取股票的实时行情 未建对应的moedl  
+//            Client.getStockRealTimeQuotes(mVariety.getVarietyType())
+//                    .setTag(TAG)
+//                    .setCallback(new StockCallback<StockResp, StockData>() {
+//                        @Override
+//                        public void onDataMsg(StockData result, StockResp.Msg msg) {
+//                            Log.d(TAG, "onDataMsg: " + result.toString());
+//                            String lastPriceStr = null;
+//                            //	涨幅
+//                            String risePriceStr = null;
+//                            //涨幅百分比
+//                            String risePercentStr = null;
+//                            lastPriceStr = String.valueOf(result.getLast_price());
+//                            risePriceStr = String.valueOf(result.getRise_price());
+//                            risePercentStr = String.valueOf(result.getRise_pre());
+//                            submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
+//                        }
+//                    })
+//                    .fire();
         }
 
+
+    }
+
+    private void submitViewpoint(String content, String calcuId, String lastPriceStr, String risePriceStr, String risePercentStr) {
         Client.publishPoint(mVariety.getBigVarietyTypeCode(), calcuId,
                 content, mPredict.getDirection(),
                 lastPriceStr, risePriceStr, risePercentStr,

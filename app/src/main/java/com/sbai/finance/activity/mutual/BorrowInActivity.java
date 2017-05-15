@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowIn;
 import com.sbai.finance.net.Callback;
@@ -66,13 +67,19 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mBorrowInAdapter = new BorrowInAdapter(this);
         mBorrowInAdapter.setCallback(new BorrowInAdapter.Callback() {
             @Override
-            public void OnItemCancelBorrowClick(Integer id) {
+            public void OnItemCancelBorrowClick(int id) {
                 requestCancelBorrow(id);
             }
-
             @Override
-            public void OnItemGetHelper(Integer id, int position) {
+            public void OnItemGetHelper(int id, int position) {
                 requestHelper(id,position);
+            }
+            @Override
+            public void OnItemImageClick(int index, int position) {
+                Launcher.with(getActivity(), ContentImgActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD,mBorrowInAdapter.getItem(position).getContentImg().split(","))
+                        .putExtra(Launcher.EX_PAYLOAD_1,index)
+                        .execute();
             }
         });
         mListView.setEmptyView(mEmpty);
@@ -257,12 +264,14 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         }
     }
 
-    static class BorrowInAdapter extends ArrayAdapter<BorrowIn>{
+    static class BorrowInAdapter extends ArrayAdapter<BorrowIn> {
         Context mContext;
         private Callback mCallback;
+
         interface Callback{
-            void OnItemCancelBorrowClick(Integer id);
-            void OnItemGetHelper(Integer id,int position );
+            void OnItemCancelBorrowClick(int id);
+            void OnItemGetHelper(int id,int position );
+            void OnItemImageClick(int index ,int position);
         }
         public void setCallback(Callback callback){
             mCallback = callback;
@@ -284,7 +293,6 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         mCallback.OnItemCancelBorrowClick(getItem(position).getId());
                     }
                 });
-
                 MyGridView mGridView= (MyGridView) convertView.findViewById(R.id.gridView);
                 ImageGridAdapter imageGridAdapter = new ImageGridAdapter(getContext());
                 imageGridAdapter.setOnItemClickListener(new ImageGridAdapter.OnItemClickListener() {
@@ -294,6 +302,34 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                     }
                 });
                 mGridView.setAdapter(imageGridAdapter);
+                ImageView image1 = (ImageView) convertView.findViewById(R.id.image1);
+                ImageView image2 = (ImageView) convertView.findViewById(R.id.image2);
+                ImageView image3 = (ImageView) convertView.findViewById(R.id.image3);
+                ImageView image4 = (ImageView) convertView.findViewById(R.id.image4);
+                image1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(0,position);
+                    }
+                });
+                image2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(1,position);
+                    }
+                });
+                image3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(2,position);
+                    }
+                });
+                image4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(3,position);
+                    }
+                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {

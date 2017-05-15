@@ -1,10 +1,10 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -156,10 +156,10 @@ public class HomeFragment extends BaseFragment {
 
     private void initView() {
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
-                "\n" + getString(R.string.borrow_detail), 0.733f, Color.parseColor("#B6B6B6"));
+                "\n" + getString(R.string.borrow_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
         mBorrowTitle.setText(attentionSpannableString);
         SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.idea_title),
-                "\n" + getString(R.string.idea_detail), 0.733f, Color.parseColor("#B6B6B6"));
+                "\n" + getString(R.string.idea_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
         mIdeaTitle.setText(fansSpannableString);
     }
 

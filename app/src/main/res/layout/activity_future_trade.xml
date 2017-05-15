@@ -171,12 +171,12 @@
                         android:layout_height="240dp">
 
                         <com.sbai.chart.TrendView
-                            android:id="@+id/stockTrendView"
+                            android:id="@+id/trendView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"/>
 
                         <com.sbai.chart.KlineView
-                            android:id="@+id/stockKlineView"
+                            android:id="@+id/klineView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:visibility="gone"/>

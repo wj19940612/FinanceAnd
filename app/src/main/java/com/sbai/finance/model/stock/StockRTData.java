@@ -1,6 +1,9 @@
 package com.sbai.finance.model.stock;
 
-public class StockRTData {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class StockRTData implements Parcelable {
 
     /**
      * ask_price1 : 0
@@ -325,4 +328,95 @@ public class StockRTData {
     public void setStock_typename(String stock_typename) {
         this.stock_typename = stock_typename;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.ask_price1);
+        dest.writeString(this.ask_price2);
+        dest.writeString(this.ask_price3);
+        dest.writeString(this.ask_price4);
+        dest.writeString(this.ask_price5);
+        dest.writeString(this.ask_volume1);
+        dest.writeString(this.ask_volume2);
+        dest.writeString(this.ask_volume3);
+        dest.writeString(this.ask_volume4);
+        dest.writeString(this.ask_volume5);
+        dest.writeString(this.bid_price1);
+        dest.writeString(this.bid_price2);
+        dest.writeString(this.bid_price3);
+        dest.writeString(this.bid_price4);
+        dest.writeString(this.bid_price5);
+        dest.writeString(this.bid_volume1);
+        dest.writeString(this.bid_volume2);
+        dest.writeString(this.bid_volume3);
+        dest.writeString(this.bid_volume4);
+        dest.writeString(this.bid_volume5);
+        dest.writeString(this.business_amount);
+        dest.writeString(this.business_balance);
+        dest.writeString(this.code_name);
+        dest.writeString(this.high_price);
+        dest.writeString(this.last_price);
+        dest.writeString(this.low_price);
+        dest.writeString(this.open_price);
+        dest.writeString(this.prev_price);
+        dest.writeString(this.rise_pre);
+        dest.writeString(this.rise_price);
+        dest.writeString(this.stock_code);
+        dest.writeString(this.stock_typename);
+    }
+
+    public StockRTData() {
+    }
+
+    protected StockRTData(Parcel in) {
+        this.ask_price1 = in.readString();
+        this.ask_price2 = in.readString();
+        this.ask_price3 = in.readString();
+        this.ask_price4 = in.readString();
+        this.ask_price5 = in.readString();
+        this.ask_volume1 = in.readString();
+        this.ask_volume2 = in.readString();
+        this.ask_volume3 = in.readString();
+        this.ask_volume4 = in.readString();
+        this.ask_volume5 = in.readString();
+        this.bid_price1 = in.readString();
+        this.bid_price2 = in.readString();
+        this.bid_price3 = in.readString();
+        this.bid_price4 = in.readString();
+        this.bid_price5 = in.readString();
+        this.bid_volume1 = in.readString();
+        this.bid_volume2 = in.readString();
+        this.bid_volume3 = in.readString();
+        this.bid_volume4 = in.readString();
+        this.bid_volume5 = in.readString();
+        this.business_amount = in.readString();
+        this.business_balance = in.readString();
+        this.code_name = in.readString();
+        this.high_price = in.readString();
+        this.last_price = in.readString();
+        this.low_price = in.readString();
+        this.open_price = in.readString();
+        this.prev_price = in.readString();
+        this.rise_pre = in.readString();
+        this.rise_price = in.readString();
+        this.stock_code = in.readString();
+        this.stock_typename = in.readString();
+    }
+
+    public static final Parcelable.Creator<StockRTData> CREATOR = new Parcelable.Creator<StockRTData>() {
+        @Override
+        public StockRTData createFromParcel(Parcel source) {
+            return new StockRTData(source);
+        }
+
+        @Override
+        public StockRTData[] newArray(int size) {
+            return new StockRTData[size];
+        }
+    };
 }

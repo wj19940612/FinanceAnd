@@ -142,6 +142,7 @@
     <string name="now_not_has_data">暂无消息</string>
     <string name="please_input_here">请在此输入......</string>
     <string name="you_dont_have_trade">你还没有交易过哦</string>
+    <string name="now_not_has_feedback_data">暂无反馈消息</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -226,6 +227,7 @@
         completions."
     </string>
     <string name="number">%1$d</string>
+    <string name="number999">999+</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
@@ -336,6 +338,8 @@
     <string name="wait_to_confirm">等待确认中</string>
     <string name="want_help_him">想要帮助TA的人</string>
 
+    <string name="one_stock_net_asset">每股净资产</string>
+    <string name="one_stock_earnings">每股收益</string>
     <string name="pay_intention">支付意向金</string>
     <string name="intention">意向金</string>
     <string name="we_chat_pay">微信支付</string>

@@ -8,7 +8,7 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
-    public static final int PAGE_SIZE = 15;
+    public static final int DEFAULT_PAGE_SIZE = 15;
 
     /**
      * 获取期货品种
@@ -357,11 +357,11 @@ public class Client {
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, int classify, int page, int pageSize) {
+    public static API requestHistoryNews(boolean autoRead, int classify, int page) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
-                .put("size", pageSize)
+                .put("size", DEFAULT_PAGE_SIZE)
                 .put("autoRead", autoRead));
     }
 
@@ -549,14 +549,13 @@ public class Client {
      * 请求Url  /coterie/userInterest/queryClickUserViewPoint.do
      *
      * @param page
-     * @param pageSize
      * @param userId   用户id
      * @return
      */
-    public static API getUserPublishList(int page, int pageSize, Integer userId) {
+    public static API getUserPublishList(int page, Integer userId) {
         return new API("/coterie/userInterest/queryClickUserViewPoint.do", new ApiParams()
                 .put("page", page)
-                .put("pageSize", pageSize)
+                .put("pageSize", DEFAULT_PAGE_SIZE)
                 .put("userId", userId));
     }
 
@@ -926,7 +925,8 @@ public class Client {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
 
-    public static API getPhone(Integer loanId) {
+
+    public static API getPhone(int loanId) {
         return new API("/coterie/help/loan/callPhone.do",
                 new ApiParams()
                         .put("loanId", loanId));
@@ -979,20 +979,6 @@ public class Client {
         return new API("/statistics/statistics/viewpointGod.do");
     }
 
-    /**
-     * 检测是否已经预测'看涨'看跌'
-     *
-     * @param bigVarietyTypeCode
-     * @param varietyId
-     * @return
-     */
-    public static API getPrediction(String bigVarietyTypeCode, int varietyId) {
-        return new API("/coterie/viewpoint/checkCalculate.do",
-                new ApiParams()
-                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
-                        .put("varietyId", varietyId));
-    }
-
 
     /**
      * 查看反馈和回复
@@ -1015,6 +1001,7 @@ public class Client {
      * @param contentType
      * @return
      */
+
     public static API sendFeedback(String content, int contentType) {
         return new API(POST, "/user/userFeedback/addFeedback.do",
                 new ApiParams()
@@ -1046,6 +1033,20 @@ public class Client {
     public static API getVarietyTradeIntroduce(int varietyId) {
         return new API("/order/order/getVarietytradeIntro.do",
                 new ApiParams()
+                        .put("varietyId", varietyId));
+    }
+
+    /**
+     * 检测是否已经预测'看涨'看跌'
+     *
+     * @param bigVarietyTypeCode
+     * @param varietyId
+     * @return
+     */
+    public static API getPrediction(String bigVarietyTypeCode, int varietyId) {
+        return new API("/coterie/viewpoint/checkCalculate.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("varietyId", varietyId));
     }
 

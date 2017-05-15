@@ -122,7 +122,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
 
     private void requestEconomicCircleNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, Client.PAGE_SIZE)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -163,7 +163,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModelList.size() < Client.PAGE_SIZE) {
+        if (historyNewsModelList.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -224,16 +224,17 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 case HistoryNewsModel.ACTION_TYPE_LIKE_POST:
 
                     //.点赞动态，点击可跳转至观点页面  viewPointId为0
-//                    if (historyNewsModel.getViewpointId() != 0) {
-//                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
-//                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
-//                    } else {
+
+//                    break;
+                    //点赞评论
+                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                    if (historyNewsModel.getViewpointId() != 0) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+                    } else {
                         Launcher.with(getActivity(), OpinionDetailsActivity.class).
                                 putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
-//                    }
-                    break;
-                //点赞评论
-                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                    }
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
@@ -328,9 +329,9 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 if (item == null) return;
                 UserInfo userInfo = item.getUserInfo();
 
-                if(TextUtils.isEmpty(item.getMsg())){
+                if (TextUtils.isEmpty(item.getMsg())) {
                     mContent.setVisibility(View.GONE);
-                }else {
+                } else {
                     mContent.setVisibility(View.VISIBLE);
                 }
 

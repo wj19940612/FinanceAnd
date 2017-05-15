@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         android:minHeight="60dp"
-        app:rightIcon="@drawable/ic_more"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/real_name_authentication"
         app:rowTextColor="@color/secondaryText"
         app:subTextColor="@color/blueAssist"
