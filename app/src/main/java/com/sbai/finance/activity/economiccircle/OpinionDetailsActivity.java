@@ -328,7 +328,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			}
 			if (mOpinionDetails.getReplyCount() > 999) {
-				mCommentNum.setText("999+");
+				mCommentNum.setText("(999+)");
 			} else {
 				mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
 			}
