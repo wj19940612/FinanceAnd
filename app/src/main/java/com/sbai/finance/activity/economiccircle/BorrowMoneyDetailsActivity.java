@@ -258,15 +258,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			mGiveHelp.setText(R.string.give_help);
 		}
 
-		/*mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mDataId)
-						.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
-						.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
-			}
-		});*/
 
 		if (LocalUser.getUser().isLogin()) {
 			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
@@ -297,6 +288,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 														mGiveHelp.setBackgroundResource(R.drawable.bg_to_confirm);
 														mGiveHelp.setText(R.string.wait_to_confirm);
 														mGiveHelp.setEnabled(false);
+														requestWantHelpHimList();
 													}
 												}
 											}).fire();
@@ -368,8 +360,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			default:
 				break;
 		}
-
-
 	}
 
 	private void calculateAvatarNum(Context context) {
@@ -399,53 +389,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			}
 		});
 	}
-
-	/*static class WantHelpHimOrYouAdapter extends ArrayAdapter<WantHelpHimOrYou> {
-
-		private Context mContext;
-		private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
-		private int mMax;
-
-		private WantHelpHimOrYouAdapter(Context context, List<WantHelpHimOrYou> wantHelpHimOrYouList, int max) {
-			super(context, 0);
-			this.mContext = context;
-			this.mWantHelpHimOrYouList  = wantHelpHimOrYouList;
-			this.mMax = max;
-		}
-
-		@NonNull
-		@Override
-		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-			ViewHolder viewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_helper_image, null);
-				viewHolder = new ViewHolder(convertView);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-
-			viewHolder.bindData(getItem(position), mContext);
-
-			return convertView;
-		}
-
-		static class ViewHolder {
-			@BindView(R.id.userImg)
-			ImageView mUserImg;
-
-			ViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
-
-			private void bindData(WantHelpHimOrYou item, Context context) {
-				Glide.with(context).load(item.getPortrait())
-						.bitmapTransform(new GlideCircleTransform(context))
-						.placeholder(R.drawable.ic_default_avatar)
-						.into(mUserImg);
-			}
-		}
-	}*/
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

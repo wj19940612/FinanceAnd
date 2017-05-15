@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowIn;
 import com.sbai.finance.net.Callback;
@@ -195,6 +196,31 @@ public class BorrowInDetailsActivity extends BaseActivity {
     }
     private void loadImage(String src,ImageView image){
         Glide.with(this).load(src).placeholder(R.drawable.help).into(image);
+    }
+    private void launcherImageView(int index){
+        Launcher.with(getActivity(), ContentImgActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD,mBorrowIn.getContentImg().split(","))
+                .putExtra(Launcher.EX_PAYLOAD_1,index)
+                .execute();
+    }
+    @OnClick({R.id.image1,R.id.image2,R.id.image3,R.id.image4})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.image1:
+                launcherImageView(0);
+                break;
+            case R.id.image2:
+                launcherImageView(1);
+                break;
+            case R.id.image3:
+                launcherImageView(2);
+                break;
+            case R.id.image4:
+                launcherImageView(3);
+                break;
+            default:
+                break;
+        }
     }
    static class ImageGridAdapter extends ArrayAdapter<BorrowHelper> {
 

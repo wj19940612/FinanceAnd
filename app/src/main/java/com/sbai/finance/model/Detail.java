@@ -17,7 +17,7 @@ public class Detail {
     * userId : 98
     */
 
-   private String createTime;
+   private long createTime;
    private int id;
    private int money;
    private String remark;
@@ -25,11 +25,11 @@ public class Detail {
    private int typeDetail;
    private int userId;
 
-   public String getCreateTime() {
+   public long getCreateTime() {
       return createTime;
    }
 
-   public void setCreateTime(String createTime) {
+   public void setCreateTime(long createTime) {
       this.createTime = createTime;
    }
 

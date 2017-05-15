@@ -65,4 +65,13 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="BottomTextViewLayout">
+        <attr name="headline_text" format="string|reference"/>
+        <attr name="headline_text_size" format="dimension|reference"/>
+        <attr name="headline_text_color" format="color|reference"/>
+        <attr name="info_text" format="string|reference"/>
+        <attr name="info_text_size" format="dimension|reference"/>
+        <attr name="info_text_color" format="color|reference"/>
+        <attr name="default_text" format="string|reference"/>
+    </declare-styleable>
 </resources>
