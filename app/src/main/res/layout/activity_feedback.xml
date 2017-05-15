@@ -45,6 +45,7 @@
                 android:drawablePadding="10dp"
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
+                android:text="@string/now_not_has_feedback_data"
                 android:paddingTop="150dp"
                 android:visibility="gone"/>
         </LinearLayout>
