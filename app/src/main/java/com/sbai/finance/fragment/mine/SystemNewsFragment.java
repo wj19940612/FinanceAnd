@@ -107,7 +107,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, Client.PAGE_SIZE)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -151,7 +151,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-        if (systemNewsModels.size() < Client.PAGE_SIZE) {
+        if (systemNewsModels.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }

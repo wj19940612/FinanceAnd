@@ -58,6 +58,7 @@
     <string name="skilled">擅长类型</string>
     <string name="accuracy_rate">看盘准确率</string>
     <string name="no_opinion">暂无观点</string>
+
     <!--Future-->
     <string name="future_foreign">国际期货</string>
     <string name="future_china">国内期货</string>
@@ -69,15 +70,19 @@
     <string name="idea_title">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
+
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证</string>
     <string name="ShenzhenStockExchange">深证</string>
     <string name="GrowthEnterpriseMarket">创业板</string>
+
+
     <!--help-->
     <string name="borrow_in">我的借入</string>
     <string name="borrow_out">我的借出</string>
     <string name="borrow">我要借款</string>
     <string name="help_borrow">互助-借款</string>
+
     <!--event-->
     <string name="no_event_record">还没有大事发生!</string>
     <string name="event_title">大事件</string>
@@ -100,7 +105,6 @@
     <string name="fifteen_min_k">15分钟</string>
     <string name="thirty_min_k">30分钟</string>
     <string name="sixty_min_k">60分钟</string>
-    <string name="five_day_k_line">五日</string>
     <string name="week_k_line">周K</string>
     <string name="month_k_line">月K</string>
     <string name="point">观点</string>
@@ -108,8 +112,20 @@
     <string name="stock_news">新闻</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
-    <!--option-->
     <string name="no_option">暂无自选</string>
+    <string name="ask_5">卖5</string>
+    <string name="ask_4">卖4</string>
+    <string name="ask_3">卖3</string>
+    <string name="ask_2">卖2</string>
+    <string name="ask_1">卖1</string>
+    <string name="bid_1">买1</string>
+    <string name="bid_2">买2</string>
+    <string name="bid_3">买3</string>
+    <string name="bid_4">买4</string>
+    <string name="bid_5">买5</string>
+    <string name="five_market">五档</string>
+    <string name="market_detail">明细</string>
+
     <!-- 我的界面 -->
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
