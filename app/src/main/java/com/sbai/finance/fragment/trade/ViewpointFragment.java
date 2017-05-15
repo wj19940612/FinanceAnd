@@ -104,7 +104,7 @@ public class ViewpointFragment extends BaseFragment {
         mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
         mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         mEmpty.setCompoundDrawablePadding(padding);
-        Drawable top = getActivity().getResources().getDrawable(R.drawable.img_no_message);
+        Drawable top = ContextCompat.getDrawable(getContext(), R.drawable.img_no_message);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
 
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);

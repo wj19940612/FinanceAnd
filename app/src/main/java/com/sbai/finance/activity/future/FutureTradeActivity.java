@@ -274,9 +274,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private void showPredictDialog() {
         if (mPredictionFragment == null) {
             mPredictionFragment = PredictionDialogFragment.newInstance().setOnPredictButtonListener(this);
-        } else {
-            mPredictionFragment.show(getSupportFragmentManager());
         }
+        mPredictionFragment.show(getSupportFragmentManager());
     }
 
     private void checkOptionalStatus() {
@@ -319,8 +318,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         protected void onRespSuccess(Resp<Integer> resp) {
                             Integer result = resp.getData();
                             if (result != null) {
-                                boolean hasAddInOpition = (result == HAS_ADD_OPITION);
-                                mTradeFloatButtons.setHasAddInOpition(hasAddInOpition);
+                                boolean hasAddInOption = (result == HAS_ADD_OPITION);
+                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
                             }
                         }
                     }).fire();
