@@ -327,7 +327,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 			} else {
 				mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
 			}
-			mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
+			if (mOpinionDetails.getReplyCount() > 999) {
+				mCommentNum.setText("999+");
+			} else {
+				mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
+			}
 			mScrollView.smoothScrollTo(0, 0);
 		}
 	}

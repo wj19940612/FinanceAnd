@@ -91,7 +91,18 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisActivity"
             android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".activity.mutual.BorrowInDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowInHisDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowOutDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowOutHisDetailActivity"
+            android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"
@@ -144,9 +155,8 @@
             android:name=".activity.mine.CreditActivity"
             android:screenOrientation="portrait"/>
 
-
         <activity
-            android:name=".activity.ContentImgActivity"
+            android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 交易 H5 -->
@@ -163,6 +173,11 @@
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
+        </activity>
+        <activity android:name=".activity.economiccircle.PayIntentionActivity">
+        </activity>
+
         <!-- 反馈 -->
         <activity
             android:name=".activity.mine.FeedbackActivity"
@@ -173,12 +188,11 @@
             android:name=".activity.mine.TheDetailActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".activity.economiccircle.WantHelpHimActivity">
 
-        </activity>
         <!-- 选择相册图片 -->
         <activity android:name=".activity.mine.ImageSelectActivity"/>
         <!-- 相册图片预览 -->
         <activity android:name=".activity.mine.ImagePreViewActivity"/>
     </application>
+
 </manifest>

@@ -94,6 +94,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         mFeedbackAdapter = new FeedbackAdapter(this, mFeedbackList);
         mListView.setAdapter(mFeedbackAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setEmptyView(mEmpty);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 

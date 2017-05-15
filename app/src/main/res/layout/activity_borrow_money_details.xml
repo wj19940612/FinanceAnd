@@ -192,6 +192,7 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/image1"
             android:layout_width="0dp"
@@ -244,6 +245,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/peopleWantHelpHimOrHer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_people_help"
@@ -263,19 +265,32 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/wantHelpHimArea"
+            android:gravity="center_vertical"
+            android:layout_marginTop="18dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="13dp"
-            android:layout_marginTop="18dp">
+            android:orientation="horizontal">
 
+            <com.sbai.finance.view.MyGridView
+
+                android:id="@+id/gridView"
+                descendantFocusability="blocksDescendants"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="5dp"
+                android:numColumns="8"
+                />
             <ImageView
+                android:id="@+id/more"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_default_avatar"/>
-
+                android:src="@drawable/ic_help_detail"/>
         </LinearLayout>
+
 
         <TextView
             android:id="@+id/giveHelp"
@@ -284,10 +299,10 @@
             android:layout_marginLeft="13dp"
             android:layout_marginRight="13dp"
             android:layout_marginTop="60dp"
-            tools:background="@drawable/bg_give_help"
             android:gravity="center"
-            tools:text="@string/give_help"
             android:textColor="@android:color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            tools:background="@drawable/bg_give_help"
+            tools:text="@string/give_help"/>
     </LinearLayout>
 </LinearLayout>

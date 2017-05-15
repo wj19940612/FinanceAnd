@@ -94,9 +94,9 @@ public class EventDetailActivity extends BaseActivity {
                 mEventTitleInfo.setVisibility(View.VISIBLE);
                 mEventTitle.setText(event.getTitle());
                 if (TextUtils.isEmpty(event.getSource())){
-                    mTimeAndSource.setText(DateUtil.formatSlash(event.getCreateTime()));
+                    mTimeAndSource.setText(DateUtil.getFormatTime(event.getCreateTime()));
                 }else{
-                    mTimeAndSource.setText(event.getSource()+"  "+DateUtil.formatSlash(event.getCreateTime()));
+                    mTimeAndSource.setText(event.getSource()+"  "+DateUtil.getFormatTime(event.getCreateTime()));
                 }
                 mPureHtml = event.getContent();
             } else {

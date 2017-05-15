@@ -635,6 +635,11 @@ public class Client {
     public static API getStockIndexVariety() {
         return new API("/order/order/getStockExponentVariety.do");
     }
+    public static API stockSearch(String key){
+        return new API("/stk/quota/search.do",
+                new ApiParams()
+                        .put("key", key));
+    }
 
     /**
      * 接口详情 (id: 212)     Mock数据
@@ -895,10 +900,21 @@ public class Client {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
 
-    public static API getPhone(Integer loanId) {
-        return new API("coterie/help/loan/callPhone.do",
+    public static API getPhone(int loanId){
+		return new API("/coterie/help/loan/callPhone.do",
+				new ApiParams()
+						.put("loanId", loanId));
+	}
+
+    /**
+     * 借单详情（含性别）
+     * @param id
+     * @return
+     */
+    public static API getBorrowDetails(int id){
+        return new API("/coterie/help/loan/showDetails.do",
                 new ApiParams()
-                        .put("loanId", loanId));
+                        .put("id", id));
     }
 
     /**
