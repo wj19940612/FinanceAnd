@@ -15,6 +15,7 @@
         app:titleText="@string/borrow_money_details"/>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -273,20 +274,19 @@
                         tools:text="@string/people_want_help_him_number"/>
                 </LinearLayout>
 
-                <LinearLayout
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="18dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:gravity="center_vertical">
 
                     <LinearLayout
                         android:id="@+id/avatarList"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="horizontal">
                     </LinearLayout>
 
@@ -294,15 +294,17 @@
                         android:id="@+id/more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:src="@drawable/ic_help_detail"
                         android:visibility="gone"/>
-                </LinearLayout>
-
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/giveHelp"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:layout_marginBottom="60dp"
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="60dp"
