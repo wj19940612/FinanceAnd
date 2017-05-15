@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowOut;
@@ -167,8 +168,32 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 .placeholder(R.drawable.help)
                 .into(image);
     }
-    @OnClick(R.id.userPortrait)
+    private void launcherImageView(int index){
+        Launcher.with(getActivity(), ContentImgActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD,mBorrowOut.getContentImg().split(","))
+                .putExtra(Launcher.EX_PAYLOAD_1,index)
+                .execute();
+    }
+    @OnClick({R.id.userPortrait,R.id.image1,R.id.image2,R.id.image3,R.id.image4})
     public void onClick(View view){
-        Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,mBorrowOut.getUserId()).execute();
+        switch (view.getId()){
+            case R.id.userPortrait:
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,mBorrowOut.getUserId()).execute();
+                break;
+            case R.id.image1:
+                launcherImageView(0);
+                break;
+            case R.id.image2:
+                launcherImageView(1);
+                break;
+            case R.id.image3:
+                launcherImageView(2);
+                break;
+            case R.id.image4:
+                launcherImageView(3);
+                break;
+            default:
+                break;
+        }
     }
 }
