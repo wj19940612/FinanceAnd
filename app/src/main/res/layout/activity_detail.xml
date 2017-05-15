@@ -44,7 +44,7 @@
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="150dp"
-                android:text="@string/now_not_has_feedback_data"
+                android:text="@string/you_dont_have_trade"
                 android:visibility="gone"/>
         </LinearLayout>
 
