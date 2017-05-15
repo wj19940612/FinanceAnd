@@ -62,6 +62,7 @@ android {
 
         alpha {
 
+
             versionCode 7
             versionName "1.6"
 //            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')

@@ -68,7 +68,7 @@ public class ContentImgActivity extends BaseActivity {
 		public Object instantiateItem(ViewGroup container, int position) {
 			ImageView imageView = new ImageView(mContext);
 			Glide.with(mContext).load(mContentImgArray[position])
-					.placeholder(R.drawable.help)
+					.thumbnail(0.4f)
 					.into(imageView);
 			container.addView(imageView);
 			return imageView;
