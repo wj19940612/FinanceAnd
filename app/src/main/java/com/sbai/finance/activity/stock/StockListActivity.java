@@ -111,6 +111,13 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         requestVisibleStockMarket();
     }
 
+    // TODO: 2017/5/15 后期需要可能删除 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
     private void requestVisibleStockMarket() {
         if (mListView != null && mStockListAdapter != null) {
             int first = mListView.getFirstVisiblePosition();

@@ -274,6 +274,7 @@
                         tools:text="@string/people_want_help_him_number"/>
                 </LinearLayout>
 
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -300,10 +301,10 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:layout_marginBottom="60dp"
                     android:id="@+id/giveHelp"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:layout_marginBottom="60dp"
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="60dp"
