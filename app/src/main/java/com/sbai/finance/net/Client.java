@@ -8,75 +8,76 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
 
-	private static final int POST = Request.Method.POST;
-	public static final int PAGE_SIZE = 15;
+    private static final int POST = Request.Method.POST;
+    public static final int PAGE_SIZE = 15;
 
-	/**
-	 * 获取期货品种
-	 *
-	 * @param page
-	 * @param pageSize
-	 * @param smallVarietyTypeCode
-	 * @return
-	 */
-	public static API getFutureVariety(Integer page, Integer pageSize, String smallVarietyTypeCode) {
-		return new API("/order/order/getVariety.do",
-				new ApiParams()
-						.put("bigVarietyTypeCode", "future")
-						.put("page", page)
-						.put("pageSize", pageSize)
-						.put("smallVarietyTypeCode", smallVarietyTypeCode));
-	}
+    /**
+     * 获取期货品种
+     *
+     * @param page
+     * @param pageSize
+     * @param smallVarietyTypeCode
+     * @return
+     */
+    public static API getFutureVariety(Integer page, Integer pageSize, String smallVarietyTypeCode) {
+        return new API("/order/order/getVariety.do",
+                new ApiParams()
+                        .put("bigVarietyTypeCode", "future")
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("smallVarietyTypeCode", smallVarietyTypeCode));
+    }
 
-	/**
-	 * 股票除指数品种
-	 *
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 */
-	public static API getStockVariety(Integer page, Integer pageSize, String search) {
-		return new API("/order/order/getStockVariety.do",
-				new ApiParams()
-						.put("page", page)
-						.put("pageSize", pageSize)
-						.put("search", search));
-	}
+    /**
+     * 股票除指数品种
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getStockVariety(Integer page, Integer pageSize, String search) {
+        return new API("/order/order/getStockVariety.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("search", search));
+    }
 
-	/**
-	 * 获取借款详情
-	 *
-	 * @param id
-	 * @return
-	 */
-	public static API getBorrowMoneyDetail(int id) {
-		return new API(POST, "/coterie/help/loan/showDetails.do",
-				new ApiParams()
-						.put("id", id));
-	}
+    /**
+     * 获取借款详情
+     *
+     * @param id
+     * @return
+     */
+    public static API getBorrowMoneyDetail(int id) {
+        return new API(POST, "/coterie/help/loan/showDetails.do",
+                new ApiParams()
+                        .put("id", id));
+    }
 
-	/**
-	 * 给予帮助
-	 *
-	 * @param id
-	 * @return
-	 */
-	public static API giveHelp(int id) {
-		return new API(POST, "/coterie/help/loan/intention.do",
-				new ApiParams()
-						.put("id", id));
-	}
+    /**
+     * 给予帮助
+     *
+     * @param id
+     * @return
+     */
+    public static API giveHelp(int id) {
+        return new API(POST, "/coterie/help/loan/intention.do",
+                new ApiParams()
+                        .put("id", id));
+    }
 
-	/**
-	 * 想要帮助他/我的人列表
-	 * @param id
-	 * @return
-	 */
-	public static API getWantHelpHimOrYouList(int id) {
-		return new API(POST, "/coterie/help/loan/intentionCount.do",
-				new ApiParams()
-						.put("id", id));
-	}
+    /**
+     * 想要帮助他/我的人列表
+     *
+     * @param id
+     * @return
+     */
+    public static API getWantHelpHimOrYouList(int id) {
+        return new API(POST, "/coterie/help/loan/intentionCount.do",
+                new ApiParams()
+                        .put("id", id));
+    }
 
 
     /**
@@ -635,7 +636,8 @@ public class Client {
     public static API getStockIndexVariety() {
         return new API("/order/order/getStockExponentVariety.do");
     }
-    public static API stockSearch(String key){
+
+    public static API stockSearch(String key) {
         return new API("/stk/quota/search.do",
                 new ApiParams()
                         .put("key", key));
@@ -805,7 +807,7 @@ public class Client {
      * @return
      */
     public static API borrowIn(String content, String contentImg, Integer days, Integer interest, Integer money, String userId) {
-        return new API(POST,"/coterie/help/loan/addLoan.do",
+        return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
                         .put("contentImg", contentImg)
@@ -900,18 +902,19 @@ public class Client {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
 
-    public static API getPhone(int loanId){
-		return new API("/coterie/help/loan/callPhone.do",
-				new ApiParams()
-						.put("loanId", loanId));
-	}
+    public static API getPhone(int loanId) {
+        return new API("/coterie/help/loan/callPhone.do",
+                new ApiParams()
+                        .put("loanId", loanId));
+    }
 
     /**
      * 借单详情（含性别）
+     *
      * @param id
      * @return
      */
-    public static API getBorrowDetails(int id){
+    public static API getBorrowDetails(int id) {
         return new API("/coterie/help/loan/showDetails.do",
                 new ApiParams()
                         .put("id", id));
@@ -953,26 +956,27 @@ public class Client {
     }
 
 
+    /**
+     * 查看反馈和回复
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getFeedback(int page, int pageSize) {
+        return new API("/user/userFeedback/seeFeedback.do",
+                new ApiParams()
+                        .put("pageSize", pageSize)
+                        .put("page", page));
+    }
 
-	/**
-	 * 查看反馈和回复
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 */
-	public static API getFeedback(int page, int pageSize) {
-		return new API("/user/userFeedback/seeFeedback.do",
-				new ApiParams()
-						.put("pageSize", pageSize)
-						.put("page", page));
-	}
-
-	/**
-	 * 用户发送反馈
-	 * @param content
-	 * @param contentType
-	 * @return
-	 */
+    /**
+     * 用户发送反馈
+     *
+     * @param content
+     * @param contentType
+     * @return
+     */
     public static API sendFeedback(String content, int contentType) {
         return new API(POST, "/user/userFeedback/addFeedback.do",
                 new ApiParams()
@@ -980,31 +984,32 @@ public class Client {
                         .put("contentType", contentType));
     }
 
-	/**
-	 * 查询明细
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 */
-	public static API getDetail(int page, int pageSize) {
-		return new API("/user/userFlow/queryUserFlow.do",
-				new ApiParams()
-						.put("page", page)
-						.put("pageSize", pageSize));
-	}
+    /**
+     * 查询明细
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getDetail(int page, int pageSize) {
+        return new API("/user/userFlow/queryUserFlow.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
 
 
-	/**
-	 * 获取品种简介
-	 *
-	 * @param varietyId
-	 * @return
-	 */
-	public static API getVarietyTradeIntroduce(int varietyId) {
-		return new API("/order/order/getVarietytradeIntro.do",
-				new ApiParams()
-						.put("varietyId", varietyId));
-	}
+    /**
+     * 获取品种简介
+     *
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietyTradeIntroduce(int varietyId) {
+        return new API("/order/order/getVarietytradeIntro.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
 
     /**
      * 检测是否已经预测'看涨'看跌'
@@ -1031,5 +1036,55 @@ public class Client {
         return new API("/order/order/getExchangeStatus.do",
                 new ApiParams()
                         .put("exchangeId", exchangeId));
+    }
+
+    /**
+     * 接口名称 个股资讯
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/selectData.do
+     *
+     * @param code
+     * @param page
+     * @param pageSize
+     * @param type
+     * @return
+     */
+    public static API getInfoStock(String code, int page, int pageSize, String type) {
+        return new API("/crawler/crawler/selectData.do", new ApiParams()
+                .put("code", code)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .put("type", type));
+    }
+
+    /**
+     * 接口名称 公司简介，公告，报告
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/selectCompanyProfile.do
+     *
+     * @param code 证券代码
+     * @return
+     */
+    public static API getCompanyReportOrInfo(String code) {
+        return new API("/crawler/crawler/selectCompanyProfile.do", new ApiParams().put("code", code));
+    }
+
+    /**
+     * 接口名称 年度报表
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/selectData.do?type=financial_summary
+     *
+     * @param code
+     * @param page
+     * @param pageSize
+     * @param type
+     * @return
+     */
+    public static API getCompanyAnnualReport(String code, int page, int pageSize, String type) {
+        return new API("/crawler/crawler/selectData.do", new ApiParams()
+                .put("code", code)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .put("type", type));
     }
 }

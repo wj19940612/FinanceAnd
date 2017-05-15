@@ -12,6 +12,7 @@ import android.widget.ExpandableListView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.view.BottomTextViewLayout;
 import com.sbai.finance.view.IconTextRow;
 
 import java.util.ArrayList;
@@ -75,6 +76,9 @@ public class FinanceFragment extends BaseFragment {
         mCompanyFinanceAdapter = new CompanyFinanceAdapter();
         mCompanyInfoList.setAdapter(mCompanyFinanceAdapter);
         mCompanyFinanceAdapter.addCompanyFinanceData(dataset);
+        mCompanyInfoList.expandGroup(0);
+        mCompanyInfoList.expandGroup(1);
+        mCompanyInfoList.expandGroup(2);
     }
 
     @Override
@@ -125,7 +129,7 @@ public class FinanceFragment extends BaseFragment {
         // 获得某个父项的某个子项
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return mCompanyFinanceData == null ? null :mCompanyFinanceData.get(parentList[groupPosition]).get(childPosition);
+            return mCompanyFinanceData == null ? null : mCompanyFinanceData.get(parentList[groupPosition]).get(childPosition);
         }
 
         @Override
@@ -159,7 +163,16 @@ public class FinanceFragment extends BaseFragment {
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            return null;
+            ChildViewHolder childViewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock_company_finance_info, null);
+                childViewHolder = new ChildViewHolder(convertView);
+                convertView.setTag(childViewHolder);
+            } else {
+                childViewHolder = (ChildViewHolder) convertView.getTag();
+            }
+            childViewHolder.bindDataWithView();
+            return convertView;
         }
 
         @Override
@@ -172,6 +185,8 @@ public class FinanceFragment extends BaseFragment {
             return false;
         }
 
+
+
         class ViewHolder {
             @BindView(R.id.companyFinancePublishTime)
             AppCompatTextView mCompanyFinancePublishTime;
@@ -182,6 +197,39 @@ public class FinanceFragment extends BaseFragment {
 
             public void bindDataWithView(String financePublishTime) {
                 mCompanyFinancePublishTime.setText(financePublishTime);
+            }
+        }
+
+        class ChildViewHolder {
+            @BindView(R.id.oneStockNetAsset)
+            BottomTextViewLayout mOneStockNetAsset;
+            @BindView(R.id.one_stock_earnings)
+            BottomTextViewLayout mOneStockEarnings;
+            @BindView(R.id.one_stock_cash_content)
+            BottomTextViewLayout mOneStockCashContent;
+            @BindView(R.id.one_stock_capital_accumulation_fund)
+            BottomTextViewLayout mOneStockCapitalAccumulationFund;
+            @BindView(R.id.fixation_capital_count)
+            BottomTextViewLayout mFixationCapitalCount;
+            @BindView(R.id.flow_capital_count)
+            BottomTextViewLayout mFlowCapitalCount;
+            @BindView(R.id.capital_count)
+            BottomTextViewLayout mCapitalCount;
+            @BindView(R.id.long_liabilities_count)
+            BottomTextViewLayout mLongLiabilitiesCount;
+            @BindView(R.id.normal_business_earnings)
+            BottomTextViewLayout mNormalBusinessEarnings;
+            @BindView(R.id.finance_charge)
+            BottomTextViewLayout mFinanceCharge;
+            @BindView(R.id.earn_profit)
+            BottomTextViewLayout mEarnProfit;
+
+            ChildViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView() {
+
             }
         }
     }
