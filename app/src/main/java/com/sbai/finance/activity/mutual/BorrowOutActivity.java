@@ -70,12 +70,13 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         mBorrowOutAdapter.setCallback(new BorrowOutAdapter.Callback() {
             @Override
             public void OnItemUserClick(int userId) {
-                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, userId).execute();
             }
+
             @Override
-            public void OnItemImageClick(int index, int position) {
+            public void OnItemImageClick(int index, String  headImage) {
                 Launcher.with(getActivity(), ContentImgActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD,mBorrowOutAdapter.getItem(position).getContentImg().split(","))
+                        .putExtra(Launcher.EX_PAYLOAD,headImage.split(","))
                         .putExtra(Launcher.EX_PAYLOAD_1,index)
                         .execute();
             }
@@ -167,7 +168,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         private Callback mCallback;
         interface Callback{
             void OnItemUserClick(int userId);
-            void OnItemImageClick(int index ,int position);
+            void OnItemImageClick(int index ,String headImage);
         }
         public void setCallback(Callback callback){
             mCallback = callback;
@@ -183,47 +184,12 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_out_mine, parent, false);
-                ImageView mUserPortrait = (ImageView) convertView.findViewById(R.id.userPortrait);
-                mUserPortrait.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemUserClick(getItem(position).getUserId());
-                    }
-                });
-                ImageView image1 = (ImageView) convertView.findViewById(R.id.image1);
-                ImageView image2 = (ImageView) convertView.findViewById(R.id.image2);
-                ImageView image3 = (ImageView) convertView.findViewById(R.id.image3);
-                ImageView image4 = (ImageView) convertView.findViewById(R.id.image4);
-                image1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemImageClick(0,position);
-                    }
-                });
-                image2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemImageClick(1,position);
-                    }
-                });
-                image3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemImageClick(2,position);
-                    }
-                });
-                image4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemImageClick(3,position);
-                    }
-                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),getContext());
+            viewHolder.bindDataWithView(getItem(position),getContext(),mCallback);
             return convertView;
         }
 
@@ -255,7 +221,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOut item, Context context){
+            private void bindDataWithView(final BorrowOut item, Context context, final Callback callback){
                 Glide.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
@@ -320,6 +286,36 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                         break;
 
                 }
+                mImage1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(0,item.getContentImg());
+                    }
+                });
+                mImage2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(1,item.getContentImg());
+                    }
+                });
+                mImage3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(2,item.getContentImg());
+                    }
+                });
+                mImage4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(3,item.getContentImg());
+                    }
+                });
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemUserClick(item.getUserId());
+                    }
+                });
             }
             private void loadImage(Context context,String src,ImageView image){
                 Glide.with(context).load(src)

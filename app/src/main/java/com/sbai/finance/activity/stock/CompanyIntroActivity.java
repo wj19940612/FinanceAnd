@@ -36,7 +36,7 @@ public class CompanyIntroActivity extends BaseActivity {
         mRegisterCapital.setInfoText(companyInfo.getZhuceziben());
         mMarketDate.setInfoText(companyInfo.getShangshiriqi());
         mPublishPrise.setInfoText(companyInfo.getFaxingjiage());
-        mCompanyAddress.setInfoText(companyInfo.getBangongdizhi()+companyInfo.getBangongdizhi());
-        mBusinessScope.setInfoText(companyInfo.getJingyingfanwei()+"\n"+companyInfo.getJingyingfanwei());
+        mCompanyAddress.setInfoText(companyInfo.getBangongdizhi());
+        mBusinessScope.setInfoText(companyInfo.getJingyingfanwei());
     }
 }
