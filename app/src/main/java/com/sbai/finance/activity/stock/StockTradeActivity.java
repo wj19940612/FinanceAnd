@@ -184,6 +184,30 @@ public class StockTradeActivity extends BaseActivity {
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
         mSlidingTab.setViewPager(mViewPager);
+        mSlidingTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                if (position == 2) {
+                    FinanceFragment fragment = (FinanceFragment) mSubPageAdapter.getFragment(position);
+                    if (fragment != null) {
+                        fragment.requestCompanyAnnualReport(0);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void requestPrediction() {
@@ -261,7 +285,7 @@ public class StockTradeActivity extends BaseActivity {
                 case 1:
                     return new ListFragment();
                 case 2:
-                    return new FinanceFragment();
+                    return FinanceFragment.newInstance(mVariety.getVarietyType());
             }
             return null;
         }

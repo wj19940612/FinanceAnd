@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-
               android:layout_height="match_parent"
               android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/companyFinancePublishTime"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/greyLightAssist"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:textColor="@color/secondaryText"
+        tools:text="2017年第4季度，(截止日期:2016-12-12)">
+    </android.support.v7.widget.AppCompatTextView>
 
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/oneStockNetAsset"
@@ -19,54 +32,63 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/one_stock_earnings"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/one_stock_cash_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/one_stock_cash_content"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/one_stock_capital_accumulation_fund"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/one_stock_capital_accumulation_fund"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/fixation_capital_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/fixation_capital_count"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/flow_capital_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/flow_capital_count"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/capital_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/capital_count"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/long_liabilities_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/long_liabilities_count"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/normal_business_earnings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/normal_business_earnings"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/finance_charge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         app:headline_text="@string/finance_charge"/>
+
     <com.sbai.finance.view.BottomTextViewLayout
         android:id="@+id/earn_profit"
         android:layout_width="match_parent"

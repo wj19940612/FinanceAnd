@@ -73,5 +73,9 @@
         <attr name="info_text_size" format="dimension|reference"/>
         <attr name="info_text_color" format="color|reference"/>
         <attr name="default_text" format="string|reference"/>
+        <attr name="headline_text_minWidth" format="dimension|reference"/>
+        <attr name="view_gravity" format="integer"/>
+        <attr name="headline_text_padding_right" format="dimension|reference"/>
+        <attr name="info_text_lineSpacingExtra" format="dimension|reference"/>
     </declare-styleable>
 </resources>

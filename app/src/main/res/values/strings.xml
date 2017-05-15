@@ -321,7 +321,7 @@
     <string name="give_help_dialog_content">注意:平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="wait_to_confirm">等待确认中</string>
     <string name="want_help_him">想要帮助TA的人</string>
-
+    <!--股票财务-->
     <string name="one_stock_net_asset">每股净资产</string>
     <string name="one_stock_earnings">每股收益</string>
     <string name="one_stock_cash_content">每股现金含量</string>
@@ -340,4 +340,12 @@
     <string name="we_chat_pay">微信支付</string>
     <string name="alipay">支付宝支付</string>
     <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
+    <!--公司简介-->
+    <string name="company_name">公司名称</string>
+    <string name="company_info">公司简介</string>
+    <string name="register_capital">注册资本</string>
+    <string name="market_date">上市日期</string>
+    <string name="publish_prise">发行价格</string>
+    <string name="company_address">公司地址</string>
+    <string name="business_scope">经营范围</string>
 </resources>
