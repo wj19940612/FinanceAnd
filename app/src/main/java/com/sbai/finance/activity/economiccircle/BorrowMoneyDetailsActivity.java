@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
@@ -62,8 +64,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mPeopleWantHelpHimOrHer;
 	@BindView(R.id.peopleNum)
 	TextView mPeopleNum;
-	/*@BindView(R.id.gridView)
-	GridView mGridView;*/
 	@BindView(R.id.giveHelp)
 	TextView mGiveHelp;
 	@BindView(R.id.isAttention)
@@ -80,11 +80,13 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	LinearLayout mAvatarList;
 	@BindView(R.id.more)
 	ImageView mMore;
+	@BindView(R.id.scrollView)
+	ScrollView mScrollView;
 
 	private int mMax;
 	private int mDataId;
+	private BorrowMoneyDetails mBorrowMoneyDetails;
 	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
-	//private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +97,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 		initData(getIntent());
 		mWantHelpHimOrYouList = new ArrayList<>();
-		/*mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this, mWantHelpHimOrYouList, mMax);
-		mGridView.setAdapter(mWantHelpHimOrYouAdapter);*/
 
 		requestBorrowMoneyDetails();
 		requestWantHelpHimList();
@@ -111,7 +111,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<BorrowMoneyDetails>, BorrowMoneyDetails>() {
 					@Override
 					protected void onRespSuccessData(BorrowMoneyDetails borrowMoneyDetails) {
-						updateBorrowDetails(BorrowMoneyDetailsActivity.this, borrowMoneyDetails);
+						mBorrowMoneyDetails = borrowMoneyDetails;
+						updateBorrowDetails(BorrowMoneyDetailsActivity.this, mBorrowMoneyDetails);
 					}
 				}).fire();
 	}
@@ -131,12 +132,13 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		int width = (int) Display.dp2Px(32, getResources());
 		Log.i(TAG, "updateWantHelpHimList: " + width);
 		int height = (int) Display.dp2Px(32, getResources());
-		int margin = (int) Display.dp2Px(getResources().getDimension(R.dimen.avatar_margin), getResources());
+		int margin = (int) Display.dp2Px(5, getResources());
 
 		int size = mWantHelpHimOrYouList.size();
 		if (size >= mMax) {
 			size = mMax;
-			for (int i = 0; i < size - 2; i++) {
+			for (int i = 0; i < size - 1; i++) {
+				mAvatarList.removeAllViews();
 				ImageView imageView = new ImageView(this);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
 				params.leftMargin = (i == 0 ? 0 : margin);
@@ -147,13 +149,12 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						.into(imageView);
 				mAvatarList.addView(imageView);
 
-				final WantHelpHimOrYou wantHelpHimOrYou = wantHelpHimOrYouList.get(i);
-				imageView.setOnClickListener(new View.OnClickListener() {
+				mAvatarList.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.USER_ID, wantHelpHimOrYou.getUserId())
+								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.execute();
 					}
 				});
@@ -164,12 +165,13 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.USER_ID, wantHelpHimOrYou.getUserId())
+								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.execute();
 					}
 				});
 			}
 		} else {
+			mAvatarList.removeAllViews();
 			for (int i = 0; i < size; i++) {
 				ImageView imageView = new ImageView(this);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
@@ -181,25 +183,18 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						.into(imageView);
 				mAvatarList.addView(imageView);
 
-				final WantHelpHimOrYou wantHelpHimOrYou = wantHelpHimOrYouList.get(i);
-				imageView.setOnClickListener(new View.OnClickListener() {
+				mAvatarList.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.USER_ID, wantHelpHimOrYou.getUserId())
+								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.execute();
 					}
 				});
 			}
 		}
 	}
-
-	/*private void updateWantHelpHimList() {
-		mWantHelpHimOrYouAdapter.clear();
-		mWantHelpHimOrYouAdapter.addAll(mWantHelpHimOrYouList);
-		mWantHelpHimOrYouAdapter.notifyDataSetChanged();
-	}*/
 
 	private void updateBorrowDetails(final Context context, final BorrowMoneyDetails borrowMoneyDetails) {
 		if (borrowMoneyDetails == null) return;
@@ -225,9 +220,9 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		}
 
 		mBorrowMoneyContent.setText(borrowMoneyDetails.getContent());
-		mNeedAmount.setText(this.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getMoney())));
-		mBorrowTime.setText(this.getString(R.string.day, String.valueOf(borrowMoneyDetails.getDays())));
-		mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getInterest())));
+		mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney()))));
+		mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays()))));
+		mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest()))));
 		mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
 
 		if (borrowMoneyDetails.getSex() == 2) {
@@ -288,6 +283,9 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 														mGiveHelp.setBackgroundResource(R.drawable.bg_to_confirm);
 														mGiveHelp.setText(R.string.wait_to_confirm);
 														mGiveHelp.setEnabled(false);
+														String peopleNum = mPeopleNum.getText().toString().trim();
+														mBorrowMoneyDetails.setIntentionCount(Integer.parseInt(peopleNum.substring(1, peopleNum.length() - 1)) + 1);
+														mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
 														requestWantHelpHimList();
 													}
 												}
@@ -367,8 +365,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		int margin = (int) Display.dp2Px(26, getResources());
 		int horizontalSpacing = (int) Display.dp2Px(5, getResources());
 		int avatarWidth = (int) Display.dp2Px(32, getResources());
-		int more = (int) Display.dp2Px(18, getResources());
-		mMax = (screenWidth - margin - more + horizontalSpacing) / (horizontalSpacing + avatarWidth);
+		mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
 	}
 
 	private void loadImage(Context context, String src, ImageView image) {

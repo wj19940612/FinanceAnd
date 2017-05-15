@@ -69,8 +69,15 @@ public class ContentImgActivity extends BaseActivity {
 			ImageView imageView = new ImageView(mContext);
 			Glide.with(mContext).load(mContentImgArray[position])
 					.thumbnail(0.4f)
+					.dontAnimate()
 					.into(imageView);
 			container.addView(imageView);
+			imageView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					finish();
+				}
+			});
 			return imageView;
 		}
 
