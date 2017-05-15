@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockKlineData;
+import com.sbai.finance.model.stock.StockNewsFragment;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
 import com.sbai.finance.net.Callback2D;
@@ -264,6 +264,30 @@ public class StockTradeActivity extends BaseActivity {
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
         mSlidingTab.setViewPager(mViewPager);
+        mSlidingTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                if (position == 2) {
+                    FinanceFragment fragment = (FinanceFragment) mSubPageAdapter.getFragment(position);
+                    if (fragment != null) {
+                        fragment.requestCompanyAnnualReport(0);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void requestPrediction() {
@@ -305,7 +329,7 @@ public class StockTradeActivity extends BaseActivity {
         Launcher.with(getActivity(), PublishOpinionActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .putExtra(Launcher.EX_PAYLOAD_2, mStockRTData)
+//                .putExtra(Launcher.EX_PAYLOAD_2, mStockRTData)
                 .execute();
     }
 
@@ -339,9 +363,9 @@ public class StockTradeActivity extends BaseActivity {
                 case 0:
                     return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return new ListFragment();
+                    return StockNewsFragment.newInstance(mVariety.getVarietyType());
                 case 2:
-                    return new FinanceFragment();
+                    return FinanceFragment.newInstance(mVariety.getVarietyType());
             }
             return null;
         }

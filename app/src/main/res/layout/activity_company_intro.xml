@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.sbai.finance.activity.stock.CompanyIntroActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:backFeature="true"
+            app:titleText="@string/company_info"/>
+
+        <com.sbai.finance.view.BottomTextViewLayout
+            android:id="@+id/company_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:headline_text="@string/company_name"
+            app:headline_text_minWidth="0dp"
+            app:info_text_color="@color/blackAssist"/>
+
+        <com.sbai.finance.view.BottomTextViewLayout
+            android:id="@+id/register_capital"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:headline_text="@string/register_capital"
+            app:headline_text_minWidth="0dp"
+            app:info_text_color="@color/blackAssist"/>
+
+        <com.sbai.finance.view.BottomTextViewLayout
+            android:id="@+id/market_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:headline_text="@string/market_date"
+            app:headline_text_minWidth="0dp"
+            app:info_text_color="@color/blackAssist"/>
+
+        <com.sbai.finance.view.BottomTextViewLayout
+            android:id="@+id/publish_prise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:headline_text="@string/publish_prise"
+            app:headline_text_minWidth="0dp"
+            app:info_text_color="@color/blackAssist"/>
+
+        <com.sbai.finance.view.BottomTextViewLayout
+            android:id="@+id/company_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:headline_text="@string/company_address"
+            app:headline_text_minWidth="0dp"
+            app:info_text_color="@color/blackAssist"
+            app:info_text_lineSpacingExtra="8dp"/>
+
+        <com.sbai.finance.view.BottomTextViewLayout
+            android:id="@+id/business_scope"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:headline_text="@string/business_scope"
+            app:headline_text_minWidth="0dp"
+            app:info_text_color="@color/blackAssist"
+            app:info_text_lineSpacingExtra="10dp"/>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
