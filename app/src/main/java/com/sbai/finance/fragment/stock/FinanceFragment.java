@@ -26,6 +26,7 @@ import com.sbai.finance.model.stock.CompanyInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BottomTextViewLayout;
 import com.sbai.finance.view.IconTextRow;
@@ -243,7 +244,7 @@ public class FinanceFragment extends BaseFragment {
             }
 
             public void bindDataWithView(CompanyAnnualReportModel item) {
-                mCompanyFinancePublishTime.setText(String.valueOf(item.getCreateDate()));
+                mCompanyFinancePublishTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
                 mOneStockNetAsset.setInfoText(item.getMeigujinzichan());
                 mOneStockEarnings.setInfoText(item.getMeigushouyi());
                 mOneStockCashContent.setInfoText(item.getMeiguxianjinhanliang());

@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.CreditApproveActivity;
+import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.activity.mutual.BorrowInActivity;
 import com.sbai.finance.activity.mutual.BorrowInHisActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -228,7 +229,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     break;
                 //   30.意向金支付成功
                 case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
-                    // TODO: 2017/5/2 跳转明细
+                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     break;
             }
         }
