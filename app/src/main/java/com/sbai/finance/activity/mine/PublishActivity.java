@@ -250,8 +250,16 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mAvatar);
-                mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
-                mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
+                if (item.getReplyCount() > 999) {
+                    mReplyCount.setText(R.string.number999);
+                } else {
+                    mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
+                }
+                if (item.getPraiseCount() > 999) {
+                    mPraiseCount.setText(R.string.number999);
+                } else {
+                    mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
+                }
                 mVarietyName.setText(item.getVarietyName());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mBigVarietyName.setText(item.getBigVarietyTypeName());
@@ -262,7 +270,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 if (item.getDirection() == 1) {
                     if (item.getGuessPass() == 1) {
                         mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
-                    } else if(item.getGuessPass() == 2){
+                    } else if (item.getGuessPass() == 2) {
                         mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
                     } else {
                         mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
@@ -271,7 +279,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
                 } else {
                     if (item.getGuessPass() == 1) {
                         mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
-                    } else if(item.getGuessPass() == 2){
+                    } else if (item.getGuessPass() == 2) {
                         mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
                     } else {
                         mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
