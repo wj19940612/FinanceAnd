@@ -20,6 +20,9 @@
     <dimen name="common_default_size">15sp</dimen>
     <dimen name="contentImg_width">79dp</dimen>
     <dimen name="contentImg_height">69dp</dimen>
+    <dimen name="avatar_width">32dp</dimen>
+    <dimen name="avatar_height">32dp</dimen>
+    <dimen name="avatar_margin">5dp</dimen>
     <dimen name="identity_card_width">117dp</dimen>
     <dimen name="identity_card_height">100dp</dimen>
     <dimen name="zero">0dp</dimen>

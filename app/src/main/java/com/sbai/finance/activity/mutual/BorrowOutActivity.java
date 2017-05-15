@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
@@ -70,6 +71,13 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             @Override
             public void OnItemUserClick(int userId) {
                 Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
+            @Override
+            public void OnItemImageClick(int index, int position) {
+                Launcher.with(getActivity(), ContentImgActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD,mBorrowOutAdapter.getItem(position).getContentImg().split(","))
+                        .putExtra(Launcher.EX_PAYLOAD_1,index)
+                        .execute();
             }
         });
         mListView.setEmptyView(mEmpty);
@@ -159,6 +167,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         private Callback mCallback;
         interface Callback{
             void OnItemUserClick(int userId);
+            void OnItemImageClick(int index ,int position);
         }
         public void setCallback(Callback callback){
             mCallback = callback;
@@ -179,6 +188,34 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                     @Override
                     public void onClick(View v) {
                         mCallback.OnItemUserClick(getItem(position).getUserId());
+                    }
+                });
+                ImageView image1 = (ImageView) convertView.findViewById(R.id.image1);
+                ImageView image2 = (ImageView) convertView.findViewById(R.id.image2);
+                ImageView image3 = (ImageView) convertView.findViewById(R.id.image3);
+                ImageView image4 = (ImageView) convertView.findViewById(R.id.image4);
+                image1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(0,position);
+                    }
+                });
+                image2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(1,position);
+                    }
+                });
+                image3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(2,position);
+                    }
+                });
+                image4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemImageClick(3,position);
                     }
                 });
                 viewHolder = new ViewHolder(convertView);

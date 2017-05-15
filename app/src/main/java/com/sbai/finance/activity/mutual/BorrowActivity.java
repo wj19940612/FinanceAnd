@@ -117,7 +117,10 @@ public class BorrowActivity extends BaseActivity {
 		int money = Integer.valueOf( mBorrowLimit.getText().toString());
 		int interest =  Integer.valueOf( mBorrowInterest.getText().toString());
 		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
-		String content = mBorrowRemark.getText().toString().substring(0,300);
+		String content = mBorrowRemark.getText().toString();
+		if (content.length()>=300){
+			content = content.substring(0,300);
+		}
 		StringBuilder contentImg = new StringBuilder();
 		int photoAmount =mPhotoGridAdapter.getCount();
 		for (int i = 0; i<photoAmount-1;i++){

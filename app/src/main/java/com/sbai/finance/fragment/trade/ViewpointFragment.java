@@ -39,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class ViewpointFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)
@@ -104,7 +106,6 @@ public class ViewpointFragment extends BaseFragment {
         mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         mEmpty.setCompoundDrawablePadding(padding);
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
-
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
@@ -261,15 +262,15 @@ public class ViewpointFragment extends BaseFragment {
 
             if (item.getReplyCount() > 999) {
                 ((TextView) helper.getView(R.id.commentNum))
-                        .setText(String.valueOf(item.getPraiseCount()) + "+");
+                        .setText(R.string.number999);
             } else {
                 ((TextView) helper.getView(R.id.commentNum))
-                        .setText(String.valueOf(item.getPraiseCount()));
+                        .setText(String.valueOf(item.getReplyCount()));
             }
 
             if (item.getPraiseCount() > 999) {
                 ((TextView) helper.getView(R.id.likeNum))
-                        .setText(String.valueOf(item.getPraiseCount()) + "+");
+                        .setText(R.string.number999);
             } else {
                 ((TextView) helper.getView(R.id.likeNum))
                         .setText(String.valueOf(item.getPraiseCount()));

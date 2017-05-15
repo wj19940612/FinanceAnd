@@ -186,11 +186,13 @@
             android:screenOrientation="portrait"/>
 
         <!-- 选择相册图片 -->
-        <activity android:name=".activity.mine.ImageSelectActivity"/>
+        <activity
+            android:name=".activity.mine.ImageSelectActivity"
+            android:screenOrientation="portrait"/>
         <!-- 相册图片预览 -->
-        <activity android:name=".activity.mine.ImagePreViewActivity"/>
         <activity android:name=".activity.stock.CompanyIntroActivity">
         </activity>
+
     </application>
 
 </manifest>
