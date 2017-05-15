@@ -14,7 +14,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
-import com.sbai.finance.model.market.FutureData;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Variety;

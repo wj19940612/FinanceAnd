@@ -22,9 +22,8 @@ public class ChartSettings {
         return mPreClosePrice;
     }
 
-    public ChartSettings setPreClosePrice(float preClosePrice) {
+    public void setPreClosePrice(float preClosePrice) {
         mPreClosePrice = preClosePrice;
-        return this;
     }
 
     public float[] getBaseLines() {
@@ -53,9 +52,8 @@ public class ChartSettings {
         return mIndexesEnable;
     }
 
-    public ChartSettings setIndexesEnable(boolean indexesEnable) {
+    public void setIndexesEnable(boolean indexesEnable) {
         mIndexesEnable = indexesEnable;
-        return this;
     }
 
     public int getNumberScale() {

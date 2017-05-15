@@ -122,7 +122,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 
 
     private void requestEconomicCircleNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage, Client.PAGE_SIZE)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -163,7 +163,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModelList.size() < Client.PAGE_SIZE) {
+        if (historyNewsModelList.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
