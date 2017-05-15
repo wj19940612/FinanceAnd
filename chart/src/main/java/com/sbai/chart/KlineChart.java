@@ -474,7 +474,6 @@ public class KlineChart extends ChartView {
                 if (i == mStart) {
                     float textX = left + mTextMargin;
                     String timeStr = data.getDay();
-                    timeStr = timeStr.replaceAll("-", "/");
                     canvas.drawText(timeStr, textX, textY, sPaint);
                 } else {
                     String displayTime = formatTimestamp(data);

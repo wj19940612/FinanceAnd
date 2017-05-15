@@ -15,10 +15,13 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.market.FutureData;
+import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.net.stock.StockCallback;
+import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
@@ -26,6 +29,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -137,28 +141,33 @@ public class PublishOpinionActivity extends BaseActivity {
             }
             submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
         } else {
-            // TODO: 2017/5/12  获取股票的实时行情 未建对应的moedl  
-//            Client.getStockRealTimeQuotes(mVariety.getVarietyType())
-//                    .setTag(TAG)
-//                    .setCallback(new StockCallback<StockResp, StockData>() {
-//                        @Override
-//                        public void onDataMsg(StockData result, StockResp.Msg msg) {
-//                            Log.d(TAG, "onDataMsg: " + result.toString());
-//                            String lastPriceStr = null;
-//                            //	涨幅
-//                            String risePriceStr = null;
-//                            //涨幅百分比
-//                            String risePercentStr = null;
-//                            lastPriceStr = String.valueOf(result.getLast_price());
-//                            risePriceStr = String.valueOf(result.getRise_price());
-//                            risePercentStr = String.valueOf(result.getRise_pre());
-//                            submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
-//                        }
-//                    })
-//                    .fire();
+            requestStockRTData(content, calcuId);
         }
 
+    }
 
+    private void requestStockRTData(final String content, final String calcuId) {
+        Client.getStockRealtimeData(mVariety.getVarietyType())
+                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+                    @Override
+                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
+                        if (!result.isEmpty()) {
+                            StockRTData stockRTData = result.get(0);
+                            if (stockRTData != null) {
+                                String last_price = stockRTData.getLast_price();
+                                String rise_price = stockRTData.getRise_price();
+                                String rise_pre = stockRTData.getRise_pre();
+
+                                if (last_price.startsWith("-")) {
+                                    rise_price = "+" + rise_price;
+                                    rise_pre = "+" + rise_pre;
+                                }
+                                submitViewpoint(content, calcuId, last_price, rise_price, rise_pre);
+                            }
+
+                        }
+                    }
+                }).fireSync();
     }
 
     private void submitViewpoint(String content, String calcuId, String lastPriceStr, String risePriceStr, String risePercentStr) {

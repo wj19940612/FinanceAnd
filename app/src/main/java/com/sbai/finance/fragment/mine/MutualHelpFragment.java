@@ -120,7 +120,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestMutualHelpList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, Client.PAGE_SIZE)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -166,7 +166,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModels.size() < Client.PAGE_SIZE) {
+        if (historyNewsModels.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }

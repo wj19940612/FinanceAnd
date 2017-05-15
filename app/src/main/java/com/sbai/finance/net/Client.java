@@ -7,9 +7,8 @@ import com.sbai.httplib.ApiParams;
 
 public class Client {
 
-
     private static final int POST = Request.Method.POST;
-    public static final int PAGE_SIZE = 15;
+    public static final int DEFAULT_PAGE_SIZE = 15;
 
     /**
      * 获取期货品种
@@ -78,7 +77,6 @@ public class Client {
                 new ApiParams()
                         .put("id", id));
     }
-
 
     /**
      * 获取服务器系统时间
@@ -359,11 +357,11 @@ public class Client {
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, int classify, int page, int pageSize) {
+    public static API requestHistoryNews(boolean autoRead, int classify, int page) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
-                .put("size", pageSize)
+                .put("size", DEFAULT_PAGE_SIZE)
                 .put("autoRead", autoRead));
     }
 
@@ -551,14 +549,13 @@ public class Client {
      * 请求Url  /coterie/userInterest/queryClickUserViewPoint.do
      *
      * @param page
-     * @param pageSize
      * @param userId   用户id
      * @return
      */
-    public static API getUserPublishList(int page, int pageSize, Integer userId) {
+    public static API getUserPublishList(int page, Integer userId) {
         return new API("/coterie/userInterest/queryClickUserViewPoint.do", new ApiParams()
                 .put("page", page)
-                .put("pageSize", pageSize)
+                .put("pageSize", DEFAULT_PAGE_SIZE)
                 .put("userId", userId));
     }
 
@@ -605,6 +602,8 @@ public class Client {
     }
 
     /**
+     * 获取股票的当前行情数据
+     *
      * @param stockCodes
      * @return
      */
@@ -612,6 +611,18 @@ public class Client {
         return new API("/stock/comb",
                 new ApiParams()
                         .put("stock_code", stockCodes));
+    }
+
+    /**
+     * 获取股票实时行情接口
+     *
+     * @param stockCode
+     * @return
+     */
+    public static API getStockRealtimeData(String stockCode) {
+        return new API("/stock/realtime",
+                new ApiParams()
+                        .put("stock_code", stockCode));
     }
 
     /**
@@ -644,16 +655,28 @@ public class Client {
     }
 
     /**
-     * 接口详情 (id: 212)     Mock数据
-     * 接口名称 实时行情    获取股票的实时行情
-     * 请求类型 get
-     * 请求Url  /stock/realtime
+     * 获取k线数据
      *
-     * @param stock_code
+     * @param stockCode
+     * @param period
      * @return
      */
-    public static API getStockRealTimeQuotes(String stock_code) {
-        return new API("/stock/realtime", new ApiParams().put("stock_code", stock_code));
+    public static API getStockKlineData(String stockCode, int period) {
+        return new API("/stock/kline", new ApiParams()
+                .put("period", period)
+                .put("stock_code", stockCode)
+                .put("request_num", 100));
+    }
+
+    /**
+     * 获取股票分时图数据
+     *
+     * @return
+     */
+    public static API getStockTrendData(String stockCode) {
+        return new API("/stock/trend",
+                new ApiParams()
+                        .put("stock_code", stockCode));
     }
 
     /**
@@ -933,7 +956,7 @@ public class Client {
     public static API publishPoint(String bigVarietyTypeCode, String calcuId, String content, int direction,
                                    String lastPrice, String risePrice, String risePercent,
                                    int varietyId, String varietyType) {
-        return new API("/coterie/viewpoint/saveViewpoint.do",
+        return new API(POST, "/coterie/viewpoint/saveViewpoint.do",
                 new ApiParams()
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("calcuId", calcuId)
@@ -977,6 +1000,7 @@ public class Client {
      * @param contentType
      * @return
      */
+
     public static API sendFeedback(String content, int contentType) {
         return new API(POST, "/user/userFeedback/addFeedback.do",
                 new ApiParams()
@@ -1024,7 +1048,6 @@ public class Client {
                         .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("varietyId", varietyId));
     }
-
 
     /**
      * 获取品种交易所状态

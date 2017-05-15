@@ -93,7 +93,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
     }
 
     private void requestUserPublishList() {
-        Client.getUserPublishList(mPage, Client.PAGE_SIZE, (mUserId != -1 && mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
+        Client.getUserPublishList(mPage, (mUserId != -1 && mUserId != LocalUser.getUser().getUserInfo().getId()) ? mUserId : null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
@@ -134,7 +134,7 @@ public class PublishActivity extends BaseActivity implements AbsListView.OnScrol
             mListView.addFooterView(mFootView);
         }
 
-        if (userPublishModelList.size() < Client.PAGE_SIZE) {
+        if (userPublishModelList.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }

@@ -122,7 +122,7 @@ public class FinanceFragment extends BaseFragment {
 
     public void requestCompanyAnnualReport(final int page) {
         this.mPage = page;
-        Client.getCompanyAnnualReport(mStockCode, mPage, Client.PAGE_SIZE, CompanyAnnualReportModel.TYPE_FINANCIAL_SUMMARY)
+        Client.getCompanyAnnualReport(mStockCode, mPage, Client.DEFAULT_PAGE_SIZE, CompanyAnnualReportModel.TYPE_FINANCIAL_SUMMARY)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
                     @Override
@@ -170,7 +170,7 @@ public class FinanceFragment extends BaseFragment {
             mList.addFooterView(mFootView);
         }
 
-        if (data.size() < Client.PAGE_SIZE) {
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
             mList.removeFooterView(mFootView);
             mFootView = null;
         }
