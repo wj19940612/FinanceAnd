@@ -64,8 +64,8 @@ android {
 
             versionCode 6
             versionName "1.5"
-//            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
-            buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
+            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+            //buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
         }
     }
 }

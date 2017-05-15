@@ -4,17 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +26,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
@@ -66,8 +62,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mPeopleWantHelpHimOrHer;
 	@BindView(R.id.peopleNum)
 	TextView mPeopleNum;
-	@BindView(R.id.gridView)
-	GridView mGridView;
+	/*@BindView(R.id.gridView)
+	GridView mGridView;*/
 	@BindView(R.id.giveHelp)
 	TextView mGiveHelp;
 	@BindView(R.id.isAttention)
@@ -80,13 +76,15 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	ImageView mImage3;
 	@BindView(R.id.image4)
 	ImageView mImage4;
+	@BindView(R.id.avatarList)
+	LinearLayout mAvatarList;
 	@BindView(R.id.more)
 	ImageView mMore;
 
 	private int mMax;
 	private int mDataId;
 	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
-	private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
+	//private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +95,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 		initData(getIntent());
 		mWantHelpHimOrYouList = new ArrayList<>();
-		mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this, mWantHelpHimOrYouList, mMax);
-		mGridView.setAdapter(mWantHelpHimOrYouAdapter);
+		/*mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this, mWantHelpHimOrYouList, mMax);
+		mGridView.setAdapter(mWantHelpHimOrYouAdapter);*/
 
 		requestBorrowMoneyDetails();
 		requestWantHelpHimList();
@@ -124,16 +122,84 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccessData(List<WantHelpHimOrYou> wantHelpHimOrYouList) {
 						mWantHelpHimOrYouList = wantHelpHimOrYouList;
-						updateWantHelpHimList();
+						updateWantHelpHimList(mWantHelpHimOrYouList);
 					}
 				}).fire();
 	}
 
-	private void updateWantHelpHimList() {
+	private void updateWantHelpHimList(final List<WantHelpHimOrYou> wantHelpHimOrYouList) {
+		int width = (int) Display.dp2Px(32, getResources());
+		Log.i(TAG, "updateWantHelpHimList: " + width);
+		int height = (int) Display.dp2Px(32, getResources());
+		int margin = (int) Display.dp2Px(getResources().getDimension(R.dimen.avatar_margin), getResources());
+
+		int size = mWantHelpHimOrYouList.size();
+		if (size >= mMax) {
+			size = mMax;
+			for (int i = 0; i < size - 2; i++) {
+				ImageView imageView = new ImageView(this);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
+				params.leftMargin = (i == 0 ? 0 : margin);
+				imageView.setLayoutParams(params);
+				Glide.with(this).load(wantHelpHimOrYouList.get(i).getPortrait())
+						.bitmapTransform(new GlideCircleTransform(this))
+						.placeholder(R.drawable.ic_default_avatar)
+						.into(imageView);
+				mAvatarList.addView(imageView);
+
+				final WantHelpHimOrYou wantHelpHimOrYou = wantHelpHimOrYouList.get(i);
+				imageView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.USER_ID, wantHelpHimOrYou.getUserId())
+								.execute();
+					}
+				});
+
+				mMore.setVisibility(View.VISIBLE);
+				mMore.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.USER_ID, wantHelpHimOrYou.getUserId())
+								.execute();
+					}
+				});
+			}
+		} else {
+			for (int i = 0; i < size; i++) {
+				ImageView imageView = new ImageView(this);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
+				params.leftMargin = (i == 0 ? 0 : margin);
+				imageView.setLayoutParams(params);
+				Glide.with(this).load(wantHelpHimOrYouList.get(i).getPortrait())
+						.bitmapTransform(new GlideCircleTransform(this))
+						.placeholder(R.drawable.ic_default_avatar)
+						.into(imageView);
+				mAvatarList.addView(imageView);
+
+				final WantHelpHimOrYou wantHelpHimOrYou = wantHelpHimOrYouList.get(i);
+				imageView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.USER_ID, wantHelpHimOrYou.getUserId())
+								.execute();
+					}
+				});
+			}
+		}
+	}
+
+	/*private void updateWantHelpHimList() {
 		mWantHelpHimOrYouAdapter.clear();
 		mWantHelpHimOrYouAdapter.addAll(mWantHelpHimOrYouList);
 		mWantHelpHimOrYouAdapter.notifyDataSetChanged();
-	}
+	}*/
 
 	private void updateBorrowDetails(final Context context, final BorrowMoneyDetails borrowMoneyDetails) {
 		if (borrowMoneyDetails == null) return;
@@ -192,7 +258,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			mGiveHelp.setText(R.string.give_help);
 		}
 
-		mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		/*mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
@@ -200,7 +266,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
 						.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 			}
-		});
+		});*/
 
 		if (LocalUser.getUser().isLogin()) {
 			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
@@ -301,26 +367,24 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				break;
 			default:
 				break;
-
 		}
+
 
 	}
 
 	private void calculateAvatarNum(Context context) {
 		int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-		int margin = dp2Px(26);
-		int horizontalSpacing = dp2Px(5);
-		int avatarWidth = dp2Px(32);
-		mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
-	}
-
-	public int dp2Px(int dp) {
-		float density = this.getResources().getDisplayMetrics().density;
-		return (int) (dp * density + .5f);
+		int margin = (int) Display.dp2Px(26, getResources());
+		int horizontalSpacing = (int) Display.dp2Px(5, getResources());
+		int avatarWidth = (int) Display.dp2Px(32, getResources());
+		int more = (int) Display.dp2Px(18, getResources());
+		mMax = (screenWidth - margin - more + horizontalSpacing) / (horizontalSpacing + avatarWidth);
 	}
 
 	private void loadImage(Context context, String src, ImageView image) {
-		Glide.with(context).load(src).placeholder(R.drawable.help).into(image);
+		Glide.with(context).load(src)
+				.thumbnail(0.1f)
+				.into(image);
 	}
 
 	private void imageClick(final Context context, final String[] images,
@@ -336,7 +400,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		});
 	}
 
-	static class WantHelpHimOrYouAdapter extends ArrayAdapter<WantHelpHimOrYou> {
+	/*static class WantHelpHimOrYouAdapter extends ArrayAdapter<WantHelpHimOrYou> {
 
 		private Context mContext;
 		private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
@@ -348,14 +412,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			this.mWantHelpHimOrYouList  = wantHelpHimOrYouList;
 			this.mMax = max;
 		}
-
-		/*@Override
-		public int getCount() {
-			if (mWantHelpHimOrYouList.size() >= mMax) {
-				return mMax;
-			}
-			return mWantHelpHimOrYouList.size();
-		}*/
 
 		@NonNull
 		@Override
@@ -389,7 +445,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						.into(mUserImg);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
