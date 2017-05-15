@@ -24,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.CreditApproveActivity;
+import com.sbai.finance.activity.mutual.BorrowInActivity;
+import com.sbai.finance.activity.mutual.BorrowInHisActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
@@ -203,10 +205,12 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                 //借款单审核未通过
                 case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
                     // TODO: 2017/5/2  历史借入
+                    Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
                     break;
                 // 14.借款发布成功 *
                 case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
                     // TODO: 2017/5/2 我的借入
+                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
                 //// 20.成为观点大神
                 case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
