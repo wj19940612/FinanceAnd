@@ -1,4 +1,4 @@
-package com.sbai.finance.activity;
+package com.sbai.finance.activity.economiccircle;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

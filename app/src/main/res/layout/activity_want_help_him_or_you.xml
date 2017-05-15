@@ -15,9 +15,9 @@
         app:titleText="@string/want_help_him"/>
 
     <LinearLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <ListView
@@ -40,11 +40,14 @@
     </LinearLayout>
 
     <TextView
-
+        android:id="@+id/payIntention"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/btn_red_primary_no_radius"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/pay_intention"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_16"
-        android:gravity="center"
-        android:text="支付意向金"
-        android:layout_width="match_parent"
-        android:layout_height="49dp"/>
+        android:visibility="gone"/>
 </LinearLayout>

@@ -252,13 +252,14 @@
         android:orientation="horizontal">
 
         <EditText
+            android:maxLength="300"
             android:id="@+id/commentContent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="5"
             android:background="@null"
-            android:hint="@string/post_your_comment"
+            android:hint="@string/comment"
             android:padding="13dp"
             android:textColorHint="@color/hintText"
             android:textSize="15sp"/>

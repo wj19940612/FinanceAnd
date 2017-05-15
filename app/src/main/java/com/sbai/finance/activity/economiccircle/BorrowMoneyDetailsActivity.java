@@ -4,22 +4,28 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.ContentImgActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
+import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -29,10 +35,16 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BorrowMoneyDetailsActivity extends BaseActivity {
+
+	private static final int REQ_BORROW_MONEY_DETAILS = 1001;
+	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1002;
 
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
@@ -50,10 +62,12 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mBorrowInterest;
 	@BindView(R.id.borrowMoneyContent)
 	TextView mBorrowMoneyContent;
+	@BindView(R.id.peopleWantHelpHimOrHer)
+	TextView mPeopleWantHelpHimOrHer;
 	@BindView(R.id.peopleNum)
 	TextView mPeopleNum;
-	@BindView(R.id.wantHelpHimArea)
-	LinearLayout mWantHelpHimArea;
+	@BindView(R.id.gridView)
+	GridView mGridView;
 	@BindView(R.id.giveHelp)
 	TextView mGiveHelp;
 	@BindView(R.id.isAttention)
@@ -66,18 +80,28 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	ImageView mImage3;
 	@BindView(R.id.image4)
 	ImageView mImage4;
+	@BindView(R.id.more)
+	ImageView mMore;
 
+	private int mMax;
 	private int mDataId;
+	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
+	private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_borrow_money_details);
 		ButterKnife.bind(this);
+		calculateAvatarNum(this);
 
 		initData(getIntent());
+		mWantHelpHimOrYouList = new ArrayList<>();
+		mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this, mWantHelpHimOrYouList, mMax);
+		mGridView.setAdapter(mWantHelpHimOrYouAdapter);
 
 		requestBorrowMoneyDetails();
+		requestWantHelpHimList();
 	}
 
 	private void initData(Intent intent) {
@@ -92,6 +116,23 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						updateBorrowDetails(BorrowMoneyDetailsActivity.this, borrowMoneyDetails);
 					}
 				}).fire();
+	}
+
+	private void requestWantHelpHimList() {
+		Client.getWantHelpHimOrYouList(mDataId).setTag(TAG).setIndeterminate(this)
+				.setCallback(new Callback2D<Resp<List<WantHelpHimOrYou>>, List<WantHelpHimOrYou>>() {
+					@Override
+					protected void onRespSuccessData(List<WantHelpHimOrYou> wantHelpHimOrYouList) {
+						mWantHelpHimOrYouList = wantHelpHimOrYouList;
+						updateWantHelpHimList();
+					}
+				}).fire();
+	}
+
+	private void updateWantHelpHimList() {
+		mWantHelpHimOrYouAdapter.clear();
+		mWantHelpHimOrYouAdapter.addAll(mWantHelpHimOrYouList);
+		mWantHelpHimOrYouAdapter.notifyDataSetChanged();
 	}
 
 	private void updateBorrowDetails(final Context context, final BorrowMoneyDetails borrowMoneyDetails) {
@@ -120,7 +161,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		mBorrowMoneyContent.setText(borrowMoneyDetails.getContent());
 		mNeedAmount.setText(this.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getMoney())));
 		mBorrowTime.setText(this.getString(R.string.day, String.valueOf(borrowMoneyDetails.getDays())));
-		mBorrowInterest.setText(this.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getInterest())));
+		mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(borrowMoneyDetails.getInterest())));
+		mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
+
+		if (borrowMoneyDetails.getSex() == 2) {
+			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_him);
+		} else {
+			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_her);
+		}
 
 		mAvatar.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -144,20 +192,28 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			mGiveHelp.setText(R.string.give_help);
 		}
 
-		mWantHelpHimArea.setOnClickListener(new View.OnClickListener() {
+		mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
-				Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimActivity.class)
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 						.putExtra(Launcher.EX_PAYLOAD, mDataId)
-						.executeForResult(10);
+						.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
+						.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 			}
 		});
+
+		if (LocalUser.getUser().isLogin()) {
+			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+				mGiveHelp.setVisibility(View.GONE);
+				mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_you);
+			}
+		}
 
 		mGiveHelp.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (!LocalUser.getUser().isLogin()) {
-					Launcher.with(BorrowMoneyDetailsActivity.this, LoginActivity.class).execute();
+					Launcher.with(BorrowMoneyDetailsActivity.this, LoginActivity.class).executeForResult(REQ_BORROW_MONEY_DETAILS);
 				} else {
 					SmartDialog.with(getActivity(),
 							getString(R.string.give_help_dialog_content, borrowMoneyDetails.getUserName())
@@ -241,12 +297,26 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				imageClick(context, images, mImage1, 0);
 				imageClick(context, images, mImage2, 1);
 				imageClick(context, images, mImage3, 2);
-				imageClick(context, images, mImage3, 3);
+				imageClick(context, images, mImage4, 3);
 				break;
 			default:
 				break;
 
 		}
+
+	}
+
+	private void calculateAvatarNum(Context context) {
+		int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+		int margin = dp2Px(26);
+		int horizontalSpacing = dp2Px(5);
+		int avatarWidth = dp2Px(32);
+		mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
+	}
+
+	public int dp2Px(int dp) {
+		float density = this.getResources().getDisplayMetrics().density;
+		return (int) (dp * density + .5f);
 	}
 
 	private void loadImage(Context context, String src, ImageView image) {
@@ -264,5 +334,72 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				context.startActivity(intent);
 			}
 		});
+	}
+
+	static class WantHelpHimOrYouAdapter extends ArrayAdapter<WantHelpHimOrYou> {
+
+		private Context mContext;
+		private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
+		private int mMax;
+
+		private WantHelpHimOrYouAdapter(Context context, List<WantHelpHimOrYou> wantHelpHimOrYouList, int max) {
+			super(context, 0);
+			this.mContext = context;
+			this.mWantHelpHimOrYouList  = wantHelpHimOrYouList;
+			this.mMax = max;
+		}
+
+		/*@Override
+		public int getCount() {
+			if (mWantHelpHimOrYouList.size() >= mMax) {
+				return mMax;
+			}
+			return mWantHelpHimOrYouList.size();
+		}*/
+
+		@NonNull
+		@Override
+		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_helper_image, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+
+			viewHolder.bindData(getItem(position), mContext);
+
+			return convertView;
+		}
+
+		static class ViewHolder {
+			@BindView(R.id.userImg)
+			ImageView mUserImg;
+
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			private void bindData(WantHelpHimOrYou item, Context context) {
+				Glide.with(context).load(item.getPortrait())
+						.bitmapTransform(new GlideCircleTransform(context))
+						.placeholder(R.drawable.ic_default_avatar)
+						.into(mUserImg);
+			}
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_BORROW_MONEY_DETAILS && resultCode == RESULT_OK) {
+			requestBorrowMoneyDetails();
+		}
+
+		if (requestCode == REQ_WANT_HELP_HIM_OR_YOU && resultCode == RESULT_OK) {
+			requestBorrowMoneyDetails();
+		}
 	}
 }
