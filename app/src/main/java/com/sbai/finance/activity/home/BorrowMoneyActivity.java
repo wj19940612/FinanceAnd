@@ -25,7 +25,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.ContentImgActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -378,7 +378,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 						imageClick(context, images, mImage1, 0);
 						imageClick(context, images, mImage2, 1);
 						imageClick(context, images, mImage3, 2);
-						imageClick(context, images, mImage3, 3);
+						imageClick(context, images, mImage4, 3);
 						break;
 					default:
 						break;

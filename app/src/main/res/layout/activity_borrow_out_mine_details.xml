@@ -8,27 +8,60 @@
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="@string/borrow_in_mine_detail"
-        app:backFeature="true"/>
+        app:backFeature="true"
+        app:titleText="@string/borrow_out_mine_detail"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/greyLightAssist">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@android:color/white">
-            <TextView
-                android:id="@+id/publishTime"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/common_padding"
-                android:paddingTop="20dp"
-                android:paddingBottom="15dp"
-                android:textSize="@dimen/list_hint_size"
-                android:textColor="@color/secondaryText"
-                android:text="@string/publish_time"/>
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/userPortrait"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_default_avatar"/>
+
+                <TextView
+                    android:id="@+id/userNameLand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:lineSpacingExtra="8dp"
+                    android:orientation="vertical"
+                    android:textColor="@color/redPrimary"
+                    android:textSize="15sp"
+                    tools:text="@string/user_address"/>
+
+                <TextView
+                    android:id="@+id/publishTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="right"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/borrow_out_time"
+                    android:textColor="@color/assistText"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
@@ -151,6 +184,7 @@
                 android:layout_marginRight="13dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:id="@+id/image1"
                     android:layout_width="0dp"
@@ -187,60 +221,70 @@
                     tools:src="@drawable/help"/>
 
             </LinearLayout>
+
             <include layout="@layout/split_line_grey_light"/>
-            <LinearLayout
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/common_padding"
-                android:orientation="horizontal">
+                android:text="@string/wait_confirm"
+                android:textColor="@color/assistText"
+                android:textSize="13sp"/>
 
-                <TextView
-                    android:id="@+id/endLineTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:lineSpacingExtra="10dp"
-                    android:textColor="@color/assistText"
-                    android:textSize="11sp"
-                    tools:text="@string/end_line_time"/>
-
-                <TextView
-                    android:id="@+id/cancelBorrowIn"
-                    android:layout_width="93dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="@drawable/bg_cancel_borrow"
-                    android:textColor="@color/redPrimary"
-                    android:textSize="13sp"
-                    android:visibility="gone"
-                    android:text="@string/cancel_borrow_in"/>
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/common_padding"
+                android:layout_marginBottom="@dimen/common_padding"
+                android:layout_marginLeft="@dimen/common_padding"
+                android:layout_marginRight="@dimen/common_padding"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/end_time"
+                    android:textColor="@color/opinionText"
+                    android:textSize="@dimen/navigate_size"/>
+
+                <TextView
+                    android:id="@+id/endLineTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/redPrimary"
+                    android:textSize="@dimen/navigate_size"
+                    tools:text="11:55"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/greyLightAssist"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/common_padding">
+
                 <TextView
                     android:id="@+id/helperAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_people_help"
                     android:drawablePadding="5dp"
+                    android:text="@string/helper_her"
                     android:textColor="@color/greyAssist"
-                    android:textSize="14sp"
-                    android:text="@string/helper"/>
+                    android:textSize="14sp"/>
+
                 <com.sbai.finance.view.MyGridView
                     android:id="@+id/gridView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:numColumns="8"
                     android:horizontalSpacing="8dp"
+                    android:numColumns="8"
                     />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

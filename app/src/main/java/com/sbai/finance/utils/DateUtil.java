@@ -407,6 +407,9 @@ public class DateUtil {
         String resultHour;
         String resultMin;
         long systemTime = System.currentTimeMillis();
+        if (timestamp==0){
+            timestamp =systemTime;
+        }
         long minutes = (timestamp - systemTime)/(1000*60);
         long hours=  minutes/60;
         long minute = minutes%60;

@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.ContentImgActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -592,7 +592,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						imageClick(context, images, mImage1, 0);
 						imageClick(context, images, mImage2, 1);
 						imageClick(context, images, mImage3, 2);
-						imageClick(context, images, mImage3, 3);
+						imageClick(context, images, mImage4, 3);
 						break;
 					default:
 						break;

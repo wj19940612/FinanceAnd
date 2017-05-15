@@ -87,14 +87,16 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setAdapter(mListView, mStockListAdapter);
 
-        //测试数据 后期删除
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor("上证",
-                "\n" + "--.--", "\n-- --", 1.133f, 0.667f,
+        mShangHai.setText(initStockIndex(getString(R.string.ShangHaiStockExchange)));
+        mShenZhen.setText(initStockIndex(getString(R.string.ShenzhenStockExchange)));
+        mBoard.setText(initStockIndex(getString(R.string.GrowthEnterpriseMarket)));
+    }
+    private SpannableString  initStockIndex(String market){
+        SpannableString  attentionSpannableString = StrUtil.mergeTextWithRatioColor(market,
+                "\n" + "--", "\n-- --", 1.133f, 0.667f,
                 ContextCompat.getColor(this, R.color.redPrimary),
                 ContextCompat.getColor(this, R.color.redPrimary));
-        mShangHai.setText(attentionSpannableString);
-        mShenZhen.setText(attentionSpannableString);
-        mBoard.setText(attentionSpannableString);
+        return attentionSpannableString;
     }
     @Override
     public void onTimeUp(int count) {
@@ -113,11 +115,14 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     varietyList.add(variety);
                 }
             }
+            for (Variety variety:mStockIndexData){
+                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN){
+                    varietyList.add(variety);
+                }
+            }
             if (varietyList.size()>0){
                 requestStockMarketData(varietyList);
                 requestStockIndexMarketData(mStockIndexData);
-            }else{
-                stopScheduleJob();
             }
         }
     }

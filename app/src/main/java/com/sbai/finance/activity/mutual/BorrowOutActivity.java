@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -50,6 +52,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         setContentView(R.layout.activity_borrow_out_mine);
         ButterKnife.bind(this);
         initView();
+        requestBorrowOutData();
     }
     @OnClick(R.id.borrowOutHis)
     public void onClick(View view){
@@ -63,15 +66,28 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             }
         });
         mBorrowOutAdapter = new BorrowOutAdapter(this);
+        mBorrowOutAdapter.setCallback(new BorrowOutAdapter.Callback() {
+            @Override
+            public void OnItemUserClick(int userId) {
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
+        });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowOutAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getActivity(),BorrowOutDetailsActivity.class)
+                        .putExtra(BorrowOutDetailsActivity.BORROW_OUT,mBorrowOutAdapter.getItem(position))
+                        .execute();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestBorrowOutData();
     }
 
     private void requestBorrowOutData() {
@@ -90,9 +106,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
     }
 
     private void updateBorrowOut(List<BorrowOut> data) {
-        if (data.isEmpty()){
-            stopRefreshAnimation();
-        }
+        stopRefreshAnimation();
         mBorrowOutAdapter.clear();
         mBorrowOutAdapter.addAll( data);
         mBorrowOutAdapter.notifyDataSetChanged();
@@ -142,6 +156,13 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
     static class BorrowOutAdapter extends ArrayAdapter<BorrowOut>{
 
         Context mContext;
+        private Callback mCallback;
+        interface Callback{
+            void OnItemUserClick(int userId);
+        }
+        public void setCallback(Callback callback){
+            mCallback = callback;
+        }
         public BorrowOutAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
@@ -149,10 +170,17 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
 
         @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_out_mine, parent, false);
+                ImageView mUserPortrait = (ImageView) convertView.findViewById(R.id.userPortrait);
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCallback.OnItemUserClick(getItem(position).getUserId());
+                    }
+                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
@@ -191,7 +219,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(BorrowOut item, Context context){
-                Glide.with(context).load(item.getContentImg())
+                Glide.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserPortrait);
