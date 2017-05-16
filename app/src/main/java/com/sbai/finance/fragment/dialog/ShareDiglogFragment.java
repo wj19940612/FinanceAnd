@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -37,10 +37,10 @@ public class ShareDiglogFragment extends DialogFragment {
     TextView mWeChatFriend;
     @BindView(R.id.weChatFriendCircle)
     TextView mWeChatFriendCircle;
-    @BindView(R.id.sina)
-    TextView mSina;
+    @BindView(R.id.weibo)
+    TextView mWeibo;
     @BindView(R.id.cancel)
-    Button mCancel;
+    ImageButton mCancel;
 
     private Unbinder mBind;
     private Activity mActivity;
@@ -87,7 +87,7 @@ public class ShareDiglogFragment extends DialogFragment {
         }
     }
 
-    @OnClick({R.id.weChatFriend, R.id.weChatFriendCircle, R.id.sina, R.id.cancel})
+    @OnClick({R.id.weChatFriend, R.id.weChatFriendCircle, R.id.weibo, R.id.cancel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.weChatFriend:
@@ -96,7 +96,7 @@ public class ShareDiglogFragment extends DialogFragment {
             case R.id.weChatFriendCircle:
                 shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                 break;
-            case R.id.sina:
+            case R.id.weibo:
                 shareToPlatform(SHARE_MEDIA.SINA);
                 break;
             case R.id.cancel:
@@ -137,7 +137,7 @@ public class ShareDiglogFragment extends DialogFragment {
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
-
+            dismiss();
         }
     };
 
