@@ -329,7 +329,15 @@ public class StockTradeActivity extends BaseActivity {
     }
 
     private void updateTitleBar() {
-        mTitleBar.setTitle(mVariety.getVarietyName() + " (" + mVariety.getVarietyType() + ")");
+        View view = mTitleBar.getCustomView();
+        TextView productName = (TextView) view.findViewById(R.id.productName);
+        TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
+        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getVarietyType() + ")");
+        if (mVariety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+            exchangeStatus.setVisibility(View.GONE);
+        } else {
+            exchangeStatus.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initData() {

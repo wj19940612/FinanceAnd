@@ -12,6 +12,7 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:customView="@layout/tb_stock_name"
         app:backFeature="true"/>
 
     <LinearLayout
