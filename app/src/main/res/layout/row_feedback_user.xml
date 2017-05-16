@@ -35,9 +35,9 @@
                     android:id="@+id/endLineTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_10"
+                    android:gravity="center"
                     android:textColor="@color/secondaryText"
                     android:textSize="12sp"/>
 
@@ -79,6 +79,7 @@
                     android:textSize="12sp"/>
 
                 <RelativeLayout
+                    android:id="@+id/imageWrapper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -100,6 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
+                        android:lineSpacingExtra="5dp"
                         android:textColor="@android:color/white"/>
 
 
