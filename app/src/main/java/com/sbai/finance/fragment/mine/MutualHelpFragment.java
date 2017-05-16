@@ -103,7 +103,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getId()).execute();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getUserId()).execute();
                 getActivity().finish();
             }
         });
@@ -221,8 +221,8 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
                     Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD,item.getDataId())
-                            .putExtra(Launcher.EX_PAYLOAD_1,item.getSourceUserId())
+                            .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+                            .putExtra(Launcher.USER_ID, item.getUserId())
                             .execute();
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:

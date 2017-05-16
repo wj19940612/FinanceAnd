@@ -232,7 +232,7 @@ public class LoginActivity extends BaseActivity {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
-                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
+                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_TOKEN_EXPIRED));
                             setResult(RESULT_OK);
                             finish();
 

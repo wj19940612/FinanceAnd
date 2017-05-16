@@ -649,9 +649,9 @@ public class Client {
     }
 
     public static API stockSearch(String key) {
-        return new API("/stk/quota/search.do",
+        return new API("/order/order/getStockVarietySearch.do",
                 new ApiParams()
-                        .put("key", key));
+                        .put("search", key));
     }
 
     /**
