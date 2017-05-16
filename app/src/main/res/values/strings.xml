@@ -367,4 +367,7 @@
     <string name="company_address">公司地址</string>
     <string name="business_scope">经营范围</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
