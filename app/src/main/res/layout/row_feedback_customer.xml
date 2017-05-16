@@ -37,9 +37,9 @@
                     android:id="@+id/endLineTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_10"
+                    android:gravity="center"
                     android:textColor="@color/secondaryText"
                     android:textSize="12sp"/>
 
@@ -94,7 +94,9 @@
                     <TextView
                         android:id="@+id/text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="5dp"
+                        android:paddingLeft="5dp"/>
 
 
                 </LinearLayout>

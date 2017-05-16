@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -74,6 +75,8 @@ public class BorrowInDetailsActivity extends BaseActivity {
     MyGridView mGridView;
     @BindView(R.id.more)
     ImageView mMore;
+    @BindView(R.id.checkStatus)
+    LinearLayout mCheckStatus;
     private int mMax;
     private ImageGridAdapter mImageGridAdapter;
     private BorrowIn mBorrowIn;
@@ -127,6 +130,7 @@ public class BorrowInDetailsActivity extends BaseActivity {
         SpannableString attentionSpannableString;
         switch (mBorrowIn.getStatus()){
             case BorrowIn.STATUS_CHECKED:
+                mCheckStatus.setVisibility(View.VISIBLE);
                 attentionSpannableString = StrUtil.mergeTextWithRatioColor(getActivity().getString(R.string.call_helper),
                         "\n" +getActivity().getString(R.string.end_line),"  "+DateUtil.compareTime(mBorrowIn.getEndlineTime()), 1.455f,1.455f,
                         ContextCompat.getColor(getActivity(),R.color.opinionText), ContextCompat.getColor(getActivity(),R.color.redPrimary));
@@ -134,8 +138,10 @@ public class BorrowInDetailsActivity extends BaseActivity {
                 mEndLineTime.setGravity(Gravity.LEFT);
                 break;
             case BorrowIn.STATUS_NO_CHECK:
+                mCheckStatus.setVisibility(View.GONE);
                 attentionSpannableString = StrUtil.mergeTextWithColor(getActivity().getString(R.string.on_checking),1.455f,
                         ContextCompat.getColor(getActivity(),R.color.opinionText));
+
                 mEndLineTime.setText(attentionSpannableString);
                 mEndLineTime.setGravity(Gravity.CENTER);
                 break;

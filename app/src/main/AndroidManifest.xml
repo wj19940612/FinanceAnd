@@ -166,6 +166,9 @@
 
         <!-- 交易 H5 -->
         <activity
+            android:name=".activity.WebActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.trade.TradeWebActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -199,9 +202,11 @@
         <activity
             android:name=".activity.mine.ImageSelectActivity"
             android:screenOrientation="portrait"/>
-        <!-- 相册图片预览 -->
         <activity android:name=".activity.stock.CompanyIntroActivity">
         </activity>
+        <!-- 相册图片预览 -->
+        <activity android:name=".activity.mine.ImagePreViewActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 微博分享 -->
         <activity

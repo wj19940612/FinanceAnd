@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,10 +20,12 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.FutureHq;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.market.StockSearchData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import java.util.ArrayList;
@@ -70,8 +73,17 @@ public class SearchStockActivity extends BaseActivity {
 			}
 		});
 		mListAdapter = new StockListAdapter(this);
-		mListView.addFooterView(mClearRecord);
+		//mListView.addFooterView(mClearRecord);
 		mListView.setAdapter(mListAdapter);
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Variety variety = (Variety) parent.getAdapter().getItem(position);
+				if (variety != null) {
+					Launcher.with(getActivity(), StockTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -87,9 +99,9 @@ public class SearchStockActivity extends BaseActivity {
 
 	private void requestSearchStock(String key){
 		Client.stockSearch(key).setTag(TAG)
-				.setCallback(new Callback2D<Resp<List<StockSearchData>>,List<StockSearchData>>() {
+				.setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
 					@Override
-					protected void onRespSuccessData(List<StockSearchData> data) {
+					protected void onRespSuccessData(List<Variety> data) {
 						updateRecordData(data);
 					}
 				}).fire();
@@ -98,13 +110,13 @@ public class SearchStockActivity extends BaseActivity {
 	public void onClick(View view){
 		requestSearchStock(mStock.getText().toString());
 	}
-	private void updateRecordData(List<StockSearchData> data) {
+	private void updateRecordData(List<Variety> data) {
 		mListAdapter.clear();
 		mListAdapter.addAll(data);
 		mListAdapter.notifyDataSetChanged();
 	}
 
-	public static class StockListAdapter extends ArrayAdapter<StockSearchData> {
+	public static class StockListAdapter extends ArrayAdapter<Variety> {
 		Context mContext;
 
 		public StockListAdapter(@NonNull Context context) {
@@ -135,9 +147,9 @@ public class SearchStockActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindDataWithView(StockSearchData item) {
-				mStockCode.setText(item.getInstrumentId());
-				mStockName.setText(item.getName());
+			private void bindDataWithView(Variety item) {
+				mStockCode.setText(item.getVarietyType());
+				mStockName.setText(item.getVarietyName());
 			}
 		}
 	}

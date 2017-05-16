@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -57,6 +59,8 @@ public class BorrowActivity extends BaseActivity {
 	TextView mPublish;
 	@BindView(R.id.agree)
 	CheckBox mAgree;
+	@BindView(R.id.contentDays)
+	LinearLayout mContentDays;
 
 	private PhotoGridAdapter mPhotoGridAdapter;
 	private String mImagePath;
@@ -106,26 +110,36 @@ public class BorrowActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-	@OnClick(R.id.publish)
-	public void onClick(){
-		int money = Integer.valueOf( mBorrowLimit.getText().toString());
-		String interest =  mBorrowInterest.getText().toString();
-		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
-		String content = mBorrowRemark.getText().toString();
-		if (content.length()>=300){
-			content = content.substring(0,300);
+	@OnClick({R.id.publish,R.id.contentDays})
+	public void onClick(View view){
+		switch (view.getId()){
+			case R.id.publish:
+				int money = Integer.valueOf( mBorrowLimit.getText().toString());
+				String interest =  mBorrowInterest.getText().toString();
+				int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
+				String content = mBorrowRemark.getText().toString();
+				if (content.length()>=300){
+					content = content.substring(0,300);
+				}
+				StringBuilder contentImg = new StringBuilder();
+				int photoAmount =mPhotoGridAdapter.getCount();
+				for (int i = 0; i<photoAmount-1;i++){
+					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),400f);
+					Log.d(TAG, "image: "+image.length());
+					contentImg.append(image+",");
+				}
+				if(contentImg.length()>0){
+					contentImg.deleteCharAt(contentImg.length()-1);
+				}
+				requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
+				break;
+			case R.id.contentDays:
+				mBorrowTimeLimit.requestFocus();
+				mBorrowTimeLimit.setFocusable(true);
+				break;
+			default:
+				break;
 		}
-		StringBuilder contentImg = new StringBuilder();
-		int photoAmount =mPhotoGridAdapter.getCount();
-		for (int i = 0; i<photoAmount-1;i++){
-			String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),400f);
-			Log.d(TAG, "image: "+image.length());
-			contentImg.append(image+",");
-		}
-		if(contentImg.length()>0){
-			contentImg.deleteCharAt(contentImg.length()-1);
-		}
-		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 	}
 	private void requestPublishBorrow(String content,String contentImg,Integer days,String interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
@@ -163,7 +177,7 @@ public class BorrowActivity extends BaseActivity {
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty|| borrowInterest.equalsIgnoreCase("0")){
+		if (isEmpty||borrowInterest.length()>18||Double.parseDouble(borrowInterest)==0){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_over_interest));
@@ -191,7 +205,6 @@ public class BorrowActivity extends BaseActivity {
 		}
 		return true;
 	}
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -245,18 +258,19 @@ public class BorrowActivity extends BaseActivity {
 		public void setOnItemClickListener(OnItemClickListener onItemClickListener){
 			mOnItemClickListener = onItemClickListener;
 		}
+
 		@NonNull
 		@Override
 		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 			if (position == getCount()-1){
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_add_photo, null);
-				TextView mAddPhoto = (TextView) convertView.findViewById(R.id.addPhoto);
-				mAddPhoto.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mOnItemClickListener.onClick(position);
-					}
-				});
+					convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_add_photo, null);
+					TextView mAddPhoto = (TextView) convertView.findViewById(R.id.addPhoto);
+					mAddPhoto.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							mOnItemClickListener.onClick(position);
+						}
+					});
 			}else{
 				 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_photo, null);
 				 ImageView mPhotoImg = (ImageView) convertView.findViewById(R.id.photoImg);
