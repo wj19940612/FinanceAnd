@@ -26,8 +26,8 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -39,6 +39,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -525,9 +526,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mLocation.setText(item.getLand());
 				}
 
-				mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(item.getMoney())));
-				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
-				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));
+				mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getMoney()))));
+				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getDays()))));
+				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getInterest()))));
 				mBorrowMoneyContent.setText(item.getContent());
 
 
@@ -539,8 +540,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					}
 				});
-
-
+				if (item.getContentImg()==null){
+					item.setContentImg("");
+				}
 				String[] images = item.getContentImg().split(",");
 				switch (images.length) {
 					case 1:

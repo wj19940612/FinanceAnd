@@ -829,7 +829,7 @@ public class Client {
      * @param userId
      * @return
      */
-    public static API borrowIn(String content, String contentImg, Integer days, Integer interest, Integer money, String userId) {
+    public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money, String userId) {
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
@@ -924,7 +924,6 @@ public class Client {
     public static API getBorrowOutHisList() {
         return new API("/coterie/help/loan/historyLoanOut.do");
     }
-
 
     public static API getPhone(int loanId) {
         return new API("/coterie/help/loan/callPhone.do",
@@ -1060,5 +1059,55 @@ public class Client {
         return new API("/order/order/getExchangeStatus.do",
                 new ApiParams()
                         .put("exchangeId", exchangeId));
+    }
+
+//    /**
+//     * 接口名称 个股资讯
+//     * 请求类型 get
+//     * 请求Url  /crawler/crawler/selectData.do
+//     *
+//     * @param code
+//     * @param page
+//     * @param pageSize
+//     * @param type
+//     * @return
+//     */
+//    public static API getInfoStock(String code, int page, int pageSize, String type) {
+//        return new API("/crawler/crawler/selectData.do", new ApiParams()
+//                .put("code", code)
+//                .put("page", page)
+//                .put("pageSize", pageSize)
+//                .put("type", type));
+//    }
+
+    /**
+     * 接口名称 公司简介，公告，报告
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/selectCompanyProfile.do
+     *
+     * @param code 证券代码
+     * @return
+     */
+    public static API getCompanyReportOrInfo(String code) {
+        return new API("/crawler/crawler/selectCompanyProfile.do", new ApiParams().put("code", code));
+    }
+
+    /**
+     * 接口名称 年度报表  接口名称 个股资讯
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/selectData.do?type=financial_summary
+     *
+     * @param code
+     * @param page
+     * @param pageSize
+     * @param type
+     * @return
+     */
+    public static API getCompanyAnnualReport(String code, int page, int pageSize, String type) {
+        return new API("/crawler/crawler/selectData.do", new ApiParams()
+                .put("code", code)
+                .put("page", page)
+                .put("pageSize", pageSize)
+                .put("type", type));
     }
 }

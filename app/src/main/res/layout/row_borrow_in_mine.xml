@@ -222,13 +222,29 @@
             android:textColor="@color/greyAssist"
             android:textSize="14sp"
             android:text="@string/helper"/>
-        <com.sbai.finance.view.MyGridView
-            android:id="@+id/gridView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:numColumns="8"
-            android:horizontalSpacing="8dp"
-            />
+            android:orientation="horizontal">
+            <com.sbai.finance.view.MyGridView
+                android:id="@+id/gridView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="10dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:numColumns="auto_fit"
+                android:columnWidth="32dp"
+                android:horizontalSpacing="5dp"/>
+            <ImageView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_help_detail"
+                android:clickable="true"
+                android:visibility="gone"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

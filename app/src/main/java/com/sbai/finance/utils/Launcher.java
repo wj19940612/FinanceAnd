@@ -78,6 +78,10 @@ public class Launcher {
 		mIntent.putExtra(key, data);
 		return this;
 	}
+	public Launcher putExtra(String key,String[] value){
+		mIntent.putExtra(key,value);
+		return this;
+	}
 
 	public Launcher putExtra(String key, Bundle bundle) {
 		mIntent.putExtra(key, bundle);

@@ -14,294 +14,306 @@
         app:barBackground="@color/blackAssist"
         app:titleText="@string/borrow_money_details"/>
 
-
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_default_avatar"/>
-
-        <TextView
-            android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/colorRed"
-            android:textSize="15sp"
-            tools:text="吴彦祖"/>
-
-        <TextView
-            android:id="@+id/isAttention"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/userName"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/userName"
-            android:textColor="@color/assistText"
-            android:textSize="11sp"
-            tools:text="@string/is_attention"/>
-
-        <TextView
-            android:id="@+id/publishTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/userName"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/assistText"
-            android:textSize="11sp"
-            tools:text="2008/08/08 08:00"/>
-
-        <TextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userName"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/assistText"
-            android:textSize="11sp"
-            tools:text="温州 苍南"/>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginTop="15sp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/bg_borrow_money"
-            android:gravity="center"
-            android:text="@string/borrow_money"
-            android:textColor="@android:color/white"
-            android:textSize="10sp"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:background="@drawable/bg_product_up_down"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical">
 
-                <TextView
+                <ImageView
+                    android:id="@+id/avatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/need_amount"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="10sp"/>
+                    android:src="@drawable/ic_default_avatar"/>
 
                 <TextView
-                    android:id="@+id/needAmount"
+                    android:id="@+id/userName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/blackAssist"
-                    tools:text="@string/RMB"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/borrow_time"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="10sp"/>
-
-
-                <TextView
-                    android:id="@+id/borrowTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/blackAssist"
-                    tools:text="@string/day"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/borrow_interest"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="10sp"/>
-
-
-                <TextView
-                    android:id="@+id/borrowInterest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/avatar"
                     android:textColor="@color/colorRed"
-                    tools:text="@string/RMB"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+                    android:textSize="15sp"
+                    tools:text="吴彦祖"/>
 
-    <TextView
-        android:id="@+id/borrowMoneyContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginTop="15dp"
-        android:lineSpacingExtra="12dp"
-        android:textColor="@color/opinionText"
-        android:textSize="14sp"
-        tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+                <TextView
+                    android:id="@+id/isAttention"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/userName"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/userName"
+                    android:textColor="@color/assistText"
+                    android:textSize="11sp"
+                    tools:text="@string/is_attention"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/publishTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/userName"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/assistText"
+                    android:textSize="11sp"
+                    tools:text="2008/08/08 08:00"/>
 
-        <ImageView
-            android:id="@+id/image1"
-            android:layout_width="0dp"
-            android:layout_height="69dp"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            tools:src="@drawable/help"/>
-
-        <ImageView
-            android:id="@+id/image2"
-            android:layout_width="0dp"
-            android:layout_height="69dp"
-            android:layout_marginLeft="14dp"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            tools:src="@drawable/help"/>
-
-        <ImageView
-            android:id="@+id/image3"
-            android:layout_width="0dp"
-            android:layout_height="69dp"
-            android:layout_marginLeft="14dp"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            tools:src="@drawable/help"/>
-
-        <ImageView
-            android:id="@+id/image4"
-            android:layout_width="0dp"
-            android:layout_height="69dp"
-            android:layout_marginLeft="14dp"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            tools:src="@drawable/help"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/greyLightAssist"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/peopleWantHelpHimOrHer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_people_help"
-                android:drawablePadding="5dp"
-                android:text="@string/people_want_help_him"
-                android:textColor="@color/secondaryText"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/peopleNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/secondaryText"
-                android:textSize="14sp"
-                tools:text="@string/people_want_help_him_number"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
-            android:layout_marginTop="18dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/userName"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toRightOf="@+id/avatar"
+                    android:textColor="@color/assistText"
+                    android:textSize="11sp"
+                    tools:text="温州 苍南"/>
+            </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/avatarList"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="15sp"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_borrow_money"
+                    android:gravity="center"
+                    android:text="@string/borrow_money"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="20"
+                    android:background="@drawable/bg_product_up_down"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/need_amount"
+                            android:textColor="@color/secondaryText"
+                            android:textSize="10sp"/>
+
+                        <TextView
+                            android:id="@+id/needAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/blackAssist"
+                            tools:text="@string/RMB"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/borrow_time"
+                            android:textColor="@color/secondaryText"
+                            android:textSize="10sp"/>
+
+
+                        <TextView
+                            android:id="@+id/borrowTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/blackAssist"
+                            tools:text="@string/day"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/borrow_interest"
+                            android:textColor="@color/secondaryText"
+                            android:textSize="10sp"/>
+
+
+                        <TextView
+                            android:id="@+id/borrowInterest"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/colorRed"
+                            tools:text="@string/RMB"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/more"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/borrowMoneyContent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_help_detail"
-                android:visibility="gone"/>
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="12dp"
+                android:textColor="@color/opinionText"
+                android:textSize="14sp"
+                tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="0dp"
+                    android:layout_height="69dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/help"/>
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="0dp"
+                    android:layout_height="69dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/help"/>
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="0dp"
+                    android:layout_height="69dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/help"/>
+
+                <ImageView
+                    android:id="@+id/image4"
+                    android:layout_width="0dp"
+                    android:layout_height="69dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/help"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/greyLightAssist"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/peopleWantHelpHimOrHer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_people_help"
+                        android:drawablePadding="5dp"
+                        android:text="@string/people_want_help_him"
+                        android:textColor="@color/secondaryText"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/peopleNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/secondaryText"
+                        android:textSize="14sp"
+                        tools:text="@string/people_want_help_him_number"/>
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:id="@+id/avatarList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_help_detail"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/giveHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="60dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginTop="60dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:background="@drawable/bg_give_help"
+                    tools:text="@string/give_help"/>
+            </LinearLayout>
         </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/giveHelp"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
-            android:layout_marginTop="60dp"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            tools:background="@drawable/bg_give_help"
-            tools:text="@string/give_help"/>
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
