@@ -136,8 +136,8 @@ public class SearchStockActivity extends BaseActivity {
 			}
 
 			private void bindDataWithView(StockSearchData item) {
-				mStockCode.setText(item.getInstrumentId());
-				mStockName.setText(item.getName());
+				mStockCode.setText(item.getVarietyType());
+				mStockName.setText(item.getVarietyName());
 			}
 		}
 	}
