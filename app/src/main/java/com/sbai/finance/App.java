@@ -8,6 +8,9 @@ import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.httplib.CookieManger;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 
 public class App extends Application {
 
@@ -22,7 +25,11 @@ public class App extends Application {
 
         if (BuildConfig.DEBUG) {
             handleUncaughtException();
+            Config.DEBUG = true;
         }
+        //友盟
+        UMShareAPI.get(this);
+
     }
 
     private void handleUncaughtException() {
@@ -45,5 +52,11 @@ public class App extends Application {
 
     public static Context getAppContext() {
         return sContext;
+    }
+
+    static {
+        // TODO: 2017/5/16 帐号还未申请 所以还没配置 
+        PlatformConfig.setWeixin("", "");
+        PlatformConfig.setSinaWeibo("", "", "");
     }
 }
