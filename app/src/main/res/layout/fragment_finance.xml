@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.fragment.stock.FinanceFragment">
     <com.sbai.finance.view.IconTextRow
+        android:visibility="gone"
         android:id="@+id/company"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -30,6 +31,6 @@
         android:drawablePadding="10dp"
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center_horizontal"
-        android:paddingTop="150dp"
+        android:paddingTop="100dp"
         android:visibility="gone"/>
 </LinearLayout>
