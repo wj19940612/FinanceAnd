@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.stock;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -51,6 +52,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class StockTradeActivity extends BaseActivity {
+
+    private static final int REQ_CODE_PUBLIS_VIEWPOINT = 172;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -151,6 +154,21 @@ public class StockTradeActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_PUBLIS_VIEWPOINT:
+                    ViewpointFragment viewpointFragment = getViewpointFragment();
+                    if (viewpointFragment != null) {
+                        viewpointFragment.refreshPointList();
+                    }
+                    break;
+            }
+        }
     }
 
     @Override
@@ -290,6 +308,14 @@ public class StockTradeActivity extends BaseActivity {
 
     }
 
+    private ViewpointFragment getViewpointFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(0);
+        if (fragment instanceof ViewpointFragment) {
+            return (ViewpointFragment) fragment;
+        }
+        return null;
+    }
+
     private void requestPrediction() {
         Client.getPrediction(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
                 .setTag(TAG).setIndeterminate(this)
@@ -329,8 +355,7 @@ public class StockTradeActivity extends BaseActivity {
         Launcher.with(getActivity(), PublishOpinionActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-//                .putExtra(Launcher.EX_PAYLOAD_2, mStockRTData)
-                .execute();
+                .executeForResult(REQ_CODE_PUBLIS_VIEWPOINT);
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {

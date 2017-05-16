@@ -131,14 +131,16 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     }
                 }
             }
-            for (Variety variety : mStockIndexData) {
-                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                    varietyList.add(variety);
+            if (mStockIndexData != null && !mStockIndexData.isEmpty()) {
+                for (Variety variety : mStockIndexData) {
+                    if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+                        varietyList.add(variety);
+                    }
                 }
-            }
-            if (varietyList.size() > 0) {
-                requestStockMarketData(varietyList);
-                requestStockIndexMarketData(mStockIndexData);
+                if (varietyList.size() > 0) {
+                    requestStockMarketData(varietyList);
+                    requestStockIndexMarketData(mStockIndexData);
+                }
             }
         }
     }
@@ -157,6 +159,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockMarketData(List<Variety> data) {
+        if (data ==  null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");

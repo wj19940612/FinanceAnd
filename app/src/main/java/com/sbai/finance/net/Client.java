@@ -8,7 +8,7 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
-    public static final int DEFAULT_PAGE_SIZE = 15;
+    public static final int DEFAULT_PAGE_SIZE = 5;
 
     /**
      * 获取期货品种
