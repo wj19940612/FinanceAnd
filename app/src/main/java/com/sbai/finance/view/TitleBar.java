@@ -231,6 +231,10 @@ public class TitleBar extends RelativeLayout {
         mRightView.setEnabled(enable);
     }
 
+    public CharSequence getTitle() {
+        return mTitle;
+    }
+
     public View getCustomView() {
         return mCustomView;
     }

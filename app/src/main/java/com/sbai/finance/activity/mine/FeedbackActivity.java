@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +96,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         mFeedbackAdapter = new FeedbackAdapter(this, mFeedbackList);
         mListView.setAdapter(mFeedbackAdapter);
         mListView.setOnScrollListener(this);
-        mListView.setEmptyView(mEmpty);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
@@ -134,7 +134,21 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         } else {
             mPage++;
         }
+        updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
+    }
+
+    private void updateTitle(List<Feedback> data) {
+        //已经设置过标题就不设置了
+        if (!mTitleBar.getTitle().equals(getString(R.string.feed_back))) {
+            return;
+        }
+        for (Feedback feedback : data) {
+            if (!TextUtils.isEmpty(feedback.getReplyName())) {
+                mTitleBar.setTitle(getString(R.string.feed_back) + "-" + feedback.getReplyName());
+                break;
+            }
+        }
     }
 
     @Override
@@ -416,6 +430,14 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                             PreviewFragment.newInstance(feedback.getContent())
                                     .show(((FeedbackActivity) context).getSupportFragmentManager());
                         }
+                    }
+                });
+
+                mHeadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId()).execute();
                     }
                 });
 
