@@ -87,7 +87,7 @@ public class MineFragment extends BaseFragment {
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
+            if (intent.getAction().equalsIgnoreCase(BaseActivity.ACTION_TOKEN_EXPIRED)) {
                 updateUserImage();
                 updateUserStatus();
             }
@@ -105,7 +105,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.LOGIN_SUCCESS_ACTION));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(BaseActivity.ACTION_TOKEN_EXPIRED));
         updateUserImage();
         updateUserStatus();
     }
