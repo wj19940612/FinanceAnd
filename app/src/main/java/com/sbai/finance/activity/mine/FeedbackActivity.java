@@ -402,7 +402,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 }
                 Glide.with(context).load(feedback.getUserPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
-                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .placeholder(R.drawable.ic_avatar_feedback)
                         .into(mHeadImage);
 
                 mImage.setOnClickListener(new View.OnClickListener() {
@@ -446,7 +446,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 mText.setText(feedback.getContent());
                 Glide.with(context).load(feedback.getUserPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
-                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .placeholder(R.drawable.ic_avatar_feedback)
                         .into(mHeadImage);
             }
         }
