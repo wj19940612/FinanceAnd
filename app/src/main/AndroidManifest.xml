@@ -138,7 +138,6 @@
         <activity
             android:name=".activity.mine.FansActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.mine.PublishActivity"
             android:screenOrientation="portrait"/>
@@ -154,7 +153,6 @@
         <activity
             android:name=".activity.mine.CreditActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
@@ -172,7 +170,6 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
-
         <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
         </activity>
         <activity android:name=".activity.economiccircle.PayIntentionActivity">
@@ -187,7 +184,7 @@
         <activity
             android:name=".activity.mine.TheDetailActivity"
             android:screenOrientation="portrait"/>
-        
+
         <!-- 选择相册图片 -->
         <activity
             android:name=".activity.mine.ImageSelectActivity"
@@ -196,6 +193,8 @@
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.web.PaymentActivity">
+        </activity>
     </application>
 
 </manifest>
