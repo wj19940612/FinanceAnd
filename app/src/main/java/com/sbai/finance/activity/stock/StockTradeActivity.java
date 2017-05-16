@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.stock;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.chart.ChartSettings;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
@@ -24,14 +26,15 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
 import com.sbai.finance.fragment.stock.FinanceFragment;
+import com.sbai.finance.fragment.stock.StockNewsFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockKlineData;
-import com.sbai.finance.fragment.stock.StockNewsFragment;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -40,6 +43,9 @@ import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomToast;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -50,6 +56,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class StockTradeActivity extends BaseActivity {
 
@@ -119,6 +127,12 @@ public class StockTradeActivity extends BaseActivity {
 
         updateTitleBar();
 
+        setTradeFloatButton();
+        requestStockRTData();
+        requestOptionalStatus();
+    }
+
+    private void setTradeFloatButton() {
         mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
             @Override
             public void onPublishPointButtonClick() {
@@ -131,7 +145,11 @@ public class StockTradeActivity extends BaseActivity {
 
             @Override
             public void onAddOptionalButtonClick() {
-
+                if (LocalUser.getUser().isLogin()) {
+                    checkOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
 
             @Override
@@ -139,9 +157,89 @@ public class StockTradeActivity extends BaseActivity {
 
             }
         });
+    }
 
+    private void requestOptionalStatus() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.checkOptional(mVariety.getVarietyId())
+                    .setTag(TAG).setIndeterminate(this)
+                    .setCallback(new Callback<Resp<Integer>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Integer> resp) {
+                            Integer result = resp.getData();
+                            if (result != null) {
+                                boolean hasAddInOption = (result == HAS_ADD_OPITION);
+                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
+                            }
+                        }
+                    }).fire();
+        }
+    }
 
-        requestStockRTData();
+    private void checkOptionalStatus() {
+        if (mTradeFloatButtons.isHasAddInOptional()) {
+            requestDeleteOptional();
+        } else {
+            requestAddOptional();
+        }
+    }
+
+    private void requestDeleteOptional() {
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
+                .setMessageTextSize(15)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        Client.delOptional(mVariety.getVarietyId())
+                                .setTag(TAG)
+                                .setIndeterminate(StockTradeActivity.this)
+                                .setCallback(new Callback<Resp<JsonObject>>() {
+                                    @Override
+                                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                                        if (resp.isSuccess()) {
+                                            mTradeFloatButtons.setHasAddInOpition(false);
+                                            CustomToast.getInstance().showText(StockTradeActivity.this, R.string.delete_option_succeed);
+                                        } else {
+                                            ToastUtil.curt(resp.getMsg());
+                                        }
+                                    }
+                                })
+                                .fire();
+                        dialog.dismiss();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setNegative(R.string.cancel)
+                .show();
+    }
+
+    private void requestAddOptional() {
+        Client.addOption(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                            CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+
+                    @Override
+                    protected void onReceive(Resp<JsonObject> resp) {
+                        super.onReceive(resp);
+                        // 701 代表已经添加过
+                        if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                        }
+                    }
+                })
+                .fire();
     }
 
     @Override
@@ -290,14 +388,18 @@ public class StockTradeActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-
                 if (position == 2) {
                     FinanceFragment fragment = (FinanceFragment) mSubPageAdapter.getFragment(position);
                     if (fragment != null) {
                         fragment.requestCompanyAnnualReport(0);
                     }
                 }
-
+                if (position == 1) {
+                    StockNewsFragment stockNewsFragment = getStockNewsFragment();
+                    if (stockNewsFragment != null) {
+                        stockNewsFragment.requestCompanyAnnualReport(0);
+                    }
+                }
             }
 
             @Override
@@ -308,9 +410,17 @@ public class StockTradeActivity extends BaseActivity {
 
     }
 
+    private StockNewsFragment getStockNewsFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(1);
+        if (fragment != null && fragment instanceof StockNewsFragment) {
+            return (StockNewsFragment) fragment;
+        }
+        return null;
+    }
+
     private ViewpointFragment getViewpointFragment() {
         Fragment fragment = mSubPageAdapter.getFragment(0);
-        if (fragment instanceof ViewpointFragment) {
+        if (fragment != null && fragment instanceof ViewpointFragment) {
             return (ViewpointFragment) fragment;
         }
         return null;

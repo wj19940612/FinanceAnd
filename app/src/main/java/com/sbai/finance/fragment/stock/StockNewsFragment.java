@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -95,7 +94,6 @@ public class StockNewsFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 StockNewsModel item = (StockNewsModel) parent.getAdapter().getItem(position);
                 if (item != null) {
-                    Log.d(TAG, "onItemClick: " + item.getUrl());
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_TITLE, item.getTitle())
                             .putExtra(WebActivity.EX_URL, item.getUrl())
@@ -143,12 +141,15 @@ public class StockNewsFragment extends BaseFragment {
             mListView.addFooterView(mFootView);
         }
 
+        if (page == 0) {
+            mStockNewsAdapter.clear();
+            mSet.clear();
+        }
 
         if (StockNewsDataList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
-
 
         for (StockNewsModel data : StockNewsDataList) {
             if (mSet.add(data.getId())) {
