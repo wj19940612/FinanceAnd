@@ -51,8 +51,8 @@ public abstract class ChartView extends View {
     private static final int FONT_MA_TITLE_DP = 8;
     private static final int TEXT_MARGIN_WITH_LINE_DP = 3;
     private static final int RECT_PADDING_DP = 3;
-    private static final int MIDDLE_EXTRA_SPACE_DP = 10;
-    private static final int HEIGHT_TIME_LINE_DP = 24;
+    private static final int MIDDLE_EXTRA_SPACE_DP = 2;
+    private static final int HEIGHT_TIME_LINE_DP = 14;
     private static final float RATIO_OF_TOP = 0.73f;
     private static final float BASELINE_WIDTH = 0.5f;
 

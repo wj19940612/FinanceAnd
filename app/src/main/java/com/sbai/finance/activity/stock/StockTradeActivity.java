@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -137,7 +138,6 @@ public class StockTradeActivity extends BaseActivity {
             }
         });
 
-
         requestStockRTData();
     }
 
@@ -170,10 +170,19 @@ public class StockTradeActivity extends BaseActivity {
                     public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
                         if (!result.isEmpty()) {
                             mStockRTData = result.get(0);
+                            updateStockTrendView(mStockRTData);
                         }
                         updateMarketDataView();
                     }
                 }).fireSync();
+    }
+
+    private void updateStockTrendView(StockRTData stockRTData) {
+        ChartSettings settings = mStockTrendView.getSettings();
+        if (settings != null && settings.getPreClosePrice() == 0) {
+            settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
+            mStockTrendView.setSettings(settings);
+        }
     }
 
     private void updateMarketDataView() {
@@ -182,7 +191,7 @@ public class StockTradeActivity extends BaseActivity {
             String risePrice = mStockRTData.getRise_price();
             String risePercent = mStockRTData.getRise_pre();
             String lastPrice = mStockRTData.getLast_price();
-            if (risePrice.startsWith("-")) {
+            if (!TextUtils.isEmpty(risePrice) && risePrice.startsWith("-")) {
                 color = ContextCompat.getColor(getActivity(), R.color.greenPrimary);
             } else {
                 risePrice = "+" + risePrice;
@@ -215,7 +224,6 @@ public class StockTradeActivity extends BaseActivity {
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
-
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.day_k_line));
@@ -226,15 +234,15 @@ public class StockTradeActivity extends BaseActivity {
 
     private void initChartViews() {
         ChartSettings settings = new ChartSettings();
-        settings.setBaseLines(mVariety.getBaseline());
-        settings.setNumberScale(mVariety.getPriceScale());
+        settings.setBaseLines(3);
+        settings.setNumberScale(2);
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
-        settings.setXAxis(241);
+        settings.setXAxis(240);
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(mVariety.getBaseline());
+        settings2.setBaseLines(7);
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
@@ -250,7 +258,10 @@ public class StockTradeActivity extends BaseActivity {
                 .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
                     @Override
                     public void onDataMsg(List<StockTrendData> result, StockResp.Msg msg) {
-                        mStockTrendView.setDataList(result);
+                        if (!result.isEmpty()) {
+                            result.remove(0); // 第一条数据为集合竞价的数据
+                            mStockTrendView.setDataList(result);
+                        }
                     }
                 }).fireSync();
     }
@@ -420,6 +431,7 @@ public class StockTradeActivity extends BaseActivity {
     }
 
     private void requestKlineDataAndSet(int type) {
+        mStockKlineView.clearData();
         Client.getStockKlineData(mVariety.getVarietyType(), type)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new StockCallback<StockResp, List<StockKlineData>>() {
