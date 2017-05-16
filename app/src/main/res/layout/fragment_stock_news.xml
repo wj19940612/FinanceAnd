@@ -18,7 +18,7 @@
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center_horizontal"
         android:paddingTop="150dp"
-        android:text="@string/quick_publish"
+        android:text="@string/no_event_record"
         android:textColor="@color/assistText"
         android:textSize="20sp"/>
 </LinearLayout>

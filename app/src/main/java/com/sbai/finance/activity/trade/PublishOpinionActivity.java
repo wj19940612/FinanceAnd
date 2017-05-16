@@ -180,6 +180,7 @@ public class PublishOpinionActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
+                            setResult(RESULT_OK);
                             Intent intent = new Intent(REFRESH_POINT);
                             LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
                                     .sendBroadcast(intent);
