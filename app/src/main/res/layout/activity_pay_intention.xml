@@ -31,12 +31,13 @@
             android:textSize="14sp"/>
 
         <TextView
+            android:id="@+id/intentionAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textColor="@color/redPrimary"
             android:textSize="38sp"
-            android:text="￥5元"/>
+            tools:text="@string/intention_amount"/>
     </LinearLayout>
 
     <TextView
@@ -47,53 +48,13 @@
         android:textColor="@color/secondaryText"
         android:textSize="@dimen/dp_10"/>
 
-    <LinearLayout
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical">
-
-        <CheckBox
-            android:padding="15dp"
-            style="@style/CustomCheckboxTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/we_chat_pay"
-            android:textColor="@color/blackAssist"/>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/greyLightAssist"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical">
-
-        <CheckBox
-            android:padding="15dp"
-            style="@style/CustomCheckboxTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:shadowColor="@color/redPrimary"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/alipay"
-            android:textColor="@color/blackAssist"/>
-    </LinearLayout>
+        android:divider="@null">
+    </ListView>
 
     <TextView
         android:id="@+id/payIntention"

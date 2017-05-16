@@ -70,7 +70,7 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				mPayIntention.setVisibility(View.VISIBLE);
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 						final WantHelpHimOrYou wantHelpHimOrYou = (WantHelpHimOrYou) parent.getItemAtPosition(position);
 						mPayIntention.setEnabled(true);
 						mWantHelpHimOrYouAdapter.setChecked(position);
@@ -85,7 +85,10 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 											@Override
 											public void onClick(Dialog dialog) {
 												dialog.dismiss();
-												Launcher.with(getActivity(),PayIntentionActivity.class).execute();
+												Launcher.with(getActivity(),PayIntentionActivity.class)
+														.putExtra(Launcher.EX_PAYLOAD, mDataId)
+														.putExtra(Launcher.USER_ID, mWantHelpHimOrYouList.get(position).getUserId())
+														.execute();
 											}
 										})
 										.setMessageTextSize(16)
@@ -223,10 +226,34 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				mPayIntention.setVisibility(View.VISIBLE);
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+						final WantHelpHimOrYou wantHelpHimOrYou = (WantHelpHimOrYou) parent.getItemAtPosition(position);
 						mPayIntention.setEnabled(true);
 						mWantHelpHimOrYouAdapter.setChecked(position);
 						mWantHelpHimOrYouAdapter.notifyDataSetInvalidated();
+
+						mPayIntention.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								SmartDialog.with(getActivity(),
+										getString(R.string.select_help, wantHelpHimOrYou.getUserName()))
+										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+											@Override
+											public void onClick(Dialog dialog) {
+												dialog.dismiss();
+												Launcher.with(getActivity(),PayIntentionActivity.class)
+														.putExtra(Launcher.EX_PAYLOAD, mDataId)
+														.putExtra(Launcher.USER_ID, mWantHelpHimOrYouList.get(position).getUserId())
+														.execute();
+											}
+										})
+										.setMessageTextSize(16)
+										.setMessageTextColor(ContextCompat.getColor(WantHelpHimOrYouActivity.this, R.color.blackAssist))
+										.setNegative(R.string.cancel)
+										.show();
+
+							}
+						});
 					}
 				});
 			} else {

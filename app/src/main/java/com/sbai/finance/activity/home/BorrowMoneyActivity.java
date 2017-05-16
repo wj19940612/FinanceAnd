@@ -25,8 +25,8 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
@@ -43,6 +43,7 @@ import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -228,6 +229,12 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			notifyDataSetChanged();
 		}
 
+		public void addAll(List<BorrowMoney> economicCircleList) {
+			mBorrowMoneyList.clear();
+			mBorrowMoneyList.addAll(economicCircleList);
+			notifyDataSetChanged();
+		}
+
 		@Override
 		public int getCount() {
 			return mBorrowMoneyList.size();
@@ -327,63 +334,63 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					}
 				});
 
-
-				String[] images = item.getContentImg().split(",");
-				switch (images.length) {
-					case 1:
-						if (TextUtils.isEmpty(images[0])) {
-							mImage1.setVisibility(View.GONE);
-							mImage2.setVisibility(View.GONE);
-							mImage3.setVisibility(View.GONE);
-							mImage4.setVisibility(View.GONE);
-						} else {
+				if (item.getContentImg() != null) {
+					String[] images = item.getContentImg().split(",");
+					switch (images.length) {
+						case 1:
+							if (TextUtils.isEmpty(images[0])) {
+								mImage1.setVisibility(View.GONE);
+								mImage2.setVisibility(View.GONE);
+								mImage3.setVisibility(View.GONE);
+								mImage4.setVisibility(View.GONE);
+							} else {
+								mImage1.setVisibility(View.VISIBLE);
+								loadImage(context, images[0], mImage1);
+								mImage2.setVisibility(View.INVISIBLE);
+								mImage3.setVisibility(View.INVISIBLE);
+								mImage4.setVisibility(View.INVISIBLE);
+								imageClick(context, images, mImage1, 0);
+							}
+							break;
+						case 2:
 							mImage1.setVisibility(View.VISIBLE);
 							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.INVISIBLE);
+							mImage2.setVisibility(View.VISIBLE);
+							loadImage(context, images[1], mImage2);
 							mImage3.setVisibility(View.INVISIBLE);
 							mImage4.setVisibility(View.INVISIBLE);
 							imageClick(context, images, mImage1, 0);
-						}
-						break;
-					case 2:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.VISIBLE);
-						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.INVISIBLE);
-						mImage4.setVisibility(View.INVISIBLE);
-						imageClick(context, images, mImage1, 0);
-						imageClick(context, images, mImage2, 1);
-						break;
-					case 3:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.VISIBLE);
-						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.VISIBLE);
-						loadImage(context, images[2], mImage3);
-						mImage4.setVisibility(View.INVISIBLE);
-						imageClick(context, images, mImage1, 0);
-						imageClick(context, images, mImage2, 1);
-						imageClick(context, images, mImage3, 2);
-						break;
-					case 4:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.VISIBLE);
-						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.VISIBLE);
-						loadImage(context, images[2], mImage3);
-						mImage4.setVisibility(View.VISIBLE);
-						loadImage(context, images[3], mImage4);
-						imageClick(context, images, mImage1, 0);
-						imageClick(context, images, mImage2, 1);
-						imageClick(context, images, mImage3, 2);
-						imageClick(context, images, mImage4, 3);
-						break;
-					default:
-						break;
-
+							imageClick(context, images, mImage2, 1);
+							break;
+						case 3:
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.VISIBLE);
+							loadImage(context, images[1], mImage2);
+							mImage3.setVisibility(View.VISIBLE);
+							loadImage(context, images[2], mImage3);
+							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
+							imageClick(context, images, mImage2, 1);
+							imageClick(context, images, mImage3, 2);
+							break;
+						case 4:
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.VISIBLE);
+							loadImage(context, images[1], mImage2);
+							mImage3.setVisibility(View.VISIBLE);
+							loadImage(context, images[2], mImage3);
+							mImage4.setVisibility(View.VISIBLE);
+							loadImage(context, images[3], mImage4);
+							imageClick(context, images, mImage1, 0);
+							imageClick(context, images, mImage2, 1);
+							imageClick(context, images, mImage3, 2);
+							imageClick(context, images, mImage4, 3);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 
@@ -435,6 +442,16 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 							mBorrowMoneyAdapter.notifyDataSetChanged();
 						}
 					}
+				}
+
+				if (whetherAttentionShieldOrNot.isShield()) {
+					for (Iterator it = mBorrowMoneyList.iterator(); it.hasNext(); ) {
+						BorrowMoney borrowMoney = (BorrowMoney) it.next();
+						if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()) {
+							it.remove();
+						}
+					}
+					mBorrowMoneyAdapter.addAll(mBorrowMoneyList);
 				}
 			}
 		}
