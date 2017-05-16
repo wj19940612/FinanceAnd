@@ -269,7 +269,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_people_help"
                     android:drawablePadding="5dp"
-                    android:text="@string/helper_her"
+                    android:text="@string/helper_his"
                     android:textColor="@color/greyAssist"
                     android:textSize="14sp"/>
                 <LinearLayout

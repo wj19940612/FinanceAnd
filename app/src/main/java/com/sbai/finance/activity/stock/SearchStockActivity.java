@@ -70,7 +70,7 @@ public class SearchStockActivity extends BaseActivity {
 			}
 		});
 		mListAdapter = new StockListAdapter(this);
-		mListView.addFooterView(mClearRecord);
+		//mListView.addFooterView(mClearRecord);
 		mListView.setAdapter(mListAdapter);
 	}
 

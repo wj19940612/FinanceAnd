@@ -34,7 +34,6 @@
             android:gravity="center_horizontal"
             android:paddingTop="180dp"
             android:drawableTop="@drawable/img_no_message"
-            android:text="@string/mutual_no_borrow_out"
             android:textColor="@color/assistText"
             android:textSize="@dimen/list_title_size"
             android:visibility="visible"/>

@@ -129,11 +129,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     varietyList.add(variety);
                 }
             }
-            for (Variety variety : mStockIndexData) {
-                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                    varietyList.add(variety);
-                }
-            }
             if (varietyList.size() > 0) {
                 requestStockMarketData(varietyList);
                 requestStockIndexMarketData(mStockIndexData);
@@ -170,6 +165,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockIndexMarketData(List<Variety> data) {
+        if (data == null){
+            return;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -245,7 +243,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         mStockListAdapter.notifyDataSetChanged();
     }
-
     @OnClick({R.id.stock, R.id.search, R.id.marketArea})
     public void onClick(View view) {
         switch (view.getId()) {
