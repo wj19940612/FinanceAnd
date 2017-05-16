@@ -64,7 +64,6 @@ public class FinanceFragment extends BaseFragment {
 
     }
 
-
     public static FinanceFragment newInstance(String code) {
         FinanceFragment fragment = new FinanceFragment();
         Bundle args = new Bundle();
