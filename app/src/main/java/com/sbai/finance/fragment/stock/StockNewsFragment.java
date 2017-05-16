@@ -1,4 +1,4 @@
-package com.sbai.finance.model.stock;
+package com.sbai.finance.fragment.stock;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

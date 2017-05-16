@@ -28,7 +28,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockKlineData;
-import com.sbai.finance.model.stock.StockNewsFragment;
+import com.sbai.finance.fragment.stock.StockNewsFragment;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
 import com.sbai.finance.net.Callback2D;
