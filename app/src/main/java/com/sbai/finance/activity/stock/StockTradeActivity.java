@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -298,11 +299,13 @@ public class StockTradeActivity extends BaseActivity {
             String risePrice = mStockRTData.getRise_price();
             String risePercent = mStockRTData.getRise_pre();
             String lastPrice = mStockRTData.getLast_price();
-            if (risePrice.startsWith("-")) {
-                color = ContextCompat.getColor(getActivity(), R.color.greenPrimary);
-            } else {
-                risePrice = "+" + risePrice;
-                risePercent = "+" + risePercent;
+            if (!TextUtils.isEmpty(risePrice)) {
+                if (risePrice.startsWith("-")) {
+                    color = ContextCompat.getColor(getActivity(), R.color.greenPrimary);
+                } else {
+                    risePrice = "+" + risePrice;
+                    risePercent = "+" + risePercent;
+                }
             }
             mLastPrice.setText(lastPrice);
             mPriceChange.setText(risePrice + "     " + risePercent + "%");
