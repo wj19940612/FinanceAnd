@@ -125,8 +125,10 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
             List<Variety> varietyList = new ArrayList<>();
             for (int i = first; i <= last; i++) {
                 Variety variety = mStockListAdapter.getItem(i);
-                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                    varietyList.add(variety);
+                if (variety != null) {
+                    if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+                        varietyList.add(variety);
+                    }
                 }
             }
             for (Variety variety : mStockIndexData) {
