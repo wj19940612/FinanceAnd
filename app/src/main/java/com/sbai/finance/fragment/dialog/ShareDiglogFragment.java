@@ -122,7 +122,7 @@ public class ShareDiglogFragment extends DialogFragment {
     private UMShareListener mUMShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-
+            
         }
 
         @Override
