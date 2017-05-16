@@ -114,6 +114,7 @@ public class FinanceFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<CompanyInfo>, CompanyInfo>() {
                     @Override
                     protected void onRespSuccessData(CompanyInfo data) {
+                        mCompany.setVisibility(View.VISIBLE);
                         mCompanyInfo = data;
                         mCompany.setText(data.getCompanyName());
                     }
