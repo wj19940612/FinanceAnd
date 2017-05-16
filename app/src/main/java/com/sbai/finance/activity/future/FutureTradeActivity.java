@@ -190,7 +190,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void initChartViews() {
         TrendView.Settings settings = new TrendView.Settings();
-        settings.setBaseLines(mVariety.getBaseline());
+        settings.setBaseLines(7);
         settings.setNumberScale(mVariety.getPriceScale());
         settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
@@ -199,7 +199,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(mVariety.getBaseline());
+        settings2.setBaseLines(7);
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);

@@ -42,6 +42,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
@@ -74,7 +75,8 @@ public class HomeFragment extends BaseFragment {
     TextView mIdeaTitle;
     @BindView(R.id.bigEvent)
     LinearLayout mBigEvent;
-
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
 
@@ -90,7 +92,7 @@ public class HomeFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-
+        addTopPaddingWithStatusBar(mTitleBar);
         mTopicGridAdapter = new TopicGridAdapter(getContext());
         mTopicGv.setAdapter(mTopicGridAdapter);
         mTopicGv.setFocusable(false);

@@ -74,11 +74,11 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         mBorrowOutHisAdapter = new BorrowOutHisAdapter(this);
         mBorrowOutHisAdapter.setCallback(new BorrowOutHisAdapter.Callback() {
             @Override
-            public void OnItemCallClick(Integer id) {
+            public void OnItemCallClick(int id) {
                 requestPhone(id);
             }
             @Override
-            public void OnItemRepayClick(Integer id) {
+            public void OnItemRepayClick(int id) {
                 requestRepay(id);
             }
 
@@ -190,8 +190,8 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
         Context mContext;
         private Callback mCallback;
         interface Callback{
-            void OnItemCallClick(Integer id);
-            void OnItemRepayClick(Integer id);
+            void OnItemCallClick(int id);
+            void OnItemRepayClick(int id);
             void OnItemUserClick(int userId);
         }
         public void setCallback(Callback callback){
@@ -207,33 +207,12 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_out_mine_his, parent, false);
-                ImageView mUserPortrait = (ImageView) convertView.findViewById(R.id.userPortrait);
-                mUserPortrait.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemUserClick(getItem(position).getUserId());
-                    }
-                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),mContext);
-            TextView mCall = (TextView) convertView.findViewById(R.id.call);
-            TextView mAlreadyRepay = (TextView) convertView.findViewById(R.id.alreadyRepay);
-            mCall.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemCallClick(getItem(position).getId());
-                }
-            });
-            mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemRepayClick(getItem(position).getId());
-                }
-            });
+            viewHolder.bindDataWithView(getItem(position),mContext,mCallback);
             return convertView;
          }
         static class ViewHolder{
@@ -255,10 +234,14 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
             LinearLayout mBorrowStatus;
             @BindView(R.id.success)
             LinearLayout mSuccess;
+            @BindView(R.id.alreadyRepay)
+            TextView mAlreadyRepay;
+            @BindView(R.id.call)
+            TextView mCall;
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOutHistory item, Context context){
+            private void bindDataWithView(final BorrowOutHistory item, Context context, final Callback callback){
                 Glide.with(context).load(item.getPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_default_avatar)
@@ -274,7 +257,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                        context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
+                        context.getString(R.string.borrow_out_time), DateUtil.formatSlash(item.getConfirmTime())));
                 switch (item.getStatus()){
                     case BorrowOutHistory.STATUS_PAY_INTENTION:
                     case BorrowOutHistory.STATUS_SUCCESS:
@@ -289,6 +272,24 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                     default:
                         break;
                 }
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemUserClick(item.getUserId());
+                    }
+                });
+                mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemRepayClick(item.getId());
+                    }
+                });
+                mCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemCallClick(item.getId());
+                    }
+                });
             }
         }
     }

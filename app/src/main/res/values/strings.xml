@@ -52,12 +52,12 @@
     <string name="self_choice">自选</string>
 
     <string name="banner_detail">活动详情</string>
-
+    <string name="recommend">推荐</string>
     <!--opinion-->
     <string name="opinion">观点大神</string>
     <string name="skilled">擅长类型</string>
     <string name="accuracy_rate">看盘准确率</string>
-    <string name="no_opinion">暂无观点</string>
+    <string name="no_opinion">现在还没有大神上榜哦!</string>
 
     <!--Future-->
     <string name="future_foreign">国际期货</string>
@@ -206,6 +206,8 @@
     <string name="is_auditing">审核中</string>
     <string name="attention_number">关注 %1$s</string>
     <string name="fans_number">粉丝 %1$s</string>
+    <string name="real_name_error">姓名输入错误</string>
+    <string name="identity_card_error">身份证输入错误</string>
 
     <string name="shield_him">屏蔽TA</string>
     <string name="is_shield">已屏蔽</string>
@@ -298,14 +300,14 @@
     <string name="borrow_in__mine_his">历史借入</string>
     <string name="borrow_out_mine_his">历史借出</string>
     <string name="publish_time">发布于 %1$s</string>
-    <string name="end_line_time">正在需求帮助\n 倒计时 11:59</string>
-    <string name="call_helper">正在需求帮助</string>
+    <string name="end_line_time">正在寻求帮助\n 倒计时 11:59</string>
+    <string name="call_helper">正在寻求帮助</string>
     <string name="on_checking">审核中</string>
     <string name="end_line">倒计时</string>
     <string name="cancel_borrow_in">取消借款</string>
     <string name="helper">想要帮助你的人 (%1$d)</string>
     <string name="helper_her">想要帮助她的人 (%1$d)</string>
-    <string name="helper_his">想要帮助他的人 (%1$d)</string>
+    <string name="helper_his">想要帮助TA的人 (%1$d)</string>
     <string name="borrow_in_time">%1$s时间\n%2$s</string>
     <string name="borrow_out_time">借出时间\n%1$s</string>
     <string name="borrow_in_time_success">借入</string>
@@ -321,7 +323,7 @@
     <string name="no_location">暂无位置信息</string>
     <string name="no_phone">暂无联系电话</string>
     <string name="borrow_failure">借款失败</string>
-
+    <string name="cancel_confirm">是否要取消借款?</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
@@ -337,13 +339,34 @@
     <string name="give_help_dialog_content">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="wait_to_confirm">等待确认中</string>
     <string name="want_help_him">想要帮助TA的人</string>
-
+    <!--股票财务-->
     <string name="one_stock_net_asset">每股净资产</string>
     <string name="one_stock_earnings">每股收益</string>
+    <string name="one_stock_cash_content">每股现金含量</string>
+    <string name="one_stock_capital_accumulation_fund">每股资本公积金</string>
+    <string name="fixation_capital_count">固定资产合计</string>
+    <string name="flow_capital_count">流动资产合计</string>
+    <string name="capital_count">资产合计</string>
+    <string name="long_liabilities_count">长期负债合计</string>
+    <string name="normal_business_earnings">主营业务收入</string>
+    <string name="finance_charge">财务费用</string>
+    <string name="earn_profit">净利润</string>
+
+
     <string name="pay_intention">支付意向金</string>
     <string name="intention">意向金</string>
     <string name="we_chat_pay">微信支付</string>
     <string name="ali_pay">支付宝支付</string>
     <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
     <string name="intention_amount">￥%1$s元</string>
+
+    <!--公司简介-->
+    <string name="company_name">公司名称</string>
+    <string name="company_info">公司简介</string>
+    <string name="register_capital">注册资本</string>
+    <string name="market_date">上市日期</string>
+    <string name="publish_prise">发行价格</string>
+    <string name="company_address">公司地址</string>
+    <string name="business_scope">经营范围</string>
+
 </resources>

@@ -1,6 +1,5 @@
 package com.sbai.finance.fragment.trade;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -104,9 +103,7 @@ public class ViewpointFragment extends BaseFragment {
         mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
         mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         mEmpty.setCompoundDrawablePadding(padding);
-        Drawable top = ContextCompat.getDrawable(getContext(), R.drawable.img_no_message);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-
+        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
         mOpinionAdapter = new OpinionAdapter(R.layout.row_opinion, mOpinionList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOpinionAdapter);
@@ -148,7 +145,7 @@ public class ViewpointFragment extends BaseFragment {
                 .fire();
     }
 
-    private void updateViewWithData(List<Opinion> data,boolean needScrollToTop) {
+    private void updateViewWithData(List<Opinion> data, boolean needScrollToTop) {
         //获取的数据为空 并且原来就无数据 则显示空view
         if (data == null || data.size() == 0 && mOpinionList.size() == 0) {
             mOpinionAdapter.removeAllFooterView();
@@ -167,7 +164,7 @@ public class ViewpointFragment extends BaseFragment {
                 mPage++;
             }
             mOpinionAdapter.notifyDataSetChanged();
-            if (needScrollToTop){
+            if (needScrollToTop) {
                 mRecyclerView.scrollToPosition(0);
             }
         }
@@ -263,7 +260,7 @@ public class ViewpointFragment extends BaseFragment {
 
             if (item.getReplyCount() > 999) {
                 ((TextView) helper.getView(R.id.commentNum))
-                        .setText("999+");
+                        .setText(R.string.number999);
             } else {
                 ((TextView) helper.getView(R.id.commentNum))
                         .setText(String.valueOf(item.getReplyCount()));
@@ -271,7 +268,7 @@ public class ViewpointFragment extends BaseFragment {
 
             if (item.getPraiseCount() > 999) {
                 ((TextView) helper.getView(R.id.likeNum))
-                        .setText("999+");
+                        .setText(R.string.number999);
             } else {
                 ((TextView) helper.getView(R.id.likeNum))
                         .setText(String.valueOf(item.getPraiseCount()));

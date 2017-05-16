@@ -26,7 +26,9 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mutual.BorrowInActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -40,7 +42,6 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -102,7 +103,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getId()).execute();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getUserId()).execute();
                 getActivity().finish();
             }
         });
@@ -219,13 +220,15 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             updateNewsReadStatus(position, item);
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                    ToastUtil.curt("跳转至想帮助我的人");
+                    Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+                            .putExtra(Launcher.USER_ID, item.getUserId())
+                            .execute();
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
-                    ToastUtil.curt("拒绝我的帮助");
                     break;
                 case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
-                    ToastUtil.curt("跳转至我的借出");
+                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
 
             }

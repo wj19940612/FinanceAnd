@@ -208,33 +208,12 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_in_mine_his, parent, false);
-                ImageView mUserPortrait = (ImageView) convertView.findViewById(R.id.userPortrait);
-                mUserPortrait.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCallback.OnItemUserClick(getItem(position).getSelectedUserId());
-                    }
-                });
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),position,mContext);
-            TextView mCall = (TextView) convertView.findViewById(R.id.call);
-            TextView mAlreadyRepay = (TextView) convertView.findViewById(R.id.alreadyRepay);
-            mCall.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemCallClick(getItem(position).getId());
-                }
-            });
-            mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemRepayClick(getItem(position).getId());
-                }
-            });
+            viewHolder.bindDataWithView(getItem(position),position,mContext,mCallback);
             return convertView;
         }
 
@@ -257,15 +236,37 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             LinearLayout mBorrowStatus;
             @BindView(R.id.success)
             LinearLayout mSuccess;
+            @BindView(R.id.alreadyRepay)
+            TextView mAlreadyRepay;
+            @BindView(R.id.call)
+            TextView mCall;
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowInHis item, int position, Context context){
+            private void bindDataWithView(final BorrowInHis item, int position, Context context, final Callback callback){
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 SpannableString attentionSpannableString;
                 String location =item.getLocation();
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemUserClick(item.getSelectedUserId());
+                    }
+                });
+                mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemRepayClick(item.getId());
+                    }
+                });
+                mCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemCallClick(item.getId());
+                    }
+                });
                 if (location==null){
                     location = context.getString(R.string.no_location);
                 }
@@ -276,16 +277,19 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 " "+context.getString(R.string.not_allow),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getConfirmTime())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getAuditTime())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_FAIL:
+                    case BorrowInHis.STATUS_TIMEOUT:
+                    case BorrowInHis.STATUS_CANCEL:
+                    case BorrowInHis.STATUS_NO_CHOICE:
                         mUserPortrait.setVisibility(View.GONE);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.borrow_failure),
                                 " "+item.getFailMsg(),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getConfirmTime())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_SUCCESS:case BorrowInHis.STATUS_PAY_INTENTION:
@@ -297,7 +301,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getConfirmTime())));
                         mAlreadyRepayment.setVisibility(View.GONE);
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.VISIBLE);
@@ -311,7 +315,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getConfirmTime())));
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.GONE);
                         mAlreadyRepayment.setVisibility(View.VISIBLE);

@@ -111,6 +111,18 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         requestVisibleStockMarket();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startScheduleJob(1000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
     private void requestVisibleStockMarket() {
         if (mListView != null && mStockListAdapter != null) {
             int first = mListView.getFirstVisiblePosition();
@@ -118,19 +130,16 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
             List<Variety> varietyList = new ArrayList<>();
             for (int i = first; i <= last; i++) {
                 Variety variety = mStockListAdapter.getItem(i);
-                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                    varietyList.add(variety);
-                }
-            }
-            for (Variety variety : mStockIndexData) {
-                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                    varietyList.add(variety);
+                if (variety != null) {
+                    if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+                        varietyList.add(variety);
+                    }
                 }
             }
             if (varietyList.size() > 0) {
-                requestStockMarketData(varietyList);
-                requestStockIndexMarketData(mStockIndexData);
-            }
+                    requestStockMarketData(varietyList);
+                    requestStockIndexMarketData(mStockIndexData);
+                }
         }
     }
 
@@ -148,6 +157,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockMarketData(List<Variety> data) {
+        if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -163,6 +173,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockIndexMarketData(List<Variety> data) {
+        if (data == null){
+            return;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -238,7 +251,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         mStockListAdapter.notifyDataSetChanged();
     }
-
     @OnClick({R.id.stock, R.id.search, R.id.marketArea})
     public void onClick(View view) {
         switch (view.getId()) {

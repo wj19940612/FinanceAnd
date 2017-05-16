@@ -1,30 +1,36 @@
-<com.sbai.finance.view.CustomSwipeRefreshLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/customSwipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.sbai.finance.fragment.stock.FinanceFragment">
+    <com.sbai.finance.view.IconTextRow
+        android:visibility="gone"
+        android:id="@+id/company"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        app:leftIcon="@drawable/ic_stock_finance_company"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowTextColor="@color/blueAssist"/>
 
-    <LinearLayout
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:visibility="visible"/>
 
-        <com.sbai.finance.view.IconTextRow
-            android:id="@+id/company"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:color/white"
-            app:leftIcon="@drawable/ic_stock_finance_company"
-            app:rightIcon="@drawable/ic_arrow_right_tint"
-            app:rowText="浙江杭州松柏科技有限公司"
-            app:rowTextColor="@color/blueAssist"/>
-
-        <ExpandableListView
-            android:id="@+id/companyInfoList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ExpandableListView>
-    </LinearLayout>
-</com.sbai.finance.view.CustomSwipeRefreshLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/img_no_message"
+        android:gravity="center_horizontal"
+        android:paddingTop="100dp"
+        android:visibility="gone"/>
+</LinearLayout>

@@ -165,13 +165,10 @@
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
                 android:layout_marginTop="15dp"
-                android:ellipsize="end"
                 android:lineSpacingExtra="12dp"
-                android:maxLines="2"
                 android:textColor="@color/opinionText"
                 android:textSize="14sp"
                 tools:text="狗狗生病住院"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -232,14 +229,29 @@
                     android:textColor="@color/greyAssist"
                     android:textSize="14sp"
                     android:text="@string/helper_her"/>
-                <com.sbai.finance.view.MyGridView
-                    android:id="@+id/gridView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:numColumns="8"
-                    android:horizontalSpacing="8dp"
-                    />
+                    android:orientation="horizontal">
+                    <com.sbai.finance.view.MyGridView
+                        android:id="@+id/gridView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:numColumns="auto_fit"
+                        android:columnWidth="32dp"
+                        android:horizontalSpacing="5dp"/>
+                    <ImageView
+                        android:id="@+id/more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_help_detail"
+                        android:clickable="true"
+                        android:visibility="gone"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

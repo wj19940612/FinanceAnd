@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,13 +15,17 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
+import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -62,6 +67,9 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     ImageView mImage4;
     @BindView(R.id.gridView)
     MyGridView mGridView;
+    @BindView(R.id.more)
+    ImageView mMore;
+    private int mMax;
     private BorrowOut mBorrowOut;
     private BorrowInDetailsActivity.ImageGridAdapter mImageGridAdapter;
     @Override
@@ -78,9 +86,24 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     }
 
     private void initView() {
+        calculateAvatarNum(this);
         mImageGridAdapter = new BorrowInDetailsActivity.ImageGridAdapter(this);
         mGridView.setAdapter(mImageGridAdapter);
         mGridView.setFocusable(false);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                launcherWantHelpHer(mBorrowOut.getId());
+            }
+        });
+    }
+    private void calculateAvatarNum(Context context) {
+        int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        float margin =  Display.dp2Px(26, getResources());
+        float horizontalSpacing =  Display.dp2Px(5, getResources());
+        float avatarWidth =  Display.dp2Px(32, getResources());
+        float more = Display.dp2Px(18, getResources());
+        mMax = (int) ((screenWidth - margin - more) / (horizontalSpacing + avatarWidth));
     }
     private void requestHelper( int id){
         Client.getHelper(id).setTag(TAG)
@@ -92,17 +115,29 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 }).fire();
     }
     private void updateHelperData(List<BorrowHelper> data) {
-        mHelperAmount.setText(getActivity().getString(R.string.helper_her,data.size()));
+        mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.size()));
+
         mImageGridAdapter.clear();
-        mImageGridAdapter.addAll(data);
+        if (data.size()>mMax){
+            mImageGridAdapter.addAll(data.subList(0,mMax));
+            mMore.setVisibility(View.VISIBLE);
+        }else{
+            mImageGridAdapter.addAll(data);
+            mMore.setVisibility(View.GONE);
+        }
         mImageGridAdapter.notifyDataSetChanged();
+    }
+    private void launcherWantHelpHer(int loadId){
+        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD,loadId)
+                .execute();
     }
     private void updateDataWithView(BorrowOut borrowOut){
         Glide.with(this).load(borrowOut.getPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
                 .bitmapTransform(new GlideCircleTransform(this))
                 .into(mUserPortrait);
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(borrowOut.getConfirmTime())));
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(borrowOut.getIntentionTime())));
         mNeedAmount.setText(this.getString(R.string.RMB,String.valueOf(borrowOut.getMoney())));
         mBorrowTime.setText(this.getString(R.string.day,String.valueOf(borrowOut.getDays())));
         mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(borrowOut.getInterest())));
@@ -174,7 +209,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 .putExtra(Launcher.EX_PAYLOAD_1,index)
                 .execute();
     }
-    @OnClick({R.id.userPortrait,R.id.image1,R.id.image2,R.id.image3,R.id.image4})
+    @OnClick({R.id.userPortrait,R.id.image1,R.id.image2,R.id.image3,R.id.image4,R.id.more})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.userPortrait:
@@ -191,6 +226,9 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 break;
             case R.id.image4:
                 launcherImageView(3);
+                break;
+            case R.id.more:
+                launcherWantHelpHer(mBorrowOut.getId());
                 break;
             default:
                 break;
