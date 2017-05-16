@@ -39,7 +39,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled false // !!set true when package release apk
+        cruncherEnabled true // !!set true when package release apk
     }
 
     dexOptions {
@@ -58,8 +58,8 @@ android {
         }
 
         alpha {
-            versionCode 8
-            versionName "1.7"
+            versionCode 9
+            versionName "1.8"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
         }
     }
