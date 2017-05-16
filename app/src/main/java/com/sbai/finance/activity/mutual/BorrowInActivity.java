@@ -130,7 +130,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                     @Override
                     protected void onRespSuccessData(List<BorrowIn> data) {
                         updateBorrowInData(data);
-                        requestHelper(data);
+                     //   requestHelper(data);
                     }
                 })
                 .fire();
