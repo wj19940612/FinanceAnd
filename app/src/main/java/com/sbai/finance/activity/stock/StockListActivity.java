@@ -111,7 +111,12 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         requestVisibleStockMarket();
     }
 
-    // TODO: 2017/5/15 后期需要可能删除 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startScheduleJob(1000);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -125,14 +130,16 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
             List<Variety> varietyList = new ArrayList<>();
             for (int i = first; i <= last; i++) {
                 Variety variety = mStockListAdapter.getItem(i);
-                if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                    varietyList.add(variety);
+                if (variety != null) {
+                    if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+                        varietyList.add(variety);
+                    }
                 }
             }
             if (varietyList.size() > 0) {
-                requestStockMarketData(varietyList);
-                requestStockIndexMarketData(mStockIndexData);
-            }
+                    requestStockMarketData(varietyList);
+                    requestStockIndexMarketData(mStockIndexData);
+                }
         }
     }
 
@@ -150,6 +157,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockMarketData(List<Variety> data) {
+        if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");

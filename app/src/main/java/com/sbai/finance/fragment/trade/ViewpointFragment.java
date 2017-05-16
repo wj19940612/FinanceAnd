@@ -39,8 +39,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.android.volley.Request.Method.HEAD;
-
 public class ViewpointFragment extends BaseFragment {
 
     @BindView(R.id.recyclerView)

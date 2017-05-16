@@ -11,9 +11,9 @@ public class Variety implements Parcelable {
 
     public static final String FUTURE_CHINA = "china";
     public static final String FUTURE_FOREIGN = "foreign";
-    public static final String STOCK_EXPONENT_SH="1A0001";
-    public static final String STOCK_EXPONENT_GE="399006";
-    public static final String STOCK_EXPONENT_SZ="399001";
+    public static final String STOCK_EXPONENT_SH = "1A0001";
+    public static final String STOCK_EXPONENT_GE = "399006";
+    public static final String STOCK_EXPONENT_SZ = "399001";
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
 
@@ -34,8 +34,7 @@ public class Variety implements Parcelable {
      * varietyName : 沪银
      * varietyType : ag
      */
-    //	基线
-    private int baseline;
+    private int baseline; //	基线
     private String bigVarietyTypeCode; // 期货：future 外汇：forex 股票：stock
     private String contractsCode;   //	合约代码（只对期货有用）
     private double decimalScale;     //	分时图曲线比例
@@ -51,7 +50,7 @@ public class Variety implements Parcelable {
     private String varietyName;
     private String varietyType;
 
-    public boolean ifProductIsStock(){
+    public boolean isStock() {
         return getBigVarietyTypeCode().equalsIgnoreCase(VAR_STOCK);
     }
 
