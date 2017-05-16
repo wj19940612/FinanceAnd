@@ -115,7 +115,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 }).fire();
     }
     private void updateHelperData(List<BorrowHelper> data) {
-        mHelperAmount.setText(getActivity().getString(R.string.helper_her,data.size()));
+        mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.size()));
 
         mImageGridAdapter.clear();
         if (data.size()>mMax){
@@ -137,7 +137,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar)
                 .bitmapTransform(new GlideCircleTransform(this))
                 .into(mUserPortrait);
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(borrowOut.getConfirmTime())));
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(borrowOut.getIntentionTime())));
         mNeedAmount.setText(this.getString(R.string.RMB,String.valueOf(borrowOut.getMoney())));
         mBorrowTime.setText(this.getString(R.string.day,String.valueOf(borrowOut.getDays())));
         mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(borrowOut.getInterest())));
