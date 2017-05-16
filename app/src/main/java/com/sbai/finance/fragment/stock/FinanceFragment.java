@@ -56,6 +56,7 @@ public class FinanceFragment extends BaseFragment {
     //证券代码
     private String mStockCode;
     private int mPage = 0;
+    private int mPageSize = 10;
     private TextView mFootView;
 
     private CompanyInfo mCompanyInfo;
@@ -122,7 +123,7 @@ public class FinanceFragment extends BaseFragment {
 
     public void requestCompanyAnnualReport(final int page) {
         this.mPage = page;
-        Client.getCompanyAnnualReport(mStockCode, mPage, Client.DEFAULT_PAGE_SIZE, CompanyAnnualReportModel.TYPE_FINANCIAL_SUMMARY)
+        Client.getCompanyAnnualReport(mStockCode, mPage, mPageSize, CompanyAnnualReportModel.TYPE_FINANCIAL_SUMMARY)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
                     @Override
@@ -170,7 +171,7 @@ public class FinanceFragment extends BaseFragment {
             mList.addFooterView(mFootView);
         }
 
-        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+        if (data.size() < mPageSize) {
             mList.removeFooterView(mFootView);
             mFootView = null;
         }

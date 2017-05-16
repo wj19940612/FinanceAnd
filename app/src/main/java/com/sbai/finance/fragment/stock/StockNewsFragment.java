@@ -47,6 +47,7 @@ public class StockNewsFragment extends BaseFragment {
 
     private String mStockCode;
     private int mPage;
+    private int mPageSize = 10;
     TextView mFootView;
     private HashSet<String> mSet;
 
@@ -96,8 +97,8 @@ public class StockNewsFragment extends BaseFragment {
                 if (item != null) {
                     Log.d(TAG, "onItemClick: " + item.getUrl());
                     Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_TITLE,item.getTitle())
-                            .putExtra(WebActivity.EX_URL,item.getUrl())
+                            .putExtra(WebActivity.EX_TITLE, item.getTitle())
+                            .putExtra(WebActivity.EX_URL, item.getUrl())
                             .execute();
                 }
             }
@@ -106,7 +107,7 @@ public class StockNewsFragment extends BaseFragment {
 
     public void requestCompanyAnnualReport(final int page) {
         this.mPage = page;
-        Client.getCompanyAnnualReport(mStockCode, mPage, Client.DEFAULT_PAGE_SIZE, CompanyAnnualReportModel.TYPE_STOCK_NEWS)
+        Client.getCompanyAnnualReport(mStockCode, mPage, mPageSize, CompanyAnnualReportModel.TYPE_STOCK_NEWS)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArrayList<StockNewsModel>>, ArrayList<StockNewsModel>>() {
                     @Override
@@ -143,7 +144,7 @@ public class StockNewsFragment extends BaseFragment {
         }
 
 
-        if (StockNewsDataList.size() < Client.DEFAULT_PAGE_SIZE) {
+        if (StockNewsDataList.size() < mPageSize) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
