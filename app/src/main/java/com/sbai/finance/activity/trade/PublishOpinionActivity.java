@@ -117,8 +117,7 @@ public class PublishOpinionActivity extends BaseActivity {
         final String calcuId = mPredict.isCalculate() ? String.valueOf(mPredict.getCalcuId()) : null;
 
 
-        //股票的时候是轮训
-        if (!mVariety.ifProductIsStock()) {
+        if (!mVariety.isStock()) {
             //最新价
             String lastPriceStr = null;
             //	涨幅
@@ -141,6 +140,7 @@ public class PublishOpinionActivity extends BaseActivity {
             }
             submitViewpoint(content, calcuId, lastPriceStr, risePriceStr, risePercentStr);
         } else {
+            //股票的时候是轮询
             requestStockRTData(content, calcuId);
         }
 

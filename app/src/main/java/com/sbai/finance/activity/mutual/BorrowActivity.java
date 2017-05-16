@@ -60,12 +60,6 @@ public class BorrowActivity extends BaseActivity {
 
 	private PhotoGridAdapter mPhotoGridAdapter;
 	private String mImagePath;
-	private int MAX_MONEY=2000;
-	private int MIN_MONEY=500;
-	private int MAX_INTEREST=Integer.MAX_VALUE;
-	private int MIN_INTEREST=1;
-	private int MAX_DAYS=60;
-	private int MIN_DAYS=1;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -115,7 +109,7 @@ public class BorrowActivity extends BaseActivity {
 	@OnClick(R.id.publish)
 	public void onClick(){
 		int money = Integer.valueOf( mBorrowLimit.getText().toString());
-		int interest =  Integer.valueOf( mBorrowInterest.getText().toString());
+		String interest =  mBorrowInterest.getText().toString();
 		int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
 		String content = mBorrowRemark.getText().toString();
 		if (content.length()>=300){
@@ -133,7 +127,7 @@ public class BorrowActivity extends BaseActivity {
 		}
 		requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 	}
-	private void requestPublishBorrow(String content,String contentImg,Integer days,Integer interest,Integer money,String userId){
+	private void requestPublishBorrow(String content,String contentImg,Integer days,String interest,Integer money,String userId){
 		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
 				.setIndeterminate(this)
 				.setCallback(new Callback<Resp<Object>>() {

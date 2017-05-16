@@ -170,9 +170,12 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
+
+        <activity
+            android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
         </activity>
-        <activity android:name=".activity.economiccircle.PayIntentionActivity">
+        <activity
+            android:name=".activity.economiccircle.PayIntentionActivity">
         </activity>
 
         <!-- 反馈 -->
