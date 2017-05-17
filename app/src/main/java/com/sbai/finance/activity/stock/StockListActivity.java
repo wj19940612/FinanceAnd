@@ -133,9 +133,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 }
             }
             if (varietyList.size() > 0) {
-                    requestStockMarketData(varietyList);
-                    requestStockIndexMarketData(mStockIndexData);
-                }
+                requestStockMarketData(varietyList);
+                requestStockIndexMarketData(mStockIndexData);
+            }
         }
     }
 
@@ -153,7 +153,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockMarketData(List<Variety> data) {
-        if (data == null || data.isEmpty()) return;
+        if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -169,9 +169,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockIndexMarketData(List<Variety> data) {
-        if (data == null){
-            return;
-        }
+        if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -247,7 +245,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         mStockListAdapter.notifyDataSetChanged();
     }
-    @OnClick({R.id.stock, R.id.search, R.id.shangHai,R.id.shenZhen,R.id.board})
+
+    @OnClick({R.id.stock, R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
     public void onClick(View view) {
         Variety variety;
         switch (view.getId()) {
@@ -266,16 +265,19 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 break;
         }
     }
-    private void launcherIndexActivity(String varietyType ){
-        if (mStockIndexData!=null){
-            for (Variety variety:mStockIndexData){
-                if (variety.getVarietyType().equalsIgnoreCase(varietyType)){
-                    Launcher.with(getActivity(), StockIndexTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
-                      break;
+
+    private void launcherIndexActivity(String varietyType) {
+        if (mStockIndexData != null) {
+            for (Variety variety : mStockIndexData) {
+                if (variety.getVarietyType().equalsIgnoreCase(varietyType)) {
+                    Launcher.with(getActivity(), StockIndexActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    break;
                 }
             }
         }
     }
+
     @Override
     public void onRefresh() {
         reset();
@@ -306,7 +308,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Variety variety = (Variety) parent.getAdapter().getItem(position);
         if (variety != null) {
-            Launcher.with(getActivity(), StockTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
+            Launcher.with(getActivity(), StockDetailActivity.class).
+                    putExtra(Launcher.EX_PAYLOAD, variety).execute();
         }
     }
 
