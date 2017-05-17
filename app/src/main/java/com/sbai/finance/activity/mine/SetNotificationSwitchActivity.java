@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -34,14 +33,16 @@ public class SetNotificationSwitchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_notification_switch);
         ButterKnife.bind(this);
+    }
 
-
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         if (isNotificationEnabled()) {
             mAcceptNewsSwitch.setSelected(true);
         } else {
             mAcceptNewsSwitch.setSelected(false);
         }
-
     }
 
     @OnClick(R.id.acceptNewsSwitch)
@@ -51,23 +52,9 @@ public class SetNotificationSwitchActivity extends AppCompatActivity {
 
     private void openSystemSettingPage() {
         Intent intent = new Intent(Settings.ACTION_SETTINGS);
-        startActivityForResult(intent, 122);
+        startActivity(intent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 122 && resultCode == RESULT_OK) {
-            if (isNotificationEnabled()) {
-                ToastUtil.curt("应用通知打开");
-                mAcceptNewsSwitch.setSelected(true);
-            } else {
-                ToastUtil.curt("未开启");
-                mAcceptNewsSwitch.setSelected(false);
-                openSystemSettingPage();
-            }
-        }
-    }
 
     /**
      * 获取通知栏权限是否开启
