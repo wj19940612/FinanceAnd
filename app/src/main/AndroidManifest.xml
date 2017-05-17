@@ -75,6 +75,9 @@
         <activity
             android:name=".activity.stock.StockTradeActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.StockIndexTradeActivity"
+            android:screenOrientation="portrait"/>
         <!-- 互助 -->
         <activity
             android:name=".activity.mutual.BorrowActivity"

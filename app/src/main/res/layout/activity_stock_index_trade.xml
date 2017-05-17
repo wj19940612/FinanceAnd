@@ -37,7 +37,6 @@
                 android:text="--"
                 android:textColor="@android:color/white"
                 android:textSize="38sp"/>
-
             <TextView
                 android:id="@+id/priceChange"
                 android:layout_width="match_parent"
