@@ -22,10 +22,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowIn;
@@ -39,6 +41,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -79,7 +82,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mBorrowInAdapter.setCallback(new BorrowInAdapter.Callback() {
             @Override
             public void OnItemCancelBorrowClick(final int id) {
-                SmartDialog.with(getActivity())
+                SmartDialog.with(getActivity(), getString(R.string.cancel_confirm))
+                        .setMessageTextSize(15)
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
@@ -87,8 +91,9 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                                 dialog.dismiss();
                             }
                         })
-                        .setTitle(getString(R.string.cancel_confirm))
                         .setTitleMaxLines(1)
+                        .setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist))
+                        .setMessageTextColor(ContextCompat.getColor(getActivity(), R.color.opinionText))
                         .setNegative(R.string.cancel)
                         .show();
             }
@@ -109,6 +114,14 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowInAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getActivity(), BorrowInDetailsActivity.class)
+                        .putExtra(BorrowInDetailsActivity.BORROW_IN, mBorrowInAdapter.getItem(position))
+                        .execute();
+            }
+        });
 
     }
 
@@ -465,8 +478,9 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         callback.OnItemImageClick(3,item.getContentImg());
                     }
                 });
-
-
+                if (item.getContentImg()==null){
+                    item.setContentImg("");
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length) {
                     case 1:

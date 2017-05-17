@@ -249,7 +249,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
     @OnClick({R.id.stock, R.id.search, R.id.shangHai,R.id.shenZhen,R.id.board})
     public void onClick(View view) {
-        Variety variety;
         switch (view.getId()) {
             case R.id.stock:
             case R.id.search:

@@ -145,8 +145,15 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         if (location==null){
             location = this.getString(R.string.no_location);
         }
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(), "\n"+ location,0.73f,
-                ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
+        SpannableString attentionSpannableString;
+        if (data.getIsAttentionSelected() == BorrowDetails.ATTENTION){
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
+                    getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
+        }else{
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
+                    "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
+        }
         mUserNameLand.setText(attentionSpannableString);
         mPublishTime.setText(this.getString(R.string.borrow_in_time,
                 this.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(data.getConfirmTime())));

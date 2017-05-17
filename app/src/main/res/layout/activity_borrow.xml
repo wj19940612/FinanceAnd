@@ -154,11 +154,10 @@
                 android:textColor="@color/assistText"
                 android:textSize="10sp"
                 android:text="@string/borrow_photo_tips"/>
-            <com.sbai.finance.view.MyGridView
+            <GridView
                 android:id="@+id/photoGv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="69dp"
+                android:layout_height="69dp"
                 android:numColumns="4"
                 android:horizontalSpacing="8dp"
                 android:verticalSpacing="8dp"

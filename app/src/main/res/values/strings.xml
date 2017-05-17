@@ -282,6 +282,7 @@
     <string name="borrow_publish">确认发布</string>
     <string name="want_borrow">我要借款</string>
     <string name="borrow_overdue">超出借款期限</string>
+    <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">阅读并同意</string>
@@ -309,7 +310,7 @@
     <string name="cancel_borrow_in">取消借款</string>
     <string name="helper">想要帮助你的人 (%1$d)</string>
     <string name="helper_her">想要帮助她的人 (%1$d)</string>
-    <string name="helper_his">想要帮助TA的人 (%1$d)</string>
+    <string name="helper_his">想要帮助他的人 (%1$d)</string>
     <string name="borrow_in_time">%1$s时间\n%2$s</string>
     <string name="borrow_out_time">借出时间\n%1$s</string>
     <string name="borrow_in_time_success">借入</string>

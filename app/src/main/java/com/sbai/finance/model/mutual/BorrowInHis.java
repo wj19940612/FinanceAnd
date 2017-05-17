@@ -46,7 +46,7 @@ public class BorrowInHis {
     private String failMsg;
     private int id;
     private int intentionCount;
-    private int interest;
+    private long interest;
     private String location;
     private long modifyDate;
     private int money;
@@ -136,11 +136,11 @@ public class BorrowInHis {
         this.intentionCount = intentionCount;
     }
 
-    public int getInterest() {
+    public long getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(long interest) {
         this.interest = interest;
     }
 

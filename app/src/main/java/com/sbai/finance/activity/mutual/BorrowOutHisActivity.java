@@ -97,7 +97,8 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Launcher.with(getActivity(),BorrowOutHisDetailActivity.class)
-                                    .putExtra(BorrowOutHisDetailActivity.BORROW_OUT_HIS,mBorrowOutHisAdapter.getItem(position).getId())
+                                    .putExtra(BorrowOutHisDetailActivity.ID,mBorrowOutHisAdapter.getItem(position).getId())
+                                    .putExtra(BorrowOutHisDetailActivity.CONFIRM_TIME,mBorrowOutHisAdapter.getItem(position).getConfirmTime())
                                     .execute();
                     }
                 });
@@ -256,8 +257,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                        context.getString(R.string.borrow_out_time), DateUtil.formatSlash(item.getConfirmTime())));
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getConfirmTime())));
                 switch (item.getStatus()){
                     case BorrowOutHistory.STATUS_PAY_INTENTION:
                     case BorrowOutHistory.STATUS_SUCCESS:

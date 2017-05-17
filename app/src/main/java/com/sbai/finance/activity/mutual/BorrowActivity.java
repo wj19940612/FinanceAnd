@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
@@ -44,7 +47,7 @@ import butterknife.OnClick;
 
 public class BorrowActivity extends BaseActivity {
 	@BindView(R.id.photoGv)
-	MyGridView mPhotoGv;
+	GridView mPhotoGv;
 	@BindView(R.id.borrowLimit)
 	EditText mBorrowLimit;
 	@BindView(R.id.borrowInterest)
@@ -94,6 +97,17 @@ public class BorrowActivity extends BaseActivity {
 		});
 		mPhotoGv.setFocusable(false);
 		mPhotoGv.setAdapter(mPhotoGridAdapter);
+		mPhotoGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if (position<mPhotoGridAdapter.getCount()-1){
+					Launcher.with(getActivity(), ContentImgActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mPhotoGridAdapter.getItem(position).split(","))
+							.putExtra(Launcher.EX_PAYLOAD_1, 0)
+							.execute();
+				}
+			}
+		});
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
@@ -201,7 +215,11 @@ public class BorrowActivity extends BaseActivity {
 			return false;
 		}
 		if (TextUtils.isEmpty(mBorrowRemark.getText())){
+			mWarn.setVisibility(View.VISIBLE);
+			mWarn.setText(getString(R.string.no_remark));
 			return false;
+		}else{
+			mWarn.setVisibility(View.INVISIBLE);
 		}
 		return true;
 	}
@@ -218,6 +236,7 @@ public class BorrowActivity extends BaseActivity {
 			mPhotoGridAdapter.insert(helpImagePath,mPhotoGridAdapter.getCount()-1);
 			mPhotoGridAdapter.notifyDataSetChanged();
 		}
+
 	}
 
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {

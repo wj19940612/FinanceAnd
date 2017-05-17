@@ -19,6 +19,7 @@ import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
+import com.sbai.finance.model.mutual.BorrowDetails;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
@@ -38,7 +39,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BorrowOutDetailsActivity extends BaseActivity {
-    public static final String BORROW_OUT="borrowOut";
+    public static final String ID="id";
+    public static final String INTENTION_TIME="intentionTime";
     @BindView(R.id.userPortrait)
     ImageView mUserPortrait;
     @BindView(R.id.userNameLand)
@@ -70,7 +72,8 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     @BindView(R.id.more)
     ImageView mMore;
     private int mMax;
-    private BorrowOut mBorrowOut;
+    private long mIntentionTime;
+    private BorrowDetails mBorrowDetails;
     private BorrowInDetailsActivity.ImageGridAdapter mImageGridAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,10 +81,14 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_borrow_out_mine_details);
         ButterKnife.bind(this);
         initView();
-        mBorrowOut = getIntent().getParcelableExtra(BORROW_OUT);
-        if (mBorrowOut!=null){
-            updateDataWithView(mBorrowOut);
-            requestHelper(mBorrowOut.getId());
+        mIntentionTime = getIntent().getLongExtra(INTENTION_TIME,-1);
+        if (mIntentionTime==-1){
+            mIntentionTime = System.currentTimeMillis();
+        }
+        int id  = getIntent().getIntExtra(ID,-1);
+        if (id!=-1){
+            requestBorrowDetail(id);
+            requestHelper(id);
         }
     }
 
@@ -93,7 +100,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                launcherWantHelpHer(mBorrowOut.getId());
+                launcherWantHelpHer(mBorrowDetails.getId());
             }
         });
     }
@@ -114,9 +121,17 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                     }
                 }).fire();
     }
-    private void updateHelperData(List<BorrowHelper> data) {
-        mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.size()));
+    private void requestBorrowDetail(int id){
+        Client.getBorrowDetails(id).setTag(TAG)
+                .setCallback(new Callback2D<Resp<BorrowDetails>,BorrowDetails>() {
+                    @Override
+                    protected void onRespSuccessData(BorrowDetails data) {
+                        updateBorrowDetailData(data);
+                    }
+                }).fireSync();
 
+    }
+    private void updateHelperData(List<BorrowHelper> data) {
         mImageGridAdapter.clear();
         if (data.size()>mMax){
             mImageGridAdapter.addAll(data.subList(0,mMax));
@@ -132,25 +147,41 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 .putExtra(Launcher.EX_PAYLOAD,loadId)
                 .execute();
     }
-    private void updateDataWithView(BorrowOut borrowOut){
-        Glide.with(this).load(borrowOut.getPortrait())
+    private void updateBorrowDetailData(BorrowDetails data){
+        mBorrowDetails = data;
+        Glide.with(this).load(mBorrowDetails.getPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
                 .bitmapTransform(new GlideCircleTransform(this))
                 .into(mUserPortrait);
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(borrowOut.getIntentionTime())));
-        mNeedAmount.setText(this.getString(R.string.RMB,String.valueOf(borrowOut.getMoney())));
-        mBorrowTime.setText(this.getString(R.string.day,String.valueOf(borrowOut.getDays())));
-        mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(borrowOut.getInterest())));
-        mOption.setText(borrowOut.getContent());
-        String location = borrowOut.getLocation();
+        if (mBorrowDetails.getSex() == BorrowDetails.WOMEN){
+            mHelperAmount.setText(getActivity().getString(R.string.helper_her,mBorrowDetails.getIntentionCount()));
+        }else{
+            mHelperAmount.setText(getActivity().getString(R.string.helper_his,mBorrowDetails.getIntentionCount()));
+        }
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(mIntentionTime)));
+        mNeedAmount.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getMoney())));
+        mBorrowTime.setText(this.getString(R.string.day,String.valueOf(mBorrowDetails.getDays())));
+        mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getInterest())));
+        mOption.setText(mBorrowDetails.getContent());
+        String location = mBorrowDetails.getLocation();
         if(location==null){
             location = this.getString(R.string.no_location);
         }
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(borrowOut.getUserName(),
-                "\n" +location, 0.733f, ContextCompat.getColor(this,R.color.assistText));
+        SpannableString attentionSpannableString;
+        if (mBorrowDetails.getIsAttention() == BorrowDetails.ATTENTION){
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(mBorrowDetails.getUserName(),
+                    getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
+        }else{
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(mBorrowDetails.getUserName(),
+                  "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
+        }
         mUserNameLand.setText(attentionSpannableString);
-        mEndLineTime.setText(DateUtil.compareTime(borrowOut.getEndlineTime()));
-        String[] images = borrowOut.getContentImg().split(",");
+        mEndLineTime.setText(DateUtil.compareTime(mBorrowDetails.getEndlineTime()));
+        if (mBorrowDetails.getContentImg().isEmpty()){
+            mBorrowDetails.setContentImg("");
+        }
+        String[] images = mBorrowDetails.getContentImg().split(",");
         switch (images.length){
             case 1:
                 if (TextUtils.isEmpty(images[0])){
@@ -205,7 +236,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     }
     private void launcherImageView(int index){
         Launcher.with(getActivity(), ContentImgActivity.class)
-                .putExtra(Launcher.EX_PAYLOAD,mBorrowOut.getContentImg().split(","))
+                .putExtra(Launcher.EX_PAYLOAD,mBorrowDetails.getContentImg().split(","))
                 .putExtra(Launcher.EX_PAYLOAD_1,index)
                 .execute();
     }
@@ -213,7 +244,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.userPortrait:
-                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,mBorrowOut.getUserId()).execute();
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,mBorrowDetails.getUserId()).execute();
                 break;
             case R.id.image1:
                 launcherImageView(0);
@@ -228,7 +259,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
                 launcherImageView(3);
                 break;
             case R.id.more:
-                launcherWantHelpHer(mBorrowOut.getId());
+                launcherWantHelpHer(mBorrowDetails.getId());
                 break;
             default:
                 break;

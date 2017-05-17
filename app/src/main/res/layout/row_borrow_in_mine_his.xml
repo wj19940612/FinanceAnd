@@ -20,7 +20,6 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
             android:clickable="true"
             android:src="@drawable/ic_default_avatar"/>
 
@@ -29,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:lineSpacingExtra="8dp"
             android:orientation="vertical"
             android:textColor="@color/blackAssist"

@@ -271,7 +271,6 @@ public class StockIndexTradeActivity extends BaseActivity {
         mMarketArea.setBackgroundColor(color);
         mTitleBar.setBackgroundColor(color);
     }
-
     private void updateTitleBar() {
         mTitleBar.setTitle(mVariety.getVarietyName() + " (" + mVariety.getVarietyType() + ")");
     }
