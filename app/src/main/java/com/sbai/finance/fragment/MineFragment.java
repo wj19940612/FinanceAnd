@@ -106,8 +106,6 @@ public class MineFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(BaseActivity.ACTION_TOKEN_EXPIRED));
-        updateUserImage();
-        updateUserStatus();
     }
 
     @Override
@@ -124,6 +122,13 @@ public class MineFragment extends BaseFragment {
             requestNoReadNewsNumber();
             requestUserAttentionAndroidFansNumber();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUserImage();
+        updateUserStatus();
     }
 
     private void requestNoReadNewsNumber() {
