@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.model.future.FutureData;
@@ -62,6 +63,7 @@ public class OptionalActivity extends BaseActivity implements
 
     private SlideListAdapter mSlideListAdapter;
     private int mPage;
+    private int mPageSize = 15;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +101,7 @@ public class OptionalActivity extends BaseActivity implements
                         Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }else{
-                        Launcher.with(getActivity(), StockTradeActivity.class)
+                        Launcher.with(getActivity(), StockDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }
                 }
@@ -153,7 +155,9 @@ public class OptionalActivity extends BaseActivity implements
                 .setCallback(new StockCallback<StockResp, List<StockData>>() {
                     @Override
                     public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
-                        updateStockMarketData(result);
+                        if (result!=null){
+                          mSlideListAdapter.addStockData(result);
+                        }
                     }
                 }).fireSync();
     }
@@ -168,7 +172,7 @@ public class OptionalActivity extends BaseActivity implements
                 .setCallback(new Callback2D<Resp<List<FutureData>>,List<FutureData>>() {
                     @Override
                     protected void onRespSuccessData(List<FutureData> data) {
-                        updateFutureMarketData(data);
+                        mSlideListAdapter.addFutureData(data);
                     }
                 })
               .fireSync();
@@ -183,10 +187,14 @@ public class OptionalActivity extends BaseActivity implements
         stopRefreshAnimation();
         mSlideListAdapter.clear();
         mSlideListAdapter.addAll(data);
+        if (data.size() < mPageSize) {
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
+        }
         mSlideListAdapter.notifyDataSetChanged();
         requestMarketData(data);
     }
-
     private void requestMarketData(ArrayList<Variety> data) {
         List<Variety> futures = new ArrayList<>();
         List<Variety> stocks = new ArrayList<>();
@@ -205,68 +213,6 @@ public class OptionalActivity extends BaseActivity implements
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }
-    private void updateFutureMarketData(List<FutureData> data){
-        if (mListView != null && mSlideListAdapter != null&&data!=null) {
-            for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                Variety variety = mSlideListAdapter.getItem(i);
-                if (variety != null&&variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                    for (FutureData futureData:data){
-                         if (futureData.getInstrumentId().equalsIgnoreCase(variety.getContractsCode())){
-                             View childView = mListView.getChildAt(i);
-                             if (childView != null) {
-                                 TextView lastPrice = ButterKnife.findById(childView, R.id.lastPrice);
-                                 TextView rate = ButterKnife.findById(childView, R.id.rate);
-                                 double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
-                                         .divide(new BigDecimal(futureData.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
-                                         .multiply(new BigDecimal(100)).doubleValue();
-                                 lastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), variety.getPriceScale()));
-                                 if (priceChange >= 0) {
-                                     lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                                     rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                                     rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
-                                 } else {
-                                     lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                                     rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                                     rate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
-                                 }
-                             }
-                             break;
-                         }
-                    }
-                }
-            }
-        }
-    }
-    private void updateStockMarketData(List<StockData> data){
-        if (mListView != null && mSlideListAdapter != null&&data!=null) {
-            for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                Variety variety = mSlideListAdapter.getItem(i);
-                if (variety != null&&variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    for (StockData stockData:data){
-                        if (stockData.getStock_code().equalsIgnoreCase(variety.getVarietyType())){
-                            View childView = mListView.getChildAt(i);
-                            if (childView != null) {
-                                TextView lastPrice = ButterKnife.findById(childView, R.id.lastPrice);
-                                TextView rate = ButterKnife.findById(childView, R.id.rate);
-                                lastPrice.setText(stockData.getLast_price());
-                                String priceChange = stockData.getRise_pre();
-                                if (priceChange.startsWith("-")) {
-                                    lastPrice.setTextColor(ContextCompat.getColor(this, R.color.greenAssist));
-                                    rate.setTextColor(ContextCompat.getColor(this, R.color.greenAssist));
-                                    rate.setText(priceChange + "%");
-                                } else {
-                                    lastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-                                    rate.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-                                    rate.setText("+" + priceChange + "%");
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
         }
     }
     @Override
@@ -290,19 +236,28 @@ public class OptionalActivity extends BaseActivity implements
         Context mContext;
         private OnDelClickListener mOnDelClickListener;
         private HashMap<String, FutureData> mFutureDataList;
-
+        private HashMap<String, StockData> mStockDataList;
         interface OnDelClickListener {
             void onClick(int position);
         }
 
-        public void addFutureData(FutureData futureData) {
-            mFutureDataList.put(futureData.getInstrumentId(), futureData);
+        public void addFutureData(List<FutureData> futureDataList) {
+            for (FutureData futureData:futureDataList){
+               mFutureDataList.put(futureData.getInstrumentId(), futureData);
+            }
+            notifyDataSetChanged();
         }
-
+        public void addStockData(List<StockData> stockDataList) {
+            for (StockData stockData : stockDataList) {
+                mStockDataList.put(stockData.getStock_code(), stockData);
+            }
+            notifyDataSetChanged();
+        }
         public SlideListAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
             mFutureDataList = new HashMap<>();
+            mStockDataList = new HashMap<>();
         }
 
         public void setOnDelClickListener(OnDelClickListener onDelClickListener) {
@@ -330,7 +285,7 @@ public class OptionalActivity extends BaseActivity implements
                     mOnDelClickListener.onClick(position);
                 }
             });
-            viewHolder.bindDataWithView(getItem(position), mFutureDataList, mContext);
+            viewHolder.bindDataWithView(getItem(position), mFutureDataList,mStockDataList, mContext);
             return convertView;
         }
 
@@ -355,33 +310,50 @@ public class OptionalActivity extends BaseActivity implements
                 mDel = (TextView) menu.findViewById(R.id.del);
             }
 
-            private void bindDataWithView(Variety item, HashMap<String, FutureData> map, Context context) {
+            private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockData> stockMap, Context context) {
                 if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
                     mFutureName.setText(item.getVarietyName());
                     mFutureCode.setText(item.getVarietyType());
+                    StockData stockData = stockMap.get(item.getVarietyType());
+                    if (stockData != null) {
+                        mLastPrice.setText(stockData.getLast_price());
+                        String priceChange = stockData.getRise_pre();
+                        if (priceChange.startsWith("-")) {
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setText(priceChange + "%");
+                        } else {
+
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setText("+" + priceChange + "%");
+                        }
+                    } else {
+                        mLastPrice.setText("--");
+                        mRate.setText("--");
+                    }
                 }else  {
                     mFutureName.setText(item.getVarietyName());
                     mFutureCode.setText(item.getContractsCode());
-                }
-
-                FutureData futureData = map.get(item.getContractsCode());
-                if (futureData != null) {
-                    double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
-                            .divide(new BigDecimal(futureData.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
-                            .multiply(new BigDecimal(100)).doubleValue();
-                    mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
-                    if (priceChange >= 0) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
+                    FutureData futureData = futureMap.get(item.getContractsCode());
+                    if (futureData != null) {
+                        double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
+                                .divide(new BigDecimal(futureData.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
+                                .multiply(new BigDecimal(100)).doubleValue();
+                        mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
+                        if (priceChange >= 0) {
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
+                        } else {
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
+                        }
                     } else {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
+                        mLastPrice.setText("--");
+                        mRate.setText("--.--%");
                     }
-                } else {
-                    mLastPrice.setText("--");
-                    mRate.setText("--.--%");
                 }
 
                 if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {

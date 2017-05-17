@@ -48,7 +48,7 @@ public class BorrowOutHistory implements Parcelable {
     private int id;
     private int intentionCount;
     private String intentionTime;
-    private int interest;
+    private long interest;
     private String location;
     private long modifyDate;
     private int money;
@@ -147,7 +147,7 @@ public class BorrowOutHistory implements Parcelable {
         this.intentionTime = intentionTime;
     }
 
-    public int getInterest() {
+    public long getInterest() {
         return interest;
     }
 
@@ -245,7 +245,7 @@ public class BorrowOutHistory implements Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.intentionCount);
         dest.writeString(this.intentionTime);
-        dest.writeInt(this.interest);
+        dest.writeLong(this.interest);
         dest.writeString(this.location);
         dest.writeLong(this.modifyDate);
         dest.writeInt(this.money);
@@ -272,7 +272,7 @@ public class BorrowOutHistory implements Parcelable {
         this.id = in.readInt();
         this.intentionCount = in.readInt();
         this.intentionTime = in.readString();
-        this.interest = in.readInt();
+        this.interest = in.readLong();
         this.location = in.readString();
         this.modifyDate = in.readLong();
         this.money = in.readInt();

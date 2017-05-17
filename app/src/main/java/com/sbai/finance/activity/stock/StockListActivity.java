@@ -248,7 +248,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     @OnClick({R.id.stock, R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
     public void onClick(View view) {
-        Variety variety;
         switch (view.getId()) {
             case R.id.stock:
             case R.id.search:
@@ -376,18 +375,14 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setText(stockData.getLast_price());
                     String priceChange = stockData.getRise_pre();
                     if (priceChange.startsWith("-")) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                        mLastPrice.setSelected(true);
+                        mRate.setSelected(true);
                         mRate.setText(priceChange + "%");
                     } else {
-
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                        mLastPrice.setSelected(false);
+                        mRate.setSelected(false);
                         mRate.setText("+" + priceChange + "%");
                     }
-                } else {
-                    mLastPrice.setText("--");
-                    mRate.setText("--");
                 }
 
                 if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
