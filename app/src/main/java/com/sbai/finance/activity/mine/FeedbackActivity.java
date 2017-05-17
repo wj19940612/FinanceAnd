@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +32,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
@@ -378,10 +380,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         static class UserViewHolder {
             @BindView(R.id.endLineTime)
             TextView mEndLineTime;
-            @BindView(R.id.imageWrapper)
-            RelativeLayout mImageWrapper;
             @BindView(R.id.timeLayout)
             RelativeLayout mTimeLayout;
+            @BindView(R.id.contentWrapper)
+            RelativeLayout mWrapper;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
             @BindView(R.id.image)
@@ -403,32 +405,39 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     mTimeLayout.setVisibility(View.GONE);
                 }
                 mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+
+                mWrapper.removeAllViews();
+                TextView textview = null;
+                ImageView imageview = null;
                 //判断是否图片
                 if (feedback.getContentType() == CONTENT_TYPE_TEXT) {
-                    mImage.setVisibility(View.GONE);
-                    mText.setVisibility(View.VISIBLE);
-                    mText.setText(feedback.getContent());
+                    //create textview and add
+                    textview = createTextview(context);
+                    mWrapper.addView(textview);
+                    textview.setText(feedback.getContent());
                 } else {
-                    mImage.setVisibility(View.VISIBLE);
-                    mText.setVisibility(View.GONE);
+                    //create imageview and add
+                    imageview = createImageview(context);
+                    mWrapper.addView(imageview);
                     Glide.with(context).load(feedback.getContent())
                             .bitmapTransform(new GlideThumbTransform(context))
-                            .into(mImage);
+                            .into(imageview);
                 }
                 Glide.with(context).load(feedback.getUserPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_avatar_feedback)
                         .into(mHeadImage);
-
-                mImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
-                            PreviewFragment.newInstance(feedback.getContent())
-                                    .show(((FeedbackActivity) context).getSupportFragmentManager());
+                if (imageview != null) {
+                    imageview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
+                                PreviewFragment.newInstance(feedback.getContent())
+                                        .show(((FeedbackActivity) context).getSupportFragmentManager());
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 mHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -438,6 +447,28 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     }
                 });
 
+            }
+
+            private TextView createTextview(Context context) {
+                TextView tv = new TextView(context);
+                tv.setTextColor(Color.WHITE);
+                int spacing = (int) Display.dp2Px(5.0f, context.getResources());
+                tv.setLineSpacing(spacing, 0);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                int margin = (int) Display.dp2Px(10.0f, context.getResources());
+                params.setMargins(0, 0, margin, 0);
+                tv.setLayoutParams(params);
+                return tv;
+            }
+
+            private ImageView createImageview(Context context) {
+                ImageView image = new ImageView(context);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                int margin = (int) Display.dp2Px(5.0f, context.getResources());
+                params.setMargins(0, 0, margin, 0);
+                image.setLayoutParams(params);
+                return image;
             }
 
         }

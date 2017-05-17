@@ -80,7 +80,7 @@
                     android:textSize="12sp"/>
 
                 <RelativeLayout
-                    android:id="@+id/imageWrapper"
+                    android:id="@+id/contentWrapper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
