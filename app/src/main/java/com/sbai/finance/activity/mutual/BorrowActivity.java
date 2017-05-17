@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,7 +33,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
-import com.sbai.finance.view.MyGridView;
+import com.sbai.finance.view.GrapeGridView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +45,7 @@ import butterknife.OnClick;
 
 public class BorrowActivity extends BaseActivity {
 	@BindView(R.id.photoGv)
-	GridView mPhotoGv;
+	GrapeGridView mPhotoGv;
 	@BindView(R.id.borrowLimit)
 	EditText mBorrowLimit;
 	@BindView(R.id.borrowInterest)
