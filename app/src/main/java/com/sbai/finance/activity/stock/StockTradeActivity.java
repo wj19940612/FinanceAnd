@@ -62,7 +62,7 @@ import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class StockTradeActivity extends BaseActivity {
 
-    private static final int REQ_CODE_PUBLIS_VIEWPOINT = 172;
+    public static final int REQ_CODE_PUBLISH_VIEWPOINT = 172;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -259,7 +259,7 @@ public class StockTradeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQ_CODE_PUBLIS_VIEWPOINT:
+                case REQ_CODE_PUBLISH_VIEWPOINT:
                     ViewpointFragment viewpointFragment = getViewpointFragment();
                     if (viewpointFragment != null) {
                         viewpointFragment.refreshPointList();
@@ -485,7 +485,7 @@ public class StockTradeActivity extends BaseActivity {
         Launcher.with(getActivity(), PublishOpinionActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .executeForResult(REQ_CODE_PUBLIS_VIEWPOINT);
+                .executeForResult(REQ_CODE_PUBLISH_VIEWPOINT);
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {

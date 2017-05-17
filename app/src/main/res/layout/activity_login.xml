@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryText"
+    android:background="@drawable/bg_login"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.LoginActivity">
 
@@ -15,11 +15,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/bg_login"/>
+        <!--<android.support.v7.widget.AppCompatImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:scaleType="fitXY"-->
+            <!--app:srcCompat="@drawable/bg_login"/>-->
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/deletePage"

@@ -2,6 +2,7 @@ package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -24,8 +25,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
-import com.sbai.finance.fragment.stock.FinanceFragment;
-import com.sbai.finance.fragment.stock.StockNewsFragment;
+import com.sbai.finance.fragment.stock.PriceLimitRankingFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
@@ -150,6 +150,7 @@ public class StockIndexTradeActivity extends BaseActivity {
 
         requestStockRTData();
     }
+
     private void checkOptionalStatus() {
         if (mTradeFloatButtons.isHasAddInOptional()) {
             requestDeleteOptional();
@@ -157,6 +158,7 @@ public class StockIndexTradeActivity extends BaseActivity {
             requestAddOptional();
         }
     }
+
     private void requestAddOptional() {
         Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
@@ -182,6 +184,7 @@ public class StockIndexTradeActivity extends BaseActivity {
                     }
                 }).fire();
     }
+
     private void requestDeleteOptional() {
         SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
                 .setMessageTextSize(15)
@@ -212,6 +215,7 @@ public class StockIndexTradeActivity extends BaseActivity {
                 .setNegative(R.string.cancel)
                 .show();
     }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -222,6 +226,17 @@ public class StockIndexTradeActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == StockTradeActivity.REQ_CODE_PUBLISH_VIEWPOINT && resultCode == RESULT_OK) {
+            Fragment fragment = mSubPageAdapter.getFragment(0);
+            if (fragment != null && fragment instanceof ViewpointFragment) {
+                ((ViewpointFragment) fragment).refreshPointList();
+            }
+        }
     }
 
     @Override
@@ -344,10 +359,15 @@ public class StockIndexTradeActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == 2) {
-                    FinanceFragment fragment = (FinanceFragment) mSubPageAdapter.getFragment(position);
-                    if (fragment != null) {
-                        fragment.requestCompanyAnnualReport(0);
+                if (position == 1) {
+                    PriceLimitRankingFragment priceLimitRankingFragment = getPriceLimitRankingFragment(1);
+                    if (priceLimitRankingFragment != null) {
+                        priceLimitRankingFragment.requestStockSortList();
+                    }
+                } else if (position == 2) {
+                    PriceLimitRankingFragment priceLimitRankingFragment = getPriceLimitRankingFragment(2);
+                    if (priceLimitRankingFragment != null) {
+                        priceLimitRankingFragment.requestStockSortList();
                     }
                 }
 
@@ -359,6 +379,14 @@ public class StockIndexTradeActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private PriceLimitRankingFragment getPriceLimitRankingFragment(int position) {
+        Fragment fragment = mSubPageAdapter.getFragment(position);
+        if (fragment instanceof PriceLimitRankingFragment) {
+            return (PriceLimitRankingFragment) fragment;
+        }
+        return null;
     }
 
     private void requestPrediction() {
@@ -401,7 +429,7 @@ public class StockIndexTradeActivity extends BaseActivity {
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
 //                .putExtra(Launcher.EX_PAYLOAD_2, mStockRTData)
-                .execute();
+                .executeForResult(StockTradeActivity.REQ_CODE_PUBLISH_VIEWPOINT);
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {
@@ -434,9 +462,9 @@ public class StockIndexTradeActivity extends BaseActivity {
                 case 0:
                     return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return StockNewsFragment.newInstance(mVariety.getVarietyType());
+                    return PriceLimitRankingFragment.newInstance(1, mVariety.getExchangeCode());
                 case 2:
-                    return FinanceFragment.newInstance(mVariety.getVarietyType());
+                    return PriceLimitRankingFragment.newInstance(2, mVariety.getExchangeCode());
             }
             return null;
         }

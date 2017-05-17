@@ -699,7 +699,7 @@ public class Client {
      * @param stock_type 股票类别,参考市场查询返回值
      * @return
      */
-    public static API getSstockSort(int sort_type, int stock_type) {
+    public static API getStockSort(int sort_type, int stock_type) {
         return new API("/stock/sort", new ApiParams()
                 .put("sort_type", sort_type)
                 .put("stock_type", stock_type));

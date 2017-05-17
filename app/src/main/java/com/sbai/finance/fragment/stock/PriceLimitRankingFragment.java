@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.stock.StockData;
-import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
+import com.sbai.finance.net.stock.StockCallback;
+import com.sbai.finance.net.stock.StockResp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +33,7 @@ import butterknife.Unbinder;
 public class PriceLimitRankingFragment extends BaseFragment {
 
     private static final String KEY_SORT_TYPE = "sort_type";
-    private static final String KEY_STOCK_TYPE = "sort_type";
+    private static final String KEY_STOCK_TYPE = "stock_type";
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -61,6 +63,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
         if (getArguments() != null) {
             mSortType = getArguments().getInt(KEY_SORT_TYPE);
             mStockType = getArguments().getInt(KEY_STOCK_TYPE);
+            Log.d(TAG, "onCreate: " + mSortType + " s " + mStockType);
         }
     }
 
@@ -81,13 +84,13 @@ public class PriceLimitRankingFragment extends BaseFragment {
         requestStockSortList();
     }
 
-    private void requestStockSortList() {
-        Client.getSstockSort(mSortType, mStockType)
+    public void requestStockSortList() {
+        Client.getStockSort(mSortType, mStockType)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
+                .setCallback(new StockCallback<StockResp,ArrayList<StockData>>() {
                     @Override
-                    protected void onRespSuccessData(List<StockData> data) {
-                        updateStockSort(data);
+                    public void onDataMsg(ArrayList<StockData> result, StockResp.Msg msg) {
+                        updateStockSort(result);
                     }
                 })
                 .fireSync();
