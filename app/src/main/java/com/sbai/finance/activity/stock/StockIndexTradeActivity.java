@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.stock;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.chart.ChartSettings;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
@@ -31,6 +33,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -39,6 +42,9 @@ import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomToast;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -128,7 +134,11 @@ public class StockIndexTradeActivity extends BaseActivity {
 
             @Override
             public void onAddOptionalButtonClick() {
-
+                if (LocalUser.getUser().isLogin()) {
+                    checkOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
 
             @Override
@@ -140,7 +150,68 @@ public class StockIndexTradeActivity extends BaseActivity {
 
         requestStockRTData();
     }
+    private void checkOptionalStatus() {
+        if (mTradeFloatButtons.isHasAddInOptional()) {
+            requestDeleteOptional();
+        } else {
+            requestAddOptional();
+        }
+    }
+    private void requestAddOptional() {
+        Client.addOption(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                            CustomToast.getInstance().showText(StockIndexTradeActivity.this, R.string.add_option_succeed);
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
 
+                    @Override
+                    protected void onReceive(Resp<JsonObject> resp) {
+                        super.onReceive(resp);
+                        // 701 代表已经添加过
+                        if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                        }
+                    }
+                }).fire();
+    }
+    private void requestDeleteOptional() {
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
+                .setMessageTextSize(15)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        Client.delOptional(mVariety.getVarietyId())
+                                .setTag(TAG)
+                                .setIndeterminate(StockIndexTradeActivity.this)
+                                .setCallback(new Callback<Resp<JsonObject>>() {
+                                    @Override
+                                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                                        if (resp.isSuccess()) {
+                                            mTradeFloatButtons.setHasAddInOpition(false);
+                                            CustomToast.getInstance().showText(StockIndexTradeActivity.this, R.string.delete_option_succeed);
+                                        } else {
+                                            ToastUtil.curt(resp.getMsg());
+                                        }
+                                    }
+                                })
+                                .fire();
+                        dialog.dismiss();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setNegative(R.string.cancel)
+                .show();
+    }
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -350,9 +421,9 @@ public class StockIndexTradeActivity extends BaseActivity {
                 case 0:
                     return mContext.getString(R.string.point);
                 case 1:
-                    return mContext.getString(R.string.stock_news);
+                    return mContext.getString(R.string.rise);
                 case 2:
-                    return mContext.getString(R.string.stock_finance);
+                    return mContext.getString(R.string.down);
             }
             return super.getPageTitle(position);
         }
