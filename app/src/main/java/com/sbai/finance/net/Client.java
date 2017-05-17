@@ -549,7 +549,7 @@ public class Client {
      * 请求Url  /coterie/userInterest/queryClickUserViewPoint.do
      *
      * @param page
-     * @param userId   用户id
+     * @param userId 用户id
      * @return
      */
     public static API getUserPublishList(int page, Integer userId) {
@@ -688,6 +688,21 @@ public class Client {
         return new API("/stock/trend",
                 new ApiParams()
                         .put("stock_code", stockCode));
+    }
+
+    /**
+     * 接口名称 涨跌幅排行
+     * 请求类型 get
+     * 请求Url  /stock/sort
+     *
+     * @param sort_type  排序类别    	1到4分别是 涨幅排名 跌幅排名 5分钟涨幅 5分钟跌幅
+     * @param stock_type 股票类别,参考市场查询返回值
+     * @return
+     */
+    public static API getStockSort(int sort_type, int stock_type) {
+        return new API("/stock/sort", new ApiParams()
+                .put("sort_type", sort_type)
+                .put("stock_type", stock_type));
     }
 
     /**

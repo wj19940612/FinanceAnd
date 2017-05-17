@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
  * Created by linrongfang on 2017/5/9.
+ * 获取图片后压缩
  */
 
 public class GlideThumbTransform extends BitmapTransformation {

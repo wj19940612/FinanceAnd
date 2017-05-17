@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -18,7 +17,8 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
-import com.sbai.finance.activity.stock.StockIndexTradeActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Variety;
@@ -29,8 +29,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
-import com.sbai.finance.netty.Netty;
-import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -100,10 +98,10 @@ public class OptionalActivity extends BaseActivity implements
                     if (variety.getVarietyType().equalsIgnoreCase(Variety.STOCK_EXPONENT_SH)
                             ||variety.getVarietyType().equalsIgnoreCase(Variety.STOCK_EXPONENT_SZ)
                             ||variety.getVarietyType().equalsIgnoreCase(Variety.STOCK_EXPONENT_GE)){
-                        Launcher.with(getActivity(), StockIndexTradeActivity.class)
+                        Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }else{
-                        Launcher.with(getActivity(), StockTradeActivity.class)
+                        Launcher.with(getActivity(), StockDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }
                 }

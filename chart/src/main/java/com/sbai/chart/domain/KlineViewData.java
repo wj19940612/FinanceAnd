@@ -30,16 +30,8 @@ public class KlineViewData {
         return closePrice;
     }
 
-    public void setClosePrice(float closePrice) {
-        this.closePrice = closePrice;
-    }
-
     public String getDay() {
         return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
     }
 
     public float getMaxPrice() {
