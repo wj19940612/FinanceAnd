@@ -120,7 +120,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && isAdded()) {
+        if (isVisibleToUser && isAdded() && LocalUser.getUser().isLogin()) {
             requestNoReadNewsNumber();
             requestUserAttentionAndroidFansNumber();
         }

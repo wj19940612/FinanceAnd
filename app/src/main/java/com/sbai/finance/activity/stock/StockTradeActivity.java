@@ -1,8 +1,10 @@
 package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +35,9 @@ import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
@@ -58,11 +64,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class StockTradeActivity extends BaseActivity {
 
-    private static final int REQ_CODE_PUBLIS_VIEWPOINT = 172;
+    public static final int REQ_CODE_PUBLISH_VIEWPOINT = 172;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -109,6 +116,7 @@ public class StockTradeActivity extends BaseActivity {
     private Prediction mPrediction;
 
     PredictionDialogFragment mPredictionFragment;
+    private RefreshPointReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +139,14 @@ public class StockTradeActivity extends BaseActivity {
         setTradeFloatButton();
         requestStockRTData();
         requestOptionalStatus();
+
+        registerRefreshReceiver();
+    }
+
+    private void registerRefreshReceiver() {
+        mReceiver = new RefreshPointReceiver();
+        IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
     private void setTradeFloatButton() {
@@ -255,11 +271,19 @@ public class StockTradeActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQ_CODE_PUBLIS_VIEWPOINT:
+                case REQ_CODE_PUBLISH_VIEWPOINT:
                     ViewpointFragment viewpointFragment = getViewpointFragment();
                     if (viewpointFragment != null) {
                         viewpointFragment.refreshPointList();
@@ -344,11 +368,6 @@ public class StockTradeActivity extends BaseActivity {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-    }
 
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
@@ -487,7 +506,7 @@ public class StockTradeActivity extends BaseActivity {
         Launcher.with(getActivity(), PublishOpinionActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .executeForResult(REQ_CODE_PUBLIS_VIEWPOINT);
+                .executeForResult(REQ_CODE_PUBLISH_VIEWPOINT);
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {
@@ -587,5 +606,29 @@ public class StockTradeActivity extends BaseActivity {
                         mStockKlineView.setDataList(dataList);
                     }
                 }).fire();
+    }
+
+    private class RefreshPointReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+            AttentionAndFansNumberModel attentionAndFansNumberModel =
+                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+            ViewpointFragment viewpointFragment = getViewpointFragment();
+            if (viewpointFragment != null) {
+                if (details != null) {
+                    viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+                } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                    viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+                } else {
+                    viewpointFragment.refreshPointList();
+                }
+
+            }
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,12 +28,14 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
-import com.sbai.finance.fragment.stock.FinanceFragment;
-import com.sbai.finance.fragment.stock.StockNewsFragment;
+import com.sbai.finance.fragment.stock.PriceLimitRankingFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
@@ -55,6 +61,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 
 public class StockIndexTradeActivity extends BaseActivity {
 
@@ -103,6 +111,7 @@ public class StockIndexTradeActivity extends BaseActivity {
     private Prediction mPrediction;
 
     PredictionDialogFragment mPredictionFragment;
+    private RefreshPointReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +158,16 @@ public class StockIndexTradeActivity extends BaseActivity {
 
 
         requestStockRTData();
+        registerRefreshReceiver();
     }
+
+
+    private void registerRefreshReceiver() {
+        mReceiver = new RefreshPointReceiver();
+        IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+    }
+
     private void checkOptionalStatus() {
         if (mTradeFloatButtons.isHasAddInOptional()) {
             requestDeleteOptional();
@@ -157,6 +175,7 @@ public class StockIndexTradeActivity extends BaseActivity {
             requestAddOptional();
         }
     }
+
     private void requestAddOptional() {
         Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
@@ -182,6 +201,7 @@ public class StockIndexTradeActivity extends BaseActivity {
                     }
                 }).fire();
     }
+
     private void requestDeleteOptional() {
         SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
                 .setMessageTextSize(15)
@@ -212,6 +232,7 @@ public class StockIndexTradeActivity extends BaseActivity {
                 .setNegative(R.string.cancel)
                 .show();
     }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -223,6 +244,14 @@ public class StockIndexTradeActivity extends BaseActivity {
         super.onPause();
         stopScheduleJob();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
 
     @Override
     public void onTimeUp(int count) {
@@ -278,12 +307,6 @@ public class StockIndexTradeActivity extends BaseActivity {
 
     private void initData() {
         mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
 
@@ -344,10 +367,15 @@ public class StockIndexTradeActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == 2) {
-                    FinanceFragment fragment = (FinanceFragment) mSubPageAdapter.getFragment(position);
-                    if (fragment != null) {
-                        fragment.requestCompanyAnnualReport(0);
+                if (position == 1) {
+                    PriceLimitRankingFragment priceLimitRankingFragment = getPriceLimitRankingFragment(1);
+                    if (priceLimitRankingFragment != null) {
+                        priceLimitRankingFragment.requestStockSortList();
+                    }
+                } else if (position == 2) {
+                    PriceLimitRankingFragment priceLimitRankingFragment = getPriceLimitRankingFragment(2);
+                    if (priceLimitRankingFragment != null) {
+                        priceLimitRankingFragment.requestStockSortList();
                     }
                 }
 
@@ -359,6 +387,14 @@ public class StockIndexTradeActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private PriceLimitRankingFragment getPriceLimitRankingFragment(int position) {
+        Fragment fragment = mSubPageAdapter.getFragment(position);
+        if (fragment instanceof PriceLimitRankingFragment) {
+            return (PriceLimitRankingFragment) fragment;
+        }
+        return null;
     }
 
     private void requestPrediction() {
@@ -401,18 +437,24 @@ public class StockIndexTradeActivity extends BaseActivity {
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
 //                .putExtra(Launcher.EX_PAYLOAD_2, mStockRTData)
-                .execute();
+                .executeForResult(StockTradeActivity.REQ_CODE_PUBLISH_VIEWPOINT);
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
         Context mContext;
+        int mExchangeCode;
 
         public SubPageAdapter(FragmentManager fm, Context context) {
             super(fm);
             mFragmentManager = fm;
             mContext = context;
+            try {
+                mExchangeCode = Integer.valueOf(mVariety.getExchangeCode());
+            } catch (NumberFormatException e) {
+
+            }
         }
 
         @Override
@@ -434,9 +476,9 @@ public class StockIndexTradeActivity extends BaseActivity {
                 case 0:
                     return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return StockNewsFragment.newInstance(mVariety.getVarietyType());
+                    return PriceLimitRankingFragment.newInstance(1, mExchangeCode);
                 case 2:
-                    return FinanceFragment.newInstance(mVariety.getVarietyType());
+                    return PriceLimitRankingFragment.newInstance(2, mExchangeCode);
             }
             return null;
         }
@@ -449,6 +491,14 @@ public class StockIndexTradeActivity extends BaseActivity {
         public Fragment getFragment(int position) {
             return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
         }
+    }
+
+    private ViewpointFragment getViewpointFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(0);
+        if (fragment != null && fragment instanceof ViewpointFragment) {
+            return (ViewpointFragment) fragment;
+        }
+        return null;
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -500,5 +550,29 @@ public class StockIndexTradeActivity extends BaseActivity {
                         mStockKlineView.setDataList(dataList);
                     }
                 }).fire();
+    }
+
+    private class RefreshPointReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+            AttentionAndFansNumberModel attentionAndFansNumberModel =
+                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+            ViewpointFragment viewpointFragment = getViewpointFragment();
+            if (viewpointFragment != null) {
+                if (details != null) {
+                    viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+                } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                    viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+                } else {
+                    viewpointFragment.refreshPointList();
+                }
+
+            }
+        }
     }
 }

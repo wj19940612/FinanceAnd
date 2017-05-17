@@ -154,6 +154,7 @@ public class OpinionDetailsActivity extends BaseActivity {
                             intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
                             LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
                                     .sendBroadcast(intent);
+                            setResult(RESULT_OK);
                         }
                     }
                 }).fire();
@@ -526,6 +527,7 @@ public class OpinionDetailsActivity extends BaseActivity {
                                         intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
                                         LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
                                                 .sendBroadcast(intent);
+                                        setResult(RESULT_OK);
 
                                     }
                                 }

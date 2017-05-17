@@ -1,6 +1,6 @@
 package com.sbai.finance.model.stock;
 
-public class StockData  {
+public class StockData {
 
     /**
      * code_name : 厦门钨业
@@ -25,6 +25,8 @@ public class StockData  {
     private String rise_price;
     //股票代码
     private String stock_code;
+    //涨跌幅	 股票排行榜特有的字段
+    private String value1;
 
     public String getCode_name() {
         return code_name;
@@ -82,6 +84,14 @@ public class StockData  {
         this.stock_code = stock_code;
     }
 
+    public String getValue1() {
+        return value1;
+    }
+
+    public void setValue1(String value1) {
+        this.value1 = value1;
+    }
+
     @Override
     public String toString() {
         return "StockData{" +
@@ -92,8 +102,7 @@ public class StockData  {
                 ", rise_pre='" + rise_pre + '\'' +
                 ", rise_price='" + rise_price + '\'' +
                 ", stock_code='" + stock_code + '\'' +
+                ", value1='" + value1 + '\'' +
                 '}';
     }
-
-
 }
