@@ -18,12 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -83,12 +85,19 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 										getString(R.string.select_help, wantHelpHimOrYou.getUserName()))
 										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 											@Override
-											public void onClick(Dialog dialog) {
-												dialog.dismiss();
-												Launcher.with(getActivity(),PayIntentionActivity.class)
-														.putExtra(Launcher.EX_PAYLOAD, mDataId)
-														.putExtra(Launcher.USER_ID, mWantHelpHimOrYouList.get(position).getUserId())
-														.execute();
+											public void onClick(final Dialog dialog) {
+												Client.chooseGoodPeople(mDataId,  mWantHelpHimOrYouList.get(position).getUserId())
+														.setTag(TAG)
+														.setIndeterminate(WantHelpHimOrYouActivity.this)
+														.setCallback(new Callback<Resp<JsonPrimitive>>() {
+															@Override
+															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+																Launcher.with(getActivity(),PayIntentionActivity.class)
+																		.putExtra(Launcher.EX_PAYLOAD, mDataId)
+																		.execute();
+																dialog.dismiss();
+															}
+														}).fire();
 											}
 										})
 										.setMessageTextSize(16)
@@ -239,12 +248,19 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 										getString(R.string.select_help, wantHelpHimOrYou.getUserName()))
 										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 											@Override
-											public void onClick(Dialog dialog) {
-												dialog.dismiss();
-												Launcher.with(getActivity(),PayIntentionActivity.class)
-														.putExtra(Launcher.EX_PAYLOAD, mDataId)
-														.putExtra(Launcher.USER_ID, mWantHelpHimOrYouList.get(position).getUserId())
-														.execute();
+											public void onClick(final Dialog dialog) {
+												Client.chooseGoodPeople(mDataId,  mWantHelpHimOrYouList.get(position).getUserId())
+														.setTag(TAG)
+														.setIndeterminate(WantHelpHimOrYouActivity.this)
+														.setCallback(new Callback<Resp<JsonPrimitive>>() {
+															@Override
+															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+																Launcher.with(getActivity(),PayIntentionActivity.class)
+																		.putExtra(Launcher.EX_PAYLOAD, mDataId)
+																		.execute();
+																dialog.dismiss();
+															}
+														}).fire();
 											}
 										})
 										.setMessageTextSize(16)

@@ -1093,6 +1093,20 @@ public class Client {
                         .put("platform", platform));
     }
 
+	/**
+	 * 选择好心人
+	 *
+	 * @param id
+	 * @param selectedId
+	 * @return
+	 */
+	public static API chooseGoodPeople(int id, int selectedId) {
+	    return new API("/coterie/help/loan/selected.do",
+			    new ApiParams()
+					    .put("id", id)
+					    .put("selectedId", selectedId));
+    }
+
     /**
      * 支付查询
      *

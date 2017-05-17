@@ -151,4 +151,9 @@
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
+    <style name="MyDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>
