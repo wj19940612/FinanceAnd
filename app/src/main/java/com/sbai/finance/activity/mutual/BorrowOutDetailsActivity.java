@@ -171,7 +171,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         if (mBorrowDetails.getIsAttention() == BorrowDetails.ATTENTION){
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(mBorrowDetails.getUserName(),
                     getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
-                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
+                    ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
         }else{
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(mBorrowDetails.getUserName(),
                   "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));

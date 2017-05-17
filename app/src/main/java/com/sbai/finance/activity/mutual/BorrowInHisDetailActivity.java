@@ -149,7 +149,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         if (data.getIsAttentionSelected() == BorrowDetails.ATTENTION){
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
                     getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
-                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
+                    ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
         }else{
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
                     "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
