@@ -61,7 +61,7 @@ import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POI
 
 public class OpinionDetailsActivity extends BaseActivity {
 
-    public static final String REFRESH_ATTENTION = "refresh_attention";
+    public static final String REFRESH_ATTENTION = "refresh_point";
 
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
@@ -154,7 +154,7 @@ public class OpinionDetailsActivity extends BaseActivity {
                             intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
                             LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
                                     .sendBroadcast(intent);
-                            setResult(RESULT_OK);
+//                            setResult(RESULT_OK, intent);
                         }
                     }
                 }).fire();
@@ -527,7 +527,6 @@ public class OpinionDetailsActivity extends BaseActivity {
                                         intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
                                         LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
                                                 .sendBroadcast(intent);
-                                        setResult(RESULT_OK);
 
                                     }
                                 }

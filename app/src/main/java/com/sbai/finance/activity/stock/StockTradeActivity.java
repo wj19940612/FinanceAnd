@@ -285,12 +285,30 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQ_CODE_PUBLISH_VIEWPOINT:
-                    ViewpointFragment viewpointFragment = getViewpointFragment();
-                    if (viewpointFragment != null) {
-                        viewpointFragment.refreshPointList();
-                    }
+                case ViewpointFragment.REQ_CODE_ATTENTION:
+                    ToastUtil.curt("收到回到");
+                    updateViewPointPage(data);
                     break;
+            }
+        }
+    }
+
+    private void updateViewPointPage(Intent data) {
+        OpinionDetails details = (OpinionDetails) data.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+        WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+        AttentionAndFansNumberModel attentionAndFansNumberModel =
+                (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+        ViewpointFragment viewpointFragment = getViewpointFragment();
+        if (viewpointFragment != null) {
+            if (details != null) {
+                viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+            } else {
+                viewpointFragment.refreshPointList();
             }
         }
     }
@@ -304,6 +322,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             requestStockRTData();
         }
     }
+
 
     private void requestStockRTData() {
         Client.getStockRealtimeData(mVariety.getVarietyType())
@@ -446,18 +465,18 @@ public abstract class StockTradeActivity extends BaseActivity {
         if (mPredictionFragment == null) {
             mPredictionFragment = PredictionDialogFragment.newInstance()
                     .setOnPredictButtonListener(new PredictionDialogFragment.OnPredictButtonListener() {
-                @Override
-                public void onBullishButtonClick(int directionLong) {
-                    mPrediction.setDirection(directionLong);
-                    openPublishPointPage();
-                }
+                        @Override
+                        public void onBullishButtonClick(int directionLong) {
+                            mPrediction.setDirection(directionLong);
+                            openPublishPointPage();
+                        }
 
-                @Override
-                public void onBearishButtonClick(int directionShort) {
-                    mPrediction.setDirection(directionShort);
-                    openPublishPointPage();
-                }
-            });
+                        @Override
+                        public void onBearishButtonClick(int directionShort) {
+                            mPrediction.setDirection(directionShort);
+                            openPublishPointPage();
+                        }
+                    });
         }
         mPredictionFragment.show(getSupportFragmentManager());
     }
@@ -525,24 +544,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     private class RefreshPointReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
-
-            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-            AttentionAndFansNumberModel attentionAndFansNumberModel =
-                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-            ViewpointFragment viewpointFragment = getViewpointFragment();
-            if (viewpointFragment != null) {
-                if (details != null) {
-                    viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
-                } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                    viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
-                } else {
-                    viewpointFragment.refreshPointList();
-                }
-
-            }
+            updateViewPointPage(intent);
         }
     }
 }
