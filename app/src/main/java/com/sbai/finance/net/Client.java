@@ -10,6 +10,7 @@ public class Client {
     private static final int POST = Request.Method.POST;
     public static final int DEFAULT_PAGE_SIZE = 15;
 
+
     /**
      * 获取期货品种
      *
@@ -26,6 +27,60 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
+//<<<<<<< HEAD
+//
+//    /**
+//     * 股票除指数品种
+//     *
+//     * @param page
+//     * @param pageSize
+//     * @return
+//     */
+//    public static API getStockVariety(Integer page, Integer pageSize, String search) {
+//        return new API("/order/order/getStockVariety.do",
+//                new ApiParams()
+//                        .put("page", page)
+//                        .put("pageSize", pageSize)
+//                        .put("search", search));
+//    }
+//
+//    /**
+//     * 获取借款详情
+//     *
+//     * @param id
+//     * @return
+//     */
+//    public static API getBorrowMoneyDetail(int id) {
+//        return new API(POST, "/coterie/help/loan/showDetails.do",
+//                new ApiParams()
+//                        .put("id", id));
+//    }
+//
+//    /**
+//     * 给予帮助
+//     *
+//     * @param id
+//     * @return
+//     */
+//    public static API giveHelp(int id) {
+//        return new API(POST, "/coterie/help/loan/intention.do",
+//                new ApiParams()
+//                        .put("id", id));
+//    }
+//
+//    /**
+//     * 想要帮助他/我的人列表
+//     *
+//     * @param id
+//     * @return
+//     */
+//    public static API getWantHelpHimOrYouList(int id) {
+//        return new API(POST, "/coterie/help/loan/intentionCount.do",
+//                new ApiParams()
+//                        .put("id", id));
+//    }
+//=======
+//>>>>>>> dev
 
     /**
      * 股票除指数品种
@@ -407,15 +462,29 @@ public class Client {
     }
 
     /**
+     * 接口名称 大事件列表
+     *
      * @param page     页码
      * @param pageSize 页码大小
      * @return
      */
-    public static API getBreakingNewsData(Integer page, Integer pageSize) {
+    public static API getBreakingNewsData(int page, int pageSize) {
         return new API("/user/breakingNews/findBreakingNewsList.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize));
+    }
+
+    /**
+     * 接口名称 显示内容
+     * 请求类型 post
+     * 请求Url  user/breakingNews/showDetail.do
+     *
+     * @param id
+     * @return
+     */
+    public static API getBigEventContent(String id) {
+        return new API("/user/breakingNews/showDetail.do", new ApiParams().put("id", id));
     }
 
     /**
@@ -612,6 +681,7 @@ public class Client {
                 new ApiParams()
                         .put("stock_code", stockCodes));
     }
+
     /**
      * 获取多个期货合约行情数据
      *
@@ -855,6 +925,7 @@ public class Client {
      * @param userId
      * @return
      */
+
     public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money, String userId) {
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
@@ -1026,7 +1097,6 @@ public class Client {
      * @param contentType
      * @return
      */
-
     public static API sendFeedback(String content, int contentType) {
         return new API(POST, "/user/userFeedback/addFeedback.do",
                 new ApiParams()
