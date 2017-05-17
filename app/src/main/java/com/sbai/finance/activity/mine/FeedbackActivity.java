@@ -89,7 +89,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         ButterKnife.bind(this);
 
         initViews();
-        requestFeedbackList();
+        requestFeedbackList(true);
     }
 
     private void initViews() {
@@ -102,14 +102,14 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
 
     //只有在登录的情况下 才请求记录
-    private void requestFeedbackList() {
+    private void requestFeedbackList(final boolean needScrollToLast) {
         Client.getFeedback(mPage, mPageSize)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
                     @Override
                     protected void onRespSuccessData(List<Feedback> data) {
-                        updateFeedbackList(data);
+                        updateFeedbackList(data,needScrollToLast);
                     }
 
                     @Override
@@ -121,7 +121,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .fire();
     }
 
-    private void updateFeedbackList(List<Feedback> data) {
+    private void updateFeedbackList(List<Feedback> data,boolean needScrollToLast) {
         if (data == null) {
             stopRefreshAnimation();
             return;
@@ -135,6 +135,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
+        if (needScrollToLast){
+            mListView.smoothScrollToPosition(mFeedbackAdapter.getCount() - 1);
+        }
     }
 
     private void updateTitle(List<Feedback> data) {
@@ -152,7 +155,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        requestFeedbackList();
+        requestFeedbackList(false);
     }
 
     private void stopRefreshAnimation() {
@@ -463,6 +466,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
             private ImageView createImageview(Context context) {
                 ImageView image = new ImageView(context);
+                image.setScaleType(ImageView.ScaleType.FIT_XY);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
                 int margin = (int) Display.dp2Px(5.0f, context.getResources());
