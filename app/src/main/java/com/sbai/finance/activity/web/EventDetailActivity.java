@@ -87,10 +87,9 @@ public class EventDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
-        initWebView();
         EventModel event = (EventModel) getIntent().getSerializableExtra(EX_EVENT);
-        initData(event);
         mRawCookie = getIntent().getStringExtra(EX_RAW_COOKIE);
+        initData(event);
         String eventId = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
         if (!TextUtils.isEmpty(eventId)) {
             Client.getBigEventContent(eventId)
@@ -123,6 +122,7 @@ public class EventDetailActivity extends BaseActivity {
                 mPageUrl = event.getUrl();
             }
         }
+        initWebView();
     }
 
     protected void initWebView() {
