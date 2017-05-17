@@ -540,65 +540,64 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					}
 				});
-				if (item.getContentImg()==null){
-					item.setContentImg("");
-				}
-				String[] images = item.getContentImg().split(",");
-				switch (images.length) {
-					case 1:
-						if (TextUtils.isEmpty(images[0])) {
-							mImage1.setVisibility(View.GONE);
-							mImage2.setVisibility(View.GONE);
-							mImage3.setVisibility(View.GONE);
-							mImage4.setVisibility(View.GONE);
-						} else {
+
+				if (item.getContentImg() != null) {
+					String[] images = item.getContentImg().split(",");
+					switch (images.length) {
+						case 1:
+							if (TextUtils.isEmpty(images[0])) {
+								mImage1.setVisibility(View.GONE);
+								mImage2.setVisibility(View.GONE);
+								mImage3.setVisibility(View.GONE);
+								mImage4.setVisibility(View.GONE);
+							} else {
+								mImage1.setVisibility(View.VISIBLE);
+								loadImage(context, images[0], mImage1);
+								mImage2.setVisibility(View.INVISIBLE);
+								mImage3.setVisibility(View.INVISIBLE);
+								mImage4.setVisibility(View.INVISIBLE);
+								imageClick(context, images, mImage1, 0);
+							}
+							break;
+						case 2:
 							mImage1.setVisibility(View.VISIBLE);
 							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.INVISIBLE);
+							mImage2.setVisibility(View.VISIBLE);
+							loadImage(context, images[1], mImage2);
 							mImage3.setVisibility(View.INVISIBLE);
 							mImage4.setVisibility(View.INVISIBLE);
 							imageClick(context, images, mImage1, 0);
-						}
-						break;
-					case 2:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.VISIBLE);
-						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.INVISIBLE);
-						mImage4.setVisibility(View.INVISIBLE);
-						imageClick(context, images, mImage1, 0);
-						imageClick(context, images, mImage2, 1);
-						break;
-					case 3:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.VISIBLE);
-						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.VISIBLE);
-						loadImage(context, images[2], mImage3);
-						mImage4.setVisibility(View.INVISIBLE);
-						imageClick(context, images, mImage1, 0);
-						imageClick(context, images, mImage2, 1);
-						imageClick(context, images, mImage3, 2);
-						break;
-					case 4:
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.VISIBLE);
-						loadImage(context, images[1], mImage2);
-						mImage3.setVisibility(View.VISIBLE);
-						loadImage(context, images[2], mImage3);
-						mImage4.setVisibility(View.VISIBLE);
-						loadImage(context, images[3], mImage4);
-						imageClick(context, images, mImage1, 0);
-						imageClick(context, images, mImage2, 1);
-						imageClick(context, images, mImage3, 2);
-						imageClick(context, images, mImage4, 3);
-						break;
-					default:
-						break;
-
+							imageClick(context, images, mImage2, 1);
+							break;
+						case 3:
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.VISIBLE);
+							loadImage(context, images[1], mImage2);
+							mImage3.setVisibility(View.VISIBLE);
+							loadImage(context, images[2], mImage3);
+							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
+							imageClick(context, images, mImage2, 1);
+							imageClick(context, images, mImage3, 2);
+							break;
+						case 4:
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.VISIBLE);
+							loadImage(context, images[1], mImage2);
+							mImage3.setVisibility(View.VISIBLE);
+							loadImage(context, images[2], mImage3);
+							mImage4.setVisibility(View.VISIBLE);
+							loadImage(context, images[3], mImage4);
+							imageClick(context, images, mImage1, 0);
+							imageClick(context, images, mImage2, 1);
+							imageClick(context, images, mImage3, 2);
+							imageClick(context, images, mImage4, 3);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 
@@ -644,10 +643,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							mEconomicCircleAdapter.notifyDataSetChanged();
 						} else {
 							economicCircle.setIsAttention(1);
-
+							mEconomicCircleAdapter.notifyDataSetChanged();
 						}
 					}
 				}
+
 				if (whetherAttentionShieldOrNot.isShield()) {
 					for (Iterator it = mEconomicCircleList.iterator(); it.hasNext(); ) {
 						EconomicCircle economicCircle = (EconomicCircle) it.next();
@@ -656,7 +656,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					}
 					mEconomicCircleAdapter.addAll(mEconomicCircleList);
-					mEconomicCircleAdapter.notifyDataSetChanged();
 				}
 			}
 		}

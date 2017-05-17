@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@color/greyLightAssist"
               android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/home"/>
+
     <ScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -16,11 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <com.sbai.finance.view.TitleBar
-                android:id="@+id/titleBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:titleText="@string/home"/>
+
             <com.sbai.finance.view.HomeBanner
                 android:id="@+id/homeBanner"
                 android:layout_width="match_parent"
@@ -40,20 +43,22 @@
                 android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:paddingBottom="17dp"
-                android:paddingRight="@dimen/common_padding"
                 android:paddingLeft="@dimen/common_padding"
+                android:paddingRight="@dimen/common_padding"
                 android:paddingTop="15dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="19dp"
+                    android:background="@drawable/bg_event"
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:layout_marginRight="19dp"
-                    android:background="@drawable/bg_event"
+                    android:text="大事件"
                     android:textColor="@color/redPrimary"
-                    android:textSize="10sp"
-                    android:text="大事件"/>
+                    android:textSize="10sp"/>
+
                 <TextView
                     android:id="@+id/event"
                     android:layout_width="match_parent"
@@ -71,32 +76,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
                 android:layout_marginBottom="44dp"
-                android:orientation="vertical"
-                android:background="@android:color/white">
+                android:layout_marginTop="14dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
 
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/common_padding"
                     android:paddingBottom="@dimen/common_padding"
+                    android:paddingLeft="@dimen/common_padding"
                     android:paddingTop="15dp"
+                    android:text="@string/recommend"
                     android:textColor="@color/blackAssist"
-                    android:textSize="14sp"
-                    android:text="@string/recommend"/>
+                    android:textSize="14sp"/>
+
                 <com.sbai.finance.view.MyGridView
                     android:id="@+id/topicGv"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:horizontalSpacing="15dp"
-                    android:verticalSpacing="28dp"
                     android:numColumns="2"
                     android:paddingBottom="@dimen/common_split"
                     android:paddingLeft="@dimen/common_padding"
                     android:paddingRight="@dimen/common_padding"
-                    android:scrollbars="none"/>
+                    android:scrollbars="none"
+                    android:verticalSpacing="28dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

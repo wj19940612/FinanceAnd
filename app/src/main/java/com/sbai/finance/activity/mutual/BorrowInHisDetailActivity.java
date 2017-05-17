@@ -149,7 +149,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                 ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
         mUserNameLand.setText(attentionSpannableString);
         mPublishTime.setText(this.getString(R.string.borrow_in_time,
-                this.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(data.getAuditTime())));
+                this.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(data.getConfirmTime())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));

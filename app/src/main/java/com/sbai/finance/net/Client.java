@@ -1061,6 +1061,50 @@ public class Client {
                         .put("exchangeId", exchangeId));
     }
 
+    /**
+     * 获取意向金金额
+     *
+     * @return
+     */
+    public static API getIntentionAmount() {
+        return new API("/user/userpay/getUserLoanMoney.do");
+    }
+
+    /**
+     * 获取可用平台
+     *
+     * @return
+     */
+    public static API getUsablePlatform() {
+        return new API("/user/finance/platform/selectUsablePlatform.do");
+    }
+
+    /**
+     * 获取支付路径
+     *
+     * @param orderId
+     * @param platform
+     * @return
+     */
+    public static API getPaymentPath(int orderId, String platform) {
+        return new API("/user/userpay/payLoanMoney.do",
+                new ApiParams()
+                        .put("orderId", orderId)
+                        .put("platform", platform));
+    }
+
+    /**
+     * 支付查询
+     *
+     * @param orderId
+     * @return
+     */
+    public static API paymentQuery(int orderId) {
+        return new API("/user/userpay/confirmPay.do",
+                new ApiParams()
+                        .put("orderId", orderId));
+    }
+
 //    /**
 //     * 接口名称 个股资讯
 //     * 请求类型 get
