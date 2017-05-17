@@ -49,6 +49,7 @@ public class Variety implements Parcelable {
     private int varietyId;
     private String varietyName;
     private String varietyType;
+    private int exchangeCode;
 
     public boolean isStock() {
         return getBigVarietyTypeCode().equalsIgnoreCase(VAR_STOCK);
@@ -166,6 +167,39 @@ public class Variety implements Parcelable {
         return decimalScale;
     }
 
+    public int getExchangeCode() {
+        return exchangeCode;
+    }
+
+    public void setExchangeCode(int exchangeCode) {
+        this.exchangeCode = exchangeCode;
+    }
+
+    public Variety() {
+    }
+
+    @Override
+    public String toString() {
+        return "Variety{" +
+                "baseline=" + baseline +
+                ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+                ", contractsCode='" + contractsCode + '\'' +
+                ", decimalScale=" + decimalScale +
+                ", displayMarketTimes='" + displayMarketTimes + '\'' +
+                ", exchangeId=" + exchangeId +
+                ", exchangeStatus=" + exchangeStatus +
+                ", flashChartPriceInterval=" + flashChartPriceInterval +
+                ", marketPoint=" + marketPoint +
+                ", openMarketTime='" + openMarketTime + '\'' +
+                ", smallVarietyTypeCode='" + smallVarietyTypeCode + '\'' +
+                ", sort=" + sort +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", exchangeCode=" + exchangeCode +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -188,9 +222,7 @@ public class Variety implements Parcelable {
         dest.writeInt(this.varietyId);
         dest.writeString(this.varietyName);
         dest.writeString(this.varietyType);
-    }
-
-    public Variety() {
+        dest.writeInt(this.exchangeCode);
     }
 
     protected Variety(Parcel in) {
@@ -209,9 +241,10 @@ public class Variety implements Parcelable {
         this.varietyId = in.readInt();
         this.varietyName = in.readString();
         this.varietyType = in.readString();
+        this.exchangeCode = in.readInt();
     }
 
-    public static final Parcelable.Creator<Variety> CREATOR = new Parcelable.Creator<Variety>() {
+    public static final Creator<Variety> CREATOR = new Creator<Variety>() {
         @Override
         public Variety createFromParcel(Parcel source) {
             return new Variety(source);
@@ -222,25 +255,4 @@ public class Variety implements Parcelable {
             return new Variety[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "Variety{" +
-                "baseline=" + baseline +
-                ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
-                ", contractsCode='" + contractsCode + '\'' +
-                ", decimalScale=" + decimalScale +
-                ", displayMarketTimes='" + displayMarketTimes + '\'' +
-                ", exchangeId=" + exchangeId +
-                ", exchangeStatus=" + exchangeStatus +
-                ", flashChartPriceInterval=" + flashChartPriceInterval +
-                ", marketPoint=" + marketPoint +
-                ", openMarketTime='" + openMarketTime + '\'' +
-                ", smallVarietyTypeCode='" + smallVarietyTypeCode + '\'' +
-                ", sort=" + sort +
-                ", varietyId=" + varietyId +
-                ", varietyName='" + varietyName + '\'' +
-                ", varietyType='" + varietyType + '\'' +
-                '}';
-    }
 }

@@ -44,8 +44,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@color/warningText"
+            android:textColor="@color/up_or_down_price_color"
             android:textSize="@dimen/navigate_size"
+            android:text="@string/stock_no_data"
             tool:text="1.180"/>
 
         <TextView
@@ -53,8 +54,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@color/warningText"
+            android:textColor="@color/up_or_down_price_color"
             android:textSize="@dimen/navigate_size"
+            android:text="@string/stock_no_data"
             tool:text="+25.53%"/>
     </LinearLayout>
 

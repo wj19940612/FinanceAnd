@@ -41,7 +41,7 @@
     <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
     <string name="login">登  录</string>
-    <string name="resend_after_n_seconds">%1$ds后重发</string>
+    <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
 
     <!--Home-->
@@ -369,7 +369,7 @@
     <string name="company_address">公司地址</string>
     <string name="business_scope">经营范围</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--股票排行榜-->
+    <string name="stock_no_data">--</string>
 
 </resources>

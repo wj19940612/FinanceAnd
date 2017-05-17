@@ -373,18 +373,14 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setText(stockData.getLast_price());
                     String priceChange = stockData.getRise_pre();
                     if (priceChange.startsWith("-")) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                        mLastPrice.setSelected(true);
+                        mRate.setSelected(true);
                         mRate.setText(priceChange + "%");
                     } else {
-
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                        mLastPrice.setSelected(false);
+                        mRate.setSelected(false);
                         mRate.setText("+" + priceChange + "%");
                     }
-                } else {
-                    mLastPrice.setText("--");
-                    mRate.setText("--");
                 }
 
                 if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {

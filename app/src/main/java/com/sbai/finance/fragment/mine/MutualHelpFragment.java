@@ -220,9 +220,10 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             updateNewsReadStatus(position, item);
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
+                    Log.d(TAG, "onItemClick: ");
                     Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-                            .putExtra(Launcher.USER_ID, item.getUserId())
+                            .putExtra(Launcher.USER_ID, item.getUserInfo().getId())
                             .execute();
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
