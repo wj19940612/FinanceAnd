@@ -680,7 +680,7 @@ public class Client {
     }
 
     /**
-     * 查询自选gu
+     * 查询自选
      *
      * @param bigVarietyTypeCode
      * @return

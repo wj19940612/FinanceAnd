@@ -24,8 +24,8 @@ public class StockKlineData extends KlineViewData {
      * open_price : 40.49
      */
 
-    private String business_amount;
-    private String business_balance;
+    private String business_amount; // 交易量（91.80万）
+    private String business_balance; // 交易额（8.09亿）
     private String close_price;
     private String date;
     private String high_price;
@@ -88,5 +88,10 @@ public class StockKlineData extends KlineViewData {
             e.printStackTrace();
         }
         return "";
+    }
+
+    @Override
+    public long getNowVolume() {
+        return Long.valueOf(getBusiness_amount()).longValue();
     }
 }

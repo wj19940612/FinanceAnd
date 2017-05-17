@@ -5,5 +5,6 @@
     <string name="highestPrice">最高</string>
     <string name="lowestPrice">最低</string>
     <string name="closePrice">收盘</string>
-
+    <string name="businessAmount">交易量</string>
+    
 </resources>

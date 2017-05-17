@@ -372,6 +372,8 @@ public class StockTradeActivity extends BaseActivity {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        settings2.setIndexesEnable(false);
+        settings2.setIndexesBaseLines(2);
         mStockKlineView.setDayLine(true);
         mStockKlineView.setSettings(settings2);
         mStockKlineView.setOnAchieveTheLastListener(null);
