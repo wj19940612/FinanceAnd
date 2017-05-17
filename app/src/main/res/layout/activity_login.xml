@@ -16,9 +16,9 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatImageView
-            android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scaleType="fitXY"
             app:srcCompat="@drawable/bg_login"/>
 
         <android.support.v7.widget.AppCompatImageView
@@ -32,13 +32,13 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/appIconName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
             android:layout_below="@+id/deletePage"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="70dp"
             android:drawablePadding="10dp"
-            android:drawableTop="@mipmap/ic_launcher_round"
+            android:drawableTop="@drawable/logo_login"
             android:gravity="center_horizontal"
             android:text="@string/app_name"
             android:textColor="@android:color/white"/>
@@ -51,8 +51,6 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.LinearLayoutCompat
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:id="@+id/phoneLl"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -60,6 +58,8 @@
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
                 android:layout_marginTop="45dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="center_vertical">
 
                 <android.support.v7.widget.AppCompatTextView
@@ -84,21 +84,9 @@
                     android:id="@+id/phoneNumberClear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:visibility="invisible"
                     app:srcCompat="@drawable/ic_login_label_delete"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/getAuthCode"
-                    android:layout_width="93dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/btn_auth_code_rounded"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="@string/get_auth_code"
-                    android:textColor="@color/login_get_auth_code_color"/>
             </android.support.v7.widget.LinearLayoutCompat>
 
             <View
@@ -109,12 +97,12 @@
                 android:background="@color/greyLightAssist"/>
 
             <android.support.v7.widget.LinearLayoutCompat
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
                 android:minHeight="60dp">
 
@@ -139,14 +127,17 @@
                     android:maxLength="10"
                     android:paddingTop="10dp"/>
 
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/codeClear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="98dp"
-                    android:layout_marginTop="5dp"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/ic_login_label_delete"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/getAuthCode"
+                    android:layout_width="93dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/btn_auth_code_rounded"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="@string/get_auth_code"
+                    android:textColor="@color/login_get_auth_code_color"/>
+
             </android.support.v7.widget.LinearLayoutCompat>
 
             <View
