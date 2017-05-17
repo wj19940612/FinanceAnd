@@ -275,7 +275,7 @@ public class StrUtil {
 
 
 
-		
+
 		Drawable d = ContextCompat.getDrawable(context, drawableRes);
 		d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 		CenteredImageSpan span = new CenteredImageSpan(context, drawableRes);

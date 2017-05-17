@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowIn;
@@ -39,6 +42,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -79,7 +83,8 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mBorrowInAdapter.setCallback(new BorrowInAdapter.Callback() {
             @Override
             public void OnItemCancelBorrowClick(final int id) {
-                SmartDialog.with(getActivity())
+                SmartDialog.with(getActivity(), getString(R.string.cancel_confirm))
+                        .setMessageTextSize(15)
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
@@ -87,8 +92,9 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                                 dialog.dismiss();
                             }
                         })
-                        .setTitle(getString(R.string.cancel_confirm))
                         .setTitleMaxLines(1)
+                        .setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist))
+                        .setMessageTextColor(ContextCompat.getColor(getActivity(), R.color.opinionText))
                         .setNegative(R.string.cancel)
                         .show();
             }
@@ -109,6 +115,14 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowInAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getActivity(), BorrowInDetailsActivity.class)
+                        .putExtra(BorrowInDetailsActivity.BORROW_IN, mBorrowInAdapter.getItem(position))
+                        .execute();
+            }
+        });
 
     }
 
@@ -396,12 +410,14 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                                 "\n" + context.getString(R.string.end_line), "  " + DateUtil.compareTime(item.getEndlineTime()), 1.455f, 1.455f,
                                 ContextCompat.getColor(context, R.color.opinionText), ContextCompat.getColor(context, R.color.redPrimary));
                         mEndLineTime.setText(attentionSpannableString);
+                        mEndLineTime.setGravity(Gravity.LEFT);
                         mCancelBorrowIn.setVisibility(View.VISIBLE);
                         break;
                     case BorrowIn.STATUS_NO_CHECK:
                         attentionSpannableString = StrUtil.mergeTextWithColor(context.getString(R.string.on_checking), 1.455f,
                                 ContextCompat.getColor(context, R.color.opinionText));
                         mEndLineTime.setText(attentionSpannableString);
+                        mEndLineTime.setGravity(Gravity.CENTER);
                         mCancelBorrowIn.setVisibility(View.GONE);
                         break;
                     default:
@@ -465,8 +481,9 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                         callback.OnItemImageClick(3,item.getContentImg());
                     }
                 });
-
-
+                if (item.getContentImg()==null){
+                    item.setContentImg("");
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length) {
                     case 1:

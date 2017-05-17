@@ -1,15 +1,11 @@
 package com.sbai.finance.activity.home;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +18,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
-import com.sbai.finance.activity.web.HideTitleWebActivity;
 import com.sbai.finance.model.EventModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -34,7 +28,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.httplib.CookieManger;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 

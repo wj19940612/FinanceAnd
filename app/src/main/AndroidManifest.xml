@@ -73,7 +73,10 @@
             android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.StockTradeActivity"
+            android:name=".activity.stock.StockDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.StockIndexActivity"
             android:screenOrientation="portrait"/>
         <!-- 互助 -->
         <activity
@@ -153,6 +156,7 @@
         <activity
             android:name=".activity.mine.CreditActivity"
             android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
@@ -173,6 +177,7 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
+
         <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
         </activity>
         <activity android:name=".activity.economiccircle.PayIntentionActivity">
@@ -188,6 +193,7 @@
             android:name=".activity.mine.TheDetailActivity"
             android:screenOrientation="portrait"/>
 
+
         <!-- 选择相册图片 -->
         <activity
             android:name=".activity.mine.ImageSelectActivity"
@@ -195,6 +201,7 @@
         <activity android:name=".activity.stock.CompanyIntroActivity">
         </activity>
         <!-- 相册图片预览 -->
+
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
@@ -202,6 +209,15 @@
         </activity>
         <activity android:name=".activity.economiccircle.AliPayActivity">
         </activity>
+
+        <!--      service       -->
+        <service android:name=".service.PushIntentService"/>
+        <service
+            android:name=".service.PushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice"/>
+
     </application>
 
 </manifest>

@@ -148,6 +148,9 @@ public class BorrowInDetailsActivity extends BaseActivity {
             default:
                 break;
         }
+        if (mBorrowIn.getContentImg()==null){
+            mBorrowIn.setContentImg("");
+        }
         String[] images = mBorrowIn.getContentImg().split(",");
         switch (images.length){
             case 1:

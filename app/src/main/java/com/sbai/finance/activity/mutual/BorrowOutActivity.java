@@ -89,7 +89,8 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Launcher.with(getActivity(),BorrowOutDetailsActivity.class)
-                        .putExtra(BorrowOutDetailsActivity.BORROW_OUT,mBorrowOutAdapter.getItem(position))
+                        .putExtra(BorrowOutDetailsActivity.ID,mBorrowOutAdapter.getItem(position).getId())
+                        .putExtra(BorrowOutDetailsActivity.INTENTION_TIME,mBorrowOutAdapter.getItem(position).getIntentionTime())
                         .execute();
             }
         });

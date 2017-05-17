@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +32,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
@@ -48,7 +50,6 @@ import butterknife.OnClick;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_PICTURE;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_TEXT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
-import static com.sbai.finance.utils.DateUtil.FORMAT_YEAR_MONTH_DAY;
 
 /**
  * Created by linrongfang on 2017/5/8.
@@ -88,7 +89,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         ButterKnife.bind(this);
 
         initViews();
-        requestFeedbackList();
+        requestFeedbackList(true);
     }
 
     private void initViews() {
@@ -101,28 +102,26 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
 
     //只有在登录的情况下 才请求记录
-    private void requestFeedbackList() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.getFeedback(mPage, mPageSize)
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
-                        @Override
-                        protected void onRespSuccessData(List<Feedback> data) {
-                            updateFeedbackList(data);
-                        }
+    private void requestFeedbackList(final boolean needScrollToLast) {
+        Client.getFeedback(mPage, mPageSize)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Feedback> data) {
+                        updateFeedbackList(data,needScrollToLast);
+                    }
 
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            stopRefreshAnimation();
-                        }
-                    })
-                    .fire();
-        }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
     }
 
-    private void updateFeedbackList(List<Feedback> data) {
+    private void updateFeedbackList(List<Feedback> data,boolean needScrollToLast) {
         if (data == null) {
             stopRefreshAnimation();
             return;
@@ -136,6 +135,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
+        if (needScrollToLast){
+            mListView.smoothScrollToPosition(mFeedbackAdapter.getCount() - 1);
+        }
     }
 
     private void updateTitle(List<Feedback> data) {
@@ -153,7 +155,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        requestFeedbackList();
+        requestFeedbackList(false);
     }
 
     private void stopRefreshAnimation() {
@@ -190,7 +192,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private void sendFeedbackText() {
         if (LocalUser.getUser().isLogin()) {
             String content = mCommentContent.getText().toString().trim();
-            requestSendFeedback(content, CONTENT_TYPE_TEXT, null);
+            requestSendFeedback(content, CONTENT_TYPE_TEXT);
         } else {
             Launcher.with(this, LoginActivity.class).execute();
         }
@@ -210,10 +212,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private void requestSendFeedbackImage(final String path) {
         String content = ImageUtils.compressImageToBase64(path);
         int contentType = CONTENT_TYPE_PICTURE;
-        requestSendFeedback(content, contentType, path);
+        requestSendFeedback(content, contentType);
     }
 
-    private void requestSendFeedback(final String content, final int contentType, final String imagePath) {
+    private void requestSendFeedback(final String content, final int contentType) {
         Client.sendFeedback(content, contentType)
                 .setTag(TAG)
                 .setIndeterminate(FeedbackActivity.this)
@@ -221,7 +223,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         // TODO: 2017/5/10 刷新界面
-                        refreshChatList(content, contentType, imagePath);
+                        refreshChatList(content, contentType);
                     }
 
                     @Override
@@ -233,7 +235,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     //刷新列表
-    private void refreshChatList(final String content, final int contentType, String imagePath) {
+    private void refreshChatList(final String content, final int contentType) {
         //请求最新的服务器数据  并取第一条
         Client.getFeedback(0, mPageSize)
                 .setTag(TAG)
@@ -381,10 +383,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         static class UserViewHolder {
             @BindView(R.id.endLineTime)
             TextView mEndLineTime;
-            @BindView(R.id.imageWrapper)
-            RelativeLayout mImageWrapper;
             @BindView(R.id.timeLayout)
             RelativeLayout mTimeLayout;
+            @BindView(R.id.contentWrapper)
+            RelativeLayout mWrapper;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
             @BindView(R.id.image)
@@ -401,37 +403,44 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(final Feedback feedback, boolean needTitle, final Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_YEAR_MONTH_DAY));
+                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
                 mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+
+                mWrapper.removeAllViews();
+                TextView textview = null;
+                ImageView imageview = null;
                 //判断是否图片
                 if (feedback.getContentType() == CONTENT_TYPE_TEXT) {
-                    mImage.setVisibility(View.GONE);
-                    mText.setVisibility(View.VISIBLE);
-                    mText.setText(feedback.getContent());
+                    //create textview and add
+                    textview = createTextview(context);
+                    mWrapper.addView(textview);
+                    textview.setText(feedback.getContent());
                 } else {
-                    mImage.setVisibility(View.VISIBLE);
-                    mText.setVisibility(View.GONE);
+                    //create imageview and add
+                    imageview = createImageview(context);
+                    mWrapper.addView(imageview);
                     Glide.with(context).load(feedback.getContent())
                             .bitmapTransform(new GlideThumbTransform(context))
-                            .into(mImage);
+                            .into(imageview);
                 }
                 Glide.with(context).load(feedback.getUserPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_avatar_feedback)
                         .into(mHeadImage);
-
-                mImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
-                            PreviewFragment.newInstance(feedback.getContent())
-                                    .show(((FeedbackActivity) context).getSupportFragmentManager());
+                if (imageview != null) {
+                    imageview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
+                                PreviewFragment.newInstance(feedback.getContent())
+                                        .show(((FeedbackActivity) context).getSupportFragmentManager());
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 mHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -441,6 +450,29 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     }
                 });
 
+            }
+
+            private TextView createTextview(Context context) {
+                TextView tv = new TextView(context);
+                tv.setTextColor(Color.WHITE);
+                int spacing = (int) Display.dp2Px(5.0f, context.getResources());
+                tv.setLineSpacing(spacing, 1.2f);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                int margin = (int) Display.dp2Px(10.0f, context.getResources());
+                params.setMargins(0, 0, margin, 0);
+                tv.setLayoutParams(params);
+                return tv;
+            }
+
+            private ImageView createImageview(Context context) {
+                ImageView image = new ImageView(context);
+                image.setScaleType(ImageView.ScaleType.FIT_XY);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                int margin = (int) Display.dp2Px(5.0f, context.getResources());
+                params.setMargins(0, 0, margin, 0);
+                image.setLayoutParams(params);
+                return image;
             }
 
         }
@@ -464,7 +496,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(Feedback feedback, boolean needTitle, Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_YEAR_MONTH_DAY));
+                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }

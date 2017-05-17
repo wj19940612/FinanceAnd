@@ -7,6 +7,8 @@ package com.sbai.finance.model.mutual;
 public class BorrowDetails {
     public static final int WOMEN=1;
     public static final int MAN=2;
+    public static final int NO_ATTENTION=1;
+    public static final int ATTENTION=2;
     /**
      * aduitActorId : 0
      * auditTime : 1494296441000
@@ -48,9 +50,10 @@ public class BorrowDetails {
     private String failMsg;
     private int id;
     private int intentionCount;
-    private int interest;
+    private long interest;
     private int isAttention;
     private int isIntention;
+    private int isAttentionSelected;
     private String location;
     private long modifyDate;
     private int money;
@@ -64,6 +67,14 @@ public class BorrowDetails {
     private int status;
     private int userId;
     private String userName;
+
+    public int getIsAttentionSelected() {
+        return isAttentionSelected;
+    }
+
+    public void setIsAttentionSelected(int isAttentionSelected) {
+        this.isAttentionSelected = isAttentionSelected;
+    }
 
     public int getAduitActorId() {
         return aduitActorId;
@@ -153,11 +164,11 @@ public class BorrowDetails {
         this.intentionCount = intentionCount;
     }
 
-    public int getInterest() {
+    public long getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(long interest) {
         this.interest = interest;
     }
 

@@ -46,8 +46,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.marketArea)
-    LinearLayout mMarketArea;
     @BindView(R.id.shangHai)
     TextView mShangHai;
     @BindView(R.id.shenZhen)
@@ -65,8 +63,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private int mPage = 0;
     private int mPageSize = 15;
-
-    private Variety mVariety;
 
     private StockListAdapter mStockListAdapter;
     private List<Variety> mStockIndexData;
@@ -137,9 +133,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 }
             }
             if (varietyList.size() > 0) {
-                    requestStockMarketData(varietyList);
-                    requestStockIndexMarketData(mStockIndexData);
-                }
+                requestStockMarketData(varietyList);
+                requestStockIndexMarketData(mStockIndexData);
+            }
         }
     }
 
@@ -157,7 +153,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockMarketData(List<Variety> data) {
-        if (data == null || data.isEmpty()) return;
+        if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -173,9 +169,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void requestStockIndexMarketData(List<Variety> data) {
-        if (data == null){
-            return;
-        }
+        if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
             stringBuilder.append(variety.getVarietyType()).append(",");
@@ -251,16 +245,35 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         mStockListAdapter.notifyDataSetChanged();
     }
-    @OnClick({R.id.stock, R.id.search, R.id.marketArea})
+
+    @OnClick({R.id.stock, R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.stock:
             case R.id.search:
                 Launcher.with(getActivity(), SearchStockActivity.class).execute();
                 break;
-            case R.id.marketArea:
-                // TODO: 2017/5/3 跳转指数详情
+            case R.id.shangHai:
+                launcherIndexActivity(Variety.STOCK_EXPONENT_SH);
                 break;
+            case R.id.shenZhen:
+                launcherIndexActivity(Variety.STOCK_EXPONENT_SZ);
+                break;
+            case R.id.board:
+                launcherIndexActivity(Variety.STOCK_EXPONENT_GE);
+                break;
+        }
+    }
+
+    private void launcherIndexActivity(String varietyType) {
+        if (mStockIndexData != null) {
+            for (Variety variety : mStockIndexData) {
+                if (variety.getVarietyType().equalsIgnoreCase(varietyType)) {
+                    Launcher.with(getActivity(), StockIndexActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    break;
+                }
+            }
         }
     }
 
@@ -294,7 +307,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Variety variety = (Variety) parent.getAdapter().getItem(position);
         if (variety != null) {
-            Launcher.with(getActivity(), StockTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
+            Launcher.with(getActivity(), StockDetailActivity.class).
+                    putExtra(Launcher.EX_PAYLOAD, variety).execute();
         }
     }
 
@@ -361,18 +375,14 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setText(stockData.getLast_price());
                     String priceChange = stockData.getRise_pre();
                     if (priceChange.startsWith("-")) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                        mLastPrice.setSelected(true);
+                        mRate.setSelected(true);
                         mRate.setText(priceChange + "%");
                     } else {
-
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                        mLastPrice.setSelected(false);
+                        mRate.setSelected(false);
                         mRate.setText("+" + priceChange + "%");
                     }
-                } else {
-                    mLastPrice.setText("--");
-                    mRate.setText("--");
                 }
 
                 if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
