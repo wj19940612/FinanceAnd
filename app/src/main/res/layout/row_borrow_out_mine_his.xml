@@ -29,6 +29,7 @@
             android:paddingRight="10dp"
             android:orientation="vertical"
             android:layout_gravity="center"
+            android:lineSpacingExtra="8dp"
             android:textColor="@color/redPrimary"
             android:textSize="15sp"
             android:ellipsize="end"

@@ -142,7 +142,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
 
         String location =data.getSelectedLocation();
-        if (location==null){
+        if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);
         }
         SpannableString attentionSpannableString;
