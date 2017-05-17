@@ -453,7 +453,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 TextView tv = new TextView(context);
                 tv.setTextColor(Color.WHITE);
                 int spacing = (int) Display.dp2Px(5.0f, context.getResources());
-                tv.setLineSpacing(spacing, 0);
+                tv.setLineSpacing(spacing, 1.2f);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 int margin = (int) Display.dp2Px(10.0f, context.getResources());
                 params.setMargins(0, 0, margin, 0);

@@ -8,8 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
-import com.sbai.finance.fragment.stock.FinanceFragment;
-import com.sbai.finance.fragment.stock.StockNewsFragment;
+import com.sbai.finance.fragment.stock.PriceLimitRankingFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 
 public class StockIndexActivity extends StockTradeActivity {
@@ -46,11 +45,17 @@ public class StockIndexActivity extends StockTradeActivity {
 
         FragmentManager mFragmentManager;
         Context mContext;
+        int mExchangeCode;
 
         public SubPageAdapter(FragmentManager fm, Context context) {
             super(fm);
             mFragmentManager = fm;
             mContext = context;
+            try {
+                mExchangeCode = Integer.valueOf(mVariety.getExchangeCode());
+            } catch (NumberFormatException e) {
+
+            }
         }
 
         @Override
@@ -72,9 +77,9 @@ public class StockIndexActivity extends StockTradeActivity {
                 case 0:
                     return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return StockNewsFragment.newInstance(mVariety.getVarietyType());
+                    return PriceLimitRankingFragment.newInstance(1, mExchangeCode);
                 case 2:
-                    return FinanceFragment.newInstance(mVariety.getVarietyType());
+                    return PriceLimitRankingFragment.newInstance(2, mExchangeCode);
             }
             return null;
         }

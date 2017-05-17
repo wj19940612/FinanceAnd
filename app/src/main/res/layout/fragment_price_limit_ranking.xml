@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.sbai.finance.fragment.stock.PriceLimitRankingFragment">
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:drawablePadding="25dp"
+        android:drawableTop="@drawable/img_no_message"
+        android:gravity="center_horizontal"
+        android:paddingTop="150dp"
+        android:textColor="@color/assistText"
+        android:textSize="@dimen/navigate_size"
+        android:visibility="gone"/>
+</LinearLayout>

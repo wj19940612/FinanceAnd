@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.trade;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -40,6 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ViewpointFragment extends BaseFragment {
+    //打开观点详情页
+    public static final int REQ_CODE_ATTENTION = 5436;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -318,9 +321,9 @@ public class ViewpointFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                                .execute();
+                        Intent intent = new Intent(getActivity(), OpinionDetailsActivity.class);
+                        intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
+                        startActivityForResult(intent, REQ_CODE_ATTENTION);
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
@@ -330,9 +333,9 @@ public class ViewpointFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                                .execute();
+                        Intent intent = new Intent(getActivity(), OpinionDetailsActivity.class);
+                        intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
+                        startActivityForResult(intent, REQ_CODE_ATTENTION);
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
