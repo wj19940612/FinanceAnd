@@ -73,10 +73,10 @@
             android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.StockTradeActivity"
+            android:name=".activity.stock.StockDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.StockIndexTradeActivity"
+            android:name=".activity.stock.StockIndexActivity"
             android:screenOrientation="portrait"/>
         <!-- 互助 -->
         <activity

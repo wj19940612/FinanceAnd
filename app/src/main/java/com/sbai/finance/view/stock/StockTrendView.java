@@ -108,7 +108,7 @@ public class StockTrendView extends LinearLayout {
         ButterKnife.bind(this, mFivePriceView);
     }
 
-    public float dp2Px(float value, Resources res) {
+    private float dp2Px(float value, Resources res) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
 
@@ -123,6 +123,14 @@ public class StockTrendView extends LinearLayout {
 
     public void setDataList(List<StockTrendData> dataList) {
         mTrendView.setDataList(dataList);
+    }
+
+    public void setHasFiveMarketView(boolean hasFiveMarketView) {
+        if (hasFiveMarketView) {
+            mFivePriceView.setVisibility(VISIBLE);
+        } else {
+            mFivePriceView.setVisibility(GONE);
+        }
     }
 
     public void setStockRTData(StockRTData stockRTData) {
