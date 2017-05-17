@@ -347,6 +347,29 @@ public class DateUtil {
     }
 
     /**
+     * 获取反馈页面的格式化时间
+     * 日期显示：
+     * 本日记录：今天
+     * 昨日记录：昨天
+     * 两日以前记录：XX日00:00
+     * @param createTime
+     * @return
+     */
+    public static String getFeedbackFormatTime(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (isToday(createTime, systemTime)) {
+            return "今天";
+        }
+        if (isYesterday(createTime, systemTime)) {
+            return "昨天";
+        }
+        if (isInThisYear(createTime)){
+            return DateUtil.format(createTime, FORMAT_NOT_HOUR);
+        }
+        return DateUtil.format(createTime, FORMAT_YEAR_MONTH_DAY);
+    }
+
+    /**
      * 格式化月份  如果是当月 则显示本月
      * 如果是当年中的其他月份  显示x月
      * 如果是跨年月份   则显示xxxx年xx月
