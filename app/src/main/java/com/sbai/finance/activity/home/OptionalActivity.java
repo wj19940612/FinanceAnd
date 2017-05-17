@@ -30,6 +30,7 @@ import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.slidingListView.SlideItem;
 import com.sbai.finance.view.slidingListView.SlideListView;
 
@@ -46,10 +47,11 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-04-18.
  */
 
-public class OptionalActivity extends BaseActivity implements AbsListView.OnScrollListener {
+public class OptionalActivity extends BaseActivity implements
+        SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
 
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.listView)
     SlideListView mListView;
     @BindView(R.id.empty)
@@ -58,7 +60,7 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
     LinearLayout mVarietyTitle;
 
     private SlideListAdapter mSlideListAdapter;
-
+    private int mPage;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,12 +71,6 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
 
     private void initView() {
         mVarietyTitle.setVisibility(View.GONE);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestOptionalData();
-            }
-        });
         mSlideListAdapter = new SlideListAdapter(this);
         mSlideListAdapter.setOnDelClickListener(new SlideListAdapter.OnDelClickListener() {
             @Override
@@ -82,6 +78,9 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
                 requestDelOptionalData(mSlideListAdapter.getItem(position).getVarietyId());
             }
         });
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setAdapter(mListView, mSlideListAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mSlideListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,7 +97,6 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
                 }
             }
         });
-        mListView.setOnScrollListener(this);
     }
 
     @Override
@@ -117,7 +115,7 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
     }
 
     private void requestOptionalData() {
-        Client.getOptional(Variety.VAR_FUTURE).setTag(TAG)
+        Client.getOptional(Variety.VAR_FUTURE,mPage).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
@@ -200,17 +198,21 @@ public class OptionalActivity extends BaseActivity implements AbsListView.OnScro
             }
         }
     }
-
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onRefresh() {
+        reset();
+        requestOptionalData();
+    }
 
+    private void reset() {
+        mPage = 0;
+        mSlideListAdapter.clear();
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    public void onLoadMore() {
+        requestOptionalData();
     }
 
     public static class SlideListAdapter extends ArrayAdapter<Variety> {

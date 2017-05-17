@@ -16,25 +16,21 @@
     <include layout="@layout/layout_search_stock"/>
 
     <LinearLayout
-        android:id="@+id/marketArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
-
         <TextView
             android:id="@+id/shangHai"
             style="@style/MarketDataStock"
             android:background="@drawable/bg_pressable"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
-
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/greyLightAssist"/>
-
         <TextView
             android:id="@+id/shenZhen"
             style="@style/MarketDataStock"
