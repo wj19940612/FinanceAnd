@@ -11,9 +11,9 @@ public class Variety implements Parcelable {
 
     public static final String FUTURE_CHINA = "china";
     public static final String FUTURE_FOREIGN = "foreign";
-    public static final String STOCK_EXPONENT_SH="000001";
-    public static final String STOCK_EXPONENT_GE="399006";
-    public static final String STOCK_EXPONENT_SZ="399001";
+    public static final String STOCK_EXPONENT_SH = "1A0001";
+    public static final String STOCK_EXPONENT_GE = "399006";
+    public static final String STOCK_EXPONENT_SZ = "399001";
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
 
@@ -34,8 +34,7 @@ public class Variety implements Parcelable {
      * varietyName : 沪银
      * varietyType : ag
      */
-    //	基线
-    private int baseline;
+    private int baseline; //	基线
     private String bigVarietyTypeCode; // 期货：future 外汇：forex 股票：stock
     private String contractsCode;   //	合约代码（只对期货有用）
     private double decimalScale;     //	分时图曲线比例
@@ -50,8 +49,9 @@ public class Variety implements Parcelable {
     private int varietyId;
     private String varietyName;
     private String varietyType;
+    private String exchangeCode;
 
-    public boolean ifProductIsStock(){
+    public boolean isStock() {
         return getBigVarietyTypeCode().equalsIgnoreCase(VAR_STOCK);
     }
 
@@ -167,6 +167,39 @@ public class Variety implements Parcelable {
         return decimalScale;
     }
 
+    public String getExchangeCode() {
+        return exchangeCode;
+    }
+
+    public void setExchangeCode(String exchangeCode) {
+        this.exchangeCode = exchangeCode;
+    }
+
+    public Variety() {
+    }
+
+    @Override
+    public String toString() {
+        return "Variety{" +
+                "baseline=" + baseline +
+                ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
+                ", contractsCode='" + contractsCode + '\'' +
+                ", decimalScale=" + decimalScale +
+                ", displayMarketTimes='" + displayMarketTimes + '\'' +
+                ", exchangeId=" + exchangeId +
+                ", exchangeStatus=" + exchangeStatus +
+                ", flashChartPriceInterval=" + flashChartPriceInterval +
+                ", marketPoint=" + marketPoint +
+                ", openMarketTime='" + openMarketTime + '\'' +
+                ", smallVarietyTypeCode='" + smallVarietyTypeCode + '\'' +
+                ", sort=" + sort +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", exchangeCode=" + exchangeCode +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -189,9 +222,7 @@ public class Variety implements Parcelable {
         dest.writeInt(this.varietyId);
         dest.writeString(this.varietyName);
         dest.writeString(this.varietyType);
-    }
-
-    public Variety() {
+        dest.writeString(this.exchangeCode);
     }
 
     protected Variety(Parcel in) {
@@ -210,9 +241,10 @@ public class Variety implements Parcelable {
         this.varietyId = in.readInt();
         this.varietyName = in.readString();
         this.varietyType = in.readString();
+        this.exchangeCode = in.readString();
     }
 
-    public static final Parcelable.Creator<Variety> CREATOR = new Parcelable.Creator<Variety>() {
+    public static final Creator<Variety> CREATOR = new Creator<Variety>() {
         @Override
         public Variety createFromParcel(Parcel source) {
             return new Variety(source);
@@ -223,25 +255,4 @@ public class Variety implements Parcelable {
             return new Variety[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "Variety{" +
-                "baseline=" + baseline +
-                ", bigVarietyTypeCode='" + bigVarietyTypeCode + '\'' +
-                ", contractsCode='" + contractsCode + '\'' +
-                ", decimalScale=" + decimalScale +
-                ", displayMarketTimes='" + displayMarketTimes + '\'' +
-                ", exchangeId=" + exchangeId +
-                ", exchangeStatus=" + exchangeStatus +
-                ", flashChartPriceInterval=" + flashChartPriceInterval +
-                ", marketPoint=" + marketPoint +
-                ", openMarketTime='" + openMarketTime + '\'' +
-                ", smallVarietyTypeCode='" + smallVarietyTypeCode + '\'' +
-                ", sort=" + sort +
-                ", varietyId=" + varietyId +
-                ", varietyName='" + varietyName + '\'' +
-                ", varietyType='" + varietyType + '\'' +
-                '}';
-    }
 }

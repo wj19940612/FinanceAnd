@@ -1,10 +1,13 @@
 package com.sbai.finance.model.mutual;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Administrator on 2017-04-28.
  */
 
-public class BorrowOut {
+public class BorrowOut implements Parcelable {
 
 
     /**
@@ -37,8 +40,18 @@ public class BorrowOut {
     private int days;
     private long endlineTime;
     private int id;
+
+    public int getLoadId() {
+        return loadId;
+    }
+
+    public void setLoadId(int loadId) {
+        this.loadId = loadId;
+    }
+
+    private int loadId;
     private int intentionCount;
-    private String intentionTime;
+    private long intentionTime;
     private int interest;
     private long modifyDate;
     private int money;
@@ -46,6 +59,15 @@ public class BorrowOut {
     private int userId;
     private String userName;
     private String location;
+    private String portrait;
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
+    }
 
     public String getLocation() {
         return location;
@@ -135,11 +157,11 @@ public class BorrowOut {
         this.intentionCount = intentionCount;
     }
 
-    public String getIntentionTime() {
+    public long getIntentionTime() {
         return intentionTime;
     }
 
-    public void setIntentionTime(String intentionTime) {
+    public void setIntentionTime(long intentionTime) {
         this.intentionTime = intentionTime;
     }
 
@@ -190,4 +212,69 @@ public class BorrowOut {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.auditActorId);
+        dest.writeLong(this.auditTime);
+        dest.writeLong(this.confirmTime);
+        dest.writeString(this.content);
+        dest.writeString(this.contentImg);
+        dest.writeLong(this.createDate);
+        dest.writeInt(this.days);
+        dest.writeLong(this.endlineTime);
+        dest.writeInt(this.id);
+        dest.writeInt(this.intentionCount);
+        dest.writeLong(this.intentionTime);
+        dest.writeInt(this.interest);
+        dest.writeLong(this.modifyDate);
+        dest.writeInt(this.money);
+        dest.writeInt(this.status);
+        dest.writeInt(this.userId);
+        dest.writeString(this.userName);
+        dest.writeString(this.location);
+        dest.writeString(this.portrait);
+    }
+
+    public BorrowOut() {
+    }
+
+    protected BorrowOut(Parcel in) {
+        this.auditActorId = in.readInt();
+        this.auditTime = in.readLong();
+        this.confirmTime = in.readLong();
+        this.content = in.readString();
+        this.contentImg = in.readString();
+        this.createDate = in.readLong();
+        this.days = in.readInt();
+        this.endlineTime = in.readLong();
+        this.id = in.readInt();
+        this.intentionCount = in.readInt();
+        this.intentionTime = in.readLong();
+        this.interest = in.readInt();
+        this.modifyDate = in.readLong();
+        this.money = in.readInt();
+        this.status = in.readInt();
+        this.userId = in.readInt();
+        this.userName = in.readString();
+        this.location = in.readString();
+        this.portrait = in.readString();
+    }
+
+    public static final Parcelable.Creator<BorrowOut> CREATOR = new Parcelable.Creator<BorrowOut>() {
+        @Override
+        public BorrowOut createFromParcel(Parcel source) {
+            return new BorrowOut(source);
+        }
+
+        @Override
+        public BorrowOut[] newArray(int size) {
+            return new BorrowOut[size];
+        }
+    };
 }

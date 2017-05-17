@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -139,7 +140,11 @@ public class UserDataActivity extends BaseActivity {
 				mUserName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_male, 0, 0, 0);
 			}
 
-			mLocation.setText(mUserData.getLand());
+			if (TextUtils.isEmpty(mUserData.getLand())) {
+				mLocation.setText(R.string.no_location_information);
+			} else {
+				mLocation.setText(mUserData.getLand());
+			}
 
 			if (mUserData.getCertificationStatus() == 0) {
 				mAuthentication.setText(R.string.unauthorized);
@@ -295,7 +300,7 @@ public class UserDataActivity extends BaseActivity {
 	}
 
 	private void cancelAttention() {
-		SmartDialog.with(getActivity(), "", getString(R.string.cancel_attention_dialog_title, mUserData.getUserName()))
+		SmartDialog.with(getActivity(),getString(R.string.cancel_attention_dialog_title, mUserData.getUserName()))
 				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 					@Override
 					public void onClick(Dialog dialog) {
@@ -317,9 +322,9 @@ public class UserDataActivity extends BaseActivity {
 						dialog.dismiss();
 					}
 				})
+				.setMessageTextSize(16)
 				.setTitleMaxLines(2)
-				.setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-				.setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+				.setMessageTextColor(ContextCompat.getColor(this, R.color.blackAssist))
 				.setNegative(R.string.cancel)
 				.show();
 	}

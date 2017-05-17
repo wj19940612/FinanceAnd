@@ -30,7 +30,6 @@
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/avatar"
             android:layout_below="@+id/userName"
             android:layout_toRightOf="@+id/avatar"
             android:textColor="@color/assistText"

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyLightAssist"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/pay_intention"/>
+
+    <LinearLayout
+        android:layout_width="315dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_pay_intention"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intention"
+            android:textColor="@color/assistText"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/intentionAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/redPrimary"
+            android:textSize="38sp"
+            tools:text="@string/intention_amount"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="意向金为平台服务费,无论用户是否成功借款都不予退还,请谅解"
+        android:textColor="@color/secondaryText"
+        android:textSize="@dimen/dp_10"/>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:divider="@null">
+    </ListView>
+
+    <TextView
+        android:id="@+id/payIntention"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/btn_red_primary"
+        android:gravity="center"
+        android:text="@string/pay_intention"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/sp_16"/>
+</LinearLayout>

@@ -17,7 +17,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mutual.MutualActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.ViewPointMater;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -55,7 +58,11 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
         mOpinionListAdapter.setOnClickListener(new OpinionListAdapter.OnClickListener() {
             @Override
             public void onClick(int userId) {
-                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         mListView.setEmptyView(mEmpty);

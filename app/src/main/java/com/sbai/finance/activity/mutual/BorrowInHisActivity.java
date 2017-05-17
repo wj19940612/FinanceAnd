@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.CallPhone;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -32,6 +34,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -59,6 +62,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
         setContentView(R.layout.activity_borrow_in_mine_his);
         ButterKnife.bind(this);
         initView();
+        requestBorrowHisData();
     }
 
     private void initView() {
@@ -79,16 +83,34 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             public void OnItemRepayClick(Integer id) {
                 requestRepay(id);
             }
+
+            @Override
+            public void OnItemUserClick(int userId) {
+                Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+            }
         });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowInHisAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BorrowInHis borrowInHis = mBorrowInHisAdapter.getItem(position);
+                int status =borrowInHis.getStatus();
+                int loadId = borrowInHis.getId();
+                if (status == BorrowInHis.STATUS_ALREADY_REPAY||status == BorrowInHis.STATUS_PAY_INTENTION
+                        ||status== BorrowInHis.STATUS_SUCCESS){
+                    Launcher.with(getActivity(),BorrowInHisDetailActivity.class)
+                            .putExtra(BorrowInHisDetailActivity.BORROW_IN_HIS,loadId)
+                            .execute();
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestBorrowHisData();
     }
 
     private void requestBorrowHisData(){
@@ -170,6 +192,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
         interface Callback{
             void OnItemCallClick(Integer id);
             void OnItemRepayClick(Integer id);
+            void OnItemUserClick(int userId);
         }
         public void setCallback(Callback callback){
             mCallback = callback;
@@ -190,21 +213,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),position,mContext);
-            TextView mCall = (TextView) convertView.findViewById(R.id.call);
-            TextView mAlreadyRepay = (TextView) convertView.findViewById(R.id.alreadyRepay);
-            mCall.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemCallClick(getItem(position).getId());
-                }
-            });
-            mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.OnItemRepayClick(getItem(position).getId());
-                }
-            });
+            viewHolder.bindDataWithView(getItem(position),position,mContext,mCallback);
             return convertView;
         }
 
@@ -227,15 +236,37 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             LinearLayout mBorrowStatus;
             @BindView(R.id.success)
             LinearLayout mSuccess;
+            @BindView(R.id.alreadyRepay)
+            TextView mAlreadyRepay;
+            @BindView(R.id.call)
+            TextView mCall;
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowInHis item, int position, Context context){
+            private void bindDataWithView(final BorrowInHis item, int position, Context context, final Callback callback){
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 SpannableString attentionSpannableString;
                 String location =item.getLocation();
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemUserClick(item.getSelectedUserId());
+                    }
+                });
+                mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemRepayClick(item.getId());
+                    }
+                });
+                mCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemCallClick(item.getId());
+                    }
+                });
                 if (location==null){
                     location = context.getString(R.string.no_location);
                 }
@@ -246,16 +277,19 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 " "+context.getString(R.string.not_allow),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getConfirmTime())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getAuditTime())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_FAIL:
+                    case BorrowInHis.STATUS_TIMEOUT:
+                    case BorrowInHis.STATUS_CANCEL:
+                    case BorrowInHis.STATUS_NO_CHOICE:
                         mUserPortrait.setVisibility(View.GONE);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.borrow_failure),
                                 " "+item.getFailMsg(),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getConfirmTime())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_SUCCESS:case BorrowInHis.STATUS_PAY_INTENTION:
@@ -267,7 +301,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getConfirmTime())));
                         mAlreadyRepayment.setVisibility(View.GONE);
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.VISIBLE);
@@ -276,12 +310,12 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mUserPortrait.setVisibility(View.VISIBLE);
                         Glide.with(context).load(item.getPortrait())
                                 .bitmapTransform(new GlideCircleTransform(context))
-                                .placeholder(R.drawable.help).into(mUserPortrait);
+                                .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getAuditTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getConfirmTime())));
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.GONE);
                         mAlreadyRepayment.setVisibility(View.VISIBLE);

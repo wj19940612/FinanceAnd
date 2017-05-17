@@ -1,56 +1,74 @@
 package com.sbai.finance.fragment.stock;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.stock.CompanyIntroActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.stock.CompanyAnnualReportModel;
+import com.sbai.finance.model.stock.CompanyInfo;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.BottomTextViewLayout;
 import com.sbai.finance.view.IconTextRow;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class FinanceFragment extends BaseFragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String KEY_STOCK_CODE = "STOCK_CODE";
     @BindView(R.id.company)
     IconTextRow mCompany;
-    @BindView(R.id.companyInfoList)
-    ExpandableListView mCompanyInfoList;
+    @BindView(android.R.id.list)
+    ListView mList;
+    @BindView(android.R.id.empty)
+    AppCompatTextView mEmpty;
+
 
     private Unbinder mBind;
     private CompanyFinanceAdapter mCompanyFinanceAdapter;
+    private HashSet<String> mSet;
+    //证券代码
+    private String mStockCode;
+    private int mPage = 0;
+    private int mPageSize = 10;
+    private TextView mFootView;
 
-
-    private Map<String, List<String>> dataset = new HashMap<>();
-    private String[] parentList = new String[]{"2017年第4季度，(截止日期:2016-12-12)", "2017年第3季度，(截止日期:2016-9-12)", "2017年第4季度，(截止日期:2016-6-12)"};
-    private List<String> childrenList1 = new ArrayList<>();
-    private List<String> childrenList2 = new ArrayList<>();
-    private List<String> childrenList3 = new ArrayList<>();
+    private CompanyInfo mCompanyInfo;
 
     public FinanceFragment() {
 
     }
 
-    public static FinanceFragment newInstance(String param1, String param2) {
+    public static FinanceFragment newInstance(String code) {
         FinanceFragment fragment = new FinanceFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(KEY_STOCK_CODE, code);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,6 +76,10 @@ public class FinanceFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mStockCode = getArguments().getString(KEY_STOCK_CODE);
+            Log.d(TAG, "onCreate: 股票代码 " + mStockCode);
+        }
     }
 
     @Override
@@ -71,10 +93,95 @@ public class FinanceFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initialData();
-        mCompanyFinanceAdapter = new CompanyFinanceAdapter();
-        mCompanyInfoList.setAdapter(mCompanyFinanceAdapter);
-        mCompanyFinanceAdapter.addCompanyFinanceData(dataset);
+        mSet = new HashSet<>();
+        mList.setEmptyView(mEmpty);
+        mCompanyFinanceAdapter = new CompanyFinanceAdapter(getActivity());
+        mList.setAdapter(mCompanyFinanceAdapter);
+        requestCompanyAnnualReport(mPage);
+        requestCompanyInfo();
+    }
+
+    @OnClick(R.id.company)
+    public void onViewClicked() {
+        if (mCompanyInfo != null) {
+            Launcher.with(getActivity(), CompanyIntroActivity.class).putExtra(Launcher.EX_PAYLOAD, mCompanyInfo).execute();
+        }
+    }
+
+    private void requestCompanyInfo() {
+        Client.getCompanyReportOrInfo(mStockCode)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<CompanyInfo>, CompanyInfo>() {
+                    @Override
+                    protected void onRespSuccessData(CompanyInfo data) {
+                        mCompany.setVisibility(View.VISIBLE);
+                        mCompanyInfo = data;
+                        mCompany.setText(data.getCompanyName());
+                    }
+                })
+                .fireSync();
+    }
+
+    public void requestCompanyAnnualReport(final int page) {
+        this.mPage = page;
+        Client.getCompanyAnnualReport(mStockCode, mPage, mPageSize, CompanyAnnualReportModel.TYPE_FINANCIAL_SUMMARY)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
+                    @Override
+                    protected void onRespSuccessData(ArrayList<CompanyAnnualReportModel> data) {
+                        for (CompanyAnnualReportModel model : data) {
+                            Log.d(TAG, "onRespSuccessData: 年报  " + model.toString());
+                        }
+                        updateCompanyAnnualReportList(data, page);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                    }
+                })
+                .fire();
+    }
+
+    private void updateCompanyAnnualReportList(ArrayList<CompanyAnnualReportModel> data, int page) {
+        if (data == null) {
+            return;
+        }
+
+        //切换的时候刷新数据
+        if (page == 0) {
+            mSet.clear();
+            mCompanyFinanceAdapter.clear();
+        }
+
+        if (mFootView == null) {
+            mFootView = new TextView(getActivity());
+            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+            mFootView.setPadding(padding, padding, padding, padding);
+            mFootView.setText(getText(R.string.load_more));
+            mFootView.setGravity(Gravity.CENTER);
+            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+            mFootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPage++;
+                    requestCompanyAnnualReport(mPage);
+                }
+            });
+            mList.addFooterView(mFootView);
+        }
+
+        if (data.size() < mPageSize) {
+            mList.removeFooterView(mFootView);
+            mFootView = null;
+        }
+
+        for (CompanyAnnualReportModel companyAnnualReportData : data) {
+            if (mSet.add(companyAnnualReportData.getId())) {
+                mCompanyFinanceAdapter.add(companyAnnualReportData);
+            }
+        }
     }
 
     @Override
@@ -83,105 +190,73 @@ public class FinanceFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    private void initialData() {
-        childrenList1.add(parentList[0] + "-" + "first");
-        childrenList1.add(parentList[0] + "-" + "second");
-        childrenList1.add(parentList[0] + "-" + "third");
-        childrenList2.add(parentList[1] + "-" + "first");
-        childrenList2.add(parentList[1] + "-" + "second");
-        childrenList2.add(parentList[1] + "-" + "third");
-        childrenList3.add(parentList[2] + "-" + "first");
-        childrenList3.add(parentList[2] + "-" + "second");
-        childrenList3.add(parentList[2] + "-" + "third");
-        dataset.put(parentList[0], childrenList1);
-        dataset.put(parentList[1], childrenList2);
-        dataset.put(parentList[2], childrenList3);
-    }
+    class CompanyFinanceAdapter extends ArrayAdapter<CompanyAnnualReportModel> {
 
-    class CompanyFinanceAdapter extends BaseExpandableListAdapter {
+        private Context mContext;
 
-        private Map<String, List<String>> mCompanyFinanceData;
-
-        public void addCompanyFinanceData(Map<String, List<String>> data) {
-            this.mCompanyFinanceData = data;
-            notifyDataSetChanged();
+        public CompanyFinanceAdapter(@NonNull Context context) {
+            super(context, 0);
+            mContext = context;
         }
 
+        @NonNull
         @Override
-        public int getGroupCount() {
-            return mCompanyFinanceData == null ? 0 : mCompanyFinanceData.size();
-        }
-
-        @Override
-        public int getChildrenCount(int groupPosition) {
-            return 0;
-        }
-
-        @Override
-        public Object getGroup(int groupPosition) {
-            return mCompanyFinanceData == null ? null : mCompanyFinanceData.get(parentList[groupPosition]);
-        }
-
-        // 获得某个父项的某个子项
-        @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return mCompanyFinanceData == null ? null :mCompanyFinanceData.get(parentList[groupPosition]).get(childPosition);
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return false;
-        }
-
-        @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock_company_faiance_title, null);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_stock_company_finance, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(parentList[groupPosition]);
+            viewHolder.bindDataWithView(getItem(position));
             return convertView;
-        }
-
-        @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            return null;
-        }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return false;
-        }
-
-        @Override
-        public boolean areAllItemsEnabled() {
-            return false;
         }
 
         class ViewHolder {
             @BindView(R.id.companyFinancePublishTime)
             AppCompatTextView mCompanyFinancePublishTime;
+            @BindView(R.id.oneStockNetAsset)
+            BottomTextViewLayout mOneStockNetAsset;
+            @BindView(R.id.one_stock_earnings)
+            BottomTextViewLayout mOneStockEarnings;
+            @BindView(R.id.one_stock_cash_content)
+            BottomTextViewLayout mOneStockCashContent;
+            @BindView(R.id.one_stock_capital_accumulation_fund)
+            BottomTextViewLayout mOneStockCapitalAccumulationFund;
+            @BindView(R.id.fixation_capital_count)
+            BottomTextViewLayout mFixationCapitalCount;
+            @BindView(R.id.flow_capital_count)
+            BottomTextViewLayout mFlowCapitalCount;
+            @BindView(R.id.capital_count)
+            BottomTextViewLayout mCapitalCount;
+            @BindView(R.id.long_liabilities_count)
+            BottomTextViewLayout mLongLiabilitiesCount;
+            @BindView(R.id.normal_business_earnings)
+            BottomTextViewLayout mNormalBusinessEarnings;
+            @BindView(R.id.finance_charge)
+            BottomTextViewLayout mFinanceCharge;
+            @BindView(R.id.earn_profit)
+            BottomTextViewLayout mEarnProfit;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(String financePublishTime) {
-                mCompanyFinancePublishTime.setText(financePublishTime);
+            public void bindDataWithView(CompanyAnnualReportModel item) {
+                mCompanyFinancePublishTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+                mOneStockNetAsset.setInfoText(item.getMeigujinzichan());
+                mOneStockEarnings.setInfoText(item.getMeigushouyi());
+                mOneStockCashContent.setInfoText(item.getMeiguxianjinhanliang());
+                mOneStockCapitalAccumulationFund.setInfoText(item.getMeiguzibengongjijin());
+                mFixationCapitalCount.setInfoText(item.getGudingzichanheji());
+                mFlowCapitalCount.setInfoText(item.getLiudongzichanheji());
+                mCapitalCount.setInfoText(item.getZichanzongji());
+                mLongLiabilitiesCount.setInfoText(item.getChangqifuzaiheji());
+                mNormalBusinessEarnings.setInfoText(item.getZhuyingyewushouru());
+                mFinanceCharge.setInfoText(item.getCaiwufeiyong());
+                mEarnProfit.setInfoText(item.getJinlirun());
             }
         }
     }

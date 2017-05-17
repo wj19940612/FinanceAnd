@@ -91,8 +91,8 @@ public class EventDetailActivity extends BaseActivity {
         EventModel event = (EventModel) getIntent().getSerializableExtra(EX_EVENT);
         initData(event);
         mRawCookie = getIntent().getStringExtra(EX_RAW_COOKIE);
-        int eventId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
-        if (eventId != -1) {
+        String eventId = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
+        if (!TextUtils.isEmpty(eventId)) {
             Client.getBigEventContent(eventId)
                     .setIndeterminate(this)
                     .setTag(TAG)
@@ -111,10 +111,11 @@ public class EventDetailActivity extends BaseActivity {
             if (!event.isH5Style()) {
                 mEventTitleInfo.setVisibility(View.VISIBLE);
                 mEventTitle.setText(event.getTitle());
+
                 if (TextUtils.isEmpty(event.getSource())) {
-                    mTimeAndSource.setText(DateUtil.formatSlash(event.getCreateTime()));
+                    mTimeAndSource.setText(DateUtil.getFormatTime(event.getCreateTime()));
                 } else {
-                    mTimeAndSource.setText(event.getSource() + "  " + DateUtil.formatSlash(event.getCreateTime()));
+                    mTimeAndSource.setText(event.getSource() + "  " + DateUtil.getFormatTime(event.getCreateTime()));
                 }
                 mPureHtml = event.getContent();
             } else {

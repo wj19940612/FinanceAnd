@@ -8,10 +8,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -50,6 +54,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
         setContentView(R.layout.activity_borrow_out_mine);
         ButterKnife.bind(this);
         initView();
+        requestBorrowOutData();
     }
     @OnClick(R.id.borrowOutHis)
     public void onClick(View view){
@@ -63,15 +68,36 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             }
         });
         mBorrowOutAdapter = new BorrowOutAdapter(this);
+        mBorrowOutAdapter.setCallback(new BorrowOutAdapter.Callback() {
+            @Override
+            public void OnItemUserClick(int userId) {
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, userId).execute();
+            }
+
+            @Override
+            public void OnItemImageClick(int index, String  headImage) {
+                Launcher.with(getActivity(), ContentImgActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD,headImage.split(","))
+                        .putExtra(Launcher.EX_PAYLOAD_1,index)
+                        .execute();
+            }
+        });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowOutAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getActivity(),BorrowOutDetailsActivity.class)
+                        .putExtra(BorrowOutDetailsActivity.BORROW_OUT,mBorrowOutAdapter.getItem(position))
+                        .execute();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestBorrowOutData();
     }
 
     private void requestBorrowOutData() {
@@ -90,9 +116,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
     }
 
     private void updateBorrowOut(List<BorrowOut> data) {
-        if (data.isEmpty()){
-            stopRefreshAnimation();
-        }
+        stopRefreshAnimation();
         mBorrowOutAdapter.clear();
         mBorrowOutAdapter.addAll( data);
         mBorrowOutAdapter.notifyDataSetChanged();
@@ -142,6 +166,14 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
     static class BorrowOutAdapter extends ArrayAdapter<BorrowOut>{
 
         Context mContext;
+        private Callback mCallback;
+        interface Callback{
+            void OnItemUserClick(int userId);
+            void OnItemImageClick(int index ,String headImage);
+        }
+        public void setCallback(Callback callback){
+            mCallback = callback;
+        }
         public BorrowOutAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
@@ -149,7 +181,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
 
         @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null){
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_borrow_out_mine, parent, false);
@@ -158,7 +190,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position),getContext());
+            viewHolder.bindDataWithView(getItem(position),getContext(),mCallback);
             return convertView;
         }
 
@@ -190,12 +222,12 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(BorrowOut item, Context context){
-                Glide.with(context).load(item.getContentImg())
+            private void bindDataWithView(final BorrowOut item, Context context, final Callback callback){
+                Glide.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserPortrait);
-                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getConfirmTime())));
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getIntentionTime())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
@@ -255,6 +287,36 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                         break;
 
                 }
+                mImage1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(0,item.getContentImg());
+                    }
+                });
+                mImage2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(1,item.getContentImg());
+                    }
+                });
+                mImage3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(2,item.getContentImg());
+                    }
+                });
+                mImage4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemImageClick(3,item.getContentImg());
+                    }
+                });
+                mUserPortrait.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.OnItemUserClick(item.getUserId());
+                    }
+                });
             }
             private void loadImage(Context context,String src,ImageView image){
                 Glide.with(context).load(src)

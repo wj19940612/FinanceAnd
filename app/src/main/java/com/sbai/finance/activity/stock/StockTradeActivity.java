@@ -1,56 +1,87 @@
 package com.sbai.finance.activity.stock;
 
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
+import com.sbai.chart.ChartSettings;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
-import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
-import com.sbai.finance.fragment.stock.FinanceFragment;
-import com.sbai.finance.fragment.stock.FiveMarketFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.market.FutureData;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.stock.StockKlineData;
+import com.sbai.finance.model.stock.StockRTData;
+import com.sbai.finance.model.stock.StockTrendData;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.net.stock.StockCallback;
+import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomToast;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+import com.sbai.finance.view.stock.StockTrendView;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StockTradeActivity extends BaseActivity {
+import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
+import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
+
+public abstract class StockTradeActivity extends BaseActivity {
+
+    protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
+
+    protected abstract PagerAdapter createSubPageAdapter();
+
+    protected abstract ViewpointFragment getViewpointFragment();
+
+    private static final int REQ_CODE_PUBLISH_VIEWPOINT = 172;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
+
+    @BindView(R.id.lastPrice)
+    TextView mLastPrice;
+    @BindView(R.id.priceChange)
+    TextView mPriceChange;
+    @BindView(R.id.marketArea)
+    LinearLayout mMarketArea;
 
     @BindView(R.id.todayOpen)
     TextView mTodayOpen;
@@ -63,10 +94,10 @@ public class StockTradeActivity extends BaseActivity {
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(R.id.trendView)
-    TrendView mTrendView;
-    @BindView(R.id.klineView)
-    KlineView mKlineView;
+    @BindView(R.id.stockTrendView)
+    protected StockTrendView mStockTrendView;
+    @BindView(R.id.stockKlineView)
+    protected KlineView mStockKlineView;
 
     @BindView(R.id.tradeFloatButtons)
     TradeFloatButtons mTradeFloatButtons;
@@ -80,21 +111,14 @@ public class StockTradeActivity extends BaseActivity {
     LinearLayout mChartArea;
     @BindView(R.id.subPageArea)
     LinearLayout mSubPageArea;
-    @BindView(R.id.detailView)
-    FrameLayout mDetailView;
-    @BindView(R.id.fiveHq)
-    TextView mFiveHq;
-    @BindView(R.id.splitHq)
-    TextView mSplitHq;
-    @BindView(R.id.detailMarket)
-    LinearLayout mDetailMarket;
 
-
-    private SubPageAdapter mSubPageAdapter;
-    private Variety mVariety;
-    private FutureData mFutureData;
+    private StockRTData mStockRTData;
     private Prediction mPrediction;
-    PredictionDialogFragment mPredictionFragment;
+
+
+    private RefreshPointReceiver mReceiver;
+    private PredictionDialogFragment mPredictionFragment;
+    protected Variety mVariety;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,24 +130,27 @@ public class StockTradeActivity extends BaseActivity {
             addStatusBarHeightTopPadding(mTitleBar);
         }
 
-//        mVariety = new Gson().fromJson("{\"displayMarketTimes\": \"06:00;12:00;18:00;00:00;05:00\",\"decimalScale\": 0.2,\"sign\": \"$\",\"varietyType\": \"CL\",\"baseline\": 9,\"isDomestic\": 0,\"tags\": 0,\"exchangeId\": 9,\"openMarketTime\": \"06:00;05:00\",\"flashChartPriceInterval\": 2,\"varietyId\": 10,\"exchangeStatus\": 1,\"contractsCode\": \"CL1706\",\"advertisement\": \" \",\"currency\": \"USD\",\"marketPoint\": 2,\"varietyName\": \"美原油\",\"eachPointMoney\": 1000,\"currencyUnit\": \"美元\",\"ratio\": 7.3,\"varietyId\": 1}", Variety.class);
-        mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
-        initView();
+        initData();
+
         initTabLayout();
         initChartViews();
         initSlidingTab();
+        initTitleBar();
+        initTradeFloatButton();
+
+        requestStockRTData();
+        requestOptionalStatus();
+
+        registerRefreshReceiver();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+    private void registerRefreshReceiver() {
+        mReceiver = new RefreshPointReceiver();
+        IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
-    private void initView() {
-        mFiveHq.setSelected(true);
-        mTitleBar.setTitle(getString(R.string.stock_code, mVariety.getVarietyName(), mVariety.getVarietyType()));
-        getSupportFragmentManager().beginTransaction().add(R.id.detailView, new FiveMarketFragment()).commit();
+    private void initTradeFloatButton() {
         mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
             @Override
             public void onPublishPointButtonClick() {
@@ -136,54 +163,286 @@ public class StockTradeActivity extends BaseActivity {
 
             @Override
             public void onAddOptionalButtonClick() {
-
+                if (LocalUser.getUser().isLogin()) {
+                    checkOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
 
             @Override
             public void onTradeButtonClick() {
-
             }
         });
     }
 
+    private void requestOptionalStatus() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.checkOptional(mVariety.getVarietyId())
+                    .setTag(TAG).setIndeterminate(this)
+                    .setCallback(new Callback<Resp<Integer>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Integer> resp) {
+                            Integer result = resp.getData();
+                            if (result != null) {
+                                boolean hasAddInOption = (result == HAS_ADD_OPITION);
+                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
+                            }
+                        }
+                    }).fireSync();
+        }
+    }
+
+    private void checkOptionalStatus() {
+        if (mTradeFloatButtons.isHasAddInOptional()) {
+            showDeleteOptionalDialog();
+        } else {
+            requestAddOptional();
+        }
+    }
+
+    private void showDeleteOptionalDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
+                .setMessageTextSize(15)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestDeleteOptional();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setNegative(R.string.cancel)
+                .show();
+    }
+
+    private void requestDeleteOptional() {
+        Client.delOptional(mVariety.getVarietyId())
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mTradeFloatButtons.setHasAddInOpition(false);
+                            CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                }).fireSync();
+    }
+
+    private void requestAddOptional() {
+        Client.addOption(mVariety.getVarietyId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                            CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+
+                    @Override
+                    protected void onReceive(Resp<JsonObject> resp) {
+                        super.onReceive(resp);
+                        // 701 代表已经添加过
+                        if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
+                            mTradeFloatButtons.setHasAddInOpition(true);
+                        }
+                    }
+                }).fire();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        startScheduleJob(1 * 1000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case ViewpointFragment.REQ_CODE_ATTENTION:
+                    ToastUtil.curt("收到回到");
+                    updateViewPointPage(data);
+                    break;
+            }
+        }
+    }
+
+    private void updateViewPointPage(Intent data) {
+        OpinionDetails details = (OpinionDetails) data.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+        WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+        AttentionAndFansNumberModel attentionAndFansNumberModel =
+                (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+        ViewpointFragment viewpointFragment = getViewpointFragment();
+        if (viewpointFragment != null) {
+            if (details != null) {
+                viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+            } else {
+                viewpointFragment.refreshPointList();
+            }
+        }
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
+            requestStockTrendDataAndSet();
+        }
+        if (count % TimerHandler.STOCK_RT_PULL_TIME == 0) {
+            requestStockRTData();
+        }
+    }
+
+
+    private void requestStockRTData() {
+        Client.getStockRealtimeData(mVariety.getVarietyType())
+                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+                    @Override
+                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
+                        if (!result.isEmpty()) {
+                            mStockRTData = result.get(0);
+                            updateStockTrendView(mStockRTData);
+                        }
+                        updateMarketDataView();
+                    }
+                }).fireSync();
+    }
+
+    private void updateStockTrendView(StockRTData stockRTData) {
+        ChartSettings settings = mStockTrendView.getSettings();
+        if (settings != null && settings.getPreClosePrice() == 0) {
+            settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
+            mStockTrendView.setSettings(settings);
+        }
+    }
+
+    private void updateMarketDataView() {
+        int color = ContextCompat.getColor(getActivity(), R.color.redPrimary);
+        if (mStockRTData != null) {
+            String risePrice = mStockRTData.getRise_price();
+            String risePercent = mStockRTData.getRise_pre();
+            String lastPrice = mStockRTData.getLast_price();
+            if (!TextUtils.isEmpty(risePrice)) {
+                if (risePrice.startsWith("-")) {
+                    color = ContextCompat.getColor(getActivity(), R.color.greenPrimary);
+                } else {
+                    risePrice = "+" + risePrice;
+                    risePercent = "+" + risePercent;
+                }
+            }
+            mLastPrice.setText(lastPrice);
+            mPriceChange.setText(risePrice + "     " + risePercent + "%");
+            mTodayOpen.setText(mStockRTData.getOpen_price());
+            mHighest.setText(mStockRTData.getHigh_price());
+            mLowest.setText(mStockRTData.getLow_price());
+            mPreClose.setText(mStockRTData.getPrev_price());
+
+            mStockTrendView.setStockRTData(mStockRTData);
+        }
+        mMarketArea.setBackgroundColor(color);
+        mTitleBar.setBackgroundColor(color);
+    }
+
+    private void initTitleBar() {
+        View view = mTitleBar.getCustomView();
+        TextView productName = (TextView) view.findViewById(R.id.productName);
+        TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
+        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getVarietyType() + ")");
+        if (mVariety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+            exchangeStatus.setVisibility(View.GONE);
+        } else {
+            exchangeStatus.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initData() {
+        mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+    }
+
+
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.day_k_line));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.five_day_k_line));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.week_k_line));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.month_k_line));
         mTabLayout.addOnTabSelectedListener(mOnTabSelectedListener);
     }
 
-    private void initChartViews() {
-        TrendView.Settings settings = new TrendView.Settings();
-        settings.setBaseLines(mVariety.getBaseline());
-        settings.setNumberScale(mVariety.getPriceScale());
-        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
-        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
-        settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
-        settings.setCalculateXAxisFromOpenMarketTime(true);
-        mTrendView.setSettings(settings);
+    protected void initChartViews() {
+        ChartSettings settings = new ChartSettings();
+        settings.setBaseLines(3);
+        settings.setNumberScale(2);
+        settings.setIndexesEnable(true);
+        settings.setIndexesBaseLines(2);
+        settings.setXAxis(240);
+        mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(mVariety.getBaseline());
+        settings2.setBaseLines(7);
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
-        mKlineView.setSettings(settings2);
-        mKlineView.setOnAchieveTheLastListener(null);
+        settings2.setIndexesEnable(false);
+        settings2.setIndexesBaseLines(2);
+        mStockKlineView.setDayLine(true);
+        mStockKlineView.setSettings(settings2);
+        mStockKlineView.setOnAchieveTheLastListener(null);
+
+        requestStockTrendDataAndSet();
+    }
+
+    private void requestStockTrendDataAndSet() {
+        Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
+                .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
+                    @Override
+                    public void onDataMsg(List<StockTrendData> result, StockResp.Msg msg) {
+                        if (!result.isEmpty()) {
+                            result.remove(0); // 第一条数据为集合竞价的数据
+                            mStockTrendView.setDataList(result);
+                        }
+                    }
+                }).fireSync();
     }
 
     private void initSlidingTab() {
-//        mViewPager.setOffscreenPageLimit(2);
-        mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
-        mViewPager.setAdapter(mSubPageAdapter);
+        mViewPager.setAdapter(createSubPageAdapter());
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
         mSlidingTab.setViewPager(mViewPager);
+        mSlidingTab.setOnPageChangeListener(createPageChangeListener());
     }
 
     private void requestPrediction() {
@@ -204,19 +463,20 @@ public class StockTradeActivity extends BaseActivity {
 
     private void showPredictDialog() {
         if (mPredictionFragment == null) {
-            mPredictionFragment = PredictionDialogFragment.newInstance().setOnPredictButtonListener(new PredictionDialogFragment.OnPredictButtonListener() {
-                @Override
-                public void onBullishButtonClick(int directionLong) {
-                    mPrediction.setDirection(directionLong);
-                    openPublishPointPage();
-                }
+            mPredictionFragment = PredictionDialogFragment.newInstance()
+                    .setOnPredictButtonListener(new PredictionDialogFragment.OnPredictButtonListener() {
+                        @Override
+                        public void onBullishButtonClick(int directionLong) {
+                            mPrediction.setDirection(directionLong);
+                            openPublishPointPage();
+                        }
 
-                @Override
-                public void onBearishButtonClick(int directionShort) {
-                    mPrediction.setDirection(directionShort);
-                    openPublishPointPage();
-                }
-            });
+                        @Override
+                        public void onBearishButtonClick(int directionShort) {
+                            mPrediction.setDirection(directionShort);
+                            openPublishPointPage();
+                        }
+                    });
         }
         mPredictionFragment.show(getSupportFragmentManager());
     }
@@ -225,55 +485,8 @@ public class StockTradeActivity extends BaseActivity {
         Launcher.with(getActivity(), PublishOpinionActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .putExtra(Launcher.EX_PAYLOAD_2, mFutureData)
-                .execute();
-    }
+                .executeForResult(REQ_CODE_PUBLISH_VIEWPOINT);
 
-    private class SubPageAdapter extends FragmentPagerAdapter {
-
-        FragmentManager mFragmentManager;
-        Context mContext;
-
-        public SubPageAdapter(FragmentManager fm, Context context) {
-            super(fm);
-            mFragmentManager = fm;
-            mContext = context;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return mContext.getString(R.string.point);
-                case 1:
-                    return mContext.getString(R.string.stock_news);
-                case 2:
-                    return mContext.getString(R.string.stock_finance);
-            }
-            return super.getPageTitle(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
-                case 1:
-                    return new ListFragment();
-                case 2:
-                    return new FinanceFragment();
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        public Fragment getFragment(int position) {
-            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
-        }
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -281,14 +494,14 @@ public class StockTradeActivity extends BaseActivity {
         public void onTabSelected(TabLayout.Tab tab) {
             String tabText = tab.getText().toString();
             if (tabText.equals(getString(R.string.day_k_line))) {
-                requestKlineDataAndSet(null);
+                requestKlineDataAndSet(StockKlineData.PERIOD_DAY);
                 showKlineView();
-            } else if (tabText.equals(getString(R.string.five_day_k_line))) {
-
             } else if (tabText.equals(getString(R.string.week_k_line))) {
-
+                requestKlineDataAndSet(StockKlineData.PERIOD_WEEK);
+                showKlineView();
             } else if (tabText.equals(getString(R.string.month_k_line))) {
-
+                requestKlineDataAndSet(StockKlineData.PERIOD_MONTH);
+                showKlineView();
             } else {
                 showTrendView();
             }
@@ -306,30 +519,32 @@ public class StockTradeActivity extends BaseActivity {
     };
 
     private void showTrendView() {
-        mTrendView.setVisibility(View.VISIBLE);
-        mKlineView.setVisibility(View.GONE);
-        mDetailMarket.setVisibility(View.VISIBLE);
+        mStockTrendView.setVisibility(View.VISIBLE);
+        mStockKlineView.setVisibility(View.GONE);
     }
 
     private void showKlineView() {
-        mTrendView.setVisibility(View.GONE);
-        mKlineView.setVisibility(View.VISIBLE);
-        mDetailMarket.setVisibility(View.GONE);
+        mStockTrendView.setVisibility(View.GONE);
+        mStockKlineView.setVisibility(View.VISIBLE);
     }
 
-    private void requestKlineDataAndSet(final String type) {
-        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+    private void requestKlineDataAndSet(int type) {
+        mStockKlineView.clearData();
+        Client.getStockKlineData(mVariety.getVarietyType(), type)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new StockCallback<StockResp, List<StockKlineData>>() {
                     @Override
-                    protected void onRespSuccessData(List<KlineViewData> data) {
-                        if (TextUtils.isEmpty(type)) { // dayK
-                            mKlineView.setDayLine(true);
-                        } else {
-                            mKlineView.setDayLine(false);
-                        }
-                        Collections.reverse(data);
-                        mKlineView.setDataList(data);
+                    public void onDataMsg(List<StockKlineData> result, StockResp.Msg msg) {
+                        List<KlineViewData> dataList = new ArrayList<KlineViewData>(result);
+                        mStockKlineView.setDataList(dataList);
                     }
                 }).fire();
+    }
+
+    private class RefreshPointReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateViewPointPage(intent);
+        }
     }
 }

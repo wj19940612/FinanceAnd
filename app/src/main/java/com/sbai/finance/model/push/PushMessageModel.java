@@ -19,13 +19,14 @@ public class PushMessageModel {
      */
 
     private int classify;
-    private int createTime;
-    private int dataId;
+    private long createTime;
+    private String dataId;
     private String iconUrl;
     private String msg;
     private String title;
     private int type;
     private String url;
+
 
     public int getClassify() {
         return classify;
@@ -35,20 +36,20 @@ public class PushMessageModel {
         this.classify = classify;
     }
 
-    public int getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
 
-    public int getDataId() {
+    public String getDataId() {
         return dataId;
     }
 
-    public void setDataId(int dataId) {
+    public void setDataId(String dataId) {
         this.dataId = dataId;
     }
 

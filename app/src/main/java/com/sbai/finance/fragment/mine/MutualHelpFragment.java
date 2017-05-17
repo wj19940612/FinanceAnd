@@ -26,7 +26,9 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mutual.BorrowInActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -40,7 +42,6 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -102,8 +103,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getId()).execute();
-                getActivity().finish();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getSourceUserId()).execute();
             }
         });
 
@@ -120,7 +120,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     }
 
     private void requestMutualHelpList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage, Client.PAGE_SIZE)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_MUTUAL_HELP, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -166,7 +166,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             mListView.addFooterView(mFootView);
         }
 
-        if (historyNewsModels.size() < Client.PAGE_SIZE) {
+        if (historyNewsModels.size() < Client.DEFAULT_PAGE_SIZE) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -219,13 +219,23 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             updateNewsReadStatus(position, item);
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                    ToastUtil.curt("跳转至想帮助我的人");
+                    Log.d(TAG, "onItemClick: " + item.toString());
+//                    if (item.getUserInfo() != null) {
+//                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+//                                .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+//                                .putExtra(Launcher.USER_ID, item.getUserInfo().getId())
+//                                .execute();
+//                    } else {
+                    Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+                            .putExtra(Launcher.USER_ID, item.getSourceUserId())
+                            .execute();
+//                    }
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
-                    ToastUtil.curt("拒绝我的帮助");
                     break;
                 case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
-                    ToastUtil.curt("跳转至我的借出");
+                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
 
             }

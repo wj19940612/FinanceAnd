@@ -1,9 +1,11 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
@@ -37,6 +40,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,7 +50,6 @@ import butterknife.OnClick;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_PICTURE;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_TEXT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
-import static com.sbai.finance.utils.DateUtil.FORMAT_YEAR_MONTH_DAY;
 
 /**
  * Created by linrongfang on 2017/5/8.
@@ -100,24 +103,22 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     //只有在登录的情况下 才请求记录
     private void requestFeedbackList() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.getFeedback(mPage, mPageSize)
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
-                        @Override
-                        protected void onRespSuccessData(List<Feedback> data) {
-                            updateFeedbackList(data);
-                        }
+        Client.getFeedback(mPage, mPageSize)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Feedback> data) {
+                        updateFeedbackList(data);
+                    }
 
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            stopRefreshAnimation();
-                        }
-                    })
-                    .fire();
-        }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
     }
 
     private void updateFeedbackList(List<Feedback> data) {
@@ -132,7 +133,21 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         } else {
             mPage++;
         }
+        updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
+    }
+
+    private void updateTitle(List<Feedback> data) {
+        //已经设置过标题就不设置了
+        if (!mTitleBar.getTitle().equals(getString(R.string.feed_back))) {
+            return;
+        }
+        for (Feedback feedback : data) {
+            if (!TextUtils.isEmpty(feedback.getReplyName())) {
+                mTitleBar.setTitle(getString(R.string.feed_back) + "-" + feedback.getReplyName());
+                break;
+            }
+        }
     }
 
     @Override
@@ -174,7 +189,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private void sendFeedbackText() {
         if (LocalUser.getUser().isLogin()) {
             String content = mCommentContent.getText().toString().trim();
-            requestSendFeedback(content, CONTENT_TYPE_TEXT, null);
+            requestSendFeedback(content, CONTENT_TYPE_TEXT);
         } else {
             Launcher.with(this, LoginActivity.class).execute();
         }
@@ -194,10 +209,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private void requestSendFeedbackImage(final String path) {
         String content = ImageUtils.compressImageToBase64(path);
         int contentType = CONTENT_TYPE_PICTURE;
-        requestSendFeedback(content, contentType, path);
+        requestSendFeedback(content, contentType);
     }
 
-    private void requestSendFeedback(final String content, final int contentType, final String imagePath) {
+    private void requestSendFeedback(final String content, final int contentType) {
         Client.sendFeedback(content, contentType)
                 .setTag(TAG)
                 .setIndeterminate(FeedbackActivity.this)
@@ -205,7 +220,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         // TODO: 2017/5/10 刷新界面
-                        refreshChatList(content, contentType, imagePath);
+                        refreshChatList(content, contentType);
                     }
 
                     @Override
@@ -217,8 +232,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     //刷新列表
-    private void refreshChatList(final String content, final int contentType, String imagePath) {
-        //请求最新的服务器数据  并取最后一条
+    private void refreshChatList(final String content, final int contentType) {
+        //请求最新的服务器数据  并取第一条
         Client.getFeedback(0, mPageSize)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -241,7 +256,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         if (data == null) {
             return;
         }
-        Feedback feedback = data.get(data.size() - 1);
+        Feedback feedback = data.get(0);
         mFeedbackAdapter.addFeedbackItem(feedback);
         mListView.setSelection(mFeedbackAdapter.getCount() - 1);
         if (contentType == CONTENT_TYPE_TEXT) {
@@ -268,10 +283,11 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             int length = list.size();
             //如果原来已经有数据 则倒序插入
             if (mFeedbackList.size() > 0) {
-                for (int i = length - 1; i >= 0; i--) {
+                for (int i = 0; i < length; i++) {
                     mFeedbackList.add(0, list.get(i));
                 }
             } else {
+                Collections.reverse(list);
                 mFeedbackList.addAll(list);
             }
             notifyDataSetChanged();
@@ -366,6 +382,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             TextView mEndLineTime;
             @BindView(R.id.timeLayout)
             RelativeLayout mTimeLayout;
+            @BindView(R.id.contentWrapper)
+            RelativeLayout mWrapper;
             @BindView(R.id.timestamp)
             TextView mTimestamp;
             @BindView(R.id.image)
@@ -382,38 +400,75 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(final Feedback feedback, boolean needTitle, final Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_YEAR_MONTH_DAY));
+                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
                 mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+
+                mWrapper.removeAllViews();
+                TextView textview = null;
+                ImageView imageview = null;
                 //判断是否图片
                 if (feedback.getContentType() == CONTENT_TYPE_TEXT) {
-                    mImage.setVisibility(View.GONE);
-                    mText.setVisibility(View.VISIBLE);
-                    mText.setText(feedback.getContent());
+                    //create textview and add
+                    textview = createTextview(context);
+                    mWrapper.addView(textview);
+                    textview.setText(feedback.getContent());
                 } else {
-                    mImage.setVisibility(View.VISIBLE);
-                    mText.setVisibility(View.GONE);
+                    //create imageview and add
+                    imageview = createImageview(context);
+                    mWrapper.addView(imageview);
                     Glide.with(context).load(feedback.getContent())
                             .bitmapTransform(new GlideThumbTransform(context))
-                            .into(mImage);
+                            .into(imageview);
                 }
                 Glide.with(context).load(feedback.getUserPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
-                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .placeholder(R.drawable.ic_avatar_feedback)
                         .into(mHeadImage);
+                if (imageview != null) {
+                    imageview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
+                                PreviewFragment.newInstance(feedback.getContent())
+                                        .show(((FeedbackActivity) context).getSupportFragmentManager());
+                            }
+                        }
+                    });
+                }
 
-                mImage.setOnClickListener(new View.OnClickListener() {
+                mHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
-                            PreviewFragment.newInstance(feedback.getContent())
-                                    .show(((FeedbackActivity) context).getSupportFragmentManager());
-                        }
+                        Launcher.with(context, UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId()).execute();
                     }
                 });
 
+            }
+
+            private TextView createTextview(Context context) {
+                TextView tv = new TextView(context);
+                tv.setTextColor(Color.WHITE);
+                int spacing = (int) Display.dp2Px(5.0f, context.getResources());
+                tv.setLineSpacing(spacing, 1.2f);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                int margin = (int) Display.dp2Px(10.0f, context.getResources());
+                params.setMargins(0, 0, margin, 0);
+                tv.setLayoutParams(params);
+                return tv;
+            }
+
+            private ImageView createImageview(Context context) {
+                ImageView image = new ImageView(context);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                int margin = (int) Display.dp2Px(5.0f, context.getResources());
+                params.setMargins(0, 0, margin, 0);
+                image.setLayoutParams(params);
+                return image;
             }
 
         }
@@ -437,15 +492,14 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(Feedback feedback, boolean needTitle, Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_YEAR_MONTH_DAY));
+                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
                 mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
                 mText.setText(feedback.getContent());
-                Glide.with(context).load(feedback.getUserPortrait())
+                Glide.with(context).load(R.drawable.ic_feedback_service)
                         .bitmapTransform(new GlideCircleTransform(context))
-                        .placeholder(R.drawable.ic_default_avatar_big)
                         .into(mHeadImage);
             }
         }

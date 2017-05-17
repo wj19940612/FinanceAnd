@@ -30,56 +30,28 @@ public class KlineViewData {
         return closePrice;
     }
 
-    public void setClosePrice(float closePrice) {
-        this.closePrice = closePrice;
-    }
-
     public String getDay() {
         return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
     }
 
     public float getMaxPrice() {
         return maxPrice;
     }
 
-    public void setMaxPrice(float maxPrice) {
-        this.maxPrice = maxPrice;
-    }
-
     public float getMinPrice() {
         return minPrice;
-    }
-
-    public void setMinPrice(float minPrice) {
-        this.minPrice = minPrice;
     }
 
     public float getOpenPrice() {
         return openPrice;
     }
 
-    public void setOpenPrice(float openPrice) {
-        this.openPrice = openPrice;
-    }
-
     public String getTime() {
         return time;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public long getTimeStamp() {
         return timeStamp;
-    }
-
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
     public long getNowVolume() {

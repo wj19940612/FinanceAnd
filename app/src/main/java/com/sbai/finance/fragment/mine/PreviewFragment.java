@@ -67,7 +67,7 @@ public class PreviewFragment extends DialogFragment {
         unbinder = ButterKnife.bind(this, view);
         mUserPortrait = getArguments().getString(Launcher.EX_PAYLOAD);
         Glide.with(getActivity()).load(mUserPortrait)
-                .placeholder(R.drawable.ic_default_avatar_big)
+                .thumbnail(0.4f)
                 .into(mImageview);
         return view;
     }

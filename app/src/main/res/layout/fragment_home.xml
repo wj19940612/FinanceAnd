@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/greyLightAssist"
               android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/home"/>
 
     <ScrollView
         android:id="@+id/nestedScrollView"
@@ -31,27 +38,26 @@
                 android:id="@+id/bigEvent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="0.5dp"
+                android:layout_marginBottom="0.5dp"
+                android:layout_marginTop="14dp"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/common_padding"
+                android:paddingBottom="17dp"
+                android:paddingLeft="@dimen/common_padding"
                 android:paddingRight="@dimen/common_padding"
-                android:paddingTop="@dimen/common_padding">
+                android:paddingTop="15dp">
 
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:src="@drawable/fanli_pic_bigevent"/>
-
-                <View
-                    android:layout_width="0.5dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="@dimen/common_padding"
-                    android:background="@color/greyLightAssist"/>
+                    android:layout_marginRight="19dp"
+                    android:background="@drawable/bg_event"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="大事件"
+                    android:textColor="@color/redPrimary"
+                    android:textSize="10sp"/>
 
                 <TextView
                     android:id="@+id/event"
@@ -60,26 +66,45 @@
                     android:layout_gravity="center_vertical"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/blackAssist"
-                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:textSize="10sp"
                     tool:text="雄安燃情资本市场 概念股连续疯长"/>
             </LinearLayout>
 
             <include layout="@layout/home_function"/>
 
-            <com.sbai.finance.view.MyGridView
-                android:id="@+id/topicGv"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:horizontalSpacing="9dp"
-                android:numColumns="2"
-                android:paddingBottom="@dimen/common_split"
-                android:paddingLeft="@dimen/common_padding"
-                android:paddingRight="@dimen/common_padding"
-                android:paddingTop="@dimen/common_split"
-                android:scrollbars="none"
-                android:verticalSpacing="@dimen/common_split"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="44dp"
+                android:layout_marginTop="14dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/common_padding"
+                    android:paddingLeft="@dimen/common_padding"
+                    android:paddingTop="15dp"
+                    android:text="@string/recommend"
+                    android:textColor="@color/blackAssist"
+                    android:textSize="14sp"/>
+
+                <com.sbai.finance.view.MyGridView
+                    android:id="@+id/topicGv"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:horizontalSpacing="15dp"
+                    android:numColumns="2"
+                    android:paddingBottom="@dimen/common_split"
+                    android:paddingLeft="@dimen/common_padding"
+                    android:paddingRight="@dimen/common_padding"
+                    android:scrollbars="none"
+                    android:verticalSpacing="28dp"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

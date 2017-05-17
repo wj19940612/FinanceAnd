@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
  * Created by linrongfang on 2017/5/9.
+ * 获取图片后压缩
  */
 
 public class GlideThumbTransform extends BitmapTransformation {
@@ -35,7 +36,7 @@ public class GlideThumbTransform extends BitmapTransformation {
         //宽高最大值
         int maxValue = (int) Display.dp2Px(200, mContext.getResources());
         //如果最大值都比maxValue小 则显示原图
-        if (size > maxValue) {
+        if (size < maxValue) {
             return source;
         }
         //压缩比例

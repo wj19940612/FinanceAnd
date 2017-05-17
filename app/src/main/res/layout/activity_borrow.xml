@@ -84,6 +84,7 @@
                     android:hint="@string/borrow_interest_amount"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/contentDays"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:orientation="horizontal"
@@ -208,7 +209,7 @@
                     android:layout_height="14dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
-                    android:button="@drawable/btn_agree_selector"/>
+                    android:button="@drawable/checkbox_style"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
