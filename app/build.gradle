@@ -39,7 +39,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled true // !!set true when package release apk
+        cruncherEnabled false // !!set true when package release apk
     }
 
     dexOptions {
