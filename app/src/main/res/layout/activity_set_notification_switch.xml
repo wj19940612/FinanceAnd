@@ -31,11 +31,11 @@
             android:textColor="@color/primaryText"
             android:textSize="@dimen/common_default_size"/>
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:checked="true"
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/acceptNewsSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@drawable/bg_switch_news"/>
+            android:checked="true"
+            app:srcCompat="@drawable/bg_switch_news"/>
     </LinearLayout>
 </LinearLayout>
