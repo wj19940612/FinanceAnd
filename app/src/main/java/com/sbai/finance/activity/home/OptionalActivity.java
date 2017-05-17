@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.model.future.FutureData;
@@ -99,7 +100,7 @@ public class OptionalActivity extends BaseActivity implements
                         Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }else{
-                        Launcher.with(getActivity(), StockTradeActivity.class)
+                        Launcher.with(getActivity(), StockDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }
                 }
