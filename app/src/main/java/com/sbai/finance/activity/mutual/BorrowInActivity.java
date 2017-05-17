@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -409,12 +410,14 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                                 "\n" + context.getString(R.string.end_line), "  " + DateUtil.compareTime(item.getEndlineTime()), 1.455f, 1.455f,
                                 ContextCompat.getColor(context, R.color.opinionText), ContextCompat.getColor(context, R.color.redPrimary));
                         mEndLineTime.setText(attentionSpannableString);
+                        mEndLineTime.setGravity(Gravity.LEFT);
                         mCancelBorrowIn.setVisibility(View.VISIBLE);
                         break;
                     case BorrowIn.STATUS_NO_CHECK:
                         attentionSpannableString = StrUtil.mergeTextWithColor(context.getString(R.string.on_checking), 1.455f,
                                 ContextCompat.getColor(context, R.color.opinionText));
                         mEndLineTime.setText(attentionSpannableString);
+                        mEndLineTime.setGravity(Gravity.CENTER);
                         mCancelBorrowIn.setVisibility(View.GONE);
                         break;
                     default:
