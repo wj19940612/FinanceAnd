@@ -612,6 +612,17 @@ public class Client {
                 new ApiParams()
                         .put("stock_code", stockCodes));
     }
+    /**
+     * 获取多个期货合约行情数据
+     *
+     * @param codes
+     * @return
+     */
+    public static API getFutureMarketData(String codes) {
+        return new API("/fut/quota/list.do",
+                new ApiParams()
+                        .put("codes", codes));
+    }
 
     /**
      * 获取股票实时行情接口
@@ -682,13 +693,13 @@ public class Client {
     /**
      * 查询自选
      *
-     * @param bigVarietyTypeCode
      * @return
      */
-    public static API getOptional(String bigVarietyTypeCode) {
+    public static API getOptional(int page) {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
-                        .put("bigVarietyTypeCode", bigVarietyTypeCode));
+                        .put("page", page)
+                        .put("pageSize", 15));
     }
 
     /**
@@ -1059,6 +1070,50 @@ public class Client {
         return new API("/order/order/getExchangeStatus.do",
                 new ApiParams()
                         .put("exchangeId", exchangeId));
+    }
+
+    /**
+     * 获取意向金金额
+     *
+     * @return
+     */
+    public static API getIntentionAmount() {
+        return new API("/user/userpay/getUserLoanMoney.do");
+    }
+
+    /**
+     * 获取可用平台
+     *
+     * @return
+     */
+    public static API getUsablePlatform() {
+        return new API("/user/finance/platform/selectUsablePlatform.do");
+    }
+
+    /**
+     * 获取支付路径
+     *
+     * @param orderId
+     * @param platform
+     * @return
+     */
+    public static API getPaymentPath(int orderId, String platform) {
+        return new API("/user/userpay/payLoanMoney.do",
+                new ApiParams()
+                        .put("orderId", orderId)
+                        .put("platform", platform));
+    }
+
+    /**
+     * 支付查询
+     *
+     * @param orderId
+     * @return
+     */
+    public static API paymentQuery(int orderId) {
+        return new API("/user/userpay/confirmPay.do",
+                new ApiParams()
+                        .put("orderId", orderId));
     }
 
 //    /**

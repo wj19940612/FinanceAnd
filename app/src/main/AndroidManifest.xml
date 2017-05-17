@@ -75,6 +75,9 @@
         <activity
             android:name=".activity.stock.StockTradeActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.StockIndexTradeActivity"
+            android:screenOrientation="portrait"/>
         <!-- 互助 -->
         <activity
             android:name=".activity.mutual.BorrowActivity"
@@ -174,8 +177,7 @@
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
+        <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
         </activity>
         <activity
             android:name=".activity.economiccircle.PayIntentionActivity">
@@ -198,8 +200,12 @@
         <activity android:name=".activity.stock.CompanyIntroActivity">
         </activity>
         <!-- 相册图片预览 -->
-        <activity android:name=".activity.mine.ImagePreViewActivity"
+        <activity
+            android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".activity.web.PaymentActivity">
+        </activity>
 
     </application>
 

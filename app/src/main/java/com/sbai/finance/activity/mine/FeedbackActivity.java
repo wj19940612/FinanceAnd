@@ -48,7 +48,6 @@ import butterknife.OnClick;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_PICTURE;
 import static com.sbai.finance.model.mine.Feedback.CONTENT_TYPE_TEXT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
-import static com.sbai.finance.utils.DateUtil.FORMAT_YEAR_MONTH_DAY;
 
 /**
  * Created by linrongfang on 2017/5/8.
@@ -102,24 +101,22 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     //只有在登录的情况下 才请求记录
     private void requestFeedbackList() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.getFeedback(mPage, mPageSize)
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
-                        @Override
-                        protected void onRespSuccessData(List<Feedback> data) {
-                            updateFeedbackList(data);
-                        }
+        Client.getFeedback(mPage, mPageSize)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Feedback> data) {
+                        updateFeedbackList(data);
+                    }
 
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            stopRefreshAnimation();
-                        }
-                    })
-                    .fire();
-        }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
     }
 
     private void updateFeedbackList(List<Feedback> data) {
@@ -190,7 +187,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private void sendFeedbackText() {
         if (LocalUser.getUser().isLogin()) {
             String content = mCommentContent.getText().toString().trim();
-            requestSendFeedback(content, CONTENT_TYPE_TEXT, null);
+            requestSendFeedback(content, CONTENT_TYPE_TEXT);
         } else {
             Launcher.with(this, LoginActivity.class).execute();
         }
@@ -210,10 +207,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private void requestSendFeedbackImage(final String path) {
         String content = ImageUtils.compressImageToBase64(path);
         int contentType = CONTENT_TYPE_PICTURE;
-        requestSendFeedback(content, contentType, path);
+        requestSendFeedback(content, contentType);
     }
 
-    private void requestSendFeedback(final String content, final int contentType, final String imagePath) {
+    private void requestSendFeedback(final String content, final int contentType) {
         Client.sendFeedback(content, contentType)
                 .setTag(TAG)
                 .setIndeterminate(FeedbackActivity.this)
@@ -221,7 +218,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         // TODO: 2017/5/10 刷新界面
-                        refreshChatList(content, contentType, imagePath);
+                        refreshChatList(content, contentType);
                     }
 
                     @Override
@@ -233,7 +230,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     //刷新列表
-    private void refreshChatList(final String content, final int contentType, String imagePath) {
+    private void refreshChatList(final String content, final int contentType) {
         //请求最新的服务器数据  并取第一条
         Client.getFeedback(0, mPageSize)
                 .setTag(TAG)
@@ -401,7 +398,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(final Feedback feedback, boolean needTitle, final Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_YEAR_MONTH_DAY));
+                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
@@ -464,7 +461,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(Feedback feedback, boolean needTitle, Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_YEAR_MONTH_DAY));
+                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
