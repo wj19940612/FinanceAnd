@@ -55,12 +55,13 @@ android {
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
             buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
+            //buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
         }
 
         alpha {
             versionCode 9
             versionName "1.8"
-            buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
+            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
         }
     }
 }

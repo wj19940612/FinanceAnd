@@ -612,6 +612,17 @@ public class Client {
                 new ApiParams()
                         .put("stock_code", stockCodes));
     }
+    /**
+     * 获取多个期货合约行情数据
+     *
+     * @param codes
+     * @return
+     */
+    public static API getFutureMarketData(String codes) {
+        return new API("/fut/quota/list.do",
+                new ApiParams()
+                        .put("codes", codes));
+    }
 
     /**
      * 获取股票实时行情接口
@@ -680,15 +691,13 @@ public class Client {
     }
 
     /**
-     * 查询自选gu
+     * 查询自选
      *
-     * @param bigVarietyTypeCode
      * @return
      */
-    public static API getOptional(String bigVarietyTypeCode,int page) {
+    public static API getOptional(int page) {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
-                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
                         .put("page", page)
                         .put("pageSize", 15));
     }

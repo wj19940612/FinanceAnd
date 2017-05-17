@@ -110,6 +110,8 @@
     <string name="point">观点</string>
     <string name="introduce">简介</string>
     <string name="stock_news">新闻</string>
+    <string name="rise">涨幅榜</string>
+    <string name="down">跌幅榜</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="no_option">暂无自选</string>
