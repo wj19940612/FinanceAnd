@@ -685,10 +685,12 @@ public class Client {
      * @param bigVarietyTypeCode
      * @return
      */
-    public static API getOptional(String bigVarietyTypeCode) {
+    public static API getOptional(String bigVarietyTypeCode,int page) {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
-                        .put("bigVarietyTypeCode", bigVarietyTypeCode));
+                        .put("bigVarietyTypeCode", bigVarietyTypeCode)
+                        .put("page", page)
+                        .put("pageSize", 15));
     }
 
     /**

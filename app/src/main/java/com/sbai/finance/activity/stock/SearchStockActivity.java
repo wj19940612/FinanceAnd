@@ -81,6 +81,7 @@ public class SearchStockActivity extends BaseActivity {
 				Variety variety = (Variety) parent.getAdapter().getItem(position);
 				if (variety != null) {
 					Launcher.with(getActivity(), StockTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
+					finish();
 				}
 			}
 		});

@@ -46,8 +46,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.marketArea)
-    LinearLayout mMarketArea;
     @BindView(R.id.shangHai)
     TextView mShangHai;
     @BindView(R.id.shenZhen)
@@ -65,8 +63,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private int mPage = 0;
     private int mPageSize = 15;
-
-    private Variety mVariety;
 
     private StockListAdapter mStockListAdapter;
     private List<Variety> mStockIndexData;
@@ -251,19 +247,35 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         mStockListAdapter.notifyDataSetChanged();
     }
-    @OnClick({R.id.stock, R.id.search, R.id.marketArea})
+    @OnClick({R.id.stock, R.id.search, R.id.shangHai,R.id.shenZhen,R.id.board})
     public void onClick(View view) {
+        Variety variety;
         switch (view.getId()) {
             case R.id.stock:
             case R.id.search:
                 Launcher.with(getActivity(), SearchStockActivity.class).execute();
                 break;
-            case R.id.marketArea:
-                // TODO: 2017/5/3 跳转指数详情
+            case R.id.shangHai:
+                launcherIndexActivity(Variety.STOCK_EXPONENT_SH);
+                break;
+            case R.id.shenZhen:
+                launcherIndexActivity(Variety.STOCK_EXPONENT_SZ);
+                break;
+            case R.id.board:
+                launcherIndexActivity(Variety.STOCK_EXPONENT_GE);
                 break;
         }
     }
-
+    private void launcherIndexActivity(String varietyType ){
+        if (mStockIndexData!=null){
+            for (Variety variety:mStockIndexData){
+                if (variety.getVarietyType().equalsIgnoreCase(varietyType)){
+                    Launcher.with(getActivity(), StockIndexTradeActivity.class).putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                      break;
+                }
+            }
+        }
+    }
     @Override
     public void onRefresh() {
         reset();
