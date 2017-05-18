@@ -217,6 +217,7 @@
                     android:textColor="@color/secondaryText"
                     android:text="@string/borrow_agree"/>
                 <TextView
+                    android:id="@+id/protocol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/blueAssist"

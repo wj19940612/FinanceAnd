@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -248,7 +249,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                         .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserPortrait);
                 String location = item.getLocation();
-                if (location==null){
+                if(TextUtils.isEmpty(location)){
                     location = context.getString(R.string.no_location);
                 }
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,

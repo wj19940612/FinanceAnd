@@ -164,7 +164,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getInterest())));
         mOption.setText(mBorrowDetails.getContent());
         String location = mBorrowDetails.getLocation();
-        if(location==null){
+        if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);
         }
         SpannableString attentionSpannableString;
