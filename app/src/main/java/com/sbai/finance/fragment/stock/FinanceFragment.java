@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -82,7 +81,6 @@ public class FinanceFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mStockCode = getArguments().getString(KEY_STOCK_CODE);
-            Log.d(TAG, "onCreate: 股票代码 " + mStockCode);
         }
     }
 
@@ -149,9 +147,6 @@ public class FinanceFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
                     @Override
                     protected void onRespSuccessData(ArrayList<CompanyAnnualReportModel> data) {
-                        for (CompanyAnnualReportModel model : data) {
-                            Log.d(TAG, "onRespSuccessData: 年报  " + model.toString());
-                        }
                         updateCompanyAnnualReportList(data);
                     }
 

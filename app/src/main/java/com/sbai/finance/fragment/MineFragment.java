@@ -142,8 +142,9 @@ public class MineFragment extends BaseFragment {
                             count = count + notReadMessageNumberData.getCount();
                         }
                         if (count != 0) {
-                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
-                                    " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
+                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
+                                            + (count > 99 ? getString(R.string.number99) : count )+ " ",
+                                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
                                     , getString(R.string.item));
                             mNews.setSubText(attentionSpannableString);
                         } else {

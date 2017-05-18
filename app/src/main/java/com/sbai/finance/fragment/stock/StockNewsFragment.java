@@ -89,7 +89,7 @@ public class StockNewsFragment extends BaseFragment {
         mRecyclerView.setAdapter(mStockNewsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        requestCompanyAnnualReport(0);
+        requestStockNewsList(0);
     }
 
     private void initViewWithAdapter() {
@@ -121,7 +121,7 @@ public class StockNewsFragment extends BaseFragment {
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             if (isSlideToBottom(recyclerView) && mLoadMore) {
-                requestCompanyAnnualReport(mPage);
+                requestStockNewsList(mPage);
             }
         }
     };
@@ -133,7 +133,7 @@ public class StockNewsFragment extends BaseFragment {
         return false;
     }
 
-    public void requestCompanyAnnualReport(final int page) {
+    public void requestStockNewsList(final int page) {
         this.mPage = page;
         Client.getCompanyAnnualReport(mStockCode, mPage, mPageSize, CompanyAnnualReportModel.TYPE_STOCK_NEWS)
                 .setTag(TAG)
@@ -159,6 +159,9 @@ public class StockNewsFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
+            if (page == 0) {
+                mStockNewsAdapter.clear();
+            }
             mStockNewsModels.addAll(data);
             if (data.size() < mPageSize) {
                 mLoadMore = false;
@@ -194,6 +197,11 @@ public class StockNewsFragment extends BaseFragment {
             this.mStockNewsModels.clear();
             this.mStockNewsModels.addAll(stockNewsModels);
             notifyDataSetChanged();
+        }
+
+        public void clear() {
+            mStockNewsModels.clear();
+            notifyItemRangeRemoved(0, mStockNewsModels.size());
         }
 
         @Override

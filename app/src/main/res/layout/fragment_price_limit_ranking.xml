@@ -5,6 +5,8 @@
               android:orientation="vertical"
               tools:context="com.sbai.finance.fragment.stock.PriceLimitRankingFragment">
 
+    <include layout="@layout/layout_hq_header"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

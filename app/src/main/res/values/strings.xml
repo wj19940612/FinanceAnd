@@ -232,6 +232,7 @@
     </string>
     <string name="number">%1$d</string>
     <string name="number999">999+</string>
+    <string name="number99">99+</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
