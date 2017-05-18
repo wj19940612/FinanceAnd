@@ -113,7 +113,7 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
-                && calendar.get(Calendar.WEEK_OF_YEAR) == todayCalendar.get(Calendar.WEEK_OF_YEAR);
+                && calendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR);
     }
 
     public static boolean isInThisYear(long time) {

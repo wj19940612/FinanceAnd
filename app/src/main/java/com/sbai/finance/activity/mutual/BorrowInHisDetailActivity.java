@@ -100,7 +100,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         int id= getIntent().getIntExtra(BORROW_IN_HIS,-1);
         if (id!=-1){
             requestBorrowDetail(id);
-            requestHelper(id);
+           // requestHelper(id);
         }
     }
     private void initView() {
@@ -149,14 +149,14 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         if (data.getIsAttentionSelected() == BorrowDetails.ATTENTION){
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
                     getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
-                    ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
         }else{
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
                     "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
         }
         mUserNameLand.setText(attentionSpannableString);
         mPublishTime.setText(this.getString(R.string.borrow_in_time,
-                this.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(data.getConfirmTime())));
+                this.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(data.getConfirmTime())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
