@@ -277,7 +277,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 " "+context.getString(R.string.not_allow),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getAuditTime())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.getFormatTime(item.getAuditTime())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_FAIL:
@@ -289,7 +289,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 " "+item.getFailMsg(),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_failure), DateUtil.formatSlash(item.getModifyDate())));
+                                context.getString(R.string.borrow_in_time_failure), DateUtil.getFormatTime(item.getModifyDate())));
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_SUCCESS:case BorrowInHis.STATUS_PAY_INTENTION:
@@ -301,7 +301,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getConfirmTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(item.getConfirmTime())));
                         mAlreadyRepayment.setVisibility(View.GONE);
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.VISIBLE);
@@ -315,7 +315,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                                 ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
                         mUserNameLand.setText(attentionSpannableString);
                         mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(item.getConfirmTime())));
+                                context.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(item.getConfirmTime())));
                         mBorrowStatus.setVisibility(View.VISIBLE);
                         mSuccess.setVisibility(View.GONE);
                         mAlreadyRepayment.setVisibility(View.VISIBLE);

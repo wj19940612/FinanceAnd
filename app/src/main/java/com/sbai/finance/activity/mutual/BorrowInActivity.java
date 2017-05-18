@@ -397,7 +397,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 ImageGridAdapter imageGridAdapter = new ImageGridAdapter(context);
                 mGridView.setAdapter(imageGridAdapter);
                 mGridView.setVisibility(View.VISIBLE);
-                mPublishTime.setText(context.getString(R.string.publish_time, DateUtil.formatSlash(item.getCreateDate())));
+                mPublishTime.setText(context.getString(R.string.publish_time, DateUtil.getFormatTime(item.getCreateDate())));
                 mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));

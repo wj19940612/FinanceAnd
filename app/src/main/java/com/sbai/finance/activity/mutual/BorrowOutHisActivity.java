@@ -258,7 +258,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getConfirmTime())));
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.getFormatTime(item.getConfirmTime())));
                 switch (item.getStatus()){
                     case BorrowOutHistory.STATUS_PAY_INTENTION:
                     case BorrowOutHistory.STATUS_SUCCESS:

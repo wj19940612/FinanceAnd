@@ -153,13 +153,13 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
         if (data.getIsAttention() == BorrowDetails.ATTENTION){
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getUserName(),
                     getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
-                    ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
         }else{
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getUserName(),
                     "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
         }
         mUserNameLand.setText(attentionSpannableString);
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.formatSlash(mConfirmTime)));
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(mConfirmTime)));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
