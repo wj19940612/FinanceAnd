@@ -34,6 +34,7 @@ import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -154,11 +155,38 @@ public class MineFragment extends BaseFragment {
                 .fireSync();
     }
 
+    private void requestNoReadFeedbackNumber() {
+        Client.getNoReadFeedbackNumber()
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<String>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<String> resp) {
+                        if (resp.isSuccess()) {
+                            int count = Integer.parseInt(resp.getData());
+                            updateNoReadFeedbackCount(count);
+                        }
+                    }
+                })
+                .fireSync();
+    }
+
+    private void updateNoReadFeedbackCount(int count) {
+        if (count != 0) {
+            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
+                    " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
+                    , getString(R.string.item));
+            mFeedBack.setSubText(attentionSpannableString);
+        } else {
+            mFeedBack.setSubText("");
+        }
+    }
+
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
             updateUserNumber(null);
             requestUserAttentionAndroidFansNumber();
             requestNoReadNewsNumber();
+            requestNoReadFeedbackNumber();
             mHeadImageLayout.setVisibility(View.VISIBLE);
             mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
