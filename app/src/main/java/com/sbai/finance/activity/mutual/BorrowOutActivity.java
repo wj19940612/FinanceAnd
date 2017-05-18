@@ -234,13 +234,16 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mOption.setText(item.getContent());
                 String location = item.getLocation();
-                if(location==null){
+                if(TextUtils.isEmpty(location)){
                     location = context.getString(R.string.no_location);
                 }
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
                         "\n" +location, 0.733f, ContextCompat.getColor(context,R.color.assistText));
                 mUserNameLand.setText(attentionSpannableString);
                 mEndLineTime.setText(DateUtil.compareTime(item.getEndlineTime()));
+                if (item.getContentImg()==null){
+                    item.setContentImg("");
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
                     case 1:

@@ -271,7 +271,7 @@
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="borrow_limit">借款金额</string>
     <string name="borrow_amount">500~2000元</string>
-    <string name="borrow_interest_amount">最低1元</string>
+    <string name="borrow_interest_amount">1~200元</string>
     <string name="borrow_day_limit">借款期限</string>
     <string name="borrow_day_limit_hint">1~60</string>
     <string name="borrow_remark">备注</string>

@@ -189,7 +189,7 @@ public class BorrowActivity extends BaseActivity {
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty||borrowInterest.length()>18||Double.parseDouble(borrowInterest)==0){
+		if (isEmpty||borrowInterest.length()>3||Integer.valueOf(borrowInterest)<1||Integer.valueOf(borrowInterest)>200){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_over_interest));

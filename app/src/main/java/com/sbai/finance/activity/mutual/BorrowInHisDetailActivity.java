@@ -142,7 +142,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
 
         String location =data.getSelectedLocation();
-        if (location==null){
+        if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);
         }
         SpannableString attentionSpannableString;
@@ -162,6 +162,9 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
         mHelperAmount.setText(getActivity().getString(R.string.helper,data.getIntentionCount()));
         mOption.setText(data.getContent());
+        if (data.getContentImg()==null){
+            data.setContentImg("");
+        }
         String[] images = data.getContentImg().split(",");
         switch (images.length){
             case 1:
