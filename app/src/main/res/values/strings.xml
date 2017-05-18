@@ -232,6 +232,7 @@
     </string>
     <string name="number">%1$d</string>
     <string name="number999">999+</string>
+    <string name="number99">99+</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
@@ -365,7 +366,7 @@
     <string name="one_stock_capital_accumulation_fund">每股资本公积金</string>
     <string name="fixation_capital_count">固定资产合计</string>
     <string name="flow_capital_count">流动资产合计</string>
-    <string name="capital_count">资产合计</string>
+    <string name="capital_count">资产总计</string>
     <string name="long_liabilities_count">长期负债合计</string>
     <string name="normal_business_earnings">主营业务收入</string>
     <string name="finance_charge">财务费用</string>

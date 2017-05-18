@@ -224,7 +224,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                     }
                     Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-                            .putExtra(Launcher.USER_ID, item.getSourceUserId())
+                            .putExtra(Launcher.USER_ID, item.getUserId())
                             .execute();
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:

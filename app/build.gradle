@@ -60,6 +60,7 @@ android {
 
     productFlavors {
         dev {
+
             minSdkVersion 19
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
@@ -69,9 +70,16 @@ android {
         }
 
         alpha {
+            applicationId "com.sbai.finance"
             versionCode 10
             versionName "1.9"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
+                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
+                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh"
+            ]
         }
     }
 }
