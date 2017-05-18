@@ -167,6 +167,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 					}
@@ -191,6 +192,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 					}
