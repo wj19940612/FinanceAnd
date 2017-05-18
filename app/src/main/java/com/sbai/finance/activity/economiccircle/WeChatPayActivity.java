@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mutual.BorrowInHisActivity;
+import com.sbai.finance.activity.mutual.BorrowInHisDetailActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -33,12 +33,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.R.id.completePayment;
+import static com.sbai.finance.activity.mutual.BorrowInHisDetailActivity.BORROW_IN_HIS;
+
 
 public class WeChatPayActivity extends BaseActivity {
 
 	@BindView(R.id.imageView)
 	ImageView mImageView;
-	@BindView(R.id.completePayment)
+	@BindView(completePayment)
 	TextView mCompletePayment;
 
 	private String mPaymentPath;
@@ -146,13 +149,16 @@ public class WeChatPayActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick(R.id.completePayment)
+	@OnClick(completePayment)
 	public void onViewClicked() {
 		Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback<Resp<JsonPrimitive>>() {
 					@Override
 					protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-						Launcher.with(WeChatPayActivity.this, BorrowInHisActivity.class).execute();
+						Launcher.with(WeChatPayActivity.this, BorrowInHisDetailActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD_2, mDataId)
+								.putExtra(BORROW_IN_HIS, mDataId)
+								.execute();
 						finish();
 					}
 				}).fire();

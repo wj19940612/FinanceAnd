@@ -68,6 +68,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mGiveHelp;
 	@BindView(R.id.isAttention)
 	TextView mIsAttention;
+	@BindView(R.id.contentImg)
+	LinearLayout mContentImg;
 	@BindView(R.id.image1)
 	ImageView mImage1;
 	@BindView(R.id.image2)
@@ -313,6 +315,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						mImage3.setVisibility(View.GONE);
 						mImage4.setVisibility(View.GONE);
 					} else {
+						mContentImg.setVisibility(View.VISIBLE);
 						mImage1.setVisibility(View.VISIBLE);
 						loadImage(context, images[0], mImage1);
 						mImage2.setVisibility(View.INVISIBLE);
@@ -322,6 +325,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					}
 					break;
 				case 2:
+					mContentImg.setVisibility(View.VISIBLE);
 					mImage1.setVisibility(View.VISIBLE);
 					loadImage(context, images[0], mImage1);
 					mImage2.setVisibility(View.VISIBLE);
@@ -332,6 +336,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					imageClick(context, images, mImage2, 1);
 					break;
 				case 3:
+					mContentImg.setVisibility(View.VISIBLE);
 					mImage1.setVisibility(View.VISIBLE);
 					loadImage(context, images[0], mImage1);
 					mImage2.setVisibility(View.VISIBLE);
@@ -344,6 +349,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					imageClick(context, images, mImage3, 2);
 					break;
 				case 4:
+					mContentImg.setVisibility(View.VISIBLE);
 					mImage1.setVisibility(View.VISIBLE);
 					loadImage(context, images[0], mImage1);
 					mImage2.setVisibility(View.VISIBLE);

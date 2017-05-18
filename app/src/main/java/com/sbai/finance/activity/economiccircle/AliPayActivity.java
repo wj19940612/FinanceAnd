@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mutual.BorrowInHisActivity;
+import com.sbai.finance.activity.mutual.BorrowInHisDetailActivity;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -21,6 +21,8 @@ import com.sbai.finance.utils.Launcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.activity.mutual.BorrowInHisDetailActivity.BORROW_IN_HIS;
 
 
 public class AliPayActivity extends BaseActivity {
@@ -71,7 +73,10 @@ public class AliPayActivity extends BaseActivity {
 						.setCallback(new Callback<Resp<JsonPrimitive>>() {
 							@Override
 							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								Launcher.with(AliPayActivity.this, BorrowInHisActivity.class).execute();
+								Launcher.with(AliPayActivity.this, BorrowInHisDetailActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD_2, mDataId)
+										.putExtra(BORROW_IN_HIS, mDataId)
+										.execute();
 								finish();
 							}
 						}).fire();

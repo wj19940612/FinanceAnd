@@ -185,6 +185,7 @@
                 android:id="@+id/borrowMoneyContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
                 android:layout_marginTop="15dp"
@@ -194,51 +195,52 @@
                 tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
 
             <LinearLayout
+                android:id="@+id/contentImg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/image1"
                     android:layout_width="0dp"
                     android:layout_height="69dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/image2"
                     android:layout_width="0dp"
                     android:layout_height="69dp"
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/image3"
                     android:layout_width="0dp"
                     android:layout_height="69dp"
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/image4"
                     android:layout_width="0dp"
                     android:layout_height="69dp"
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
             </LinearLayout>
 
