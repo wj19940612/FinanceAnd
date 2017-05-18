@@ -33,6 +33,7 @@ import com.sbai.finance.view.IconTextRow;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +49,7 @@ public class FinanceFragment extends BaseFragment {
     IconTextRow mCompany;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    //    @BindView(android.R.id.empty)
-
+    @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
 
 
@@ -63,6 +63,7 @@ public class FinanceFragment extends BaseFragment {
     private TextView mFootView;
 
     private CompanyInfo mCompanyInfo;
+    private ArrayList<CompanyAnnualReportModel> mCompanyAnnualReportModels;
 
     public FinanceFragment() {
 
@@ -97,7 +98,8 @@ public class FinanceFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
-        mCompanyFinanceAdapter = new CompanyFinanceAdapter(R.layout.row_stock_company_finance);
+        mCompanyAnnualReportModels = new ArrayList<>();
+        mCompanyFinanceAdapter = new CompanyFinanceAdapter(R.layout.row_stock_company_finance, mCompanyAnnualReportModels);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mCompanyFinanceAdapter);
         requestCompanyAnnualReport(mPage);
@@ -139,6 +141,9 @@ public class FinanceFragment extends BaseFragment {
 
     public void requestCompanyAnnualReport(final int page) {
         this.mPage = page;
+        if (page == 0) {
+            mCompanyAnnualReportModels.clear();
+        }
         Client.getCompanyAnnualReport(mStockCode, mPage, mPageSize, CompanyAnnualReportModel.TYPE_FINANCIAL_SUMMARY)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
@@ -147,21 +152,27 @@ public class FinanceFragment extends BaseFragment {
                         for (CompanyAnnualReportModel model : data) {
                             Log.d(TAG, "onRespSuccessData: 年报  " + model.toString());
                         }
-                        updateCompanyAnnualReportList(data, page);
+                        updateCompanyAnnualReportList(data);
                     }
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
+                        updateCompanyAnnualReportList(null);
                     }
                 })
                 .fire();
     }
 
-    private void updateCompanyAnnualReportList(ArrayList<CompanyAnnualReportModel> data, int page) {
-
-        if (data == null || data.isEmpty()) {
-
+    private void updateCompanyAnnualReportList(ArrayList<CompanyAnnualReportModel> data) {
+        if (data == null || data.isEmpty() && mCompanyAnnualReportModels.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmpty.setVisibility(View.GONE);
+            mCompanyAnnualReportModels.addAll(data);
+            mCompanyFinanceAdapter.notifyDataSetChanged();
         }
 
     }
@@ -176,6 +187,10 @@ public class FinanceFragment extends BaseFragment {
 
         public CompanyFinanceAdapter(int layoutResId) {
             super(layoutResId);
+        }
+
+        public CompanyFinanceAdapter(int layoutResId, List<CompanyAnnualReportModel> data) {
+            super(layoutResId, data);
         }
 
         @Override
@@ -197,7 +212,7 @@ public class FinanceFragment extends BaseFragment {
             BottomTextViewLayout mFinanceCharge = helper.getView(R.id.finance_charge);
             BottomTextViewLayout mEarnProfit = helper.getView(R.id.earn_profit);
 
-            mCompanyFinancePublishTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+            mCompanyFinancePublishTime.setText(DateUtil.getYearQuarter(item.getJiezhiriqi()));
             mOneStockNetAsset.setInfoText(item.getMeigujinzichan());
             mOneStockEarnings.setInfoText(item.getMeigushouyi());
             mOneStockCashContent.setInfoText(item.getMeiguxianjinhanliang());

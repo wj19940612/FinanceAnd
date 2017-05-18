@@ -20,7 +20,9 @@ public class DateUtil {
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
+    public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
+
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
         return dateFormat.format(new Date(time));
@@ -192,6 +194,7 @@ public class DateUtil {
         Date date = new Date(timestamp);
         return dateFormat.format(date);
     }
+
     public static String formatSlash(long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH);
         Date date = new Date(timestamp);
@@ -332,6 +335,7 @@ public class DateUtil {
      * 本日记录：今日00:00；
      * 昨日记录：昨日00:00
      * 两日以前记录：XX日00:00
+     *
      * @param createTime
      * @return
      */
@@ -352,6 +356,7 @@ public class DateUtil {
      * 本日记录：今天
      * 昨日记录：昨天
      * 两日以前记录：XX日00:00
+     *
      * @param createTime
      * @return
      */
@@ -363,7 +368,7 @@ public class DateUtil {
         if (isYesterday(createTime, systemTime)) {
             return "昨天";
         }
-        if (isInThisYear(createTime)){
+        if (isInThisYear(createTime)) {
             return DateUtil.format(createTime, FORMAT_NOT_HOUR);
         }
         return DateUtil.format(createTime, FORMAT_YEAR_MONTH_DAY);
@@ -373,6 +378,7 @@ public class DateUtil {
      * 格式化月份  如果是当月 则显示本月
      * 如果是当年中的其他月份  显示x月
      * 如果是跨年月份   则显示xxxx年xx月
+     *
      * @param createTime
      * @return
      */
@@ -423,36 +429,38 @@ public class DateUtil {
     public static String getTodayEndTime(long timestamp) {
         return format(timestamp, "yyyy-MM-dd") + " 24:00:00";
     }
+
     /**
      * 比较两个时间相差的分钟 返回格式为11:40
      */
-    public static String compareTime(long timestamp){
+    public static String compareTime(long timestamp) {
         String resultHour;
         String resultMin;
         long systemTime = System.currentTimeMillis();
-        if (timestamp==0 || timestamp<systemTime){
+        if (timestamp == 0 || timestamp < systemTime) {
             return "00:00";
         }
-        long minutes = (timestamp - systemTime)/(1000*60);
-        long hours=  minutes/60;
-        long minute = minutes%60;
-        if (hours<10){
-            resultHour ="0"+String.valueOf(hours);
-        }else{
+        long minutes = (timestamp - systemTime) / (1000 * 60);
+        long hours = minutes / 60;
+        long minute = minutes % 60;
+        if (hours < 10) {
+            resultHour = "0" + String.valueOf(hours);
+        } else {
             resultHour = String.valueOf(hours);
         }
-        if (minute<10){
-            resultMin ="0"+String.valueOf(minute);
-        }else{
-            resultMin =String.valueOf(minute);
+        if (minute < 10) {
+            resultMin = "0" + String.valueOf(minute);
+        } else {
+            resultMin = String.valueOf(minute);
         }
-        return resultHour+":"+resultMin;
+        return resultHour + ":" + resultMin;
     }
 
 
     /**
      * string类型转换为long类型  strTime的时间格式和formatType的时间格式必须相同
-     * @param strTime 要转换的String类型的时间
+     *
+     * @param strTime    要转换的String类型的时间
      * @param formatType 时间格式
      * @return
      * @throws ParseException
@@ -470,7 +478,8 @@ public class DateUtil {
 
     /**
      * string类型转换为date类型
-     * @param strTime 要转换的string类型的时间
+     *
+     * @param strTime    要转换的string类型的时间
      * @param formatType 要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
      * @return
      * @throws ParseException
@@ -486,6 +495,46 @@ public class DateUtil {
         return date;
     }
 
+    //xxxx年第几季度
+    public static String getYearQuarter(String date) {
+        return getYearQuarter(getStringToDate(date, "yyyy-MM-dd"));
+    }
+
+    public static String getYearQuarter(long date) {
+        Calendar.getInstance().setTime(new Date(date));
+        int i = Calendar.getInstance().get(Calendar.MONTH);
+        String year = format(date, "yyyy");
+        String month = format(date, "yyyy MM");
+        month = month.substring(month.length() - 2,month.length());
+        if (!TextUtils.isEmpty(month) && month.startsWith("0")) {
+            month = month.substring(0, month.length());
+        }
+        int monthTime = Integer.valueOf(month);
+        return year + "年第" + getQuarter(monthTime) + "季度  " + "(截止日期: " + format(date, FORMAT_SPECIAL_SLASH_NO_HOUR + ")");
+    }
+
+    public static String getQuarter(int time) {
+        String monthTime = String.valueOf(time);
+        switch (time) {
+            case 1:
+            case 2:
+            case 3:
+                return "—";
+            case 4:
+            case 5:
+            case 6:
+                return "二";
+            case 7:
+            case 8:
+            case 9:
+                return "三";
+            case 10:
+            case 11:
+            case 12:
+                return "四";
+        }
+        return "";
+    }
 
     public static long dateToLong(Date date) {
         return date.getTime();
