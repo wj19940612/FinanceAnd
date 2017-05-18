@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
@@ -34,6 +35,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.GrapeGridView;
+import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,10 +100,16 @@ public class BorrowActivity extends BaseActivity {
 		mPhotoGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (position<mPhotoGridAdapter.getCount()-1){
+				int photoCount=mPhotoGridAdapter.getCount()-1;
+				if (position<photoCount){
+					StringBuilder builder = new StringBuilder();
+					for (int i=0;i<photoCount;i++){
+						builder.append(mPhotoGridAdapter.getItem(i)).append(",");
+					}
+					builder.deleteCharAt(builder.length()-1);
 					Launcher.with(getActivity(), ContentImgActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, mPhotoGridAdapter.getItem(position).split(","))
-							.putExtra(Launcher.EX_PAYLOAD_1, 0)
+							.putExtra(Launcher.EX_PAYLOAD, builder.toString().split(","))
+							.putExtra(Launcher.EX_PAYLOAD_1, position)
 							.execute();
 				}
 			}
@@ -122,7 +130,7 @@ public class BorrowActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-	@OnClick({R.id.publish,R.id.contentDays})
+	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol})
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
@@ -148,6 +156,14 @@ public class BorrowActivity extends BaseActivity {
 			case R.id.contentDays:
 				mBorrowTimeLimit.requestFocus();
 				mBorrowTimeLimit.setFocusable(true);
+				break;
+			case R.id.protocol:
+                Launcher.with(this, WebActivity.class)
+						.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
+						.putExtra(WebActivity.EX_URL,"")
+						.putExtra(WebActivity.EX_HTML,getString(R.string.protocol))
+						.putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+						.execute();
 				break;
 			default:
 				break;
