@@ -582,6 +582,15 @@ public class Client {
     }
 
     /**
+     * 接口名称 未读取意见反馈数量
+     * 请求类型 get
+     * 请求Url   /user/userFeedback/findFeedback.do
+     */
+    public static API getNoReadFeedbackNumber() {
+        return new API("/user/userFeedback/findFeedback.do");
+    }
+
+    /**
      * 接口名称 认证查询
      * 请求类型 get
      * 请求Url  /user/user/userCertification.do
