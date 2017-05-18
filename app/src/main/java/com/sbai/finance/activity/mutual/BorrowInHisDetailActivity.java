@@ -147,16 +147,11 @@ public class BorrowInHisDetailActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if (mIsReturnHome!=-1){
-            mTitleBar.setBackClickLisenter(new TitleBar.OnBackClickListener() {
-                @Override
-                public void onClick() {
-                    Launcher.with(getActivity(), MainActivity.class)
+               Launcher.with(getActivity(), MainActivity.class)
                             .execute();
-                    finish();
-                }
-            });
-        }
-    }
+              finish();
+          }}
+
 
     private void requestHelper(int id){
         Client.getHelper(id).setTag(TAG)
