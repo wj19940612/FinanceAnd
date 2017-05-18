@@ -1,6 +1,8 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -8,12 +10,33 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.httplib.ApiIndeterminate;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseFragment extends Fragment implements
         ApiIndeterminate, TimerHandler.TimerCallback {
 
     private TimerHandler mTimerHandler;
     protected String TAG;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MobclickAgent.openActivityDurationTrack(false);
+    }
+
+    @Override
+    public void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        MobclickAgent.onPageEnd(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        MobclickAgent.onPageStart(TAG);
+    }
 
     @Override
     public void onAttach(Context context) {

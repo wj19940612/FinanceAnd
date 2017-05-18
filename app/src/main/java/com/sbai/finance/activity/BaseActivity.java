@@ -25,6 +25,7 @@ import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.httplib.ApiIndeterminate;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
@@ -98,6 +99,8 @@ public class BaseActivity extends AppCompatActivity implements
             }
         });
         SysTime.getSysTime().sync();
+
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
     protected void translucentStatusBar() {
@@ -145,6 +148,8 @@ public class BaseActivity extends AppCompatActivity implements
         Preference.get().setForeground(true);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
                 new IntentFilter(ACTION_TOKEN_EXPIRED));
+        MobclickAgent.onPageStart(TAG);
+        MobclickAgent.onResume(this);
     }
 
     @Override
@@ -152,6 +157,8 @@ public class BaseActivity extends AppCompatActivity implements
         super.onPause();
         Preference.get().setForeground(false);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        MobclickAgent.onPageEnd(TAG);
+        MobclickAgent.onPause(this);
     }
 
     @Override
