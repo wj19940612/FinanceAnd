@@ -100,7 +100,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         int id= getIntent().getIntExtra(BORROW_IN_HIS,-1);
         if (id!=-1){
             requestBorrowDetail(id);
-            requestHelper(id);
+           // requestHelper(id);
         }
     }
     private void initView() {
@@ -142,26 +142,29 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
 
         String location =data.getSelectedLocation();
-        if (location==null){
+        if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);
         }
         SpannableString attentionSpannableString;
         if (data.getIsAttentionSelected() == BorrowDetails.ATTENTION){
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
                     getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
-                    ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
         }else{
             attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
                     "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
         }
         mUserNameLand.setText(attentionSpannableString);
         mPublishTime.setText(this.getString(R.string.borrow_in_time,
-                this.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(data.getConfirmTime())));
+                this.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(data.getConfirmTime())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
         mHelperAmount.setText(getActivity().getString(R.string.helper,data.getIntentionCount()));
         mOption.setText(data.getContent());
+        if (data.getContentImg()==null){
+            data.setContentImg("");
+        }
         String[] images = data.getContentImg().split(",");
         switch (images.length){
             case 1:

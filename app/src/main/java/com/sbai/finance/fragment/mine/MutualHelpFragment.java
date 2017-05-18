@@ -219,22 +219,20 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             updateNewsReadStatus(position, item);
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                    Log.d(TAG, "onItemClick: " + item.toString());
-//                    if (item.getUserInfo() != null) {
-//                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-//                                .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-//                                .putExtra(Launcher.USER_ID, item.getUserInfo().getId())
-//                                .execute();
-//                    } else {
+                    if (item.isLossEfficacy()) {
+                        return;
+                    }
                     Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
                             .putExtra(Launcher.USER_ID, item.getSourceUserId())
                             .execute();
-//                    }
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
                     break;
                 case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
+                    if (item.isLossEfficacy()) {
+                        return;
+                    }
                     Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
 

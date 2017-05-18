@@ -19,7 +19,7 @@ public class Detail {
 
    private long createTime;
    private int id;
-   private int money;
+   private double money;
    private String remark;
    private int type;
    private int typeDetail;
@@ -41,11 +41,11 @@ public class Detail {
       this.id = id;
    }
 
-   public int getMoney() {
+   public double getMoney() {
       return money;
    }
 
-   public void setMoney(int money) {
+   public void setMoney(double money) {
       this.money = money;
    }
 

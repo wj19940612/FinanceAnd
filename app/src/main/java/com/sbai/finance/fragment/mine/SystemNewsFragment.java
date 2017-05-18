@@ -27,6 +27,7 @@ import com.sbai.finance.activity.mine.CreditApproveActivity;
 import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.activity.mutual.BorrowInActivity;
 import com.sbai.finance.activity.mutual.BorrowInHisActivity;
+import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
@@ -205,30 +206,46 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             switch (systemNewsModel.getType()) {
                 //借款单审核未通过
                 case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
-                    // TODO: 2017/5/2  历史借入
+                    if (systemNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
                     break;
                 // 14.借款发布成功 *
                 case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
-                    // TODO: 2017/5/2 我的借入
+                    if (systemNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
                 //// 20.成为观点大神
                 case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
-                    // TODO: 2017/5/2 观点大神 
+                    if (systemNewsModel.isLossEfficacy()) {
+                        return;
+                    }
+                    Launcher.with(getActivity(), OpinionActivity.class).execute();
                     break;
                 //21.实名认证已通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_PASSED:
+                    if (systemNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_ALREADY_APPROVE);
                     Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     break;
                 // 22.实名认证未通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
+                    if (systemNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
                     Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     break;
                 //   30.意向金支付成功
                 case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
+                    if (systemNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     break;
             }
