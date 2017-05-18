@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -31,8 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static android.R.attr.padding;
 
 
 public class PriceLimitRankingFragment extends BaseFragment {
@@ -87,14 +84,13 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mStockDataArrayList = new ArrayList<>();
-        mStockSortAdapter = new StockSortAdapter(getActivity(), mStockDataArrayList);
+        mStockSortAdapter = new StockSortAdapter(getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mStockSortAdapter);
         requestStockSortList();
     }
 
     public void requestStockSortList() {
-        mStockDataArrayList.clear();
         Client.getStockSort(mSortType, mStockType)
                 .setTag(TAG)
                 .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
@@ -150,8 +146,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
     }
 
     private void initEmptyView() {
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
         mEmpty = new AppCompatTextView(getActivity());
-        mEmpty.setPadding(0, 10 * padding, 0, 0);
+        mEmpty.setPadding(0, padding, 0, 0);
         mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
         mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
         mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -164,9 +161,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
         Context mContext;
         ArrayList<StockData> mStockDataArrayList;
 
-        public StockSortAdapter(Context context, ArrayList<StockData> datas) {
+        public StockSortAdapter(Context context) {
             this.mContext = context;
-            mStockDataArrayList = datas;
+            mStockDataArrayList = new ArrayList<>();
         }
 
         public void addAll(List<StockData> datas) {
@@ -181,7 +178,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock_sort, parent,false);
             return new ViewHolder(view);
         }
 
@@ -204,10 +201,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
-            @BindView(R.id.trade)
-            LinearLayout mTrade;
-            @BindView(R.id.stopTrade)
-            TextView mStopTrade;
 
             ViewHolder(View view) {
                 super(view);
