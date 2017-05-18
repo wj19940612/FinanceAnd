@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
@@ -32,7 +34,8 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
-import com.sbai.finance.view.MyGridView;
+import com.sbai.finance.view.GrapeGridView;
+import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +47,7 @@ import butterknife.OnClick;
 
 public class BorrowActivity extends BaseActivity {
 	@BindView(R.id.photoGv)
-	MyGridView mPhotoGv;
+	GrapeGridView mPhotoGv;
 	@BindView(R.id.borrowLimit)
 	EditText mBorrowLimit;
 	@BindView(R.id.borrowInterest)
@@ -94,6 +97,23 @@ public class BorrowActivity extends BaseActivity {
 		});
 		mPhotoGv.setFocusable(false);
 		mPhotoGv.setAdapter(mPhotoGridAdapter);
+		mPhotoGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				int photoCount=mPhotoGridAdapter.getCount()-1;
+				if (position<photoCount){
+					StringBuilder builder = new StringBuilder();
+					for (int i=0;i<photoCount;i++){
+						builder.append(mPhotoGridAdapter.getItem(i)).append(",");
+					}
+					builder.deleteCharAt(builder.length()-1);
+					Launcher.with(getActivity(), ContentImgActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, builder.toString().split(","))
+							.putExtra(Launcher.EX_PAYLOAD_1, position)
+							.execute();
+				}
+			}
+		});
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
@@ -110,7 +130,7 @@ public class BorrowActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-	@OnClick({R.id.publish,R.id.contentDays})
+	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol})
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
@@ -136,6 +156,14 @@ public class BorrowActivity extends BaseActivity {
 			case R.id.contentDays:
 				mBorrowTimeLimit.requestFocus();
 				mBorrowTimeLimit.setFocusable(true);
+				break;
+			case R.id.protocol:
+                Launcher.with(this, WebActivity.class)
+						.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
+						.putExtra(WebActivity.EX_URL,"")
+						.putExtra(WebActivity.EX_HTML,getString(R.string.protocol))
+						.putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+						.execute();
 				break;
 			default:
 				break;
@@ -177,7 +205,7 @@ public class BorrowActivity extends BaseActivity {
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty||borrowInterest.length()>18||Double.parseDouble(borrowInterest)==0){
+		if (isEmpty||borrowInterest.length()>3||Integer.valueOf(borrowInterest)<1||Integer.valueOf(borrowInterest)>200){
 			if (!isEmpty){
 				mWarn.setVisibility(View.VISIBLE);
 				mWarn.setText(getString(R.string.borrow_over_interest));
@@ -201,7 +229,11 @@ public class BorrowActivity extends BaseActivity {
 			return false;
 		}
 		if (TextUtils.isEmpty(mBorrowRemark.getText())){
+			mWarn.setVisibility(View.VISIBLE);
+			mWarn.setText(getString(R.string.no_remark));
 			return false;
+		}else{
+			mWarn.setVisibility(View.INVISIBLE);
 		}
 		return true;
 	}
@@ -218,6 +250,7 @@ public class BorrowActivity extends BaseActivity {
 			mPhotoGridAdapter.insert(helpImagePath,mPhotoGridAdapter.getCount()-1);
 			mPhotoGridAdapter.notifyDataSetChanged();
 		}
+
 	}
 
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {

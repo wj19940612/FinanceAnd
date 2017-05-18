@@ -101,8 +101,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     @BindView(R.id.chartArea)
     LinearLayout mChartArea;
-    @BindView(R.id.subPageArea)
-    LinearLayout mSubPageArea;
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
     @BindView(R.id.exchangeCloseView)
@@ -190,7 +188,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void initChartViews() {
         TrendView.Settings settings = new TrendView.Settings();
-        settings.setBaseLines(mVariety.getBaseline());
+        settings.setBaseLines(7);
         settings.setNumberScale(mVariety.getPriceScale());
         settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
@@ -199,7 +197,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(mVariety.getBaseline());
+        settings2.setBaseLines(7);
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
@@ -625,6 +623,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 if (details != null) {
                     viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
                 } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                    viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isShield());
                     viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
                 } else {
                     viewpointFragment.refreshPointList();

@@ -23,6 +23,7 @@
         <item name="android:textSize">15sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColorHint">@color/secondaryText</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="SignEditText.PhoneNum">
@@ -31,7 +32,7 @@
     </style>
 
     <style name="HomeListHeaderButton">
-        <item name="android:drawablePadding">4dp</item>
+        <!--<item name="android:drawablePadding">4dp</item>-->
         <item name="android:gravity">center_horizontal</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">10dp</item>
@@ -149,6 +150,11 @@
 
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

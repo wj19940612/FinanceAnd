@@ -108,4 +108,20 @@ public class EventModel implements Serializable{
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	@Override
+	public String toString() {
+		return "EventModel{" +
+				"clicks=" + clicks +
+				", content='" + content + '\'' +
+				", createTime=" + createTime +
+				", format=" + format +
+				", id='" + id + '\'' +
+				", operator='" + operator + '\'' +
+				", status=" + status +
+				", title='" + title + '\'' +
+				", source='" + source + '\'' +
+				", url='" + url + '\'' +
+				'}';
+	}
 }

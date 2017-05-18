@@ -45,7 +45,8 @@ import butterknife.OnClick;
  */
 
 public class BorrowOutHisDetailActivity extends BaseActivity {
-    public static final String BORROW_OUT_HIS="borrowOutHis";
+    public static final String ID="id";
+    public static final String CONFIRM_TIME="confirmTime";
     @BindView(R.id.userPortrait)
     ImageView mUserPortrait;
     @BindView(R.id.userNameLand)
@@ -75,8 +76,8 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
     @BindView(R.id.more)
     ImageView mMore;
     private int mMax;
+    private long mConfirmTime;
     private ImageGridAdapter mImageGridAdapter;
-    private int mSex;
     private BorrowDetails mBorrowDetails;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +85,11 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_borrow_out_mine_his_details);
         ButterKnife.bind(this);
         initView();
-        int id= getIntent().getIntExtra(BORROW_OUT_HIS,-1);
+        mConfirmTime = getIntent().getLongExtra(CONFIRM_TIME,-1);
+        if (mConfirmTime==-1){
+            mConfirmTime = System.currentTimeMillis();
+        }
+        int id= getIntent().getIntExtra(ID,-1);
         if (id!=-1){
             requestBorrowDetail(id);
             requestHelper(id);
@@ -141,25 +146,33 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
 
         String location =data.getLocation();
-        if (location==null){
+        if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);
         }
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getUserName(), "\n"+ location,0.73f,
-                ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
+        SpannableString attentionSpannableString;
+        if (data.getIsAttention() == BorrowDetails.ATTENTION){
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getUserName(),
+                    getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
+        }else{
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getUserName(),
+                    "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
+        }
         mUserNameLand.setText(attentionSpannableString);
-        mPublishTime.setText(this.getString(R.string.borrow_in_time,
-                this.getString(R.string.borrow_out_time), DateUtil.formatSlash(data.getAuditTime())));
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(mConfirmTime)));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
-        mSex = data.getSex();
-        if (mSex==BorrowDetails.MAN){
-            mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.getIntentionCount()));
-        }else{
+        if (data.getSex()==BorrowDetails.WOMEN){
             mHelperAmount.setText(getActivity().getString(R.string.helper_her,data.getIntentionCount()));
+        }else{
+            mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.getIntentionCount()));
         }
 
         mOption.setText(data.getContent());
+        if (data.getContentImg()==null){
+            data.setContentImg("");
+        }
         String[] images = data.getContentImg().split(",");
         switch (images.length){
             case 1:
@@ -245,11 +258,6 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
     }
 
     private void updateHelperData(List<BorrowHelper> data) {
-        if (mSex==BorrowDetails.MAN){
-            mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.size()));
-        }else{
-            mHelperAmount.setText(getActivity().getString(R.string.helper_her,data.size()));
-        }
         mImageGridAdapter.clear();
         if (data.size()>mMax){
             mImageGridAdapter.addAll(data.subList(0,mMax));

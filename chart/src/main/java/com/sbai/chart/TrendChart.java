@@ -40,7 +40,7 @@ public class TrendChart extends ChartView {
         init();
     }
 
-    public void init() {
+    private void init() {
         mVisibleList = new SparseArray<>();
         mFirstVisibleIndex = Integer.MAX_VALUE;
         mLastVisibleIndex = Integer.MIN_VALUE;

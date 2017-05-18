@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +98,8 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Launcher.with(getActivity(),BorrowOutHisDetailActivity.class)
-                                    .putExtra(BorrowOutHisDetailActivity.BORROW_OUT_HIS,mBorrowOutHisAdapter.getItem(position).getId())
+                                    .putExtra(BorrowOutHisDetailActivity.ID,mBorrowOutHisAdapter.getItem(position).getId())
+                                    .putExtra(BorrowOutHisDetailActivity.CONFIRM_TIME,mBorrowOutHisAdapter.getItem(position).getConfirmTime())
                                     .execute();
                     }
                 });
@@ -247,7 +249,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                         .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserPortrait);
                 String location = item.getLocation();
-                if (location==null){
+                if(TextUtils.isEmpty(location)){
                     location = context.getString(R.string.no_location);
                 }
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,
@@ -256,8 +258,7 @@ public class BorrowOutHisActivity extends BaseActivity implements AbsListView.On
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                        context.getString(R.string.borrow_out_time), DateUtil.formatSlash(item.getConfirmTime())));
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.getFormatTime(item.getConfirmTime())));
                 switch (item.getStatus()){
                     case BorrowOutHistory.STATUS_PAY_INTENTION:
                     case BorrowOutHistory.STATUS_SUCCESS:

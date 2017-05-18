@@ -1,19 +1,14 @@
 package com.sbai.finance.fragment.stock;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -39,19 +34,22 @@ import butterknife.Unbinder;
 public class StockNewsFragment extends BaseFragment {
 
     private static final String KEY_STOCK_CODE = "stock_code";
-    @BindView(android.R.id.list)
-    ListView mListView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+
+    TextView mFootView;
 
     private String mStockCode;
     private int mPage;
     private int mPageSize = 10;
-    TextView mFootView;
     private HashSet<String> mSet;
 
     private Unbinder mBind;
     private StockNewsAdapter mStockNewsAdapter;
+    private ArrayList<StockNewsModel> mStockNewsModels;
+    private boolean mLoadMore = true;
 
 
     public StockNewsFragment() {
@@ -85,22 +83,54 @@ public class StockNewsFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
-        mStockNewsAdapter = new StockNewsAdapter(getActivity());
-        mListView.setAdapter(mStockNewsAdapter);
-        mListView.setEmptyView(mEmpty);
+        initViewWithAdapter();
+        mStockNewsModels = new ArrayList<>();
+        mStockNewsAdapter = new StockNewsAdapter(mStockNewsModels);
+        mRecyclerView.setAdapter(mStockNewsAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
         requestCompanyAnnualReport(0);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                StockNewsModel item = (StockNewsModel) parent.getAdapter().getItem(position);
-                if (item != null) {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_TITLE, item.getTitle())
-                            .putExtra(WebActivity.EX_URL, item.getUrl())
-                            .execute();
-                }
+    }
+
+    private void initViewWithAdapter() {
+//        mFootView = new TextView(getActivity());
+//        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+//        mFootView.setPadding(padding, padding, padding, padding);
+//        mFootView.setText(getText(R.string.load_all));
+//        mFootView.setGravity(Gravity.CENTER);
+//        mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
+//        mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+//
+//        mEmpty = new TextView(getActivity());
+//        mEmpty.setText(getText(R.string.quick_publish));
+//        mEmpty.setPadding(0, 10 * padding, 0, 0);
+//        mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
+//        mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
+//        mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+//        mEmpty.setCompoundDrawablePadding(padding);
+//        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
+    }
+
+    RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (isSlideToBottom(recyclerView) && mLoadMore) {
+                requestCompanyAnnualReport(mPage);
             }
-        });
+        }
+    };
+
+    protected boolean isSlideToBottom(RecyclerView recyclerView) {
+        if (recyclerView == null) return false;
+        if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
+            return true;
+        return false;
     }
 
     public void requestCompanyAnnualReport(final int page) {
@@ -116,47 +146,30 @@ public class StockNewsFragment extends BaseFragment {
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
+                        updateStockNewsList(null, -1);
                     }
                 })
                 .fire();
     }
 
-    private void updateStockNewsList(ArrayList<StockNewsModel> StockNewsDataList, int page) {
-        if (StockNewsDataList == null) return;
-        if (mFootView == null) {
-            mFootView = new TextView(getActivity());
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-            mFootView.setPadding(padding, padding, padding, padding);
-            mFootView.setText(getText(R.string.load_more));
-            mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPage++;
-                    requestCompanyAnnualReport(mPage);
-                }
-            });
-            mListView.addFooterView(mFootView);
-        }
-
-        if (page == 0) {
-            mStockNewsAdapter.clear();
-            mSet.clear();
-        }
-
-        if (StockNewsDataList.size() < mPageSize) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
-        }
-
-        for (StockNewsModel data : StockNewsDataList) {
-            if (mSet.add(data.getId())) {
-                mStockNewsAdapter.add(data);
+    private void updateStockNewsList(ArrayList<StockNewsModel> data, int page) {
+        if (data == null || data.isEmpty() && mStockNewsModels.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmpty.setVisibility(View.GONE);
+            mStockNewsModels.addAll(data);
+            if (data.size() < mPageSize) {
+                mLoadMore = false;
+            } else {
+                mLoadMore = true;
+                mPage++;
             }
+            mStockNewsAdapter.notifyDataSetChanged();
         }
     }
+
 
     @Override
     public void onDestroyView() {
@@ -164,42 +177,68 @@ public class StockNewsFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    class StockNewsAdapter extends ArrayAdapter<StockNewsModel> {
-        private Context mContext;
+    class StockNewsAdapter extends RecyclerView.Adapter<StockNewsAdapter.ViewHolder> {
 
-        public StockNewsAdapter(@NonNull Context context) {
-            super(context, 0);
-            mContext = context;
+        private ArrayList<StockNewsModel> mStockNewsModels;
+
+        public StockNewsAdapter(ArrayList<StockNewsModel> stockNewsModels) {
+            this.mStockNewsModels = stockNewsModels;
         }
 
-        @NonNull
+        public void addAll(ArrayList<StockNewsModel> stockNewsModels) {
+            this.mStockNewsModels.addAll(stockNewsModels);
+            notifyDataSetChanged();
+        }
+
+        public void updateData(ArrayList<StockNewsModel> stockNewsModels) {
+            this.mStockNewsModels.clear();
+            this.mStockNewsModels.addAll(stockNewsModels);
+            notifyDataSetChanged();
+        }
+
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_event, parent, false);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.bindDataWithView(getItem(position), mContext);
-            return convertView;
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_event, null);
+            return new ViewHolder(view);
         }
 
-        class ViewHolder {
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mStockNewsModels.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mStockNewsModels != null ? mStockNewsModels.size() : 0;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            @BindView(R.id.eventTitle)
+            TextView mEventTitle;
             @BindView(R.id.eventSource)
             TextView mEventSource;
             @BindView(R.id.eventTime)
             TextView mEventTime;
-            @BindView(R.id.eventTitle)
-            TextView mEventTitle;
+            @BindView(R.id.event)
+            LinearLayout mEvent;
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
             }
 
-            private void bindDataWithView(StockNewsModel item, Context context) {
+            public void bindDataWithView(final StockNewsModel item) {
+                if (item == null) return;
+                mEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, item.getTitle())
+                                .putExtra(WebActivity.EX_URL, item.getUrl())
+                                .execute();
+                    }
+                });
                 if (TextUtils.isEmpty(item.getFrom())) {
                     mEventSource.setVisibility(View.GONE);
                 } else {
@@ -209,7 +248,7 @@ public class StockNewsFragment extends BaseFragment {
                 mEventTime.setText(DateUtil.getFormatTime(item.getTime()));
                 mEventTitle.setText(item.getTitle());
             }
-
         }
+
     }
 }

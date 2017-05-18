@@ -44,7 +44,6 @@ public class KlineChart extends ChartView {
     private int mStart;
     private int mLength;
     private int mEnd;
-    private long mMaxVolume;
     private float mCandleWidth;
     private float mMaxBaseLine;
     private float mMinBaseLine;
@@ -210,12 +209,10 @@ public class KlineChart extends ChartView {
         if (mDataList != null && mDataList.size() > 0) {
             float max = mMaxBaseLine;
             float min = mMinBaseLine;
-            mMaxVolume = Long.MIN_VALUE;
             for (int i = mStart; i < mEnd; i++) {
                 KlineViewData data = mDataList.get(i);
                 if (max < data.getMaxPrice()) max = data.getMaxPrice();
                 if (min > data.getMinPrice()) min = data.getMinPrice();
-                if (mMaxVolume < data.getNowVolume()) mMaxVolume = data.getNowVolume();
             }
 
             float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
@@ -224,8 +221,7 @@ public class KlineChart extends ChartView {
 
             // 额外扩大最大值 最小值
             max += priceRange;
-            min -= priceRange;
-
+            //min -= priceRange;
             priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
                     .divide(new BigDecimal(baselines.length - 1),
                             mSettings.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
@@ -240,9 +236,15 @@ public class KlineChart extends ChartView {
 
     @Override
     protected void calculateIndexesBaseLines(long[] indexesBaseLines) {
-        if (mSettings.getIndexesType() == Settings.INDEXES_VOL) {
-            long volumeRange = mMaxVolume / (indexesBaseLines.length - 1);
-            indexesBaseLines[0] = mMaxVolume;
+        if (mDataList != null && mDataList.size() > 0) {
+            long maxVolume = mDataList.get(mStart).getNowVolume();
+            for (int i = mStart; i < mEnd; i++) {
+                if (maxVolume < mDataList.get(i).getNowVolume()) {
+                    maxVolume = mDataList.get(i).getNowVolume();
+                }
+            }
+            long volumeRange = maxVolume / (indexesBaseLines.length - 1);
+            indexesBaseLines[0] = maxVolume;
             indexesBaseLines[indexesBaseLines.length - 1] = 0;
             for (int i = indexesBaseLines.length - 2; i > 0; i--) {
                 indexesBaseLines[i] = indexesBaseLines[i + 1] + volumeRange;
@@ -588,6 +590,12 @@ public class KlineChart extends ChartView {
             setTouchLinePaint(sPaint);
             canvas.drawLine(touchX, top, touchX, top + height, sPaint);
             canvas.drawLine(left, touchY, left + width, touchY, sPaint);
+
+            if (indexesEnable) {
+                float touchY2 = getIndexesChartY(data.getNowVolume());
+                canvas.drawLine(touchX, top2, touchX, top2 + height2, sPaint);
+                canvas.drawLine(left2, touchY2, left2 + width, touchY2, sPaint);
+            }
         }
     }
 

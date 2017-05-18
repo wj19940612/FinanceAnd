@@ -3,16 +3,22 @@ package com.sbai.finance.view.stock;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.SparseArray;
+import android.view.MotionEvent;
 
 import com.sbai.chart.ChartView;
 import com.sbai.finance.model.stock.StockTrendData;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class StockTrendChart extends ChartView {
@@ -21,19 +27,31 @@ public class StockTrendChart extends ChartView {
 
     private List<StockTrendData> mDataList;
     private StockTrendData mUnstableData;
+    private SparseArray<StockTrendData> mVisibleList;
+    private int mFirstVisibleIndex;
+    private int mLastVisibleIndex;
+
     private String[] mTimeLine;
     private float mVolumeWidth;
 
+
     public StockTrendChart(Context context) {
         super(context);
-        mTimeLine = new String[]{"9:30", "11:30", "15:00"};
-        mVolumeWidth = dp2Px(VOLUME_WIDTH_DP);
+        init();
     }
 
     public StockTrendChart(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mTimeLine = new String[]{"9:30", "11:30", "15:00"};
+        init();
+    }
+
+    private void init() {
+        mTimeLine = new String[]{"09:30", "11:30", "13:00", "15:00"};
         mVolumeWidth = dp2Px(VOLUME_WIDTH_DP);
+
+        mVisibleList = new SparseArray<>();
+        mFirstVisibleIndex = Integer.MAX_VALUE;
+        mLastVisibleIndex = Integer.MIN_VALUE;
     }
 
     protected void setRealTimeLinePaint(Paint paint) {
@@ -49,9 +67,58 @@ public class StockTrendChart extends ChartView {
         paint.setPathEffect(null);
     }
 
+    protected void setDashLinePaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartColor.BASE.get()));
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setPathEffect(new DashPathEffect(new float[]{8, 3}, 1));
+    }
+
+    protected void setTouchLineTextPaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
+        paint.setTextSize(mBigFontSize);
+        paint.setPathEffect(null);
+    }
+
+    protected void setRedRectBgPaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+    }
+
+    protected void setRedTouchLinePaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setPathEffect(null);
+    }
+
+
     public void setDataList(List<StockTrendData> dataList) {
         mDataList = dataList;
         redraw();
+    }
+
+    public void setVisibleList(SparseArray<StockTrendData> visibleList) {
+        mVisibleList = visibleList;
+    }
+
+    public SparseArray<StockTrendData> getVisibleList() {
+        return mVisibleList;
+    }
+
+    public void setPriceAreaWidth(float priceAreaWidth) {
+        mPriceAreaWidth = priceAreaWidth;
+    }
+
+    public float getPriceAreaWidth() {
+        return mPriceAreaWidth;
+    }
+
+    public int getFirstVisibleIndex() {
+        return mFirstVisibleIndex;
+    }
+
+    public int getLastVisibleIndex() {
+        return mLastVisibleIndex;
     }
 
     @Override
@@ -76,18 +143,6 @@ public class StockTrendChart extends ChartView {
                     min = mUnstableData.getLastPrice();
                 }
             }
-
-            // the chart need a min height
-//            double delta = new BigDecimal(max).subtract(new BigDecimal(min)).doubleValue();
-//            float limitUp = mSettings.getLimitUp();
-//            if (delta < limitUp) {
-//                max = new BigDecimal(min).add(new BigDecimal(limitUp)).floatValue();
-//            }
-
-            float pricePadding = (max - min) * 1.0f / (baselines.length - 1);
-            /** expand max ~ min to not let trend line touch top and bottom **/
-            max = max + pricePadding;
-            min = min - pricePadding;
 
             float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
                     .divide(new BigDecimal(baselines.length - 1), RoundingMode.HALF_EVEN)
@@ -147,7 +202,7 @@ public class StockTrendChart extends ChartView {
                 float y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
                 canvas.drawText(baseLineValue, x, y, sPaint);
 
-            } else if (i != 0 && i % 2 == 0) {
+            } else if (i != 0) {
                 setDefaultTextPaint(sPaint);
                 String baseLineValue = formatNumber(baselines[i]);
                 float textWidth = sPaint.measureText(baseLineValue);
@@ -157,6 +212,22 @@ public class StockTrendChart extends ChartView {
             }
 
             topY += verticalInterval;
+        }
+
+        float preClosePrice = mSettings.getPreClosePrice();
+        if (preClosePrice < baselines[0] && preClosePrice > baselines[baselines.length - 1]) {
+            setDashLinePaint(sPaint);
+            topY = getChartY(preClosePrice);
+            Path path = getPath();
+            path.moveTo(left, topY);
+            path.lineTo(left + width, topY);
+            canvas.drawPath(path, sPaint);
+
+            setDefaultTextPaint(sPaint);
+            String preClosePriceStr = formatNumber(preClosePrice);
+            float x = left + mTextMargin;
+            float y = topY - mTextMargin - mFontHeight / 2 + mOffset4CenterText;
+            canvas.drawText(preClosePriceStr, x, y, sPaint);
         }
     }
 
@@ -172,7 +243,7 @@ public class StockTrendChart extends ChartView {
             float chartX = 0;
             float chartY = 0;
             for (int i = 0; i < size; i++) {
-                chartX = getChartX(i);
+                chartX = getChartX(i, mDataList.get(i));
                 chartY = getChartY(mDataList.get(i).getLastPrice());
                 if (path.isEmpty()) {
                     firstChartX = chartX;
@@ -218,6 +289,23 @@ public class StockTrendChart extends ChartView {
         }
     }
 
+    private float getChartX(int index, StockTrendData data) {
+        updateFirstLastVisibleIndex(index);
+        mVisibleList.put(index, data);
+        return super.getChartX(index);
+    }
+
+    @Override
+    protected int calculateTouchIndex(MotionEvent e) {
+        float touchX = e.getX();
+        return getIndexOfXAxis(touchX);
+    }
+
+    private void updateFirstLastVisibleIndex(int indexOfXAxis) {
+        mFirstVisibleIndex = Math.min(indexOfXAxis, mFirstVisibleIndex);
+        mLastVisibleIndex = Math.max(indexOfXAxis, mLastVisibleIndex);
+    }
+
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
         setDefaultTextPaint(sPaint);
@@ -229,10 +317,157 @@ public class StockTrendChart extends ChartView {
         textX = (left + width) / 2 - textWidth / 2;
         canvas.drawText(mTimeLine[1], textX, textY, sPaint);
 
-        textWidth = sPaint.measureText(mTimeLine[2]);
+        textWidth = sPaint.measureText(mTimeLine[3]);
         textX = left + width - textWidth;
-        canvas.drawText(mTimeLine[2], textX, textY, sPaint);
+        canvas.drawText(mTimeLine[3], textX, textY, sPaint);
     }
 
+    @Override
+    protected void drawTouchLines(boolean indexesEnable, int touchIndex,
+                                  int left, int top, int width, int height,
+                                  int left2, int top2, int width2, int height2,
+                                  Canvas canvas) {
+        if (hasThisTouchIndex(touchIndex)) {
+            StockTrendData data = mVisibleList.get(touchIndex);
+            float touchX = getChartX(touchIndex);
+            float touchY = getChartY(data.getLastPrice());
+            float touchY2 = getIndexesChartY(data.getBusinessVolume());
 
+            // draw cross line: vertical line and horizontal line
+            setRedTouchLinePaint(sPaint);
+            Path path = getPath();
+            path.moveTo(touchX, top);
+            path.lineTo(touchX, top + height);
+            canvas.drawPath(path, sPaint);
+            path = getPath();
+            path.moveTo(left, touchY);
+            path.lineTo(left + width - mPriceAreaWidth, touchY);
+            canvas.drawPath(path, sPaint);
+
+            // draw date connect to vertical line
+            String date = getDate(touchIndex);
+            setTouchLineTextPaint(sPaint);
+            float dateWidth = sPaint.measureText(date);
+            RectF redRect = getBigFontBgRectF(0, 0, dateWidth);
+            float rectHeight = redRect.height();
+            float rectWidth = redRect.width();
+            redRect.left = touchX - rectWidth / 2;
+            redRect.top = top + height;
+            if (redRect.left < left) { // rect will touch left border
+                redRect.left = left;
+            }
+            if (redRect.left + rectWidth > left + width) { // rect will touch right border
+                redRect.left = left + width - rectWidth;
+            }
+            redRect.right = redRect.left + rectWidth;
+            redRect.bottom = redRect.top + rectHeight;
+            setRedRectBgPaint(sPaint);
+            canvas.drawRoundRect(redRect, 2, 2, sPaint);
+            float dateX = redRect.left + (rectWidth - dateWidth) / 2;
+            float dateY = top + height + rectHeight / 2 + mOffset4CenterBigText;
+            setTouchLineTextPaint(sPaint);
+            canvas.drawText(date, dateX, dateY, sPaint);
+
+            // draw price connect to horizontal line
+            String price = formatNumber(data.getLastPrice());
+            setTouchLineTextPaint(sPaint);
+            float priceWidth = sPaint.measureText(price);
+            float priceMargin = (mPriceAreaWidth - priceWidth) / 2;
+            float priceX = left + width - priceMargin - priceWidth;
+            redRect = getBigFontBgRectF(priceX, touchY + mOffset4CenterBigText, priceWidth);
+            rectHeight = redRect.height();
+            redRect.top -= rectHeight / 2;
+            if (redRect.top < top) {
+                redRect.top = top;
+            }
+            redRect.bottom = redRect.top + rectHeight;
+            setRedRectBgPaint(sPaint);
+            canvas.drawRoundRect(redRect, 2, 2, sPaint);
+            float priceY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
+            setTouchLineTextPaint(sPaint);
+            canvas.drawText(price, priceX, priceY, sPaint);
+
+            if (indexesEnable) {
+                // draw cross line: vertical line and horizontal line
+                setRedTouchLinePaint(sPaint);
+                path = getPath();
+                path.moveTo(touchX, top2);
+                path.lineTo(touchX, top2 + height2);
+                canvas.drawPath(path, sPaint);
+                path = getPath();
+                path.moveTo(left2, touchY2);
+                path.lineTo(left2 + width2 - mPriceAreaWidth, touchY2);
+                canvas.drawPath(path, sPaint);
+
+                // draw volume connect to horizontal line
+                String volume = String.valueOf(data.getBusinessVolume());
+                setTouchLineTextPaint(sPaint);
+                float volumeWidth = sPaint.measureText(volume);
+                redRect = getBigFontBgRectF(0, 0, volumeWidth);
+                rectHeight = redRect.height();
+                rectWidth = redRect.width();
+                float volumeMargin = (rectWidth - volumeWidth) / 2;
+                float volumeX = left2 + width2 - volumeMargin - volumeWidth;
+                redRect.top = touchY2 - rectHeight;
+                redRect.left = left2 + width2 - rectWidth;
+                if (redRect.top < top2) {
+                    redRect.top = top2;
+                }
+                redRect.bottom = redRect.top + rectHeight;
+                redRect.right = redRect.left + rectWidth;
+                setRedRectBgPaint(sPaint);
+                canvas.drawRoundRect(redRect, 2, 2, sPaint);
+                float volumeY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
+                setTouchLineTextPaint(sPaint);
+                canvas.drawText(volume, volumeX, volumeY, sPaint);
+            }
+        }
+    }
+
+    private String getDate(int index) {
+        int morningDataCount = getDiffMinutes(mTimeLine[0], mTimeLine[1]);
+        if (index >= morningDataCount) {
+            return getTimeFrom(mTimeLine[2], index - morningDataCount);
+        }
+        return getTimeFrom(mTimeLine[0], index);
+    }
+
+    /**
+     * get diff minutes bewteen endDate and startDate. endDate - startDate
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public int getDiffMinutes(String startDate, String endDate) {
+        long diff = 0;
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
+            long start = parser.parse(startDate).getTime();
+            long end = parser.parse(endDate).getTime();
+
+            if (startDate.compareTo(endDate) <= 0) { // eg. 09:00 <= 09:10
+                diff = end - start;
+            } else { // eg. 21:00 ~ 01:00, we should change 01:00 to 25:00
+                diff = end + 24 * 60 * 60 * 1000 - start;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            return (int) (diff / (60 * 1000));
+        }
+    }
+
+    public String getTimeFrom(String startDate, int count) {
+        SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
+        long result = 0;
+        try {
+            long start = parser.parse(startDate).getTime();
+            result = start + count * 60 * 1000;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            return parser.format(new Date(result));
+        }
+    }
 }

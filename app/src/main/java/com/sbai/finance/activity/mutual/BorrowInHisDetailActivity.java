@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -47,6 +48,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyGridView;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
@@ -60,6 +62,8 @@ import butterknife.OnClick;
 
 public class BorrowInHisDetailActivity extends BaseActivity {
     public static final String BORROW_IN_HIS="borrowInHis";
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.userPortrait)
     ImageView mUserPortrait;
     @BindView(R.id.userNameLand)
@@ -89,6 +93,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
     @BindView(R.id.more)
     ImageView mMore;
     private int mMax;
+    private int mIsReturnHome;
     private ImageGridAdapter mImageGridAdapter;
     private BorrowDetails mBorrowDetails;
     @Override
@@ -98,13 +103,24 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
         int id= getIntent().getIntExtra(BORROW_IN_HIS,-1);
+        mIsReturnHome =getIntent().getIntExtra(Launcher.EX_PAYLOAD_2,-1);
         if (id!=-1){
             requestBorrowDetail(id);
-            requestHelper(id);
+           // requestHelper(id);
         }
     }
     private void initView() {
         calculateAvatarNum(this);
+        if (mIsReturnHome!=-1){
+            mTitleBar.setBackClickLisenter(new TitleBar.OnBackClickListener() {
+                @Override
+                public void onClick() {
+                    Launcher.with(getActivity(), MainActivity.class)
+                            .execute();
+                    finish();
+                }
+            });
+        }
         mImageGridAdapter = new ImageGridAdapter(this);
         mGridView.setAdapter(mImageGridAdapter);
         mGridView.setFocusable(false);
@@ -126,7 +142,18 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                }).fireSync();
 
     }
-    private void requestHelper( int id){
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mIsReturnHome!=-1){
+               Launcher.with(getActivity(), MainActivity.class)
+                            .execute();
+              finish();
+          }}
+
+
+    private void requestHelper(int id){
         Client.getHelper(id).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowHelper>>,List<BorrowHelper>>() {
                     @Override
@@ -142,19 +169,29 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
 
         String location =data.getSelectedLocation();
-        if (location==null){
+        if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);
         }
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(), "\n"+ location,0.73f,
-                ContextCompat.getColor(this,R.color.redPrimary),ContextCompat.getColor(this,R.color.assistText));
+        SpannableString attentionSpannableString;
+        if (data.getIsAttentionSelected() == BorrowDetails.ATTENTION){
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
+                    getString(R.string.is_attention), "\n" +location, 0.733f, 0.733f,
+                    ContextCompat.getColor(this,R.color.assistText),ContextCompat.getColor(this,R.color.assistText));
+        }else{
+            attentionSpannableString = StrUtil.mergeTextWithRatioColor(data.getSelectedUserName(),
+                    "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
+        }
         mUserNameLand.setText(attentionSpannableString);
         mPublishTime.setText(this.getString(R.string.borrow_in_time,
-                this.getString(R.string.borrow_in_time_success), DateUtil.formatSlash(data.getConfirmTime())));
+                this.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(data.getConfirmTime())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
         mHelperAmount.setText(getActivity().getString(R.string.helper,data.getIntentionCount()));
         mOption.setText(data.getContent());
+        if (data.getContentImg()==null){
+            data.setContentImg("");
+        }
         String[] images = data.getContentImg().split(",");
         switch (images.length){
             case 1:

@@ -180,6 +180,7 @@ public class HomeFragment extends BaseFragment {
             int counter = mHomeBanner.getInnerCounter();
             mHomeBanner.setInnerCounter(++counter);
         }
+
     }
 
     @Override

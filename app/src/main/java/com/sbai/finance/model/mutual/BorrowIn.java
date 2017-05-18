@@ -30,7 +30,7 @@ public class BorrowIn implements Parcelable {
     private int days;
     private long endlineTime;
     private int id;
-    private String interest;
+    private long interest;
     private long modifyDate;
     private int money;
     private int status;
@@ -93,11 +93,11 @@ public class BorrowIn implements Parcelable {
         this.id = id;
     }
 
-    public String getInterest() {
+    public long getInterest() {
         return interest;
     }
 
-    public void setInterest(String interest) {
+    public void setInterest(long interest) {
         this.interest = interest;
     }
 
@@ -146,7 +146,7 @@ public class BorrowIn implements Parcelable {
         dest.writeInt(this.days);
         dest.writeLong(this.endlineTime);
         dest.writeInt(this.id);
-        dest.writeString(this.interest);
+        dest.writeLong(this.interest);
         dest.writeLong(this.modifyDate);
         dest.writeInt(this.money);
         dest.writeInt(this.status);
@@ -164,7 +164,7 @@ public class BorrowIn implements Parcelable {
         this.days = in.readInt();
         this.endlineTime = in.readLong();
         this.id = in.readInt();
-        this.interest = in.readString();
+        this.interest = in.readLong();
         this.modifyDate = in.readLong();
         this.money = in.readInt();
         this.status = in.readInt();

@@ -8,6 +8,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -66,6 +67,7 @@ public class StockTrendView extends LinearLayout {
     TextView mBidVolume5;
 
     private StockTrendChart mTrendView;
+    private StockTouchView mTouchView;
     private View mFivePriceView;
 
     public StockTrendView(Context context) {
@@ -82,16 +84,20 @@ public class StockTrendView extends LinearLayout {
         setOrientation(HORIZONTAL);
 
         mTrendView = new StockTrendChart(getContext());
+        mTouchView = new StockTouchView(getContext(), mTrendView);
         mFivePriceView = LayoutInflater.from(getContext()).inflate(R.layout.view_five_price, null);
         View splitLine = mFivePriceView.findViewById(R.id.splitLine);
         LayoutParams params = (LayoutParams) splitLine.getLayoutParams();
         params.height = (int) dp2Px(0.5f, getResources());
 
+        FrameLayout container = new FrameLayout(getContext());
+        container.addView(mTrendView);
+        container.addView(mTouchView);
         params = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         int margin = (int) dp2Px(12f, getResources());
         params.weight = 1;
         params.setMargins(0, 0, 0, margin);
-        addView(mTrendView, params);
+        addView(container, params);
 
         int width = (int) dp2Px(125f, getResources());
         margin = (int) dp2Px(6f, getResources());
@@ -102,16 +108,29 @@ public class StockTrendView extends LinearLayout {
         ButterKnife.bind(this, mFivePriceView);
     }
 
-    public float dp2Px(float value, Resources res) {
+    private float dp2Px(float value, Resources res) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
 
     public void setSettings(ChartSettings settings) {
         mTrendView.setSettings(settings);
+        mTouchView.setSettings(settings);
+    }
+
+    public ChartSettings getSettings() {
+        return mTrendView.getSettings();
     }
 
     public void setDataList(List<StockTrendData> dataList) {
         mTrendView.setDataList(dataList);
+    }
+
+    public void setHasFiveMarketView(boolean hasFiveMarketView) {
+        if (hasFiveMarketView) {
+            mFivePriceView.setVisibility(VISIBLE);
+        } else {
+            mFivePriceView.setVisibility(GONE);
+        }
     }
 
     public void setStockRTData(StockRTData stockRTData) {

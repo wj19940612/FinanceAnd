@@ -184,6 +184,7 @@ public class PublishOpinionActivity extends BaseActivity {
                             Intent intent = new Intent(REFRESH_POINT);
                             LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
                                     .sendBroadcast(intent);
+                            setResult(RESULT_OK, intent);
                             finish();
                         }
                     }

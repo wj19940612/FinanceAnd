@@ -17,7 +17,8 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -145,7 +146,6 @@
                             android:textColor="@color/secondaryText"
                             android:textSize="10sp"/>
 
-
                         <TextView
                             android:id="@+id/borrowTime"
                             android:layout_width="wrap_content"
@@ -153,7 +153,6 @@
                             android:layout_marginTop="10dp"
                             android:textColor="@color/blackAssist"
                             tools:text="@string/day"/>
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -186,6 +185,7 @@
                 android:id="@+id/borrowMoneyContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
                 android:layout_marginTop="15dp"
@@ -195,13 +195,14 @@
                 tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
 
             <LinearLayout
+                android:id="@+id/contentImg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="13dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/image1"
@@ -209,6 +210,7 @@
                     android:layout_height="69dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
 
                 <ImageView
@@ -218,6 +220,7 @@
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
 
                 <ImageView
@@ -227,6 +230,7 @@
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
 
                 <ImageView
@@ -236,6 +240,7 @@
                     android:layout_marginLeft="14dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     tools:src="@drawable/help"/>
             </LinearLayout>
 
@@ -311,7 +316,7 @@
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
-                    tools:background="@drawable/bg_give_help"
+                    tools:background="@drawable/btn_give_help"
                     tools:text="@string/give_help"/>
             </LinearLayout>
         </LinearLayout>

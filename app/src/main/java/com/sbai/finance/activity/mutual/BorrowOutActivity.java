@@ -89,7 +89,8 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Launcher.with(getActivity(),BorrowOutDetailsActivity.class)
-                        .putExtra(BorrowOutDetailsActivity.BORROW_OUT,mBorrowOutAdapter.getItem(position))
+                        .putExtra(BorrowOutDetailsActivity.ID,mBorrowOutAdapter.getItem(position).getId())
+                        .putExtra(BorrowOutDetailsActivity.INTENTION_TIME,mBorrowOutAdapter.getItem(position).getIntentionTime())
                         .execute();
             }
         });
@@ -227,19 +228,22 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserPortrait);
-                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.formatSlash(item.getIntentionTime())));
+                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.getFormatTime(item.getIntentionTime())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
                 mOption.setText(item.getContent());
                 String location = item.getLocation();
-                if(location==null){
+                if(TextUtils.isEmpty(location)){
                     location = context.getString(R.string.no_location);
                 }
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
                         "\n" +location, 0.733f, ContextCompat.getColor(context,R.color.assistText));
                 mUserNameLand.setText(attentionSpannableString);
                 mEndLineTime.setText(DateUtil.compareTime(item.getEndlineTime()));
+                if (item.getContentImg()==null){
+                    item.setContentImg("");
+                }
                 String[] images = item.getContentImg().split(",");
                 switch (images.length){
                     case 1:

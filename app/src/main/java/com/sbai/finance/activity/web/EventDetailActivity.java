@@ -24,7 +24,11 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.EventModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 
 import butterknife.BindView;
@@ -83,20 +87,34 @@ public class EventDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
-        initData(getIntent());
-        initWebView();
+        EventModel event = (EventModel) getIntent().getSerializableExtra(EX_EVENT);
+        mRawCookie = getIntent().getStringExtra(EX_RAW_COOKIE);
+        initData(event);
+        String eventId = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
+        if (!TextUtils.isEmpty(eventId)) {
+            Client.getBigEventContent(eventId)
+                    .setIndeterminate(this)
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<EventModel>, EventModel>() {
+                        @Override
+                        protected void onRespSuccessData(EventModel data) {
+                            initData(data);
+                        }
+                    })
+                    .fireSync();
+        }
     }
 
-    protected void initData(Intent intent) {
-        EventModel event = (EventModel) intent.getSerializableExtra(EX_EVENT);
+    protected void initData(EventModel event) {
         if (event != null) {
             if (!event.isH5Style()) {
                 mEventTitleInfo.setVisibility(View.VISIBLE);
                 mEventTitle.setText(event.getTitle());
-                if (TextUtils.isEmpty(event.getSource())){
+
+                if (TextUtils.isEmpty(event.getSource())) {
                     mTimeAndSource.setText(DateUtil.getFormatTime(event.getCreateTime()));
-                }else{
-                    mTimeAndSource.setText(event.getSource()+"  "+DateUtil.getFormatTime(event.getCreateTime()));
+                } else {
+                    mTimeAndSource.setText(event.getSource() + "  " + DateUtil.getFormatTime(event.getCreateTime()));
                 }
                 mPureHtml = event.getContent();
             } else {
@@ -104,7 +122,7 @@ public class EventDetailActivity extends BaseActivity {
                 mPageUrl = event.getUrl();
             }
         }
-        mRawCookie = intent.getStringExtra(EX_RAW_COOKIE);
+        initWebView();
     }
 
     protected void initWebView() {

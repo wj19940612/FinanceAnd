@@ -52,7 +52,7 @@ public class BorrowOut implements Parcelable {
     private int loadId;
     private int intentionCount;
     private long intentionTime;
-    private int interest;
+    private long interest;
     private long modifyDate;
     private int money;
     private int status;
@@ -165,11 +165,11 @@ public class BorrowOut implements Parcelable {
         this.intentionTime = intentionTime;
     }
 
-    public int getInterest() {
+    public long getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(long interest) {
         this.interest = interest;
     }
 
@@ -231,7 +231,7 @@ public class BorrowOut implements Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.intentionCount);
         dest.writeLong(this.intentionTime);
-        dest.writeInt(this.interest);
+        dest.writeLong(this.interest);
         dest.writeLong(this.modifyDate);
         dest.writeInt(this.money);
         dest.writeInt(this.status);
@@ -256,7 +256,7 @@ public class BorrowOut implements Parcelable {
         this.id = in.readInt();
         this.intentionCount = in.readInt();
         this.intentionTime = in.readLong();
-        this.interest = in.readInt();
+        this.interest = in.readLong();
         this.modifyDate = in.readLong();
         this.money = in.readInt();
         this.status = in.readInt();

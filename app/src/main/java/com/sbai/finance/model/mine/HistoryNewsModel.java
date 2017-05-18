@@ -62,6 +62,7 @@ public class HistoryNewsModel implements Parcelable {
     private int sourceUserId;
     private int type;
     private int userId;
+    //0  未读 1 已读 3失效
     private int status;
     private long createDate;
     /**
@@ -76,6 +77,10 @@ public class HistoryNewsModel implements Parcelable {
 
     public boolean isAlreadyRead() {
         return getStatus() == 1;
+    }
+
+    public boolean isLossEfficacy() {
+        return getStatus() == 3;
     }
 
     public String getMsg() {

@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">泛理 DEV</string>
+    <string name="app_name">乐米 DEV</string>
 
     <!-- Dialog -->
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
 
     <!-- Main -->
-    <string name="home">泛理</string>
+    <string name="home">乐米</string>
     <string name="economic_circle">经济圈</string>
     <string name="mine">我的</string>
 
@@ -41,7 +41,7 @@
     <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
     <string name="login">登  录</string>
-    <string name="resend_after_n_seconds">%1$ds后重发</string>
+    <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
 
     <!--Home-->
@@ -110,6 +110,8 @@
     <string name="point">观点</string>
     <string name="introduce">简介</string>
     <string name="stock_news">新闻</string>
+    <string name="rise_list">涨幅榜</string>
+    <string name="fail_list">跌幅榜</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="no_option">暂无自选</string>
@@ -269,7 +271,7 @@
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="borrow_limit">借款金额</string>
     <string name="borrow_amount">500~2000元</string>
-    <string name="borrow_interest_amount">最低1元</string>
+    <string name="borrow_interest_amount">1~200元</string>
     <string name="borrow_day_limit">借款期限</string>
     <string name="borrow_day_limit_hint">1~60</string>
     <string name="borrow_remark">备注</string>
@@ -280,12 +282,13 @@
     <string name="borrow_publish">确认发布</string>
     <string name="want_borrow">我要借款</string>
     <string name="borrow_overdue">超出借款期限</string>
+    <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">阅读并同意</string>
     <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
     <string name="publish_success">发布成功</string>
-
+    <string name="protocol">规则与用户须知</string>
     <!--mutual-->
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
     <string name="mutual_no_borrow_out">您暂无向他人借出款项哦~</string>
@@ -307,7 +310,7 @@
     <string name="cancel_borrow_in">取消借款</string>
     <string name="helper">想要帮助你的人 (%1$d)</string>
     <string name="helper_her">想要帮助她的人 (%1$d)</string>
-    <string name="helper_his">想要帮助TA的人 (%1$d)</string>
+    <string name="helper_his">想要帮助他的人 (%1$d)</string>
     <string name="borrow_in_time">%1$s时间\n%2$s</string>
     <string name="borrow_out_time">借出时间\n%1$s</string>
     <string name="borrow_in_time_success">借入</string>
@@ -335,10 +338,26 @@
     <string name="all_image">所有图片</string>
 
     <!--借款有道-->
-    <string name="give_help_dialog_title">是否要帮助%1$s?</string>
-    <string name="give_help_dialog_content">注意:平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="give_help_dialog_title">是否要帮助“%1$s”?</string>
+    <string name="give_help_dialog_content">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="wait_to_confirm">等待确认中</string>
     <string name="want_help_him">想要帮助TA的人</string>
+    <string name="pay_intention">支付意向金</string>
+    <string name="intention">意向金</string>
+    <string name="we_chat_pay">微信支付</string>
+    <string name="ali_pay">支付宝支付</string>
+    <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
+    <string name="intention_amount">￥%1$s元</string>
+    <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
+    <string name="ali_pay_hint_1">1.如果未打开支付宝或未完成付款,请点击“继续支付”。</string>
+    <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成付款”。</string>
+    <string name="ali_pay_hint_2">2.如果你已完成,请点击“已完成付款”。</string>
+    <string name="complete_payment">已完成支付</string>
+    <string name="continue_to_pay">继续支付</string>
+    <string name="save_picture">保存图片</string>
+    <string name="save_picture_failed">保存失败</string>
+    <string name="save_picture_success">图片成功保存至%1$s目录</string>
+
     <!--股票财务-->
     <string name="one_stock_net_asset">每股净资产</string>
     <string name="one_stock_earnings">每股收益</string>
@@ -352,13 +371,8 @@
     <string name="finance_charge">财务费用</string>
     <string name="earn_profit">净利润</string>
 
-
-    <string name="pay_intention">支付意向金</string>
-    <string name="intention">意向金</string>
-    <string name="we_chat_pay">微信支付</string>
-    <string name="alipay">支付宝支付</string>
-    <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
     <!--公司简介-->
+
     <string name="company_name">公司名称</string>
     <string name="company_info">公司简介</string>
     <string name="register_capital">注册资本</string>
@@ -372,5 +386,7 @@
     <string name="wechat_friend">微信</string>
     <string name="wechat_circle">朋友圈</string>
     <string name="weibo">微博</string>
+    <!--股票排行榜-->
+    <string name="stock_no_data">--</string>
 
 </resources>

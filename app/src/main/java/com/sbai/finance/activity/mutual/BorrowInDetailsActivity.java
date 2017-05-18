@@ -121,7 +121,7 @@ public class BorrowInDetailsActivity extends BaseActivity {
     }
 
     private void initBorrowInData() {
-        mPublishTime.setText(getActivity().getString(R.string.publish_time, DateUtil.formatSlash(mBorrowIn.getCreateDate())));
+        mPublishTime.setText(getActivity().getString(R.string.publish_time, DateUtil.getFormatTime(mBorrowIn.getCreateDate())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(mBorrowIn.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(mBorrowIn.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(mBorrowIn.getInterest())));
@@ -147,6 +147,9 @@ public class BorrowInDetailsActivity extends BaseActivity {
                 break;
             default:
                 break;
+        }
+        if (mBorrowIn.getContentImg()==null){
+            mBorrowIn.setContentImg("");
         }
         String[] images = mBorrowIn.getContentImg().split(",");
         switch (images.length){
