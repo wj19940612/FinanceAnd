@@ -109,8 +109,6 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     @BindView(R.id.chartArea)
     LinearLayout mChartArea;
-    @BindView(R.id.subPageArea)
-    LinearLayout mSubPageArea;
 
     private StockRTData mStockRTData;
     private Prediction mPrediction;

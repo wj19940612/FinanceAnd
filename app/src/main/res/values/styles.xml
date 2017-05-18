@@ -131,11 +131,9 @@
 
     <style name="StockCompanyInfoClause">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">@dimen/common_padding</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">100dp</item>
-        <item name="android:paddingTop">25dp</item>
+        <item name="android:minWidth">150dp</item>
         <item name="android:textColor">@color/secondaryText</item>
         <item name="android:textSize">13sp</item>
     </style>
@@ -143,9 +141,10 @@
     <style name="StockCompanyInfoNumber">
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textColor">@color/primaryText</item>
         <item name="android:textSize">13sp</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">

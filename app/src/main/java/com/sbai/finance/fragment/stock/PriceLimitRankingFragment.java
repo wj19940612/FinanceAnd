@@ -115,6 +115,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
+            mStockSortAdapter.clear();
             mStockSortAdapter.addAll(data);
         }
     }
@@ -168,17 +169,17 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
         public void addAll(List<StockData> datas) {
             mStockDataArrayList.addAll(datas);
-            notifyDataSetChanged();
+            notifyItemRangeChanged(0,datas.size());
         }
 
         public void clear() {
             mStockDataArrayList.clear();
-            notifyDataSetChanged();
+            notifyItemRangeRemoved(0, mStockDataArrayList.size());
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock_sort, parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
             return new ViewHolder(view);
         }
 

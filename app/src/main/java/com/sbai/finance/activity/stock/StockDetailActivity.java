@@ -30,7 +30,7 @@ public class StockDetailActivity extends StockTradeActivity {
                 if (position == 1) {
                     StockNewsFragment stockNewsFragment = getStockNewsFragment();
                     if (stockNewsFragment != null) {
-                        stockNewsFragment.requestCompanyAnnualReport(0);
+                        stockNewsFragment.requestStockNewsList(0);
                     }
                 }
 

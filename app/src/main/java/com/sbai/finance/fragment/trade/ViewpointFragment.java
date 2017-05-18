@@ -195,17 +195,14 @@ public class ViewpointFragment extends BaseFragment {
 
     //刷新某条点赞和评论
     public void updateItemById(int id, int replyCount, int praiseCount) {
-        int position = 0;
         for (Opinion opinion : mOpinionList) {
             if (opinion.getId() == id) {
+                opinion.setReplyCount(replyCount);
+                opinion.setPraiseCount(praiseCount);
                 break;
-            } else {
-                position++;
             }
         }
-        mOpinionList.get(position).setReplyCount(replyCount);
-        mOpinionList.get(position).setPraiseCount(praiseCount);
-        mOpinionAdapter.notifyItemChanged(position);
+        mOpinionAdapter.notifyDataSetChanged();
     }
 
     //根据user id刷新关注
