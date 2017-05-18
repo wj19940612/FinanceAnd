@@ -288,7 +288,7 @@
     <string name="borrow_agree">阅读并同意</string>
     <string name="borrow_agreement">《泛理借款规则与用户须知》</string>
     <string name="publish_success">发布成功</string>
-
+    <string name="protocol">规则与用户须知</string>
     <!--mutual-->
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
     <string name="mutual_no_borrow_out">您暂无向他人借出款项哦~</string>
