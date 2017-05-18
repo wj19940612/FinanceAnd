@@ -100,10 +100,16 @@ public class BorrowActivity extends BaseActivity {
 		mPhotoGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (position<mPhotoGridAdapter.getCount()-1){
+				int photoCount=mPhotoGridAdapter.getCount()-1;
+				if (position<photoCount){
+					StringBuilder builder = new StringBuilder();
+					for (int i=0;i<photoCount;i++){
+						builder.append(mPhotoGridAdapter.getItem(i)).append(",");
+					}
+					builder.deleteCharAt(builder.length()-1);
 					Launcher.with(getActivity(), ContentImgActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, mPhotoGridAdapter.getItem(position).split(","))
-							.putExtra(Launcher.EX_PAYLOAD_1, 0)
+							.putExtra(Launcher.EX_PAYLOAD, builder.toString().split(","))
+							.putExtra(Launcher.EX_PAYLOAD_1, position)
 							.execute();
 				}
 			}
