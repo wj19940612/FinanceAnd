@@ -5,11 +5,10 @@
               android:orientation="vertical"
               tools:context="com.sbai.finance.fragment.stock.PriceLimitRankingFragment">
 
-    <ListView
-        android:id="@android:id/list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:layout_height="match_parent"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@android:id/empty"

@@ -7,21 +7,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.sbai.finance.fragment.stock.FinanceFragment">
+
     <com.sbai.finance.view.IconTextRow
-        android:visibility="gone"
         android:id="@+id/company"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/white"
+        android:visibility="gone"
         app:leftIcon="@drawable/ic_stock_finance_company"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowTextColor="@color/blueAssist"/>
 
-    <ListView
-        android:id="@android:id/list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:layout_height="match_parent"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@android:id/empty"
