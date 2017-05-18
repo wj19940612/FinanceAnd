@@ -183,6 +183,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						.into(imageView);
 				mAvatarList.addView(imageView);
 
+				mMore.setVisibility(View.GONE);
 				mAvatarList.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -249,7 +250,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			mGiveHelp.setText(R.string.wait_to_confirm);
 			mGiveHelp.setEnabled(false);
 		} else {
-			mGiveHelp.setBackgroundResource(R.drawable.bg_give_help);
+			mGiveHelp.setBackgroundResource(R.drawable.btn_give_help);
 			mGiveHelp.setText(R.string.give_help);
 		}
 

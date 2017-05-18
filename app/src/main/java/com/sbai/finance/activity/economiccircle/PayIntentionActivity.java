@@ -2,6 +2,7 @@ package com.sbai.finance.activity.economiccircle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.web.PaymentActivity;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.net.Callback2D;
@@ -171,9 +171,24 @@ public class PayIntentionActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccessData(PaymentPath paymentPath) {
 						mPaymentPath = paymentPath.getCodeUrl();
-						Launcher.with(getActivity(), PaymentActivity.class)
-								.putExtra(PaymentActivity.EX_URL, paymentPath.getCodeUrl())
-								.execute();
+						if ("qtalipay".equals(mPlatform)) {
+							Launcher.with(getActivity(), AliPayActivity.class)
+									.putExtra(Launcher.EX_PAYLOAD, mPlatform)
+									.putExtra(Launcher.EX_PAYLOAD_1, mDataId)
+									.execute();
+
+							Intent intent = new Intent();
+							intent.setAction("android.intent.action.VIEW");
+							Uri content_url = Uri.parse(mPaymentPath);
+							intent.setData(content_url);
+							intent.setClassName("com.android.browser","com.android.browser.BrowserActivity");
+							startActivity(intent);
+						} else if("qtwxscan".equals(mPlatform)) {
+							Launcher.with(getActivity(), WeChatPayActivity.class)
+									.putExtra(Launcher.EX_PAYLOAD, mPaymentPath)
+									.putExtra(Launcher.EX_PAYLOAD_1, mDataId)
+									.execute();
+						}
 					}
 				}).fire();
 	}

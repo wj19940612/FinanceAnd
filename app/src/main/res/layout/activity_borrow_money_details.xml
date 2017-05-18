@@ -314,7 +314,7 @@
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
-                    tools:background="@drawable/bg_give_help"
+                    tools:background="@drawable/btn_give_help"
                     tools:text="@string/give_help"/>
             </LinearLayout>
         </LinearLayout>
