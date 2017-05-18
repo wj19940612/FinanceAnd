@@ -5,11 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/companyFinancePublishTime"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="32dp"
         android:layout_marginBottom="20dp"
         android:background="@color/greyLightAssist"
@@ -20,255 +21,255 @@
         tools:text="2017年第4季度，(截止日期:2016-12-12)">
     </android.support.v7.widget.AppCompatTextView>
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/oneStockNetAsset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/one_stock_net_asset"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/one_stock_earnings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/one_stock_earnings"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/one_stock_cash_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/one_stock_cash_content"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/one_stock_capital_accumulation_fund"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/one_stock_capital_accumulation_fund"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/fixation_capital_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/fixation_capital_count"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/flow_capital_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/flow_capital_count"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/capital_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/capital_count"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/long_liabilities_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/long_liabilities_count"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/normal_business_earnings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/normal_business_earnings"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/finance_charge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/finance_charge"/>
+
+    <com.sbai.finance.view.BottomTextViewLayout
+        android:id="@+id/earn_profit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:headline_text="@string/earn_profit"/>
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
+
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/one_stock_net_asset"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/oneStockNetAsset"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/one_stock_net_asset"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/one_stock_earnings"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/one_stock_earnings"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/one_stock_earnings"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/one_stock_cash_content"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/one_stock_cash_content"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/one_stock_cash_content"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/one_stock_capital_accumulation_fund"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/one_stock_capital_accumulation_fund"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/one_stock_capital_accumulation_fund"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/fixation_capital_count"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/fixation_capital_count"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/fixation_capital_count"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/flow_capital_count"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/flow_capital_count"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/flow_capital_count"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/capital_count"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/capital_count"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/capital_count"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/long_liabilities_count"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/long_liabilities_count"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/long_liabilities_count"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/normal_business_earnings"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/normal_business_earnings"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/normal_business_earnings"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/finance_charge"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/finance_charge"-->
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/finance_charge"/>-->
+    <!--android:layout_marginBottom="25dp"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
 
-    <!--<com.sbai.finance.view.BottomTextViewLayout-->
+    <!--<android.support.v7.widget.AppCompatTextView-->
+    <!--style="@style/StockCompanyInfoClause"-->
+    <!--android:text="@string/earn_profit"/>-->
+
+    <!--<AutoCompleteTextView-->
     <!--android:id="@+id/earn_profit"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:color/white"-->
-    <!--app:headline_text="@string/earn_profit"/>-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/one_stock_net_asset"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/oneStockNetAsset"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/one_stock_earnings"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/one_stock_earnings"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/one_stock_cash_content"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/one_stock_cash_content"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/one_stock_capital_accumulation_fund"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/one_stock_capital_accumulation_fund"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/fixation_capital_count"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/fixation_capital_count"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/flow_capital_count"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/flow_capital_count"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/capital_count"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/capital_count"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/long_liabilities_count"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/long_liabilities_count"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/normal_business_earnings"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/normal_business_earnings"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/finance_charge"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/finance_charge"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/StockCompanyInfoClause"
-            android:text="@string/earn_profit"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/earn_profit"
-            style="@style/StockCompanyInfoNumber"/>
-    </LinearLayout>
+    <!--style="@style/StockCompanyInfoNumber"/>-->
+    <!--</LinearLayout>-->
 </android.support.v7.widget.LinearLayoutCompat>

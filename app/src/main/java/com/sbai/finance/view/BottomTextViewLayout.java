@@ -81,6 +81,7 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         mInfoTextView.setTextColor(mInfoTextColor);
         mInfoTextView.setTextSize(mInfoTextSize);
         mInfoTextView.setLineSpacing(mInfoTextLineSpacingExtra, 1);
+        mInfoTextView.setText("-");
         addView(mInfoTextView, 1);
 
     }
