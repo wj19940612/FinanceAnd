@@ -228,7 +228,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserPortrait);
-                mPublishTime.setText(context.getString(R.string.borrow_out_time,DateUtil.getFormatTime(item.getIntentionTime())));
+                mPublishTime.setText(context.getString(R.string.intention_time,DateUtil.getFormatTime(item.getIntentionTime())));
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));

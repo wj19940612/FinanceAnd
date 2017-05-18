@@ -26,6 +26,7 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -67,6 +68,7 @@ public class BorrowActivity extends BaseActivity {
 
 	private PhotoGridAdapter mPhotoGridAdapter;
 	private String mImagePath;
+	private String mProtocolUrl = API.getHost()+"/mobi/mutual/rules?nohead=1";
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -160,8 +162,7 @@ public class BorrowActivity extends BaseActivity {
 			case R.id.protocol:
                 Launcher.with(this, WebActivity.class)
 						.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
-						.putExtra(WebActivity.EX_URL,"")
-						.putExtra(WebActivity.EX_HTML,getString(R.string.protocol))
+						.putExtra(WebActivity.EX_URL,mProtocolUrl)
 						.putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
 						.execute();
 				break;

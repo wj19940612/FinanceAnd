@@ -61,7 +61,7 @@
                     android:layout_gravity="center"
                     android:gravity="right"
                     android:lineSpacingExtra="5dp"
-                    android:text="@string/borrow_out_time"
+                    android:text="@string/intention_time"
                     android:textColor="@color/assistText"
                     android:textSize="11sp"/>
             </LinearLayout>

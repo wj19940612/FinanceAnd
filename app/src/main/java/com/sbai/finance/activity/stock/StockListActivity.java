@@ -33,6 +33,7 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -68,7 +69,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private StockListAdapter mStockListAdapter;
     private List<Variety> mStockIndexData;
-
+    private HashSet<String> mSet;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +82,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void initView() {
+        mSet = new HashSet<>();
         mStock.setFocusable(false);
         mStockListAdapter = new StockListAdapter(this);
         mListView.setAdapter(mStockListAdapter);
@@ -239,7 +241,11 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void updateStockData(List<Variety> data) {
         stopRefreshAnimation();
-        mStockListAdapter.addAll(data);
+        for (Variety variety:data){
+            if (mSet.add(variety.getVarietyType())) {
+                mStockListAdapter.add(variety);
+            }
+        }
         if (data.size() < mPageSize) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
@@ -287,6 +293,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void reset() {
         mPage = 0;
+        mSet.clear();
         mStockListAdapter.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
