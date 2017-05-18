@@ -100,7 +100,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mEconomicCircleNewsAdapter.setCallBack(new EconomicCircleNewsAdapter.CallBack() {
             @Override
             public void onUserHeadImageClick(HistoryNewsModel historyNewsModel) {
-                Log.d(TAG, "onUserHeadImageClick: " + historyNewsModel.toString());
                 Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, historyNewsModel.getSourceUserId()).execute();
             }
         });
@@ -228,6 +227,9 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
 //                    break;
                     //点赞评论
                 case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+                    if (historyNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     if (historyNewsModel.getViewpointId() != 0) {
                         Launcher.with(getActivity(), OpinionDetailsActivity.class).
                                 putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
@@ -239,6 +241,9 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
                     //观点详情页面  将选择的这条评论置顶显示，
+                    if (historyNewsModel.isLossEfficacy()) {
+                        return;
+                    }
                     Launcher.with(getActivity(), OpinionDetailsActivity.class).
                             putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
                             .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
