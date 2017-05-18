@@ -101,8 +101,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     @BindView(R.id.chartArea)
     LinearLayout mChartArea;
-    @BindView(R.id.subPageArea)
-    LinearLayout mSubPageArea;
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
     @BindView(R.id.exchangeCloseView)
