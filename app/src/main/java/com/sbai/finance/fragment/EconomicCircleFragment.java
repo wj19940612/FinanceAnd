@@ -224,7 +224,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					requestEconomicCircleList();
 				}
 			});
-			mListView.addFooterView(mFootView);
+			mListView.addFooterView(mFootView, null,true);
 		}
 
 		if (economicCircleList.size() < mPageSize) {

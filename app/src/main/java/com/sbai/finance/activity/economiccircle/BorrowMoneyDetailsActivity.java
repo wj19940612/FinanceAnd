@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -132,15 +131,15 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 	private void updateWantHelpHimList(final List<WantHelpHimOrYou> wantHelpHimOrYouList) {
 		int width = (int) Display.dp2Px(32, getResources());
-		Log.i(TAG, "updateWantHelpHimList: " + width);
 		int height = (int) Display.dp2Px(32, getResources());
 		int margin = (int) Display.dp2Px(5, getResources());
+
+		mAvatarList.removeAllViews();
 
 		int size = mWantHelpHimOrYouList.size();
 		if (size >= mMax) {
 			size = mMax;
 			for (int i = 0; i < size - 1; i++) {
-				mAvatarList.removeAllViews();
 				ImageView imageView = new ImageView(this);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
 				params.leftMargin = (i == 0 ? 0 : margin);
@@ -156,6 +155,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 					}
@@ -173,7 +173,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				});
 			}
 		} else {
-			mAvatarList.removeAllViews();
+
 			for (int i = 0; i < size; i++) {
 				ImageView imageView = new ImageView(this);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
