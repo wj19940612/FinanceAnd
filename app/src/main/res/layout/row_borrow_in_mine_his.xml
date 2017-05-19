@@ -33,7 +33,7 @@
             android:paddingRight="10dp"
             android:lineSpacingExtra="8dp"
             android:orientation="vertical"
-            android:textColor="@color/redPrimary"
+            android:textColor="@color/blackAssist"
             android:textSize="15sp"
             tools:text="@string/user_address"/>
 
