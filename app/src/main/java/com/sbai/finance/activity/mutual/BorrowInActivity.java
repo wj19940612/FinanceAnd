@@ -406,6 +406,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 SpannableString attentionSpannableString;
                 switch (item.getStatus()) {
                     case BorrowIn.STATUS_CHECKED:
+                    case BorrowIn.STATUS_ACCEPTY:
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.call_helper),
                                 "\n" + context.getString(R.string.end_line), "  " + DateUtil.compareTime(item.getEndlineTime()), 1.455f, 1.455f,
                                 ContextCompat.getColor(context, R.color.opinionText), ContextCompat.getColor(context, R.color.redPrimary));

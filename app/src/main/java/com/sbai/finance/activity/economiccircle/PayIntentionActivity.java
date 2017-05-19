@@ -181,7 +181,6 @@ public class PayIntentionActivity extends BaseActivity {
 							intent.setAction("android.intent.action.VIEW");
 							Uri content_url = Uri.parse(mPaymentPath);
 							intent.setData(content_url);
-							intent.setClassName("com.android.browser","com.android.browser.BrowserActivity");
 							startActivity(intent);
 						} else if("qtwxscan".equals(mPlatform)) {
 							Launcher.with(getActivity(), WeChatPayActivity.class)

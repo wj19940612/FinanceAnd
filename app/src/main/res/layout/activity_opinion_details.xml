@@ -12,10 +12,6 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:barBackground="@color/blackAssist"
-        app:rightImage="@drawable/ic_share"
-        app:rightText="@string/share"
-        app:rightTextSize="14sp"
-        app:rightVisible="true"
         app:titleText="@string/details"/>
 
     <android.support.v4.widget.SwipeRefreshLayout

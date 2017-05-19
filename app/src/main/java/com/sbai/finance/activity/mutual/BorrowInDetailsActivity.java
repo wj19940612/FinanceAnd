@@ -130,6 +130,7 @@ public class BorrowInDetailsActivity extends BaseActivity {
         SpannableString attentionSpannableString;
         switch (mBorrowIn.getStatus()){
             case BorrowIn.STATUS_CHECKED:
+            case BorrowIn.STATUS_ACCEPTY:
                 mCheckStatus.setVisibility(View.VISIBLE);
                 attentionSpannableString = StrUtil.mergeTextWithRatioColor(getActivity().getString(R.string.call_helper),
                         "\n" +getActivity().getString(R.string.end_line),"  "+DateUtil.compareTime(mBorrowIn.getEndlineTime()), 1.455f,1.455f,

@@ -213,7 +213,7 @@ public class HomeFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
-                        if (!TextUtils.isEmpty(resp.getData())) {
+                        if (resp.getData()!=null) {
                             updateEventInfo(resp.getData());
                         }
                     }
