@@ -46,7 +46,6 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:lineSpacingExtra="8dp"
-                    android:orientation="vertical"
                     android:textColor="@color/redPrimary"
                     android:textSize="15sp"
                     android:ellipsize="end"
