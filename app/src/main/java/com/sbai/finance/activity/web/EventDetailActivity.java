@@ -31,6 +31,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +65,8 @@ public class EventDetailActivity extends BaseActivity {
     LinearLayout mErrorPage;
     @BindView(R.id.eventTitleInfo)
     LinearLayout mEventTitleInfo;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private boolean mLoadSuccess;
     protected String mPageUrl;
     protected String mTitle;
@@ -115,7 +118,8 @@ public class EventDetailActivity extends BaseActivity {
     }
 
     private void initStockNewsData(StockNewsInfoModel stockNewsInfoModel) {
-        if(stockNewsInfoModel!=null){
+        if (stockNewsInfoModel != null) {
+            mTitleBar.setTitle(R.string.stock_news);
             mEventTitleInfo.setVisibility(View.VISIBLE);
             mEventTitle.setText(stockNewsInfoModel.getTitle());
 
