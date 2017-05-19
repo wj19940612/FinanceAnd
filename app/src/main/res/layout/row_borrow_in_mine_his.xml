@@ -13,7 +13,7 @@
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"
         android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/userPortrait"
@@ -25,20 +25,21 @@
 
         <TextView
             android:id="@+id/userNameLand"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:lineSpacingExtra="8dp"
             android:orientation="vertical"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/redPrimary"
             android:textSize="15sp"
             tools:text="@string/user_address"/>
 
         <TextView
             android:id="@+id/publishTime"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="right"

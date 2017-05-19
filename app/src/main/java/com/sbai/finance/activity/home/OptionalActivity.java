@@ -113,6 +113,7 @@ public class OptionalActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        reset();
         requestOptionalData();
     }
 
