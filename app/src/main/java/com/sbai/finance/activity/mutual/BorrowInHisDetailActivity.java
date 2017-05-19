@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -47,6 +48,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyGridView;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
@@ -60,6 +62,8 @@ import butterknife.OnClick;
 
 public class BorrowInHisDetailActivity extends BaseActivity {
     public static final String BORROW_IN_HIS="borrowInHis";
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.userPortrait)
     ImageView mUserPortrait;
     @BindView(R.id.userNameLand)
@@ -89,6 +93,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
     @BindView(R.id.more)
     ImageView mMore;
     private int mMax;
+    private int mIsReturnHome;
     private ImageGridAdapter mImageGridAdapter;
     private BorrowDetails mBorrowDetails;
     @Override
@@ -98,6 +103,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
         int id= getIntent().getIntExtra(BORROW_IN_HIS,-1);
+        mIsReturnHome =getIntent().getIntExtra(Launcher.EX_PAYLOAD_2,-1);
         if (id!=-1){
             requestBorrowDetail(id);
            // requestHelper(id);
@@ -105,6 +111,16 @@ public class BorrowInHisDetailActivity extends BaseActivity {
     }
     private void initView() {
         calculateAvatarNum(this);
+        if (mIsReturnHome!=-1){
+            mTitleBar.setBackClickLisenter(new TitleBar.OnBackClickListener() {
+                @Override
+                public void onClick() {
+                    Launcher.with(getActivity(), MainActivity.class)
+                            .execute();
+                    finish();
+                }
+            });
+        }
         mImageGridAdapter = new ImageGridAdapter(this);
         mGridView.setAdapter(mImageGridAdapter);
         mGridView.setFocusable(false);
@@ -126,7 +142,18 @@ public class BorrowInHisDetailActivity extends BaseActivity {
                }).fireSync();
 
     }
-    private void requestHelper( int id){
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mIsReturnHome!=-1){
+               Launcher.with(getActivity(), MainActivity.class)
+                            .execute();
+              finish();
+          }}
+
+
+    private void requestHelper(int id){
         Client.getHelper(id).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowHelper>>,List<BorrowHelper>>() {
                     @Override

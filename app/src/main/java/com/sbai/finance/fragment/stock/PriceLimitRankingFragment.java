@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.stock;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -16,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.stock.StockData;
@@ -31,8 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static android.R.attr.padding;
 
 
 public class PriceLimitRankingFragment extends BaseFragment {
@@ -87,15 +84,13 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mStockDataArrayList = new ArrayList<>();
-//        initEmptyView();
-        mStockSortAdapter = new StockSortAdapter(R.layout.row_variey, mStockDataArrayList);
+        mStockSortAdapter = new StockSortAdapter(getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mStockSortAdapter);
         requestStockSortList();
     }
 
     public void requestStockSortList() {
-        mStockDataArrayList.clear();
         Client.getStockSort(mSortType, mStockType)
                 .setTag(TAG)
                 .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
@@ -120,8 +115,8 @@ public class PriceLimitRankingFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-            mStockDataArrayList.addAll(data);
-            mStockSortAdapter.notifyDataSetChanged();
+            mStockSortAdapter.clear();
+            mStockSortAdapter.addAll(data);
         }
     }
 
@@ -152,8 +147,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
     }
 
     private void initEmptyView() {
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
         mEmpty = new AppCompatTextView(getActivity());
-        mEmpty.setPadding(0, 10 * padding, 0, 0);
+        mEmpty.setPadding(0, padding, 0, 0);
         mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
         mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
         mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -161,43 +157,75 @@ public class PriceLimitRankingFragment extends BaseFragment {
         mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
     }
 
-    static class StockSortAdapter extends BaseQuickAdapter<StockData, BaseViewHolder> {
+    class StockSortAdapter extends RecyclerView.Adapter<StockSortAdapter.ViewHolder> {
 
-        private List<StockData> mStockDataList;
+        Context mContext;
+        ArrayList<StockData> mStockDataArrayList;
 
-        public StockSortAdapter(int layoutResId, List<StockData> data) {
-            super(layoutResId, data);
-            this.mStockDataList = data;
+        public StockSortAdapter(Context context) {
+            this.mContext = context;
+            mStockDataArrayList = new ArrayList<>();
         }
 
-        private void clear() {
-            mStockDataList.clear();
-            notifyDataSetChanged();
+        public void addAll(List<StockData> datas) {
+            mStockDataArrayList.addAll(datas);
+            notifyItemRangeChanged(0,datas.size());
+        }
+
+        public void clear() {
+            mStockDataArrayList.clear();
+            notifyItemRangeRemoved(0, mStockDataArrayList.size());
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, StockData item) {
-            TextView mFutureName = helper.getView(R.id.futureName);
-            TextView mFutureCode = helper.getView(R.id.futureCode);
-            TextView mLastPrice = helper.getView(R.id.lastPrice);
-            TextView mRate = helper.getView(R.id.rate);
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
+            return new ViewHolder(view);
+        }
 
-            if (item == null) return;
-            mFutureName.setText(item.getCode_name());
-            mFutureCode.setText(item.getStock_code());
-            String priceLimit = item.getValue1();
-            if (!TextUtils.isEmpty(priceLimit)) {
-                if (priceLimit.startsWith("-")) {
-                    mLastPrice.setSelected(true);
-                    mRate.setSelected(true);
-                    mRate.setText(priceLimit + "%");
-                } else {
-                    mLastPrice.setSelected(false);
-                    mRate.setSelected(false);
-                    mRate.setText("+" + priceLimit + "%");
-                }
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mStockDataArrayList.get(position), position, mContext);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mStockDataArrayList != null ? mStockDataArrayList.size() : 0;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.futureName)
+            TextView mFutureName;
+            @BindView(R.id.futureCode)
+            TextView mFutureCode;
+            @BindView(R.id.lastPrice)
+            TextView mLastPrice;
+            @BindView(R.id.rate)
+            TextView mRate;
+
+            ViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
             }
-            mLastPrice.setText(item.getLast_price());
+
+            public void bindDataWithView(StockData item, int position, Context context) {
+                if (item == null) return;
+                mFutureName.setText(item.getCode_name());
+                mFutureCode.setText(item.getStock_code());
+                String priceLimit = item.getValue1();
+                if (!TextUtils.isEmpty(priceLimit)) {
+                    if (priceLimit.startsWith("-")) {
+                        mLastPrice.setSelected(true);
+                        mRate.setSelected(true);
+                        mRate.setText(priceLimit + "%");
+                    } else {
+                        mLastPrice.setSelected(false);
+                        mRate.setSelected(false);
+                        mRate.setText("+" + priceLimit + "%");
+                    }
+                }
+                mLastPrice.setText(item.getLast_price());
+            }
         }
     }
 }

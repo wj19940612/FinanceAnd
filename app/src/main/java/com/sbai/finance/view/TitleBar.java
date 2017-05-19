@@ -46,7 +46,13 @@ public class TitleBar extends RelativeLayout {
 
         init();
     }
-
+    private OnBackClickListener mBackClickListener;
+    public  interface OnBackClickListener{
+        void onClick();
+    }
+    public void setBackClickLisenter(OnBackClickListener onBackClickListener){
+        mBackClickListener =onBackClickListener;
+    }
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TitleBar);
 
@@ -118,6 +124,9 @@ public class TitleBar extends RelativeLayout {
                 @Override
                 public void onClick(View view) {
                     onBackClick(view);
+                    if (mBackClickListener!=null){
+                        mBackClickListener.onClick();
+                    }
                 }
             });
         }

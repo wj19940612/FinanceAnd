@@ -62,7 +62,7 @@ public class OptionalActivity extends BaseActivity implements
     LinearLayout mVarietyTitle;
 
     private SlideListAdapter mSlideListAdapter;
-    private int mPage;
+    private int mPage = 0;
     private int mPageSize = 15;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,11 +81,11 @@ public class OptionalActivity extends BaseActivity implements
                 requestDelOptionalData(mSlideListAdapter.getItem(position).getVarietyId());
             }
         });
+        mListView.setEmptyView(mEmpty);
+        mListView.setAdapter(mSlideListAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setAdapter(mListView, mSlideListAdapter);
-        mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mSlideListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -179,13 +179,10 @@ public class OptionalActivity extends BaseActivity implements
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
-        if (data.isEmpty()){
-            mVarietyTitle.setVisibility(View.GONE);
-        }else{
+        if (!data.isEmpty()&&mPage==0){
             mVarietyTitle.setVisibility(View.VISIBLE);
         }
         stopRefreshAnimation();
-        mSlideListAdapter.clear();
         mSlideListAdapter.addAll(data);
         if (data.size() < mPageSize) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
@@ -214,6 +211,9 @@ public class OptionalActivity extends BaseActivity implements
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
     }
     @Override
     public void onRefresh() {
@@ -224,6 +224,7 @@ public class OptionalActivity extends BaseActivity implements
     private void reset() {
         mPage = 0;
         mSlideListAdapter.clear();
+        mVarietyTitle.setVisibility(View.GONE);
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
@@ -332,7 +333,7 @@ public class OptionalActivity extends BaseActivity implements
                         mLastPrice.setText("--");
                         mRate.setText("--");
                     }
-                }else  {
+                }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
                     mFutureName.setText(item.getVarietyName());
                     mFutureCode.setText(item.getContractsCode());
                     FutureData futureData = futureMap.get(item.getContractsCode());
@@ -348,7 +349,7 @@ public class OptionalActivity extends BaseActivity implements
                         } else {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                             mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                            mRate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
+                            mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
                         }
                     } else {
                         mLastPrice.setText("--");

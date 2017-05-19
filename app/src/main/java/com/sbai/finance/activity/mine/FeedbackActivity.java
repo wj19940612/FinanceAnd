@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -424,6 +425,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     mWrapper.addView(imageview);
                     Glide.with(context).load(feedback.getContent())
                             .bitmapTransform(new GlideThumbTransform(context))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imageview);
                 }
                 Glide.with(context).load(feedback.getUserPortrait())

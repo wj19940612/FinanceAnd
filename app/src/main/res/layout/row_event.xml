@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tool="http://schemas.android.com/tools"
-              android:orientation="vertical"
+              android:id="@+id/event"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingTop="20dp"
+              android:orientation="vertical"
               android:paddingBottom="20dp"
               android:paddingLeft="@dimen/common_padding"
-              android:paddingRight="@dimen/common_padding">
+              android:paddingRight="@dimen/common_padding"
+              android:paddingTop="20dp">
+
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/event_title_text"
         android:textSize="@dimen/list_title_size"
         android:textStyle="bold"
-        android:ellipsize="end"
-        android:maxLines="2"
         tool:text="证监会刘主席发言：鼓励上市公司分红，证监会刘主席发言：鼓励上市公司分红"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
         <TextView
             android:id="@+id/eventSource"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/assistText"
             android:paddingRight="25dp"
+            android:textColor="@color/assistText"
             android:textSize="@dimen/list_hint_size"
-            tool:text="中国财经网"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            tool:text="中国财经网"/>
+
         <TextView
             android:id="@+id/eventTime"
             android:layout_width="match_parent"
