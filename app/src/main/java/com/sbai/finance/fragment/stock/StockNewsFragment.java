@@ -13,10 +13,10 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.web.StockNewsActivity;
+import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.stock.CompanyAnnualReportModel;
+import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.model.stock.StockNewsModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -242,10 +242,19 @@ public class StockNewsFragment extends BaseFragment {
                 mEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), StockNewsActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, item.getTitle())
-                                .putExtra(WebActivity.EX_URL, item.getUrl())
-                                .execute();
+                        Client.getStockNewsInfo(item.getId())
+                                .setTag(TAG)
+                                .setCallback(new Callback2D<Resp<StockNewsInfoModel>, StockNewsInfoModel>() {
+                                    @Override
+                                    protected void onRespSuccessData(StockNewsInfoModel data) {
+                                        if (data != null) {
+                                            Launcher.with(getActivity(), EventDetailActivity.class)
+                                                    .putExtra(EventDetailActivity.EX_STOCK_NEWS, data)
+                                                    .execute();
+                                        }
+                                    }
+                                })
+                                .fire();
                     }
                 });
                 if (TextUtils.isEmpty(item.getFrom())) {
