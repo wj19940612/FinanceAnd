@@ -352,8 +352,8 @@
     <string name="intention_amount">￥%1$s元</string>
     <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
     <string name="ali_pay_hint_1">1.如果未打开支付宝或未完成付款,请点击“继续支付”。</string>
-    <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成付款”。</string>
-    <string name="ali_pay_hint_2">2.如果你已完成,请点击“已完成付款”。</string>
+    <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
+    <string name="ali_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
     <string name="complete_payment">已完成支付</string>
     <string name="continue_to_pay">继续支付</string>
     <string name="save_picture">保存图片</string>
