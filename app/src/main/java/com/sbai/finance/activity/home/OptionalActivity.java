@@ -98,9 +98,7 @@ public class OptionalActivity extends BaseActivity implements
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                 }
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    if (variety.getVarietyType().equalsIgnoreCase(Variety.STOCK_EXPONENT_SH)
-                            ||variety.getVarietyType().equalsIgnoreCase(Variety.STOCK_EXPONENT_SZ)
-                            ||variety.getVarietyType().equalsIgnoreCase(Variety.STOCK_EXPONENT_GE)){
+                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)){
                         Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }else{

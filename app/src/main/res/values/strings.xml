@@ -72,9 +72,9 @@
     <string name="quick_publish">快来发表你的观点吧!</string>
 
     <!--Stock-->
-    <string name="ShangHaiStockExchange">上证</string>
-    <string name="ShenzhenStockExchange">深证</string>
-    <string name="GrowthEnterpriseMarket">创业板</string>
+    <string name="ShangHaiStockExchange">上证指数</string>
+    <string name="ShenzhenStockExchange">深证指数</string>
+    <string name="GrowthEnterpriseMarket">创业板指</string>
 
 
     <!--help-->

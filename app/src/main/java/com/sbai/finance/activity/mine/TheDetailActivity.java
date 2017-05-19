@@ -44,7 +44,7 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
     private DetailAdapter mDetailAdapter;
     private List<Detail> mDetailList;
 
-    private int mPageSize = 15;
+    private int mPageSize = 20;
     private int mPageNo = 0;
 
     @Override

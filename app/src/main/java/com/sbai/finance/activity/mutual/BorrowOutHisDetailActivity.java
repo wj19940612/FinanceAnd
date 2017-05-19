@@ -159,7 +159,7 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
                     "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
         }
         mUserNameLand.setText(attentionSpannableString);
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(mConfirmTime)));
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(data.getConfirmTime())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
