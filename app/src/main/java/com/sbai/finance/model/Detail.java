@@ -21,6 +21,7 @@ public class Detail {
    private int id;
    private double money;
    private String remark;
+   private String platformName;
    private int type;
    private int typeDetail;
    private int userId;
@@ -55,6 +56,14 @@ public class Detail {
 
    public void setRemark(String remark) {
       this.remark = remark;
+   }
+
+   public String getPlatformName() {
+      return platformName;
+   }
+
+   public void setPlatformName(String platformName) {
+      this.platformName = platformName;
    }
 
    public int getType() {

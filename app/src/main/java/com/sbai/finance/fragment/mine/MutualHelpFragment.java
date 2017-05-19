@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.activity.mutual.BorrowInActivity;
+import com.sbai.finance.activity.mutual.BorrowOutActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -233,7 +233,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                     if (item.isLossEfficacy()) {
                         return;
                     }
-                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
+                    Launcher.with(getActivity(), BorrowOutActivity.class).execute();
                     break;
 
             }

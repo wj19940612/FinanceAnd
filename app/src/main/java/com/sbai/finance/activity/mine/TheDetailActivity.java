@@ -44,7 +44,7 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
     private DetailAdapter mDetailAdapter;
     private List<Detail> mDetailList;
 
-    private int mPageSize = 15;
+    private int mPageSize = 20;
     private int mPageNo = 0;
 
     @Override
@@ -217,10 +217,8 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
 
                 mPaymentTime.setText(DateUtil.getDetailFormatTime(detail.getCreateTime()));
 
-                String payType = detail.getType() == 2 ? "微信" : "支付宝";
-
                 mPaymentContent.setText(detail.getRemark());
-                mPaymentType.setText(payType);
+                mPaymentType.setText(detail.getPlatformName());
                 mPaymentNum.setText(String.valueOf(detail.getMoney()) + "元");
 
             }

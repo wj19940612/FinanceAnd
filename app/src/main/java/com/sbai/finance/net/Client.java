@@ -27,60 +27,7 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
-//<<<<<<< HEAD
-//
-//    /**
-//     * 股票除指数品种
-//     *
-//     * @param page
-//     * @param pageSize
-//     * @return
-//     */
-//    public static API getStockVariety(Integer page, Integer pageSize, String search) {
-//        return new API("/order/order/getStockVariety.do",
-//                new ApiParams()
-//                        .put("page", page)
-//                        .put("pageSize", pageSize)
-//                        .put("search", search));
-//    }
-//
-//    /**
-//     * 获取借款详情
-//     *
-//     * @param id
-//     * @return
-//     */
-//    public static API getBorrowMoneyDetail(int id) {
-//        return new API(POST, "/coterie/help/loan/showDetails.do",
-//                new ApiParams()
-//                        .put("id", id));
-//    }
-//
-//    /**
-//     * 给予帮助
-//     *
-//     * @param id
-//     * @return
-//     */
-//    public static API giveHelp(int id) {
-//        return new API(POST, "/coterie/help/loan/intention.do",
-//                new ApiParams()
-//                        .put("id", id));
-//    }
-//
-//    /**
-//     * 想要帮助他/我的人列表
-//     *
-//     * @param id
-//     * @return
-//     */
-//    public static API getWantHelpHimOrYouList(int id) {
-//        return new API(POST, "/coterie/help/loan/intentionCount.do",
-//                new ApiParams()
-//                        .put("id", id));
-//    }
-//=======
-//>>>>>>> dev
+
 
     /**
      * 股票除指数品种
@@ -1198,18 +1145,18 @@ public class Client {
                         .put("platform", platform));
     }
 
-	/**
-	 * 选择好心人
-	 *
-	 * @param id
-	 * @param selectedId
-	 * @return
-	 */
-	public static API chooseGoodPeople(int id, int selectedId) {
-	    return new API("/coterie/help/loan/selected.do",
-			    new ApiParams()
-					    .put("id", id)
-					    .put("selectedId", selectedId));
+    /**
+     * 选择好心人
+     *
+     * @param id
+     * @param selectedId
+     * @return
+     */
+    public static API chooseGoodPeople(int id, int selectedId) {
+        return new API("/coterie/help/loan/selected.do",
+                new ApiParams()
+                        .put("id", id)
+                        .put("selectedId", selectedId));
     }
 
     /**
@@ -1272,5 +1219,17 @@ public class Client {
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .put("type", type));
+    }
+
+    /**
+     * 接口名称 单个新闻
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/newsDetail.do
+     *
+     * @param id
+     * @return
+     */
+    public static API getStockNewsInfo(String id) {
+        return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
 }

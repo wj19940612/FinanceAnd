@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -144,6 +145,9 @@ public class FinanceFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
                     @Override
                     protected void onRespSuccessData(ArrayList<CompanyAnnualReportModel> data) {
+                        for (CompanyAnnualReportModel a : data) {
+                            Log.d("wangjie222", "onRespSuccessData: 财务 " + a.toString());
+                        }
                         updateCompanyAnnualReportList(data);
                     }
 

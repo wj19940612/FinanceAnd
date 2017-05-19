@@ -75,6 +75,10 @@ public class HistoryNewsModel implements Parcelable {
      * data : {"content":"第一次发表观点，这个品种一定涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！"}
      */
 
+    public boolean istheEarnestMoneyPaySuccess() {
+        return getType() == THE_EARNEST_MONEY_APY_SUCCESS;
+    }
+
     public boolean isAlreadyRead() {
         return getStatus() == 1;
     }
@@ -195,6 +199,8 @@ public class HistoryNewsModel implements Parcelable {
          */
 
         private String content;
+        private String money;
+        private String source;
 
         public String getContent() {
             return content;
@@ -208,6 +214,21 @@ public class HistoryNewsModel implements Parcelable {
 
         }
 
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
 
         @Override
         public int describeContents() {
@@ -234,6 +255,15 @@ public class HistoryNewsModel implements Parcelable {
                 return new DataBean[size];
             }
         };
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "content='" + content + '\'' +
+                    ", money=" + money +
+                    ", source='" + source + '\'' +
+                    '}';
+        }
     }
 
     /**

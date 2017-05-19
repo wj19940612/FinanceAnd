@@ -14,6 +14,7 @@ public class Variety implements Parcelable {
     public static final String STOCK_EXPONENT_SH = "1A0001";
     public static final String STOCK_EXPONENT_GE = "399006";
     public static final String STOCK_EXPONENT_SZ = "399001";
+    public static final String STOCK_EXPONENT="exponent";
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
 
