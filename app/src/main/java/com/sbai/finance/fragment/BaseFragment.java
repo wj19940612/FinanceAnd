@@ -26,14 +26,12 @@ public class BaseFragment extends Fragment implements
 
     @Override
     public void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
         MobclickAgent.onPageEnd(TAG);
     }
 
     @Override
     public void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
         MobclickAgent.onPageStart(TAG);
     }
