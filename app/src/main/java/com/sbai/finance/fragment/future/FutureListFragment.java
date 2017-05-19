@@ -117,7 +117,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onResume() {
         super.onResume();
         Netty.get().addHandler(mNettyHandler);
-        reset();
+        //reset();
         requestVarietyList();
     }
 

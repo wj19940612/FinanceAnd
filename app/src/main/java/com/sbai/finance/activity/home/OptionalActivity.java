@@ -40,6 +40,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -64,6 +65,7 @@ public class OptionalActivity extends BaseActivity implements
     private SlideListAdapter mSlideListAdapter;
     private int mPage = 0;
     private int mPageSize = 15;
+    private HashSet<String> mSet;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,12 +75,13 @@ public class OptionalActivity extends BaseActivity implements
     }
 
     private void initView() {
+        mSet = new HashSet<>();
         mVarietyTitle.setVisibility(View.GONE);
         mSlideListAdapter = new SlideListAdapter(this);
         mSlideListAdapter.setOnDelClickListener(new SlideListAdapter.OnDelClickListener() {
             @Override
             public void onClick(final int position) {
-                requestDelOptionalData(mSlideListAdapter.getItem(position).getVarietyId());
+                requestDelOptionalData(mSlideListAdapter.getItem(position));
             }
         });
         mListView.setEmptyView(mEmpty);
@@ -130,13 +133,19 @@ public class OptionalActivity extends BaseActivity implements
                 }).fireSync();
     }
 
-    private void requestDelOptionalData(Integer varietyId) {
-        Client.delOptional(varietyId).setTag(TAG)
+    private void requestDelOptionalData(final Variety variety) {
+        Client.delOptional(variety.getVarietyId()).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            requestOptionalData();
+                              mSlideListAdapter.remove(variety);
+                              mSlideListAdapter.notifyDataSetChanged();
+                              if (mSlideListAdapter.getCount()==0){
+                                  mVarietyTitle.setVisibility(View.GONE);
+                              }
+//                            reset();
+//                            requestOptionalData();
                         } else {
                             ToastUtil.curt(resp.getMsg());
                             stopRefreshAnimation();
@@ -183,7 +192,17 @@ public class OptionalActivity extends BaseActivity implements
             mVarietyTitle.setVisibility(View.VISIBLE);
         }
         stopRefreshAnimation();
-        mSlideListAdapter.addAll(data);
+        for (Variety variety:data){
+            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+                if (mSet.add(variety.getVarietyType())){
+                    mSlideListAdapter.add(variety);
+                }
+            }else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+                if (mSet.add(variety.getContractsCode())){
+                    mSlideListAdapter.add(variety);
+                }
+            }
+        }
         if (data.size() < mPageSize) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
@@ -223,6 +242,7 @@ public class OptionalActivity extends BaseActivity implements
 
     private void reset() {
         mPage = 0;
+        mSet.clear();
         mSlideListAdapter.clear();
         mVarietyTitle.setVisibility(View.GONE);
         mSwipeRefreshLayout.setLoadMoreEnable(true);
