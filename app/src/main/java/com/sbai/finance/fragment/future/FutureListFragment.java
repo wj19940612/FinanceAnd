@@ -34,6 +34,7 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,6 +60,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     private String mFutureType;
     private int mPage;
+    private HashSet<String> mSet;
 
     public static FutureListFragment newInstance(String type) {
         FutureListFragment futureListFragment = new FutureListFragment();
@@ -88,7 +90,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPage = 0;
-
+        mSet = new HashSet<>();
         initView();
     }
 
@@ -170,7 +172,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     private void updateFutureData(List<Variety> varietyList) {
         stopRefreshAnimation();
-        mFutureListAdapter.addAll(varietyList);
+        for (Variety variety:varietyList){
+            if (mSet.add(variety.getContractsCode())){
+                mFutureListAdapter.add(variety);
+            }
+        }
         if (varietyList.size() < 15) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
@@ -231,6 +237,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     private void reset() {
         mPage = 0;
+        mSet.clear();
         mFutureListAdapter.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }

@@ -10,6 +10,7 @@ import android.os.Parcelable;
 public class BorrowIn implements Parcelable {
     public static final int STATUS_NO_CHECK=1;
     public static final int STATUS_CHECKED=3;
+    public static final int STATUS_ACCEPTY=5;
     /**
      * content : 测试借款
      * contentImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773198.png,https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773530.png,https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773621.png,https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493363773636.png,
