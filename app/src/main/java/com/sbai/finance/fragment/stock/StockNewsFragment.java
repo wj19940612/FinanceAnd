@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.web.StockNewsActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.stock.CompanyAnnualReportModel;
 import com.sbai.finance.model.stock.StockNewsModel;
@@ -241,7 +242,7 @@ public class StockNewsFragment extends BaseFragment {
                 mEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WebActivity.class)
+                        Launcher.with(getActivity(), StockNewsActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, item.getTitle())
                                 .putExtra(WebActivity.EX_URL, item.getUrl())
                                 .execute();
