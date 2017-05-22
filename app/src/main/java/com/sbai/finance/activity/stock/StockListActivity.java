@@ -244,19 +244,19 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
             variety = (Variety) mShangHai.getTag();
             if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getStock_code())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + " " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShangHai.setText(spannableString);
             }
             variety = (Variety) mShenZhen.getTag();
             if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getStock_code())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + " " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShenZhen.setText(spannableString);
             }
             variety = (Variety) mBoard.getTag();
             if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getStock_code())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + " " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mBoard.setText(spannableString);
             }
         }
