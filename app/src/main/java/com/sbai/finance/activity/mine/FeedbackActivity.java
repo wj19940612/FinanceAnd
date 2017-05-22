@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.EmojiFilter;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
@@ -94,6 +96,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initViews() {
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new EmojiFilter();
+        mCommentContent.setFilters(filters);
         mFeedbackList = new ArrayList<>();
         mFeedbackAdapter = new FeedbackAdapter(this, mFeedbackList);
         mListView.setAdapter(mFeedbackAdapter);
@@ -128,6 +133,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             return;
         }
 
+        stopRefreshAnimation();
         if (data.size() < mPageSize) {
             mLoadMoreEnable = false;
             mSwipeRefreshLayout.setEnabled(false);
@@ -468,7 +474,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
             private ImageView createImageview(Context context) {
                 ImageView image = new ImageView(context);
-                image.setScaleType(ImageView.ScaleType.FIT_XY);
+                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
                 int margin = (int) Display.dp2Px(5.0f, context.getResources());

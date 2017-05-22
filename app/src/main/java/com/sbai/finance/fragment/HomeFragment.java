@@ -213,9 +213,7 @@ public class HomeFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
-                        if (resp.getData()!=null) {
                             updateEventInfo(resp.getData());
-                        }
                     }
                 }).fire();
         //获取主题信息

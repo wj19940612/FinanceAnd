@@ -2,10 +2,9 @@ package com.sbai.finance.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -44,6 +43,7 @@ public class GlideThumbTransform extends BitmapTransformation {
         //最终得到的宽高
         int width = (int) (source.getWidth() / scale);
         int height = (int) (source.getHeight() / scale);
+
         //从BitmapPool中尝试获取bitmap
         Bitmap result = pool.get(width, height, Bitmap.Config.ARGB_8888);
         if (result == null) {
@@ -52,10 +52,12 @@ public class GlideThumbTransform extends BitmapTransformation {
 
         Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
-        paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-        paint.setAntiAlias(true);
-        RectF rectF = new RectF(0f, 0f, width, height);
-        canvas.drawRect(rectF, paint);
+        Matrix matrix = new Matrix();
+        //左乘
+        matrix.preScale(1 / scale, 1 / scale);
+        Bitmap newBitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, false);
+        canvas.drawBitmap(newBitmap, 0f, 0f, paint);
+
         return result;
 
     }
