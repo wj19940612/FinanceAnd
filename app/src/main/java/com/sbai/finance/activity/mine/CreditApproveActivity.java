@@ -8,7 +8,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -29,8 +29,6 @@ import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.utils.ValidityDecideUtil;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +57,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     AppCompatTextView mSubmit;
 
     private boolean mEnable;
-    private ArrayList<String> mImagePath;
+    private SparseArray<String> mImagePath;
     private UserIdentityCardInfo mUserIdentityCardInfo;
 
     @Override
@@ -67,7 +65,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_approve);
         ButterKnife.bind(this);
-        mImagePath = new ArrayList<>();
+        mImagePath = new SparseArray<>();
         requestUserCreditApproveStatus();
         mRealNameInput.addTextChangedListener(mValidationWatcher);
         mIdentityCardNumber.addTextChangedListener(mIdentityCardApproveWatcher);
@@ -253,7 +251,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     }
 
     private void submitUserCreditApprove(final String realName, String identityCard) {
-        if (!mImagePath.isEmpty() && mImagePath.size() > 1) {
+        if (mImagePath.size() > 1) {
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
             String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
             Client.submitUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
@@ -282,9 +280,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     @Override
     public void onImagePath(int index, String imagePath) {
         hideErrorView();
-        Log.d("wangjie222", "onImagePath: " + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            mImagePath.add(index, imagePath);
+            mImagePath.append(index, imagePath);
             if (index == IDENTITY_CARD_FONT) {
                 loadIdentityCardFontImage(imagePath);
             } else if (index == IDENTITY_CARD_REVERSE) {
