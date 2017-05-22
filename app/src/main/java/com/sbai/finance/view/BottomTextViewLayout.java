@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -106,7 +107,18 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
     }
 
     public void setInfoText(CharSequence infoText) {
-        mInfoTextView.setText(infoText);
+        if (TextUtils.isEmpty(infoText)) {
+            mInfoTextView.setText("—");
+        } else {
+            infoText = infoText.toString().trim().replaceAll(" ","");
+            if (TextUtils.isEmpty(infoText)) {
+                mInfoTextView.setText("—");
+            } else {
+                mInfoTextView.setText(infoText);
+            }
+        }
+
+
     }
 
     public void setInfoText(int infoTextResId) {

@@ -115,7 +115,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-            mStockSortAdapter.clear();
+//            mStockSortAdapter.clear();
             mStockSortAdapter.addAll(data);
         }
     }
@@ -169,13 +169,25 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
         public void addAll(List<StockData> datas) {
             mStockDataArrayList.addAll(datas);
-            notifyItemRangeChanged(0,datas.size());
+            //先显示10个
+//            notifyItemRangeChanged(0,datas.size());
+            if (mStockDataArrayList != null && !mStockDataArrayList.isEmpty()) {
+                if (mStockDataArrayList.size() > 9) {
+                    notifyItemRangeChanged(0, 10);
+                } else {
+                    notifyItemRangeChanged(0, mStockDataArrayList.size());
+                }
+            }
         }
 
-        public void clear() {
-            mStockDataArrayList.clear();
-            notifyItemRangeRemoved(0, mStockDataArrayList.size());
-        }
+//        public void clear() {
+//            mStockDataArrayList.clear();
+////            notifyItemRangeRemoved(0, mStockDataArrayList.size());
+//            if(mStockDataArrayList.isEmpty()){
+//
+//                notifyItemRangeRemoved(0, 10);
+//            }
+//        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -185,12 +197,21 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            if (mStockDataArrayList.isEmpty()) return;
             holder.bindDataWithView(mStockDataArrayList.get(position), position, mContext);
         }
 
         @Override
         public int getItemCount() {
-            return mStockDataArrayList != null ? mStockDataArrayList.size() : 0;
+//            return mStockDataArrayList != null ? mStockDataArrayList.size() : 0;
+            if (mStockDataArrayList != null) {
+                if (mStockDataArrayList.size() > 9) {
+                    return 10;
+                } else {
+                    return mStockDataArrayList.size();
+                }
+            }
+            return 0;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

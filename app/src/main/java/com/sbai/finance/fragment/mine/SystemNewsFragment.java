@@ -327,7 +327,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 //
 //                //   30.意向金支付成功
 //                public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
-                Log.d("wangjie ", "bindViewWithData: "+item.toString());
+                Log.d("wangjie ", "bindViewWithData: " + item.toString());
                 switch (item.getType()) {
                     //借款单审核未通过
                     case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
@@ -365,7 +365,12 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                 }
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
-                mContent.setText(item.getMsg());
+                if (item.istheEarnestMoneyPaySuccess() && item.getData() != null) {
+                    mContent.setText(context.getString(R.string.pay_count, item.getData().getMoney() + " \n" +
+                            context.getString(R.string.pay_source, item.getData().getSource())));
+                } else {
+                    mContent.setText(item.getMsg());
+                }
             }
         }
     }
