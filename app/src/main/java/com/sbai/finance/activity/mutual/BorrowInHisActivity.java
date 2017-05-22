@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -240,6 +241,8 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
             TextView mAlreadyRepay;
             @BindView(R.id.call)
             TextView mCall;
+            @BindView(R.id.userInfo)
+            RelativeLayout mUserInfo;
             ViewHolder(View view){
                 ButterKnife.bind(this, view);
             }
@@ -272,7 +275,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                 }
                 switch (item.getStatus()){
                     case BorrowInHis.STATUS_FAIL_CHECK:
-                        mUserPortrait.setVisibility(View.GONE);
+                        mUserInfo.setVisibility(View.GONE);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.borrow_failure),
                                 " "+context.getString(R.string.not_allow),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
@@ -284,7 +287,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                     case BorrowInHis.STATUS_TIMEOUT:
                     case BorrowInHis.STATUS_CANCEL:
                     case BorrowInHis.STATUS_NO_CHOICE:
-                        mUserPortrait.setVisibility(View.GONE);
+                        mUserInfo.setVisibility(View.GONE);
                         attentionSpannableString = StrUtil.mergeTextWithRatioColor(context.getString(R.string.borrow_failure),
                                 " "+item.getFailMsg(),1.0f,ContextCompat.getColor(context,R.color.redPrimary));
                         mUserNameLand.setText(attentionSpannableString);
@@ -293,7 +296,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_SUCCESS:case BorrowInHis.STATUS_PAY_INTENTION:
-                        mUserPortrait.setVisibility(View.VISIBLE);
+                        mUserInfo.setVisibility(View.VISIBLE);
                         Glide.with(context).load(item.getPortrait())
                                 .bitmapTransform(new GlideCircleTransform(context))
                                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
@@ -307,7 +310,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mSuccess.setVisibility(View.VISIBLE);
                         break;
                     case BorrowInHis.STATUS_ALREADY_REPAY:
-                        mUserPortrait.setVisibility(View.VISIBLE);
+                        mUserInfo.setVisibility(View.VISIBLE);
                         Glide.with(context).load(item.getPortrait())
                                 .bitmapTransform(new GlideCircleTransform(context))
                                 .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
