@@ -3,14 +3,10 @@ package com.sbai.finance.fragment.stock;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +64,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
         if (getArguments() != null) {
             mSortType = getArguments().getInt(KEY_SORT_TYPE);
             mStockType = getArguments().getInt(KEY_STOCK_TYPE);
-            Log.d(TAG, "onCreate: " + mSortType + " s " + mStockType);
         }
     }
 
@@ -146,17 +141,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
         requestStockSortList();
     }
 
-    private void initEmptyView() {
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        mEmpty = new AppCompatTextView(getActivity());
-        mEmpty.setPadding(0, padding, 0, 0);
-        mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
-        mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
-        mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        mEmpty.setCompoundDrawablePadding(padding);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
-    }
-
     class StockSortAdapter extends RecyclerView.Adapter<StockSortAdapter.ViewHolder> {
 
         Context mContext;
@@ -168,16 +152,10 @@ public class PriceLimitRankingFragment extends BaseFragment {
         }
 
         public void addAll(List<StockData> datas) {
+            mStockDataArrayList.clear();
             mStockDataArrayList.addAll(datas);
             //先显示10个
-//            notifyItemRangeChanged(0,datas.size());
-            if (mStockDataArrayList != null && !mStockDataArrayList.isEmpty()) {
-                if (mStockDataArrayList.size() > 9) {
-                    notifyItemRangeChanged(0, 10);
-                } else {
-                    notifyItemRangeChanged(0, mStockDataArrayList.size());
-                }
-            }
+            notifyItemRangeChanged(0, datas.size());
         }
 
 //        public void clear() {
@@ -203,15 +181,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-//            return mStockDataArrayList != null ? mStockDataArrayList.size() : 0;
-            if (mStockDataArrayList != null) {
-                if (mStockDataArrayList.size() > 9) {
-                    return 10;
-                } else {
-                    return mStockDataArrayList.size();
-                }
-            }
-            return 0;
+            return mStockDataArrayList != null ? mStockDataArrayList.size() : 0;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
