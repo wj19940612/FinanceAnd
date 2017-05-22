@@ -226,7 +226,7 @@ public class BorrowInDetailsActivity extends BaseActivity {
         mImageGridAdapter.notifyDataSetChanged();
     }
     private void loadImage(String src,ImageView image){
-        Glide.with(this).load(src).placeholder(R.drawable.help).into(image);
+        Glide.with(this).load(src).placeholder(R.drawable.ic_loading_pic).into(image);
     }
     private void launcherImageView(int index){
         Launcher.with(getActivity(), ContentImgActivity.class)

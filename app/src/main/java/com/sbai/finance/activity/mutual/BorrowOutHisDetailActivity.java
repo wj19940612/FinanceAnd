@@ -254,9 +254,8 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
         }
     }
     private void loadImage(String src,ImageView image){
-        Glide.with(this).load(src).placeholder(R.drawable.help).into(image);
+        Glide.with(this).load(src).placeholder(R.drawable.ic_loading_pic).into(image);
     }
-
     private void updateHelperData(List<BorrowHelper> data) {
         mImageGridAdapter.clear();
         if (data.size()>mMax){
