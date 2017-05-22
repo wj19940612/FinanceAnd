@@ -114,9 +114,9 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
                 break;
 
             case MotionEvent.ACTION_UP:
-                if (canLoad()) {
-                    loadData();
-                }
+//                if (canLoad()) {
+//                    loadData();
+//                }
                 break;
 
             default:
@@ -154,7 +154,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private void loadData() {
-        if (mOnLoadMoreListener != null&&loadMoreEnable) {
+        if (mOnLoadMoreListener != null && loadMoreEnable) {
             setLoading(true);
             mOnLoadMoreListener.onLoadMore();
         }
@@ -201,7 +201,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
         mVisibleItemCount = visibleItemCount;
         mTotalItemCount = totalItemCount;
-        if (visibleItemCount < totalItemCount && enableBottomLoad()) {
+        if (visibleItemCount < totalItemCount && canLoad()) {
             loadData();
         }
     }

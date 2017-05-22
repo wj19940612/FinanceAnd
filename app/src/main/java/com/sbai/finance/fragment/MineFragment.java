@@ -122,6 +122,7 @@ public class MineFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded() && LocalUser.getUser().isLogin()) {
             requestNoReadNewsNumber();
+            requestNoReadFeedbackNumber();
             requestUserAttentionAndroidFansNumber();
         }
     }
@@ -174,8 +175,9 @@ public class MineFragment extends BaseFragment {
 
     private void updateNoReadFeedbackCount(int count) {
         if (count != 0) {
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
-                    " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
+            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
+                            + (count > 99 ? getString(R.string.number99) : count )+ " ",
+                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
                     , getString(R.string.item));
             mFeedBack.setSubText(attentionSpannableString);
         } else {
