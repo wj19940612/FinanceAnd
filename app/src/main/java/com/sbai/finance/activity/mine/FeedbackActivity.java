@@ -133,6 +133,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             return;
         }
 
+        stopRefreshAnimation();
         if (data.size() < mPageSize) {
             mLoadMoreEnable = false;
             mSwipeRefreshLayout.setEnabled(false);
@@ -473,7 +474,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
             private ImageView createImageview(Context context) {
                 ImageView image = new ImageView(context);
-                image.setScaleType(ImageView.ScaleType.FIT_XY);
+                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
                 int margin = (int) Display.dp2Px(5.0f, context.getResources());

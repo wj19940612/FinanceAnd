@@ -282,6 +282,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     @Override
     public void onImagePath(int index, String imagePath) {
         hideErrorView();
+        Log.d("wangjie222", "onImagePath: " + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
             mImagePath.add(index, imagePath);
             if (index == IDENTITY_CARD_FONT) {
