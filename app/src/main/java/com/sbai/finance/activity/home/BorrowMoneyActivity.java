@@ -404,7 +404,8 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			private void loadImage(Context context, String src, ImageView image) {
 				Glide.with(context)
 						.load(src)
-						.thumbnail(0.1f)
+						.placeholder(R.drawable.img_loading)
+						.error(R.drawable.logo_login)
 						.into(image);
 			}
 

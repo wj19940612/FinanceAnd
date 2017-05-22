@@ -611,7 +611,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			private void loadImage(Context context, String src, ImageView image) {
 				Glide.with(context)
 						.load(src)
-						.thumbnail(0.1f)
+						.placeholder(R.drawable.img_loading)
+						.error(R.drawable.logo_login)
 						.into(image);
 			}
 

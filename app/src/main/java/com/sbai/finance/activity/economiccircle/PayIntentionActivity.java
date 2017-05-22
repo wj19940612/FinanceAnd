@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -24,6 +23,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +37,14 @@ public class PayIntentionActivity extends BaseActivity {
 	@BindView(R.id.intentionAmount)
 	TextView mIntentionAmount;
 	@BindView(android.R.id.list)
-	ListView mListView;
+	MyListView mListView;
 	@BindView(R.id.payIntention)
 	TextView mPayIntention;
 
 	private double mAmount;
 	private int mDataId;
 	private int mUserId;
+	private static int mType;
 	private static String mPlatform;
 	private String mPaymentPath;
 	private List<UsablePlatform> mUsablePlatformList;
@@ -157,6 +158,7 @@ public class PayIntentionActivity extends BaseActivity {
 				if (checked == position) {
 					mCheckbox.setBackgroundResource(R.drawable.ic_checkbox_checked);
 					mPlatform = item.getPlatform();
+					mType = item.getType();
 				} else {
 					mCheckbox.setBackgroundResource(R.drawable.ic_checkbox);
 				}
@@ -171,7 +173,7 @@ public class PayIntentionActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccessData(PaymentPath paymentPath) {
 						mPaymentPath = paymentPath.getCodeUrl();
-						if ("qtalipay".equals(mPlatform)) {
+						if (mType == 1) {
 							Launcher.with(getActivity(), AliPayActivity.class)
 									.putExtra(Launcher.EX_PAYLOAD, mPlatform)
 									.putExtra(Launcher.EX_PAYLOAD_1, mDataId)
@@ -182,7 +184,7 @@ public class PayIntentionActivity extends BaseActivity {
 							Uri content_url = Uri.parse(mPaymentPath);
 							intent.setData(content_url);
 							startActivity(intent);
-						} else if("qtwxscan".equals(mPlatform)) {
+						} else if(mType == 2) {
 							Launcher.with(getActivity(), WeChatPayActivity.class)
 									.putExtra(Launcher.EX_PAYLOAD, mPaymentPath)
 									.putExtra(Launcher.EX_PAYLOAD_1, mDataId)
