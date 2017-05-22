@@ -8,12 +8,25 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.httplib.ApiIndeterminate;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseFragment extends Fragment implements
         ApiIndeterminate, TimerHandler.TimerCallback {
 
     private TimerHandler mTimerHandler;
     protected String TAG;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(TAG);
+    }
 
     @Override
     public void onAttach(Context context) {

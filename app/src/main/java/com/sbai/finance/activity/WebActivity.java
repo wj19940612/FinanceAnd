@@ -21,9 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -259,6 +259,8 @@ public class WebActivity extends BaseActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            //友盟统计
+            MobclickAgent.onPageStart(url);
             if (mLoadSuccess) {
                 mWebView.setVisibility(View.VISIBLE);
                 mErrorPage.setVisibility(View.GONE);
