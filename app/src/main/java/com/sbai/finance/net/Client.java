@@ -1165,10 +1165,11 @@ public class Client {
      * @param orderId
      * @return
      */
-    public static API paymentQuery(int orderId) {
+    public static API paymentQuery(int orderId, String platform) {
         return new API("/user/userpay/confirmPay.do",
                 new ApiParams()
-                        .put("orderId", orderId));
+                        .put("orderId", orderId)
+                        .put("platform", platform));
     }
 
 //    /**

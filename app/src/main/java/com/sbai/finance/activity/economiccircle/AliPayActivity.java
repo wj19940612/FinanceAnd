@@ -68,7 +68,7 @@ public class AliPayActivity extends BaseActivity {
 						}).fire();
 				break;
 			case R.id.completePayment:
-				Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
+				Client.paymentQuery(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
 						.setCallback(new Callback<Resp<JsonPrimitive>>() {
 							@Override
 							protected void onRespSuccess(Resp<JsonPrimitive> resp) {

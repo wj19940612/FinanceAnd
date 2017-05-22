@@ -188,6 +188,7 @@ public class PayIntentionActivity extends BaseActivity {
 							Launcher.with(getActivity(), WeChatPayActivity.class)
 									.putExtra(Launcher.EX_PAYLOAD, mPaymentPath)
 									.putExtra(Launcher.EX_PAYLOAD_1, mDataId)
+									.putExtra(Launcher.EX_PAYLOAD_2, mPlatform)
 									.execute();
 						}
 					}
