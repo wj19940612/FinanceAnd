@@ -12,21 +12,27 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.net.stock.StockCallback;
+import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,7 +51,7 @@ public class TopicActivity extends BaseActivity {
 	@BindView(R.id.empty)
 	TextView mEmpty;
 
-	private FutureListFragment.FutureListAdapter mTopicListAdapter;
+	private OptionalActivity.SlideListAdapter mTopicListAdapter;
 	private Topic mTopic;
 
 	@Override
@@ -67,7 +73,7 @@ public class TopicActivity extends BaseActivity {
 		mTitle.setTitle(mTopic.getTitle());
 		mTopicTitle.setText(mTopic.getIntroduction());
 
-		mTopicListAdapter = new FutureListFragment.FutureListAdapter(this);
+		mTopicListAdapter = new OptionalActivity.SlideListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mTopicListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,8 +85,13 @@ public class TopicActivity extends BaseActivity {
 							.putExtra(Launcher.EX_PAYLOAD, variety).execute();
 				}
 				if (variety != null&&variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-					Launcher.with(getActivity(), StockTradeActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, variety).execute();
+					if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)){
+						Launcher.with(getActivity(), StockIndexActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, variety).execute();
+					}else{
+						Launcher.with(getActivity(), StockDetailActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, variety).execute();
+					}
 				}
 			}
 		});
@@ -103,37 +114,54 @@ public class TopicActivity extends BaseActivity {
 	}
 
 	private void updateTopicInfo(List<Variety> subjectLists) {
-		StringBuilder codes = new StringBuilder();
 		mTopicListAdapter.clear();
 		mTopicListAdapter.addAll(subjectLists);
 		mTopicListAdapter.notifyDataSetChanged();
-		for (Variety variety:subjectLists){
-			codes.append(variety.getContractsCode()).append(",");
-		}
-		String codesWithSplit = codes.toString();
-		if (codesWithSplit.endsWith(",")){
-			String code = codes.toString().substring(0,codesWithSplit.length()-1);
-			requestQuotaList(code);
-		}
 
+		List<Variety> futures = new ArrayList<>();
+		List<Variety> stocks = new ArrayList<>();
+		for (Variety variety:subjectLists) {
+			if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
+				futures.add(variety);
+			} else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
+				stocks.add(variety);
+			}
+		}
+		requestFutureMarketData(futures);
+		requestStockMarketData(stocks);
 	}
-	private void requestQuotaList(String codes){
-          Client.getQuotaList(codes).setTag(TAG)
-				  .setCallback(new Callback2D<Resp<List<FutureData>>,List<FutureData>>() {
-					  @Override
-					  protected void onRespSuccessData(List<FutureData> data) {
-						  updateQuota(data);
-					  }
-				  }).fire();
-	}
-
-    private void updateQuota(List<FutureData> futureDatas){
-		for (FutureData data:futureDatas){
-			mTopicListAdapter.addFutureData(data);
-			updateListViewVisibleItem(data);
+	private void requestStockMarketData(List<Variety> data) {
+		if (data == null || data.isEmpty()) return;
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Variety variety : data) {
+			stringBuilder.append(variety.getVarietyType()).append(",");
 		}
-		mTopicListAdapter.notifyDataSetChanged();
-
+		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+		Client.getStockMarketData(stringBuilder.toString())
+				.setCallback(new StockCallback<StockResp, List<StockData>>() {
+					@Override
+					public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+						if (result!=null){
+							mTopicListAdapter.addStockData(result);
+						}
+					}
+				}).fireSync();
+	}
+	private void requestFutureMarketData(List<Variety> data) {
+		if (data == null || data.isEmpty()) return;
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Variety variety : data) {
+			stringBuilder.append(variety.getContractsCode()).append(",");
+		}
+		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+		Client.getFutureMarketData(stringBuilder.toString()).setTag(TAG)
+				.setCallback(new Callback2D<Resp<List<FutureData>>,List<FutureData>>() {
+					@Override
+					protected void onRespSuccessData(List<FutureData> data) {
+						mTopicListAdapter.addFutureData(data);
+					}
+				})
+				.fireSync();
 	}
 	private void updateListViewVisibleItem(FutureData data) {
 		if (mListView != null && mTopicListAdapter != null) {

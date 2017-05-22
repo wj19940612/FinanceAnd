@@ -6,8 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
@@ -59,17 +62,27 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         setGravity(mViewGravity);
         mHeadLineTextView = new AppCompatTextView(getContext());
         mHeadLineTextView.setMinWidth((int) Display.dp2Px(mHeadLineMinWidth, getResources()));
-        mHeadLineTextView.setPadding(pxTodp(padding), 0, pxTodp(mHeadLinePaddingRight), (int) Display.dp2Px(25f, getResources()));
+        mHeadLineTextView.setMinHeight(50);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 0, (int) Display.dp2Px(25f, getResources()));
+        mHeadLineTextView.setPadding(pxTodp(padding), 0, pxTodp(mHeadLinePaddingRight), 0);
         mHeadLineTextView.setText(mHeadLineText);
         mHeadLineTextView.setTextSize(mHeadLineTextSize);
         mHeadLineTextView.setTextColor(mHeadLineTextColor);
+        mHeadLineTextView.setLayoutParams(layoutParams);
         addView(mHeadLineTextView, 0);
         mInfoTextView = new AppCompatTextView(getContext());
         mInfoTextView.setText(mInfoText);
+        mInfoTextView.setMinHeight(50);
         mInfoTextView.setPadding(pxTodp(padding), 0, pxTodp(padding), (int) Display.dp2Px(25f, getResources()));
+        LinearLayout.LayoutParams infoLayouts = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        infoLayouts.setMargins(0, 0, 0, (int) Display.dp2Px(25f, getResources()));
+        layoutParams.setMargins(0, 0, 0, 0);
+        mInfoTextView.setLayoutParams(infoLayouts);
         mInfoTextView.setTextColor(mInfoTextColor);
         mInfoTextView.setTextSize(mInfoTextSize);
-        mInfoTextView.setLineSpacing(mInfoTextLineSpacingExtra,1);
+        mInfoTextView.setLineSpacing(mInfoTextLineSpacingExtra, 1);
+        mInfoTextView.setText("-");
         addView(mInfoTextView, 1);
 
     }
@@ -94,7 +107,18 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
     }
 
     public void setInfoText(CharSequence infoText) {
-        mInfoTextView.setText(infoText);
+        if (TextUtils.isEmpty(infoText)) {
+            mInfoTextView.setText("—");
+        } else {
+            infoText = infoText.toString().trim().replaceAll(" ","");
+            if (TextUtils.isEmpty(infoText)) {
+                mInfoTextView.setText("—");
+            } else {
+                mInfoTextView.setText(infoText);
+            }
+        }
+
+
     }
 
     public void setInfoText(int infoTextResId) {

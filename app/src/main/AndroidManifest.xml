@@ -156,7 +156,6 @@
         <activity
             android:name=".activity.mine.CreditActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
@@ -177,6 +176,10 @@
         <activity
             android:name=".activity.web.EventDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.StockNewsActivity"
+            android:screenOrientation="portrait"/>
+
 
         <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
         </activity>
@@ -192,7 +195,6 @@
         <activity
             android:name=".activity.mine.TheDetailActivity"
             android:screenOrientation="portrait"/>
-
 
         <!-- 选择相册图片 -->
         <activity
@@ -210,7 +212,7 @@
         <activity android:name=".activity.economiccircle.AliPayActivity">
         </activity>
 
-        <!--      service       -->
+        <!-- service -->
         <service android:name=".service.PushIntentService"/>
         <service
             android:name=".service.PushService"

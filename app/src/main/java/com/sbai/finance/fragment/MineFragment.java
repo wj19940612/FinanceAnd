@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.AttentionActivity;
 import com.sbai.finance.activity.mine.FansActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
@@ -56,7 +57,7 @@ public class MineFragment extends BaseFragment {
     private static final int REQ_CODE_NEW_NEWS = 18;
     private static final int REQ_CODE_FANS_PAGE = 322;
     private static final int REQ_CODE_ATTENTION_PAGE = 4555;
-
+    private static final String ABOUT_US = "http://fanli.esongbai.xyz/mobi/user/about/about?nohead=1";
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
     @BindView(R.id.userName)
@@ -143,8 +144,9 @@ public class MineFragment extends BaseFragment {
                             count = count + notReadMessageNumberData.getCount();
                         }
                         if (count != 0) {
-                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message),
-                                    " " + count + " ", ContextCompat.getColor(getActivity(), R.color.redPrimary)
+                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
+                                            + (count > 99 ? getString(R.string.number99) : count )+ " ",
+                                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
                                     , getString(R.string.item));
                             mNews.setSubText(attentionSpannableString);
                         } else {
@@ -272,7 +274,9 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), SettingActivity.class).execute();
                 break;
             case R.id.aboutUs:
-//                Launcher.with(getActivity(), UserDataActivity.class).execute();
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, ABOUT_US)
+                        .execute();
                 break;
             case R.id.detail:
                 if (LocalUser.getUser().isLogin()) {

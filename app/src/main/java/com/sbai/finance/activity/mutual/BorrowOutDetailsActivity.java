@@ -145,6 +145,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     private void launcherWantHelpHer(int loadId){
         Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD,loadId)
+                .putExtra(Launcher.EX_PAYLOAD_1,mBorrowDetails.getSex())
                 .execute();
     }
     private void updateBorrowDetailData(BorrowDetails data){
@@ -158,7 +159,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         }else{
             mHelperAmount.setText(getActivity().getString(R.string.helper_his,mBorrowDetails.getIntentionCount()));
         }
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(mIntentionTime)));
+        mPublishTime.setText(this.getString(R.string.intention_time, DateUtil.getFormatTime(mIntentionTime)));
         mNeedAmount.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getMoney())));
         mBorrowTime.setText(this.getString(R.string.day,String.valueOf(mBorrowDetails.getDays())));
         mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getInterest())));
@@ -178,7 +179,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         }
         mUserNameLand.setText(attentionSpannableString);
         mEndLineTime.setText(DateUtil.compareTime(mBorrowDetails.getEndlineTime()));
-        if (mBorrowDetails.getContentImg().isEmpty()){
+        if (mBorrowDetails.getContentImg()==null){
             mBorrowDetails.setContentImg("");
         }
         String[] images = mBorrowDetails.getContentImg().split(",");

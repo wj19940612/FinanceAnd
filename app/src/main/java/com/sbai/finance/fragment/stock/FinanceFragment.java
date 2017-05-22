@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.CompanyIntroActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -33,7 +31,6 @@ import com.sbai.finance.view.IconTextRow;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,7 +79,6 @@ public class FinanceFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mStockCode = getArguments().getString(KEY_STOCK_CODE);
-            Log.d(TAG, "onCreate: 股票代码 " + mStockCode);
         }
     }
 
@@ -99,7 +95,7 @@ public class FinanceFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
         mCompanyAnnualReportModels = new ArrayList<>();
-        mCompanyFinanceAdapter = new CompanyFinanceAdapter(R.layout.row_stock_company_finance, mCompanyAnnualReportModels);
+        mCompanyFinanceAdapter = new CompanyFinanceAdapter(mCompanyAnnualReportModels);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mCompanyFinanceAdapter);
         requestCompanyAnnualReport(mPage);
@@ -149,8 +145,8 @@ public class FinanceFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
                     @Override
                     protected void onRespSuccessData(ArrayList<CompanyAnnualReportModel> data) {
-                        for (CompanyAnnualReportModel model : data) {
-                            Log.d(TAG, "onRespSuccessData: 年报  " + model.toString());
+                        for (CompanyAnnualReportModel a : data) {
+                            Log.d("wangjie222", "onRespSuccessData: 财务 " + a.toString());
                         }
                         updateCompanyAnnualReportList(data);
                     }
@@ -171,8 +167,7 @@ public class FinanceFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-            mCompanyAnnualReportModels.addAll(data);
-            mCompanyFinanceAdapter.notifyDataSetChanged();
+            mCompanyFinanceAdapter.addAll(data);
         }
 
     }
@@ -183,47 +178,111 @@ public class FinanceFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    class CompanyFinanceAdapter extends BaseQuickAdapter<CompanyAnnualReportModel, BaseViewHolder> {
+    class CompanyFinanceAdapter extends RecyclerView.Adapter<CompanyFinanceAdapter.ViewHolder> {
 
-        public CompanyFinanceAdapter(int layoutResId) {
-            super(layoutResId);
+        ArrayList<CompanyAnnualReportModel> mCompanyAnnualReportModels;
+
+        public CompanyFinanceAdapter(ArrayList<CompanyAnnualReportModel> companyAnnualReportModels) {
+            mCompanyAnnualReportModels = companyAnnualReportModels;
         }
 
-        public CompanyFinanceAdapter(int layoutResId, List<CompanyAnnualReportModel> data) {
-            super(layoutResId, data);
+        public void addAll(ArrayList<CompanyAnnualReportModel> companyAnnualReportModels) {
+            mCompanyAnnualReportModels.addAll(companyAnnualReportModels);
+            notifyDataSetChanged();
+        }
+
+        public void clear() {
+            mCompanyAnnualReportModels.clear();
+            notifyItemRangeRemoved(0, mCompanyAnnualReportModels.size());
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, CompanyAnnualReportModel item) {
-            bindDataWithView(helper, item);
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock_company_finance, null);
+            return new ViewHolder(view);
         }
 
-        private void bindDataWithView(BaseViewHolder helper, CompanyAnnualReportModel item) {
-            AppCompatTextView mCompanyFinancePublishTime = helper.getView(R.id.companyFinancePublishTime);
-            BottomTextViewLayout mOneStockNetAsset = helper.getView(R.id.oneStockNetAsset);
-            BottomTextViewLayout mOneStockEarnings = helper.getView(R.id.one_stock_earnings);
-            BottomTextViewLayout mOneStockCashContent = helper.getView(R.id.one_stock_cash_content);
-            BottomTextViewLayout mOneStockCapitalAccumulationFund = helper.getView(R.id.one_stock_capital_accumulation_fund);
-            BottomTextViewLayout mFixationCapitalCount = helper.getView(R.id.fixation_capital_count);
-            BottomTextViewLayout mFlowCapitalCount = helper.getView(R.id.flow_capital_count);
-            BottomTextViewLayout mCapitalCount = helper.getView(R.id.capital_count);
-            BottomTextViewLayout mLongLiabilitiesCount = helper.getView(R.id.long_liabilities_count);
-            BottomTextViewLayout mNormalBusinessEarnings = helper.getView(R.id.normal_business_earnings);
-            BottomTextViewLayout mFinanceCharge = helper.getView(R.id.finance_charge);
-            BottomTextViewLayout mEarnProfit = helper.getView(R.id.earn_profit);
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mCompanyAnnualReportModels.get(position));
+        }
 
-            mCompanyFinancePublishTime.setText(DateUtil.getYearQuarter(item.getJiezhiriqi()));
-            mOneStockNetAsset.setInfoText(item.getMeigujinzichan());
-            mOneStockEarnings.setInfoText(item.getMeigushouyi());
-            mOneStockCashContent.setInfoText(item.getMeiguxianjinhanliang());
-            mOneStockCapitalAccumulationFund.setInfoText(item.getMeiguzibengongjijin());
-            mFixationCapitalCount.setInfoText(item.getGudingzichanheji());
-            mFlowCapitalCount.setInfoText(item.getLiudongzichanheji());
-            mCapitalCount.setInfoText(item.getZichanzongji());
-            mLongLiabilitiesCount.setInfoText(item.getChangqifuzaiheji());
-            mNormalBusinessEarnings.setInfoText(item.getZhuyingyewushouru());
-            mFinanceCharge.setInfoText(item.getCaiwufeiyong());
-            mEarnProfit.setInfoText(item.getJinlirun());
+        @Override
+        public int getItemCount() {
+            return mCompanyAnnualReportModels.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+//            @BindView(R.id.companyFinancePublishTime)
+//            AppCompatTextView mCompanyFinancePublishTime;
+//            @BindView(R.id.oneStockNetAsset)
+//            AutoCompleteTextView mOneStockNetAsset;
+//            @BindView(R.id.one_stock_earnings)
+//            AutoCompleteTextView mOneStockEarnings;
+//            @BindView(R.id.one_stock_cash_content)
+//            AutoCompleteTextView mOneStockCashContent;
+//            @BindView(R.id.one_stock_capital_accumulation_fund)
+//            AutoCompleteTextView mOneStockCapitalAccumulationFund;
+//            @BindView(R.id.fixation_capital_count)
+//            AutoCompleteTextView mFixationCapitalCount;
+//            @BindView(R.id.flow_capital_count)
+//            AutoCompleteTextView mFlowCapitalCount;
+//            @BindView(R.id.capital_count)
+//            AutoCompleteTextView mCapitalCount;
+//            @BindView(R.id.long_liabilities_count)
+//            AutoCompleteTextView mLongLiabilitiesCount;
+//            @BindView(R.id.normal_business_earnings)
+//            AutoCompleteTextView mNormalBusinessEarnings;
+//            @BindView(R.id.finance_charge)
+//            AutoCompleteTextView mFinanceCharge;
+//            @BindView(R.id.earn_profit)
+//            AutoCompleteTextView mEarnProfit;
+
+            @BindView(R.id.companyFinancePublishTime)
+            AppCompatTextView mCompanyFinancePublishTime;
+            @BindView(R.id.oneStockNetAsset)
+            BottomTextViewLayout mOneStockNetAsset;
+            @BindView(R.id.one_stock_earnings)
+            BottomTextViewLayout mOneStockEarnings;
+            @BindView(R.id.one_stock_cash_content)
+            BottomTextViewLayout mOneStockCashContent;
+            @BindView(R.id.one_stock_capital_accumulation_fund)
+            BottomTextViewLayout mOneStockCapitalAccumulationFund;
+            @BindView(R.id.fixation_capital_count)
+            BottomTextViewLayout mFixationCapitalCount;
+            @BindView(R.id.flow_capital_count)
+            BottomTextViewLayout mFlowCapitalCount;
+            @BindView(R.id.capital_count)
+            BottomTextViewLayout mCapitalCount;
+            @BindView(R.id.long_liabilities_count)
+            BottomTextViewLayout mLongLiabilitiesCount;
+            @BindView(R.id.normal_business_earnings)
+            BottomTextViewLayout mNormalBusinessEarnings;
+            @BindView(R.id.finance_charge)
+            BottomTextViewLayout mFinanceCharge;
+            @BindView(R.id.earn_profit)
+            BottomTextViewLayout mEarnProfit;
+
+            ViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(CompanyAnnualReportModel item) {
+                if (item == null) return;
+                mCompanyFinancePublishTime.setText(DateUtil.getYearQuarter(item.getJiezhiriqi()));
+                mOneStockNetAsset.setInfoText(item.getMeigujinzichan());
+                mOneStockEarnings.setInfoText(item.getMeigushouyi());
+                mOneStockCashContent.setInfoText(item.getMeiguxianjinhanliang());
+                mOneStockCapitalAccumulationFund.setInfoText(item.getMeiguzibengongjijin());
+                mFixationCapitalCount.setInfoText(item.getGudingzichanheji());
+                mFlowCapitalCount.setInfoText(item.getLiudongzichanheji());
+                mCapitalCount.setInfoText(item.getZichanzongji());
+                mLongLiabilitiesCount.setInfoText(item.getChangqifuzaiheji());
+                mNormalBusinessEarnings.setInfoText(item.getZhuyingyewushouru());
+                mFinanceCharge.setInfoText(item.getCaiwufeiyong());
+                mEarnProfit.setInfoText(item.getJinlirun());
+            }
         }
     }
 }

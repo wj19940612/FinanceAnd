@@ -55,6 +55,7 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 
 	private int mDataId;
 	private int mUserId;
+	private int mSex;
 	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
 	private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
 
@@ -110,7 +111,12 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 					}
 				});
 			} else {
-				mTitleBar.setTitle(R.string.want_help_him);
+				if (mSex == 1) {
+					mTitleBar.setTitle(R.string.people_want_help_her);
+				} else {
+					mTitleBar.setTitle(R.string.people_want_help_him);
+				}
+
 				mPayIntention.setVisibility(View.GONE);
 			}
 		}
@@ -125,6 +131,7 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
+		mSex = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
 
 	private void requestWantHelpHimList() {
@@ -273,7 +280,11 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 					}
 				});
 			} else {
-				mTitleBar.setTitle(R.string.people_want_help_him);
+				if (mSex == 1) {
+					mTitleBar.setTitle(R.string.people_want_help_her);
+				} else {
+					mTitleBar.setTitle(R.string.people_want_help_him);
+				}
 				mPayIntention.setVisibility(View.GONE);
 			}
 		}

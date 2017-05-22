@@ -202,6 +202,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HistoryNewsModel systemNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (systemNewsModel != null) {
+            Log.d(TAG, "onItemClick: " + systemNewsModel.toString());
             updateNewsReadStatus(position, systemNewsModel);
             switch (systemNewsModel.getType()) {
                 //借款单审核未通过
@@ -326,7 +327,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 //
 //                //   30.意向金支付成功
 //                public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
-
+                Log.d("wangjie ", "bindViewWithData: " + item.toString());
                 switch (item.getType()) {
                     //借款单审核未通过
                     case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
@@ -354,13 +355,6 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
                         break;
                 }
-                if (item.getType() == HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS) {
-                    if (item.isAlreadyRead()) {
-                        mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
-                    } else {
-                        mTitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed_read, 0, 0, 0);
-                    }
-                }
 
                 if (item.isAlreadyRead()) {
                     mContent.setSelected(true);
@@ -369,10 +363,14 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                     mTitle.setSelected(false);
                     mContent.setSelected(false);
                 }
-
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
-                mContent.setText(item.getMsg());
+                if (item.istheEarnestMoneyPaySuccess() && item.getData() != null) {
+                    mContent.setText(context.getString(R.string.pay_count, item.getData().getMoney() + " \n" +
+                            context.getString(R.string.pay_source, item.getData().getSource())));
+                } else {
+                    mContent.setText(item.getMsg());
+                }
             }
         }
     }

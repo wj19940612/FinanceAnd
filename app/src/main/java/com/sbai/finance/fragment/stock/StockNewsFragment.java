@@ -13,9 +13,10 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.stock.CompanyAnnualReportModel;
+import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.model.stock.StockNewsModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -89,7 +90,7 @@ public class StockNewsFragment extends BaseFragment {
         mRecyclerView.setAdapter(mStockNewsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        requestCompanyAnnualReport(0);
+        requestStockNewsList(0);
     }
 
     private void initViewWithAdapter() {
@@ -121,7 +122,7 @@ public class StockNewsFragment extends BaseFragment {
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             if (isSlideToBottom(recyclerView) && mLoadMore) {
-                requestCompanyAnnualReport(mPage);
+                requestStockNewsList(mPage);
             }
         }
     };
@@ -133,7 +134,7 @@ public class StockNewsFragment extends BaseFragment {
         return false;
     }
 
-    public void requestCompanyAnnualReport(final int page) {
+    public void requestStockNewsList(final int page) {
         this.mPage = page;
         Client.getCompanyAnnualReport(mStockCode, mPage, mPageSize, CompanyAnnualReportModel.TYPE_STOCK_NEWS)
                 .setTag(TAG)
@@ -159,6 +160,9 @@ public class StockNewsFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
+            if (page == 0) {
+                mStockNewsAdapter.clear();
+            }
             mStockNewsModels.addAll(data);
             if (data.size() < mPageSize) {
                 mLoadMore = false;
@@ -194,6 +198,11 @@ public class StockNewsFragment extends BaseFragment {
             this.mStockNewsModels.clear();
             this.mStockNewsModels.addAll(stockNewsModels);
             notifyDataSetChanged();
+        }
+
+        public void clear() {
+            mStockNewsModels.clear();
+            notifyItemRangeRemoved(0, mStockNewsModels.size());
         }
 
         @Override
@@ -233,10 +242,19 @@ public class StockNewsFragment extends BaseFragment {
                 mEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, item.getTitle())
-                                .putExtra(WebActivity.EX_URL, item.getUrl())
-                                .execute();
+                        Client.getStockNewsInfo(item.getId())
+                                .setTag(TAG)
+                                .setCallback(new Callback2D<Resp<StockNewsInfoModel>, StockNewsInfoModel>() {
+                                    @Override
+                                    protected void onRespSuccessData(StockNewsInfoModel data) {
+                                        if (data != null) {
+                                            Launcher.with(getActivity(), EventDetailActivity.class)
+                                                    .putExtra(EventDetailActivity.EX_STOCK_NEWS, data)
+                                                    .execute();
+                                        }
+                                    }
+                                })
+                                .fire();
                     }
                 });
                 if (TextUtils.isEmpty(item.getFrom())) {

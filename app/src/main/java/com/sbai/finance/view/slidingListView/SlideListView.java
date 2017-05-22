@@ -21,7 +21,7 @@ public class SlideListView extends ListView {
 	private static final int TOUCH_STATE_Y=2;//竖滑状态
 	//判断横竖滑动的最小值
 	private static final int MAX_Y=5;
-	private static final int MAX_X=3;
+	private static final int MAX_X=5;
 
 	public SlideListView(Context context) {
 		super(context);
