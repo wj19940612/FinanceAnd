@@ -291,6 +291,7 @@
     <string name="publish_success">发布成功</string>
     <string name="protocol">规则与用户须知</string>
     <!--mutual-->
+    <string name="good_heart">好心人</string>
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
     <string name="mutual_no_borrow_out">您暂无向他人借出款项哦~</string>
     <string name="borrow_in_his">历史借入</string>
