@@ -103,7 +103,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
         });
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mEconomicCircleNewsAdapter);
-//        mListView.setOnScrollListener(this);
         requestEconomicCircleNewsList();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -149,28 +148,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
             stopRefreshAnimation();
             return;
         }
-//        if (mFootView == null) {
-//            mFootView = new TextView(getActivity());
-//            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-//            mFootView.setPadding(padding, padding, padding, padding);
-//            mFootView.setText(getText(R.string.load_more));
-//            mFootView.setGravity(Gravity.CENTER);
-//            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
-//            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
-//            mFootView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (mSwipeRefreshLayout.isRefreshing()) return;
-//                    mPage++;
-//                    requestEconomicCircleNewsList();
-//                }
-//            });
-//            mListView.addFooterView(mFootView);
-//        }
-//
         if (historyNewsModelList.size() < Client.DEFAULT_PAGE_SIZE) {
-//            mListView.removeFooterView(mFootView);
-//            mFootView = null;
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
             mPage++;
@@ -204,19 +182,6 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
         super.onDestroyView();
         mBind.unbind();
     }
-
-//    @Override
-//    public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//    }
-//
-//    @Override
-//    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//        int topRowVerticalPosition =
-//                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-//        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-//    }
-
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
         mNotReadNewsNumber = notReadNews.getCount();
     }
