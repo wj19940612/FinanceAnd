@@ -10,15 +10,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
@@ -32,6 +28,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.HashSet;
@@ -40,16 +37,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AttentionActivity extends BaseActivity implements AbsListView.OnScrollListener {
+public class AttentionActivity extends BaseActivity {
 
     @BindView(android.R.id.list)
     ListView mListView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
-    private TextView mFootView;
     private RelieveAttentionAdapter mRelieveAttentionAdapter;
     private HashSet<Integer> mSet;
 
@@ -65,7 +61,6 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         mListView.setEmptyView(mEmpty);
         mRelieveAttentionAdapter = new RelieveAttentionAdapter(this);
         mListView.setAdapter(mRelieveAttentionAdapter);
-        mListView.setOnScrollListener(this);
         mRelieveAttentionAdapter.setOnRelieveAttentionClickListener(new RelieveAttentionAdapter.OnRelieveAttentionClickListener() {
             @Override
             public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
@@ -88,6 +83,14 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
+                requestUserAttentionList();
+            }
+        });
+
+        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
                 requestUserAttentionList();
             }
         });
@@ -143,36 +146,18 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
             stopRefreshAnimation();
             return;
         }
-        if (mFootView == null) {
-            mFootView = new TextView(getActivity());
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-            mFootView.setPadding(padding, padding, padding, padding);
-            mFootView.setText(getText(R.string.load_more));
-            mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mPage++;
-                    requestUserAttentionList();
-                }
-            });
-            mListView.addFooterView(mFootView);
-        }
-
         if (userAttentionModelList.size() < mPageSize) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
         }
 
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mRelieveAttentionAdapter != null) {
                 mRelieveAttentionAdapter.clear();
             }
-            stopRefreshAnimation();
         }
+        stopRefreshAnimation();
 
         for (UserAttentionModel data : userAttentionModelList) {
             if (mSet.add(data.getId())) {
@@ -185,18 +170,10 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
-    }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
     }
 
     static class RelieveAttentionAdapter extends ArrayAdapter<UserAttentionModel> {
@@ -253,7 +230,7 @@ public class AttentionActivity extends BaseActivity implements AbsListView.OnScr
                 mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
                 if (item.isAttention()) {
                     mUserName.setText(StrUtil.mergeTextWithRatioColor(item.getFollowuserName(),
-                            "\n" + context.getString(R.string.is_already_attention_other),0.8f,
+                            "\n" + context.getString(R.string.is_already_attention_other), 0.8f,
                             ContextCompat.getColor(context, R.color.secondaryText)));
                 } else {
                     mUserName.setText(item.getFollowuserName());

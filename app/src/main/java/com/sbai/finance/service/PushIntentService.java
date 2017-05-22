@@ -108,16 +108,16 @@ public class PushIntentService extends GTIntentService {
         builder.setAutoCancel(true);
         builder.setWhen(pushMessageModel.getCreateTime());
         String brand = Build.BRAND;
+        PendingIntent intent = setPendingIntent(context, pushMessageModel);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
         if (!TextUtils.isEmpty(brand) && brand.equalsIgnoreCase(PHONE_BRAND_SAMSUNG)) {
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
             builder.setLargeIcon(bitmap);
-            if (bitmap != null) {
-                bitmap.recycle();
-            }
+//            if (bitmap != null) {
+//                bitmap.recycle();
+//            }
         }
-        PendingIntent intent = setPendingIntent(context, pushMessageModel);
         builder.setContentIntent(intent);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(R.string.app_name, builder.build());
@@ -126,7 +126,7 @@ public class PushIntentService extends GTIntentService {
     @NonNull
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
         Intent messageIntent = new Intent(context, EventDetailActivity.class);
-        messageIntent.putExtra(Launcher.EX_PAYLOAD,data.getDataId());
+        messageIntent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
         return PendingIntent.getActivity(context, 0, messageIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
