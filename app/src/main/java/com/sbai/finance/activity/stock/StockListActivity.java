@@ -412,13 +412,13 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     }
                 }
 
-                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
-                    mTrade.setVisibility(View.GONE);
-                    mStopTrade.setVisibility(View.VISIBLE);
-                } else {
-                    mTrade.setVisibility(View.VISIBLE);
-                    mStopTrade.setVisibility(View.GONE);
-                }
+//                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
+//                    mTrade.setVisibility(View.GONE);
+//                    mStopTrade.setVisibility(View.VISIBLE);
+//                } else {
+//                    mTrade.setVisibility(View.VISIBLE);
+//                    mStopTrade.setVisibility(View.GONE);
+//                }
             }
         }
     }
