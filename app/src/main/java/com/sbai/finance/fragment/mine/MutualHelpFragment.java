@@ -11,12 +11,9 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -42,6 +39,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
 import java.util.List;
@@ -50,7 +48,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class MutualHelpFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class MutualHelpFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
 
     @BindView(android.R.id.list)
@@ -58,7 +56,7 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private Unbinder mBind;
     private TextView mFootView;
@@ -98,7 +96,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         mListView.setEmptyView(mEmpty);
         mMutualHelpAdapter = new MutualHelpAdapter(getActivity());
         mListView.setAdapter(mMutualHelpAdapter);
-        mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(this);
         mMutualHelpAdapter.setOnUserHeadImageClickListener(new MutualHelpAdapter.OnUserHeadImageClickListener() {
             @Override
@@ -113,10 +110,16 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
                 requestMutualHelpList();
             }
         });
-        mOnNoReadNewsListener.onNoReadNewsNumber(10, 0);
+        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                requestMutualHelpList();
+            }
+        });
     }
 
     private void requestMutualHelpList() {
@@ -147,28 +150,11 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
             stopRefreshAnimation();
             return;
         }
-        if (mFootView == null) {
-            mFootView = new TextView(getActivity());
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-            mFootView.setPadding(padding, padding, padding, padding);
-            mFootView.setText(getText(R.string.load_more));
-            mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mPage++;
-                    requestMutualHelpList();
-                }
-            });
-            mListView.addFooterView(mFootView);
-        }
 
         if (historyNewsModels.size() < Client.DEFAULT_PAGE_SIZE) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
         }
 
         if (mSwipeRefreshLayout.isRefreshing()) {
@@ -176,9 +162,8 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
                 mMutualHelpAdapter.clear();
                 mMutualHelpAdapter.notifyDataSetChanged();
             }
-            stopRefreshAnimation();
         }
-
+        stopRefreshAnimation();
         for (HistoryNewsModel data : historyNewsModels) {
             if (mSet.add(data.getId())) {
                 mMutualHelpAdapter.add(data);
@@ -191,6 +176,10 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
     }
 
 
@@ -198,18 +187,6 @@ public class MutualHelpFragment extends BaseFragment implements AbsListView.OnSc
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
     @Override

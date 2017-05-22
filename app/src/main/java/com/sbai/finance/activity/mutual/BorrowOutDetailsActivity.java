@@ -232,7 +232,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
     }
     private void loadImage(String src,ImageView image){
         Glide.with(this).load(src)
-                .placeholder(R.drawable.help)
+                .placeholder(R.drawable.ic_loading_pic)
                 .into(image);
     }
     private void launcherImageView(int index){

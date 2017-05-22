@@ -323,7 +323,7 @@
     <string name="already_repay">已经还款</string>
     <string name="already_repayment">已还款</string>
     <string name="is_pay_intention">已支付意向金</string>
-    <string name="not_allow">审批失败</string>
+    <string name="not_allow">审核失败</string>
     <string name="user_address">这里是用户名\n杭州 萧山</string>
     <string name="wait_confirm">等待确认中</string>
     <string name="end_time">倒计时</string>
