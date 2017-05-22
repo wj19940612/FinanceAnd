@@ -12,12 +12,9 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -42,6 +39,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,14 +49,14 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class EconomicCircleNewsFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class EconomicCircleNewsFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     @BindView(android.R.id.list)
     ListView mListView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private Unbinder mBind;
     private EconomicCircleNewsAdapter mEconomicCircleNewsAdapter;
@@ -105,7 +103,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         });
         mListView.setOnItemClickListener(this);
         mListView.setAdapter(mEconomicCircleNewsAdapter);
-        mListView.setOnScrollListener(this);
+//        mListView.setOnScrollListener(this);
         requestEconomicCircleNewsList();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -113,9 +111,17 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
                 requestEconomicCircleNewsList();
             }
         });
+        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                requestEconomicCircleNewsList();
+            }
+        });
+        mSwipeRefreshLayout.setAdapter(mListView, mEconomicCircleNewsAdapter);
 
     }
 
@@ -143,36 +149,39 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
             stopRefreshAnimation();
             return;
         }
-        if (mFootView == null) {
-            mFootView = new TextView(getActivity());
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-            mFootView.setPadding(padding, padding, padding, padding);
-            mFootView.setText(getText(R.string.load_more));
-            mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mPage++;
-                    requestEconomicCircleNewsList();
-                }
-            });
-            mListView.addFooterView(mFootView);
-        }
-
+//        if (mFootView == null) {
+//            mFootView = new TextView(getActivity());
+//            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+//            mFootView.setPadding(padding, padding, padding, padding);
+//            mFootView.setText(getText(R.string.load_more));
+//            mFootView.setGravity(Gravity.CENTER);
+//            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
+//            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+//            mFootView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (mSwipeRefreshLayout.isRefreshing()) return;
+//                    mPage++;
+//                    requestEconomicCircleNewsList();
+//                }
+//            });
+//            mListView.addFooterView(mFootView);
+//        }
+//
         if (historyNewsModelList.size() < Client.DEFAULT_PAGE_SIZE) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
+//            mListView.removeFooterView(mFootView);
+//            mFootView = null;
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
         }
 
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mEconomicCircleNewsAdapter != null) {
                 mEconomicCircleNewsAdapter.clear();
             }
-            stopRefreshAnimation();
         }
+        stopRefreshAnimation();
         for (HistoryNewsModel data : historyNewsModelList) {
             if (mSet.add(data.getId())) {
                 mEconomicCircleNewsAdapter.add(data);
@@ -184,6 +193,10 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
+
     }
 
     @Override
@@ -192,17 +205,17 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AbsListV
         mBind.unbind();
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-    }
+//    @Override
+//    public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//    }
+//
+//    @Override
+//    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//        int topRowVerticalPosition =
+//                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+//        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+//    }
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
         mNotReadNewsNumber = notReadNews.getCount();
