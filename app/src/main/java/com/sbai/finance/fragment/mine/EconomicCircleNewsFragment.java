@@ -323,17 +323,16 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
                             .placeholder(R.drawable.ic_default_avatar)
                             .into(mUserHeadImage);
                     if (item.isNotRead()) {
-                        mContent.setSelected(true);
-                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
-                                !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
-                                ContextCompat.getColor(context, R.color.secondaryText));
-                        mUserAction.setText(spannableString);
-                    } else {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
                                 ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
-                        mContent.setSelected(false);
+                        mContent.setSelected(true);
+                    } else {  mContent.setSelected(false);
+                        SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
+                                !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
+                                ContextCompat.getColor(context, R.color.secondaryText));
+                        mUserAction.setText(spannableString);
                     }
                 }
 

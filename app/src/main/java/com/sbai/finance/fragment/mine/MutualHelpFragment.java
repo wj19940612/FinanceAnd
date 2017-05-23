@@ -295,11 +295,11 @@ public class MutualHelpFragment extends BaseFragment implements AdapterView.OnIt
                             .into(mUserHeadImage);
                     if (item.isNotRead()) {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", item.getTitle(),
-                                ContextCompat.getColor(context, R.color.secondaryText));
+                                ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     } else {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", item.getTitle(),
-                                ContextCompat.getColor(context, R.color.primaryText));
+                                ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     }
                 }
