@@ -44,9 +44,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Administrator on 2017-04-27.
- */
 
 public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnScrollListener{
     @BindView(R.id.swipeRefreshLayout)
@@ -273,6 +270,7 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                 if (location==null){
                     location = context.getString(R.string.no_location);
                 }
+
                 switch (item.getStatus()){
                     case BorrowInHis.STATUS_FAIL_CHECK:
                         mUserInfo.setVisibility(View.GONE);
@@ -296,18 +294,33 @@ public class BorrowInHisActivity extends BaseActivity implements AbsListView.OnS
                         mBorrowStatus.setVisibility(View.GONE);
                         break;
                     case BorrowInHis.STATUS_SUCCESS:case BorrowInHis.STATUS_PAY_INTENTION:
-                        mUserInfo.setVisibility(View.VISIBLE);
-                        Glide.with(context).load(item.getPortrait())
-                                .bitmapTransform(new GlideCircleTransform(context))
-                                .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
-                        attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+ location,0.73f,
-                                ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
-                        mUserNameLand.setText(attentionSpannableString);
-                        mPublishTime.setText(context.getString(R.string.borrow_in_time,
-                                context.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(item.getConfirmTime())));
-                        mAlreadyRepayment.setVisibility(View.GONE);
-                        mBorrowStatus.setVisibility(View.VISIBLE);
-                        mSuccess.setVisibility(View.VISIBLE);
+                        if (item.getLoanInRepay()==BorrowInHis.STATUS_NO_REPAY){
+                            mUserInfo.setVisibility(View.VISIBLE);
+                            Glide.with(context).load(item.getPortrait())
+                                    .bitmapTransform(new GlideCircleTransform(context))
+                                    .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
+                            attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+ location,0.73f,
+                                    ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
+                            mUserNameLand.setText(attentionSpannableString);
+                            mPublishTime.setText(context.getString(R.string.borrow_in_time,
+                                    context.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(item.getConfirmTime())));
+                            mAlreadyRepayment.setVisibility(View.GONE);
+                            mBorrowStatus.setVisibility(View.VISIBLE);
+                            mSuccess.setVisibility(View.VISIBLE);
+                        }else if (item.getLoanInRepay()==BorrowInHis.STATUS_REPAY){
+                            mUserInfo.setVisibility(View.VISIBLE);
+                            Glide.with(context).load(item.getPortrait())
+                                    .bitmapTransform(new GlideCircleTransform(context))
+                                    .placeholder(R.drawable.ic_default_avatar).into(mUserPortrait);
+                            attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(), "\n"+location,0.73f,
+                                    ContextCompat.getColor(context,R.color.redPrimary),ContextCompat.getColor(context,R.color.assistText));
+                            mUserNameLand.setText(attentionSpannableString);
+                            mPublishTime.setText(context.getString(R.string.borrow_in_time,
+                                    context.getString(R.string.borrow_in_time_success), DateUtil.getFormatTime(item.getConfirmTime())));
+                            mBorrowStatus.setVisibility(View.VISIBLE);
+                            mSuccess.setVisibility(View.GONE);
+                            mAlreadyRepayment.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case BorrowInHis.STATUS_ALREADY_REPAY:
                         mUserInfo.setVisibility(View.VISIBLE);

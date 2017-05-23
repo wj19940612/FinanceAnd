@@ -18,6 +18,7 @@ import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -25,57 +26,64 @@ import butterknife.Unbinder;
  */
 
 public class AvatarDialogFragment extends DialogFragment {
-    private String mUserPortrait;
 
-    @BindView(R.id.avatar)
-    ImageView mAvatar;
-    Unbinder unbinder;
+	private String mUserPortrait;
 
-    public static AvatarDialogFragment newInstance(String userPortrait) {
-        AvatarDialogFragment fragment = new AvatarDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(Launcher.EX_PAYLOAD, userPortrait);
-        fragment.setArguments(args);
-        return fragment;
-    }
+	@BindView(R.id.avatar)
+	ImageView mAvatar;
+	Unbinder unbinder;
+	private Dialog mDialog;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, 0);
-    }
+	public static AvatarDialogFragment newInstance(String userPortrait) {
+		AvatarDialogFragment fragment = new AvatarDialogFragment();
+		Bundle args = new Bundle();
+		args.putString(Launcher.EX_PAYLOAD, userPortrait);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_avatar, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
-    }
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setStyle(STYLE_NO_TITLE, 0);
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mUserPortrait = getArguments().getString(Launcher.EX_PAYLOAD);
-        Glide.with(getActivity()).load(mUserPortrait)
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mAvatar);
-        Dialog dialog = getDialog();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setLayout((int) (displayMetrics.widthPixels * 0.95), (int) (displayMetrics.widthPixels * 0.95));
-        }
-    }
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.dialog_fragment_avatar, container, false);
+		unbinder = ButterKnife.bind(this, view);
+		return view;
+	}
 
-    public void show(FragmentManager manager) {
-        this.show(manager, AvatarDialogFragment.class.getSimpleName());
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mUserPortrait = getArguments().getString(Launcher.EX_PAYLOAD);
+		Glide.with(getActivity()).load(mUserPortrait)
+				.placeholder(R.drawable.ic_default_avatar_big)
+				.into(mAvatar);
+		mDialog = getDialog();
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		Window window = mDialog.getWindow();
+		if (window != null) {
+			window.setLayout((int) (displayMetrics.widthPixels * 0.95), (int) (displayMetrics.widthPixels * 0.95));
+		}
+	}
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
+	public void show(FragmentManager manager) {
+		this.show(manager, AvatarDialogFragment.class.getSimpleName());
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		unbinder.unbind();
+	}
+
+	@OnClick(R.id.avatar)
+	public void onViewClicked() {
+		mDialog.dismiss();
+	}
 }

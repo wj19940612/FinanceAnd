@@ -64,7 +64,7 @@ public class OptionalActivity extends BaseActivity implements
 
     private SlideListAdapter mSlideListAdapter;
     private int mPage = 0;
-    private int mPageSize = 15;
+    private int mPageSize = 200;
     private HashSet<String> mSet;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -376,13 +376,13 @@ public class OptionalActivity extends BaseActivity implements
                     }
                 }
 
-                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
-                    mTrade.setVisibility(View.GONE);
-                    mStopTrade.setVisibility(View.VISIBLE);
-                } else {
-                    mTrade.setVisibility(View.VISIBLE);
-                    mStopTrade.setVisibility(View.GONE);
-                }
+//                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
+//                    mTrade.setVisibility(View.GONE);
+//                    mStopTrade.setVisibility(View.VISIBLE);
+//                } else {
+//                    mTrade.setVisibility(View.VISIBLE);
+//                    mStopTrade.setVisibility(View.GONE);
+//                }
             }
         }
     }

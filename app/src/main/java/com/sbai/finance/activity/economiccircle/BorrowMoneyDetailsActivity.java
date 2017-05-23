@@ -210,7 +210,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				.into(mAvatar);
 
 		mUserName.setText(borrowMoneyDetails.getUserName());
-		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getCreateDate()));
+		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getAuditTime()));
 
 		if (TextUtils.isEmpty(borrowMoneyDetails.getLocation())) {
 			mLocation.setText(R.string.no_location_information);
@@ -368,6 +368,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				default:
 					break;
 			}
+		} else {
+			mContentImg.setVisibility(View.GONE);
 		}
 	}
 
@@ -380,8 +382,10 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	}
 
 	private void loadImage(Context context, String src, ImageView image) {
-		Glide.with(context).load(src)
-				.thumbnail(0.1f)
+		Glide.with(context)
+				.load(src)
+				.placeholder(R.drawable.img_loading)
+				.error(R.drawable.logo_login)
 				.into(image);
 	}
 

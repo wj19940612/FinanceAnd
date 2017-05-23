@@ -59,12 +59,11 @@ public class AliPayActivity extends BaseActivity {
 						.setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
 							@Override
 							protected void onRespSuccessData(PaymentPath paymentPath) {
-									Intent intent = new Intent();
-									intent.setAction("android.intent.action.VIEW");
-									Uri content_url = Uri.parse(paymentPath.getCodeUrl());
-									intent.setData(content_url);
-									intent.setClassName("com.android.browser","com.android.browser.BrowserActivity");
-									startActivity(intent);
+								Intent intent = new Intent();
+								intent.setAction("android.intent.action.VIEW");
+								Uri content_url = Uri.parse(paymentPath.getCodeUrl());
+								intent.setData(content_url);
+								startActivity(intent);
 							}
 						}).fire();
 				break;

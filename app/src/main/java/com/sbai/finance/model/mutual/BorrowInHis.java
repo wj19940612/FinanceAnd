@@ -13,7 +13,8 @@ public class BorrowInHis {
     public static final int STATUS_PAY_INTENTION=6;
     public static final int STATUS_SUCCESS=7;
     public static final int STATUS_ALREADY_REPAY=8;
-
+    public static final int STATUS_NO_REPAY=0;
+    public static final int STATUS_REPAY=1;
     /**
      * auditActorId : 0
      * auditTime : 1493945778000
@@ -35,7 +36,7 @@ public class BorrowInHis {
      * userId : 111
      * userName : 用户2340
      */
-
+    private int loanInRepay;
     private int auditActorId;
     private long auditTime;
     private long confirmTime;
@@ -55,6 +56,14 @@ public class BorrowInHis {
     private int status;
     private int userId;
     private String userName;
+
+    public int getLoanInRepay() {
+        return loanInRepay;
+    }
+
+    public void setLoanInRepay(int loanInRepay) {
+        this.loanInRepay = loanInRepay;
+    }
 
     public int getAuditActorId() {
         return auditActorId;

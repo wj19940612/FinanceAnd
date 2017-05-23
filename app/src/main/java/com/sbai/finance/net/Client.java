@@ -740,7 +740,7 @@ public class Client {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", 15));
+                        .put("pageSize", 200));
     }
 
     /**
@@ -995,7 +995,10 @@ public class Client {
                 new ApiParams()
                         .put("id", id));
     }
-
+    public static API getBorrowProcotol(){
+        return new API("/user/article/articleDetail.do",
+                new ApiParams().put("id",2));
+    }
     /**
      * 发表观点
      *
