@@ -47,7 +47,6 @@ public class WeChatPayActivity extends BaseActivity {
 	private String mPaymentPath;
 	private int mDataId;
 	private Bitmap mBitmap;
-	private String mPlatform;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +102,6 @@ public class WeChatPayActivity extends BaseActivity {
 	private void initData(Intent intent) {
 		mPaymentPath = intent.getStringExtra(Launcher.EX_PAYLOAD);
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-		mPlatform = intent.getStringExtra(Launcher.EX_PAYLOAD_2);
 	}
 
 	private class SaveImageTask extends AsyncTask<Bitmap, Void, String> {
@@ -153,7 +151,7 @@ public class WeChatPayActivity extends BaseActivity {
 
 	@OnClick(completePayment)
 	public void onViewClicked() {
-		Client.paymentQuery(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
+		Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback<Resp<JsonPrimitive>>() {
 					@Override
 					protected void onRespSuccess(Resp<JsonPrimitive> resp) {

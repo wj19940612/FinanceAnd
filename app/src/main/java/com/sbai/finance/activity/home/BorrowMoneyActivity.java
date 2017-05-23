@@ -398,6 +398,8 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 						default:
 							break;
 					}
+				} else {
+					mContentImg.setVisibility(View.GONE);
 				}
 			}
 

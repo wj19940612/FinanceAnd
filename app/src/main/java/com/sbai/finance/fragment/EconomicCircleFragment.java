@@ -605,6 +605,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						default:
 							break;
 					}
+				} else {
+					mContentImg.setVisibility(View.GONE);
 				}
 			}
 
