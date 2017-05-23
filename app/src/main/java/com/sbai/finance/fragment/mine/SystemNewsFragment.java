@@ -334,7 +334,7 @@ public class SystemNewsFragment extends BaseFragment implements AdapterView.OnIt
                 }
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
-                if (item.istheEarnestMoneyPaySuccess() && item.getData() != null) {
+                if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
                     mContent.setText(context.getString(R.string.pay_count, item.getData().getMoney() + " \n" +
                             context.getString(R.string.pay_source, item.getData().getSource())));
                 } else {
