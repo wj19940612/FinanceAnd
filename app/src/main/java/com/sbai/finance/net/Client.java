@@ -995,7 +995,10 @@ public class Client {
                 new ApiParams()
                         .put("id", id));
     }
-
+    public static API getBorrowProcotol(){
+        return new API("/user/article/articleDetail.do",
+                new ApiParams().put("id",2));
+    }
     /**
      * 发表观点
      *
