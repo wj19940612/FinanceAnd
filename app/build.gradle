@@ -15,7 +15,7 @@ android {
                 GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
                 GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
                 GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
-                UMENG_APP_KEY   :" 591a6342677baa75060024bf"
+                UMENG_APP_KEY   : "591a6342677baa75060024bf"
         ]
 
         // the ndk and manifest configs are for getui
