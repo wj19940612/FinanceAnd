@@ -49,7 +49,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled false // !!set true when package release apk
+        cruncherEnabled true // !!set true when package release apk
     }
 
     dexOptions {
@@ -71,8 +71,8 @@ android {
 
         alpha {
             applicationId "com.sbai.finance"
-            versionCode 11
-            versionName "0.1.11"
+            versionCode 12
+            versionName "0.1.12"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
 
             manifestPlaceholders = [
