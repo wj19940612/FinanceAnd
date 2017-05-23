@@ -368,6 +368,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				default:
 					break;
 			}
+		} else {
+			mContentImg.setVisibility(View.GONE);
 		}
 	}
 
