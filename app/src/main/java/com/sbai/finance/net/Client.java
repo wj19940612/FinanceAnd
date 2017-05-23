@@ -231,6 +231,7 @@ public class Client {
                         .put("varietyId", varietyId));
     }
 
+
     /**
      * 获取多个行情
      *
@@ -690,6 +691,7 @@ public class Client {
                 new ApiParams()
                         .put("search", key));
     }
+
 
     /**
      * 获取k线数据
