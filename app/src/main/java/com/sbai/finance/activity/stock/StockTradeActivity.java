@@ -338,8 +338,10 @@ public abstract class StockTradeActivity extends BaseActivity {
     private void updateStockTrendView(StockRTData stockRTData) {
         ChartSettings settings = mStockTrendView.getSettings();
         if (settings != null && settings.getPreClosePrice() == 0) {
-            settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
-            mStockTrendView.setSettings(settings);
+            if (!TextUtils.isEmpty(stockRTData.getPrev_price())) {
+                settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
+                mStockTrendView.setSettings(settings);
+            }
         }
     }
 
