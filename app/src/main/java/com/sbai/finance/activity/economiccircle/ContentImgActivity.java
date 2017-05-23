@@ -3,10 +3,8 @@ package com.sbai.finance.activity.economiccircle;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
@@ -14,6 +12,8 @@ import com.sbai.finance.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static com.sbai.finance.R.id.viewPager;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
@@ -23,7 +23,8 @@ import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 public class ContentImgActivity extends BaseActivity {
 
 	@BindView(viewPager)
-	ViewPager mViewPager;
+	HackyViewPager mViewPager;
+
 	private ContentImgAdapter mContentImgAdapter;
 
 	@Override
@@ -42,7 +43,7 @@ public class ContentImgActivity extends BaseActivity {
 		mViewPager.setCurrentItem(currentItem);
 	}
 
-	public class ContentImgAdapter extends PagerAdapter {
+	private class ContentImgAdapter extends PagerAdapter {
 
 		private Context mContext;
 		private String[] mContentImgArray;
@@ -66,16 +67,22 @@ public class ContentImgActivity extends BaseActivity {
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			ImageView imageView = new ImageView(mContext);
+			PhotoView imageView = new PhotoView(mContext);
 			Glide.with(mContext).load(mContentImgArray[position])
 					.thumbnail(0.1f)
 					.dontAnimate()
 					.into(imageView);
 			container.addView(imageView);
-			imageView.setOnClickListener(new View.OnClickListener() {
+
+			imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
 				@Override
-				public void onClick(View v) {
+				public void onPhotoTap(View view, float x, float y) {
 					finish();
+				}
+
+				@Override
+				public void onOutsidePhotoTap() {
+
 				}
 			});
 			return imageView;
