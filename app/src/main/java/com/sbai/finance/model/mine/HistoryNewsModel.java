@@ -83,8 +83,8 @@ public class HistoryNewsModel implements Parcelable {
         return getType() == THE_EARNEST_MONEY_APY_SUCCESS;
     }
 
-    public boolean isAlreadyRead() {
-        return getStatus() == 1;
+    public boolean isNotRead() {
+        return getStatus() == 0;
     }
 
     //如果失效或者借款取消，超时 不进行跳转
