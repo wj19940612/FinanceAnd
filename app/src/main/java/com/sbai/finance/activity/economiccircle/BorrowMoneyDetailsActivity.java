@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
@@ -281,20 +282,24 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 									Client.giveHelp(mDataId).setTag(TAG).
 											setIndeterminate(BorrowMoneyDetailsActivity.this)
 											.setCallback(new Callback<Resp<JsonPrimitive>>() {
+
 												@Override
 												protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 													if (resp.isSuccess()) {
-														borrowMoneyDetails.setIsIntention(1);
-														mGiveHelp.setBackgroundResource(R.drawable.bg_to_confirm);
-														mGiveHelp.setText(R.string.wait_to_confirm);
-														mGiveHelp.setEnabled(false);
-														String peopleNum = mPeopleNum.getText().toString().trim();
-														mBorrowMoneyDetails.setIntentionCount(Integer.parseInt(peopleNum.substring(1, peopleNum.length() - 1)) + 1);
-														mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
+														requestBorrowMoneyDetails();
 														requestWantHelpHimList();
 													}
 												}
+
+												@Override
+												public void onFailure(VolleyError volleyError) {
+													super.onFailure(volleyError);
+													//处理多端问题
+													requestBorrowMoneyDetails();
+													requestWantHelpHimList();
+												}
 											}).fire();
+
 									dialog.dismiss();
 								}
 							})

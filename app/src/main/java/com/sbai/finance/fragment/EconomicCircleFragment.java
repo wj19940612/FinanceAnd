@@ -77,7 +77,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	private TextView mFootView;
 	private RefreshAttentionReceiver mReceiver;
 
-	private int mPage = 0;
+	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<String> mSet;
 
@@ -150,7 +150,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		if (isVisibleToUser && isVisible()) {
 			mSwipeRefreshLayout.setRefreshing(true);
 			mSet.clear();
-			mPage = 0;
+			mCreateTime = null;
 			requestEconomicCircleList();
 		}
 	}
@@ -173,14 +173,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			@Override
 			public void onRefresh() {
 				mSet.clear();
-				mPage = 0;
+				mCreateTime = null;
 				requestEconomicCircleList();
 			}
 		});
 	}
 
 	private void requestEconomicCircleList() {
-		Client.getEconomicCircleList(mPage, mPageSize).setTag(TAG)
+		Client.getEconomicCircleList(mCreateTime, mPageSize).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<EconomicCircle>>, List<EconomicCircle>>() {
 					@Override
 					protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
@@ -220,7 +220,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				@Override
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mPage++;
+					mCreateTime = mEconomicCircleList.get(mEconomicCircleList.size() - 1).getCreateTime();
 					requestEconomicCircleList();
 				}
 			});

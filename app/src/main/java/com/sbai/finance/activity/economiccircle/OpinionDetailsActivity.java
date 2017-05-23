@@ -109,7 +109,7 @@ public class OpinionDetailsActivity extends BaseActivity {
     private TextView mFootView;
     private RefreshAttentionReceiver mReceiver;
 
-    private int mPage = 0;
+    private Long mCreateTime;
     private int mPageSize = 15;
     private HashSet<Integer> mSet;
     private int mDataId;
@@ -166,7 +166,7 @@ public class OpinionDetailsActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 mSet.clear();
-                mPage = 0;
+                mCreateTime = null;
                 if (mReplyId != -1) {
                     mReplyId = -1;
                 }
@@ -177,7 +177,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
     private void requestOpinionReplyList() {
         if (mOpinionDetails != null) {
-            Client.getOpinionReplyList(mPage, mPageSize, mOpinionDetails.getId(),
+            Client.getOpinionReplyList(mCreateTime, mPageSize, mOpinionDetails.getId(),
                     mReplyId != -1 ? mReplyId : null).setTag(TAG)
                     .setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
                         @Override
@@ -219,7 +219,7 @@ public class OpinionDetailsActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mPage++;
+                    mCreateTime = mOpinionReplyList.get(mOpinionReplyList.size() - 1).getCreateTime();;
                     requestOpinionReplyList();
                 }
             });
@@ -552,7 +552,7 @@ public class OpinionDetailsActivity extends BaseActivity {
                                 protected void onRespSuccess(Resp<JsonObject> resp) {
                                     if (resp.isSuccess()) {
                                         mSet.clear();
-                                        mPage = 0;
+                                        mCreateTime = null;
                                         mSwipeRefreshLayout.setRefreshing(true);
                                         requestOpinionReplyList();
                                         requestOpinionDetails(true);
