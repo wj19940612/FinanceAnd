@@ -182,6 +182,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
         super.onDestroyView();
         mBind.unbind();
     }
+
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNews) {
         mNotReadNewsNumber = notReadNews.getCount();
     }
@@ -191,7 +192,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
         HistoryNewsModel historyNewsModel = (HistoryNewsModel) parent.getAdapter().getItem(position);
         if (historyNewsModel != null) {
             updateNewsReadStatus(position, historyNewsModel);
-            Log.d(TAG, "onItemClick: " + historyNewsModel.toString());
+            Log.d(TAG, "onItemClick: " + historyNewsModel.getStatus()+" type "+historyNewsModel.getType());
 
             switch (historyNewsModel.getType()) {
                 //关注
@@ -205,27 +206,25 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
 //                    break;
                     //点赞评论
                 case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                    if (historyNewsModel.isLossEfficacy()) {
-                        return;
-                    }
-                    if (historyNewsModel.getViewpointId() != 0) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
-                    } else {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+                    if (!historyNewsModel.isLossEfficacy()) {
+                        if (historyNewsModel.getViewpointId() != 0) {
+                            Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                    putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+                        } else {
+                            Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                    putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+                        }
                     }
                     break;
                 //评论
                 case HistoryNewsModel.ACTION_TYPE_COMMENT:
                     //观点详情页面  将选择的这条评论置顶显示，
-                    if (historyNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!historyNewsModel.isLossEfficacy()) {
+                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
+                                .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
+                                .execute();
                     }
-                    Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                            putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
-                            .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
-                            .execute();
                     break;
             }
 
@@ -233,7 +232,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
     }
 
     private void updateNewsReadStatus(int position, HistoryNewsModel historyNewsModel) {
-        if (!historyNewsModel.isAlreadyRead()) {
+        if (historyNewsModel.isNotRead()) {
             mEconomicCircleNewsAdapter.remove(historyNewsModel);
             historyNewsModel.setStatus(1);
             mEconomicCircleNewsAdapter.insert(historyNewsModel, position);
@@ -323,7 +322,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
                             .bitmapTransform(new GlideCircleTransform(context))
                             .placeholder(R.drawable.ic_default_avatar)
                             .into(mUserHeadImage);
-                    if (item.isAlreadyRead()) {
+                    if (item.isNotRead()) {
                         mContent.setSelected(true);
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
