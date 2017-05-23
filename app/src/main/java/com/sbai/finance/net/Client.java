@@ -824,11 +824,25 @@ public class Client {
                         .put("viewpointId", viewpointId));
     }
 
+
+    /**
+     * 获取品种详情
+     *
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietyDetails(int varietyId) {
+        return new API("/order/order/getVarietyInfoById.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
+
+
     /**
      * 获取观点回复列表
      *
      * @param page
-     * @param pageSize
+     * @param pageSizex
      * @param viewpointId
      * @return
      */

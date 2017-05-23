@@ -17,8 +17,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -92,6 +92,7 @@
                     tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
 
                 <LinearLayout
+                    android:id="@+id/variety"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginLeft="13dp"
@@ -240,7 +241,7 @@
             </LinearLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="49dp"
@@ -248,7 +249,6 @@
         android:orientation="horizontal">
 
         <EditText
-            android:maxLength="300"
             android:id="@+id/commentContent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -256,6 +256,7 @@
             android:layout_weight="5"
             android:background="@null"
             android:hint="@string/comment"
+            android:maxLength="300"
             android:padding="13dp"
             android:textColorHint="@color/hintText"
             android:textSize="15sp"/>
