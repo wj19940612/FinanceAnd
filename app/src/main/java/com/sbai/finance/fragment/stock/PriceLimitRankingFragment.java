@@ -10,15 +10,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
+import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,13 +199,15 @@ public class PriceLimitRankingFragment extends BaseFragment {
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
+            @BindView(R.id.rootView)
+            LinearLayout mRootView;
 
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(StockData item, int position, Context context) {
+            public void bindDataWithView(final StockData item, int position, final Context context) {
                 if (item == null) return;
                 mFutureName.setText(item.getCode_name());
                 mFutureCode.setText(item.getStock_code());
@@ -216,6 +224,21 @@ public class PriceLimitRankingFragment extends BaseFragment {
                     }
                 }
                 mLastPrice.setText(item.getLast_price());
+                mRootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Client.getStockInfo(item.getStock_code())
+                                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                                    @Override
+                                    protected void onRespSuccessData(Variety data) {
+                                        Launcher.with(context, StockDetailActivity.class)
+                                                .putExtra(Launcher.EX_PAYLOAD, data).execute();
+                                    }
+                                })
+                                .fire();
+
+                    }
+                });
             }
         }
     }

@@ -692,6 +692,18 @@ public class Client {
     }
 
     /**
+     * 接口名称 根据股票代码查询股票信息
+     * 请求类型 get
+     * 请求Url  /order/stock/query/info.do
+     *
+     * @param code
+     * @return
+     */
+    public static API getStockInfo(String code) {
+        return new API("/order/stock/query/info.do", new ApiParams().put("code", code));
+    }
+
+    /**
      * 获取k线数据
      *
      * @param stockCode
@@ -995,10 +1007,12 @@ public class Client {
                 new ApiParams()
                         .put("id", id));
     }
-    public static API getBorrowProcotol(){
+
+    public static API getBorrowProcotol() {
         return new API("/user/article/articleDetail.do",
-                new ApiParams().put("id",2));
+                new ApiParams().put("id", 2));
     }
+
     /**
      * 发表观点
      *

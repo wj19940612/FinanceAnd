@@ -284,7 +284,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case ViewpointFragment.REQ_CODE_ATTENTION:
-                    ToastUtil.curt("收到回到");
                     updateViewPointPage(data);
                     break;
             }
