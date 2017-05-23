@@ -181,35 +181,41 @@ public class SystemNewsFragment extends BaseFragment implements AdapterView.OnIt
             switch (systemNewsModel.getType()) {
                 //借款单审核未通过
                 case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
-                    if (isNewsLossEfficacy(systemNewsModel)) return;
-                    Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
+                    }
                     break;
                 // 14.借款发布成功 *
                 case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
-                    if (isNewsLossEfficacy(systemNewsModel)) return;
-                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), BorrowInActivity.class).execute();
+                    }
                     break;
                 //// 20.成为观点大神
                 case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
-                    if (isNewsLossEfficacy(systemNewsModel)) return;
-                    Launcher.with(getActivity(), OpinionActivity.class).execute();
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), OpinionActivity.class).execute();
+                    }
                     break;
                 //21.实名认证已通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_PASSED:
-                    if (isNewsLossEfficacy(systemNewsModel)) return;
-                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_ALREADY_APPROVE);
-                    Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_ALREADY_APPROVE);
+                        Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                    }
                     break;
                 // 22.实名认证未通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
-                    if (isNewsLossEfficacy(systemNewsModel)) return;
-                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
-                    Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
+                        Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                    }
                     break;
                 //   30.意向金支付成功
                 case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
-                    if (isNewsLossEfficacy(systemNewsModel)) return;
-                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                    }
                     break;
             }
         }
@@ -223,24 +229,24 @@ public class SystemNewsFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     private void updateNewsReadStatus(int position, HistoryNewsModel systemNewsModel) {
-        if (!systemNewsModel.isAlreadyRead()) {
+        if (systemNewsModel.isNotRead()) {
             mSystemNewsAdapter.remove(systemNewsModel);
             systemNewsModel.setStatus(1);
             mSystemNewsAdapter.insert(systemNewsModel, position);
+            getActivity().setResult(Activity.RESULT_OK);
+            mNotReadNewsNumber--;
+            if (mNotReadNewsNumber == 0) {
+                mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, 0);
+            }
+            Client.updateMsgReadStatus(systemNewsModel.getId())
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                        }
+                    })
+                    .fire();
         }
-        getActivity().setResult(Activity.RESULT_OK);
-        mNotReadNewsNumber--;
-        if (mNotReadNewsNumber == 0) {
-            mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, 0);
-        }
-        Client.updateMsgReadStatus(systemNewsModel.getId())
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                    }
-                })
-                .fire();
     }
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNewsNumber) {
@@ -325,16 +331,16 @@ public class SystemNewsFragment extends BaseFragment implements AdapterView.OnIt
                         break;
                 }
 
-                if (item.isAlreadyRead()) {
-                    mContent.setSelected(true);
-                    mTitle.setSelected(true);
-                } else {
+                if (item.isNotRead()) {
                     mTitle.setSelected(false);
                     mContent.setSelected(false);
+                } else {
+                    mContent.setSelected(true);
+                    mTitle.setSelected(true);
                 }
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
-                if (item.istheEarnestMoneyPaySuccess() && item.getData() != null) {
+                if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
                     mContent.setText(context.getString(R.string.pay_count, item.getData().getMoney() + " \n" +
                             context.getString(R.string.pay_source, item.getData().getSource())));
                 } else {

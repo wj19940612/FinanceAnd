@@ -196,30 +196,27 @@ public class MutualHelpFragment extends BaseFragment implements AdapterView.OnIt
             updateNewsReadStatus(position, item);
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
-                    if (item.isLossEfficacy()) {
-                        return;
+                    if (!item.isLossEfficacy()) {
+                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+                                .putExtra(Launcher.USER_ID, item.getUserId())
+                                .execute();
                     }
-                    Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-                            .putExtra(Launcher.USER_ID, item.getUserId())
-                            .execute();
                     break;
                 case HistoryNewsModel.ACTION_TYPE_REFUSE_YOU_PEOPLE:
                     break;
                 case HistoryNewsModel.ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE:
-                    if (item.isLossEfficacy()) {
-                        return;
+                    if (!item.isLossEfficacy()) {
+                        Launcher.with(getActivity(), BorrowOutHisActivity.class).execute();
                     }
-                    Launcher.with(getActivity(), BorrowOutHisActivity.class).execute();
                     break;
 
             }
-
         }
     }
 
     private void updateNewsReadStatus(int position, HistoryNewsModel item) {
-        if (!item.isAlreadyRead()) {
+        if (item.isNotRead()) {
             mMutualHelpAdapter.remove(item);
             item.setStatus(1);
             mMutualHelpAdapter.insert(item, position);
@@ -296,13 +293,13 @@ public class MutualHelpFragment extends BaseFragment implements AdapterView.OnIt
                             .placeholder(R.drawable.ic_default_avatar)
                             .bitmapTransform(new GlideCircleTransform(context))
                             .into(mUserHeadImage);
-                    if (item.isAlreadyRead()) {
+                    if (item.isNotRead()) {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", item.getTitle(),
-                                ContextCompat.getColor(context, R.color.secondaryText));
+                                ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
                     } else {
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ", item.getTitle(),
-                                ContextCompat.getColor(context, R.color.primaryText));
+                                ContextCompat.getColor(context, R.color.secondaryText));
                         mUserAction.setText(spannableString);
                     }
                 }

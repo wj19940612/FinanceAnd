@@ -1,6 +1,7 @@
 package com.sbai.chart;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -46,15 +47,18 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
     private void init() {
         mKlineChart = new KlineChart(getContext());
         mKlineChart.setOnTouchLinesAppearListener(this);
-        addView(mKlineChart, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
+        int margin = (int) dp2Px(12f, getResources());
+        RelativeLayout.LayoutParams params = new LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, 0, 0, margin);
+        addView(mKlineChart, params);
 
         mLeftSideBar = LayoutInflater.from(getContext()).inflate(R.layout.kline_side_bar, null);
         mRightSideBar = LayoutInflater.from(getContext()).inflate(R.layout.kline_side_bar, null);
 
-        int marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12,
-                getResources().getDisplayMetrics());
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        int marginTop = (int) dp2Px(12f, getResources());
+        params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(ALIGN_PARENT_LEFT);
         params.setMargins(0, marginTop, 0, 0);
@@ -69,6 +73,10 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
         addView(mRightSideBar, params);
 
         mDateFormat = new SimpleDateFormat("yyyy/MM/dd\nHH:mm");
+    }
+
+    private float dp2Px(float value, Resources res) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
 
     public void setOnAchieveTheLastListener(OnAchieveTheLastListener onAchieveTheLastListener) {

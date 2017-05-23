@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,10 +29,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.OpinionReply;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
@@ -323,6 +327,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mUpDownPercent.setText(mOpinionDetails.getRisePre());
 			}*/
 
+
 			if (mOpinionDetails.getIsPraise() == 1) {
 				mLoveNum.setSelected(true);
 			} else {
@@ -339,6 +344,38 @@ public class OpinionDetailsActivity extends BaseActivity {
 				mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
 			}
 			mScrollView.smoothScrollTo(0, 0);
+		}
+	}
+
+	@OnClick(R.id.variety)
+	public void onViewClicked() {
+		if (getCallingActivity() != null) {
+			String className = getCallingActivity().getClassName();
+			if (!TextUtils.isEmpty(className)) {
+				if (className.equalsIgnoreCase(FutureTradeActivity.class.getName())
+						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())) {
+					return;
+				}
+			}
+		}
+
+		if (mOpinionDetails != null) {
+			Client.getVarietyDetails(mOpinionDetails.getVarietyId()).setTag(TAG)
+					.setCallback(new Callback2D<Resp<Variety>, Variety>() {
+						@Override
+						protected void onRespSuccessData(Variety variety) {
+							Log.d(TAG, "onRespSuccessData: " + variety.toString());
+							if (Variety.VAR_FUTURE.equals(mOpinionDetails.getBigVarietyTypeCode())) {
+								Launcher.with(OpinionDetailsActivity.this, FutureTradeActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, variety)
+										.execute();
+							} else {
+								Launcher.with(OpinionDetailsActivity.this, StockDetailActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, variety)
+										.execute();
+							}
+						}
+					}).fire();
 		}
 	}
 

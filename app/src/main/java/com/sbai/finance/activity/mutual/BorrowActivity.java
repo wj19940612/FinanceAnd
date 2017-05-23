@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -26,8 +27,10 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mutual.BorrowProtocol;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
@@ -160,11 +163,26 @@ public class BorrowActivity extends BaseActivity {
 				mBorrowTimeLimit.setFocusable(true);
 				break;
 			case R.id.protocol:
-                Launcher.with(this, WebActivity.class)
-						.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
-						.putExtra(WebActivity.EX_URL,mProtocolUrl)
-						.putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-						.execute();
+				Client.getBorrowProcotol().setTag(TAG)
+						.setCallback(new Callback2D<Resp<BorrowProtocol>,BorrowProtocol>() {
+							@Override
+							protected void onRespSuccessData(BorrowProtocol data) {
+								Launcher.with(getActivity(), WebActivity.class)
+										.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
+										.putExtra(WebActivity.EX_HTML,data.getContent())
+										.putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+										.execute();
+							}
+							@Override
+							public void onFailure(VolleyError volleyError) {
+								super.onFailure(volleyError);
+								Launcher.with(getActivity(), WebActivity.class)
+										.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
+										.putExtra(WebActivity.EX_URL,mProtocolUrl)
+										.putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+										.execute();
+							}
+						}).fire();
 				break;
 			default:
 				break;

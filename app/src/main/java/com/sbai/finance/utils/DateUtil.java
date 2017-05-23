@@ -320,7 +320,7 @@ public class DateUtil {
             if (DateUtil.isToday(createTime, systemTime)) {
                 return DateUtil.format(createTime, "HH:mm");
             } else if (DateUtil.isYesterday(createTime, systemTime)) {
-                return DateUtil.format(createTime, "昨天  " + "HH:mm");
+                return DateUtil.format(createTime, "昨日  " + "HH:mm");
             } else {
                 return DateUtil.format(createTime, DateUtil.FORMAT_NOT_HOUR);
             }
@@ -363,10 +363,10 @@ public class DateUtil {
     public static String getFeedbackFormatTime(long createTime) {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (isToday(createTime, systemTime)) {
-            return "今天";
+            return "今日";
         }
         if (isYesterday(createTime, systemTime)) {
-            return "昨天";
+            return "昨日";
         }
         if (isInThisYear(createTime)) {
             return DateUtil.format(createTime, FORMAT_NOT_HOUR);
