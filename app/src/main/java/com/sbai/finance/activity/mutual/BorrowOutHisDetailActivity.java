@@ -169,7 +169,7 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
             mHelperAmount.setText(getActivity().getString(R.string.helper_his,data.getIntentionCount()));
         }
 
-        mOption.setText(data.getContent());
+        mOption.setText(data.getContent().trim());
         if (data.getContentImg()==null){
             data.setContentImg("");
         }

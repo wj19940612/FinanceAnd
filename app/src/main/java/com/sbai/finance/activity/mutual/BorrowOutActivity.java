@@ -232,7 +232,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
                 mNeedAmount.setText(context.getString(R.string.RMB,String.valueOf(item.getMoney())));
                 mBorrowTime.setText(context.getString(R.string.day,String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB,String.valueOf(item.getInterest())));
-                mOption.setText(item.getContent());
+                mOption.setText(item.getContent().trim());
                 String location = item.getLocation();
                 if(TextUtils.isEmpty(location)){
                     location = context.getString(R.string.no_location);

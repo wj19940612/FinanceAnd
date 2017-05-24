@@ -402,7 +402,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
                 mBorrowTime.setText(context.getString(R.string.day, String.valueOf(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(item.getInterest())));
                 mHelperAmount.setText(context.getString(R.string.helper, item.getIntentionCount()));
-                mOption.setText(item.getContent());
+                mOption.setText(item.getContent().trim());
                 SpannableString attentionSpannableString;
                 switch (item.getStatus()) {
                     case BorrowIn.STATUS_CHECKED:

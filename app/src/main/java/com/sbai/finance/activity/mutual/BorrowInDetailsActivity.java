@@ -126,7 +126,7 @@ public class BorrowInDetailsActivity extends BaseActivity {
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(mBorrowIn.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(mBorrowIn.getInterest())));
         mHelperAmount.setText(getActivity().getString(R.string.helper,mBorrowIn.getIntentionCount()));
-        mOption.setText(mBorrowIn.getContent());
+        mOption.setText(mBorrowIn.getContent().trim());
         SpannableString attentionSpannableString;
         switch (mBorrowIn.getStatus()){
             case BorrowIn.STATUS_CHECKED:

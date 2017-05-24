@@ -188,7 +188,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
         mHelperAmount.setText(getActivity().getString(R.string.helper,data.getIntentionCount()));
-        mOption.setText(data.getContent());
+        mOption.setText(data.getContent().trim());
         if (data.getContentImg()==null){
             data.setContentImg("");
         }

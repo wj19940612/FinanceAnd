@@ -1,9 +1,13 @@
 package com.sbai.finance.activity.mutual;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -68,7 +72,9 @@ public class BorrowActivity extends BaseActivity {
 	CheckBox mAgree;
 	@BindView(R.id.contentDays)
 	LinearLayout mContentDays;
-
+    private LocalBroadcastManager mLocalBroadcastManager;
+	private DelPhotoBroadcastReceiver mDelPhotoBroadcastReceiver;
+	private IntentFilter mIntentFilter;
 	private PhotoGridAdapter mPhotoGridAdapter;
 	private String mImagePath;
 	private String mProtocolUrl = API.getHost()+"/mobi/mutual/rules?nohead=1";
@@ -115,6 +121,7 @@ public class BorrowActivity extends BaseActivity {
 					Launcher.with(getActivity(), ContentImgActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, builder.toString().split(","))
 							.putExtra(Launcher.EX_PAYLOAD_1, position)
+							.putExtra(Launcher.EX_PAYLOAD_2, position)
 							.execute();
 				}
 			}
@@ -129,6 +136,12 @@ public class BorrowActivity extends BaseActivity {
 				    setPublishStatus();
 				}
 		});
+
+		mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+		mDelPhotoBroadcastReceiver = new DelPhotoBroadcastReceiver();
+		mIntentFilter = new IntentFilter();
+		mIntentFilter.addAction(ContentImgActivity.DEL_IMAGE);
+		mLocalBroadcastManager.registerReceiver(mDelPhotoBroadcastReceiver,mIntentFilter);
 	}
 
 	@Override
@@ -146,6 +159,12 @@ public class BorrowActivity extends BaseActivity {
 				String content = mBorrowRemark.getText().toString();
 				if (content.length()>=300){
 					content = content.substring(0,300);
+				}
+				while (content.startsWith("\n")){
+					content = content.substring(1,content.length());
+				}
+				while (content.endsWith("\n")){
+					content = content.substring(0,content.length()-1);
 				}
 				StringBuilder contentImg = new StringBuilder();
 				int photoAmount =mPhotoGridAdapter.getCount();
@@ -265,11 +284,11 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowInterest.removeTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.removeTextChangedListener(mBorrowTimeLimitValidationWatcher);
 		mBorrowRemark.removeTextChangedListener(mBorrowRemarkValidationWatcher);
+		mLocalBroadcastManager.unregisterReceiver(mDelPhotoBroadcastReceiver);
 	}
 	private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)){
 			mPhotoGridAdapter.insert(helpImagePath,mPhotoGridAdapter.getCount()-1);
-			mPhotoGridAdapter.notifyDataSetChanged();
 		}
 
 	}
@@ -298,8 +317,15 @@ public class BorrowActivity extends BaseActivity {
 			setPublishStatus();
 		}
 	};
-
-
+	class DelPhotoBroadcastReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int index = intent.getExtras().getInt(ContentImgActivity.DEL_IMAGE);
+			if (index>=0){
+				mPhotoGridAdapter.remove(mPhotoGridAdapter.getItem(index));
+			}
+		}
+	}
 	static class PhotoGridAdapter extends ArrayAdapter<String> {
 
 		public PhotoGridAdapter(@NonNull Context context) {
