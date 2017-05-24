@@ -15,6 +15,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,17 +91,17 @@ public class IntroduceFragment extends BaseFragment {
     }
 
     private void updateFutureIntroduce(FutureIntroduce data) {
-        mTradeCategory.setText(data.getVarietyName());
-        mTradeCode.setText(String.valueOf(data.getVarietyType()));
-        mTradeTimeSummerWinter.setText(data.getTradeTime().replace("//", "\n"));
-        mHoldingTime.setText(data.getOpsitionTime());
-        mTradeUnit.setText(data.getTradeUnit());
-        mQuoteUnit.setText(data.getReportPriceUnit());
-        mLowestMargin.setText(data.getLowestMargin());
-        mTradeType.setText(data.getTradeType());
-        mTradeSystem.setText(data.getTradeRegime());
-        mDeliveryTime.setText(data.getDeliveryTime());
-        mDailyPriceMaximumVolatilityLimit.setText(data.getEverydayPriceMaxFluctuateLimit());
+        mTradeCategory.setText(StrFormatter.getFormatText(data.getVarietyName()));
+        mTradeCode.setText(StrFormatter.getFormatText(String.valueOf(data.getVarietyType())));
+        mTradeTimeSummerWinter.setText(StrFormatter.getFormatText(data.getTradeTime()));
+        mHoldingTime.setText(StrFormatter.getFormatText(data.getOpsitionTime()));
+        mTradeUnit.setText(StrFormatter.getFormatText(data.getTradeUnit()));
+        mQuoteUnit.setText(StrFormatter.getFormatText(data.getReportPriceUnit()));
+        mLowestMargin.setText(StrFormatter.getFormatText(data.getLowestMargin()));
+        mTradeType.setText(StrFormatter.getFormatText(data.getTradeType()));
+        mTradeSystem.setText(StrFormatter.getFormatText(data.getTradeRegime()));
+        mDeliveryTime.setText(StrFormatter.getFormatText(data.getDeliveryTime()));
+        mDailyPriceMaximumVolatilityLimit.setText(StrFormatter.getFormatText(data.getEverydayPriceMaxFluctuateLimit()));
     }
 
     @Override
