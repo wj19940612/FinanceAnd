@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sbai.finance.activity.economiccircle.ContentImgActivity">
-
     <com.sbai.finance.activity.economiccircle.HackyViewPager
         android:background="@android:color/black"
         android:id="@+id/viewPager"

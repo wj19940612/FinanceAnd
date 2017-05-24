@@ -139,6 +139,7 @@ public class BorrowActivity extends BaseActivity {
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
+				mPublish.setEnabled(false);
 				int money = Integer.valueOf( mBorrowLimit.getText().toString());
 				String interest =  mBorrowInterest.getText().toString();
 				int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
@@ -199,6 +200,7 @@ public class BorrowActivity extends BaseActivity {
 							Launcher.with(getActivity(),BorrowInActivity.class).execute();
 							finish();
 						}else{
+							mPublish.setEnabled(true);
 							ToastUtil.curt(resp.getMsg());
 						}
 					}
