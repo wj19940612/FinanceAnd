@@ -35,7 +35,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.EmojiFilter;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
@@ -97,7 +96,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void initViews() {
         InputFilter[] filters = new InputFilter[1];
-        filters[0] = new EmojiFilter();
+        filters[0] = new InputFilter.LengthFilter(400);
         mCommentContent.setFilters(filters);
         mFeedbackList = new ArrayList<>();
         mFeedbackAdapter = new FeedbackAdapter(this, mFeedbackList);
