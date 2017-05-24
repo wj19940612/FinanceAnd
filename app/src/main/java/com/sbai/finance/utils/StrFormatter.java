@@ -27,4 +27,13 @@ public class StrFormatter {
         }
         return phoneNoSpace;
     }
+
+    /**
+     * 替换//为换行
+     * @param text
+     * @return
+     */
+    public static String getFormatText(String text){
+        return text.replace("//", "\n");
+    }
 }
