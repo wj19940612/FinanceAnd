@@ -231,6 +231,7 @@ public class Client {
                         .put("varietyId", varietyId));
     }
 
+
     /**
      * 获取多个行情
      *
@@ -691,6 +692,7 @@ public class Client {
                         .put("search", key));
     }
 
+
     /**
      * 接口名称 根据股票代码查询股票信息
      * 请求类型 get
@@ -794,17 +796,24 @@ public class Client {
     /**
      * 获取经济圈列表
      *
+     * @param createTime
+     * @param pageSize
+     * @return
+     */
+    public static API getEconomicCircleList(Long createTime, int pageSize) {
+        return new API("/coterie/coterie/coterieList.do",
+                new ApiParams()
+                        .put("createTime", createTime)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * 获取借款有道列表
+     *
      * @param page
      * @param pageSize
      * @return
      */
-    public static API getEconomicCircleList(int page, int pageSize) {
-        return new API("/coterie/coterie/coterieList.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize));
-    }
-
     public static API getBorrowMoneyList(int page, int pageSize) {
         return new API(POST, "/coterie/help/loan/showList.do",
                 new ApiParams()
@@ -842,7 +851,7 @@ public class Client {
      * 获取观点回复列表
      *
      * @param page
-     * @param pageSizex
+     * @param pageSize
      * @param viewpointId
      * @return
      */
@@ -857,16 +866,16 @@ public class Client {
     /**
      * 获取观点回复列表,在消息里面的回复列表里的置顶回复id
      *
-     * @param page
+     * @param createTime
      * @param pageSize
      * @param viewpointId
      * @param replyId
      * @return
      */
-    public static API getOpinionReplyList(int page, int pageSize, int viewpointId, Integer replyId) {
+    public static API getOpinionReplyList(Long createTime, int pageSize, int viewpointId, Integer replyId) {
         return new API("/coterie/viewpoint/findViewpointReply.do",
                 new ApiParams()
-                        .put("page", page)
+                        .put("createTime", createTime)
                         .put("pageSize", pageSize)
                         .put("viewpointId", viewpointId)
                         .put("replyId", replyId));

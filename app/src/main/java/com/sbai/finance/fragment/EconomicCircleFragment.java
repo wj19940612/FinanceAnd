@@ -77,7 +77,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	private TextView mFootView;
 	private RefreshAttentionReceiver mReceiver;
 
-	private int mPage = 0;
+	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<String> mSet;
 
@@ -150,7 +150,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		if (isVisibleToUser && isVisible()) {
 			mSwipeRefreshLayout.setRefreshing(true);
 			mSet.clear();
-			mPage = 0;
+			mCreateTime = null;
 			requestEconomicCircleList();
 		}
 	}
@@ -173,14 +173,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			@Override
 			public void onRefresh() {
 				mSet.clear();
-				mPage = 0;
+				mCreateTime = null;
 				requestEconomicCircleList();
 			}
 		});
 	}
 
 	private void requestEconomicCircleList() {
-		Client.getEconomicCircleList(mPage, mPageSize).setTag(TAG)
+		Client.getEconomicCircleList(mCreateTime, mPageSize).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<EconomicCircle>>, List<EconomicCircle>>() {
 					@Override
 					protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
@@ -220,11 +220,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				@Override
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mPage++;
+					mCreateTime = mEconomicCircleList.get(mEconomicCircleList.size() - 1).getCreateTime();
 					requestEconomicCircleList();
 				}
 			});
-			mListView.addFooterView(mFootView, null,true);
+			mListView.addFooterView(mFootView, null, true);
 		}
 
 		if (economicCircleList.size() < mPageSize) {
@@ -544,24 +544,17 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					}
 				});
 
-				if (item.getContentImg() != null) {
+				if (!TextUtils.isEmpty(item.getContentImg())) {
 					String[] images = item.getContentImg().split(",");
 					switch (images.length) {
 						case 1:
-							if (TextUtils.isEmpty(images[0])) {
-								mImage1.setVisibility(View.GONE);
-								mImage2.setVisibility(View.GONE);
-								mImage3.setVisibility(View.GONE);
-								mImage4.setVisibility(View.GONE);
-							} else {
-								mContentImg.setVisibility(View.VISIBLE);
-								mImage1.setVisibility(View.VISIBLE);
-								loadImage(context, images[0], mImage1);
-								mImage2.setVisibility(View.INVISIBLE);
-								mImage3.setVisibility(View.INVISIBLE);
-								mImage4.setVisibility(View.INVISIBLE);
-								imageClick(context, images, mImage1, 0);
-							}
+							mContentImg.setVisibility(View.VISIBLE);
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.INVISIBLE);
+							mImage3.setVisibility(View.INVISIBLE);
+							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
 							break;
 						case 2:
 							mContentImg.setVisibility(View.VISIBLE);

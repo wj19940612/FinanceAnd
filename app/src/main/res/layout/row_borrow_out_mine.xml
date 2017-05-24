@@ -43,7 +43,7 @@
             android:layout_gravity="center"
             android:lineSpacingExtra="5dp"
             android:textSize="11sp"
-            android:text="@string/intention_time"/>
+            tools:text="@string/intention_time"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

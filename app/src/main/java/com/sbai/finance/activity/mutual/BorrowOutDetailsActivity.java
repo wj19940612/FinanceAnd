@@ -163,7 +163,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         mNeedAmount.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getMoney())));
         mBorrowTime.setText(this.getString(R.string.day,String.valueOf(mBorrowDetails.getDays())));
         mBorrowInterest.setText(this.getString(R.string.RMB,String.valueOf(mBorrowDetails.getInterest())));
-        mOption.setText(mBorrowDetails.getContent());
+        mOption.setText(mBorrowDetails.getContent().trim());
         String location = mBorrowDetails.getLocation();
         if(TextUtils.isEmpty(location)){
             location = this.getString(R.string.no_location);

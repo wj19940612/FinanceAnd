@@ -72,8 +72,8 @@ android {
 
         alpha {
             applicationId "com.sbai.finance"
-            versionCode 12
-            versionName "0.1.12"
+            versionCode 14
+            versionName "0.1.14"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
 
             manifestPlaceholders = [
