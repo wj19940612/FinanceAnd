@@ -91,8 +91,8 @@ public class IntroduceFragment extends BaseFragment {
     }
 
     private void updateFutureIntroduce(FutureIntroduce data) {
-        mTradeCategory.setText(data.getVarietyName());
-        mTradeCode.setText(String.valueOf(data.getVarietyType()));
+        mTradeCategory.setText(StrFormatter.getFormatText(data.getVarietyName()));
+        mTradeCode.setText(StrFormatter.getFormatText(String.valueOf(data.getVarietyType())));
         mTradeTimeSummerWinter.setText(StrFormatter.getFormatText(data.getTradeTime()));
         mHoldingTime.setText(StrFormatter.getFormatText(data.getOpsitionTime()));
         mTradeUnit.setText(StrFormatter.getFormatText(data.getTradeUnit()));
