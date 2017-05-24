@@ -63,7 +63,6 @@
                     android:textColor="@color/redPrimary"
                     android:textSize="15sp"
                     tools:text="@string/user_address"/>
-
                 <TextView
                     android:id="@+id/publishTime"
                     android:layout_width="wrap_content"
@@ -71,7 +70,7 @@
                     android:layout_gravity="center"
                     android:gravity="right"
                     android:lineSpacingExtra="5dp"
-                    android:text="@string/borrow_in_time"
+                    tools:text="@string/borrow_in_time"
                     android:textColor="@color/assistText"
                     android:textSize="11sp"/>
             </LinearLayout>

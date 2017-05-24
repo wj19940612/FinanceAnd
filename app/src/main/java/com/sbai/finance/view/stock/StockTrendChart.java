@@ -227,6 +227,9 @@ public class StockTrendChart extends ChartView {
             String preClosePriceStr = formatNumber(preClosePrice);
             float x = left + mTextMargin;
             float y = topY - mTextMargin - mFontHeight / 2 + mOffset4CenterText;
+            if (topY - mTextMargin - mFontHeight <= top) { // preClosePriceText beyond top
+                y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
+            }
             canvas.drawText(preClosePriceStr, x, y, sPaint);
         }
     }
