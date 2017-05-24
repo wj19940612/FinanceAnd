@@ -25,6 +25,15 @@ public class UsablePlatform {
 	private int status;
 	private int transfer;
 	private long updateTime;
+	private int type;
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 
 	public long getCreateTime() {
 		return createTime;
@@ -101,6 +110,7 @@ public class UsablePlatform {
 				", status=" + status +
 				", transfer=" + transfer +
 				", updateTime=" + updateTime +
+				", type=" + type +
 				'}';
 	}
 }

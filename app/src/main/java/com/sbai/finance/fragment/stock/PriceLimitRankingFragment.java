@@ -3,26 +3,28 @@ package com.sbai.finance.fragment.stock;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
+import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +70,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
         if (getArguments() != null) {
             mSortType = getArguments().getInt(KEY_SORT_TYPE);
             mStockType = getArguments().getInt(KEY_STOCK_TYPE);
-            Log.d(TAG, "onCreate: " + mSortType + " s " + mStockType);
         }
     }
 
@@ -115,7 +116,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-            mStockSortAdapter.clear();
+//            mStockSortAdapter.clear();
             mStockSortAdapter.addAll(data);
         }
     }
@@ -146,17 +147,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
         requestStockSortList();
     }
 
-    private void initEmptyView() {
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        mEmpty = new AppCompatTextView(getActivity());
-        mEmpty.setPadding(0, padding, 0, 0);
-        mEmpty.setGravity(Gravity.CENTER_HORIZONTAL);
-        mEmpty.setTextColor(ContextCompat.getColor(getActivity(), R.color.assistText));
-        mEmpty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        mEmpty.setCompoundDrawablePadding(padding);
-        mEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.img_no_message, 0, 0);
-    }
-
     class StockSortAdapter extends RecyclerView.Adapter<StockSortAdapter.ViewHolder> {
 
         Context mContext;
@@ -168,14 +158,20 @@ public class PriceLimitRankingFragment extends BaseFragment {
         }
 
         public void addAll(List<StockData> datas) {
+            mStockDataArrayList.clear();
             mStockDataArrayList.addAll(datas);
-            notifyItemRangeChanged(0,datas.size());
+            //先显示10个
+            notifyItemRangeChanged(0, datas.size());
         }
 
-        public void clear() {
-            mStockDataArrayList.clear();
-            notifyItemRangeRemoved(0, mStockDataArrayList.size());
-        }
+//        public void clear() {
+//            mStockDataArrayList.clear();
+////            notifyItemRangeRemoved(0, mStockDataArrayList.size());
+//            if(mStockDataArrayList.isEmpty()){
+//
+//                notifyItemRangeRemoved(0, 10);
+//            }
+//        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -185,6 +181,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            if (mStockDataArrayList.isEmpty()) return;
             holder.bindDataWithView(mStockDataArrayList.get(position), position, mContext);
         }
 
@@ -202,13 +199,15 @@ public class PriceLimitRankingFragment extends BaseFragment {
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
+            @BindView(R.id.rootView)
+            LinearLayout mRootView;
 
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(StockData item, int position, Context context) {
+            public void bindDataWithView(final StockData item, int position, final Context context) {
                 if (item == null) return;
                 mFutureName.setText(item.getCode_name());
                 mFutureCode.setText(item.getStock_code());
@@ -225,6 +224,21 @@ public class PriceLimitRankingFragment extends BaseFragment {
                     }
                 }
                 mLastPrice.setText(item.getLast_price());
+                mRootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Client.getStockInfo(item.getStock_code())
+                                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                                    @Override
+                                    protected void onRespSuccessData(Variety data) {
+                                        Launcher.with(context, StockDetailActivity.class)
+                                                .putExtra(Launcher.EX_PAYLOAD, data).execute();
+                                    }
+                                })
+                                .fire();
+
+                    }
+                });
             }
         }
     }

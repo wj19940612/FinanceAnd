@@ -101,9 +101,9 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borrow_in_mine_his_details);
         ButterKnife.bind(this);
-        initView();
         int id= getIntent().getIntExtra(BORROW_IN_HIS,-1);
         mIsReturnHome =getIntent().getIntExtra(Launcher.EX_PAYLOAD_2,-1);
+        initView();
         if (id!=-1){
             requestBorrowDetail(id);
            // requestHelper(id);
@@ -242,7 +242,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
 
     }
     private void loadImage(String src,ImageView image){
-        Glide.with(this).load(src).placeholder(R.drawable.help).into(image);
+        Glide.with(this).load(src).placeholder(R.drawable.ic_loading_pic).into(image);
     }
     private void updateHelperData(List<BorrowHelper> data) {
         mHelperAmount.setText(getActivity().getString(R.string.helper,data.size()));

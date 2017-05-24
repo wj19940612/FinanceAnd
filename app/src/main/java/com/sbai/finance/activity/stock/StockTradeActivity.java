@@ -284,7 +284,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case ViewpointFragment.REQ_CODE_ATTENTION:
-                    ToastUtil.curt("收到回到");
                     updateViewPointPage(data);
                     break;
             }
@@ -339,8 +338,10 @@ public abstract class StockTradeActivity extends BaseActivity {
     private void updateStockTrendView(StockRTData stockRTData) {
         ChartSettings settings = mStockTrendView.getSettings();
         if (settings != null && settings.getPreClosePrice() == 0) {
-            settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
-            mStockTrendView.setSettings(settings);
+            if (!TextUtils.isEmpty(stockRTData.getPrev_price())) {
+                settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
+                mStockTrendView.setSettings(settings);
+            }
         }
     }
 
@@ -410,7 +411,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
-        settings2.setIndexesEnable(false);
+        settings2.setIndexesEnable(true);
         settings2.setIndexesBaseLines(2);
         mStockKlineView.setDayLine(true);
         mStockKlineView.setSettings(settings2);

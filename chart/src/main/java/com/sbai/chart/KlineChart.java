@@ -138,6 +138,12 @@ public class KlineChart extends ChartView {
         paint.setPathEffect(null);
     }
 
+    protected void setTouchLineTextPaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
+        paint.setTextSize(mBigFontSize);
+        paint.setPathEffect(null);
+    }
+
     private void setMovingAveragesPaint(Paint paint, int movingAverage) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(1);
@@ -168,6 +174,12 @@ public class KlineChart extends ChartView {
     protected void setTouchLinePaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartColor.RED.get()));
         paint.setStyle(Paint.Style.STROKE);
+        paint.setPathEffect(null);
+    }
+
+    protected void setRedRectBgPaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+        paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
     }
 
@@ -593,6 +605,30 @@ public class KlineChart extends ChartView {
 
             if (indexesEnable) {
                 float touchY2 = getIndexesChartY(data.getNowVolume());
+
+                // draw volume connect to horizontal line
+                String volume = String.valueOf(data.getNowVolume());
+                setTouchLineTextPaint(sPaint);
+                float volumeWidth = sPaint.measureText(volume);
+                RectF redRect = getBigFontBgRectF(0, 0, volumeWidth);
+                float rectHeight = redRect.height();
+                float rectWidth = redRect.width();
+                float volumeMargin = (rectWidth - volumeWidth) / 2;
+                float volumeX = left2 + width2 - volumeMargin - volumeWidth;
+                redRect.top = touchY2 - rectHeight;
+                redRect.left = left2 + width2 - rectWidth;
+                if (redRect.top < top2) {
+                    redRect.top = top2;
+                }
+                redRect.bottom = redRect.top + rectHeight;
+                redRect.right = redRect.left + rectWidth;
+                setRedRectBgPaint(sPaint);
+                canvas.drawRoundRect(redRect, 2, 2, sPaint);
+                float volumeY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
+                setTouchLineTextPaint(sPaint);
+                canvas.drawText(volume, volumeX, volumeY, sPaint);
+
+                setTouchLinePaint(sPaint);
                 canvas.drawLine(touchX, top2, touchX, top2 + height2, sPaint);
                 canvas.drawLine(left2, touchY2, left2 + width, touchY2, sPaint);
             }

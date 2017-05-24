@@ -27,60 +27,7 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
-//<<<<<<< HEAD
-//
-//    /**
-//     * 股票除指数品种
-//     *
-//     * @param page
-//     * @param pageSize
-//     * @return
-//     */
-//    public static API getStockVariety(Integer page, Integer pageSize, String search) {
-//        return new API("/order/order/getStockVariety.do",
-//                new ApiParams()
-//                        .put("page", page)
-//                        .put("pageSize", pageSize)
-//                        .put("search", search));
-//    }
-//
-//    /**
-//     * 获取借款详情
-//     *
-//     * @param id
-//     * @return
-//     */
-//    public static API getBorrowMoneyDetail(int id) {
-//        return new API(POST, "/coterie/help/loan/showDetails.do",
-//                new ApiParams()
-//                        .put("id", id));
-//    }
-//
-//    /**
-//     * 给予帮助
-//     *
-//     * @param id
-//     * @return
-//     */
-//    public static API giveHelp(int id) {
-//        return new API(POST, "/coterie/help/loan/intention.do",
-//                new ApiParams()
-//                        .put("id", id));
-//    }
-//
-//    /**
-//     * 想要帮助他/我的人列表
-//     *
-//     * @param id
-//     * @return
-//     */
-//    public static API getWantHelpHimOrYouList(int id) {
-//        return new API(POST, "/coterie/help/loan/intentionCount.do",
-//                new ApiParams()
-//                        .put("id", id));
-//    }
-//=======
-//>>>>>>> dev
+
 
     /**
      * 股票除指数品种
@@ -283,6 +230,7 @@ public class Client {
                 new ApiParams()
                         .put("varietyId", varietyId));
     }
+
 
     /**
      * 获取多个行情
@@ -744,6 +692,19 @@ public class Client {
                         .put("search", key));
     }
 
+
+    /**
+     * 接口名称 根据股票代码查询股票信息
+     * 请求类型 get
+     * 请求Url  /order/stock/query/info.do
+     *
+     * @param code
+     * @return
+     */
+    public static API getStockInfo(String code) {
+        return new API("/order/stock/query/info.do", new ApiParams().put("code", code));
+    }
+
     /**
      * 获取k线数据
      *
@@ -793,7 +754,7 @@ public class Client {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", 15));
+                        .put("pageSize", 200));
     }
 
     /**
@@ -835,17 +796,24 @@ public class Client {
     /**
      * 获取经济圈列表
      *
+     * @param createTime
+     * @param pageSize
+     * @return
+     */
+    public static API getEconomicCircleList(Long createTime, int pageSize) {
+        return new API("/coterie/coterie/coterieList.do",
+                new ApiParams()
+                        .put("createTime", createTime)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * 获取借款有道列表
+     *
      * @param page
      * @param pageSize
      * @return
      */
-    public static API getEconomicCircleList(int page, int pageSize) {
-        return new API("/coterie/coterie/coterieList.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize));
-    }
-
     public static API getBorrowMoneyList(int page, int pageSize) {
         return new API(POST, "/coterie/help/loan/showList.do",
                 new ApiParams()
@@ -864,6 +832,20 @@ public class Client {
                 new ApiParams()
                         .put("viewpointId", viewpointId));
     }
+
+
+    /**
+     * 获取品种详情
+     *
+     * @param varietyId
+     * @return
+     */
+    public static API getVarietyDetails(int varietyId) {
+        return new API("/order/order/getVarietyInfoById.do",
+                new ApiParams()
+                        .put("varietyId", varietyId));
+    }
+
 
     /**
      * 获取观点回复列表
@@ -884,16 +866,16 @@ public class Client {
     /**
      * 获取观点回复列表,在消息里面的回复列表里的置顶回复id
      *
-     * @param page
+     * @param createTime
      * @param pageSize
      * @param viewpointId
      * @param replyId
      * @return
      */
-    public static API getOpinionReplyList(int page, int pageSize, int viewpointId, Integer replyId) {
+    public static API getOpinionReplyList(Long createTime, int pageSize, int viewpointId, Integer replyId) {
         return new API("/coterie/viewpoint/findViewpointReply.do",
                 new ApiParams()
-                        .put("page", page)
+                        .put("createTime", createTime)
                         .put("pageSize", pageSize)
                         .put("viewpointId", viewpointId)
                         .put("replyId", replyId));
@@ -1049,6 +1031,11 @@ public class Client {
                         .put("id", id));
     }
 
+    public static API getBorrowProcotol() {
+        return new API("/user/article/articleDetail.do",
+                new ApiParams().put("id", 2));
+    }
+
     /**
      * 发表观点
      *
@@ -1198,18 +1185,18 @@ public class Client {
                         .put("platform", platform));
     }
 
-	/**
-	 * 选择好心人
-	 *
-	 * @param id
-	 * @param selectedId
-	 * @return
-	 */
-	public static API chooseGoodPeople(int id, int selectedId) {
-	    return new API("/coterie/help/loan/selected.do",
-			    new ApiParams()
-					    .put("id", id)
-					    .put("selectedId", selectedId));
+    /**
+     * 选择好心人
+     *
+     * @param id
+     * @param selectedId
+     * @return
+     */
+    public static API chooseGoodPeople(int id, int selectedId) {
+        return new API("/coterie/help/loan/selected.do",
+                new ApiParams()
+                        .put("id", id)
+                        .put("selectedId", selectedId));
     }
 
     /**
@@ -1272,5 +1259,17 @@ public class Client {
                 .put("page", page)
                 .put("pageSize", pageSize)
                 .put("type", type));
+    }
+
+    /**
+     * 接口名称 单个新闻
+     * 请求类型 get
+     * 请求Url  /crawler/crawler/newsDetail.do
+     *
+     * @param id
+     * @return
+     */
+    public static API getStockNewsInfo(String id) {
+        return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
 }

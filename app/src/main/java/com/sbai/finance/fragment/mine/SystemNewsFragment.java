@@ -5,16 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -40,6 +36,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
 import java.util.List;
@@ -48,14 +45,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class SystemNewsFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class SystemNewsFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     @BindView(android.R.id.list)
     ListView mListView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private Unbinder mBind;
     private TextView mFootView;
@@ -94,7 +91,6 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
         mListView.setEmptyView(mEmpty);
         mSystemNewsAdapter = new SystemNewsAdapter(getActivity());
         mListView.setAdapter(mSystemNewsAdapter);
-        mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(this);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -102,12 +98,19 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
+                requestSystemNewsList();
+            }
+        });
+
+        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
                 requestSystemNewsList();
             }
         });
 
         requestSystemNewsList();
-        mOnNoReadNewsListener.onNoReadNewsNumber(15, 0);
     }
 
     private void requestSystemNewsList() {
@@ -116,9 +119,6 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
-                        for (HistoryNewsModel his : data) {
-                            Log.d(TAG, " 系统消息" + his.toString());
-                        }
                         updateSystemNewsListData(data);
                     }
 
@@ -136,36 +136,18 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             stopRefreshAnimation();
             return;
         }
-        if (mFootView == null) {
-            mFootView = new TextView(getActivity());
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-            mFootView.setPadding(padding, padding, padding, padding);
-            mFootView.setText(getText(R.string.load_more));
-            mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.greyAssist));
-            mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mPage++;
-                    requestSystemNewsList();
-                }
-            });
-            mListView.addFooterView(mFootView);
-        }
-
         if (systemNewsModels.size() < Client.DEFAULT_PAGE_SIZE) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
         }
 
         if (mSwipeRefreshLayout.isRefreshing()) {
             if (mSystemNewsAdapter != null) {
                 mSystemNewsAdapter.clear();
             }
-            stopRefreshAnimation();
         }
+        stopRefreshAnimation();
 
         for (HistoryNewsModel data : systemNewsModels) {
             if (mSet.add(data.getId())) {
@@ -178,24 +160,16 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
     @Override
@@ -207,71 +181,72 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
             switch (systemNewsModel.getType()) {
                 //借款单审核未通过
                 case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
-                    if (systemNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
                     }
-                    Launcher.with(getActivity(), BorrowInHisActivity.class).execute();
                     break;
                 // 14.借款发布成功 *
                 case HistoryNewsModel.BORROW_MONEY_PUBLISH_SUCCESS:
-                    if (systemNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     }
-                    Launcher.with(getActivity(), BorrowInActivity.class).execute();
                     break;
                 //// 20.成为观点大神
                 case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
-                    if (systemNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), OpinionActivity.class).execute();
                     }
-                    Launcher.with(getActivity(), OpinionActivity.class).execute();
                     break;
                 //21.实名认证已通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_PASSED:
-                    if (systemNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_ALREADY_APPROVE);
+                        Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     }
-                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_ALREADY_APPROVE);
-                    Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     break;
                 // 22.实名认证未通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_FAILED:
-                    if (systemNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
+                        Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     }
-                    LocalUser.getUser().getUserInfo().setStatus(UserInfo.CREDIT_IS_NOT_APPROVE);
-                    Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     break;
                 //   30.意向金支付成功
                 case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
-                    if (systemNewsModel.isLossEfficacy()) {
-                        return;
+                    if (!isNewsLossEfficacy(systemNewsModel)) {
+                        Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     }
-                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     break;
             }
         }
     }
 
+    private boolean isNewsLossEfficacy(HistoryNewsModel systemNewsModel) {
+        if (systemNewsModel.isLossEfficacy()) {
+            return true;
+        }
+        return false;
+    }
+
     private void updateNewsReadStatus(int position, HistoryNewsModel systemNewsModel) {
-        if (!systemNewsModel.isAlreadyRead()) {
+        if (systemNewsModel.isNotRead()) {
             mSystemNewsAdapter.remove(systemNewsModel);
             systemNewsModel.setStatus(1);
             mSystemNewsAdapter.insert(systemNewsModel, position);
+            getActivity().setResult(Activity.RESULT_OK);
+            mNotReadNewsNumber--;
+            if (mNotReadNewsNumber == 0) {
+                mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, 0);
+            }
+            Client.updateMsgReadStatus(systemNewsModel.getId())
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                        }
+                    })
+                    .fire();
         }
-        getActivity().setResult(Activity.RESULT_OK);
-        mNotReadNewsNumber--;
-        if (mNotReadNewsNumber == 0) {
-            mOnNoReadNewsListener.onNoReadNewsNumber(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, 0);
-        }
-        Client.updateMsgReadStatus(systemNewsModel.getId())
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                    }
-                })
-                .fire();
     }
 
     public void setNotReadNewsNumber(NotReadMessageNumberModel notReadNewsNumber) {
@@ -327,7 +302,7 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
 //
 //                //   30.意向金支付成功
 //                public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
-                Log.d("wangjie ", "bindViewWithData: "+item.toString());
+                Log.d("wangjie ", "bindViewWithData: " + item.toString());
                 switch (item.getType()) {
                     //借款单审核未通过
                     case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
@@ -356,16 +331,21 @@ public class SystemNewsFragment extends BaseFragment implements AbsListView.OnSc
                         break;
                 }
 
-                if (item.isAlreadyRead()) {
-                    mContent.setSelected(true);
-                    mTitle.setSelected(true);
-                } else {
+                if (item.isNotRead()) {
                     mTitle.setSelected(false);
                     mContent.setSelected(false);
+                } else {
+                    mContent.setSelected(true);
+                    mTitle.setSelected(true);
                 }
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
-                mContent.setText(item.getMsg());
+                if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
+                    mContent.setText(context.getString(R.string.pay_count, item.getData().getMoney() + " \n" +
+                            context.getString(R.string.pay_source, item.getData().getSource())));
+                } else {
+                    mContent.setText(item.getMsg());
+                }
             }
         }
     }

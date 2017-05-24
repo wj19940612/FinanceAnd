@@ -94,7 +94,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     public static UploadUserImageDialogFragment newInstance(int index, boolean ifClipImage) {
         Bundle args = new Bundle();
         args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
-        args.putInt(KEY_IMAGE_URL_INDEX,index);
+        args.putInt(KEY_IMAGE_URL_INDEX, index);
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -207,22 +207,24 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     }
 
     private String getGalleryBitmapPath(Intent data) {
-        Uri photosUri = data.getData();
-        if (photosUri != null) {
-            if (!TextUtils.isEmpty(photosUri.getPath()) && photosUri.getPath().endsWith("jpg")) {
-                return photosUri.getPath();
-            } else {
-                ContentResolver contentResolver = getActivity().getContentResolver();
-                Cursor cursor = contentResolver.query(photosUri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-                if (cursor != null) {
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    cursor.moveToFirst();
-                    //最后根据索引值获取图片路径
-                    String path = cursor.getString(column_index);
-                    if (!TextUtils.isEmpty(path)) {
-                        return path;
+        if (data != null && data.getData() != null) {
+            Uri photosUri = data.getData();
+            if (photosUri != null) {
+                if (!TextUtils.isEmpty(photosUri.getPath()) && photosUri.getPath().endsWith("jpg")) {
+                    return photosUri.getPath();
+                } else {
+                    ContentResolver contentResolver = getActivity().getContentResolver();
+                    Cursor cursor = contentResolver.query(photosUri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                    if (cursor != null) {
+                        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        cursor.moveToFirst();
+                        //最后根据索引值获取图片路径
+                        String path = cursor.getString(column_index);
+                        if (!TextUtils.isEmpty(path)) {
+                            return path;
+                        }
+                        cursor.close();
                     }
-                    cursor.close();
                 }
             }
         }
@@ -236,7 +238,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
             getActivity().startActivityForResult(intent, REQ_CLIP_HEAD_IMAGE_PAGE);
         } else {
             if (mOnImagePathListener != null) {
-                mOnImagePathListener.onImagePath(mImagePathIndex,imaUri.replace("/raw//",""));
+                mOnImagePathListener.onImagePath(mImagePathIndex, imaUri.replace("/raw//", ""));
             }
         }
         dismiss();

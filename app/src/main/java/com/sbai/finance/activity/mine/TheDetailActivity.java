@@ -18,6 +18,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -44,7 +45,7 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
     private DetailAdapter mDetailAdapter;
     private List<Detail> mDetailList;
 
-    private int mPageSize = 15;
+    private int mPageSize = 20;
     private int mPageNo = 0;
 
     @Override
@@ -219,7 +220,7 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
 
                 mPaymentContent.setText(detail.getRemark());
                 mPaymentType.setText(detail.getPlatformName());
-                mPaymentNum.setText(String.valueOf(detail.getMoney()) + "元");
+                mPaymentNum.setText(FinanceUtil.formatWithScale(detail.getMoney()) + "元");
 
             }
         }

@@ -117,7 +117,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onResume() {
         super.onResume();
         Netty.get().addHandler(mNettyHandler);
-        reset();
+        //reset();
         requestVarietyList();
     }
 
@@ -322,13 +322,13 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                     mRate.setText("--");
                 }
 
-                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
-                    mTrade.setVisibility(View.GONE);
-                    mStopTrade.setVisibility(View.VISIBLE);
-                } else {
-                    mTrade.setVisibility(View.VISIBLE);
-                    mStopTrade.setVisibility(View.GONE);
-                }
+//                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
+//                    mTrade.setVisibility(View.GONE);
+//                    mStopTrade.setVisibility(View.VISIBLE);
+//                } else {
+//                    mTrade.setVisibility(View.VISIBLE);
+//                    mStopTrade.setVisibility(View.GONE);
+//                }
             }
         }
     }

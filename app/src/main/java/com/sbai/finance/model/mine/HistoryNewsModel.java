@@ -21,12 +21,16 @@ public class HistoryNewsModel implements Parcelable {
     public static final int ACTION_TYPE_LIKE_COMMENT = 3;
     public static final int ACTION_TYPE_COMMENT = 4;
 
-    // 10.想帮你的人 11拒绝你的人12.接受你帮助的人    // 13.借款单审核未通过 14.借款发布成功 *
+    // 10.想帮你的人 11拒绝你的人12.接受你帮助的人
     public static final int ACTION_TYPE_WANT_TO_HELP_FOR_YOU = 10;
     public static final int ACTION_TYPE_REFUSE_YOU_PEOPLE = 11;
     public static final int ACTION_TYPE_ACCEPT_YOUR_HELP_PEOPLE = 12;
+
+    // 13.借款单审核未通过 14.借款发布成功 * 15.借款超时 16.借款取消 *
     public static final int BORROW_MONEY_AUDIT_IS_NOT_PASS = 13;
     public static final int BORROW_MONEY_PUBLISH_SUCCESS = 14;
+    public static final int BORROW_MONEY_TIME_OUT = 15;
+    public static final int BORROW_MONEY_CANCEL = 16;
 
     // 20.成为观点大神 21.实名认证已通过 22.实名认证未通过 * 25.涨跌预测成功 26.涨跌预测失败
     public static final int BECOME_VIEWPOINT_MANITO = 20;
@@ -75,12 +79,19 @@ public class HistoryNewsModel implements Parcelable {
      * data : {"content":"第一次发表观点，这个品种一定涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！"}
      */
 
-    public boolean isAlreadyRead() {
-        return getStatus() == 1;
+    public boolean isTheEarnestMoneyPaySuccess() {
+        return getType() == THE_EARNEST_MONEY_APY_SUCCESS;
     }
 
+    public boolean isNotRead() {
+        return getStatus() == 0;
+    }
+
+    //如果失效或者借款取消，超时 不进行跳转
     public boolean isLossEfficacy() {
-        return getStatus() == 3;
+        return getStatus() == 3 ||
+                getType() == BORROW_MONEY_TIME_OUT
+                || getType() == BORROW_MONEY_CANCEL;
     }
 
     public String getMsg() {
@@ -195,6 +206,8 @@ public class HistoryNewsModel implements Parcelable {
          */
 
         private String content;
+        private String money;
+        private String source;
 
         public String getContent() {
             return content;
@@ -208,6 +221,21 @@ public class HistoryNewsModel implements Parcelable {
 
         }
 
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
 
         @Override
         public int describeContents() {
@@ -234,6 +262,15 @@ public class HistoryNewsModel implements Parcelable {
                 return new DataBean[size];
             }
         };
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "content='" + content + '\'' +
+                    ", money=" + money +
+                    ", source='" + source + '\'' +
+                    '}';
+        }
     }
 
     /**

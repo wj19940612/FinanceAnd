@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
@@ -210,7 +211,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				.into(mAvatar);
 
 		mUserName.setText(borrowMoneyDetails.getUserName());
-		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getCreateDate()));
+		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getAuditTime()));
 
 		if (TextUtils.isEmpty(borrowMoneyDetails.getLocation())) {
 			mLocation.setText(R.string.no_location_information);
@@ -281,20 +282,24 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 									Client.giveHelp(mDataId).setTag(TAG).
 											setIndeterminate(BorrowMoneyDetailsActivity.this)
 											.setCallback(new Callback<Resp<JsonPrimitive>>() {
+
 												@Override
 												protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 													if (resp.isSuccess()) {
-														borrowMoneyDetails.setIsIntention(1);
-														mGiveHelp.setBackgroundResource(R.drawable.bg_to_confirm);
-														mGiveHelp.setText(R.string.wait_to_confirm);
-														mGiveHelp.setEnabled(false);
-														String peopleNum = mPeopleNum.getText().toString().trim();
-														mBorrowMoneyDetails.setIntentionCount(Integer.parseInt(peopleNum.substring(1, peopleNum.length() - 1)) + 1);
-														mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
+														requestBorrowMoneyDetails();
 														requestWantHelpHimList();
 													}
 												}
+
+												@Override
+												public void onFailure(VolleyError volleyError) {
+													super.onFailure(volleyError);
+													//处理多端问题
+													requestBorrowMoneyDetails();
+													requestWantHelpHimList();
+												}
 											}).fire();
+
 									dialog.dismiss();
 								}
 							})
@@ -307,24 +312,17 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			}
 		});
 
-		if (borrowMoneyDetails.getContentImg() != null) {
+		if (!TextUtils.isEmpty(borrowMoneyDetails.getContentImg())) {
 			String[] images = borrowMoneyDetails.getContentImg().split(",");
 			switch (images.length) {
 				case 1:
-					if (TextUtils.isEmpty(images[0])) {
-						mImage1.setVisibility(View.GONE);
-						mImage2.setVisibility(View.GONE);
-						mImage3.setVisibility(View.GONE);
-						mImage4.setVisibility(View.GONE);
-					} else {
-						mContentImg.setVisibility(View.VISIBLE);
-						mImage1.setVisibility(View.VISIBLE);
-						loadImage(context, images[0], mImage1);
-						mImage2.setVisibility(View.INVISIBLE);
-						mImage3.setVisibility(View.INVISIBLE);
-						mImage4.setVisibility(View.INVISIBLE);
-						imageClick(context, images, mImage1, 0);
-					}
+					mContentImg.setVisibility(View.VISIBLE);
+					mImage1.setVisibility(View.VISIBLE);
+					loadImage(context, images[0], mImage1);
+					mImage2.setVisibility(View.INVISIBLE);
+					mImage3.setVisibility(View.INVISIBLE);
+					mImage4.setVisibility(View.INVISIBLE);
+					imageClick(context, images, mImage1, 0);
 					break;
 				case 2:
 					mContentImg.setVisibility(View.VISIBLE);
@@ -368,6 +366,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				default:
 					break;
 			}
+		} else {
+			mContentImg.setVisibility(View.GONE);
 		}
 	}
 
@@ -380,8 +380,10 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	}
 
 	private void loadImage(Context context, String src, ImageView image) {
-		Glide.with(context).load(src)
-				.thumbnail(0.1f)
+		Glide.with(context)
+				.load(src)
+				.placeholder(R.drawable.img_loading)
+				.error(R.drawable.logo_login)
 				.into(image);
 	}
 

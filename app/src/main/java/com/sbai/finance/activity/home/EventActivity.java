@@ -70,6 +70,13 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				EventModel dataBean = mEventListAdapter.getItem(position);
+				Client.getBreakingNewsDetailData(dataBean.getId()).setTag(TAG)
+						.setCallback(new Callback2D<Resp<EventModel>,EventModel>() {
+							@Override
+							protected void onRespSuccessData(EventModel data) {
+								//统计点击次数
+							}
+						}).fireSync();
 				Launcher.with(getActivity(), EventDetailActivity.class)
 							.putExtra(EventDetailActivity.EX_EVENT, dataBean)
 							.putExtra(EventDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
@@ -103,11 +110,12 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 				}).fire();
 	}
     private void updateEventInfo(List<EventModel> eventList){
-		if (eventList == null) {
-			return;
-		}
 		stopRefreshAnimation();
-		mEventListAdapter.addAll(eventList);
+		for (EventModel eventModel:eventList){
+			if (mSet.add(eventModel.getId())){
+				mEventListAdapter.add(eventModel);
+			}
+		}
 		if (eventList.size() < mPageSize) {
 			mSwipeRefreshLayout.setLoadMoreEnable(false);
 		} else {
@@ -163,6 +171,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 
 	private void reset() {
 		mPageNo = 0;
+		mSet.clear();
 		mEventListAdapter.clear();
 		mSwipeRefreshLayout.setLoadMoreEnable(true);
 	}

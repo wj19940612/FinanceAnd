@@ -24,12 +24,14 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.EventModel;
+import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +51,7 @@ public class EventDetailActivity extends BaseActivity {
     public static final String EX_TITLE = "title";
     public static String EX_RAW_COOKIE = "rawCookie";
     public static final String EX_EVENT = "event";
+    public static final String EX_STOCK_NEWS = "stock_news";
 
     @BindView(R.id.eventTitle)
     TextView mEventTitle;
@@ -62,6 +65,8 @@ public class EventDetailActivity extends BaseActivity {
     LinearLayout mErrorPage;
     @BindView(R.id.eventTitleInfo)
     LinearLayout mEventTitleInfo;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private boolean mLoadSuccess;
     protected String mPageUrl;
     protected String mTitle;
@@ -88,8 +93,12 @@ public class EventDetailActivity extends BaseActivity {
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
         EventModel event = (EventModel) getIntent().getSerializableExtra(EX_EVENT);
+        StockNewsInfoModel stockNewsInfoModel = getIntent().getParcelableExtra(EX_STOCK_NEWS);
         mRawCookie = getIntent().getStringExtra(EX_RAW_COOKIE);
+
+
         initData(event);
+        initStockNewsData(stockNewsInfoModel);
         String eventId = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
         if (!TextUtils.isEmpty(eventId)) {
             Client.getBigEventContent(eventId)
@@ -99,9 +108,27 @@ public class EventDetailActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccessData(EventModel data) {
                             initData(data);
+                            initWebView();
                         }
                     })
                     .fireSync();
+        }
+
+        initWebView();
+    }
+
+    private void initStockNewsData(StockNewsInfoModel stockNewsInfoModel) {
+        if (stockNewsInfoModel != null) {
+            mTitleBar.setTitle(R.string.stock_news);
+            mEventTitleInfo.setVisibility(View.VISIBLE);
+            mEventTitle.setText(stockNewsInfoModel.getTitle());
+
+            if (TextUtils.isEmpty(stockNewsInfoModel.getFrom())) {
+                mTimeAndSource.setText(DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
+            } else {
+                mTimeAndSource.setText(stockNewsInfoModel.getFrom() + "  " + DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
+            }
+            mPureHtml = stockNewsInfoModel.getContent();
         }
     }
 
@@ -122,7 +149,6 @@ public class EventDetailActivity extends BaseActivity {
                 mPageUrl = event.getUrl();
             }
         }
-        initWebView();
     }
 
     protected void initWebView() {

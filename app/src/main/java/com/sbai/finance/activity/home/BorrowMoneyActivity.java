@@ -337,24 +337,17 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					}
 				});
 
-				if (item.getContentImg() != null) {
+				if (!TextUtils.isEmpty(item.getContentImg())) {
 					String[] images = item.getContentImg().split(",");
 					switch (images.length) {
 						case 1:
-							if (TextUtils.isEmpty(images[0])) {
-								mImage1.setVisibility(View.GONE);
-								mImage2.setVisibility(View.GONE);
-								mImage3.setVisibility(View.GONE);
-								mImage4.setVisibility(View.GONE);
-							} else {
-								mContentImg.setVisibility(View.VISIBLE);
-								mImage1.setVisibility(View.VISIBLE);
-								loadImage(context, images[0], mImage1);
-								mImage2.setVisibility(View.INVISIBLE);
-								mImage3.setVisibility(View.INVISIBLE);
-								mImage4.setVisibility(View.INVISIBLE);
-								imageClick(context, images, mImage1, 0);
-							}
+							mContentImg.setVisibility(View.VISIBLE);
+							mImage1.setVisibility(View.VISIBLE);
+							loadImage(context, images[0], mImage1);
+							mImage2.setVisibility(View.INVISIBLE);
+							mImage3.setVisibility(View.INVISIBLE);
+							mImage4.setVisibility(View.INVISIBLE);
+							imageClick(context, images, mImage1, 0);
 							break;
 						case 2:
 							mContentImg.setVisibility(View.VISIBLE);
@@ -398,13 +391,16 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 						default:
 							break;
 					}
+				} else {
+					mContentImg.setVisibility(View.GONE);
 				}
 			}
 
 			private void loadImage(Context context, String src, ImageView image) {
 				Glide.with(context)
 						.load(src)
-						.thumbnail(0.1f)
+						.placeholder(R.drawable.img_loading)
+						.error(R.drawable.logo_login)
 						.into(image);
 			}
 

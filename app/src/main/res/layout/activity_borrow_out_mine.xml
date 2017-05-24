@@ -23,6 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_above="@+id/borrowOutHis"
+            android:dividerHeight="10dp"
+            android:divider="@color/greyLightAssist"
             android:visibility="gone"/>
         <TextView
             android:id="@+id/empty"

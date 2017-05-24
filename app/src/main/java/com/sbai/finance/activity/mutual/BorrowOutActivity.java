@@ -324,7 +324,7 @@ public class BorrowOutActivity extends BaseActivity  implements AbsListView.OnSc
             }
             private void loadImage(Context context,String src,ImageView image){
                 Glide.with(context).load(src)
-                        .placeholder(R.drawable.help)
+                        .placeholder(R.drawable.ic_loading_pic)
                         .into(image);
             }
 

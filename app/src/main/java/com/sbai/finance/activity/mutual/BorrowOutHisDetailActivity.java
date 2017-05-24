@@ -159,7 +159,7 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
                     "\n" +location, 0.733f,ContextCompat.getColor(this,R.color.assistText));
         }
         mUserNameLand.setText(attentionSpannableString);
-        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(mConfirmTime)));
+        mPublishTime.setText(this.getString(R.string.borrow_out_time, DateUtil.getFormatTime(data.getConfirmTime())));
         mNeedAmount.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getMoney())));
         mBorrowTime.setText(getActivity().getString(R.string.day,String.valueOf(data.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB,String.valueOf(data.getInterest())));
@@ -254,9 +254,8 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
         }
     }
     private void loadImage(String src,ImageView image){
-        Glide.with(this).load(src).placeholder(R.drawable.help).into(image);
+        Glide.with(this).load(src).placeholder(R.drawable.ic_loading_pic).into(image);
     }
-
     private void updateHelperData(List<BorrowHelper> data) {
         mImageGridAdapter.clear();
         if (data.size()>mMax){

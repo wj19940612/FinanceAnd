@@ -12,7 +12,8 @@ public class BorrowOutHistory implements Parcelable {
     public static final int STATUS_PAY_INTENTION=6;
     public static final int STATUS_SUCCESS=7;
     public static final int STATUS_ALREADY_REPAY=8;
-
+    public static final int STATUS_NO_REPAY=0;
+    public static final int STATUS_REPAY=1;
     /**
      * auditActorId : 0
      * auditTime : 1494397076000
@@ -36,7 +37,7 @@ public class BorrowOutHistory implements Parcelable {
      * userId : 187
      * userName : 233
      */
-
+    private int loanOutRepay;
     private int auditActorId;
     private long auditTime;
     private long confirmTime;
@@ -58,6 +59,14 @@ public class BorrowOutHistory implements Parcelable {
     private int status;
     private int userId;
     private String userName;
+
+    public int getLoanOutRepay() {
+        return loanOutRepay;
+    }
+
+    public void setLoanOutRepay(int loanOutRepay) {
+        this.loanOutRepay = loanOutRepay;
+    }
 
     public int getAuditActorId() {
         return auditActorId;
