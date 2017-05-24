@@ -96,8 +96,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initViews() {
-        InputFilter[] filters = new InputFilter[1];
+        InputFilter[] filters = new InputFilter[2];
         filters[0] = new EmojiFilter();
+        filters[1] = new InputFilter.LengthFilter(400);
         mCommentContent.setFilters(filters);
         mFeedbackList = new ArrayList<>();
         mFeedbackAdapter = new FeedbackAdapter(this, mFeedbackList);
