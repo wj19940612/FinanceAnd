@@ -581,7 +581,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							imageClick(context, images, mImage3, 2);
 							break;
 						case 4:
-
+							mContentImg.setVisibility(View.VISIBLE);
 							mImage1.setVisibility(View.VISIBLE);
 							loadImage(context, images[0], mImage1);
 							mImage2.setVisibility(View.VISIBLE);
