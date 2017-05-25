@@ -504,21 +504,21 @@ public class OpinionDetailsActivity extends BaseActivity {
 											if (resp.isSuccess()) {
 												if (mLoveNum.isSelected()) {
 													mLoveNum.setSelected(false);
-													if (item.getPraiseCount() >= 999) {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-														mLoveNum.setText("999+");
-													} else {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													int praiseCount = item.getPraiseCount() - 1;
+													item.setPraiseCount(praiseCount);
+													if (praiseCount < 1000) {
+														mLoveNum.setText(String.valueOf(praiseCount));
+													} else if (item.getPraiseCount() > 999) {
+														mLoveNum.setText(R.string.number999);
 													}
 												} else {
 													mLoveNum.setSelected(true);
-													if (item.getPraiseCount() > 1000) {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-														mLoveNum.setText("999+");
-													} else {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													int praiseCount = item.getPraiseCount() + 1;
+													item.setPraiseCount(praiseCount);
+													if (praiseCount < 1000) {
+														mLoveNum.setText(String.valueOf(praiseCount));
+													} else if (item.getPraiseCount() > 999) {
+														mLoveNum.setText(R.string.number999);
 													}
 												}
 											}
@@ -545,21 +545,21 @@ public class OpinionDetailsActivity extends BaseActivity {
 									if (resp.isSuccess()) {
 										if (mLoveNum.isSelected()) {
 											mLoveNum.setSelected(false);
-											if (mOpinionDetails.getPraiseCount() >= 999) {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-												mLoveNum.setText("999+");
-											} else {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											int praiseCount = mOpinionDetails.getPraiseCount() - 1;
+											mOpinionDetails.setPraiseCount(praiseCount);
+											if (praiseCount < 1000) {
+												mLoveNum.setText(String.valueOf(praiseCount));
+											} else if (mOpinionDetails.getPraiseCount() > 999) {
+												mLoveNum.setText(R.string.number999);
 											}
 										} else {
 											mLoveNum.setSelected(true);
-											if (mOpinionDetails.getPraiseCount() > 1000) {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-												mLoveNum.setText("999+");
-											} else {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											int praiseCount = mOpinionDetails.getPraiseCount() + 1;
+											mOpinionDetails.setPraiseCount(praiseCount);
+											if (praiseCount < 1000) {
+												mLoveNum.setText(String.valueOf(praiseCount));
+											} else if (mOpinionDetails.getPraiseCount() > 999) {
+												mLoveNum.setText(R.string.number999);
 											}
 										}
 										Intent intent = new Intent(REFRESH_POINT);

@@ -166,6 +166,16 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
 		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
 
+		if (firstVisibleItem == 0) {
+			View firstVisibleItemView = mListView.getChildAt(0);
+			if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
+				View divider = firstVisibleItemView.findViewById(R.id.divider);
+				if (divider != null) {
+					divider.setVisibility(View.GONE);
+				}
+			}
+		}
+
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -581,7 +591,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							imageClick(context, images, mImage3, 2);
 							break;
 						case 4:
-
+							mContentImg.setVisibility(View.VISIBLE);
 							mImage1.setVisibility(View.VISIBLE);
 							loadImage(context, images[0], mImage1);
 							mImage2.setVisibility(View.VISIBLE);

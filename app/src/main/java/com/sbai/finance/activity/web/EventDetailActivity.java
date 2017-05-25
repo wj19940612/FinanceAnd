@@ -177,12 +177,14 @@ public class EventDetailActivity extends BaseActivity {
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.setBackgroundColor(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        //硬件加速 有些API19手机不支持
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //5.0 以下 默认同时加载http和https
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         mWebViewClient = new WebViewClient();

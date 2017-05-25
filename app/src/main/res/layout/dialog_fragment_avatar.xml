@@ -8,6 +8,7 @@
               android:padding="13dp">
 
     <ImageView
+        android:scaleType="fitXY"
         android:id="@+id/avatar"
         android:layout_width="325dp"
         android:layout_height="325dp"
