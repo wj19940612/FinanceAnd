@@ -65,7 +65,7 @@ public class AttentionActivity extends BaseActivity {
             @Override
             public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
                 SmartDialog.with(getActivity(),
-                        getString(R.string.if_not_attention, userAttentionModel.getFollowuserName()))
+                        getString(R.string.cancel_attention_dialog_title, userAttentionModel.getFollowuserName()))
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
