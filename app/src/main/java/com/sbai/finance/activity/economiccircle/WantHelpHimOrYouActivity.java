@@ -122,8 +122,12 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				} else {
 					mTitleBar.setTitle(R.string.people_want_help_him);
 				}
-
-				mPayIntention.setVisibility(View.GONE);
+			}
+		} else {
+			if (mSex == 1) {
+				mTitleBar.setTitle(R.string.people_want_help_her);
+			} else {
+				mTitleBar.setTitle(R.string.people_want_help_him);
 			}
 		}
 
@@ -289,7 +293,6 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				} else {
 					mTitleBar.setTitle(R.string.people_want_help_him);
 				}
-				mPayIntention.setVisibility(View.GONE);
 			}
 		}
 	}
