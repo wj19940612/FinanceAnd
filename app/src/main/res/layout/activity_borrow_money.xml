@@ -28,10 +28,7 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@drawable/divider_economic_circle_list"
-                android:dividerHeight="15dp"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="false"
+                android:divider="@null"
                 android:visibility="gone"/>
 
             <TextView

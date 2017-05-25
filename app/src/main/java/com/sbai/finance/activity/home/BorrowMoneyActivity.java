@@ -199,6 +199,16 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 		int topRowVerticalPosition =
 				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
 		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+
+		if (firstVisibleItem == 0) {
+			View firstVisibleItemView = mListView.getChildAt(0);
+			if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
+				View divider = firstVisibleItemView.findViewById(R.id.divider);
+				if (divider != null) {
+					divider.setVisibility(View.GONE);
+				}
+			}
+		}
 	}
 
 	static class BorrowMoneyAdapter extends BaseAdapter {

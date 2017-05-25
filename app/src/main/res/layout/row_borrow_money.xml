@@ -6,6 +6,13 @@
               android:background="@android:color/white"
               android:orientation="vertical">
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@drawable/divider_economic_circle_list"
+        android:visibility="visible"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
