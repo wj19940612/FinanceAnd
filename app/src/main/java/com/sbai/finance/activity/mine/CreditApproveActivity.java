@@ -8,9 +8,11 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
@@ -254,8 +256,10 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         if (mImagePath.size() > 1) {
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
             String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
+            Log.d("wangjie2222", "正面 : " + imageFront.length() + "  反面 " + imageReserve.length());
             Client.submitUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
                     .setIndeterminate(this)
+                    .setRetryPolicy(new DefaultRetryPolicy(100000,0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setCallback(new Callback<Resp<JsonObject>>() {
                         @Override
                         protected void onRespSuccess(Resp<JsonObject> resp) {
