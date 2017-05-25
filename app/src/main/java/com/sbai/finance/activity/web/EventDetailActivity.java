@@ -182,6 +182,9 @@ public class EventDetailActivity extends BaseActivity {
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WebChromeClient() {
