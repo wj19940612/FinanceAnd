@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="意向金为平台服务费,无论用户是否成功借款都不予退还,请谅解"
+                android:text="@string/pay_intention_hint"
                 android:textColor="@color/secondaryText"
                 android:textSize="@dimen/dp_10"/>
 
@@ -80,6 +80,5 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/sp_16"/>
         </LinearLayout>
-        =
     </ScrollView>
 </LinearLayout>

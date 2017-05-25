@@ -189,7 +189,7 @@
 
     <string name="cancel_attention_dialog_title">是否不再关注“%1$s”?</string>
     <string name="cancel_attention">取消关注</string>
-    
+
     <string name="if_attention">是否关注“%1$s”?</string>
 
     <string name="new_notification">新消息通知</string>
@@ -347,6 +347,7 @@
     <string name="want_help_him">想要帮助TA的人</string>
     <string name="pay_intention">支付意向金</string>
     <string name="intention">意向金</string>
+    <string name="pay_intention_hint">意向金为平台服务费,无论用户是否成功借款都不予退还,请谅解</string>
     <string name="we_chat_pay">微信支付</string>
     <string name="ali_pay">支付宝支付</string>
     <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
