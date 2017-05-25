@@ -655,7 +655,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 							opinionReply.setIsAttention(1);
 							mOpinionReplyAdapter.notifyDataSetChanged();
 						}
-						break;
 					}
 				}
 
