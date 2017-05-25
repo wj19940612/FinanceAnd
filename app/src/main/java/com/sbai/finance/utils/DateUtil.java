@@ -443,7 +443,7 @@ public class DateUtil {
         long minutes = (timestamp - systemTime) / (1000 * 60);
         long hours = minutes / 60;
         long minute = minutes % 60;
-        if (hours  >=  24){
+        if (hours  >=  24 ){
             return "24:00";
         }
         if (hours < 10) {

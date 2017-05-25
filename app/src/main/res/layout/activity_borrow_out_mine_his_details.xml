@@ -62,6 +62,8 @@
                     android:orientation="vertical"
                     android:textColor="@color/redPrimary"
                     android:textSize="15sp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     tools:text="@string/user_address"/>
                 <TextView
                     android:id="@+id/publishTime"
@@ -235,7 +237,8 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/common_padding"
                 android:background="@color/greyLightAssist"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/helperAmount"
                     android:layout_width="match_parent"
