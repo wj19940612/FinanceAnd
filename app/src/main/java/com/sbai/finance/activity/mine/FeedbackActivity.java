@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -114,7 +115,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
                     @Override
                     protected void onRespSuccessData(List<Feedback> data) {
-                        updateFeedbackList(data,needScrollToLast);
+                        updateFeedbackList(data, needScrollToLast);
                     }
 
                     @Override
@@ -126,7 +127,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .fire();
     }
 
-    private void updateFeedbackList(List<Feedback> data,boolean needScrollToLast) {
+    private void updateFeedbackList(List<Feedback> data, boolean needScrollToLast) {
         if (data == null) {
             stopRefreshAnimation();
             return;
@@ -141,7 +142,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
-        if (needScrollToLast){
+        if (needScrollToLast) {
             mListView.smoothScrollToPosition(mFeedbackAdapter.getCount() - 1);
         }
     }
@@ -223,6 +224,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void requestSendFeedback(final String content, final int contentType) {
         Client.sendFeedback(content, contentType)
+                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
                 .setIndeterminate(FeedbackActivity.this)
                 .setCallback(new Callback<Resp<JsonObject>>() {

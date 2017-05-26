@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -64,8 +65,9 @@ public class ClipHeadImageActivity extends BaseActivity {
     }
 
     private void confirmUserNewHeadImage(String bitmapToBase64) {
-        Log.d(TAG, "confirmUserNewHeadImage: "+bitmapToBase64.length());
+        Log.d(TAG, "confirmUserNewHeadImage: " + bitmapToBase64.length());
         Client.updateUserHeadImage(bitmapToBase64)
+                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<String>, String>() {
