@@ -34,6 +34,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
@@ -356,7 +357,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 			String className = getCallingActivity().getClassName();
 			if (!TextUtils.isEmpty(className)) {
 				if (className.equalsIgnoreCase(FutureTradeActivity.class.getName())
-						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())) {
+						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())
+						|| className.equalsIgnoreCase(StockIndexActivity.class.getName())) {
 					return;
 				}
 			}

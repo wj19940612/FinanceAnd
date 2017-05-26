@@ -29,8 +29,6 @@ import static com.sbai.finance.R.id.viewPager;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_2;
-
-
 public class ContentImgActivity extends BaseActivity {
     public static final String DEL_IMAGE="del";
 	@BindView(viewPager)
@@ -127,7 +125,6 @@ public class ContentImgActivity extends BaseActivity {
 			});
 			return imageView;
 		}
-
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView((View) object);
