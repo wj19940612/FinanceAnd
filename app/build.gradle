@@ -97,8 +97,8 @@ android {
         }
 
         prod {
-            versionCode 16
-            versionName "0.1.16"
+            versionCode 1
+            versionName "1.0.0"
             buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
 
             manifestPlaceholders = [
