@@ -92,7 +92,7 @@ public class BorrowOutHisDetailActivity extends BaseActivity {
         int id= getIntent().getIntExtra(ID,-1);
         if (id!=-1){
             requestBorrowDetail(id);
-            requestHelper(id);
+       //    requestHelper(id);
         }
     }
     private void initView() {

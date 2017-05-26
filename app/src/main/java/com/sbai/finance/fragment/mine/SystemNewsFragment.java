@@ -34,6 +34,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -341,7 +342,7 @@ public class SystemNewsFragment extends BaseFragment implements AdapterView.OnIt
                 mTitle.setText(item.getTitle());
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
                 if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
-                    mContent.setText(context.getString(R.string.pay_count, item.getData().getMoney() + " \n" +
+                    mContent.setText(context.getString(R.string.pay_count, FinanceUtil.formatWithScale(item.getData().getMoney()) + " \n" +
                             context.getString(R.string.pay_source, item.getData().getSource())));
                 } else {
                     mContent.setText(item.getMsg());
