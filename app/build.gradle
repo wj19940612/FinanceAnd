@@ -15,7 +15,8 @@ android {
                 GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
                 GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
                 GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
-                UMENG_APP_KEY   : "591a6342677baa75060024bf"
+                UMENG_APP_KEY   : "591a6342677baa75060024bf",
+                UMENG_CHANNEL   : "OFFICAL"
         ]
 
         // the ndk and manifest configs are for getui
@@ -93,20 +94,22 @@ android {
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30"
+                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
+                    UMENG_CHANNEL   : "OFFICAL"
             ]
         }
 
         prod {
-            versionCode 1
-            versionName "1.0.0"
+            versionCode 20
+            versionName "1.0.1"
             buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30"
+                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
+                    UMENG_CHANNEL   : "OFFICAL"
             ]
         }
     }
