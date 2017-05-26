@@ -8,16 +8,16 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentTop="true"/>
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
         android:paddingBottom="5dp"
+        android:visibility="visible"
         app:backFeature="true"/>
+
     <ProgressBar
         android:id="@+id/progress"
         style="@android:style/Widget.ProgressBar.Horizontal"
