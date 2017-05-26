@@ -1,7 +1,6 @@
 package com.sbai.httplib;
 
 import android.text.TextUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
