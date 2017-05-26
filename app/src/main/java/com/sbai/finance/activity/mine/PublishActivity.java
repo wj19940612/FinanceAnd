@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.mine.UserPublishModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -56,6 +58,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
     private int mPage;
     private int mUserId;
     private HashSet<Integer> mSet;
+    private List<UserPublishModel> mUserPublishModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                 .setCallback(new Callback2D<Resp<List<UserPublishModel>>, List<UserPublishModel>>() {
                     @Override
                     protected void onRespSuccessData(List<UserPublishModel> data) {
+                        mUserPublishModelList = data;
                         updateUserPublishData(data);
                     }
 
@@ -158,6 +162,25 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                     .putExtra(Launcher.EX_PAYLOAD, item.getId())
                     .putExtra(Launcher.EX_PAYLOAD_2, false)
                     .executeForResult(100);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            if (data != null) {
+                OpinionDetails opinionDetails = (OpinionDetails) data.getSerializableExtra(Launcher.EX_PAYLOAD);
+                if (opinionDetails != null) {
+                    for (UserPublishModel userPublishModel : mUserPublishModelList) {
+                        if (userPublishModel.getId() == opinionDetails.getId()) {
+                            userPublishModel.setPraiseCount(opinionDetails.getPraiseCount());
+	                        userPublishModel.setReplyCount(opinionDetails.getReplyCount());
+                        }
+                    }
+                    mPublishAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 

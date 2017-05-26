@@ -159,8 +159,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 							intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
 							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
 									.sendBroadcast(intent);
-//                            setResult(RESULT_OK, intent);
 						}
+
+						Intent intent = new Intent(REFRESH_POINT);
+						intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+						setResult(RESULT_OK, intent);
 					}
 				}).fire();
 	}
@@ -562,8 +565,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 												mLoveNum.setText(R.string.number999);
 											}
 										}
+
+
 										Intent intent = new Intent(REFRESH_POINT);
 										intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+										setResult(RESULT_OK, intent);
 										LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
 												.sendBroadcast(intent);
 
@@ -597,6 +603,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 										requestOpinionDetails(true);
 										mCommentContent.setText("");
 										mScrollView.smoothScrollTo(0, 0);
+
 									}
 								}
 							}).fire();
