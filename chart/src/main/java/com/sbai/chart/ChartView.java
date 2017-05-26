@@ -9,7 +9,6 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -300,8 +299,6 @@ public abstract class ChartView extends View {
                         || Math.abs(mDownY - event.getY()) < CLICK_PIXELS) {
                     return false;
                 }
-
-                Log.d("TAG", "onTouchEvent: remove");
 
                 mHandler.removeMessages(WHAT_LONG_PRESS);
                 mHandler.removeMessages(WHAT_ONE_CLICK);

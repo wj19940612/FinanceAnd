@@ -23,10 +23,24 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
         }
     }
+
+    java.util.Properties properties = new Properties();
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    signingConfigs {
+        release {
+            storeFile file(properties.get('keystore_storeFile'))
+            storePassword properties.get('keystore_storePassword')
+            keyAlias properties.get('keystore_keyAlias')
+            keyPassword properties.get('keystore_keyPassword')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             ext.enableCrashlytics = false
@@ -61,7 +75,6 @@ android {
 
     productFlavors {
         dev {
-
             minSdkVersion 19
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
