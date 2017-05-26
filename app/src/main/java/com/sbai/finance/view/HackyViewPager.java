@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.economiccircle;
+package com.sbai.finance.view;
 
 
 import android.content.Context;

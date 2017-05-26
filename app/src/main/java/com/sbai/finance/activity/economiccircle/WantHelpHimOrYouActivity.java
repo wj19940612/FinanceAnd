@@ -67,6 +67,12 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 
 		initData(getIntent());
 
+		initViews();
+
+		requestWantHelpHimList();
+	}
+
+	private void initViews() {
 		if (LocalUser.getUser().isLogin()) {
 			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
 				mTitleBar.setTitle(R.string.people_want_help_you);
@@ -87,13 +93,13 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 											@Override
 											public void onClick(final Dialog dialog) {
-												Client.chooseGoodPeople(mDataId,  mWantHelpHimOrYouList.get(position).getUserId())
+												Client.chooseGoodPeople(mDataId, mWantHelpHimOrYouList.get(position).getUserId())
 														.setTag(TAG)
 														.setIndeterminate(WantHelpHimOrYouActivity.this)
 														.setCallback(new Callback<Resp<JsonPrimitive>>() {
 															@Override
 															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-																Launcher.with(getActivity(),PayIntentionActivity.class)
+																Launcher.with(getActivity(), PayIntentionActivity.class)
 																		.putExtra(Launcher.EX_PAYLOAD, mDataId)
 																		.execute();
 																dialog.dismiss();
@@ -116,16 +122,18 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				} else {
 					mTitleBar.setTitle(R.string.people_want_help_him);
 				}
-
-				mPayIntention.setVisibility(View.GONE);
+			}
+		} else {
+			if (mSex == 1) {
+				mTitleBar.setTitle(R.string.people_want_help_her);
+			} else {
+				mTitleBar.setTitle(R.string.people_want_help_him);
 			}
 		}
 
 		mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mWantHelpHimOrYouAdapter);
-
-		requestWantHelpHimList();
 	}
 
 	private void initData(Intent intent) {
@@ -285,7 +293,6 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				} else {
 					mTitleBar.setTitle(R.string.people_want_help_him);
 				}
-				mPayIntention.setVisibility(View.GONE);
 			}
 		}
 	}
