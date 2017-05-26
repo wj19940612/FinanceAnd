@@ -147,7 +147,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	}
 
 	private void requestOpinionDetails(final boolean isSendBroadcast) {
-		Client.getOpinionDetails(mDataId).setTag(TAG).setIndeterminate(this)
+		Client.getOpinionDetails(mDataId).setTag(TAG)
 				.setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
 					@Override
 					protected void onRespSuccessData(OpinionDetails opinionDetails) {
