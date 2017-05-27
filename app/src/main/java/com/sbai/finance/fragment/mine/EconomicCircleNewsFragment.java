@@ -327,8 +327,9 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
                                 ContextCompat.getColor(context, R.color.primaryText));
                         mUserAction.setText(spannableString);
+                        mContent.setSelected(false);
+                    } else {
                         mContent.setSelected(true);
-                    } else {  mContent.setSelected(false);
                         SpannableString spannableString = StrUtil.mergeTextWithColor(userInfo.getUserName() + "  ",
                                 !TextUtils.isEmpty(item.getTitle()) ? item.getTitle() : "",
                                 ContextCompat.getColor(context, R.color.secondaryText));
