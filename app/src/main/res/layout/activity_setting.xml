@@ -41,4 +41,14 @@
         android:padding="@dimen/common_padding"
         android:text="@string/new_news_notification"
         android:textColor="@color/primaryText"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:id="@+id/appInfo"
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
 </LinearLayout>

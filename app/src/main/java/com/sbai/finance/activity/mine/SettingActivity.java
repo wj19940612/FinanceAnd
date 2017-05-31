@@ -6,7 +6,9 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +28,7 @@ public class SettingActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.shieldSetting, R.id.newNewsNotification})
+    @OnClick({R.id.shieldSetting, R.id.newNewsNotification, R.id.appInfo})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.shieldSetting:
@@ -34,6 +36,10 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.newNewsNotification:
                 Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+                break;
+            case R.id.appInfo:
+                ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "
+                        + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
                 break;
         }
     }
