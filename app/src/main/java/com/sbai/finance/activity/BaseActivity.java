@@ -36,6 +36,8 @@ public class BaseActivity extends AppCompatActivity implements
 
     public static final int REQ_CODE_TOKEN_EXPIRED_LOGIN = 800;
 
+    public static final int REQ_CODE_USERDATA = 1001;
+
     protected String TAG;
 
     private TimerHandler mTimerHandler;

@@ -1,13 +1,10 @@
 package com.sbai.finance.activity.economiccircle;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +23,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -42,8 +40,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 
 public class BorrowMoneyDetailsActivity extends BaseActivity {
 
@@ -95,22 +91,18 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	private int mDataId;
 	private BorrowMoneyDetails mBorrowMoneyDetails;
 	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
-	private RefreshAttentionReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_borrow_money_details);
 		ButterKnife.bind(this);
-		calculateAvatarNum(this);
-
-		initData(getIntent());
 		mWantHelpHimOrYouList = new ArrayList<>();
 
+		initData(getIntent());
+		calculateAvatarNum(this);
 		requestBorrowMoneyDetails();
 		requestWantHelpHimList();
-
-		registerRefreshReceiver();
 	}
 
 	private void initData(Intent intent) {
@@ -252,7 +244,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				if (LocalUser.getUser().isLogin()) {
 					Launcher.with(context, UserDataActivity.class)
 							.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
-							.execute();
+							.executeForResult(REQ_CODE_USERDATA);
 				} else {
 					Launcher.with(context, LoginActivity.class).execute();
 				}
@@ -419,26 +411,27 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		if (requestCode == REQ_WANT_HELP_HIM_OR_YOU && resultCode == RESULT_OK) {
 			requestBorrowMoneyDetails();
 		}
-	}
 
-	private void registerRefreshReceiver() {
-		mReceiver = new RefreshAttentionReceiver();
-		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
-	}
+		if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
+			if (data != null) {
+				WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+						(WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
-	private class RefreshAttentionReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+				AttentionAndFansNumberModel attentionAndFansNumberModel =
+						(AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
-			if (whetherAttentionShieldOrNot != null) {
-				if (whetherAttentionShieldOrNot.isFollow()) {
-					mIsAttention.setText(R.string.is_attention);
-				} else {
-					mIsAttention.setText("");
+				if (whetherAttentionShieldOrNot != null) {
+					if (whetherAttentionShieldOrNot.isFollow()) {
+						mIsAttention.setText(R.string.is_attention);
+					} else {
+						mIsAttention.setText("");
+					}
 				}
+
+				Intent intent = new Intent();
+				intent.putExtra(Launcher.EX_PAYLOAD_1, whetherAttentionShieldOrNot);
+				intent.putExtra(Launcher.EX_PAYLOAD_2, attentionAndFansNumberModel);
+				setResult(RESULT_OK, intent);
 			}
 		}
 	}
