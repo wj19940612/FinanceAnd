@@ -44,6 +44,8 @@ import butterknife.ButterKnife;
 
 public class PublishActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
+    public static final int REQ_CODE_OPINION_DETAILS = 1001;
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(android.R.id.list)
@@ -74,7 +76,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
         int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
         if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
             mPublishAdapter.setIsHimSelf(true);
-            mTitleBar.setTitle(R.string.mine_publish);
+            mTitleBar.setTitle(R.string.my_publish);
         } else {
             mTitleBar.setTitle(R.string.her_publish);
             mPublishAdapter.setIsHimSelf(false);
@@ -161,14 +163,14 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             Launcher.with(getActivity(), OpinionDetailsActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, item.getId())
                     .putExtra(Launcher.EX_PAYLOAD_2, false)
-                    .executeForResult(100);
+                    .executeForResult(REQ_CODE_OPINION_DETAILS);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == REQ_CODE_OPINION_DETAILS && resultCode == RESULT_OK) {
             if (data != null) {
                 OpinionDetails opinionDetails = (OpinionDetails) data.getSerializableExtra(Launcher.EX_PAYLOAD);
                 if (opinionDetails != null) {

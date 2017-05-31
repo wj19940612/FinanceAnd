@@ -202,7 +202,7 @@ public class MineFragment extends BaseFragment {
             mAttention.setText(attentionSpannableString);
             SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, Color.WHITE);
             mFans.setText(fansSpannableString);
-            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n-", 1.3f, Color.WHITE);
+            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n-", 1.3f, Color.WHITE);
             mMinePublish.setText(minePublishSpannableString);
         }
     }
@@ -318,7 +318,7 @@ public class MineFragment extends BaseFragment {
         mAttention.setText(attentionSpannableString);
         SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1.8f, Color.WHITE);
         mFans.setText(fansSpannableString);
-        SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.mine_publish), "\n" + data.getViewpoint(), 1.8f, Color.WHITE);
+        SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n" + data.getViewpoint(), 1.8f, Color.WHITE);
         mMinePublish.setText(minePublishSpannableString);
     }
 

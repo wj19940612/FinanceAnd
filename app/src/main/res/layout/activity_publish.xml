@@ -13,6 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/mine_publish"/>
+        app:titleText="@string/my_publish"/>
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>
