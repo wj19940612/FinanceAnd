@@ -317,7 +317,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                             Integer result = resp.getData();
                             if (result != null) {
                                 boolean hasAddInOption = (result == HAS_ADD_OPITION);
-                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
+                                mTradeFloatButtons.setHasAddInOption(hasAddInOption);
                             }
                         }
                     }).fire();
@@ -332,7 +332,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
@@ -344,7 +344,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         super.onReceive(resp);
                         // 701 代表已经添加过
                         if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                         }
                     }
                 })
@@ -364,7 +364,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                     @Override
                                     protected void onRespSuccess(Resp<JsonObject> resp) {
                                         if (resp.isSuccess()) {
-                                            mTradeFloatButtons.setHasAddInOpition(false);
+                                            mTradeFloatButtons.setHasAddInOption(false);
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
                                         } else {
                                             ToastUtil.curt(resp.getMsg());

@@ -170,7 +170,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             Integer result = resp.getData();
                             if (result != null) {
                                 boolean hasAddInOption = (result == HAS_ADD_OPITION);
-                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
+                                mTradeFloatButtons.setHasAddInOption(hasAddInOption);
                             }
                         }
                     }).fireSync();
@@ -209,7 +209,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOpition(false);
+                            mTradeFloatButtons.setHasAddInOption(false);
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
@@ -226,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
@@ -238,7 +238,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         super.onReceive(resp);
                         // 701 代表已经添加过
                         if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                         }
                     }
                 }).fire();
