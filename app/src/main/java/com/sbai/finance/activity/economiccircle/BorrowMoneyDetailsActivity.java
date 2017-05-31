@@ -227,10 +227,10 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		}
 
 		mBorrowMoneyContent.setText(borrowMoneyDetails.getContent());
-		mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney()))));
-		mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays()))));
-		mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest()))));
-		mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
+		mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney())));
+		mBorrowTime.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays())));
+		mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest())));
+		mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, borrowMoneyDetails.getIntentionCount()));
 
 		if (borrowMoneyDetails.getSex() == 1) {
 			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_her);
