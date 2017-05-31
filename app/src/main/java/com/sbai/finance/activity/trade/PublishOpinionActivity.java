@@ -2,7 +2,6 @@ package com.sbai.finance.activity.trade;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
@@ -180,10 +179,7 @@ public class PublishOpinionActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            setResult(RESULT_OK);
-                            Intent intent = new Intent(REFRESH_POINT);
-                            LocalBroadcastManager.getInstance(PublishOpinionActivity.this)
-                                    .sendBroadcast(intent);
+                            Intent intent = new Intent();
                             setResult(RESULT_OK, intent);
                             finish();
                         }

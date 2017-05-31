@@ -42,8 +42,6 @@ import butterknife.Unbinder;
 public class ViewpointFragment extends BaseFragment {
     //打开观点详情页
     public static final int REQ_CODE_ATTENTION = 5436;
-    //打开用户资料
-    public static final int REQ_CODE_USERDATA = 5437;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;

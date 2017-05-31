@@ -63,10 +63,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
-import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_USERDATA;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
+    //打开观点详情页
+    public static final int REQ_CODE_PUBLISH = 5439;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -273,7 +274,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
                 .putExtra(Launcher.EX_PAYLOAD_2, mFutureData)
-                .execute();
+                .executeForResult(REQ_CODE_PUBLISH);
     }
 
     private void showPredictDialog() {
@@ -599,7 +600,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == FragmentActivity.RESULT_OK) {
-            if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION) {
+            if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
                 updateViewPoint(data);
             }
         }

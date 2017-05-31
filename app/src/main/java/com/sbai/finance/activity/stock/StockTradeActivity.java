@@ -268,6 +268,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case REQ_CODE_PUBLISH_VIEWPOINT:
                 case ViewpointFragment.REQ_CODE_USERDATA:
                 case ViewpointFragment.REQ_CODE_ATTENTION:
                     updateViewPointPage(data);
