@@ -1,17 +1,15 @@
 package com.sbai.finance.activity.future;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
@@ -64,8 +62,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
-import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
+import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_USERDATA;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
@@ -114,8 +112,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private Prediction mPrediction;
     private FutureData mFutureData;
 
-    private RefreshPointReceiver mReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +128,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         updateTitleBar();
         updateExchangeStatusView();
 
-        registerRefreshReceiver();
     }
 
     @Override
@@ -294,13 +289,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         } else {
             requestAddOptional();
         }
-    }
-
-    private void registerRefreshReceiver() {
-        mReceiver = new RefreshPointReceiver();
-        IntentFilter filter = new IntentFilter(REFRESH_POINT);
-        filter.addAction(REFRESH_ATTENTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
     private void requestPrediction() {
@@ -513,7 +501,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     private void requestKlineDataAndSet(final String type) {
@@ -608,28 +595,36 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         productType.setText(productTypeStr);
     }
 
-    private class RefreshPointReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
-
-            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-            AttentionAndFansNumberModel attentionAndFansNumberModel =
-                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-            ViewpointFragment viewpointFragment = getViewpointFragment();
-            if (viewpointFragment != null) {
-                if (details != null) {
-                    viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
-                } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                    viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isShield());
-                    viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
-                } else {
-                    viewpointFragment.refreshPointList();
-                }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == FragmentActivity.RESULT_OK) {
+            if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION) {
+                updateViewPoint(data);
             }
         }
     }
+
+    private void updateViewPoint(Intent intent) {
+        OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+        WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+        AttentionAndFansNumberModel attentionAndFansNumberModel =
+                (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+        ViewpointFragment viewpointFragment = getViewpointFragment();
+        if (viewpointFragment != null) {
+            if (details != null) {
+                viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
+                viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+            } else {
+                viewpointFragment.refreshPointList();
+            }
+
+        }
+    }
+
 }
