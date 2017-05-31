@@ -15,7 +15,8 @@ android {
                 GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
                 GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
                 GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
-                UMENG_APP_KEY   :" 591a6342677baa75060024bf"
+                UMENG_APP_KEY   : "591a6342677baa75060024bf",
+                UMENG_CHANNEL   : "OFFICIAL"
         ]
 
         // the ndk and manifest configs are for getui
@@ -23,10 +24,24 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
         }
     }
+
+    java.util.Properties properties = new Properties();
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    signingConfigs {
+        release {
+            storeFile file(properties.get('keystore_storeFile'))
+            storePassword properties.get('keystore_storePassword')
+            keyAlias properties.get('keystore_keyAlias')
+            keyPassword properties.get('keystore_keyPassword')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             ext.enableCrashlytics = false
@@ -61,7 +76,6 @@ android {
 
     productFlavors {
         dev {
-
             minSdkVersion 19
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
@@ -71,16 +85,31 @@ android {
         }
 
         alpha {
-            applicationId "com.sbai.finance"
-            versionCode 14
-            versionName "0.1.14"
+            applicationId "com.sbai.finance.alpha"
+            versionCode 16
+            versionName "0.1.16"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30"
+                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
+                    UMENG_CHANNEL   : "OFFICIAL"
+            ]
+        }
+
+        prod {
+            versionCode 20
+            versionName "1.0.0"
+            buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
+
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
+                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
+                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
+                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
+                    UMENG_CHANNEL   : "OFFICIAL"
             ]
         }
     }
@@ -101,11 +130,6 @@ dependencies {
     compile files('libs/netty-common-4.1.5.final.jar')
     compile files('libs/netty-resolver-4.1.5.final.jar')
     compile files('libs/netty-transport-4.1.5.final.jar')
-    compile files('libs/SocialSDK_Sina_Simplify.jar')
-    compile files('libs/SocialSDK_WeChat_Simplify.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_tool.jar')
     compile files('libs/zixing-core-3.2.0.jar')
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -118,7 +142,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
-
     compile files('libs/netty-buffer-4.1.5.final.jar')
     compile files('libs/netty-codec-4.1.5.final.jar')
     compile files('libs/netty-common-4.1.5.final.jar')

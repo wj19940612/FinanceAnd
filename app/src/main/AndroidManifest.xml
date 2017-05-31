@@ -14,13 +14,6 @@
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
-    <!-- 友盟分享 权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -188,10 +181,12 @@
             android:screenOrientation="portrait"/>
 
 
-        <activity android:name=".activity.economiccircle.WantHelpHimOrYouActivity">
-        </activity>
-        <activity android:name=".activity.economiccircle.PayIntentionActivity">
-        </activity>
+        <activity
+            android:name=".activity.economiccircle.WantHelpHimOrYouActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.economiccircle.PayIntentionActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 反馈 -->
         <activity
@@ -207,17 +202,20 @@
         <activity
             android:name=".activity.mine.ImageSelectActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.stock.CompanyIntroActivity">
-        </activity>
+        <activity
+            android:name=".activity.stock.CompanyIntroActivity"
+            android:screenOrientation="portrait"/>
         <!-- 相册图片预览 -->
 
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.economiccircle.WeChatPayActivity">
-        </activity>
-        <activity android:name=".activity.economiccircle.AliPayActivity">
-        </activity>
+        <activity
+            android:name=".activity.economiccircle.WeChatPayActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.economiccircle.AliPayActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- service -->
         <service android:name=".service.PushIntentService"/>
@@ -227,30 +225,14 @@
             android:label="PushService"
             android:process=":pushservice"/>
 
-        <!-- 微博分享 -->
-        <activity
-            android:name=".WBShareActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="${UMENG_APP_KEY}">
         </meta-data>
 
-        <!-- 微信分享 -->
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL}"/>
 
 
     </application>

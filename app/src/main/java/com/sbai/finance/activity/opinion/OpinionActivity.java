@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.ViewPointMater;
 import com.sbai.finance.net.Callback2D;
@@ -29,16 +29,19 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-public class OpinionActivity extends BaseActivity implements AbsListView.OnScrollListener  {
+
+public class OpinionActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.empty)
     TextView mEmpty;
-    private  OpinionListAdapter mOpinionListAdapter;
+    private OpinionListAdapter mOpinionListAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +62,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             @Override
             public void onClick(int userId) {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
+                    Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, userId).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -78,10 +81,16 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
 
     private void requestOpinionMasterData() {
         Client.getViewPointMaster().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<ViewPointMater>>,List<ViewPointMater>>() {
+                .setCallback(new Callback2D<Resp<List<ViewPointMater>>, List<ViewPointMater>>() {
                     @Override
                     protected void onRespSuccessData(List<ViewPointMater> data) {
                         updateOpinionInfo(data);
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
                     }
                 }).fireSync();
     }
@@ -104,48 +113,55 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
+
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
+
     public static class OpinionListAdapter extends ArrayAdapter<ViewPointMater> {
         Context mContext;
-        public OpinionListAdapter(@NonNull Context context){
-            super(context,0);
+
+        public OpinionListAdapter(@NonNull Context context) {
+            super(context, 0);
             mContext = context;
         }
-        interface OnClickListener{
+
+        interface OnClickListener {
             void onClick(int userId);
         }
+
         private OnClickListener mOnClickListener;
-        public void setOnClickListener(OnClickListener onClickListener){
+
+        public void setOnClickListener(OnClickListener onClickListener) {
             mOnClickListener = onClickListener;
         }
+
         @NonNull
         @Override
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_opinion_master, parent, false);
-                ImageView userImage= (ImageView) convertView.findViewById(R.id.userImg);
+                ImageView userImage = (ImageView) convertView.findViewById(R.id.userImg);
                 userImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOnClickListener.onClick(getItem(position).getUserId());
                     }
                 });
-                viewHolder = new  ViewHolder(convertView);
+                viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
-                viewHolder =(ViewHolder) convertView.getTag();
+                viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.bindDataWithView(getItem(position), mContext);
             return convertView;
         }
 
 
-        static class ViewHolder{
+        static class ViewHolder {
             @BindView(R.id.userImg)
             ImageView mUserImg;
             @BindView(R.id.userName)
@@ -154,17 +170,19 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             TextView mSkilledType;
             @BindView(R.id.accuracyRate)
             TextView mAccuracyRate;
+
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
+
             private void bindDataWithView(ViewPointMater item, Context context) {
                 Glide.with(context).load(item.getUserPortrait())
                         .bitmapTransform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserImg);
                 mUserName.setText(item.getUserName());
-                if(item.getAdeptType()!=null){
-                    switch (item.getAdeptType()){
+                if (item.getAdeptType() != null) {
+                    switch (item.getAdeptType()) {
                         case ViewPointMater.TYPE_FUTURE:
                             mSkilledType.setText(context.getString(R.string.future));
                             break;
@@ -176,8 +194,8 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                             break;
                         default:
                             break;
-                     }
-                }else{
+                    }
+                } else {
                     mSkilledType.setText(context.getString(R.string.future));
                 }
                 String s = item.getPassRat() * 100 + "%";

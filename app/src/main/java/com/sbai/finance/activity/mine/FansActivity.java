@@ -76,7 +76,7 @@ public class FansActivity extends BaseActivity {
                             .show();
                 } else {
                     SmartDialog.with(getActivity(),
-                            getActivity().getString(R.string.if_not_attention, userFansModel.getUserName()))
+                            getActivity().getString(R.string.cancel_attention_dialog_title, userFansModel.getUserName()))
                             .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {

@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -35,7 +36,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.EmojiFilter;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
@@ -96,9 +96,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initViews() {
-        InputFilter[] filters = new InputFilter[2];
-        filters[0] = new EmojiFilter();
-        filters[1] = new InputFilter.LengthFilter(400);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(400);
         mCommentContent.setFilters(filters);
         mFeedbackList = new ArrayList<>();
         mFeedbackAdapter = new FeedbackAdapter(this, mFeedbackList);
@@ -116,7 +115,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
                     @Override
                     protected void onRespSuccessData(List<Feedback> data) {
-                        updateFeedbackList(data,needScrollToLast);
+                        updateFeedbackList(data, needScrollToLast);
                     }
 
                     @Override
@@ -128,7 +127,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .fire();
     }
 
-    private void updateFeedbackList(List<Feedback> data,boolean needScrollToLast) {
+    private void updateFeedbackList(List<Feedback> data, boolean needScrollToLast) {
         if (data == null) {
             stopRefreshAnimation();
             return;
@@ -143,7 +142,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
-        if (needScrollToLast){
+        if (needScrollToLast) {
             mListView.smoothScrollToPosition(mFeedbackAdapter.getCount() - 1);
         }
     }
@@ -225,6 +224,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void requestSendFeedback(final String content, final int contentType) {
         Client.sendFeedback(content, contentType)
+                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
                 .setIndeterminate(FeedbackActivity.this)
                 .setCallback(new Callback<Resp<JsonObject>>() {

@@ -34,6 +34,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
@@ -146,7 +147,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	}
 
 	private void requestOpinionDetails(final boolean isSendBroadcast) {
-		Client.getOpinionDetails(mDataId).setTag(TAG).setIndeterminate(this)
+		Client.getOpinionDetails(mDataId).setTag(TAG)
 				.setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
 					@Override
 					protected void onRespSuccessData(OpinionDetails opinionDetails) {
@@ -159,8 +160,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 							intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
 							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
 									.sendBroadcast(intent);
-//                            setResult(RESULT_OK, intent);
 						}
+
+						Intent intent = new Intent(REFRESH_POINT);
+						intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+						setResult(RESULT_OK, intent);
 					}
 				}).fire();
 	}
@@ -353,7 +357,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 			String className = getCallingActivity().getClassName();
 			if (!TextUtils.isEmpty(className)) {
 				if (className.equalsIgnoreCase(FutureTradeActivity.class.getName())
-						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())) {
+						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())
+						|| className.equalsIgnoreCase(StockIndexActivity.class.getName())) {
 					return;
 				}
 			}
@@ -504,21 +509,21 @@ public class OpinionDetailsActivity extends BaseActivity {
 											if (resp.isSuccess()) {
 												if (mLoveNum.isSelected()) {
 													mLoveNum.setSelected(false);
-													if (item.getPraiseCount() >= 999) {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-														mLoveNum.setText("999+");
-													} else {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													int praiseCount = item.getPraiseCount() - 1;
+													item.setPraiseCount(praiseCount);
+													if (praiseCount < 1000) {
+														mLoveNum.setText(String.valueOf(praiseCount));
+													} else if (item.getPraiseCount() > 999) {
+														mLoveNum.setText(R.string.number999);
 													}
 												} else {
 													mLoveNum.setSelected(true);
-													if (item.getPraiseCount() > 1000) {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-														mLoveNum.setText("999+");
-													} else {
-														item.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-														mLoveNum.setText(String.valueOf(item.getPraiseCount()));
+													int praiseCount = item.getPraiseCount() + 1;
+													item.setPraiseCount(praiseCount);
+													if (praiseCount < 1000) {
+														mLoveNum.setText(String.valueOf(praiseCount));
+													} else if (item.getPraiseCount() > 999) {
+														mLoveNum.setText(R.string.number999);
 													}
 												}
 											}
@@ -545,25 +550,28 @@ public class OpinionDetailsActivity extends BaseActivity {
 									if (resp.isSuccess()) {
 										if (mLoveNum.isSelected()) {
 											mLoveNum.setSelected(false);
-											if (mOpinionDetails.getPraiseCount() >= 999) {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-												mLoveNum.setText("999+");
-											} else {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) - 1);
-												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											int praiseCount = mOpinionDetails.getPraiseCount() - 1;
+											mOpinionDetails.setPraiseCount(praiseCount);
+											if (praiseCount < 1000) {
+												mLoveNum.setText(String.valueOf(praiseCount));
+											} else if (mOpinionDetails.getPraiseCount() > 999) {
+												mLoveNum.setText(R.string.number999);
 											}
 										} else {
 											mLoveNum.setSelected(true);
-											if (mOpinionDetails.getPraiseCount() > 1000) {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-												mLoveNum.setText("999+");
-											} else {
-												mOpinionDetails.setPraiseCount(Integer.parseInt(mLoveNum.getText().toString()) + 1);
-												mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+											int praiseCount = mOpinionDetails.getPraiseCount() + 1;
+											mOpinionDetails.setPraiseCount(praiseCount);
+											if (praiseCount < 1000) {
+												mLoveNum.setText(String.valueOf(praiseCount));
+											} else if (mOpinionDetails.getPraiseCount() > 999) {
+												mLoveNum.setText(R.string.number999);
 											}
 										}
+
+
 										Intent intent = new Intent(REFRESH_POINT);
 										intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
+										setResult(RESULT_OK, intent);
 										LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
 												.sendBroadcast(intent);
 
@@ -597,6 +605,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 										requestOpinionDetails(true);
 										mCommentContent.setText("");
 										mScrollView.smoothScrollTo(0, 0);
+
 									}
 								}
 							}).fire();
@@ -655,7 +664,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 							opinionReply.setIsAttention(1);
 							mOpinionReplyAdapter.notifyDataSetChanged();
 						}
-						break;
 					}
 				}
 

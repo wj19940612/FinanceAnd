@@ -59,7 +59,7 @@
             android:layout_gravity="center"
             android:lineSpacingExtra="5dp"
             android:textSize="11sp"
-            android:text="@string/borrow_out_time"/>
+            tools:text="@string/borrow_out_time"/>
     </LinearLayout>
 
     <LinearLayout

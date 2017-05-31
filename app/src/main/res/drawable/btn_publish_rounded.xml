@@ -7,13 +7,13 @@
         </shape>
     </item>
 
-    <item android:state_pressed="true">
+    <item android:state_enabled="true" android:state_pressed="true">
         <shape>
             <solid android:color="#80CD4A47"/>
             <corners android:radius="@dimen/common_eight_radius"/>
         </shape>
     </item>
-    <item>
+    <item  android:state_enabled="false" android:state_pressed="false">
         <shape>
             <corners android:radius="@dimen/common_eight_radius"/>
             <solid android:color="@color/greyAssist"/>

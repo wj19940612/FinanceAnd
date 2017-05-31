@@ -206,7 +206,7 @@ public class HistoryNewsModel implements Parcelable {
          */
 
         private String content;
-        private String money;
+        private double money;
         private String source;
 
         public String getContent() {
@@ -221,11 +221,11 @@ public class HistoryNewsModel implements Parcelable {
 
         }
 
-        public String getMoney() {
+        public double getMoney() {
             return money;
         }
 
-        public void setMoney(String money) {
+        public void setMoney(double money) {
             this.money = money;
         }
 
