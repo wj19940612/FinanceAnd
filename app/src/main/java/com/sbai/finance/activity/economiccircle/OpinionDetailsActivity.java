@@ -655,7 +655,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 						}
 
 						mOpinionReplyAdapter.addAll(mOpinionReplyList);
-						mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionReplyList.size())));
+						mCommentNum.setText(getString(R.string.comment_number, mOpinionReplyList.size()));
 					}
 				}
 
