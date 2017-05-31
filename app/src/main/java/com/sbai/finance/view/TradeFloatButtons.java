@@ -30,7 +30,7 @@ public class TradeFloatButtons extends LinearLayout {
         void onTradeButtonClick();
     }
 
-    private boolean mHasAddInOpition;
+    private boolean mHasAddInOption;
     private boolean mHasTradeButton;
     private OnViewClickListener mOnViewClickListener;
 
@@ -113,16 +113,16 @@ public class TradeFloatButtons extends LinearLayout {
     }
 
     public boolean isHasAddInOptional() {
-        return mHasAddInOpition;
+        return mHasAddInOption;
     }
 
-    public void setHasAddInOpition(boolean hasAddInOpition) {
-        mHasAddInOpition = hasAddInOpition;
-        updateOpitionalStatus();
+    public void setHasAddInOption(boolean hasAddInOption) {
+        mHasAddInOption = hasAddInOption;
+        updateOptionalStatus();
     }
 
-    private void updateOpitionalStatus() {
-        if (mHasAddInOpition) {
+    private void updateOptionalStatus() {
+        if (mHasAddInOption) {
             ((TextView) mAddOptional.getChildAt(0)).setText(R.string.delete_optional);
         } else {
             ((TextView) mAddOptional.getChildAt(0)).setText(R.string.add_optional);

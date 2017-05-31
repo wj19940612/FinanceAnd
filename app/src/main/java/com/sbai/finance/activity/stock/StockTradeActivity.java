@@ -1,15 +1,11 @@
 package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -60,7 +56,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public abstract class StockTradeActivity extends BaseActivity {
@@ -113,8 +108,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     private StockRTData mStockRTData;
     private Prediction mPrediction;
 
-
-    private RefreshPointReceiver mReceiver;
     private PredictionDialogFragment mPredictionFragment;
     protected Variety mVariety;
 
@@ -139,13 +132,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         requestStockRTData();
         requestOptionalStatus();
 
-        registerRefreshReceiver();
-    }
-
-    private void registerRefreshReceiver() {
-        mReceiver = new RefreshPointReceiver();
-        IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
     private void initTradeFloatButton() {
@@ -184,7 +170,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             Integer result = resp.getData();
                             if (result != null) {
                                 boolean hasAddInOption = (result == HAS_ADD_OPITION);
-                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
+                                mTradeFloatButtons.setHasAddInOption(hasAddInOption);
                             }
                         }
                     }).fireSync();
@@ -223,7 +209,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOpition(false);
+                            mTradeFloatButtons.setHasAddInOption(false);
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
@@ -240,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
@@ -252,7 +238,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         super.onReceive(resp);
                         // 701 代表已经添加过
                         if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                         }
                     }
                 }).fire();
@@ -274,7 +260,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
 
@@ -283,6 +268,8 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case REQ_CODE_PUBLISH_VIEWPOINT:
+                case ViewpointFragment.REQ_CODE_USERDATA:
                 case ViewpointFragment.REQ_CODE_ATTENTION:
                     updateViewPointPage(data);
                     break;
@@ -540,10 +527,4 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }).fire();
     }
 
-    private class RefreshPointReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateViewPointPage(intent);
-        }
-    }
 }
