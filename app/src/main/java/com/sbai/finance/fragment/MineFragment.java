@@ -30,7 +30,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
-import com.sbai.finance.activity.mine.SettingActivity;
+import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;

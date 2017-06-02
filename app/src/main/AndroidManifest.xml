@@ -126,15 +126,6 @@
             android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.ShieldRelieveSettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.SetNotificationSwitchActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.mine.UserDataActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -181,8 +172,6 @@
         <activity
             android:name=".activity.web.StockNewsActivity"
             android:screenOrientation="portrait"/>
-
-
         <activity
             android:name=".activity.economiccircle.WantHelpHimOrYouActivity"
             android:screenOrientation="portrait"/>
@@ -219,6 +208,25 @@
             android:name=".activity.economiccircle.AliPayActivity"
             android:screenOrientation="portrait"/>
 
+        <!--我的设置模块-->
+        <activity
+            android:name=".activity.mine.setting.SettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.ShieldRelieveSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.SetNotificationSwitchActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.SafetySettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.ModifySafetyPassActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
         <!-- service -->
         <service android:name=".service.PushIntentService"/>
         <service
@@ -227,16 +235,14 @@
             android:label="PushService"
             android:process=":pushservice"/>
 
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="${UMENG_APP_KEY}">
         </meta-data>
-
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL}"/>
-
-
     </application>
 
 </manifest>

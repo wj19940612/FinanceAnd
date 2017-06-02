@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine;
+package com.sbai.finance.activity.mine.setting;
 
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;

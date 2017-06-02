@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/greyLightAssist"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.SetNotificationSwitchActivity">
+    tools:context="com.sbai.finance.activity.mine.setting.SetNotificationSwitchActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
