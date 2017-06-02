@@ -43,6 +43,8 @@
     <string name="login">登  录</string>
     <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
+    <string name="login_hint">登录即表示同意</string>
+    <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
 
     <!--Home-->
     <string name="future">期货</string>
