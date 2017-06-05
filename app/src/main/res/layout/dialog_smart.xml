@@ -49,6 +49,7 @@
         android:id="@+id/doubleButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_bottom"
         android:orientation="horizontal"
         android:visibility="gone">
         <!--android:background="@drawable/btn_dialog_left"-->
@@ -69,6 +70,11 @@
         <!--android:layout_height="match_parent"-->
         <!--android:background="@android:color/white"/>-->
         <!--android:background="@drawable/btn_dialog_right"-->
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="@dimen/common_height"
+            android:background="@color/splitLineColor"/>
+
         <TextView
             android:id="@+id/position"
             android:layout_width="0dp"
@@ -89,6 +95,7 @@
         android:background="@drawable/bg_dialog_bottom"
         android:clickable="true"
         android:gravity="center_horizontal"
+        android:minHeight="@dimen/common_height"
         android:padding="12dp"
         android:textColor="#0076ff"
         tools:text="确定"/>

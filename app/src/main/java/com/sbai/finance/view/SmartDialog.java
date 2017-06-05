@@ -50,7 +50,7 @@ public class SmartDialog {
     private Dialog mDialog;
     private Activity mActivity;
 
-    private int mPositiveTextColor = Color.WHITE;
+    private int mPositiveTextColor = Color.parseColor("#0076ff");
     private boolean mSingleButtonIsNeedBg;
     private int mSingleButtonBg = R.drawable.btn_dialog_single;
     private int mMessageGravity = Gravity.CENTER;
