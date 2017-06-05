@@ -47,18 +47,20 @@ public class ShareDiglogFragment extends DialogFragment {
 
     private String mShareTitle;  //分享标题
     private String mShareUrl;   //链接地址
-    private String mShareImageUrl; //头像地址
+    private String mShareImageUrl; //分享图像地址
+    private String mShareDescription = "乐米金融"; //分享描述
 
     public static ShareDiglogFragment newInstance() {
         ShareDiglogFragment fragment = new ShareDiglogFragment();
         return fragment;
     }
 
-    public void setShareContent(Activity activity, String shareTitle, String shareUrl, String shareImageUrl) {
+    public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, String shareImageUrl) {
         mActivity = activity;
         mShareTitle = shareTitle;
         mShareUrl = shareUrl;
         mShareImageUrl = shareImageUrl;
+        return this;
     }
 
     @Override
@@ -92,12 +94,15 @@ public class ShareDiglogFragment extends DialogFragment {
         switch (view.getId()) {
             case R.id.weChatFriend:
                 shareToPlatform(SHARE_MEDIA.WEIXIN);
+                dismiss();
                 break;
             case R.id.weChatFriendCircle:
                 shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                dismiss();
                 break;
             case R.id.weibo:
                 shareToPlatform(SHARE_MEDIA.SINA);
+                dismiss();
                 break;
             case R.id.cancel:
                 dismiss();
@@ -109,6 +114,7 @@ public class ShareDiglogFragment extends DialogFragment {
     private void shareToPlatform(SHARE_MEDIA platform) {
         UMWeb mWeb = new UMWeb(mShareUrl);
         mWeb.setTitle(mShareTitle);
+        mWeb.setDescription(mShareDescription);
         UMImage thumb = new UMImage(mActivity, mShareImageUrl);
         mWeb.setThumb(thumb);
         new ShareAction(mActivity)
