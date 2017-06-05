@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="@color/greyLightAssist"/>
+        android:background="@color/splitLineColor"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/relive"

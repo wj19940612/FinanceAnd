@@ -7,7 +7,7 @@
     android:layout_marginBottom="12dp"
     android:paddingLeft="@dimen/common_padding"
     android:paddingRight="@dimen/common_padding"
-    android:background="@color/greyLightAssist"
+    android:background="@color/splitLineColor"
     android:drawableLeft="@drawable/ic_errow_hint"
     android:drawablePadding="5dp"
     android:orientation="vertical"

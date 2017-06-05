@@ -194,7 +194,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:background="@color/greyLightAssist"
+                    android:background="@color/splitLineColor"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -266,7 +266,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="@color/greyLightAssist"/>
+            android:background="@color/splitLineColor"/>
 
         <TextView
             android:id="@+id/reply"

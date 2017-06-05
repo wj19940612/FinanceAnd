@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -36,27 +36,26 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity {
 
     public static final String LOGIN_SUCCESS_ACTION = "LOGIN_SUCCESS_ACTION";
-
     @BindView(R.id.deletePage)
     AppCompatImageView mDeletePage;
-    //    @BindView(R.id.appIconName)
-//    AppCompatTextView mAppIconName;
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
     AppCompatImageView mPhoneNumberClear;
-    @BindView(R.id.getAuthCode)
-    AppCompatTextView mGetAuthCode;
     @BindView(R.id.phoneLl)
     LinearLayoutCompat mPhoneLl;
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
-    @BindView(R.id.errorHint)
-    AppCompatTextView mErrorHint;
+    @BindView(R.id.getAuthCode)
+    AppCompatTextView mGetAuthCode;
+    @BindView(R.id.contentLL)
+    LinearLayout mContentLL;
     @BindView(R.id.login)
     AppCompatButton mLogin;
     @BindView(R.id.showLayout)
-    RelativeLayout mShowLayout;
+    LinearLayout mShowLayout;
+    @BindView(R.id.finance_protocol)
+    TextView mFinanceProtocol;
     @BindView(R.id.hideLayout)
     LinearLayout mHideLayout;
 
@@ -112,7 +111,6 @@ public class LoginActivity extends BaseActivity {
                         .getLayoutParams();
                 lp.topMargin = offset;
                 mShowLayout.setLayoutParams(lp);
-//                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
         }
@@ -124,7 +122,6 @@ public class LoginActivity extends BaseActivity {
             if (lp.topMargin != 0) {
                 lp.topMargin = 0;
                 mShowLayout.setLayoutParams(lp);
-//                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.logo_login, 0, 0);
             }
 
         }
@@ -166,9 +163,6 @@ public class LoginActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
-            if (mErrorHint.isShown()) {
-                mErrorHint.setVisibility(View.INVISIBLE);
-            }
             boolean enable = checkSignInButtonEnable();
             if (enable != mLogin.isEnabled()) {
                 mLogin.setEnabled(enable);
@@ -232,9 +226,6 @@ public class LoginActivity extends BaseActivity {
                             setResult(RESULT_OK);
                             finish();
 
-                        } else {
-                            mErrorHint.setVisibility(View.VISIBLE);
-                            mErrorHint.setText(resp.getMsg());
                         }
                     }
                 })

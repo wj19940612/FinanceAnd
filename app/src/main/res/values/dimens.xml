@@ -27,4 +27,9 @@
     <dimen name="identity_card_height">100dp</dimen>
     <dimen name="zero">0dp</dimen>
 
+
+    <dimen name="common_padding_fifty">50dp</dimen>
+    <dimen name="hundred_radius">100dp</dimen>
+    <dimen name="common_height">44dp</dimen>
+
 </resources>

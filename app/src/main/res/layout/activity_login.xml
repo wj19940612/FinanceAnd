@@ -33,58 +33,39 @@
             android:textSize="16sp"/>
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/showLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
-        <!--<android.support.v7.widget.AppCompatTextView-->
-        <!--android:id="@+id/appIconName"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginTop="85dp"-->
-        <!--android:drawablePadding="5dp"-->
-        <!--android:drawableTop="@drawable/logo_login"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="@string/app_name"-->
-        <!--android:textColor="@android:color/white"/>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:id="@+id/contentLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/common_padding_fifty"
+            android:paddingRight="@dimen/common_padding_fifty">
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:id="@+id/phoneLl"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_below="@+id/appIconName"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
-                android:layout_marginTop="45dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical">
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="10dp"
-                    android:text="@string/phone_number"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"/>
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/phoneNumber"
                     style="@style/SignEditText.PhoneNum"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/common_margin"
                     android:layout_weight="1"
                     android:hint="@string/please_input_phone_number"/>
 
@@ -100,37 +81,23 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
-                android:background="@color/greyLightAssist"/>
+                android:background="@color/splitLineColor"/>
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
                 android:minHeight="60dp">
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="10dp"
-                    android:text="@string/auth_code"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"/>
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/authCode"
                     style="@style/SignEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/common_margin"
                     android:layout_weight="1"
-                    android:hint="@string/please_input_auth_code"
+                    android:hint="@string/auth_code"
                     android:inputType="number"
                     android:maxLength="10"
                     android:paddingTop="10dp"/>
@@ -151,46 +118,31 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
-                android:background="@color/greyLightAssist"/>
+                android:background="@color/splitLineColor"/>
         </LinearLayout>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/errorHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/contentLL"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="15dp"
-            android:drawableLeft="@drawable/ic_errow_hint"
-            android:drawablePadding="5dp"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding"
-            android:textColor="@color/warningText"
-            android:visibility="invisible"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_below="@+id/errorHint"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:layout_marginRight="@dimen/common_margin"
+            android:layout_height="@dimen/common_height"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="@dimen/common_padding_fifty"
+            android:layout_marginRight="@dimen/common_padding_fifty"
+            android:layout_marginTop="30dp"
             android:background="@drawable/btn_login_rounded"
             android:enabled="false"
             android:gravity="center"
             android:text="@string/login"
             android:textColor="@android:color/white"/>
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/hideLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="24dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -203,7 +155,6 @@
             android:id="@+id/finance_protocol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
             android:text="@string/lemi_finance_protocol"
             android:textColor="@color/blueAssist"
             android:textSize="12sp"/>
