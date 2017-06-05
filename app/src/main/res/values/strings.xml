@@ -182,13 +182,20 @@
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
     <string name="safety_setting">安全设置</string>
+    <string name="safety_center">安全中心</string>
+    <string name="setting_safety_password">设置安全密码</string>
     <string name="modify_safety_password">修改安全密码</string>
     <string name="forget_safety_password">忘记安全密码</string>
-    
+
     <!--安全设置-->
     <string name="please_input_old_password">请输入旧安全密码</string>
     <string name="please_input_new_password">请输入新安全密码</string>
     <string name="please_confirm_new_password">请确认新安全密码</string>
+
+    <string name="modify_fail">修改失败</string>
+    <string name="new_password_is_same_as_old_pass">新密码与旧密码相同</string>
+    <string name="twice_password_is_different">两次新安全密码输入不一致</string>
+
 
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>

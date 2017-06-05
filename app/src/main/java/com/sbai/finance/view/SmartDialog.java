@@ -51,6 +51,7 @@ public class SmartDialog {
     private Activity mActivity;
 
     private int mPositiveTextColor = Color.WHITE;
+    private boolean mSingleButtonIsNeedBg;
     private int mSingleButtonBg = R.drawable.btn_dialog_single;
     private int mMessageGravity = Gravity.CENTER;
     private int mMessageTextSize = 10;
@@ -98,6 +99,7 @@ public class SmartDialog {
         dialog.setMessage(msg);
         return dialog;
     }
+
     public static SmartDialog with(Activity activity) {
         SmartDialog dialog = new SmartDialog(activity);
         addMap(activity, dialog);
@@ -176,7 +178,13 @@ public class SmartDialog {
     }
 
     public SmartDialog setSingleButtonBg(int resBgId) {
+        mSingleButtonIsNeedBg = true;
         mSingleButtonBg = resBgId;
+        return this;
+    }
+
+    public SmartDialog setSingleButtonBg(boolean singleButtonIsNeedBg) {
+        this.mSingleButtonIsNeedBg = singleButtonIsNeedBg;
         return this;
     }
 
@@ -314,7 +322,7 @@ public class SmartDialog {
         mNegative = (TextView) view.findViewById(R.id.negative);
         mPosition = (TextView) view.findViewById(R.id.position);
         mSingleButton = (TextView) view.findViewById(R.id.singleButton);
-        if (mMessageText==null || mMessageText.equalsIgnoreCase("")){
+        if (mMessageText == null || mMessageText.equalsIgnoreCase("")) {
             mMessage.setVisibility(View.GONE);
         }
         mMessage.setText(mMessageText);
@@ -327,11 +335,11 @@ public class SmartDialog {
             mTitle.setVisibility(View.GONE);
         } else {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            int marginTop=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mTitleMargin, mActivity.getResources().getDisplayMetrics());
-            if (mMessage.getVisibility()==View.GONE){
-                layoutParams.setMargins(0,marginTop , 0, marginTop);
-            }else{
-                layoutParams.setMargins(0,marginTop, 0, 0);
+            int marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mTitleMargin, mActivity.getResources().getDisplayMetrics());
+            if (mMessage.getVisibility() == View.GONE) {
+                layoutParams.setMargins(0, marginTop, 0, marginTop);
+            } else {
+                layoutParams.setMargins(0, marginTop, 0, 0);
             }
             mTitle.setLayoutParams(layoutParams);
             mTitle.setText(mTitleText);
@@ -366,7 +374,9 @@ public class SmartDialog {
         } else {
             mSingleButton.setVisibility(View.VISIBLE);
             mDoubleButtons.setVisibility(View.GONE);
-            mSingleButton.setBackgroundResource(mSingleButtonBg);
+            if (mSingleButtonIsNeedBg) {
+                mSingleButton.setBackgroundResource(mSingleButtonBg);
+            }
             mSingleButton.setText(mPositiveId);
             mSingleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
