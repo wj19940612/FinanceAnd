@@ -8,7 +8,7 @@
     <color name="redPrimary">#CD4A47</color>
     <color name="greenPrimary">#33D37E</color>
     <color name="fortyPercentWhite">#66FFFFFF</color>
-    
+    <color name="redRaise">#ef6d6a</color>
     <!--Assist-->
     <color name="blackAssist">#0C0F16</color>
     <color name="pinkAssist">#E5A19F</color>

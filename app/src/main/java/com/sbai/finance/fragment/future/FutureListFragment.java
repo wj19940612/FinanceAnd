@@ -156,11 +156,12 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                             lastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), variety.getPriceScale()));
                             if (priceChange >= 0) {
                                 lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                                rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+                              //  rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+                                rate.setSelected(true);
                                 rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                             } else {
                                 lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-                                rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+                                rate.setSelected(false);
                                 rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                             }
                         }
@@ -172,6 +173,9 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     private void updateFutureData(List<Variety> varietyList) {
         stopRefreshAnimation();
+        if (mSet.isEmpty()){
+           mFutureListAdapter.clear();
+        }
         for (Variety variety:varietyList){
             if (mSet.add(variety.getContractsCode())){
                 mFutureListAdapter.add(variety);
@@ -238,7 +242,6 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     private void reset() {
         mPage = 0;
         mSet.clear();
-        mFutureListAdapter.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
@@ -285,10 +288,6 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
-            @BindView(R.id.stopTrade)
-            TextView mStopTrade;
-            @BindView(R.id.trade)
-            LinearLayout mTrade;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -310,25 +309,17 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                     mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
                     if (priceChange >= 0) {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                        mRate.setBackgroundColor(ContextCompat.getColor(context, R.color.redPrimary));
                         mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                     } else {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                        mRate.setBackgroundColor(ContextCompat.getColor(context, R.color.greenAssist));
                         mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                     }
                 } else {
                     mLastPrice.setText("--");
                     mRate.setText("--");
                 }
-
-//                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
-//                    mTrade.setVisibility(View.GONE);
-//                    mStopTrade.setVisibility(View.VISIBLE);
-//                } else {
-//                    mTrade.setVisibility(View.VISIBLE);
-//                    mStopTrade.setVisibility(View.GONE);
-//                }
             }
         }
     }

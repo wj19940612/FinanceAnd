@@ -59,6 +59,13 @@
     <string name="accuracy_rate">看盘准确率</string>
     <string name="no_opinion">现在还没有大神上榜哦!</string>
 
+    <!--optional-->
+    <string name="add_option">添加自选</string>
+    <string name="choose_optional">选择自选类型</string>
+    <string name="stock_optional">股票自选</string>
+    <string name="future_optional">期货自选</string>
+    <string name="stock_optional_hint">股票名称/代码</string>
+    <string name="future_optional_hint">期货名称/代码</string>
     <!--Future-->
     <string name="future_foreign">国际期货</string>
     <string name="future_china">国内期货</string>
@@ -114,7 +121,7 @@
     <string name="fail_list">跌幅榜</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
-    <string name="no_option">暂无自选</string>
+    <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
     <string name="ask_3">卖3</string>
@@ -274,19 +281,21 @@
     <string name="borrow_amount">500~2000元</string>
     <string name="borrow_interest_amount">1~200元</string>
     <string name="borrow_day_limit">借款期限</string>
-    <string name="borrow_day_limit_hint">1~60</string>
+    <string name="borrow_location">所在地址</string>
+    <string name="borrow_day_limit_hint">1~60天</string>
     <string name="borrow_remark">备注</string>
-    <string name="borrow_remark_hint">请填写有助于借款的信息哦,但不能填写联系方式哦!</string>
-    <string name="borrow_photo_tips">最多可上传四张照片,不得带有联系方式和不好的图片哦!</string>
+    <string name="borrow_remark_hint">简单描述一下您的借款需求，有助快速达成借款</string>
+    <string name="borrow_photo_tips">添加照片：最多可以上传4张</string>
     <string name="borrow_add_photo">添加照片</string>
     <string name="borrow_day">天</string>
+    <string name="money">元</string>
     <string name="borrow_publish">确认发布</string>
-    <string name="want_borrow">我要借款</string>
+    <string name="want_borrow">发布借款</string>
     <string name="borrow_overdue">超出借款期限</string>
     <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
-    <string name="borrow_agree">阅读并同意</string>
+    <string name="borrow_agree">发布即同意</string>
     <string name="borrow_agreement">《乐米借款规则与用户须知》</string>
     <string name="publish_success">发布成功</string>
     <string name="protocol">借款规则与用户须知</string>

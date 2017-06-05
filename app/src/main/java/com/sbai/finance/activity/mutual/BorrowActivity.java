@@ -64,12 +64,12 @@ public class BorrowActivity extends BaseActivity {
 	EditText mBorrowTimeLimit;
 	@BindView(R.id.borrowRemark)
 	EditText mBorrowRemark;
-	@BindView(R.id.warn)
-	TextView mWarn;
 	@BindView(R.id.publish)
 	TextView mPublish;
 	@BindView(R.id.agree)
 	CheckBox mAgree;
+	@BindView(R.id.location)
+	TextView mLocation;
 	@BindView(R.id.contentDays)
 	LinearLayout mContentDays;
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -127,6 +127,8 @@ public class BorrowActivity extends BaseActivity {
 			}
 		});
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
+		mBorrowLimit.requestFocus();
+		mBorrowLimit.setFocusable(true);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
 		mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
@@ -148,7 +150,7 @@ public class BorrowActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol})
+	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol,R.id.location})
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
@@ -178,9 +180,9 @@ public class BorrowActivity extends BaseActivity {
 				}
 				requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 				break;
-			case R.id.contentDays:
-				mBorrowTimeLimit.requestFocus();
-				mBorrowTimeLimit.setFocusable(true);
+			case R.id.location:
+//				mBorrowTimeLimit.requestFocus();
+//				mBorrowTimeLimit.setFocusable(true);
 				break;
 			case R.id.protocol:
 				Client.getBorrowProcotol().setTag(TAG)
@@ -236,44 +238,41 @@ public class BorrowActivity extends BaseActivity {
 		boolean isEmpty = TextUtils.isEmpty(borrowMoney);
 		if (isEmpty||borrowMoney.length()>4|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
              if (!isEmpty){
-				 mWarn.setVisibility(View.VISIBLE);
-				 mWarn.setText(getString(R.string.borrow_over_money));
+				 ToastUtil.curt(getString(R.string.borrow_over_money));
 			 }
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+			//mWarn.setVisibility(View.INVISIBLE);
+
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
 		if (isEmpty||borrowInterest.length()>3||Integer.valueOf(borrowInterest)<1||Integer.valueOf(borrowInterest)>200){
 			if (!isEmpty){
-				mWarn.setVisibility(View.VISIBLE);
-				mWarn.setText(getString(R.string.borrow_over_interest));
+				ToastUtil.curt(getString(R.string.borrow_over_interest));
 			}
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+			//mWarn.setVisibility(View.INVISIBLE);
 		}
 		String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowTimeLimit);
 		if (isEmpty||borrowTimeLimit.length()>3|| Integer.parseInt(borrowTimeLimit)>60){
 			if (!isEmpty){
-				mWarn.setVisibility(View.VISIBLE);
-				mWarn.setText(getString(R.string.borrow_overdue));
+				ToastUtil.curt(getString(R.string.borrow_overdue));
 			}
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+			//mWarn.setVisibility(View.INVISIBLE);
 		}
 		if (!mAgree.isChecked()){
 			return false;
 		}
 		if (TextUtils.isEmpty(mBorrowRemark.getText())){
-			mWarn.setVisibility(View.VISIBLE);
-			mWarn.setText(getString(R.string.no_remark));
+			ToastUtil.curt(getString(R.string.no_remark));
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+		//	mWarn.setVisibility(View.INVISIBLE);
 		}
 		return true;
 	}
