@@ -39,6 +39,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -108,6 +109,13 @@ public class MineFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(BaseActivity.ACTION_TOKEN_EXPIRED));
+        initViews();
+    }
+
+    private void initViews() {
+        int margin = (int) Display.dp2Px(4f, getResources());
+        mNews.setRightTextMargin(margin);
+        mFeedBack.setRightTextMargin(margin);
     }
 
     @Override
@@ -140,6 +148,7 @@ public class MineFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
+                        // TODO: 2017/6/5 更新后只有红点 
                         int count = 0;
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
                             count = count + notReadMessageNumberData.getCount();
@@ -174,6 +183,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void updateNoReadFeedbackCount(int count) {
+        // TODO: 2017/6/5 更新后只有红点 
         if (count != 0) {
             SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
                             + (count > 99 ? getString(R.string.number99) : count )+ " ",
