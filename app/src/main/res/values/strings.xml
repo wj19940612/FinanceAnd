@@ -142,6 +142,7 @@
     <string name="detail">明细</string>
     <string name="feed_back">意见反馈</string>
     <string name="new_message">新消息</string>
+    <string name="wallet">钱包</string>
     <string name="item">条</string>
     <string name="now_not_has_data">暂无消息</string>
     <string name="please_input_here">请在此输入......</string>

@@ -3,7 +3,6 @@ package com.sbai.finance.activity.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -54,7 +53,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.contentLL)
     LinearLayout mContentLL;
     @BindView(R.id.login)
-    AppCompatButton mLogin;
+    AppCompatTextView mLogin;
     @BindView(R.id.showLayout)
     LinearLayout mShowLayout;
     @BindView(R.id.finance_protocol)

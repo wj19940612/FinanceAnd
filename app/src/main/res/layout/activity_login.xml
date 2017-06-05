@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login"
     android:orientation="vertical"
+    android:background="@drawable/bg_login"
     tools:context="com.sbai.finance.activity.mine.LoginActivity">
 
     <RelativeLayout
+        android:background="#ffE9D7"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -131,7 +133,7 @@
             android:layout_marginTop="30dp"
             android:background="@android:color/transparent">
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_height"
@@ -148,7 +150,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="90dp"
                 android:src="@drawable/ic_loading"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
