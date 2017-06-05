@@ -43,6 +43,8 @@
     <string name="login">登  录</string>
     <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
+    <string name="login_hint">登录即表示同意</string>
+    <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
 
     <!--Home-->
     <string name="future">期货</string>
@@ -182,8 +184,17 @@
     <string name="up_load_more">加载更多</string>
     <string name="load_all">已加载全部</string>
 
+    <!--设置-->
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
+    <string name="safety_setting">安全设置</string>
+    <string name="modify_safety_password">修改安全密码</string>
+    <string name="forget_safety_password">忘记安全密码</string>
+    
+    <!--安全设置-->
+    <string name="please_input_old_password">请输入旧安全密码</string>
+    <string name="please_input_new_password">请输入新安全密码</string>
+    <string name="please_confirm_new_password">请确认新安全密码</string>
 
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>

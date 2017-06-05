@@ -7,16 +7,16 @@
     android:layout_height="match_parent"
     android:background="@color/greyLightAssist"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.setting.SettingActivity">
+    tools:context="com.sbai.finance.activity.mine.setting.SafetySettingActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/setting"/>
+        app:titleText="@string/safety_setting"/>
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/shieldSetting"
+        android:id="@+id/modify_safety_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
@@ -24,42 +24,21 @@
         android:gravity="center_vertical"
         android:minHeight="60dp"
         android:padding="@dimen/common_padding"
-        android:text="@string/shield_setting"
+        android:text="@string/modify_safety_password"
         android:textColor="@color/primaryText"
         android:textSize="15sp"/>
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/newNewsNotification"
+        android:id="@+id/forget_safety_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding"
+        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
         android:drawableRight="@drawable/ic_arrow_right_tint"
         android:gravity="center_vertical"
         android:minHeight="60dp"
         android:padding="@dimen/common_padding"
-        android:text="@string/new_news_notification"
+        android:text="@string/forget_safety_password"
         android:textColor="@color/primaryText"
         android:textSize="15sp"/>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/safety_setting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding"
-        android:background="@drawable/bg_white"
-        android:drawableRight="@drawable/ic_arrow_right_tint"
-        android:gravity="center_vertical"
-        android:minHeight="60dp"
-        android:padding="@dimen/common_padding"
-        android:text="@string/safety_setting"
-        android:textColor="@color/primaryText"
-        android:textSize="15sp"/>
-
-
-    <View
-        android:id="@+id/appInfo"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
 </LinearLayout>

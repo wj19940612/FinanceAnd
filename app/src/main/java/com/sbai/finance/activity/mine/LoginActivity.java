@@ -13,8 +13,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -24,6 +24,7 @@ import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -38,8 +39,8 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.deletePage)
     AppCompatImageView mDeletePage;
-    @BindView(R.id.appIconName)
-    AppCompatTextView mAppIconName;
+    //    @BindView(R.id.appIconName)
+//    AppCompatTextView mAppIconName;
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
@@ -57,7 +58,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.showLayout)
     RelativeLayout mShowLayout;
     @BindView(R.id.hideLayout)
-    TextView mHideLayout;
+    LinearLayout mHideLayout;
 
 
     private KeyBoardHelper mKeyBoardHelper;
@@ -106,12 +107,12 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void OnKeyBoardPop(int keyboardHeight) {
             if (bottomHeight < keyboardHeight) {
-                int offset = bottomHeight - keyboardHeight + 80;
+                int offset = bottomHeight - keyboardHeight;
                 final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
                         .getLayoutParams();
                 lp.topMargin = offset;
                 mShowLayout.setLayoutParams(lp);
-                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+//                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
         }
@@ -123,7 +124,7 @@ public class LoginActivity extends BaseActivity {
             if (lp.topMargin != 0) {
                 lp.topMargin = 0;
                 mShowLayout.setLayoutParams(lp);
-                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.logo_login, 0, 0);
+//                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.logo_login, 0, 0);
             }
 
         }
@@ -169,7 +170,6 @@ public class LoginActivity extends BaseActivity {
                 mErrorHint.setVisibility(View.INVISIBLE);
             }
             boolean enable = checkSignInButtonEnable();
-            String authCode = mAuthCode.getText().toString().trim();
             if (enable != mLogin.isEnabled()) {
                 mLogin.setEnabled(enable);
             }
@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login})
+    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.finance_protocol})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deletePage:
@@ -202,9 +202,13 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.getAuthCode:
                 getAuthCode();
+                mAuthCode.requestFocus();
                 break;
             case R.id.login:
                 login();
+                break;
+            case R.id.finance_protocol:
+                // TODO: 2017/6/2 打开乐米金融用户协议页面 
                 break;
         }
     }
@@ -223,6 +227,7 @@ public class LoginActivity extends BaseActivity {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
+                            new GpsUtils();
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_TOKEN_EXPIRED));
                             setResult(RESULT_OK);
                             finish();
