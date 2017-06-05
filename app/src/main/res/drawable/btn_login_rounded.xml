@@ -6,11 +6,11 @@
         </shape>
     </item>
 
-    <item android:state_pressed="true">
-        <shape>
-            <solid android:color="#7F222222"/>
-        </shape>
-    </item>
+    <!--<item android:state_pressed="true">-->
+        <!--<shape>-->
+            <!--<solid android:color="#7F222222"/>-->
+        <!--</shape>-->
+    <!--</item>-->
     <item>
         <shape>
             <solid android:color="@color/greyAssist"/>

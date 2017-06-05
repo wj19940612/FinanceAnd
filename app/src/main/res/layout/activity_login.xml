@@ -121,19 +121,37 @@
                 android:background="@color/splitLineColor"/>
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/login"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_height"
             android:layout_marginBottom="24dp"
             android:layout_marginLeft="@dimen/common_padding_fifty"
             android:layout_marginRight="@dimen/common_padding_fifty"
             android:layout_marginTop="30dp"
-            android:background="@drawable/btn_login_rounded"
-            android:enabled="false"
-            android:gravity="center"
-            android:text="@string/login"
-            android:textColor="@android:color/white"/>
+            android:background="@android:color/transparent">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_height"
+                android:background="@drawable/btn_login_rounded"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="@string/login"
+                android:textColor="@android:color/white"/>
+
+            <ImageView
+                android:id="@+id/loading"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="90dp"
+                android:src="@drawable/ic_loading"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -148,7 +166,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_hint"
-            android:textColor="@android:color/white"
+            android:textColor="@color/lucky_text"
             android:textSize="12sp"/>
 
         <TextView

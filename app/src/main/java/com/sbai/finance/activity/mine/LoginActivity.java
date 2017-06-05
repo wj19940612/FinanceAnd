@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -58,6 +61,8 @@ public class LoginActivity extends BaseActivity {
     TextView mFinanceProtocol;
     @BindView(R.id.hideLayout)
     LinearLayout mHideLayout;
+    @BindView(R.id.loading)
+    ImageView mLoading;
 
 
     private KeyBoardHelper mKeyBoardHelper;
@@ -185,11 +190,13 @@ public class LoginActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.finance_protocol})
+    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode,
+            R.id.login, R.id.finance_protocol})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deletePage:
                 finish();
+                overridePendingTransition(0, R.anim.slide_out_to_bottom);
                 break;
             case R.id.phoneNumberClear:
                 mPhoneNumber.setText("");
@@ -204,12 +211,17 @@ public class LoginActivity extends BaseActivity {
             case R.id.finance_protocol:
                 // TODO: 2017/6/2 打开乐米金融用户协议页面 
                 break;
+            default:
+                break;
         }
     }
 
     private void login() {
         final String phoneNumber = getPhoneNumber();
-        String authCode = mAuthCode.getText().toString().trim();
+        final String authCode = mAuthCode.getText().toString().trim();
+        mLogin.setText(R.string.login_ing);
+        mLoading.setVisibility(View.VISIBLE);
+        mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
         Client.login(authCode, phoneNumber)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -225,11 +237,13 @@ public class LoginActivity extends BaseActivity {
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_TOKEN_EXPIRED));
                             setResult(RESULT_OK);
                             finish();
-
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
                         }
                     }
                 })
                 .fire();
+
     }
 
     private void getAuthCode() {
