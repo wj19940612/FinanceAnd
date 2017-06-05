@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -44,6 +45,8 @@ public class PublishOpinionActivity extends BaseActivity {
     EditText mOpinionContent;
     @BindView(R.id.submitButton)
     Button mSubmitButton;
+    @BindView(R.id.textLength)
+    TextView mTextLength;
 
     Prediction mPredict;
     Variety mVariety;
@@ -97,6 +100,7 @@ public class PublishOpinionActivity extends BaseActivity {
         } else {
             mOpinionType.setImageResource(R.drawable.ic_opinion_down);
         }
+        mTextLength.setText(getString(R.string.opinion_length, 0));
     }
 
     private ValidationWatcher mOptionContentWatcher = new ValidationWatcher() {
@@ -107,6 +111,7 @@ public class PublishOpinionActivity extends BaseActivity {
             } else {
                 mSubmitButton.setEnabled(false);
             }
+            mTextLength.setText(getString(R.string.opinion_length,s.length()));
         }
     };
 
