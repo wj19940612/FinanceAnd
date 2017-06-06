@@ -17,7 +17,7 @@
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:layout_marginBottom="0.5dp"
-        android:background="@android:color/white">
+        android:background="#f5f5f5">
         <TextView
             style="@style/futureListTitle"
             android:layout_width="0dp"

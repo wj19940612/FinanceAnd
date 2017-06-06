@@ -10,40 +10,25 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/help_borrow"/>
+        <com.sbai.finance.view.slidingTab.SlidingTabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"/>
 
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/borrowIn"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_pressable"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/borrow_in"
-        app:rowTextColor="@color/blackAssist"
-        app:rowTextSize="@dimen/list_title_size"/>
-
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/borrowOut"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/bg_pressable"
-        android:layout_marginTop="0.5dp"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowTextColor="@color/blackAssist"
-        app:rowTextSize="@dimen/list_title_size"
-        app:rowText="@string/borrow_out"/>
-
-    <TextView
-        android:id="@+id/borrow"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginLeft="@dimen/common_margin"
-        android:layout_marginRight="@dimen/common_margin"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/bg_borrow"
-        android:gravity="center"
-        android:text="@string/borrow"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/list_title_size"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/publish"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@color/redPrimary"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/list_title_size"
+            android:text="@string/publish"/>
 
 </LinearLayout>

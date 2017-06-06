@@ -9,14 +9,6 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/want_borrow"/>
-     <TextView
-         android:layout_width="match_parent"
-         android:layout_height="25dp"
-         android:background="@color/colorRed"
-         android:gravity="center"
-         android:textSize="11sp"
-         android:textColor="@android:color/white"
-         android:text="@string/warn"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,70 +19,88 @@
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/common_padding"
                 android:paddingRight="@dimen/common_padding"
-                android:layout_marginBottom="0.5dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="1dp"
                 android:background="@android:color/white">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:drawableRight="@drawable/help_edit_money"
-                    android:drawablePadding="15dp"
                     android:layout_marginRight="15dp"
                     android:textSize="@dimen/list_title_size"
-                    android:textColor="@color/secondaryText"
+                    android:textColor="@color/blackAssist"
                     android:text="@string/borrow_limit"/>
                 <EditText
                     android:id="@+id/borrowLimit"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:layout_marginRight="15dp"
+                    android:gravity="right"
                     android:background="@null"
                     android:textColorHint="@color/hintText"
                     android:inputType="number"
                     android:textSize="@dimen/list_title_size"
                     android:hint="@string/borrow_amount"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/list_title_size"
+                    android:textColor="@color/blackAssist"
+                    android:text="@string/money"/>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/common_padding"
                 android:paddingRight="@dimen/common_padding"
-                android:layout_marginBottom="0.5dp"
+                android:layout_marginBottom="1dp"
                 android:background="@android:color/white">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:drawableRight="@drawable/help_edit_money"
-                    android:drawablePadding="15dp"
                     android:layout_marginRight="15dp"
                     android:textSize="@dimen/list_title_size"
-                    android:textColor="@color/secondaryText"
+                    android:textColor="@color/blackAssist"
                     android:text="@string/borrow_interest"/>
                 <EditText
                     android:id="@+id/borrowInterest"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:gravity="right"
+                    android:layout_marginRight="15dp"
                     android:background="@null"
                     android:textColorHint="@color/hintText"
                     android:inputType="number"
                     android:textSize="@dimen/list_title_size"
                     android:hint="@string/borrow_interest_amount"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/list_title_size"
+                    android:textColor="@color/blackAssist"
+                    android:text="@string/money"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/contentDays"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/common_padding"
                 android:paddingRight="@dimen/common_padding"
-                android:layout_marginBottom="0.5dp"
+                android:layout_marginBottom="1dp"
                 android:background="@android:color/white">
                 <TextView
                     android:layout_width="wrap_content"
@@ -98,13 +108,16 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="15dp"
                     android:textSize="@dimen/list_title_size"
-                    android:textColor="@color/secondaryText"
+                    android:textColor="@color/blackAssist"
                     android:text="@string/borrow_day_limit"/>
                 <EditText
                     android:id="@+id/borrowTimeLimit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:layout_marginRight="15dp"
+                    android:gravity="right"
                     android:background="@null"
                     android:textColorHint="@color/hintText"
                     android:inputType="number"
@@ -114,90 +127,78 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/common_padding"
                     android:textColor="@color/blackAssist"
                     android:textSize="@dimen/list_title_size"
                     android:text="@string/borrow_day"/>
             </LinearLayout>
+            <com.sbai.finance.view.IconTextRow
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:layout_marginBottom="14dp"
+                app:rightIcon="@drawable/ic_arrow_right_tint"
+                app:rowTextSize="@dimen/list_title_size"
+                app:rowTextColor="@color/blackAssist"
+                app:rowText="@string/borrow_location"
+                app:subTextSize="@dimen/sp_14"
+                app:subTextColor="@color/assistText"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/common_padding"
+                android:orientation="vertical"
+                android:paddingRight="@dimen/common_padding"
+                android:paddingLeft="@dimen/common_padding"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:background="@android:color/white">
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:textColor="@color/secondaryText"
-                    android:textSize="@dimen/list_title_size"
-                    android:text="备注       "/>
-
                 <EditText
                     android:id="@+id/borrowRemark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
+                    android:layout_marginBottom="34dp"
                     android:background="@null"
-                    android:textColorHint="@color/hintText"
+                    android:textColorHint="@color/assistText"
                     android:textColor="@color/blackAssist"
-                    android:textSize="@dimen/list_title_size"
+                    android:textSize="12sp"
                     android:hint="@string/borrow_remark_hint"/>
+                <include layout="@layout/split_line_grey_light"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="7dp"
+                    android:textColor="@color/assistText"
+                    android:textSize="12sp"
+                    android:text="@string/borrow_photo_tips"/>
+                <com.sbai.finance.view.GrapeGridView
+                    android:id="@+id/photoGv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="72dp"
+                    android:numColumns="4"
+                    android:scrollbars="none"
+                    android:horizontalSpacing="8dp"
+                    android:verticalSpacing="8dp"/>
             </LinearLayout>
             <TextView
+                android:id="@+id/publish"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="50dp"
+                android:layout_marginRight="@dimen/common_padding"
                 android:layout_marginLeft="@dimen/common_padding"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/assistText"
-                android:textSize="10sp"
-                android:text="@string/borrow_photo_tips"/>
-            <com.sbai.finance.view.GrapeGridView
-                android:id="@+id/photoGv"
-                android:layout_width="wrap_content"
-                android:layout_height="69dp"
-                android:numColumns="4"
-                android:scrollbars="none"
-                android:horizontalSpacing="8dp"
-                android:verticalSpacing="8dp"
-                android:layout_marginLeft="@dimen/common_padding"
-                android:layout_marginRight="@dimen/common_padding"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="98dp"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin">
-                <TextView
-                    android:id="@+id/warn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/publish"
-                    android:layout_marginBottom="10dp"
-                    android:drawableLeft="@drawable/ic_prompt"
-                    android:drawablePadding="5dp"
-                    android:textColor="@color/colorRed"
-                    android:textSize="13sp"
-                    android:text="@string/borrow_overdue"
-                    android:visibility="invisible"/>
-                <TextView
-                    android:id="@+id/publish"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/btn_publish_rounded"
-                    android:gravity="center"
-                    android:enabled="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/list_title_size"
-                    android:text="@string/borrow_publish"/>
-            </RelativeLayout>
+                android:background="@drawable/btn_publish_rounded"
+                android:gravity="center"
+                android:enabled="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/list_title_size"
+                android:text="@string/borrow_publish"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="20dp"
                 android:orientation="horizontal">
                <View
                    android:layout_width="0dp"

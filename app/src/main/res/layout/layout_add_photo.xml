@@ -4,15 +4,10 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <TextView
+    <ImageView
         android:id="@+id/addPhoto"
         android:layout_width="match_parent"
-        android:layout_height="69dp"
-        android:background="@drawable/bg_dotted_line_gray"
-        android:drawableTop="@drawable/ic_add_pic"
-        android:gravity="center"
-        android:paddingTop="@dimen/common_padding"
-        android:text="@string/borrow_add_photo"
-        android:textColor="@color/assistText"
-        android:textSize="13sp"/>
+        android:layout_height="72dp"
+        android:src="@drawable/ic_add_pic"
+        android:clickable="true"/>
 </LinearLayout>

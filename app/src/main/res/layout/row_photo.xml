@@ -5,7 +5,7 @@
               android:layout_height="wrap_content">
    <ImageView
        android:id="@+id/photoImg"
-       android:layout_width="79dp"
-       android:layout_height="69dp"
+       android:layout_width="72dp"
+       android:layout_height="72dp"
        android:scaleType="fitXY"/>
 </LinearLayout>

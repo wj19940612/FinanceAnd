@@ -24,6 +24,12 @@ import java.util.List;
 public class GpsUtils {
     private static final String TAG = "GpsUtils";
     private LocationManager mLocationManager;
+    private Address mAddress;
+
+    public Address getAddress() {
+        return mAddress;
+    }
+
     //public static String cityName = "深圳";  //城市名
     public String cityName;  //城市名
 
@@ -130,6 +136,7 @@ public class GpsUtils {
             String country = "";
             for (int i = 0; i < addList.size(); i++) {
                 Address add = addList.get(i);
+                mAddress = add;
                 mcityName += add.getLocality();
                 province = add.getAdminArea();
                 country = add.getSubLocality();

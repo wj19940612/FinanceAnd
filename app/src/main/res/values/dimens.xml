@@ -4,7 +4,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="common_radius">3dp</dimen>
+
     <dimen name="common_padding">14dp</dimen>
+
     <dimen name="common_split">10dp</dimen>
 
     <dimen name="navigate_size">16sp</dimen>

@@ -111,6 +111,9 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	}
     private void updateEventInfo(List<EventModel> eventList){
 		stopRefreshAnimation();
+		if (mSet.isEmpty()){
+			mEventListAdapter.clear();
+		}
 		for (EventModel eventModel:eventList){
 			if (mSet.add(eventModel.getId())){
 				mEventListAdapter.add(eventModel);
@@ -172,7 +175,6 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	private void reset() {
 		mPageNo = 0;
 		mSet.clear();
-		mEventListAdapter.clear();
 		mSwipeRefreshLayout.setLoadMoreEnable(true);
 	}
 
