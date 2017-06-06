@@ -6,5 +6,5 @@
         </shape>
     </item>
 
-    <item android:drawable="@color/greyLightAssist"/>
+    <item android:drawable="@color/splitLineColor"/>
 </selector>

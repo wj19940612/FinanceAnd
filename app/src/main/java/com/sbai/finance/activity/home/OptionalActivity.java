@@ -20,6 +20,7 @@ import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
+import com.sbai.finance.fragment.dialog.AddOptionalDialogFragment;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockData;
@@ -45,6 +46,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-04-18.
@@ -59,9 +61,8 @@ public class OptionalActivity extends BaseActivity implements
     SlideListView mListView;
     @BindView(R.id.empty)
     TextView mEmpty;
-    @BindView(R.id.varietyTitle)
-    LinearLayout mVarietyTitle;
-
+    @BindView(R.id.addOptional)
+    TextView mAddOptional;
     private SlideListAdapter mSlideListAdapter;
     private int mPage = 0;
     private int mPageSize = 200;
@@ -76,7 +77,6 @@ public class OptionalActivity extends BaseActivity implements
 
     private void initView() {
         mSet = new HashSet<>();
-        mVarietyTitle.setVisibility(View.GONE);
         mSlideListAdapter = new SlideListAdapter(this);
         mSlideListAdapter.setOnDelClickListener(new SlideListAdapter.OnDelClickListener() {
             @Override
@@ -121,6 +121,10 @@ public class OptionalActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
     }
+    @OnClick(R.id.addOptional)
+    public void onClick(View view){
+        AddOptionalDialogFragment.newInstance().show(getSupportFragmentManager());
+    }
 
     private void requestOptionalData() {
         Client.getOptional(mPage).setTag(TAG)
@@ -140,11 +144,6 @@ public class OptionalActivity extends BaseActivity implements
                         if (resp.isSuccess()) {
                               mSlideListAdapter.remove(variety);
                               mSlideListAdapter.notifyDataSetChanged();
-                              if (mSlideListAdapter.getCount()==0){
-                                  mVarietyTitle.setVisibility(View.GONE);
-                              }
-//                            reset();
-//                            requestOptionalData();
                         } else {
                             ToastUtil.curt(resp.getMsg());
                             stopRefreshAnimation();
@@ -187,10 +186,8 @@ public class OptionalActivity extends BaseActivity implements
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
-        if (!data.isEmpty()&&mPage==0){
-            mVarietyTitle.setVisibility(View.VISIBLE);
-        }
         stopRefreshAnimation();
+        mSlideListAdapter.clear();
         for (Variety variety:data){
             if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
                 if (mSet.add(variety.getVarietyType())){
@@ -242,8 +239,6 @@ public class OptionalActivity extends BaseActivity implements
     private void reset() {
         mPage = 0;
         mSet.clear();
-        mSlideListAdapter.clear();
-        mVarietyTitle.setVisibility(View.GONE);
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
@@ -289,7 +284,7 @@ public class OptionalActivity extends BaseActivity implements
         public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                View content = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
+                View content = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_optional, parent, false);
                 View menu = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_delete_btn, parent, false);
                 viewHolder = new ViewHolder(content, menu);
                 SlideItem slideItem = new SlideItem(mContext);
@@ -319,10 +314,6 @@ public class OptionalActivity extends BaseActivity implements
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
-            @BindView(R.id.stopTrade)
-            TextView mStopTrade;
-            @BindView(R.id.trade)
-            LinearLayout mTrade;
             private TextView mDel;
 
             ViewHolder(View content, View menu) {
@@ -334,27 +325,30 @@ public class OptionalActivity extends BaseActivity implements
                 if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
                     mFutureName.setText(item.getVarietyName());
                     mFutureCode.setText(item.getVarietyType());
+                    mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
                     StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
                         mLastPrice.setText(stockData.getLast_price());
                         String priceChange = stockData.getRise_pre();
                         if (priceChange.startsWith("-")) {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                            mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setSelected(false);
                             mRate.setText(priceChange + "%");
                         } else {
 
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                            mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setSelected(true);
                             mRate.setText("+" + priceChange + "%");
                         }
                     } else {
                         mLastPrice.setText("--");
+                        mRate.setSelected(true);
                         mRate.setText("--");
                     }
                 }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
                     mFutureName.setText(item.getVarietyName());
                     mFutureCode.setText(item.getContractsCode());
+                    mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
                     FutureData futureData = futureMap.get(item.getContractsCode());
                     if (futureData != null) {
                         double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
@@ -363,26 +357,19 @@ public class OptionalActivity extends BaseActivity implements
                         mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
                         if (priceChange >= 0) {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                            mRate.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setSelected(true);
                             mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                         } else {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                            mRate.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setSelected(false);
                             mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
                         }
                     } else {
                         mLastPrice.setText("--");
+                        mRate.setSelected(true);
                         mRate.setText("--.--%");
                     }
                 }
-
-//                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
-//                    mTrade.setVisibility(View.GONE);
-//                    mStopTrade.setVisibility(View.VISIBLE);
-//                } else {
-//                    mTrade.setVisibility(View.VISIBLE);
-//                    mStopTrade.setVisibility(View.GONE);
-//                }
             }
         }
     }

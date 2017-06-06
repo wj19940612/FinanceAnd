@@ -48,37 +48,34 @@ public class TradeFloatButtons extends LinearLayout {
 
     private void init() {
         setOrientation(HORIZONTAL);
-        int padding = (int) dp2Px(4);
-        setPadding(0, padding, 0, padding);
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+        setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
 
-        mPublishPoint = createChildView(R.drawable.ic_futures_btn_opinion, R.string.publish_point);
+        mTrade = createChildView(false, R.string.trade);
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1f;
-        int margin = (int) dp2Px(12);
-        params.setMargins(0, margin, 0, margin);
-        addView(mPublishPoint, params);
+        addView(mTrade, params);
 
         View splitLine = new View(getContext());
-        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.normalDivider));
         int splitLineWidth = (int) dp2Px(0.5f);
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);
 
-        int buttonWidth = (int) dp2Px(90);
-        mAddOptional = createChildView(0, R.string.add_optional);
-        params = new LayoutParams(buttonWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+        mAddOptional = createChildView(false, R.string.add_optional);
+        params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.weight = 1f;
         addView(mAddOptional, params);
 
         splitLine = new View(getContext());
-        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.normalDivider));
         splitLineWidth = (int) dp2Px(0.5f);
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);
 
-        mTrade = createChildView(R.drawable.ic_futures_btn_trade, R.string.trade);
-        params = new LayoutParams(buttonWidth, ViewGroup.LayoutParams.MATCH_PARENT);
-        addView(mTrade, params);
+        mPublishPoint = createChildView(true, R.string.publish_point);
+        params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.weight = 1f;
+        addView(mPublishPoint, params);
 
         setHasTradeButton(mHasTradeButton);
 
@@ -150,17 +147,22 @@ public class TradeFloatButtons extends LinearLayout {
         typedArray.recycle();
     }
 
-    private LinearLayout createChildView(int leftRes, int textRes) {
+    private LinearLayout createChildView(boolean isPublish, int textRes) {
         LinearLayout layout = new LinearLayout(getContext());
         layout.setGravity(Gravity.CENTER);
+        int padding = (int) dp2Px(16);
+        layout.setPadding(0, padding, 0, padding);
         TextView textView = new TextView(getContext());
         textView.setText(textRes);
-        if (leftRes != 0) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(leftRes, 0, 0, 0);
-        }
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        if (isPublish) {
+            layout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+            textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        } else {
+            layout.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+        }
         layout.addView(textView);
         return layout;
     }

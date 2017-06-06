@@ -11,7 +11,7 @@
         android:id="@+id/head"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:background="@color/greyLightAssist"
+        android:background="@color/splitLineColor"
         android:gravity="center_vertical"
         android:paddingLeft="13dp"
         android:textColor="@color/assistText"

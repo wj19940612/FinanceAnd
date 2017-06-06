@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine;
+package com.sbai.finance.activity.mine.setting;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
@@ -28,7 +28,7 @@ public class SettingActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.shieldSetting, R.id.newNewsNotification, R.id.appInfo})
+    @OnClick({R.id.shieldSetting, R.id.newNewsNotification, R.id.appInfo, R.id.safety_setting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.shieldSetting:
@@ -36,6 +36,9 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.newNewsNotification:
                 Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+                break;
+            case R.id.safety_setting:
+                Launcher.with(getActivity(), SafetySettingActivity.class).execute();
                 break;
             case R.id.appInfo:
                 ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "

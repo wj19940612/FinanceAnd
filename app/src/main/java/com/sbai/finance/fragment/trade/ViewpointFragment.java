@@ -29,7 +29,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,7 +95,7 @@ public class ViewpointFragment extends BaseFragment {
         mFootView.setText(getText(R.string.load_all));
         mFootView.setGravity(Gravity.CENTER);
         mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
-        mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+        mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.splitLineColor));
 
         mEmpty = new TextView(getActivity());
         mEmpty.setText(getText(R.string.quick_publish));
@@ -255,7 +254,8 @@ public class ViewpointFragment extends BaseFragment {
             String time = DateUtil.getFormatTime(item.getCreateTime());
             helper.setText(R.id.userName, item.getUserName())
                     .setText(R.id.followed, attend)
-                    .setText(R.id.publishTime, time);
+                    .setText(R.id.publishTime, time)
+                    .setText(R.id.opinion, item.getContent());
 
             if (item.getReplyCount() > 999) {
                 ((TextView) helper.getView(R.id.commentNum))
@@ -278,27 +278,27 @@ public class ViewpointFragment extends BaseFragment {
                     .into((ImageView) helper.getView(R.id.avatar));
             if (item.getGuessPass() == 0) {
                 if (item.getDirection() == 1) {
-                    ((TextView) helper.getView(R.id.opinion))
-                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up));
+                    ((ImageView) helper.getView(R.id.prediction))
+                            .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_opinion_up));
                 } else {
-                    ((TextView) helper.getView(R.id.opinion))
-                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down));
+                    ((ImageView) helper.getView(R.id.prediction))
+                            .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_opinion_down));
                 }
             } else if (item.getGuessPass() == 1) {
                 if (item.getDirection() == 1) {
-                    ((TextView) helper.getView(R.id.opinion))
-                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up_succeed));
+                    ((ImageView) helper.getView(R.id.prediction))
+                            .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_opinion_up_succeed));
                 } else {
-                    ((TextView) helper.getView(R.id.opinion))
-                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down_succeed));
+                    ((ImageView) helper.getView(R.id.prediction))
+                            .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_opinion_down_succeed));
                 }
             } else {
                 if (item.getDirection() == 1) {
-                    ((TextView) helper.getView(R.id.opinion))
-                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_up_failed));
+                    ((ImageView) helper.getView(R.id.prediction))
+                            .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_opinion_up_failed));
                 } else {
-                    ((TextView) helper.getView(R.id.opinion))
-                            .setText(StrUtil.mergeTextWithImage(getActivity(), item.getContent(), R.drawable.ic_opinion_down_failed));
+                    ((ImageView) helper.getView(R.id.prediction))
+                            .setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_opinion_down_failed));
                 }
             }
             helper.getView(R.id.avatar).setOnClickListener(new View.OnClickListener() {

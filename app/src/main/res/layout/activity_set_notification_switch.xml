@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyLightAssist"
+    android:background="@color/splitLineColor"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.SetNotificationSwitchActivity">
+    tools:context="com.sbai.finance.activity.mine.setting.SetNotificationSwitchActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
