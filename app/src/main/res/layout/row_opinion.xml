@@ -59,10 +59,10 @@
             android:layout_marginLeft="42dp"
             android:ellipsize="end"
             android:lineSpacingExtra="12dp"
-            android:lines="2"
+            android:maxLines="2"
             android:textColor="#222222"
             android:textSize="14sp"
-            tools:text="黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+            tools:text="涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
     </RelativeLayout>
 
 
