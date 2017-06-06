@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -232,14 +231,6 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             TextView mBigVarietyName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
-            @BindView(R.id.lastPrice)
-            TextView mLastPrice;
-            @BindView(R.id.upDownPrice)
-            TextView mUpDownPrice;
-            @BindView(R.id.upDownPercent)
-            TextView mUpDownPercent;
-            @BindView(R.id.upDownArea)
-            LinearLayout mUpDownArea;
             @BindView(R.id.replyCount)
             AppCompatTextView mReplyCount;
             @BindView(R.id.praiseCount)

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -56,16 +58,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mLocation;
 	@BindView(R.id.needAmount)
 	TextView mNeedAmount;
-	@BindView(R.id.borrowTime)
-	TextView mBorrowTime;
+	@BindView(R.id.borrowDeadline)
+	TextView mBorrowDeadline;
 	@BindView(R.id.borrowInterest)
 	TextView mBorrowInterest;
 	@BindView(R.id.borrowMoneyContent)
 	TextView mBorrowMoneyContent;
-	@BindView(R.id.peopleWantHelpHimOrHer)
-	TextView mPeopleWantHelpHimOrHer;
-	@BindView(R.id.peopleNum)
-	TextView mPeopleNum;
+	@BindView(R.id.leaveMessageNum)
+	TextView mLeaveMessageNum;
 	@BindView(R.id.giveHelp)
 	TextView mGiveHelp;
 	@BindView(R.id.isAttention)
@@ -80,12 +80,18 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	ImageView mImage3;
 	@BindView(R.id.image4)
 	ImageView mImage4;
+	@BindView(R.id.goodHeartPeopleArea)
+	RelativeLayout mGoodHeartPeopleArea;
 	@BindView(R.id.avatarList)
 	LinearLayout mAvatarList;
 	@BindView(R.id.more)
 	ImageView mMore;
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
+	@BindView(android.R.id.list)
+	MyListView mList;
+	@BindView(android.R.id.empty)
+	TextView mEmpty;
 
 	private int mMax;
 	private int mDataId;
@@ -134,11 +140,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	private void updateWantHelpHimList(final List<WantHelpHimOrYou> wantHelpHimOrYouList) {
 		int width = (int) Display.dp2Px(32, getResources());
 		int height = (int) Display.dp2Px(32, getResources());
-		int margin = (int) Display.dp2Px(5, getResources());
+		int margin = (int) Display.dp2Px(10, getResources());
 
 		mAvatarList.removeAllViews();
 
 		int size = mWantHelpHimOrYouList.size();
+		if (size > 0) {
+			mGoodHeartPeopleArea.setVisibility(View.VISIBLE);
+		}
 		if (size >= mMax) {
 			size = mMax;
 			for (int i = 0; i < size - 1; i++) {
@@ -228,15 +237,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 		mBorrowMoneyContent.setText(borrowMoneyDetails.getContent());
 		mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney())));
-		mBorrowTime.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays())));
+		mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays())));
 		mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest())));
-		mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, borrowMoneyDetails.getIntentionCount()));
-
-		if (borrowMoneyDetails.getSex() == 1) {
-			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_her);
-		} else {
-			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_him);
-		}
 
 		mAvatar.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -264,7 +266,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		if (LocalUser.getUser().isLogin()) {
 			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
 				mGiveHelp.setVisibility(View.GONE);
-				mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_you);
 			}
 		}
 
@@ -374,8 +375,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 	private void calculateAvatarNum(Context context) {
 		int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-		int margin = (int) Display.dp2Px(26, getResources());
-		int horizontalSpacing = (int) Display.dp2Px(5, getResources());
+		int margin = (int) Display.dp2Px(68, getResources());
+		int horizontalSpacing = (int) Display.dp2Px(10, getResources());
 		int avatarWidth = (int) Display.dp2Px(32, getResources());
 		mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
 	}
