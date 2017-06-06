@@ -151,7 +151,7 @@ public class TitleBar extends RelativeLayout {
 
     public void setBackButtonIcon(Drawable backIcon) {
         if (backIcon != null) {
-            mLeftView.setCompoundDrawables(backIcon, null, null, null);
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(backIcon, null, null, null);
         } else { // default icon
 
             mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back, 0, 0, 0);

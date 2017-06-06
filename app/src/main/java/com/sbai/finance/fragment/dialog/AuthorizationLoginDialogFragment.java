@@ -11,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.TitleBar;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -27,17 +28,20 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/5/10.
  */
 
-public class TradeOptionDialogFragment extends DialogFragment {
+public class AuthorizationLoginDialogFragment extends DialogFragment {
+
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     private Unbinder mBind;
 
-    public TradeOptionDialogFragment() {
+    public AuthorizationLoginDialogFragment() {
 
     }
 
-    public static TradeOptionDialogFragment newInstance() {
+    public static AuthorizationLoginDialogFragment newInstance() {
         Bundle args = new Bundle();
-        TradeOptionDialogFragment fragment = new TradeOptionDialogFragment();
+        AuthorizationLoginDialogFragment fragment = new AuthorizationLoginDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,14 +60,24 @@ public class TradeOptionDialogFragment extends DialogFragment {
             window.setGravity(Gravity.BOTTOM);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout((int) (dm.widthPixels), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout((dm.widthPixels), dm.heightPixels);
         }
+        initTitleBar();
+    }
+
+    private void initTitleBar() {
+        mTitleBar.setBackClickLisenter(new TitleBar.OnBackClickListener() {
+            @Override
+            public void onClick() {
+                dismiss();
+            }
+        });
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_trade_option, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_authorization_login, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -74,32 +88,24 @@ public class TradeOptionDialogFragment extends DialogFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.quickTrade, R.id.cancel})
+    @OnClick({R.id.login, R.id.thirdPartyProtocol})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.quickTrade:
-                checkAuthorizationTimeOverdue();
+            case R.id.login:
+                Preference.get().setAuthorizationTime(SysTime.getSysTime().getSystemTimestamp());
+                Launcher.with(getContext(), TradeWebActivity.class).execute();
+                dismiss();
                 break;
-            case R.id.cancel:
+            case R.id.thirdPartyProtocol:
+                // TODO: 2017/6/6 跳转协议页面
                 this.dismiss();
                 break;
         }
     }
 
-    private void checkAuthorizationTimeOverdue() {
-        long lastTime = Preference.get().getAuthorizationTime();
-        long diffTime = SysTime.getSysTime().getSystemTimestamp() - lastTime;
-        boolean overdue = diffTime / (1000 * 60 * 60 * 24) >= 7;
-        if (lastTime == 0 || overdue) {
-            AuthorizationLoginDialogFragment.newInstance().show(getActivity().getSupportFragmentManager());
-        } else {
-            Launcher.with(getContext(), TradeWebActivity.class).execute();
-        }
-        dismiss();
-    }
 
     public void show(FragmentManager manager) {
-        this.show(manager, TradeOptionDialogFragment.class.getSimpleName());
+        this.show(manager, AuthorizationLoginDialogFragment.class.getSimpleName());
     }
 
 }
