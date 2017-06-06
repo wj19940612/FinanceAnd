@@ -31,6 +31,7 @@
     <color name="greyAssist">#7B7B7B</color>
     <color name="bgAssist">#F5F5F5</color>
     <color name="blueAssist">#6A9CEF</color>
+
     <!--Text-->
     <color name="lucky_text">#666</color>
     <color name="hintText">#999999</color>
