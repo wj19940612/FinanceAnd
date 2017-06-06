@@ -29,6 +29,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
+import com.sbai.finance.activity.mine.setting.LocationActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mutual.BorrowProtocol;
@@ -43,6 +44,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.GrapeGridView;
+import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
@@ -69,7 +71,7 @@ public class BorrowActivity extends BaseActivity {
 	@BindView(R.id.agree)
 	CheckBox mAgree;
 	@BindView(R.id.location)
-	TextView mLocation;
+	IconTextRow mLocation;
 	@BindView(R.id.contentDays)
 	LinearLayout mContentDays;
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -181,8 +183,7 @@ public class BorrowActivity extends BaseActivity {
 				requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 				break;
 			case R.id.location:
-//				mBorrowTimeLimit.requestFocus();
-//				mBorrowTimeLimit.setFocusable(true);
+                Launcher.with(getActivity(), LocationActivity.class).putExtra("type",LocationActivity.TYPE_BORROW).execute();
 				break;
 			case R.id.protocol:
 				Client.getBorrowProcotol().setTag(TAG)
@@ -343,8 +344,8 @@ public class BorrowActivity extends BaseActivity {
 		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 			if (position == getCount()-1){
 					convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_add_photo, null);
-					TextView mAddPhoto = (TextView) convertView.findViewById(R.id.addPhoto);
-					mAddPhoto.setOnClickListener(new View.OnClickListener() {
+					ImageView imageView = (ImageView) convertView.findViewById(R.id.addPhoto);
+				    imageView.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							mOnItemClickListener.onClick(position);

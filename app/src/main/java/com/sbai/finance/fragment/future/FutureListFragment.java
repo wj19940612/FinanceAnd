@@ -309,11 +309,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                     mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
                     if (priceChange >= 0) {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mRate.setBackgroundColor(ContextCompat.getColor(context, R.color.redPrimary));
+                        mRate.setSelected(true);
                         mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                     } else {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                        mRate.setBackgroundColor(ContextCompat.getColor(context, R.color.greenAssist));
+                        mRate.setSelected(false);
                         mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                     }
                 } else {

@@ -45,6 +45,6 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_gravity="center"
-        android:src="@drawable/ic_add_pic"
+        android:src="@drawable/ic_optional_add"
         android:visibility="visible"/>
 </LinearLayout>

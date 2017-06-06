@@ -155,6 +155,9 @@
         <activity
             android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.LocationActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 交易 H5 -->
         <activity
