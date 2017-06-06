@@ -209,7 +209,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			mFootView.setText(getText(R.string.load_more));
 			mFootView.setGravity(Gravity.CENTER);
 			mFootView.setTextColor(ContextCompat.getColor(getContext(), R.color.greyAssist));
-			mFootView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.greyLightAssist));
+			mFootView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.splitLineColor));
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

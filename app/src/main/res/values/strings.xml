@@ -36,11 +36,11 @@
 
     <!--login   page-->
     <string name="phone_number">手机号</string>
-    <string name="please_input_phone_number">请输入手机号码</string>
+    <string name="please_input_phone_number">手机号码</string>
     <string name="auth_code">验证码</string>
-    <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
-    <string name="login">登  录</string>
+    <string name="login">登录</string>
+    <string name="login_ing">登陆中</string>
     <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
     <string name="login_hint">登录即表示同意</string>
@@ -142,6 +142,7 @@
     <string name="detail">明细</string>
     <string name="feed_back">意见反馈</string>
     <string name="new_message">新消息</string>
+    <string name="wallet">钱包</string>
     <string name="item">条</string>
     <string name="now_not_has_data">暂无消息</string>
     <string name="please_input_here">请在此输入......</string>
@@ -181,13 +182,20 @@
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
     <string name="safety_setting">安全设置</string>
+    <string name="safety_center">安全中心</string>
+    <string name="setting_safety_password">设置安全密码</string>
     <string name="modify_safety_password">修改安全密码</string>
     <string name="forget_safety_password">忘记安全密码</string>
-    
+
     <!--安全设置-->
     <string name="please_input_old_password">请输入旧安全密码</string>
     <string name="please_input_new_password">请输入新安全密码</string>
     <string name="please_confirm_new_password">请确认新安全密码</string>
+
+    <string name="modify_fail">修改失败</string>
+    <string name="new_password_is_same_as_old_pass">新密码与旧密码相同</string>
+    <string name="twice_password_is_different">两次新安全密码输入不一致</string>
+
 
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>

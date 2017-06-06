@@ -95,7 +95,7 @@ public class ViewpointFragment extends BaseFragment {
         mFootView.setText(getText(R.string.load_all));
         mFootView.setGravity(Gravity.CENTER);
         mFootView.setTextColor(ContextCompat.getColor(getActivity(), R.color.secondaryText));
-        mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.greyLightAssist));
+        mFootView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.splitLineColor));
 
         mEmpty = new TextView(getActivity());
         mEmpty.setText(getText(R.string.quick_publish));
