@@ -238,7 +238,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
-                        // TODO: 2017/5/10 刷新界面
                         refreshChatList(content, contentType);
                     }
 
