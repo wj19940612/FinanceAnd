@@ -15,7 +15,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
-import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
@@ -269,26 +267,20 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			TextView mPublishTime;
 			@BindView(R.id.location)
 			TextView mLocation;
-			@BindView(R.id.needAmount)
-			TextView mNeedAmount;
-			@BindView(R.id.borrowTime)
-			TextView mBorrowTime;
-			@BindView(R.id.borrowInterest)
-			TextView mBorrowInterest;
 			@BindView(R.id.borrowMoneyContent)
 			TextView mBorrowMoneyContent;
+			@BindView(R.id.needAmount)
+			TextView mNeedAmount;
+			@BindView(R.id.borrowDeadline)
+			TextView mBorrowDeadline;
+			@BindView(R.id.borrowInterest)
+			TextView mBorrowInterest;
 			@BindView(R.id.isAttention)
 			TextView mIsAttention;
-			@BindView(R.id.contentImg)
-			LinearLayout mContentImg;
-			@BindView(R.id.image1)
-			ImageView mImage1;
-			@BindView(R.id.image2)
-			ImageView mImage2;
-			@BindView(R.id.image3)
-			ImageView mImage3;
-			@BindView(R.id.image4)
-			ImageView mImage4;
+			@BindView(R.id.borrowingImg)
+			ImageView mBorrowingImg;
+			@BindView(R.id.circleMoreIcon)
+			ImageView mCircleMoreIcon;
 
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
@@ -297,18 +289,12 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			private void bindingData(final Context context, final BorrowMoney item, final Callback callback, int position) {
 				if (item == null) return;
 
-				if (position == 0) {
-					mDivider.setVisibility(View.GONE);
-				} else {
-					mDivider.setVisibility(View.VISIBLE);
-				}
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
 
 				mUserName.setText(item.getUserName());
-				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
 				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
@@ -316,17 +302,17 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					mIsAttention.setText("");
 				}
 
+				mBorrowMoneyContent.setText(item.getContent());
+				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
+				mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
+				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
+
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				if (TextUtils.isEmpty(item.getLand())) {
 					mLocation.setText(R.string.no_location_information);
 				} else {
 					mLocation.setText(item.getLand());
 				}
-
-				mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getMoney()))));
-				mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getDays()))));
-				mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getInterest()))));
-				mBorrowMoneyContent.setText(item.getContent());
-
 
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -339,82 +325,18 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 
 				if (!TextUtils.isEmpty(item.getContentImg())) {
 					String[] images = item.getContentImg().split(",");
-					switch (images.length) {
-						case 1:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.INVISIBLE);
-							mImage3.setVisibility(View.INVISIBLE);
-							mImage4.setVisibility(View.INVISIBLE);
-							imageClick(context, images, mImage1, 0);
-							break;
-						case 2:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.VISIBLE);
-							loadImage(context, images[1], mImage2);
-							mImage3.setVisibility(View.INVISIBLE);
-							mImage4.setVisibility(View.INVISIBLE);
-							imageClick(context, images, mImage1, 0);
-							imageClick(context, images, mImage2, 1);
-							break;
-						case 3:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.VISIBLE);
-							loadImage(context, images[1], mImage2);
-							mImage3.setVisibility(View.VISIBLE);
-							loadImage(context, images[2], mImage3);
-							mImage4.setVisibility(View.INVISIBLE);
-							imageClick(context, images, mImage1, 0);
-							imageClick(context, images, mImage2, 1);
-							imageClick(context, images, mImage3, 2);
-							break;
-						case 4:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.VISIBLE);
-							loadImage(context, images[1], mImage2);
-							mImage3.setVisibility(View.VISIBLE);
-							loadImage(context, images[2], mImage3);
-							mImage4.setVisibility(View.VISIBLE);
-							loadImage(context, images[3], mImage4);
-							imageClick(context, images, mImage1, 0);
-							imageClick(context, images, mImage2, 1);
-							imageClick(context, images, mImage3, 2);
-							imageClick(context, images, mImage4, 3);
-							break;
-						default:
-							break;
+					Glide.with(context).load(images[0])
+							.placeholder(R.drawable.ic_loading_pic)
+							.into(mBorrowingImg);
+					if (images.length >= 2) {
+						mCircleMoreIcon.setVisibility(View.VISIBLE);
+					} else {
+						mCircleMoreIcon.setVisibility(View.GONE);
 					}
 				} else {
-					mContentImg.setVisibility(View.GONE);
+					mBorrowingImg.setVisibility(View.GONE);
+					mCircleMoreIcon.setVisibility(View.GONE);
 				}
-			}
-
-			private void loadImage(Context context, String src, ImageView image) {
-				Glide.with(context)
-						.load(src)
-						.placeholder(R.drawable.img_loading)
-						.error(R.drawable.logo_login)
-						.into(image);
-			}
-
-			private void imageClick(final Context context, final String[] images,
-			                        ImageView imageView, final int i) {
-				imageView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(context, ContentImgActivity.class);
-						intent.putExtra(Launcher.EX_PAYLOAD, images);
-						intent.putExtra(Launcher.EX_PAYLOAD_1, i);
-						context.startActivity(intent);
-					}
-				});
 			}
 		}
 	}

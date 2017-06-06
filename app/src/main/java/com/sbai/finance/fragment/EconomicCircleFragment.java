@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
-import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -40,7 +35,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -61,7 +55,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 	private List<EconomicCircle> mEconomicCircleList;
 	private EconomicCircleAdapter mEconomicCircleAdapter;
-	private TextView mFootView;
+	private View mFootView;
 	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<String> mSet;
@@ -203,13 +197,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		}
 
 		if (mFootView == null) {
-			mFootView = new TextView(getActivity());
-			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-			mFootView.setPadding(padding, padding, padding, padding);
-			mFootView.setText(getText(R.string.load_more));
-			mFootView.setGravity(Gravity.CENTER);
-			mFootView.setTextColor(ContextCompat.getColor(getContext(), R.color.greyAssist));
-			mFootView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.splitLineColor));
+			mFootView = View.inflate(getActivity(), R.layout.view_footer, null);
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -383,7 +371,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 			switch (type) {
 				case TYPE_OPINION:
-					opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
+					opinionViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback);
 					break;
 				case TYPE_BORROW_MONEY:
 					borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
@@ -406,98 +394,56 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			TextView mPublishTime;
 			@BindView(R.id.opinionContent)
 			TextView mOpinionContent;
+			@BindView(R.id.label)
+			ImageView mLabel;
 			@BindView(R.id.bigVarietyName)
 			TextView mBigVarietyName;
 			@BindView(R.id.varietyName)
 			TextView mVarietyName;
-			@BindView(R.id.lastPrice)
-			TextView mLastPrice;
-			@BindView(R.id.upDownPrice)
-			TextView mUpDownPrice;
-			@BindView(R.id.upDownPercent)
-			TextView mUpDownPercent;
 
 			OpinionViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(Context context, final EconomicCircle item, final Callback callback, int position) {
+			private void bindingData(Context context, final EconomicCircle item, final Callback callback) {
 				if (item == null) return;
-				if (position == 0) {
-					mDivider.setVisibility(View.GONE);
-				} else {
-					mDivider.setVisibility(View.VISIBLE);
-				}
+
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
 
 				mUserName.setText(item.getUserName());
+
 				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
 				} else {
 					mIsAttention.setText("");
 				}
-				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+
+				mOpinionContent.setText(item.getContent());
 
 				if (item.getDirection() == 1) {
 					if (item.getGuessPass() == 1) {
-						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_succeed));
+						mLabel.setBackgroundResource(R.drawable.ic_opinion_up_succeed);
 					} else if (item.getGuessPass() == 2) {
-						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up_failed));
+						mLabel.setBackgroundResource(R.drawable.ic_opinion_up_failed);
 					} else {
-						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_up));
+						mLabel.setBackgroundResource(R.drawable.ic_opinion_up);
 					}
-
 				} else {
 					if (item.getGuessPass() == 1) {
-						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_succeed));
+						mLabel.setBackgroundResource(R.drawable.ic_opinion_down_succeed);
 					} else if (item.getGuessPass() == 2) {
-						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down_failed));
+						mLabel.setBackgroundResource(R.drawable.ic_opinion_down_failed);
 					} else {
-						mOpinionContent.setText(StrUtil.mergeTextWithImage(context, item.getContent(), R.drawable.ic_opinion_down));
+						mLabel.setBackgroundResource(R.drawable.ic_opinion_down);
 					}
 				}
 
-				mBigVarietyName.setText(item.getBigVarietyTypeName());
+				mBigVarietyName.setText(context.getString(R.string.big_variety_name, item.getBigVarietyTypeName()));
 				mVarietyName.setText(item.getVarietyName());
-
-			/*	if (TextUtils.isEmpty(item.getLastPrice())) {
-	                mLastPrice.setText("--");
-					mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-				} else {
-					if (item.getRisePrice().startsWith("-")) {
-						mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenPrimary));
-					} else {
-						mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-					}
-					mLastPrice.setText(item.getLastPrice());
-				}
-
-				if (TextUtils.isEmpty(item.getRisePrice())) {
-					mUpDownPrice.setText("");
-				} else {
-					if (item.getRisePrice().startsWith("-")) {
-						mUpDownPrice.setTextColor(ContextCompat.getColor(context, R.color.greenPrimary));
-					} else {
-						mUpDownPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-					}
-					mUpDownPrice.setText(item.getRisePrice());
-				}
-
-				if (TextUtils.isEmpty(item.getRisePre())) {
-					mUpDownPercent.setText("");
-				} else {
-					if (item.getRisePre().startsWith("-")) {
-						mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.greenPrimary));
-					} else {
-						mUpDownPercent.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-					}
-					mUpDownPercent.setText(item.getRisePre());
-				}*/
-
-
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -506,7 +452,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					}
 				});
-
 			}
 		}
 
@@ -525,22 +470,16 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			TextView mBorrowMoneyContent;
 			@BindView(R.id.needAmount)
 			TextView mNeedAmount;
-			@BindView(R.id.borrowTime)
-			TextView mBorrowTime;
+			@BindView(R.id.borrowDeadline)
+			TextView mBorrowDeadline;
 			@BindView(R.id.borrowInterest)
 			TextView mBorrowInterest;
 			@BindView(R.id.isAttention)
 			TextView mIsAttention;
-			@BindView(R.id.contentImg)
-			LinearLayout mContentImg;
-			@BindView(R.id.image1)
-			ImageView mImage1;
-			@BindView(R.id.image2)
-			ImageView mImage2;
-			@BindView(R.id.image3)
-			ImageView mImage3;
-			@BindView(R.id.image4)
-			ImageView mImage4;
+			@BindView(R.id.borrowingImg)
+			ImageView mBorrowingImg;
+			@BindView(R.id.circleMoreIcon)
+			ImageView mCircleMoreIcon;
 
 
 			BorrowMoneyViewHolder(View view) {
@@ -549,18 +488,13 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 			private void bindingData(Context context, final EconomicCircle item, final Callback callback, int position) {
 				if (item == null) return;
-				if (position == 0) {
-					mDivider.setVisibility(View.GONE);
-				} else {
-					mDivider.setVisibility(View.VISIBLE);
-				}
+
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
 
 				mUserName.setText(item.getUserName());
-				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
 				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
@@ -568,17 +502,17 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mIsAttention.setText("");
 				}
 
+				mBorrowMoneyContent.setText(item.getContent());
+				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
+				mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
+				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
+
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				if (TextUtils.isEmpty(item.getLand())) {
 					mLocation.setText(R.string.no_location_information);
 				} else {
 					mLocation.setText(item.getLand());
 				}
-
-				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
-				mBorrowTime.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
-				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
-				mBorrowMoneyContent.setText(item.getContent());
-
 
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -591,82 +525,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 				if (!TextUtils.isEmpty(item.getContentImg())) {
 					String[] images = item.getContentImg().split(",");
-					switch (images.length) {
-						case 1:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.INVISIBLE);
-							mImage3.setVisibility(View.INVISIBLE);
-							mImage4.setVisibility(View.INVISIBLE);
-							imageClick(context, images, mImage1, 0);
-							break;
-						case 2:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.VISIBLE);
-							loadImage(context, images[1], mImage2);
-							mImage3.setVisibility(View.INVISIBLE);
-							mImage4.setVisibility(View.INVISIBLE);
-							imageClick(context, images, mImage1, 0);
-							imageClick(context, images, mImage2, 1);
-							break;
-						case 3:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.VISIBLE);
-							loadImage(context, images[1], mImage2);
-							mImage3.setVisibility(View.VISIBLE);
-							loadImage(context, images[2], mImage3);
-							mImage4.setVisibility(View.INVISIBLE);
-							imageClick(context, images, mImage1, 0);
-							imageClick(context, images, mImage2, 1);
-							imageClick(context, images, mImage3, 2);
-							break;
-						case 4:
-							mContentImg.setVisibility(View.VISIBLE);
-							mImage1.setVisibility(View.VISIBLE);
-							loadImage(context, images[0], mImage1);
-							mImage2.setVisibility(View.VISIBLE);
-							loadImage(context, images[1], mImage2);
-							mImage3.setVisibility(View.VISIBLE);
-							loadImage(context, images[2], mImage3);
-							mImage4.setVisibility(View.VISIBLE);
-							loadImage(context, images[3], mImage4);
-							imageClick(context, images, mImage1, 0);
-							imageClick(context, images, mImage2, 1);
-							imageClick(context, images, mImage3, 2);
-							imageClick(context, images, mImage4, 3);
-							break;
-						default:
-							break;
+					Glide.with(context).load(images[0])
+							.placeholder(R.drawable.ic_loading_pic)
+							.into(mBorrowingImg);
+					if (images.length >= 2) {
+						mCircleMoreIcon.setVisibility(View.VISIBLE);
+					} else {
+						mCircleMoreIcon.setVisibility(View.GONE);
 					}
 				} else {
-					mContentImg.setVisibility(View.GONE);
+					mBorrowingImg.setVisibility(View.GONE);
+					mCircleMoreIcon.setVisibility(View.GONE);
 				}
-			}
-
-			private void loadImage(Context context, String src, ImageView image) {
-				Glide.with(context)
-						.load(src)
-						.placeholder(R.drawable.img_loading)
-						.error(R.drawable.logo_login)
-						.into(image);
-			}
-
-			private void imageClick(final Context context, final String[] images,
-			                        ImageView imageView, final int i) {
-				imageView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(context, ContentImgActivity.class);
-						intent.putExtra(Launcher.EX_PAYLOAD, images);
-						intent.putExtra(Launcher.EX_PAYLOAD_1, i);
-						context.startActivity(intent);
-					}
-				});
 			}
 		}
 	}
