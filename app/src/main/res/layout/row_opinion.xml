@@ -27,8 +27,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/colorRed"
-            android:textSize="15sp"
+            android:textColor="#222222"
+            android:textSize="16sp"
             tools:text="张三丰"/>
 
         <TextView
@@ -42,15 +42,6 @@
             android:textSize="11sp"
             tools:text="@string/is_attention"/>
 
-        <TextView
-            android:id="@+id/publishTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/userName"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/assistText"
-            android:textSize="11sp"
-            tools:text="2008/08/08 08:00"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -65,12 +56,13 @@
             android:id="@+id/opinion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="12dp"
-            android:textColor="@color/opinionText"
-            android:lines="2"
+            android:layout_marginLeft="42dp"
             android:ellipsize="end"
+            android:lineSpacingExtra="12dp"
+            android:maxLines="2"
+            android:textColor="#222222"
             android:textSize="14sp"
-            tools:text="           黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
+            tools:text="涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
     </RelativeLayout>
 
 
@@ -81,6 +73,22 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="13dp"
         android:layout_marginTop="13dp">
+
+        <ImageView
+            android:id="@+id/prediction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55dp"/>
+
+        <TextView
+            android:id="@+id/publishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/prediction"
+            android:paddingLeft="8dp"
+            android:textColor="#999999"
+            android:textSize="10sp"
+            tools:text="2008/08/08 08:00"/>
 
         <TextView
             android:id="@+id/commentNum"

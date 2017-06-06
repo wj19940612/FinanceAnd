@@ -24,6 +24,10 @@
     <color name="assistSecondText">#B6B6B6</color>
     <color name="opinionText">#5F6166</color>
 
+    <!--Divider-->
+    <color name="normalDivider">#dddddd</color>
+
+
 
     <!--泛理新规范-->
     <!--Assist-->

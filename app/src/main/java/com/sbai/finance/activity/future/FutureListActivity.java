@@ -56,9 +56,8 @@ public class FutureListActivity extends BaseActivity {
 
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(70, getResources()));
+        mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
-        mTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blueAssist));
         mTabLayout.setViewPager(mViewPager);
     }
 

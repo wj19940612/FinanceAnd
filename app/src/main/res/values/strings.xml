@@ -295,6 +295,7 @@
     <string name="prediction_rule3">3.每个预测时间段内预测一次后，将不能进行重复预测</string>
     <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
+    <string name="opinion_length">%1$d/300</string>
     <string name="submit_has_empty">提  交</string>
     <string name="please_enter_the_text">请输入文字...</string>
 

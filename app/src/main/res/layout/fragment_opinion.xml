@@ -20,5 +20,5 @@
         android:paddingTop="150dp"
         android:text="@string/quick_publish"
         android:textColor="@color/assistText"
-        android:textSize="20sp"/>
+        android:textSize="15sp"/>
 </LinearLayout>

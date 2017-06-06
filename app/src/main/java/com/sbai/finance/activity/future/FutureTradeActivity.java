@@ -221,7 +221,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
+        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setViewPager(mViewPager);
     }

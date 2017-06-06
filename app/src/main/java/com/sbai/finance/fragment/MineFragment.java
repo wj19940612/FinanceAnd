@@ -37,6 +37,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
@@ -104,6 +105,13 @@ public class MineFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(BaseActivity.ACTION_TOKEN_EXPIRED));
+        initViews();
+    }
+
+    private void initViews() {
+        int margin = (int) Display.dp2Px(4f, getResources());
+        mNews.setRightTextMargin(margin);
+        mFeedBack.setRightTextMargin(margin);
     }
 
     @Override
@@ -141,13 +149,9 @@ public class MineFragment extends BaseFragment {
                             count = count + notReadMessageNumberData.getCount();
                         }
                         if (count != 0) {
-                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
-                                            + (count > 99 ? getString(R.string.number99) : count) + " ",
-                                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
-                                    , getString(R.string.item));
-                            mNews.setSubText(attentionSpannableString);
+                            mNews.setRightTextDrawable(R.drawable.ic_new_message);
                         } else {
-                            mNews.setSubText("");
+                            mNews.setRightTextDrawable(0);
                         }
                     }
                 })
@@ -171,13 +175,9 @@ public class MineFragment extends BaseFragment {
 
     private void updateNoReadFeedbackCount(int count) {
         if (count != 0) {
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
-                            + (count > 99 ? getString(R.string.number99) : count) + " ",
-                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
-                    , getString(R.string.item));
-            mFeedBack.setSubText(attentionSpannableString);
+            mFeedBack.setRightTextDrawable(R.drawable.ic_new_message);
         } else {
-            mFeedBack.setSubText("");
+            mFeedBack.setRightTextDrawable(0);
         }
     }
 
