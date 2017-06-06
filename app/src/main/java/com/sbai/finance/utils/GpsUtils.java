@@ -118,6 +118,7 @@ public class GpsUtils {
         if (location != null) {
             lat = location.getLatitude();
             lng = location.getLongitude();
+            Log.d(TAG, "updateWithNewLocation: " + lat + "  " + lng);
         } else {
             Log.d(TAG, "updateWithNewLocation: 无法获取地理信息");
         }

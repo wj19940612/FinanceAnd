@@ -4,19 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +30,6 @@ import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
-import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -58,33 +56,31 @@ public class MineFragment extends BaseFragment {
     private static final int REQ_CODE_FANS_PAGE = 322;
     private static final int REQ_CODE_ATTENTION_PAGE = 4555;
     private static final String ABOUT_US = "http://fanli.esongbai.xyz/mobi/user/about/about?nohead=1";
+
+
+    Unbinder unbinder;
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
     @BindView(R.id.userName)
     AppCompatTextView mUserName;
+    @BindView(R.id.headImageLayout)
+    LinearLayout mHeadImageLayout;
     @BindView(R.id.attention)
     TextView mAttention;
     @BindView(R.id.fans)
     TextView mFans;
     @BindView(R.id.minePublish)
     TextView mMinePublish;
+    @BindView(R.id.wallet)
+    IconTextRow mWallet;
+    @BindView(R.id.news)
+    IconTextRow mNews;
+    @BindView(R.id.feedBack)
+    IconTextRow mFeedBack;
     @BindView(R.id.setting)
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
-    @BindView(R.id.news)
-    IconTextRow mNews;
-    @BindView(R.id.detail)
-    IconTextRow mDetail;
-    @BindView(R.id.feedBack)
-    IconTextRow mFeedBack;
-    @BindView(R.id.headImageLayout)
-    LinearLayoutCompat mHeadImageLayout;
-    @BindView(R.id.logoutImage)
-    AppCompatImageView mLogoutImage;
-
-    Unbinder unbinder;
-
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -146,7 +142,7 @@ public class MineFragment extends BaseFragment {
                         }
                         if (count != 0) {
                             SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
-                                            + (count > 99 ? getString(R.string.number99) : count )+ " ",
+                                            + (count > 99 ? getString(R.string.number99) : count) + " ",
                                     ContextCompat.getColor(getActivity(), R.color.redPrimary)
                                     , getString(R.string.item));
                             mNews.setSubText(attentionSpannableString);
@@ -176,7 +172,7 @@ public class MineFragment extends BaseFragment {
     private void updateNoReadFeedbackCount(int count) {
         if (count != 0) {
             SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
-                            + (count > 99 ? getString(R.string.number99) : count )+ " ",
+                            + (count > 99 ? getString(R.string.number99) : count) + " ",
                     ContextCompat.getColor(getActivity(), R.color.redPrimary)
                     , getString(R.string.item));
             mFeedBack.setSubText(attentionSpannableString);
@@ -191,18 +187,15 @@ public class MineFragment extends BaseFragment {
             requestUserAttentionAndroidFansNumber();
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
-            mHeadImageLayout.setVisibility(View.VISIBLE);
-            mLogoutImage.setVisibility(View.GONE);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
-            mNews.setSubText("");
-            mHeadImageLayout.setVisibility(View.GONE);
-            mLogoutImage.setVisibility(View.VISIBLE);
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, Color.WHITE);
+            mUserName.setText(R.string.login);
+            int color = ContextCompat.getColor(getActivity(), R.color.hintText);
+            SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, color);
             mAttention.setText(attentionSpannableString);
-            SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, Color.WHITE);
+            SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, color);
             mFans.setText(fansSpannableString);
-            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n-", 1.3f, Color.WHITE);
+            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n-", 1.3f, color);
             mMinePublish.setText(minePublishSpannableString);
         }
     }
@@ -226,9 +219,9 @@ public class MineFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.headImageLayout, R.id.logoutImage, R.id.userHeadImage,
+    @OnClick({R.id.headImageLayout, R.id.userHeadImage,
             R.id.attention, R.id.fans, R.id.minePublish, R.id.news,
-            R.id.setting, R.id.aboutUs, R.id.detail, R.id.feedBack})
+            R.id.setting, R.id.aboutUs, R.id.wallet, R.id.feedBack})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
@@ -236,10 +229,8 @@ public class MineFragment extends BaseFragment {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
+                    getActivity().overridePendingTransition(R.anim.slide_in_from_bottom,0);
                 }
-                break;
-            case R.id.logoutImage:
-                Launcher.with(getActivity(), LoginActivity.class).execute();
                 break;
             case R.id.userHeadImage:
                 if (LocalUser.getUser().isLogin()) {
@@ -280,9 +271,9 @@ public class MineFragment extends BaseFragment {
                         .putExtra(WebActivity.EX_URL, ABOUT_US)
                         .execute();
                 break;
-            case R.id.detail:
+            case R.id.wallet:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
+//                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -314,11 +305,12 @@ public class MineFragment extends BaseFragment {
     private void updateUserNumber(AttentionAndFansNumberModel data) {
         if (data == null)
             data = new AttentionAndFansNumberModel();
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1.8f, Color.WHITE);
+        int color = ContextCompat.getColor(getActivity(), R.color.hintText);
+        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1f, color);
         mAttention.setText(attentionSpannableString);
-        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1.8f, Color.WHITE);
+        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1f,color);
         mFans.setText(fansSpannableString);
-        SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n" + data.getViewpoint(), 1.8f, Color.WHITE);
+        SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n" + data.getViewpoint(), 1f, color);
         mMinePublish.setText(minePublishSpannableString);
     }
 

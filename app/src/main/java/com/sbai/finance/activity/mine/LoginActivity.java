@@ -3,7 +3,6 @@ package com.sbai.finance.activity.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -13,8 +12,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -27,6 +28,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -36,29 +38,30 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity {
 
     public static final String LOGIN_SUCCESS_ACTION = "LOGIN_SUCCESS_ACTION";
-
     @BindView(R.id.deletePage)
     AppCompatImageView mDeletePage;
-    //    @BindView(R.id.appIconName)
-//    AppCompatTextView mAppIconName;
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
     AppCompatImageView mPhoneNumberClear;
-    @BindView(R.id.getAuthCode)
-    AppCompatTextView mGetAuthCode;
     @BindView(R.id.phoneLl)
     LinearLayoutCompat mPhoneLl;
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
-    @BindView(R.id.errorHint)
-    AppCompatTextView mErrorHint;
+    @BindView(R.id.getAuthCode)
+    AppCompatTextView mGetAuthCode;
+    @BindView(R.id.contentLL)
+    LinearLayout mContentLL;
     @BindView(R.id.login)
-    AppCompatButton mLogin;
+    AppCompatTextView mLogin;
     @BindView(R.id.showLayout)
-    RelativeLayout mShowLayout;
+    LinearLayout mShowLayout;
+    @BindView(R.id.finance_protocol)
+    TextView mFinanceProtocol;
     @BindView(R.id.hideLayout)
     LinearLayout mHideLayout;
+    @BindView(R.id.loading)
+    ImageView mLoading;
 
 
     private KeyBoardHelper mKeyBoardHelper;
@@ -112,7 +115,6 @@ public class LoginActivity extends BaseActivity {
                         .getLayoutParams();
                 lp.topMargin = offset;
                 mShowLayout.setLayoutParams(lp);
-//                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
         }
@@ -124,7 +126,6 @@ public class LoginActivity extends BaseActivity {
             if (lp.topMargin != 0) {
                 lp.topMargin = 0;
                 mShowLayout.setLayoutParams(lp);
-//                mAppIconName.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.logo_login, 0, 0);
             }
 
         }
@@ -166,9 +167,6 @@ public class LoginActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
-            if (mErrorHint.isShown()) {
-                mErrorHint.setVisibility(View.INVISIBLE);
-            }
             boolean enable = checkSignInButtonEnable();
             if (enable != mLogin.isEnabled()) {
                 mLogin.setEnabled(enable);
@@ -191,11 +189,13 @@ public class LoginActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.finance_protocol})
+    @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode,
+            R.id.login, R.id.finance_protocol})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deletePage:
                 finish();
+                overridePendingTransition(0, R.anim.slide_out_to_bottom);
                 break;
             case R.id.phoneNumberClear:
                 mPhoneNumber.setText("");
@@ -210,12 +210,17 @@ public class LoginActivity extends BaseActivity {
             case R.id.finance_protocol:
                 // TODO: 2017/6/2 打开乐米金融用户协议页面 
                 break;
+            default:
+                break;
         }
     }
 
     private void login() {
         final String phoneNumber = getPhoneNumber();
-        String authCode = mAuthCode.getText().toString().trim();
+        final String authCode = mAuthCode.getText().toString().trim();
+        mLogin.setText(R.string.login_ing);
+        mLoading.setVisibility(View.VISIBLE);
+        mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
         Client.login(authCode, phoneNumber)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -231,14 +236,13 @@ public class LoginActivity extends BaseActivity {
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_TOKEN_EXPIRED));
                             setResult(RESULT_OK);
                             finish();
-
                         } else {
-                            mErrorHint.setVisibility(View.VISIBLE);
-                            mErrorHint.setText(resp.getMsg());
+                            ToastUtil.curt(resp.getMsg());
                         }
                     }
                 })
                 .fire();
+
     }
 
     private void getAuthCode() {

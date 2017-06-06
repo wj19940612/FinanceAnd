@@ -5,40 +5,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyLightAssist"
+    android:background="@color/splitLineColor"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.setting.SafetySettingActivity">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/safety_setting"/>
+        app:titleText="@string/safety_center"/>
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/modify_safety_password"
+        android:id="@+id/setting_safety_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         android:drawableRight="@drawable/ic_arrow_right_tint"
         android:gravity="center_vertical"
-        android:minHeight="60dp"
+        android:minHeight="@dimen/common_height"
         android:padding="@dimen/common_padding"
-        android:text="@string/modify_safety_password"
+        android:text="@string/setting_safety_password"
         android:textColor="@color/primaryText"
         android:textSize="15sp"/>
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/forget_safety_password"
+    <LinearLayout
+        android:id="@+id/modifySafetyLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0.5dp"
-        android:background="@drawable/bg_white"
-        android:drawableRight="@drawable/ic_arrow_right_tint"
-        android:gravity="center_vertical"
-        android:minHeight="60dp"
-        android:padding="@dimen/common_padding"
-        android:text="@string/forget_safety_password"
-        android:textColor="@color/primaryText"
-        android:textSize="15sp"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/modify_safety_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white"
+            android:drawableRight="@drawable/ic_arrow_right_tint"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/common_height"
+            android:padding="@dimen/common_padding"
+            android:text="@string/modify_safety_password"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="@dimen/avatar_margin"
+            android:background="@color/splitLineColor"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/forget_safety_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white"
+            android:drawableRight="@drawable/ic_arrow_right_tint"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/common_height"
+            android:padding="@dimen/common_padding"
+            android:text="@string/forget_safety_password"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+    </LinearLayout>
 </LinearLayout>
