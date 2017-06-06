@@ -24,7 +24,9 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.AreaTakePhoneActivity;
 import com.sbai.finance.activity.mine.ClipHeadImageActivity;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.io.File;
@@ -44,6 +46,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
 
     private static final String KEY_IF_CLIP_IMAGE = "IF_CLIP_IMAGE";
     private static final String KEY_IMAGE_URL_INDEX = "KEY_IMAGE_URL_INDEX";
+    private static final String KEY_IS_AREA_TAKE_PHONE = "KEY_isAreaTakePhone";
 
     /**
      * 打开相机的请求码
@@ -61,6 +64,9 @@ public class UploadUserImageDialogFragment extends DialogFragment {
      * 打开自定义裁剪页面的请求码
      */
     public static final int REQ_CLIP_HEAD_IMAGE_PAGE = 144;
+    //打开区域拍照页面的请求吗
+    private static final int REQ_CODE_AREA_TAKE_PHONE = 46605;
+
     @BindView(R.id.takePhoneFromCamera)
     AppCompatTextView mTakePhoneFromCamera;
     @BindView(R.id.takePhoneFromGallery)
@@ -73,6 +79,8 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     private boolean mNeedClipImage;
     //用来标记传回的图片地址加载到哪一个image
     private int mImagePathIndex;
+    //是否区域拍照  上传身份证
+    private boolean mIsAreaTakePhone;
     private OnImagePathListener mOnImagePathListener;
 
     public interface OnImagePathListener {
@@ -100,6 +108,16 @@ public class UploadUserImageDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    public static UploadUserImageDialogFragment newInstance(int index, boolean ifClipImage, boolean isAreaTakePhone) {
+        Bundle args = new Bundle();
+        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
+        args.putInt(KEY_IMAGE_URL_INDEX, index);
+        args.putBoolean(KEY_IS_AREA_TAKE_PHONE, isAreaTakePhone);
+        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -114,6 +132,7 @@ public class UploadUserImageDialogFragment extends DialogFragment {
         if (getArguments() != null) {
             mNeedClipImage = getArguments().getBoolean(KEY_IF_CLIP_IMAGE, true);
             mImagePathIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
+            mIsAreaTakePhone = getArguments().getBoolean(KEY_IS_AREA_TAKE_PHONE, false);
         }
         setStyle(STYLE_NO_TITLE, R.style.UpLoadHeadImageDialog);
     }
@@ -148,15 +167,19 @@ public class UploadUserImageDialogFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    Intent openCameraIntent = new Intent(
-                            MediaStore.ACTION_IMAGE_CAPTURE);
-                    mFile = new File(Environment
-                            .getExternalStorageDirectory(), System.currentTimeMillis() + "image.jpg");
-                    // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
-                    Uri mMBitmapUri = Uri.fromFile(mFile);
-                    openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
-                    startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
+                if (mIsAreaTakePhone) {
+                    startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
+                } else {
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        Intent openCameraIntent = new Intent(
+                                MediaStore.ACTION_IMAGE_CAPTURE);
+                        mFile = new File(Environment
+                                .getExternalStorageDirectory(), System.currentTimeMillis() + "image.jpg");
+                        // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
+                        Uri mMBitmapUri = Uri.fromFile(mFile);
+                        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
+                        startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
+                    }
                 }
                 break;
             case R.id.takePhoneFromGallery:
@@ -199,6 +222,12 @@ public class UploadUserImageDialogFragment extends DialogFragment {
                     String galleryBitmapPath = getGalleryBitmapPath(data);
                     if (!TextUtils.isEmpty(galleryBitmapPath)) {
                         openClipImagePage(galleryBitmapPath);
+                    }
+                    break;
+                case REQ_CODE_AREA_TAKE_PHONE:
+                    String imageUrl = data.getStringExtra(Launcher.EX_PAYLOAD);
+                    if (!TextUtils.isEmpty(imageUrl)) {
+                        openClipImagePage(imageUrl);
                     }
                     break;
             }

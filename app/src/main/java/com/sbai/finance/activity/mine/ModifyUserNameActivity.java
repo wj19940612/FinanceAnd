@@ -3,9 +3,11 @@ package com.sbai.finance.activity.mine;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -24,10 +26,12 @@ import butterknife.OnClick;
 
 public class ModifyUserNameActivity extends BaseActivity {
 
-    @BindView(R.id.userName)
+    @BindView(R.id.userNameInput)
     AppCompatEditText mUserName;
     @BindView(R.id.submitUserName)
     AppCompatButton mSubmitUserName;
+    @BindView(R.id.clear)
+    AppCompatImageView mClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,11 @@ public class ModifyUserNameActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             boolean buttonEnable = checkConfirmButtonEnable();
+            if (buttonEnable) {
+                mClear.setVisibility(View.VISIBLE);
+            } else {
+                mClear.setVisibility(View.INVISIBLE);
+            }
             if (mSubmitUserName.isEnabled() != buttonEnable) {
                 mSubmitUserName.setEnabled(buttonEnable);
             }
@@ -65,11 +74,9 @@ public class ModifyUserNameActivity extends BaseActivity {
         return !TextUtils.isEmpty(userName);
     }
 
-    @OnClick(R.id.submitUserName)
-    public void onViewClicked() {
+    private void submitNickName() {
         final String userName = mUserName.getText().toString().trim();
         if (!ValidityDecideUtil.isLegalNickName(userName)) {
-//            mErrorBar.show(R.string.is_only_a_chinese_name);
             ToastUtil.curt(R.string.is_only_a_chinese_name);
             return;
         }
@@ -92,6 +99,18 @@ public class ModifyUserNameActivity extends BaseActivity {
                     }
                 })
                 .fire();
+    }
 
+
+    @OnClick({R.id.submitUserName, R.id.clear})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.submitUserName:
+                submitNickName();
+                break;
+            case R.id.clear:
+                mUserName.setText("");
+                break;
+        }
     }
 }

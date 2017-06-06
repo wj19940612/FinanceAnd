@@ -123,7 +123,7 @@
         android:background="@drawable/bg_white"
         android:visibility="visible"
         app:hasBottomSplitLine="true"
-        app:leftIcon="@drawable/ic_mine_list_detail"
+        app:leftIcon="@drawable/ic_mine_list_wallet"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/wallet"
         app:rowTextColor="@color/primaryText"

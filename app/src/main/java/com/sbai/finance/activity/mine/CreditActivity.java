@@ -2,6 +2,7 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -38,6 +39,7 @@ public class CreditActivity extends BaseActivity {
     private void updateUserCreditStatus(Integer status) {
         switch (status) {
             case UserInfo.CREDIT_IS_ALREADY_APPROVE:
+                mCredit.setSubTextColor(ContextCompat.getColor(this,R.color.blueAssist));
                 mCredit.setSubText(R.string.authenticated);
                 break;
             case UserInfo.CREDIT_IS_APPROVE_ING:

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/bgAssist"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.CreditApproveActivity">
 
@@ -14,14 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/real_name_authentication"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/real_name_authentication"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/approveHint"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:textColor="@color/hintText"
+        android:textSize="12sp"
+        tools:text="@string/authenticated_info"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_line_division_center"
+        android:layout_height="@dimen/common_height"
+        android:background="@drawable/bg_white"
         android:gravity="center_vertical"
-        android:minHeight="60dp"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding">
 
@@ -49,12 +61,13 @@
             app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
     </LinearLayout>
 
+    <include layout="@layout/split_line"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_line_division_center"
+        android:layout_height="@dimen/common_height"
+        android:background="@drawable/bg_white"
         android:gravity="center_vertical"
-        android:minHeight="60dp"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding">
 
@@ -80,12 +93,23 @@
             app:srcCompat="@drawable/ic_user_approve_text_clrar"/>
     </LinearLayout>
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/identityCardPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="11dp"
+        android:text="@string/identity_card_phone"
+        android:textColor="@color/hintText"/>
+
     <LinearLayout
+        android:id="@+id/phoneLl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:layout_marginTop="15dp"
         android:gravity="center">
 
         <android.support.v7.widget.CardView
@@ -130,26 +154,12 @@
     </LinearLayout>
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/errorHint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="25dp"
-        android:drawableLeft="@drawable/ic_errow_hint"
-        android:drawablePadding="5dp"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding"
-        android:textColor="@color/warningText"
-        android:textSize="12sp"
-        android:visibility="invisible"/>
-
-    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/submit"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/common_height"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="50dp"
         android:background="@drawable/btn_red_rounded"
         android:enabled="false"
         android:gravity="center"

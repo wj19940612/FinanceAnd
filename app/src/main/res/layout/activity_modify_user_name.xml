@@ -13,36 +13,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:barBackground="@android:color/black"
-        app:titleText="@string/modify_user_name"/>
+        app:barBackground="@android:color/white"
+        app:titleText="@string/modify_user_name"
+        app:titleTextColor="@color/blackAssist"/>
 
-    <android.support.v7.widget.AppCompatEditText
-        android:id="@+id/userName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center_vertical"
+        android:layout_height="@dimen/common_height"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@android:color/white"
-        android:hint="@string/please_input_user_name"
-        android:maxLength="8"
-        android:paddingLeft="@dimen/common_margin"
-        android:textColorHint="@color/hintText"
-        android:textSize="16sp"/>
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/common_margin">
 
-    <!--<android.support.v7.widget.AppCompatTextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:paddingLeft="@dimen/common_margin"-->
-        <!--android:paddingTop="10dp"-->
-        <!--android:text="@string/nick_name_hint"-->
-        <!--android:textColor="@color/warningText"/>-->
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/userNameInput"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/please_input_user_name"
+            android:maxLength="8"
+            android:textColorHint="@color/hintText"
+            android:textSize="16sp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/common_margin"
+            android:paddingRight="@dimen/common_margin"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_data_clear"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingTop="10dp"
+        android:text="@string/nick_name_hint"
+        android:textColor="@color/hintText"
+        android:textSize="12sp"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/submitUserName"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginLeft="@dimen/common_margin"
-        android:layout_marginRight="@dimen/common_margin"
-        android:layout_marginTop="50dp"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="31dp"
         android:background="@drawable/btn_red_rounded"
         android:enabled="false"
         android:text="@string/save"
