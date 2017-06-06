@@ -79,6 +79,10 @@
     <string name="idea_title">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
+    <string name="choose_trade_type">选择交易类型</string>
+    <string name="quick_trade">快速交易</string>
+    <string name="strategy_buy_sell">策略买卖(暂未开放)</string>
+    <string name="firm_offer_open_account">实盘开户(暂未开放)</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>

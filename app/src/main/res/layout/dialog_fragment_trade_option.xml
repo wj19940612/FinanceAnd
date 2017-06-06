@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginLeft="@dimen/dp_10"
+              android:layout_marginRight="@dimen/dp_10"
+              android:background="@android:color/transparent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:adjustViewBounds="true"
+            android:gravity="center"
+            android:text="@string/choose_trade_type"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/greyAssist"/>
+
+        <include layout="@layout/split_line_grey_light"/>
+
+        <TextView
+            android:id="@+id/quickTrade"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/quick_trade"
+            android:textColor="@color/warningText"
+            android:textSize="15sp"/>
+
+        <include layout="@layout/split_line_grey_light"/>
+
+        <TextView
+            android:id="@+id/strategyBuyAndSell"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center"
+            android:text="@string/strategy_buy_sell"
+            android:textColor="@color/hintText"
+            android:textSize="15sp"/>
+
+        <include layout="@layout/split_line_grey_light"/>
+
+        <TextView
+            android:id="@+id/firmOfferOpenAccount"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center"
+            android:text="@string/firm_offer_open_account"
+            android:textColor="@color/hintText"
+            android:textSize="15sp"/>
+
+        <include layout="@layout/split_line_grey_light"/>
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_optional"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/take_phone_cancel"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
