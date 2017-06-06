@@ -177,4 +177,8 @@ public class IconTextRow extends LinearLayout {
         mSubTextView.setLayoutParams(params);
     }
 
+    public void setRightTextDrawable(int res){
+        mSubTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, res, 0);
+    }
+
 }

@@ -144,19 +144,14 @@ public class MineFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
-                        // TODO: 2017/6/5 更新后只有红点 
                         int count = 0;
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
                             count = count + notReadMessageNumberData.getCount();
                         }
                         if (count != 0) {
-                            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
-                                            + (count > 99 ? getString(R.string.number99) : count) + " ",
-                                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
-                                    , getString(R.string.item));
-                            mNews.setSubText(attentionSpannableString);
+                            mNews.setRightTextDrawable(R.drawable.ic_new_message);
                         } else {
-                            mNews.setSubText("");
+                            mNews.setRightTextDrawable(0);
                         }
                     }
                 })
@@ -179,15 +174,10 @@ public class MineFragment extends BaseFragment {
     }
 
     private void updateNoReadFeedbackCount(int count) {
-        // TODO: 2017/6/5 更新后只有红点 
         if (count != 0) {
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(getString(R.string.new_message), " "
-                            + (count > 99 ? getString(R.string.number99) : count) + " ",
-                    ContextCompat.getColor(getActivity(), R.color.redPrimary)
-                    , getString(R.string.item));
-            mFeedBack.setSubText(attentionSpannableString);
+            mFeedBack.setRightTextDrawable(R.drawable.ic_new_message);
         } else {
-            mFeedBack.setSubText("");
+            mFeedBack.setRightTextDrawable(0);
         }
     }
 
