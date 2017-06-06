@@ -162,15 +162,17 @@
     <string name="please_input_user_name">请输入用户名</string>
     <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-    <string name="nick_name_hint">昵称最多8个字符,请勿使用不良词汇</string>
+    <string name="nick_name_hint">1-8个字符，可由中英文、数字组成</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
-    <string name="real_name">真实姓名</string>
-    <string name="identity_card_number">身份证号码</string>
+    <string name="real_name">姓名</string>
+    <string name="identity_card_number">身份证</string>
     <string name="identity_card_font">身份证正面照片</string>
     <string name="identity_card_reverse">身份证反面照片</string>
+    <string name="identity_card_phone">身份证照片</string>
+    <string name="again_submit">重新提交</string>
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -222,6 +224,7 @@
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
+    <string name="authenticated_info">已认证信息</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
     <string name="attention_number">关注 %1$d</string>

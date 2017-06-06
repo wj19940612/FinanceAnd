@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/bgAssist"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.ModifyUserInfoActivity">
 
@@ -13,12 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/modify_user_info"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/modify_user_info"
+        app:titleTextColor="@color/blackAssist"/>
 
     <RelativeLayout
         android:id="@+id/headImageLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="55dp"
         android:background="@drawable/bg_white"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding">
@@ -29,13 +32,13 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:text="@string/head_image"
-            android:textColor="@color/secondaryText"
+            android:textColor="@color/blackAssist"
             android:textSize="@dimen/common_default_size"/>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/userHeadImage"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_toLeftOf="@+id/helpArrow"/>
@@ -49,49 +52,53 @@
             app:srcCompat="@drawable/ic_arrow_right_tint"/>
     </RelativeLayout>
 
+    <include layout="@layout/split_line"/>
+
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/nickName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/nick_name"
-        app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"
+        app:rowTextColor="@color/blackAssist"
+        app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
+
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/sex"
-        app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"
+        app:rowTextColor="@color/blackAssist"
+        app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
+
+    <include layout="@layout/split_line"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/age"
-        app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"
+        app:rowTextColor="@color/blackAssist"
+        app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
 
+    <include layout="@layout/split_line"/>
+
     <LinearLayout
-        android:gravity="center_vertical"
         android:id="@+id/ll_Location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
+        android:gravity="center_vertical"
 
         android:minHeight="50dp"
         android:paddingBottom="12dp"
@@ -103,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/location"
-            android:textColor="@color/secondaryText"/>
+            android:textColor="@color/blackAssist"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/location"
@@ -114,7 +121,7 @@
             android:ellipsize="end"
             android:gravity="right"
             android:maxLines="1"
-            android:textColor="@color/primaryText"/>
+            android:textColor="@color/hintText"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -128,23 +135,25 @@
         android:id="@+id/credit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/credit"
-        app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/primaryText"
+        app:rowTextColor="@color/blackAssist"
+        app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginLeft="@dimen/common_margin"
-        android:layout_marginRight="@dimen/common_margin"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/btn_logout_rounded"
+        android:background="@drawable/bg_white"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@android:color/white"/>
+        android:textColor="@color/redPrimary"/>
 </LinearLayout>

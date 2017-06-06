@@ -163,6 +163,10 @@ public class IconTextRow extends LinearLayout {
         mSubTextView.setText(resid);
     }
 
+    public void setSubTextColor(int color) {
+        mSubTextView.setTextColor(color);
+    }
+
     public String getSubText() {
         return mSubTextView.getText().toString();
     }

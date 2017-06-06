@@ -46,13 +46,17 @@ public class TitleBar extends RelativeLayout {
 
         init();
     }
+
     private OnBackClickListener mBackClickListener;
-    public  interface OnBackClickListener{
+
+    public interface OnBackClickListener {
         void onClick();
     }
-    public void setBackClickLisenter(OnBackClickListener onBackClickListener){
-        mBackClickListener =onBackClickListener;
+
+    public void setBackClickLisenter(OnBackClickListener onBackClickListener) {
+        mBackClickListener = onBackClickListener;
     }
+
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TitleBar);
 
@@ -124,7 +128,7 @@ public class TitleBar extends RelativeLayout {
                 @Override
                 public void onClick(View view) {
                     onBackClick(view);
-                    if (mBackClickListener!=null){
+                    if (mBackClickListener != null) {
                         mBackClickListener.onClick();
                     }
                 }
@@ -151,10 +155,10 @@ public class TitleBar extends RelativeLayout {
 
     public void setBackButtonIcon(Drawable backIcon) {
         if (backIcon != null) {
-            mLeftView.setCompoundDrawables(backIcon, null, null, null);
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(backIcon, null, null, null);
         } else { // default icon
 
-            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back, 0, 0, 0);
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_white, 0, 0, 0);
 
         }
     }
@@ -236,7 +240,7 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
-    public void setRightViewEnable(boolean enable){
+    public void setRightViewEnable(boolean enable) {
         mRightView.setEnabled(enable);
     }
 
