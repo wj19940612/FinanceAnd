@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_default_avatar"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="16sp"
+            tools:text="吴彦祖"/>
+
+        <TextView
+            android:id="@+id/isAttention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/userName"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/assistText"
+            android:textSize="11sp"
+            tools:text="@string/is_attention"/>
+
+        <TextView
+            android:id="@+id/publishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/assistText"
+            android:textSize="11sp"
+            tools:text="2008/08/08 08:00"/>
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userName"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/assistText"
+            android:textSize="11sp"
+            tools:text="温州 苍南"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="15sp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_borrow_money"
+            android:gravity="center"
+            android:text="@string/borrow_money"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@drawable/bg_product_up_down"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/need_amount"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="10sp"/>
+
+                <TextView
+                    android:id="@+id/needAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/blackAssist"
+                    tools:text="@string/RMB"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/borrow_time"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="10sp"/>
+
+
+                <TextView
+                    android:id="@+id/borrowTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/blackAssist"
+                    tools:text="@string/day"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/borrow_interest"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="10sp"/>
+
+                <TextView
+                    android:id="@+id/borrowInterest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/redPrimary"
+                    tools:text="@string/RMB"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/borrowMoneyContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="15dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="12dp"
+        android:maxLines="2"
+        android:textColor="@color/opinionText"
+        android:textSize="14sp"
+        tools:text="狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!狗狗生病住院急需手术费用,希望好心人能够帮帮忙,真的非常感谢!!!"/>
+
+    <LinearLayout
+        android:id="@+id/contentImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="0dp"
+            android:layout_height="69dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            tools:src="@drawable/help"/>
+
+        <ImageView
+            android:id="@+id/image2"
+            android:layout_width="0dp"
+            android:layout_height="69dp"
+            android:layout_marginLeft="14dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            tools:src="@drawable/help"/>
+
+        <ImageView
+            android:id="@+id/image3"
+            android:layout_width="0dp"
+            android:layout_height="69dp"
+            android:layout_marginLeft="14dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            tools:src="@drawable/help"/>
+
+        <ImageView
+            android:id="@+id/image4"
+            android:layout_width="0dp"
+            android:layout_height="69dp"
+            android:layout_marginLeft="14dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            tools:src="@drawable/help"/>
+    </LinearLayout>
+</LinearLayout>
