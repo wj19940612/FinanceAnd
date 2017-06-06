@@ -125,36 +125,37 @@ public class GpsUtils {
 
         try {
             addList = geocoder.getFromLocation(lat, lng, 1);    //解析经纬度
+            if (addList != null && addList.size() > 0) {
+                String province = "";
+                String city = "";
+                String country = "";
+                for (int i = 0; i < addList.size(); i++) {
+                    Address add = addList.get(i);
+                    mAddress = add;
+                    mcityName += add.getLocality();
+                    province = add.getAdminArea();
+                    country = add.getSubLocality();
+                    city = add.getLocality();
+
+                    Log.d(TAG, "updateWithNewLocation:   getCountryName" + add.getCountryName());
+                    Log.d(TAG, "updateWithNewLocation:   具体地址  getFeatureName" + add.getFeatureName());
+                    Log.d(TAG, "updateWithNewLocation:   getPhone" + add.getPhone());
+                    Log.d(TAG, "updateWithNewLocation:   省份 getAdminArea  " + add.getAdminArea());
+                    Log.d(TAG, "updateWithNewLocation:   getCountryCode  " + add.getCountryCode());
+                    Log.d(TAG, "updateWithNewLocation:   区  getSubLocality  " + add.getSubLocality());
+                    Log.d(TAG, "updateWithNewLocation:     getSubAdminArea  " + add.getSubAdminArea());
+                    Log.d(TAG, "updateWithNewLocation:     getLocality  " + add.getLocality());
+                }
+                Log.d(TAG, "具体地址 : " + province + " " + city + " " + country);
+                UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                userInfo.setLand(province + "-" + city + "-" + country);
+                LocalUser.getUser().setUserInfo(userInfo);
+            }
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        if (addList != null && addList.size() > 0) {
-            String province = "";
-            String city = "";
-            String country = "";
-            for (int i = 0; i < addList.size(); i++) {
-                Address add = addList.get(i);
-                mAddress = add;
-                mcityName += add.getLocality();
-                province = add.getAdminArea();
-                country = add.getSubLocality();
-                city = add.getLocality();
-
-                Log.d(TAG, "updateWithNewLocation:   getCountryName" + add.getCountryName());
-                Log.d(TAG, "updateWithNewLocation:   具体地址  getFeatureName" + add.getFeatureName());
-                Log.d(TAG, "updateWithNewLocation:   getPhone" + add.getPhone());
-                Log.d(TAG, "updateWithNewLocation:   省份 getAdminArea  " + add.getAdminArea());
-                Log.d(TAG, "updateWithNewLocation:   getCountryCode  " + add.getCountryCode());
-                Log.d(TAG, "updateWithNewLocation:   区  getSubLocality  " + add.getSubLocality());
-                Log.d(TAG, "updateWithNewLocation:     getSubAdminArea  " + add.getSubAdminArea());
-                Log.d(TAG, "updateWithNewLocation:     getLocality  " + add.getLocality());
-            }
-            Log.d(TAG, "具体地址 : " + province + " " + city + " " + country);
-            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-            userInfo.setLand(province + "-" + city + "-" + country);
-            LocalUser.getUser().setUserInfo(userInfo);
+            ToastUtil.show(e.getMessage());
+//            e.printStackTrace();
         }
         if (mcityName.length() != 0) {
             return mcityName.substring(0, (mcityName.length() - 1));
