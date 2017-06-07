@@ -1,49 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/bg_white"
-              android:orientation="vertical"
-              android:paddingBottom="20dp"
-              android:paddingLeft="@dimen/common_padding"
-              android:paddingRight="@dimen/common_padding"
-              android:paddingTop="20dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/common_padding"
+    android:paddingRight="@dimen/common_padding"
+    android:paddingTop="@dimen/common_padding">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawablePadding="6dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/already_read_or_not_read_text_color"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="欢迎加入返利"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/assistText"
-            android:textSize="11sp"
-            tools:text="2017/12"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/content"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:ellipsize="end"
-        android:lineSpacingExtra="9dp"
-        android:maxLines="2"
-        android:textColor="@color/already_read_or_not_read_text_color"
-        android:textSize="13sp"
-        tools:text="可视对讲阿看房了解萨德里克快乐圣诞分手快乐等级分类考试大家第三方骷髅精灵第三空间节福利卡圣诞节疯狂了倒计时考虑到解放路口圣诞节疯狂时代"/>
+        android:background="@drawable/bg_white"
+        app:cardCornerRadius="@dimen/common_eight_radius"
+        app:cardElevation="@null">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/common_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blackAssist"
+                    android:textSize="15sp"
+                    tools:text="平安银行"/>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/notReadNewsHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_new_message"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    tools:text="2017/12/12"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/hintText"
+                android:textSize="12sp"
+                tools:text="太棒了，预测成功"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>

@@ -250,6 +250,7 @@
     <string name="fans_number">粉丝 %1$d</string>
     <string name="real_name_error">姓名输入错误</string>
     <string name="identity_card_error">身份证输入错误</string>
+    <string name="hint">提示</string>
 
     <string name="shield_him">屏蔽TA</string>
     <string name="is_shield">已屏蔽</string>
