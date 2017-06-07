@@ -234,7 +234,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             return;
         }
 
-        SmartDialog.with(this, R.string.if_submit_credit_approve)
+        SmartDialog.with(this, R.string.if_submit_credit_approve, R.string.hint)
                 .setNegative(R.string.cancel)
                 .setMessageTextSize(16)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {

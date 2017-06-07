@@ -9,7 +9,6 @@ import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,7 +29,7 @@ public class CameraTopRectView extends View {
     private int viewHeight;
 
     public int rectWidth;
-    public int rectHeght;
+    public int rectHeight;
 
     private int rectTop;
     private int rectLeft;
@@ -42,6 +41,7 @@ public class CameraTopRectView extends View {
     private static final int LINE_WIDTH = 2;
     private static final int TOP_BAR_HEIGHT = 50;
     private static final int BOTTOM_BTN_HEIGHT = 66;
+    private int offest = 0;
 
 //    private static final int TOP_BAR_HEIGHT = Constant.RECT_VIEW_TOP;
 //    private static final int BOTTOM_BTN_HEIGHT = Constant.RECT_VIEW_BOTTOM;
@@ -77,14 +77,17 @@ public class CameraTopRectView extends View {
 
         rectWidth = mScreenWidth - (int) dp2px(context, LEFT_PADDING + RIGHT_PADDING);
 
-        rectHeght = (int) (rectWidth * 54 / 85.6);
+        rectHeight = (int) (rectWidth * 54 / 85.6);
         // 相对于此view
-        rectTop = (viewHeight - rectHeght) / 2;
+        rectTop = (viewHeight - rectHeight) / 3;
+//        rectTop = (viewHeight - rectHeight) / 2;
+
+        offest = (viewHeight - rectHeight) / 2 - rectTop;
+
         rectLeft = (viewWidth - rectWidth) / 2;
 
-        rectBottom = rectTop + rectHeght;
+        rectBottom = rectTop + rectHeight;
         rectRight = rectLeft + rectWidth;
-        Log.d(TAG, "rectWidth: " + rectWidth + " rectHeght " + rectHeght + "  rectTop " + rectTop + " rectLeft " + rectLeft + " rectBottom " + rectBottom + " rectRight " + rectRight);
         //边框的红色线长度
         lineLen = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
@@ -122,30 +125,35 @@ public class CameraTopRectView extends View {
         wordPaint.setColor(Color.TRANSPARENT);
         canvas.drawRect(rect, wordPaint);
 
+        int height = viewHeight / 2 + rectHeight / 2 - offest;
+        int subCount = viewHeight / 2 - rectHeight / 2 -offest;
+
         //画蒙层
         wordPaint.setColor(Color.parseColor("#8D8f92"));
-        Log.d(TAG, "onDraw: " + " viewHeight " + viewHeight / 2 + " rectHeght " + rectHeght / 2);
-        rect = new Rect(0, viewHeight / 2 + rectHeght / 2, viewWidth, viewHeight);
+//        rect = new Rect(0, viewHeight / 2 + rectHeight / 2, viewWidth, viewHeight);
+        rect = new Rect(0, height, viewWidth, viewHeight);
         canvas.drawRect(rect, wordPaint);
 
-        rect = new Rect(0, 0, viewWidth, viewHeight / 2 - rectHeght / 2);
+//        rect = new Rect(0, 0, viewWidth, viewHeight / 2 - rectHeight / 2);
+        rect = new Rect(0, 0, viewWidth, subCount);
         canvas.drawRect(rect, wordPaint);
 
-        rect = new Rect(0, viewHeight / 2 - rectHeght / 2, (viewWidth - rectWidth) / 2, viewHeight / 2 + rectHeght / 2);
+//        rect = new Rect(0, viewHeight / 2 - rectHeight / 2, (viewWidth - rectWidth) / 2, viewHeight / 2 + rectHeight / 2);
+        rect = new Rect(0, subCount, (viewWidth - rectWidth) / 2, height);
         canvas.drawRect(rect, wordPaint);
 
-        rect = new Rect(viewWidth - (viewWidth - rectWidth) / 2, viewHeight / 2 - rectHeght / 2, viewWidth, viewHeight / 2 + rectHeght / 2);
+//        rect = new Rect(viewWidth - (viewWidth - rectWidth) / 2, viewHeight / 2 - rectHeight / 2, viewWidth, viewHeight / 2 + rectHeight / 2);
+        rect = new Rect(viewWidth - (viewWidth - rectWidth) / 2, subCount, viewWidth, height);
         canvas.drawRect(rect, wordPaint);
 
-        rect = new Rect(rectLeft, viewHeight / 2 - rectHeght / 2, rectRight, 0);
-        Log.d(TAG, "rectLeft : " + rectLeft + "  rectBottom " + rectBottom + " rectRight " + rectRight + " rectBottom " + rectBottom);
+        rect = new Rect(rectLeft, subCount, rectRight, 0);
+//        rect = new Rect(rectLeft, viewWidth - rectHeight - 13, rectRight, 0);
         wordPaint.setColor(Color.WHITE);
         wordPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
         canvas.drawText(TIPS, rect.centerX(), rectBottom + 60, wordPaint);
 
         canvas.drawLine(rectLeft, rectTop, rectLeft + lineLen, rectTop,
                 linePaint);
-        Log.d(TAG, "rectTop: " + rectTop);
         canvas.drawLine(rectRight - lineLen, rectTop, rectRight, rectTop,
                 linePaint);
         canvas.drawLine(rectLeft, rectTop, rectLeft, rectTop + lineLen,

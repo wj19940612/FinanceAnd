@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine.setting;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.utils.GpsUtils;
+import com.sbai.finance.utils.Launcher;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class LocationActivity extends BaseActivity {
     @BindView(R.id.location)
     TextView mLocation;
     private String type;
-
+    private Address mAddress;
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -59,9 +61,9 @@ public class LocationActivity extends BaseActivity {
          }
     }
     private void updateLocationInfo(){
-        Address address = new GpsUtils().getAddress();
-        if (address!=null){
-            mLocation.setText(address.getAdminArea()+" "+address.getSubLocality()+" "+address.getLocality());
+        mAddress = new GpsUtils().getAddress();
+        if (mAddress!=null){
+            mLocation.setText(mAddress.getAdminArea()+" "+mAddress.getLocality()+" "+mAddress.getSubLocality());
         }
     }
     private void showLocationPicker() {
@@ -77,6 +79,21 @@ public class LocationActivity extends BaseActivity {
         }
         addressInitTask.execute(province, city, country);
     }
+    private void returnAddress(){
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Launcher.EX_PAYLOAD_1,mAddress);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        returnAddress();
+        super.onBackPressed();
+    }
+
     private class AddressInitTask extends AsyncTask<String, Void, ArrayList<Province>> {
         private static final String TAG = "AddressInitTask";
 
@@ -156,7 +173,10 @@ public class LocationActivity extends BaseActivity {
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
-
+                          mAddress.setAdminArea(province.getAreaName());
+                          mAddress.setLocality(city.getAreaName());
+                          mAddress.setSubLocality(county.getAreaName());
+                          returnAddress();
                     }
                 });
                 picker.show();

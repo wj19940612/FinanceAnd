@@ -281,7 +281,7 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_new, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_system_news, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -300,8 +300,8 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
             AppCompatTextView mContent;
             @BindView(R.id.time)
             AppCompatTextView mTime;
-            @BindView(R.id.presentation)
-            AppCompatTextView mPresentation;
+//            @BindView(R.id.presentation)
+//            AppCompatTextView mPresentation;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -339,9 +339,9 @@ public class EconomicCircleNewsFragment extends BaseFragment implements AdapterV
 
                 mContent.setText(item.getMsg());
 
-                if (item.getData() != null) {
-                    mPresentation.setText(item.getData().getContent());
-                }
+//                if (item.getData() != null) {
+//                    mPresentation.setText(item.getData().getContent());
+//                }
 
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
 

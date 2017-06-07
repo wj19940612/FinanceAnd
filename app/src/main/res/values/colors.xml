@@ -9,6 +9,9 @@
     <color name="greenPrimary">#7aa431</color>
     <color name="fortyPercentWhite">#66FFFFFF</color>
 
+    <color name="redRaise">#ef6d6a</color>
+    <color name="greenDown">#2ecc9f</color>
+
     <!--Assist-->
     <color name="pinkAssist">#E5A19F</color>
     <color name="greenAssist">#2ecc9f</color>

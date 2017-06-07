@@ -112,6 +112,9 @@
         <activity
             android:name=".activity.mutual.BorrowOutHisDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mutual.BorrowMineDetailsActivity"
+            android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"
@@ -214,6 +217,28 @@
         <activity
             android:name=".activity.economiccircle.AliPayActivity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.UMDefault"/>
+
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <!-- 我的设置模块 -->
         <activity

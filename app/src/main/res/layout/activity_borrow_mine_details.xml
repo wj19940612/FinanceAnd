@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/details"
+        app:backFeature="true"/>
+
+      <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_default_avatar"/>
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@+id/avatar"
+                    android:textColor="#222222"
+                    android:textSize="16sp"
+                    tools:text="反方向的钟"/>
+
+                <TextView
+                    android:id="@+id/isAttention"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/userName"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@+id/userName"
+                    android:textColor="#999999"
+                    android:textSize="10sp"
+                    tools:text="@string/is_attention"/>
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    tools:text="已提交"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/borrowMoneyContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:lineSpacingExtra="8dp"
+                android:textColor="#222222"
+                android:textSize="14sp"
+                tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/need_amount"
+                    android:textColor="#999999"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@id/needAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#222222"
+                    android:textSize="14sp"
+                    tools:text="@string/RMB"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/borrow_deadline"
+                    android:textColor="#999999"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/borrowDeadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#222222"
+                    android:textSize="14sp"
+                    tools:text="@string/day"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/borrow_interest"
+                    android:textColor="#999999"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/borrowInterest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#222222"
+                    android:textSize="14sp"
+                    tools:text="@string/RMB"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/contentImg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/img_loading"/>
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/img_loading"/>
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/img_loading"/>
+
+                <ImageView
+                    android:id="@+id/image4"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/img_loading"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_borrow_money"/>
+
+                <TextView
+                    android:id="@+id/publishTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center_vertical"
+                    android:textColor="#999999"
+                    android:textSize="10sp"
+                    tools:text="10:00"/>
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="#999999"
+                    android:textSize="10sp"
+                    tools:text="杭州 滨江"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="#ef6d6a"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/good_heart"
+                    android:textColor="#222222"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/goodHeartPeopleArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/avatarList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_help_detail"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="#ef6d6a"/>
+
+                <TextView
+                    android:id="@+id/leaveMessageNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/leave_message"
+                    android:textColor="#222222"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="54dp"
+                android:layout_marginRight="14dp"
+                android:orientation="vertical">
+
+                <com.sbai.finance.view.MyListView
+                    android:id="@android:id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@android:id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </LinearLayout>
+        </ScrollView>
+        <LinearLayout
+            android:id="@+id/borrowStatus"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:visibility="visible">
+            <LinearLayout
+                android:id="@+id/borrowOutSuccess"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/call"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/bg_pressable"
+                    android:textSize="13sp"
+                    android:textColor="@color/redPrimary"
+                    android:text="@string/call"/>
+                <TextView
+                    android:id="@+id/alreadyRepay"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_pressable_red"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/already_repay"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/callOnly"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_pressable_red"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:textColor="@android:color/white"
+                android:text="@string/call"/>
+        </LinearLayout>
+</LinearLayout>

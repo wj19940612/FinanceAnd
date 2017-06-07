@@ -48,10 +48,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Administrator on 2017-04-18.
- */
-
 public class OptionalActivity extends BaseActivity implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
 
@@ -324,14 +320,14 @@ public class OptionalActivity extends BaseActivity implements
             private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockData> stockMap, Context context) {
                 if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
                     mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(item.getVarietyType());
-                    mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
+                    mFutureCode.setText(context.getString(R.string.stock)+" "+item.getVarietyType());
+              //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
                     StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
                         mLastPrice.setText(stockData.getLast_price());
                         String priceChange = stockData.getRise_pre();
                         if (priceChange.startsWith("-")) {
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenDown));
                             mRate.setSelected(false);
                             mRate.setText(priceChange + "%");
                         } else {
@@ -347,8 +343,8 @@ public class OptionalActivity extends BaseActivity implements
                     }
                 }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
                     mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(item.getContractsCode());
-                    mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
+                    mFutureCode.setText(context.getString(R.string.future)+" "+item.getContractsCode());
+      //              mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
                     FutureData futureData = futureMap.get(item.getContractsCode());
                     if (futureData != null) {
                         double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
@@ -360,7 +356,7 @@ public class OptionalActivity extends BaseActivity implements
                             mRate.setSelected(true);
                             mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                         } else {
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenDown));
                             mRate.setSelected(false);
                             mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
                         }

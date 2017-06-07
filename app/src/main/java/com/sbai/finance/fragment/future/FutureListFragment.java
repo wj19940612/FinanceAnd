@@ -160,7 +160,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                                 rate.setSelected(true);
                                 rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                             } else {
-                                lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+                                lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenDown));
                                 rate.setSelected(false);
                                 rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                             }
@@ -312,7 +312,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         mRate.setSelected(true);
                         mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                     } else {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenDown));
                         mRate.setSelected(false);
                         mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                     }
