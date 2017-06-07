@@ -47,19 +47,20 @@ public class ShareDiglogFragment extends DialogFragment {
 
     private String mShareTitle;  //分享标题
     private String mShareUrl;   //链接地址
-    private String mShareImageUrl; //分享图像地址
     private String mShareDescription; //分享描述
+
+    boolean mIsStock;//是否为股票
 
     public static ShareDiglogFragment newInstance() {
         ShareDiglogFragment fragment = new ShareDiglogFragment();
         return fragment;
     }
 
-    public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, String shareImageUrl) {
+    public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, boolean isStock) {
         mActivity = activity;
         mShareDescription = mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
         mShareUrl = shareUrl;
-        mShareImageUrl = shareImageUrl;
+        mIsStock = isStock;
         return this;
     }
 
@@ -114,13 +115,21 @@ public class ShareDiglogFragment extends DialogFragment {
     private void shareToPlatform(SHARE_MEDIA platform) {
         UMWeb mWeb = new UMWeb(mShareUrl);
         mWeb.setTitle(mShareTitle);
+
         if (platform == SHARE_MEDIA.SINA) {
             mWeb.setDescription(mShareDescription + mShareUrl);
         } else {
             mWeb.setDescription(mShareDescription);
         }
-        UMImage thumb = new UMImage(mActivity, mShareImageUrl);
+
+        UMImage thumb = null;
+        if (mIsStock) {
+            thumb = new UMImage(mActivity, R.drawable.fanli_content_icon_shares);
+        } else {
+            thumb = new UMImage(mActivity, R.drawable.fanli_content_icon_futures);
+        }
         mWeb.setThumb(thumb);
+
         new ShareAction(mActivity)
                 .withMedia(mWeb)
                 .setPlatform(platform)
