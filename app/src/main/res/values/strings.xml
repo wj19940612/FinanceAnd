@@ -439,6 +439,12 @@
     <string name="company_address">公司地址</string>
     <string name="business_scope">经营范围</string>
 
+    <!--分享-->
+    <string name="share_to">分享到:</string>
+    <string name="wechat_friend">微信</string>
+    <string name="wechat_circle">朋友圈</string>
+    <string name="weibo">微博</string>
+    <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
     <string name="pay_count">支付金额: %1$s</string>
