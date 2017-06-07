@@ -26,8 +26,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
-import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
@@ -249,7 +249,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             @Override
             public void onTradeButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), TradeWebActivity.class).execute();
+                    TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

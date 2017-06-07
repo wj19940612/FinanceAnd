@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:backFeature="true"
+            app:backIcon="@drawable/common_cancel"
+            app:barBackground="@android:color/white"
+            app:titleText="@string/quick_trade"
+            app:titleTextColor="@color/primaryText"/>
+
+        <include layout="@layout/split_line_grey_light"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/crude_oil_future"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/quick_trade_offer_by_company"
+            android:textColor="@color/hintText"
+            android:textSize="@dimen/sp_12"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/login"
+            android:layout_width="275dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/bg_authorization_login"
+            android:gravity="center"
+            android:text="@string/confirm_login"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_agree"
+            android:textColor="@color/lucky_text"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/thirdPartyProtocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lemi_the_third_party_protocol"
+            android:textColor="@color/blueAssist"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

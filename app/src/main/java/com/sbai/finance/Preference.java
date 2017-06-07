@@ -17,6 +17,7 @@ public class Preference {
         String AVAILABLE_MARGIN = "available_margin";
         String USER_HAS_HOLDING_ORDER = "has_order";
         String DATA_SOURCE = "data_source";
+        String AUTHORIZATION_LOGIN_TIME ="authorization_login_time";
     }
 
     private static Preference sInstance;
@@ -110,5 +111,11 @@ public class Preference {
         return mPrefs.getLong(Key.SERVER_TIME, 0);
     }
 
+    public void setAuthorizationTime(long serverTime) {
+        apply(Key.AUTHORIZATION_LOGIN_TIME, serverTime);
+    }
 
+    public long getAuthorizationTime() {
+        return mPrefs.getLong(Key.AUTHORIZATION_LOGIN_TIME, 0);
+    }
 }

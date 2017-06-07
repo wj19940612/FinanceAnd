@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.utils.ValidityDecideUtil;
 import com.sbai.finance.view.CustomToast;
@@ -41,6 +43,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     private static final int IDENTITY_CARD_FONT = 0;
     private static final int IDENTITY_CARD_REVERSE = 1;
+    @BindView(R.id.approveHint)
+    AppCompatTextView mApproveHint;
     @BindView(R.id.realNameInput)
     AppCompatEditText mRealNameInput;
     @BindView(R.id.nameClear)
@@ -49,12 +53,14 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     AppCompatEditText mIdentityCardNumber;
     @BindView(R.id.identityCardNumberClear)
     AppCompatImageView mIdentityCardNumberClear;
+    @BindView(R.id.identityCardPhone)
+    AppCompatTextView mIdentityCardPhone;
     @BindView(R.id.identityCardFrontImage)
     AppCompatImageView mIdentityCardFrontImage;
     @BindView(R.id.identityCardReverseImage)
     AppCompatImageView mIdentityCardReverseImage;
-    @BindView(R.id.errorHint)
-    AppCompatTextView mErrorHint;
+    @BindView(R.id.phoneLl)
+    LinearLayout mPhoneLl;
     @BindView(R.id.submit)
     AppCompatTextView mSubmit;
 
@@ -74,14 +80,14 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         mRealNameInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideErrorView();
+//                hideErrorView();
             }
         });
 
         mIdentityCardNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideErrorView();
+//                hideErrorView();
             }
         });
     }
@@ -131,7 +137,10 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     mIdentityCardNumber.removeTextChangedListener(mIdentityCardApproveWatcher);
                     setViewEnable(false);
                     mEnable = false;
+                    mApproveHint.setText(R.string.authenticated_info);
                     mSubmit.setVisibility(View.GONE);
+                    mPhoneLl.setVisibility(View.GONE);
+                    mIdentityCardPhone.setVisibility(View.GONE);
                     break;
             }
         }
@@ -158,8 +167,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             if (mUserIdentityCardInfo != null && mUserIdentityCardInfo.getStatus() != UserInfo.CREDIT_IS_NOT_APPROVE)
                 return;
             changeSubmitEnable();
-
-            hideErrorView();
             if (!TextUtils.isEmpty(s.toString())) {
                 mNameClear.setVisibility(View.VISIBLE);
             } else {
@@ -172,7 +179,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         @Override
         public void afterTextChanged(Editable s) {
             changeSubmitEnable();
-            hideErrorView();
             if (!TextUtils.isEmpty(s.toString())) {
                 mIdentityCardNumberClear.setVisibility(View.VISIBLE);
             } else {
@@ -183,12 +189,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     private boolean checkSubmitEnable() {
         return mImagePath.size() > 1 && !TextUtils.isEmpty(getRealName()) && getIdentityCard().length() > 14;
-    }
-
-    private void hideErrorView() {
-        if (mErrorHint.getVisibility() == View.VISIBLE) {
-            mErrorHint.setVisibility(View.INVISIBLE);
-        }
     }
 
     private String getRealName() {
@@ -209,10 +209,10 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 mIdentityCardNumber.setText("");
                 break;
             case R.id.identityCardFrontImage:
-                UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_FONT, false).show(getSupportFragmentManager());
+                UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_FONT, false, true).show(getSupportFragmentManager());
                 break;
             case R.id.identityCardReverseImage:
-                UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_REVERSE, false).show(getSupportFragmentManager());
+                UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_REVERSE, false, true).show(getSupportFragmentManager());
                 break;
             case R.id.submit:
                 submit();
@@ -225,12 +225,12 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         final String identityCard = getIdentityCard();
 
         if (!ValidityDecideUtil.isOnlyAChineseName(realName)) {
-            showErrorView(getString(R.string.real_name_error));
+//            showErrorView(getString(R.string.real_name_error));
             return;
         }
 
         if (!ValidityDecideUtil.isIdentityCard(identityCard)) {
-            showErrorView(getString(R.string.identity_card_error));
+//            showErrorView(getString(R.string.identity_card_error));
             return;
         }
 
@@ -247,11 +247,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 }).show();
     }
 
-    private void showErrorView(String errorMsg) {
-        mErrorHint.setVisibility(View.VISIBLE);
-        mErrorHint.setText(errorMsg);
-    }
-
     private void submitUserCreditApprove(final String realName, String identityCard) {
         if (mImagePath.size() > 1) {
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
@@ -259,7 +254,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             Log.d("wangjie2222", "正面 : " + imageFront.length() + "  反面 " + imageReserve.length());
             Client.submitUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
                     .setIndeterminate(this)
-                    .setRetryPolicy(new DefaultRetryPolicy(100000,0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setCallback(new Callback<Resp<JsonObject>>() {
                         @Override
                         protected void onRespSuccess(Resp<JsonObject> resp) {
@@ -273,7 +268,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                                 mSubmit.setEnabled(false);
                                 setViewEnable(false);
                             } else {
-                                showErrorView(resp.getMsg());
+                                mSubmit.setText(R.string.again_submit);
+                                ToastUtil.curt(resp.getMsg());
                             }
                         }
                     })
@@ -283,7 +279,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     @Override
     public void onImagePath(int index, String imagePath) {
-        hideErrorView();
+//        hideErrorView();
         if (!TextUtils.isEmpty(imagePath)) {
             mImagePath.append(index, imagePath);
             if (index == IDENTITY_CARD_FONT) {
