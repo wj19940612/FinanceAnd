@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="#222222"
+            android:textColor="@color/primaryText"
             android:textSize="16sp"
             tools:text="张三丰"/>
 
@@ -60,7 +60,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="12dp"
             android:maxLines="2"
-            android:textColor="#222222"
+            android:textColor="@color/primaryText"
             android:textSize="14sp"
             tools:text="涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
     </RelativeLayout>
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/prediction"
             android:paddingLeft="8dp"
-            android:textColor="#999999"
+            android:textColor="@color/hintText"
             android:textSize="10sp"
             tools:text="2008/08/08 08:00"/>
 
