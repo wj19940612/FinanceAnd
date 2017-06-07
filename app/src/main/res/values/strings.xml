@@ -309,6 +309,7 @@
     <string name="opinion_length">%1$d/300</string>
     <string name="submit_has_empty">提  交</string>
     <string name="please_enter_the_text">请输入文字...</string>
+    <string name="describe_your_opinion">描述一下你的观点吧</string>
 
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
