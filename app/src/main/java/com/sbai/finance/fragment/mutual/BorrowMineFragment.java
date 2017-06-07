@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoney;
 import com.sbai.finance.model.mutual.BorrowDetails;
+import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -52,7 +54,7 @@ public class BorrowMineFragment extends BaseFragment implements
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private Unbinder unbinder;
-    private Set<String> mSet;
+    private Set<Integer> mSet;
     private int mPage = 0;
     private int mPageSize = 15;
     private BorrowMoneyAdapter mBorrowMoneyAdapter;
@@ -72,10 +74,10 @@ public class BorrowMineFragment extends BaseFragment implements
         mBorrowMoneyAdapter = new BorrowMoneyAdapter(getActivity());
         mBorrowMoneyAdapter.setCallback(new BorrowMoneyAdapter.Callback() {
             @Override
-            public void onAvatarBorrowMoneyClick(BorrowMoney borrowMoney) {
+            public void onAvatarBorrowMoneyClick(int userId) {
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, borrowMoney.getUserId())
+                            .putExtra(Launcher.USER_ID, userId)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -90,10 +92,10 @@ public class BorrowMineFragment extends BaseFragment implements
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BorrowMoney item = (BorrowMoney) parent.getItemAtPosition(position);
+                BorrowMine item = (BorrowMine) parent.getItemAtPosition(position);
                 if (item != null) {
                     Launcher.with(getActivity(), BorrowMineDetailsActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+                            .putExtra(Launcher.EX_PAYLOAD, item)
                             .execute();
                 }
             }
@@ -113,11 +115,11 @@ public class BorrowMineFragment extends BaseFragment implements
     }
 
     private void requestBorrowData() {
-        Client.getBorrowMoneyList(mPage, mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<BorrowMoney>>, List<BorrowMoney>>() {
+        Client.getMyLoad(mPage, mPageSize).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<BorrowMine>>, List<BorrowMine>>() {
                     @Override
-                    protected void onRespSuccessData(List<BorrowMoney> borrowMoneyList) {
-                        updateBorrowData(borrowMoneyList);
+                    protected void onRespSuccessData(List<BorrowMine> data) {
+                        updateBorrowData(data);
                     }
 
                     @Override
@@ -127,14 +129,14 @@ public class BorrowMineFragment extends BaseFragment implements
                     }
                 }).fire();
     }
-    private void updateBorrowData(List<BorrowMoney> data){
+    private void updateBorrowData(List<BorrowMine> data){
         stopRefreshAnimation();
         if (mSet.isEmpty()){
             mBorrowMoneyAdapter.clear();
         }
-        for (BorrowMoney borrowMoney:data){
-            if (mSet.add(borrowMoney.getId())){
-                mBorrowMoneyAdapter.add(borrowMoney);
+        for (BorrowMine borrowMine:data){
+            if (mSet.add(borrowMine.getId())){
+                mBorrowMoneyAdapter.add(borrowMine);
             }
         }
         if (data.size() < 15) {
@@ -170,9 +172,9 @@ public class BorrowMineFragment extends BaseFragment implements
         }
     }
 
-    public static class BorrowMoneyAdapter extends ArrayAdapter<BorrowMoney> {
+    public static class BorrowMoneyAdapter extends ArrayAdapter<BorrowMine> {
         interface Callback{
-            void onAvatarBorrowMoneyClick(BorrowMoney borrowMoney);
+            void onAvatarBorrowMoneyClick(int  userId);
         }
         private Callback mCallback;
         public void setCallback(Callback callback){
@@ -231,39 +233,63 @@ public class BorrowMineFragment extends BaseFragment implements
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-            private void bindingData(final BorrowMoney item, Context context, final Callback callback) {
+            private void bindingData(final BorrowMine item, Context context, final Callback callback) {
                 if (item == null) return;
 
-                Glide.with(context).load(item.getUserPortrait())
+                Glide.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
-
+                boolean isSelf = item.getUserId() == LocalUser.getUser().getUserInfo().getId();
                 mUserName.setText(item.getUserName());
-
-                if (item.getIsAttention() == 2) {
-                    mIsAttention.setText(R.string.is_attention);
-                } else {
-                    mIsAttention.setText("");
+                switch (item.getStatus()){
+                    case BorrowMine.STASTU_END_NO_HELP:
+                    case BorrowMine.STATUS_END_CANCEL:
+                    case BorrowMine.STATUS_END_NO_ALLOW:
+                    case BorrowMine.STATUS_END_NO_CHOICE_HELP:
+                    case BorrowMine.STATUS_END_REPAY:
+                        mStatus.setText(context.getString(R.string.end));
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.luckyText));
+                        break;
+                    case BorrowMine.STATUS_GIVE_HELP:
+                    case BorrowMine.STATUS_NO_CHECKED:
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.redRaise));
+                        if (isSelf){
+                            mStatus.setText(context.getString(R.string.wait_help));
+                        }else{
+                            mStatus.setText(context.getString(R.string.commit));
+                        }
+                        break;
+                     case BorrowMine.STATUS_INTENTION:
+                         mStatus.setTextColor(ContextCompat.getColor(context,R.color.redRaise));
+                         if (isSelf){
+                             mStatus.setText(context.getString(R.string.borrow_in_days,DateUtil.compareDateDifference(item.getModifyDate())));
+                         }else {
+                             mStatus.setText(context.getString(R.string.borrow_out_days,DateUtil.compareDateDifference(item.getModifyDate())));
+                         }
+                         break;
                 }
-
+//                if (item.getIsAttention() == 2) {
+//                    mIsAttention.setText(R.string.is_attention);
+//                } else {
+//                    mIsAttention.setText("");
+//                }
                 mBorrowMoneyContent.setText(item.getContent());
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
 
-                mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-                if (TextUtils.isEmpty(item.getLand())) {
+                mPublishTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+                if (TextUtils.isEmpty(item.getLocation())) {
                     mLocation.setText(R.string.no_location_information);
                 } else {
-                    mLocation.setText(item.getLand());
+                    mLocation.setText(item.getLocation());
                 }
-
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {
-                            callback.onAvatarBorrowMoneyClick(item);
+                            callback.onAvatarBorrowMoneyClick(item.getUserId());
                         }
                     }
                 });

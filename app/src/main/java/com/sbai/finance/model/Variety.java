@@ -17,6 +17,7 @@ public class Variety implements Parcelable {
     public static final String STOCK_EXPONENT="exponent";
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
+    public static final int OPTIONAL=1;
 
     /**
      * baseline : 2
@@ -51,6 +52,15 @@ public class Variety implements Parcelable {
     private String varietyName;
     private String varietyType;
     private String exchangeCode;
+    private int checkOptional;
+
+    public int getCheckOptional() {
+        return checkOptional;
+    }
+
+    public void setCheckOptional(int checkOptional) {
+        this.checkOptional = checkOptional;
+    }
 
     public boolean isStock() {
         return getBigVarietyTypeCode().equalsIgnoreCase(VAR_STOCK);
