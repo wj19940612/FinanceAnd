@@ -228,7 +228,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private void updateStockIndexMarketData(List<StockData> data) {
         // 2.判断涨跌
         int s2Color = ContextCompat.getColor(this, R.color.redPrimary);
-        int s3Color = ContextCompat.getColor(this, R.color.greenPrimary);
+        int s3Color = ContextCompat.getColor(this, R.color.greenDown);
         int color;
         Variety variety;
         SpannableString spannableString;
@@ -400,7 +400,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setText(stockData.getLast_price());
                     String priceChange = stockData.getRise_pre();
                     if (priceChange.startsWith("-")) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenAssist));
+                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenDown));
                         mRate.setSelected(false);
                         mRate.setText(priceChange + "%");
                     } else {

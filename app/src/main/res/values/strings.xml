@@ -184,7 +184,7 @@
     <string name="nick_name_hint">1-8个字符，可由中英文、数字组成</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
-    <string name="take_phone_cancel">取  消</string>
+    <string name="take_phone_cancel">取消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
     <string name="real_name">姓名</string>
     <string name="identity_card_number">身份证</string>
@@ -330,6 +330,12 @@
     <string name="borrow_overdue">超出借款期限</string>
     <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
+    <string name="money_less_500">借款金额少于500元</string>
+    <string name="money_more_2000">借款金额超过2000元</string>
+    <string name="interest_less_1">借款利息少于1元</string>
+    <string name="interest_more_200">借款利息超过200元</string>
+    <string name="days_less_1">借款期限少于1天</string>
+    <string name="days_more_60">借款期限超过60天</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">发布即同意</string>
     <string name="borrow_agreement">《乐米借款规则与用户须知》</string>
@@ -366,7 +372,7 @@
     <string name="borrow_in_time_success">借入</string>
     <string name="borrow_in_time_failure">失败</string>
     <string name="call">联系对方</string>
-    <string name="already_repay">已经还款</string>
+    <string name="already_repay">确认还款</string>
     <string name="already_repayment">已还款</string>
     <string name="is_pay_intention">已支付意向金</string>
     <string name="not_allow">审核失败</string>
