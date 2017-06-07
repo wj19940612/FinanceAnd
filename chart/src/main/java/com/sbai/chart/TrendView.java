@@ -31,14 +31,18 @@ public class TrendView extends FrameLayout {
 
     private void init() {
         mChart = new TrendChart(getContext());
+        int padding = (int) mChart.dp2Px(14);
+        mChart.setPadding(padding, 0, padding, 0);
         addView(mChart, 0, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
 
         mTwinkleView = new TwinkleView(getContext(), mChart);
+        mTwinkleView.setPadding(padding, 0, padding, 0);
         addView(mTwinkleView, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
 
         mTouchView = new TouchView(getContext(), mChart);
+        mTouchView.setPadding(padding, 0, padding, 0);
         addView(mTouchView, 2, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
     }
@@ -128,36 +132,6 @@ public class TrendView extends FrameLayout {
             }
         }
 
-//        public static List<TrendViewData> createDataList(String rawData, String[] openMarketTime) {
-//            List<TrendViewData> result = new ArrayList<>();
-//            HashSet hashSet = new HashSet();
-//            int length = rawData.length();
-//            int start = 0;
-//            while (start < length) {
-//                int end = rawData.indexOf("|", start);
-//                if (end > start) {
-//                    String singleData = rawData.substring(start, end);
-//                    String[] splitData = singleData.split(",");
-//                    float lastPrice = Float.valueOf(splitData[1]);
-//                    String date = splitData[2];
-//                    start = end + 1;
-//                    // filter invalid data and repeated data based on data.date
-//                    if (!isRepeatedDate(date, hashSet) && isValidDate(date, openMarketTime)
-//                            && lastPrice != 0) {
-//                        TrendViewData validData = new TrendViewData(splitData[0], lastPrice, date);
-//                        result.add(validData);
-//                    }
-//                }
-//            }
-//            Log.d("TEST", "hashSet.size: " + hashSet.size());
-//            return result;
-//        }
-//
-//        private static boolean isRepeatedDate(String date, HashSet hashSet) {
-//            String dateWithHourMinute = date.substring(8, 12); // yyyyMMddHHmmss -> hhmm
-//            return !hashSet.add(dateWithHourMinute);
-//        }
-//
         /**
          * check if trendView data.date is valid
          *
@@ -316,7 +290,7 @@ public class TrendView extends FrameLayout {
         }
 
         public float getLimitUp() {
-            return getPreClosePrice() * mLimitUpPercent;
+            return getPreClosePrice() * mLimitUpPercent / 100f;
         }
 
         public void setCalculateXAxisFromOpenMarketTime(boolean value) {

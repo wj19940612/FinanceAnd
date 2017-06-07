@@ -128,7 +128,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         updateTitleBar();
         updateExchangeStatusView();
-
     }
 
     @Override
@@ -184,7 +183,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void initChartViews() {
         TrendView.Settings settings = new TrendView.Settings();
-        settings.setBaseLines(7);
+        settings.setBaseLines(5);
         settings.setNumberScale(mVariety.getPriceScale());
         settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
@@ -193,7 +192,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(7);
+        settings2.setBaseLines(5);
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
@@ -554,8 +553,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         double priceChangePercent = FinanceUtil.divide(priceChange, data.getPreSetPrice(), 4)
                 .multiply(new BigDecimal(100)).doubleValue();
 
-        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
-        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenPrimary));
+        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenPrimary));
         String priceChangeStr = FinanceUtil.formatWithScale(priceChange, mVariety.getPriceScale());
         String priceChangePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
         if (priceChange >= 0) {

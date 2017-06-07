@@ -157,10 +157,10 @@ public class TradeFloatButtons extends LinearLayout {
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         if (isPublish) {
-            layout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+            layout.setBackgroundResource(R.drawable.btn_trade_red_primary);
             textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
         } else {
-            layout.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            layout.setBackgroundResource(R.drawable.btn_trade_white_primary);
             textView.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
         }
         layout.addView(textView);

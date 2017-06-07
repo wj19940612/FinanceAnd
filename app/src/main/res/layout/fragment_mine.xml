@@ -4,7 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/bgAssist"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -63,7 +63,7 @@
         android:layout_below="@+id/headImageLayout"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:background="@color/splitLineColor"/>
+        android:background="@color/split"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +86,7 @@
             android:layout_width="1dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="@color/splitLineColor"/>
+            android:background="@color/normalDivider"/>
 
         <TextView
             android:id="@+id/fans"
@@ -102,7 +102,8 @@
             android:layout_width="1dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="@color/splitLineColor"/>
+            android:background="@color/split"/>
+
 
         <TextView
             android:id="@+id/minePublish"
@@ -129,7 +130,7 @@
         app:rowText="@string/wallet"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
-        app:splitLineColor="@color/splitLineColor"/>
+        app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/news"
@@ -143,7 +144,7 @@
         app:rowText="@string/news"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
-        app:splitLineColor="@color/splitLineColor"/>
+        app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/feedBack"
@@ -157,7 +158,7 @@
         app:rowText="@string/feed_back"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
-        app:splitLineColor="@color/splitLineColor"/>
+        app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/setting"
@@ -170,7 +171,7 @@
         app:rowText="@string/setting"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
-        app:splitLineColor="@color/splitLineColor"/>
+        app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/aboutUs"
@@ -183,4 +184,5 @@
         app:rowText="@string/about_us"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
+
 </LinearLayout>

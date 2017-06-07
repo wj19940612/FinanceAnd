@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
@@ -196,9 +197,9 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
 
     private void showAgePicker() {
         OptionPicker picker = new OptionPicker(this, mAgeList);
-        picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.hintText));
+        picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
         picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
-        picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
+        picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setOffset(2);
@@ -210,7 +211,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         picker.setSelectedItem(mAgeList[mSelectAgeListIndex]);
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
         WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.splitLineColor));
+        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));
         picker.setLineConfig(lineConfig);
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
@@ -247,7 +248,6 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         }
     }
 
-
     private void logout() {
         Client.logout()
                 .setTag(TAG)
@@ -263,6 +263,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                 })
                 .fire();
     }
+
 
     @Override
     public void onUserSex(int userSex) {

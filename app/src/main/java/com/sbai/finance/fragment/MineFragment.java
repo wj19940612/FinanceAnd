@@ -188,7 +188,7 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
             mUserName.setText(R.string.login);
-            int color = ContextCompat.getColor(getActivity(), R.color.hintText);
+            int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
             SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, color);
             mAttention.setText(attentionSpannableString);
             SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, color);
@@ -302,7 +302,7 @@ public class MineFragment extends BaseFragment {
     private void updateUserNumber(AttentionAndFansNumberModel data) {
         if (data == null)
             data = new AttentionAndFansNumberModel();
-        int color = ContextCompat.getColor(getActivity(), R.color.hintText);
+        int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1f, color);
         mAttention.setText(attentionSpannableString);
         SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1f,color);

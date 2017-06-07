@@ -14,7 +14,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/splitLineColor">
+        android:background="@color/split">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -263,7 +263,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/splitLineColor"
+                android:background="@color/split"
                 android:orientation="vertical"
                 android:padding="@dimen/common_padding">
 

@@ -4,7 +4,7 @@
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/split"
     tools:context="com.sbai.finance.fragment.mine.EconomicCircleNewsFragment">
 
     <LinearLayout

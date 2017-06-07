@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/bgAssist"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatTextView
@@ -21,7 +20,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/splitLineColor"/>
+        android:background="@color/split"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/girl"
@@ -36,7 +35,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/splitLineColor"/>
+        android:background="@color/split"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/takePhoneCancel"

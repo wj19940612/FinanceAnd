@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/split"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.UserDataActivity">
 
@@ -185,7 +185,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="@color/splitLineColor"/>
+            android:background="@color/split"/>
 
         <TextView
             android:id="@+id/shield"

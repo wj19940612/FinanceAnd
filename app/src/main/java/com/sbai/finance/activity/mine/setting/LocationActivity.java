@@ -171,14 +171,14 @@ public class LocationActivity extends BaseActivity {
                 } else {
                     picker.setColumnWeight(2 / 8.0, 3 / 8.0, 3 / 8.0);//省级、地级和县级的比例为2:3:3
                 }
-                picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.hintText));
+                picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                 picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
-                picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
+                picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
                 picker.setAnimationStyle(R.style.BottomDialogAnimation);
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
                 picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
+                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.background));
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override

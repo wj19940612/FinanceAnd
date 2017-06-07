@@ -51,8 +51,9 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="12dp"
-        android:textColor="@color/hintText"
+        android:textColor="@color/unluckyText"
         tools:text="Message肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范f"/>
+
 
     <LinearLayout
         android:id="@+id/doubleButtons"
@@ -81,6 +82,7 @@
             android:textColor="@color/redPrimary"
             android:textSize="14sp"/>
 
+
         <TextView
             android:id="@+id/position"
             android:layout_width="75dp"
@@ -93,16 +95,4 @@
             android:textSize="14sp"/>
     </LinearLayout>
 
-    <!--<TextView-->
-    <!--android:id="@+id/singleButton"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:background="@drawable/bg_dialog_bottom"-->
-    <!--android:clickable="true"-->
-    <!--android:gravity="center_horizontal"-->
-    <!--android:minHeight="@dimen/common_height"-->
-    <!--android:padding="12dp"-->
-    <!--android:textColor="#0076ff"-->
-    <!--tools:text="确定"/>-->
 </LinearLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/split"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.ModifyUserNameActivity">
 
@@ -35,7 +35,7 @@
             android:background="@null"
             android:hint="@string/please_input_user_name"
             android:maxLength="8"
-            android:textColorHint="@color/hintText"
+            android:textColorHint="@color/unluckyText"
             android:textSize="16sp"/>
 
         <android.support.v7.widget.AppCompatImageView
@@ -54,7 +54,7 @@
         android:paddingLeft="@dimen/common_padding"
         android:paddingTop="10dp"
         android:text="@string/nick_name_hint"
-        android:textColor="@color/hintText"
+        android:textColor="@color/unluckyText"
         android:textSize="12sp"/>
 
     <android.support.v7.widget.AppCompatButton

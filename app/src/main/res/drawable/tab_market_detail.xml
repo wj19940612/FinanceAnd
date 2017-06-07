@@ -8,7 +8,7 @@
                 android:bottomRightRadius="@dimen/common_radius"
                 android:topLeftRadius="0dp"
                 android:topRightRadius="@dimen/common_radius"/>
-            <solid android:color="@color/splitLineColor"/>
+            <solid android:color="@color/split"/>
         </shape>
     </item>
     <item android:state_selected="true">

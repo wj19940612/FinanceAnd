@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgAssist"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.AboutUsActivity">
 
@@ -46,8 +46,8 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/action_product"
         app:rowTextColor="@color/blackAssist"
-        app:splitLineColor="@color/splitLineColor"
-        app:subTextColor="@color/hintText"
+        app:splitLineColor="@color/split"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -59,8 +59,8 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/user_protocol"
         app:rowTextColor="@color/blackAssist"
-        app:splitLineColor="@color/splitLineColor"
-        app:subTextColor="@color/hintText"
+        app:splitLineColor="@color/split"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -71,7 +71,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/check_update"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <Space
@@ -87,7 +87,7 @@
         android:gravity="center"
         android:lineSpacingExtra="3dp"
         android:text="@string/company"
-        android:textColor="@color/hintText"
+        android:textColor="@color/unluckyText"
         android:textSize="12sp"/>
 
 </LinearLayout>
