@@ -21,6 +21,7 @@ import com.sbai.finance.utils.Launcher;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,12 +34,13 @@ import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
 public class LocationActivity extends BaseActivity {
-    public static final String TYPE_BORROW="borrow";
-    public static final String TYPE_MINE="mine";
+    public static final String TYPE_BORROW = "borrow";
+    public static final String TYPE_MINE = "mine";
     @BindView(R.id.location)
     TextView mLocation;
     private String type;
     private Address mAddress;
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -55,17 +57,19 @@ public class LocationActivity extends BaseActivity {
     }
 
     @OnClick(R.id.choiceLocation)
-    public void onClick(View view){
-         if (type.equalsIgnoreCase(TYPE_BORROW)){
-             showLocationPicker();
-         }
-    }
-    private void updateLocationInfo(){
-        mAddress = new GpsUtils().getAddress();
-        if (mAddress!=null){
-            mLocation.setText(mAddress.getAdminArea()+" "+mAddress.getLocality()+" "+mAddress.getSubLocality());
+    public void onClick(View view) {
+        if (type.equalsIgnoreCase(TYPE_BORROW)) {
+            showLocationPicker();
         }
     }
+
+    private void updateLocationInfo() {
+        mAddress = new GpsUtils().getAddress();
+        if (mAddress != null) {
+            mLocation.setText(mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality());
+        }
+    }
+
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
         String province = "";
@@ -73,18 +77,19 @@ public class LocationActivity extends BaseActivity {
         String country = "";
         String[] split = mLocation.getText().toString().split(" ");
         if (split.length == 3) {
-                province = split[0];
-                city = split[1];
-                country = split[2];
+            province = split[0];
+            city = split[1];
+            country = split[2];
         }
         addressInitTask.execute(province, city, country);
     }
-    private void returnAddress(){
+
+    private void returnAddress() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Launcher.EX_PAYLOAD_1,mAddress);
+        bundle.putParcelable(Launcher.EX_PAYLOAD_1, mAddress);
         intent.putExtras(bundle);
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -173,10 +178,12 @@ public class LocationActivity extends BaseActivity {
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
-                          mAddress.setAdminArea(province.getAreaName());
-                          mAddress.setLocality(city.getAreaName());
-                          mAddress.setSubLocality(county.getAreaName());
-                          returnAddress();
+                        if (mAddress == null)
+                            mAddress = new Address(new Locale(Locale.CHINA.getLanguage()));
+                        mAddress.setAdminArea(province.getAreaName());
+                        mAddress.setLocality(city.getAreaName());
+                        mAddress.setSubLocality(county.getAreaName());
+                        returnAddress();
                     }
                 });
                 picker.show();

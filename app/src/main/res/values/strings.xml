@@ -164,6 +164,11 @@
     <string name="please_input_here">请在此输入......</string>
     <string name="you_dont_have_trade">你还没有交易过哦</string>
     <string name="now_not_has_feedback_data">暂无反馈消息</string>
+    <string name="about_le_mi">关于乐米</string>
+    <string name="action_product">功能介绍</string>
+    <string name="user_protocol">用户协议</string>
+    <string name="check_update">检测更新</string>
+    <string name="company">浙江松柏信息技术有限公司 \nCopyright2017</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>

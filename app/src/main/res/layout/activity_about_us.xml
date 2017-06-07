@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgAssist"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.AboutUsActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/about_le_mi"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@mipmap/ic_launcher"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/versionName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="34dp"
+        android:textColor="@color/blackAssist"
+        android:textSize="15sp"
+        tools:text="乐米金融1.1"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/action_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/action_product"
+        app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/splitLineColor"
+        app:subTextColor="@color/hintText"
+        app:subTextSize="@dimen/common_default_size"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/user_protocol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/user_protocol"
+        app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/splitLineColor"
+        app:subTextColor="@color/hintText"
+        app:subTextSize="@dimen/common_default_size"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/checkUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/check_update"
+        app:rowTextColor="@color/blackAssist"
+        app:subTextColor="@color/hintText"
+        app:subTextSize="@dimen/common_default_size"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="11dp"
+        android:gravity="center"
+        android:lineSpacingExtra="3dp"
+        android:text="@string/company"
+        android:textColor="@color/hintText"
+        android:textSize="12sp"/>
+
+</LinearLayout>

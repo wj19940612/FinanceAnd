@@ -43,7 +43,8 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("search", search));
     }
-    public static API getMyLoad(int page, int pageSize){
+
+    public static API getMyLoad(int page, int pageSize) {
         return new API("/coterie/help/loan/myLoan.do",
                 new ApiParams()
                         .put("page", page)
@@ -1037,6 +1038,7 @@ public class Client {
                         .put("id", id));
     }
 
+    //借款协议
     public static API getBorrowProcotol() {
         return new API("/user/article/articleDetail.do",
                 new ApiParams().put("id", 2));
@@ -1278,4 +1280,9 @@ public class Client {
     public static API getStockNewsInfo(String id) {
         return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
+
+    //h5关于我们的界面网址
+    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about?nohead=1";
+
+
 }

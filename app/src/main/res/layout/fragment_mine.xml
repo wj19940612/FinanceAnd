@@ -83,9 +83,9 @@
             tools:text="关注 \n1220"/>
 
         <View
-            android:layout_gravity="center"
             android:layout_width="1dp"
             android:layout_height="20dp"
+            android:layout_gravity="center"
             android:background="@color/splitLineColor"/>
 
         <TextView
@@ -99,9 +99,9 @@
             tools:text="粉丝 \n12200"/>
 
         <View
-            android:layout_gravity="center"
             android:layout_width="1dp"
             android:layout_height="20dp"
+            android:layout_gravity="center"
             android:background="@color/splitLineColor"/>
 
         <TextView
@@ -122,12 +122,13 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
         android:visibility="visible"
-        app:hasBottomSplitLine="true"
+
         app:leftIcon="@drawable/ic_mine_list_wallet"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/wallet"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
+        app:hasBottomSplitLine="true"
         app:splitLineColor="@color/splitLineColor"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -177,11 +178,9 @@
         android:layout_height="50dp"
         android:background="@drawable/bg_white"
         android:visibility="visible"
-        app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_aboutus"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/about_us"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"
-        app:splitLineColor="@color/splitLineColor"/>
+        app:rowTextSize="15sp"/>
 </LinearLayout>

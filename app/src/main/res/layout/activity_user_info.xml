@@ -73,26 +73,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/sex"
         app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/splitLineColor"
         app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
 
-    <include layout="@layout/split_line"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/age"
         app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/splitLineColor"
         app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
 
-    <include layout="@layout/split_line"/>
 
     <LinearLayout
         android:id="@+id/ll_Location"
