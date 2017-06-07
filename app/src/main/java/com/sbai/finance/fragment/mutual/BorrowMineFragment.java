@@ -249,7 +249,7 @@ public class BorrowMineFragment extends BaseFragment implements
                     case BorrowMine.STATUS_END_NO_CHOICE_HELP:
                     case BorrowMine.STATUS_END_REPAY:
                         mStatus.setText(context.getString(R.string.end));
-                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.hintText));
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.luckyText));
                         break;
                     case BorrowMine.STATUS_GIVE_HELP:
                     case BorrowMine.STATUS_NO_CHECKED:

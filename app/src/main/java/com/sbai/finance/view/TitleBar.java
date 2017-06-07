@@ -83,13 +83,14 @@ public class TitleBar extends RelativeLayout {
 
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
 
-
         typedArray.recycle();
     }
 
     private void init() {
         setBackgroundResource(mBackgroundRes);
         int fixedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+                getResources().getDisplayMetrics());
+        int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14,
                 getResources().getDisplayMetrics());
 
         // center view
@@ -103,25 +104,12 @@ public class TitleBar extends RelativeLayout {
         }
 
         // left view
-        int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics());
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         mLeftView = new TextView(getContext());
         mLeftView.setGravity(Gravity.CENTER);
         mLeftView.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
         addView(mLeftView, params);
-
-        // right view
-        mRightViewParent = new LinearLayout(getContext());
-        mRightViewParent.setGravity(Gravity.CENTER);
-        mRightViewParent.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
-        mRightView = new TextView(getContext());
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        mRightViewParent.addView(mRightView, params);
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        addView(mRightViewParent, params);
         if (mBackFeature) {
             setBackButtonIcon(mBackIcon);
             mLeftView.setOnClickListener(new OnClickListener() {
@@ -134,6 +122,17 @@ public class TitleBar extends RelativeLayout {
                 }
             });
         }
+
+        // right view
+        mRightViewParent = new LinearLayout(getContext());
+        mRightViewParent.setGravity(Gravity.CENTER);
+        mRightViewParent.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
+        mRightView = new TextView(getContext());
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mRightViewParent.addView(mRightView, params);
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        addView(mRightViewParent, params);
 
         setTitle(mTitle);
         setTitleSize(mTitleSize);
@@ -157,9 +156,7 @@ public class TitleBar extends RelativeLayout {
         if (backIcon != null) {
             mLeftView.setCompoundDrawablesWithIntrinsicBounds(backIcon, null, null, null);
         } else { // default icon
-
             mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_white, 0, 0, 0);
-
         }
     }
 

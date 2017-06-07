@@ -202,7 +202,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mFootView.setText(getText(R.string.load_more));
 			mFootView.setGravity(Gravity.CENTER);
 			mFootView.setTextColor(ContextCompat.getColor(this, R.color.greyAssist));
-			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.splitLineColor));
+			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.split));
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

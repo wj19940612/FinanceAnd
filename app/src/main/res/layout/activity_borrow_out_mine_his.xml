@@ -16,14 +16,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/splitLineColor"
+            android:background="@color/split"
             android:orientation="vertical">
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:dividerHeight="10dp"
-                android:divider="@color/splitLineColor"
+                android:divider="@color/split"
                 android:visibility="gone"/>
             <TextView
                 android:id="@+id/empty"

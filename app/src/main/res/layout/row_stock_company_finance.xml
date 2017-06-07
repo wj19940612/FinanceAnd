@@ -13,7 +13,7 @@
         android:layout_width="400dp"
         android:layout_height="32dp"
         android:layout_marginBottom="20dp"
-        android:background="@color/splitLineColor"
+        android:background="@color/split"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="@dimen/common_padding"

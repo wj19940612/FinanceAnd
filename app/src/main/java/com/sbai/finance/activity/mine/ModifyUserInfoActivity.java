@@ -221,7 +221,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         picker.setSelectedItem(mAgeList[mSelectAgeListIndex]);
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
         WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.splitLineColor));
+        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));
         picker.setLineConfig(lineConfig);
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
@@ -286,7 +286,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
         }
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
         WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.splitLineColor));
+        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));
         picker.setLineConfig(lineConfig);
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
@@ -401,7 +401,7 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
                 picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.splitLineColor));
+                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override

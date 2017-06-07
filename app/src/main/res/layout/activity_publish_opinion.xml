@@ -5,13 +5,16 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/split"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleTextColor="@color/blackAssist"
         app:titleText="@string/publish_opinion"/>
 
     <LinearLayout
@@ -30,10 +33,10 @@
             android:layout_marginTop="@dimen/common_padding"
             android:background="@null"
             android:gravity="left"
-            android:hint="@string/please_enter_the_text"
+            android:hint="@string/describe_your_opinion"
             android:maxLength="300"
             android:textColor="@color/greyAssist"
-            android:textColorHint="@color/hintText"
+            android:textColorHint="@color/unluckyText"
             android:textSize="15sp"/>
 
 
@@ -53,8 +56,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:textSize="12sp"
-                android:textColor="#999999"
+                android:textSize="10sp"
+                android:textColor="@color/unluckyText"
+                android:layout_alignBottom="@id/opinionType"
                 tool:text="33/300"/>
 
         </RelativeLayout>
@@ -73,6 +77,6 @@
         android:gravity="center"
         android:text="@string/submit_has_empty"
         android:textColor="@android:color/white"
-        android:textSize="16sp"/>
+        android:textSize="15sp"/>
 </LinearLayout>
 

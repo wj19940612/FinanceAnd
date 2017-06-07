@@ -369,7 +369,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_END_NO_CHOICE_HELP:
             case BorrowMine.STATUS_END_REPAY:
                 mStatus.setText(getActivity().getString(R.string.end));
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.hintText));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                 mBorrowStatus.setVisibility(View.GONE);
                 break;
             case BorrowMine.STATUS_GIVE_HELP:

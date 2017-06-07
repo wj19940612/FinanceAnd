@@ -317,7 +317,7 @@
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/bg_write_message"
                     android:text="@string/write_message"
-                    android:textColor="@color/lucky_text"
+                    android:textColor="@color/luckyText"
                     android:textSize="12sp"/>
 
             </LinearLayout>

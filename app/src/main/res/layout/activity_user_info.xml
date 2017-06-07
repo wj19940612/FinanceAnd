@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgAssist"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.ModifyUserInfoActivity">
 
@@ -22,6 +22,7 @@
         android:id="@+id/headImageLayout"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_marginTop="@dimen/common_margin"
         android:background="@drawable/bg_white"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding">
@@ -62,7 +63,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/nick_name"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
 
@@ -75,7 +76,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/sex"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <include layout="@layout/split_line"/>
@@ -88,7 +89,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/age"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <include layout="@layout/split_line"/>
@@ -121,7 +122,7 @@
             android:ellipsize="end"
             android:gravity="right"
             android:maxLines="1"
-            android:textColor="@color/hintText"/>
+            android:textColor="@color/unluckyText"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -140,7 +141,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/credit"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <Space

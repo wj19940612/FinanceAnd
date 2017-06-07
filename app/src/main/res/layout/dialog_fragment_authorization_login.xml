@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/quick_trade_offer_by_company"
-            android:textColor="@color/hintText"
+            android:textColor="@color/unluckyText"
             android:textSize="@dimen/sp_12"/>
 
         <android.support.v7.widget.AppCompatTextView
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/confirm_agree"
-            android:textColor="@color/lucky_text"
+            android:textColor="@color/luckyText"
             android:textSize="12sp"/>
 
         <TextView

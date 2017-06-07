@@ -168,7 +168,7 @@ public class LocationActivity extends BaseActivity {
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
                 picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
+                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.background));
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override

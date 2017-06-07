@@ -6,5 +6,5 @@
         </shape>
     </item>
     <item android:state_enabled="true" android:drawable="@color/redPrimary"/>
-    <item android:state_enabled="false" android:drawable="@color/hintText"/>
+    <item android:state_enabled="false" android:drawable="@color/luckyText"/>
 </selector>
