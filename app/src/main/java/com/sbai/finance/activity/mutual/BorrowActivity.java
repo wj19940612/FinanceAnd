@@ -4,12 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +56,14 @@ import com.sbai.httplib.CookieManger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.qqtheme.framework.util.CompatUtils;
 
 /**
  * Created by Administrator on 2017-04-25.
  */
 
 public class BorrowActivity extends BaseActivity {
+	public static final int REQ_CODE_ADDRESS = 100;
 	@BindView(R.id.photoGv)
 	GrapeGridView mPhotoGv;
 	@BindView(R.id.borrowLimit)
@@ -79,6 +87,7 @@ public class BorrowActivity extends BaseActivity {
 	private IntentFilter mIntentFilter;
 	private PhotoGridAdapter mPhotoGridAdapter;
 	private String mImagePath;
+	private Address mAddress;
 	private String mProtocolUrl = API.getHost()+"/mobi/mutual/rules?nohead=1";
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +98,10 @@ public class BorrowActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		SpannableString ss = new SpannableString(getString(R.string.borrow_remark_hint));//定义hint的值
+		AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12,true);//设置字体大小 true表示单位是sp
+		ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		mBorrowRemark.setHint(new SpannedString(ss));
 		mPhotoGridAdapter = new PhotoGridAdapter(this);
 		mPhotoGridAdapter.add("");
 		mPhotoGridAdapter.setOnItemClickListener(new PhotoGridAdapter.OnItemClickListener() {
@@ -129,10 +142,34 @@ public class BorrowActivity extends BaseActivity {
 			}
 		});
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
+		mBorrowLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+			   if (hasFocus){
+				   mBorrowLimit.setSelection(0);
+			   }
+			}
+		});
 		mBorrowLimit.requestFocus();
 		mBorrowLimit.setFocusable(true);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
+		mBorrowInterest.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus){
+					mBorrowInterest.setSelection(mBorrowInterest.length());
+				}
+			}
+		});
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
+		mBorrowTimeLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus){
+					mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
+				}
+			}
+		});
 		mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
         mAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -156,10 +193,53 @@ public class BorrowActivity extends BaseActivity {
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
-				mPublish.setEnabled(false);
-				int money = Integer.valueOf( mBorrowLimit.getText().toString());
-				String interest =  mBorrowInterest.getText().toString();
-				int days = Integer.valueOf( mBorrowTimeLimit.getText().toString());
+				String borrowMoney = mBorrowLimit.getText().toString().trim();
+				if (borrowMoney.length()>4|| Integer.parseInt(borrowMoney)>2000){
+					ToastUtil.curt(getString(R.string.money_more_2000));
+					mBorrowLimit.requestFocus();
+					mBorrowLimit.setFocusable(true);
+					mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					return;
+				}else if (Integer.parseInt(borrowMoney)<500){
+					ToastUtil.curt(getString(R.string.money_less_500));
+					mBorrowLimit.requestFocus();
+					mBorrowLimit.setFocusable(true);
+					mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					return;
+				}
+				int money = Integer.valueOf( borrowMoney);
+
+				String borrowInterest = mBorrowInterest.getText().toString().trim();
+				if (borrowInterest.length()>3||Integer.valueOf(borrowInterest)>200){
+					ToastUtil.curt(getString(R.string.interest_more_200));
+					mBorrowInterest.requestFocus();
+					mBorrowInterest.setFocusable(true);
+					mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					return;
+				}else if (Integer.valueOf(borrowInterest)<1){
+					ToastUtil.curt(getString(R.string.interest_less_1));
+					mBorrowInterest.requestFocus();
+					mBorrowInterest.setFocusable(true);
+					mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					return;
+				}
+
+				String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
+		        if (borrowTimeLimit.length()>3|| Integer.parseInt(borrowTimeLimit)>60){
+					ToastUtil.curt(getString(R.string.days_more_60));
+					mBorrowTimeLimit.requestFocus();
+					mBorrowTimeLimit.setFocusable(true);
+					mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					return;
+				}else if (Integer.parseInt(borrowTimeLimit)<1){
+					ToastUtil.curt(getString(R.string.days_less_1));
+					mBorrowTimeLimit.requestFocus();
+					mBorrowTimeLimit.setFocusable(true);
+					mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					return;
+				}
+
+				int days = Integer.valueOf(borrowTimeLimit);
 				String content = mBorrowRemark.getText().toString();
 				if (content.length()>=300){
 					content = content.substring(0,300);
@@ -180,10 +260,10 @@ public class BorrowActivity extends BaseActivity {
 				if(contentImg.length()>0){
 					contentImg.deleteCharAt(contentImg.length()-1);
 				}
-				requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
+				requestPublishBorrow(content,contentImg.toString(),days,borrowInterest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 				break;
 			case R.id.location:
-                Launcher.with(getActivity(), LocationActivity.class).putExtra("type",LocationActivity.TYPE_BORROW).execute();
+                Launcher.with(getActivity(), LocationActivity.class).putExtra("type",LocationActivity.TYPE_BORROW).executeForResult(REQ_CODE_ADDRESS);
 				break;
 			case R.id.protocol:
 				Client.getBorrowProcotol().setTag(TAG)
@@ -235,47 +315,16 @@ public class BorrowActivity extends BaseActivity {
 	    }
 	}
 	private boolean checkPublishButtonEnable(){
-		String borrowMoney = mBorrowLimit.getText().toString().trim();
-		boolean isEmpty = TextUtils.isEmpty(borrowMoney);
-		if (isEmpty||borrowMoney.length()>4|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
-             if (!isEmpty){
-				 ToastUtil.curt(getString(R.string.borrow_over_money));
-			 }
-			return false;
-		}else{
-			//mWarn.setVisibility(View.INVISIBLE);
-
-		}
-		String borrowInterest = mBorrowInterest.getText().toString().trim();
-		isEmpty = TextUtils.isEmpty(borrowInterest);
-		if (isEmpty||borrowInterest.length()>3||Integer.valueOf(borrowInterest)<1||Integer.valueOf(borrowInterest)>200){
-			if (!isEmpty){
-				ToastUtil.curt(getString(R.string.borrow_over_interest));
-			}
-			return false;
-		}else{
-			//mWarn.setVisibility(View.INVISIBLE);
-		}
-		String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
-		isEmpty = TextUtils.isEmpty(borrowTimeLimit);
-		if (isEmpty||borrowTimeLimit.length()>3|| Integer.parseInt(borrowTimeLimit)>60){
-			if (!isEmpty){
-				ToastUtil.curt(getString(R.string.borrow_overdue));
-			}
-			return false;
-		}else{
-			//mWarn.setVisibility(View.INVISIBLE);
-		}
-		if (!mAgree.isChecked()){
+		if (TextUtils.isEmpty(mBorrowLimit.getText())){
 			return false;
 		}
-		if (TextUtils.isEmpty(mBorrowRemark.getText())){
-			ToastUtil.curt(getString(R.string.no_remark));
+		if (TextUtils.isEmpty(mBorrowInterest.getText())){
 			return false;
-		}else{
-		//	mWarn.setVisibility(View.INVISIBLE);
 		}
-		return true;
+		if (TextUtils.isEmpty(mBorrowTimeLimit.getText())){
+			return false;
+		}
+        return true;
 	}
 	@Override
 	protected void onDestroy() {
@@ -286,6 +335,19 @@ public class BorrowActivity extends BaseActivity {
 		mBorrowRemark.removeTextChangedListener(mBorrowRemarkValidationWatcher);
 		mLocalBroadcastManager.unregisterReceiver(mDelPhotoBroadcastReceiver);
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode ==REQ_CODE_ADDRESS&&resultCode==RESULT_OK){
+			mAddress = data.getParcelableExtra(Launcher.EX_PAYLOAD_1);
+			if (mAddress!=null){
+				mLocation.setSubText(mAddress.getLocality()+" "+mAddress.getSubLocality());
+			}
+
+		}
+	}
+
 	private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)){
 			mPhotoGridAdapter.insert(helpImagePath,mPhotoGridAdapter.getCount()-1);
@@ -296,7 +358,8 @@ public class BorrowActivity extends BaseActivity {
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
 		@Override
 	public void afterTextChanged(Editable s) {
-		setPublishStatus();
+			mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.blackAssist));
+		  setPublishStatus();
 	}
 };
 	private ValidationWatcher mBorrowInterestValidationWatcher = new ValidationWatcher() {
@@ -314,7 +377,7 @@ public class BorrowActivity extends BaseActivity {
 	private ValidationWatcher mBorrowRemarkValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
-			setPublishStatus();
+			//setPublishStatus();
 		}
 	};
 	class DelPhotoBroadcastReceiver extends BroadcastReceiver {

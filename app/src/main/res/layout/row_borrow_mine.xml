@@ -46,6 +46,14 @@
             android:textColor="#999999"
             android:textSize="10sp"
             tools:text="@string/is_attention"/>
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textSize="12sp"
+            tools:text="已提交"/>
     </RelativeLayout>
 
     <TextView

@@ -318,6 +318,12 @@
     <string name="borrow_overdue">超出借款期限</string>
     <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
+    <string name="money_less_500">借款金额少于500元</string>
+    <string name="money_more_2000">借款金额超过2000元</string>
+    <string name="interest_less_1">借款利息少于1元</string>
+    <string name="interest_more_200">借款利息超过200元</string>
+    <string name="days_less_1">借款期限少于1天</string>
+    <string name="days_more_60">借款期限超过60天</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">发布即同意</string>
     <string name="borrow_agreement">《乐米借款规则与用户须知》</string>

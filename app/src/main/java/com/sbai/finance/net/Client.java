@@ -36,12 +36,18 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getStockVariety(Integer page, Integer pageSize, String search) {
+    public static API getStockVariety(int page, int pageSize, String search) {
         return new API("/order/order/getStockVariety.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize)
                         .put("search", search));
+    }
+    public static API getMyLoad(int page, int pageSize){
+        return new API("/coterie/help/loan/myLoan.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 
     /**
