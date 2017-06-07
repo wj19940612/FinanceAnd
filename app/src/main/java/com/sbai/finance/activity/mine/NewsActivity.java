@@ -61,6 +61,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
         ButterKnife.bind(this);
         mEmpty.setText(R.string.now_not_has_data);
         mListView.setEmptyView(mEmpty);
+        mListView.setDivider(null);
         mSet = new HashSet<>();
 
         mSystemNewsAdapter = new SystemNewsAdapter(this);
@@ -86,7 +87,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE, mPage)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -106,7 +107,12 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void stopRefreshAnimation() {
-
+        if (mCustomSwipeRefreshLayout.isRefreshing()) {
+            mCustomSwipeRefreshLayout.setRefreshing(false);
+        }
+        if (mCustomSwipeRefreshLayout.isLoading()) {
+            mCustomSwipeRefreshLayout.setLoading(false);
+        }
     }
 
     private void updateSystemNewsData(List<HistoryNewsModel> historyNewsModelList) {
@@ -248,7 +254,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
 
-     class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
+    class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         public SystemNewsAdapter(@NonNull Context context) {
             super(context, 0);

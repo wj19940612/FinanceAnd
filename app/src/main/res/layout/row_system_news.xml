@@ -1,62 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/common_padding"
-    android:layout_marginRight="@dimen/common_padding"
-    android:layout_marginTop="@dimen/common_padding"
-    android:background="@drawable/bg_white"
-    app:cardCornerRadius="@dimen/common_eight_radius"
-    app:cardElevation="@null">
+    android:paddingLeft="@dimen/common_padding"
+    android:paddingRight="@dimen/common_padding"
+    android:paddingTop="@dimen/common_padding">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/common_padding">
+        android:background="@drawable/bg_white"
+        app:cardCornerRadius="@dimen/common_eight_radius"
+        app:cardElevation="@null">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/common_padding">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blackAssist"
+                    android:textSize="15sp"
+                    tools:text="平安银行"/>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/notReadNewsHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_new_message"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    tools:text="2017/12/12"/>
+            </LinearLayout>
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/title"
+                android:id="@+id/content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/blackAssist"
-                android:textSize="15sp"
-                tools:text="平安银行"/>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/notReadNewsHint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_new_message"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                tools:text="2017/12/12"/>
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/hintText"
+                android:textSize="12sp"
+                tools:text="太棒了，预测成功"/>
         </LinearLayout>
+    </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:lineSpacingExtra="3dp"
-            android:textColor="@color/hintText"
-            android:textSize="12sp"
-            tools:text="太棒了，预测成功"/>
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>
