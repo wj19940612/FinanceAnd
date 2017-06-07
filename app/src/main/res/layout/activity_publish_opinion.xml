@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:textSize="12sp"
-                android:textColor="#999999"
+                android:textColor="@color/hintText"
                 tool:text="33/300"/>
 
         </RelativeLayout>
