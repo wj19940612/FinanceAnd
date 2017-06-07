@@ -36,8 +36,7 @@
             android:gravity="right|center"
             android:textColor="@color/greyAssist"
             android:textSize="@dimen/list_title_size"
-            android:text="@string/stock_no_data"
-            tool:text="已添加"
+            android:text="已添加"
             android:visibility="gone"/>
     <ImageView
         android:id="@+id/addOptional"

@@ -219,7 +219,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(context))
 				.into(mAvatar);
-
 		mUserName.setText(borrowMoneyDetails.getUserName());
 		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getAuditTime()));
 
