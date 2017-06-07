@@ -197,6 +197,9 @@
     <string name="identity_card_reverse">身份证反面照片</string>
     <string name="identity_card_phone">身份证照片</string>
     <string name="again_submit">重新提交</string>
+    <string name="boy">男</string>
+    <string name="girl">女</string>
+
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>

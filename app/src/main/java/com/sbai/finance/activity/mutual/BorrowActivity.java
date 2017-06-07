@@ -56,7 +56,6 @@ import com.sbai.httplib.CookieManger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.qqtheme.framework.util.CompatUtils;
 
 /**
  * Created by Administrator on 2017-04-25.
@@ -263,7 +262,7 @@ public class BorrowActivity extends BaseActivity {
 				requestPublishBorrow(content,contentImg.toString(),days,borrowInterest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 				break;
 			case R.id.location:
-                Launcher.with(getActivity(), LocationActivity.class).putExtra("type",LocationActivity.TYPE_BORROW).executeForResult(REQ_CODE_ADDRESS);
+                Launcher.with(getActivity(), LocationActivity.class).executeForResult(REQ_CODE_ADDRESS);
 				break;
 			case R.id.protocol:
 				Client.getBorrowProcotol().setTag(TAG)

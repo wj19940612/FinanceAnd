@@ -25,7 +25,6 @@ import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
@@ -232,7 +231,6 @@ public class LoginActivity extends BaseActivity {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
                                 Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
-                            new GpsUtils();
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_TOKEN_EXPIRED));
                             setResult(RESULT_OK);
                             finish();

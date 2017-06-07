@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mine.setting;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.Launcher;
 
@@ -34,12 +34,11 @@ import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
 public class LocationActivity extends BaseActivity {
-    public static final String TYPE_BORROW = "borrow";
-    public static final String TYPE_MINE = "mine";
+
     @BindView(R.id.location)
     TextView mLocation;
-    private String type;
     private Address mAddress;
+    private boolean mIsNeedUpdateLocation;
 
     @Override
     protected void onPostResume() {
@@ -52,26 +51,28 @@ public class LocationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
-        type = getIntent().getStringExtra("type");
-
+        mIsNeedUpdateLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
     }
 
     @OnClick(R.id.choiceLocation)
     public void onClick(View view) {
-        if (type.equalsIgnoreCase(TYPE_BORROW)) {
-            showLocationPicker();
-        }
+        showLocationPicker();
     }
 
     private void updateLocationInfo() {
         mAddress = new GpsUtils().getAddress();
         if (mAddress != null) {
-            mLocation.setText(mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality());
+            String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
+            mLocation.setText(land);
+            if (mIsNeedUpdateLocation) {
+                LocalUser.getUser().getUserInfo().setLand(land);
+            }
         }
     }
 
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
+        addressInitTask.setmIsNeedUpdateLocation(mIsNeedUpdateLocation);
         String province = "";
         String city = "";
         String country = "";
@@ -86,9 +87,7 @@ public class LocationActivity extends BaseActivity {
 
     private void returnAddress() {
         Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Launcher.EX_PAYLOAD_1, mAddress);
-        intent.putExtras(bundle);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, mAddress);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -107,6 +106,7 @@ public class LocationActivity extends BaseActivity {
                 mSelectedCity = "",
                 mSelectedCounty = "";
         private boolean mHideCounty;
+        private boolean mIsNeedUpdateLand;
 
         public AddressInitTask(Activity activity) {
             this.mActivity = activity;
@@ -118,6 +118,11 @@ public class LocationActivity extends BaseActivity {
         public AddressInitTask(Activity activity, boolean hideCounty) {
             this.mActivity = activity;
             this.mHideCounty = hideCounty;
+        }
+
+
+        public void setmIsNeedUpdateLocation(boolean isNeedUpdateLocation) {
+            this.mIsNeedUpdateLand = isNeedUpdateLocation;
         }
 
         @Override
@@ -166,18 +171,22 @@ public class LocationActivity extends BaseActivity {
                 } else {
                     picker.setColumnWeight(2 / 8.0, 3 / 8.0, 3 / 8.0);//省级、地级和县级的比例为2:3:3
                 }
-                picker.setCancelTextColor(Color.WHITE);
-                picker.setSubmitTextColor(Color.WHITE);
-                picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.warningText));
+                picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.hintText));
+                picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
+                picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
                 picker.setAnimationStyle(R.style.BottomDialogAnimation);
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
-                picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
+                picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
                 lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
+                        if (mIsNeedUpdateLand) {
+                            LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
+                        }
+
                         if (mAddress == null)
                             mAddress = new Address(new Locale(Locale.CHINA.getLanguage()));
                         mAddress.setAdminArea(province.getAreaName());

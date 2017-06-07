@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -251,7 +250,6 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         if (mImagePath.size() > 1) {
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
             String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
-            Log.d("wangjie2222", "正面 : " + imageFront.length() + "  反面 " + imageReserve.length());
             Client.submitUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
                     .setIndeterminate(this)
                     .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
@@ -298,7 +296,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             }
             Glide.with(this).load(imagePath)
                     .centerCrop()
-//                    .error(R.drawable.bg_add_identity_card_reserve)
+                    .placeholder(R.drawable.bg_add_identity_card_reserve)
+                    .error(R.drawable.bg_add_identity_card_reserve)
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(mIdentityCardReverseImage);
@@ -313,7 +312,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             Glide.with(this).load(imagePath)
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .error(R.drawable.bg_add_identity_card_font)
+                    .placeholder(R.drawable.bg_add_identity_card_font)
+                    .error(R.drawable.bg_add_identity_card_font)
                     .into(mIdentityCardFrontImage);
         }
     }
