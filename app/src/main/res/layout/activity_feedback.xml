@@ -13,6 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleTextColor="@color/blackAssist"
         app:titleText="@string/feed_back"/>
 
     <android.support.v4.widget.SwipeRefreshLayout

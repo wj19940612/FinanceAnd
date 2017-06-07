@@ -198,16 +198,10 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     </android.support.design.widget.CoordinatorLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/split"/>
-
     <com.sbai.finance.view.TradeFloatButtons
         android:id="@+id/tradeFloatButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:hasTradeButton="false"/>
-
 </LinearLayout>
