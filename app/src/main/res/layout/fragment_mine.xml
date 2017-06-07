@@ -4,120 +4,131 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/greyLightAssist"
+              android:background="@color/bgAssist"
               android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:background="@drawable/bg_mine_head">
+        android:layout_height="140dp"
+        android:background="@android:color/white">
 
-        <android.support.v7.widget.LinearLayoutCompat
+        <LinearLayout
             android:id="@+id/headImageLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:visibility="gone">
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="30dp"
+            android:visibility="visible">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/userHeadImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                app:srcCompat="@mipmap/ic_launcher_round"/>
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/common_margin"
+                app:srcCompat="@drawable/ic_default_avatar_big"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:text="@string/app_name"
-                android:textColor="@android:color/white"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:minHeight="30dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="50dp"
+                android:text="@string/login"
+                android:textColor="@color/blackAssist"
                 android:textSize="17sp"/>
-        </android.support.v7.widget.LinearLayoutCompat>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/logoutImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
-            android:visibility="visible"
-            app:srcCompat="@drawable/mine_btn_login"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_alignParentBottom="true"
-            android:background="#1AFFFFFF">
-
-            <TextView
-                android:id="@+id/attention"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:textColor="@color/assistSecondText"
-                android:textSize="10sp"
-                tools:text="关注 \n1220"/>
 
             <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/white"/>
-
-            <TextView
-                android:id="@+id/fans"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:textColor="@color/assistSecondText"
-                android:textSize="10sp"
-                tools:text="粉丝 \n12200"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/white"/>
-
-            <TextView
-                android:id="@+id/minePublish"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:lineSpacingExtra="5dp"
-                android:textColor="@color/assistSecondText"
-                android:textSize="10sp"
-                tools:text="我的发表 \n1220"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50dp"
+                android:paddingRight="@dimen/common_margin"
+                android:src="@drawable/ic_arrow_right_tint"/>
         </LinearLayout>
-
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/headImageLayout"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:background="@color/splitLineColor"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/attention"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/blackAssist"
+            tools:text="关注 \n1220"/>
+
+        <View
+            android:layout_gravity="center"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="@color/splitLineColor"/>
+
+        <TextView
+            android:id="@+id/fans"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/blackAssist"
+            tools:text="粉丝 \n12200"/>
+
+        <View
+            android:layout_gravity="center"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="@color/splitLineColor"/>
+
+        <TextView
+            android:id="@+id/minePublish"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/blackAssist"
+            tools:text="我的发表 \n1220"/>
+    </LinearLayout>
 
     <com.sbai.finance.view.IconTextRow
-        android:id="@+id/detail"
+        android:id="@+id/wallet"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
         android:visibility="visible"
-        app:leftIcon="@drawable/ic_mine_list_detail"
+        app:hasBottomSplitLine="true"
+        app:leftIcon="@drawable/ic_mine_list_wallet"
         app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/detail"
+        app:rowText="@string/wallet"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"/>
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/splitLineColor"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/news"
@@ -125,47 +136,52 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_news"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/news"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"/>
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/splitLineColor"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/feedBack"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
         android:visibility="visible"
+        app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_feed_back"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/feed_back"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"/>
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/splitLineColor"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/setting"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_setting"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/setting"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"/>
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/splitLineColor"/>
 
     <com.sbai.finance.view.IconTextRow
-        android:visibility="visible"
         android:id="@+id/aboutUs"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_aboutus"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/about_us"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"/>
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/splitLineColor"/>
 </LinearLayout>

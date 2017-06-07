@@ -264,6 +264,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void updateStockData(List<Variety> data) {
         stopRefreshAnimation();
+        if (mSet.isEmpty()){
+            mStockListAdapter.clear();
+        }
         for (Variety variety:data){
             if (mSet.add(variety.getVarietyType())) {
                 mStockListAdapter.add(variety);
@@ -312,7 +315,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private void reset() {
         mPage = 0;
         mSet.clear();
-        mStockListAdapter.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
@@ -380,10 +382,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
-            @BindView(R.id.stopTrade)
-            TextView mStopTrade;
-            @BindView(R.id.trade)
-            LinearLayout mTrade;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -402,23 +400,15 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setText(stockData.getLast_price());
                     String priceChange = stockData.getRise_pre();
                     if (priceChange.startsWith("-")) {
-                        mLastPrice.setSelected(true);
-                        mRate.setSelected(true);
+                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenAssist));
+                        mRate.setSelected(false);
                         mRate.setText(priceChange + "%");
                     } else {
-                        mLastPrice.setSelected(false);
-                        mRate.setSelected(false);
+                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.redPrimary));
+                        mRate.setSelected(true);
                         mRate.setText("+" + priceChange + "%");
                     }
                 }
-
-//                if (item.getExchangeStatus() == Variety.EXCHANGE_STATUS_CLOSE) {
-//                    mTrade.setVisibility(View.GONE);
-//                    mStopTrade.setVisibility(View.VISIBLE);
-//                } else {
-//                    mTrade.setVisibility(View.VISIBLE);
-//                    mStopTrade.setVisibility(View.GONE);
-//                }
             }
         }
     }

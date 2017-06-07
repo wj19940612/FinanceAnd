@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyLightAssist"
+    android:background="@color/bgAssist"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.CreditActivity">
 
@@ -13,17 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/credit"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/credit"
+        app:titleTextColor="@color/blackAssist"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/credit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
-        android:minHeight="60dp"
+        android:minHeight="@dimen/common_height"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/real_name_authentication"
-        app:rowTextColor="@color/secondaryText"
-        app:subTextColor="@color/blueAssist"
+        app:rowTextColor="@color/blackAssist"
+        app:subTextColor="@color/hintText"
         app:subTextSize="@dimen/common_default_size"/>
 </LinearLayout>

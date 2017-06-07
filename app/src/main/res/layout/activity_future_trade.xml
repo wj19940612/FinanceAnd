@@ -186,7 +186,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/greyLightAssist"/>
+                android:background="@color/splitLineColor"/>
 
             <com.sbai.finance.view.slidingTab.SlidingTabLayout
                 android:id="@+id/slidingTab"
@@ -199,7 +199,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="55dp"
+            android:layout_marginBottom="52dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     </android.support.design.widget.CoordinatorLayout>
 
@@ -208,5 +208,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:hasTradeButton="false"/>
+        app:hasTradeButton="true"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignTop="@id/tradeFloatButtons"
+        android:background="@color/splitLineColor"/>
 </RelativeLayout>

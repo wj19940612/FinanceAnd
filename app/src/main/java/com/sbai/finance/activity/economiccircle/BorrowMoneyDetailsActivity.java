@@ -1,17 +1,15 @@
 package com.sbai.finance.activity.economiccircle;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -26,6 +24,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -35,6 +34,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -42,8 +42,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
 
 public class BorrowMoneyDetailsActivity extends BaseActivity {
 
@@ -60,16 +58,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mLocation;
 	@BindView(R.id.needAmount)
 	TextView mNeedAmount;
-	@BindView(R.id.borrowTime)
-	TextView mBorrowTime;
+	@BindView(R.id.borrowDeadline)
+	TextView mBorrowDeadline;
 	@BindView(R.id.borrowInterest)
 	TextView mBorrowInterest;
 	@BindView(R.id.borrowMoneyContent)
 	TextView mBorrowMoneyContent;
-	@BindView(R.id.peopleWantHelpHimOrHer)
-	TextView mPeopleWantHelpHimOrHer;
-	@BindView(R.id.peopleNum)
-	TextView mPeopleNum;
+	@BindView(R.id.leaveMessageNum)
+	TextView mLeaveMessageNum;
 	@BindView(R.id.giveHelp)
 	TextView mGiveHelp;
 	@BindView(R.id.isAttention)
@@ -84,33 +80,35 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	ImageView mImage3;
 	@BindView(R.id.image4)
 	ImageView mImage4;
+	@BindView(R.id.goodHeartPeopleArea)
+	RelativeLayout mGoodHeartPeopleArea;
 	@BindView(R.id.avatarList)
 	LinearLayout mAvatarList;
 	@BindView(R.id.more)
 	ImageView mMore;
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
+	@BindView(android.R.id.list)
+	MyListView mList;
+	@BindView(android.R.id.empty)
+	TextView mEmpty;
 
 	private int mMax;
 	private int mDataId;
 	private BorrowMoneyDetails mBorrowMoneyDetails;
 	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
-	private RefreshAttentionReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_borrow_money_details);
 		ButterKnife.bind(this);
-		calculateAvatarNum(this);
-
-		initData(getIntent());
 		mWantHelpHimOrYouList = new ArrayList<>();
 
+		initData(getIntent());
+		calculateAvatarNum(this);
 		requestBorrowMoneyDetails();
 		requestWantHelpHimList();
-
-		registerRefreshReceiver();
 	}
 
 	private void initData(Intent intent) {
@@ -142,11 +140,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	private void updateWantHelpHimList(final List<WantHelpHimOrYou> wantHelpHimOrYouList) {
 		int width = (int) Display.dp2Px(32, getResources());
 		int height = (int) Display.dp2Px(32, getResources());
-		int margin = (int) Display.dp2Px(5, getResources());
+		int margin = (int) Display.dp2Px(10, getResources());
 
 		mAvatarList.removeAllViews();
 
 		int size = mWantHelpHimOrYouList.size();
+		if (size > 0) {
+			mGoodHeartPeopleArea.setVisibility(View.VISIBLE);
+		}
 		if (size >= mMax) {
 			size = mMax;
 			for (int i = 0; i < size - 1; i++) {
@@ -235,16 +236,9 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		}
 
 		mBorrowMoneyContent.setText(borrowMoneyDetails.getContent());
-		mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney()))));
-		mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays()))));
-		mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest()))));
-		mPeopleNum.setText(context.getString(R.string.people_want_help_him_number, String.valueOf(borrowMoneyDetails.getIntentionCount())));
-
-		if (borrowMoneyDetails.getSex() == 1) {
-			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_her);
-		} else {
-			mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_him);
-		}
+		mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney())));
+		mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays())));
+		mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest())));
 
 		mAvatar.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -252,7 +246,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				if (LocalUser.getUser().isLogin()) {
 					Launcher.with(context, UserDataActivity.class)
 							.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
-							.execute();
+							.executeForResult(REQ_CODE_USERDATA);
 				} else {
 					Launcher.with(context, LoginActivity.class).execute();
 				}
@@ -272,7 +266,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		if (LocalUser.getUser().isLogin()) {
 			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
 				mGiveHelp.setVisibility(View.GONE);
-				mPeopleWantHelpHimOrHer.setText(R.string.people_want_help_you);
 			}
 		}
 
@@ -382,8 +375,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 	private void calculateAvatarNum(Context context) {
 		int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-		int margin = (int) Display.dp2Px(26, getResources());
-		int horizontalSpacing = (int) Display.dp2Px(5, getResources());
+		int margin = (int) Display.dp2Px(68, getResources());
+		int horizontalSpacing = (int) Display.dp2Px(10, getResources());
 		int avatarWidth = (int) Display.dp2Px(32, getResources());
 		mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
 	}
@@ -419,26 +412,27 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		if (requestCode == REQ_WANT_HELP_HIM_OR_YOU && resultCode == RESULT_OK) {
 			requestBorrowMoneyDetails();
 		}
-	}
 
-	private void registerRefreshReceiver() {
-		mReceiver = new RefreshAttentionReceiver();
-		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
-	}
+		if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
+			if (data != null) {
+				WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+						(WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
-	private class RefreshAttentionReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+				AttentionAndFansNumberModel attentionAndFansNumberModel =
+						(AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
-			if (whetherAttentionShieldOrNot != null) {
-				if (whetherAttentionShieldOrNot.isFollow()) {
-					mIsAttention.setText(R.string.is_attention);
-				} else {
-					mIsAttention.setText("");
+				if (whetherAttentionShieldOrNot != null) {
+					if (whetherAttentionShieldOrNot.isFollow()) {
+						mIsAttention.setText(R.string.is_attention);
+					} else {
+						mIsAttention.setText("");
+					}
 				}
+
+				Intent intent = new Intent();
+				intent.putExtra(Launcher.EX_PAYLOAD_1, whetherAttentionShieldOrNot);
+				intent.putExtra(Launcher.EX_PAYLOAD_2, attentionAndFansNumberModel);
+				setResult(RESULT_OK, intent);
 			}
 		}
 	}

@@ -3,6 +3,7 @@ package com.sbai.finance.activity.mine;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.InputFilter;
@@ -143,7 +144,14 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         updateTitle(data);
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
-            mListView.smoothScrollToPosition(mFeedbackAdapter.getCount() - 1);
+            mListView.setSelection(View.FOCUS_DOWN);
+            new Handler() {}
+                    .postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mListView.setSelection(View.FOCUS_DOWN);
+                        }
+                    }, 200);
         }
     }
 
@@ -230,7 +238,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
-                        // TODO: 2017/5/10 刷新界面
                         refreshChatList(content, contentType);
                     }
 

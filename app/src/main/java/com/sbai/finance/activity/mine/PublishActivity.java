@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,6 +42,8 @@ import butterknife.ButterKnife;
 
 
 public class PublishActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
+    public static final int REQ_CODE_OPINION_DETAILS = 1001;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -74,7 +75,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
         int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
         if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
             mPublishAdapter.setIsHimSelf(true);
-            mTitleBar.setTitle(R.string.mine_publish);
+            mTitleBar.setTitle(R.string.my_publish);
         } else {
             mTitleBar.setTitle(R.string.her_publish);
             mPublishAdapter.setIsHimSelf(false);
@@ -161,14 +162,14 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             Launcher.with(getActivity(), OpinionDetailsActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, item.getId())
                     .putExtra(Launcher.EX_PAYLOAD_2, false)
-                    .executeForResult(100);
+                    .executeForResult(REQ_CODE_OPINION_DETAILS);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == REQ_CODE_OPINION_DETAILS && resultCode == RESULT_OK) {
             if (data != null) {
                 OpinionDetails opinionDetails = (OpinionDetails) data.getSerializableExtra(Launcher.EX_PAYLOAD);
                 if (opinionDetails != null) {
@@ -230,14 +231,6 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             TextView mBigVarietyName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
-            @BindView(R.id.lastPrice)
-            TextView mLastPrice;
-            @BindView(R.id.upDownPrice)
-            TextView mUpDownPrice;
-            @BindView(R.id.upDownPercent)
-            TextView mUpDownPercent;
-            @BindView(R.id.upDownArea)
-            LinearLayout mUpDownArea;
             @BindView(R.id.replyCount)
             AppCompatTextView mReplyCount;
             @BindView(R.id.praiseCount)

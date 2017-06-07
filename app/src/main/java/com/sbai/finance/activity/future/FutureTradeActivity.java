@@ -1,17 +1,15 @@
 package com.sbai.finance.activity.future;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,8 +26,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
-import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
@@ -64,11 +62,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
-import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POINT;
+import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
+    //打开观点详情页
+    public static final int REQ_CODE_PUBLISH = 5439;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -114,8 +113,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private Prediction mPrediction;
     private FutureData mFutureData;
 
-    private RefreshPointReceiver mReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +129,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         updateTitleBar();
         updateExchangeStatusView();
 
-        registerRefreshReceiver();
     }
 
     @Override
@@ -225,7 +221,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         mSlidingTab.setDistributeEvenly(true);
         mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
+        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
         mSlidingTab.setViewPager(mViewPager);
     }
@@ -253,7 +249,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             @Override
             public void onTradeButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), TradeWebActivity.class).execute();
+                    TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -278,7 +274,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .putExtra(Launcher.EX_PAYLOAD, mVariety)
                 .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
                 .putExtra(Launcher.EX_PAYLOAD_2, mFutureData)
-                .execute();
+                .executeForResult(REQ_CODE_PUBLISH);
     }
 
     private void showPredictDialog() {
@@ -294,13 +290,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         } else {
             requestAddOptional();
         }
-    }
-
-    private void registerRefreshReceiver() {
-        mReceiver = new RefreshPointReceiver();
-        IntentFilter filter = new IntentFilter(REFRESH_POINT);
-        filter.addAction(REFRESH_ATTENTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
     private void requestPrediction() {
@@ -329,7 +318,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                             Integer result = resp.getData();
                             if (result != null) {
                                 boolean hasAddInOption = (result == HAS_ADD_OPITION);
-                                mTradeFloatButtons.setHasAddInOpition(hasAddInOption);
+                                mTradeFloatButtons.setHasAddInOption(hasAddInOption);
                             }
                         }
                     }).fire();
@@ -344,7 +333,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
                         } else {
                             ToastUtil.curt(resp.getMsg());
@@ -356,7 +345,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         super.onReceive(resp);
                         // 701 代表已经添加过
                         if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
-                            mTradeFloatButtons.setHasAddInOpition(true);
+                            mTradeFloatButtons.setHasAddInOption(true);
                         }
                     }
                 })
@@ -376,7 +365,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                     @Override
                                     protected void onRespSuccess(Resp<JsonObject> resp) {
                                         if (resp.isSuccess()) {
-                                            mTradeFloatButtons.setHasAddInOpition(false);
+                                            mTradeFloatButtons.setHasAddInOption(false);
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
                                         } else {
                                             ToastUtil.curt(resp.getMsg());
@@ -513,7 +502,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     protected void onDestroy() {
         super.onDestroy();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     private void requestKlineDataAndSet(final String type) {
@@ -608,28 +596,36 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         productType.setText(productTypeStr);
     }
 
-    private class RefreshPointReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
-
-            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-            AttentionAndFansNumberModel attentionAndFansNumberModel =
-                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-            ViewpointFragment viewpointFragment = getViewpointFragment();
-            if (viewpointFragment != null) {
-                if (details != null) {
-                    viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
-                } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                    viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(),whetherAttentionShieldOrNot.isShield());
-                    viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
-                } else {
-                    viewpointFragment.refreshPointList();
-                }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == FragmentActivity.RESULT_OK) {
+            if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
+                updateViewPoint(data);
             }
         }
     }
+
+    private void updateViewPoint(Intent intent) {
+        OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+
+        WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+        AttentionAndFansNumberModel attentionAndFansNumberModel =
+                (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+        ViewpointFragment viewpointFragment = getViewpointFragment();
+        if (viewpointFragment != null) {
+            if (details != null) {
+                viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
+            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
+                viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
+            } else {
+                viewpointFragment.refreshPointList();
+            }
+
+        }
+    }
+
 }

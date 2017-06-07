@@ -1,12 +1,9 @@
 package com.sbai.finance.activity.home;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -18,7 +15,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
-import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
@@ -50,420 +45,337 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
+public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
-public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnScrollListener {
+	@BindView(android.R.id.list)
+	ListView mListView;
+	@BindView(android.R.id.empty)
+	TextView mEmpty;
+	@BindView(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @BindView(android.R.id.list)
-    ListView mListView;
-    @BindView(android.R.id.empty)
-    TextView mEmpty;
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+	private List<BorrowMoney> mBorrowMoneyList;
+	private BorrowMoneyAdapter mBorrowMoneyAdapter;
 
-    private List<BorrowMoney> mBorrowMoneyList;
-    private BorrowMoneyAdapter mBorrowMoneyAdapter;
+	private TextView mFootView;
+	private int mPage = 0;
+	private int mPageSize = 15;
+	private HashSet<String> mSet;
 
-    private TextView mFootView;
-    private int mPage = 0;
-    private int mPageSize = 15;
-    private HashSet<String> mSet;
-    private RefreshAttentionReceiver mReceiver;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_borrow_money);
+		ButterKnife.bind(this);
+		mBorrowMoneyList = new ArrayList<>();
+		mSet = new HashSet<>();
+		mBorrowMoneyAdapter = new BorrowMoneyAdapter(this, mBorrowMoneyList);
+		mListView.setEmptyView(mEmpty);
+		mListView.setAdapter(mBorrowMoneyAdapter);
+		mListView.setOnScrollListener(this);
+		mListView.setOnItemClickListener(this);
+		mBorrowMoneyAdapter.setCallback(new BorrowMoneyAdapter.Callback() {
+			@Override
+			public void onAvatarBorrowMoneyClick(BorrowMoney borrowMoney) {
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(BorrowMoneyActivity.this, UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, borrowMoney.getUserId())
+							.executeForResult(REQ_CODE_USERDATA);
+				} else {
+					Launcher.with(BorrowMoneyActivity.this, LoginActivity.class).execute();
+				}
+			}
+		});
 
+		requestBorrowMoneyList();
+		initSwipeRefreshLayout();
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_borrow_money);
-        ButterKnife.bind(this);
-        mBorrowMoneyList = new ArrayList<>();
-        mSet = new HashSet<>();
-        mBorrowMoneyAdapter = new BorrowMoneyAdapter(this, mBorrowMoneyList);
-        mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mBorrowMoneyAdapter);
-        mListView.setOnScrollListener(this);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BorrowMoney borrowMoney = (BorrowMoney) parent.getItemAtPosition(position);
-                Launcher.with(BorrowMoneyActivity.this, BorrowMoneyDetailsActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, borrowMoney.getDataId())
-                        .execute();
-            }
-        });
+	private void initSwipeRefreshLayout() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mSet.clear();
+				mPage = 0;
+				requestBorrowMoneyList();
+			}
+		});
+	}
 
-        mBorrowMoneyAdapter.setCallback(new BorrowMoneyAdapter.Callback() {
-            @Override
-            public void onAvatarBorrowMoneyClick(BorrowMoney borrowMoney) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(BorrowMoneyActivity.this, UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, borrowMoney.getUserId())
-                            .execute();
-                } else {
-                    Launcher.with(BorrowMoneyActivity.this, LoginActivity.class).execute();
-                }
-            }
-        });
+	private void requestBorrowMoneyList() {
+		Client.getBorrowMoneyList(mPage, mPageSize).setTag(TAG)
+				.setCallback(new Callback2D<Resp<List<BorrowMoney>>, List<BorrowMoney>>() {
+					@Override
+					protected void onRespSuccessData(List<BorrowMoney> borrowMoneyList) {
+						mBorrowMoneyList = borrowMoneyList;
+						updateBorrowMoneyList(mBorrowMoneyList);
+					}
 
-        requestBorrowMoneyList();
-        initSwipeRefreshLayout();
-        registerRefreshReceiver();
-    }
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
+				}).fire();
+	}
 
-    private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSet.clear();
-                mPage = 0;
-                requestBorrowMoneyList();
-            }
-        });
-    }
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
+	}
 
-    private void requestBorrowMoneyList() {
-        Client.getBorrowMoneyList(mPage, mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<BorrowMoney>>, List<BorrowMoney>>() {
-                    @Override
-                    protected void onRespSuccessData(List<BorrowMoney> borrowMoneyList) {
-                        mBorrowMoneyList = borrowMoneyList;
-                        updateBorrowMoneyList(mBorrowMoneyList);
-                    }
+	private void updateBorrowMoneyList(List<BorrowMoney> borrowMoneyList) {
+		if (borrowMoneyList == null) {
+			stopRefreshAnimation();
+			return;
+		}
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        stopRefreshAnimation();
-                    }
-                }).fire();
-    }
+		if (mFootView == null) {
+			mFootView = new TextView(getActivity());
+			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+			mFootView.setPadding(padding, padding, padding, padding);
+			mFootView.setText(getText(R.string.load_more));
+			mFootView.setGravity(Gravity.CENTER);
+			mFootView.setTextColor(ContextCompat.getColor(this, R.color.greyAssist));
+			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.splitLineColor));
+			mFootView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mSwipeRefreshLayout.isRefreshing()) return;
+					mPage++;
+					requestBorrowMoneyList();
+				}
+			});
+			mListView.addFooterView(mFootView, null, true);
+		}
 
-    private void stopRefreshAnimation() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }
+		if (borrowMoneyList.size() < mPageSize) {
+			mListView.removeFooterView(mFootView);
+			mFootView = null;
+		}
 
-    private void updateBorrowMoneyList(List<BorrowMoney> borrowMoneyList) {
-        if (borrowMoneyList == null) {
-            stopRefreshAnimation();
-            return;
-        }
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			if (mBorrowMoneyAdapter != null) {
+				mBorrowMoneyAdapter.clear();
+				mBorrowMoneyAdapter.notifyDataSetChanged();
+			}
+			stopRefreshAnimation();
+		}
 
-        if (mFootView == null) {
-            mFootView = new TextView(getActivity());
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-            mFootView.setPadding(padding, padding, padding, padding);
-            mFootView.setText(getText(R.string.load_more));
-            mFootView.setGravity(Gravity.CENTER);
-            mFootView.setTextColor(ContextCompat.getColor(this, R.color.greyAssist));
-            mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.greyLightAssist));
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mPage++;
-                    requestBorrowMoneyList();
-                }
-            });
-            mListView.addFooterView(mFootView, null, true);
-        }
+		for (BorrowMoney borrowMoney : borrowMoneyList) {
+			if (mSet.add(borrowMoney.getId())) {
+				mBorrowMoneyAdapter.add(borrowMoney);
+			}
+		}
+	}
 
-        if (borrowMoneyList.size() < mPageSize) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
-        }
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            if (mBorrowMoneyAdapter != null) {
-                mBorrowMoneyAdapter.clear();
-                mBorrowMoneyAdapter.notifyDataSetChanged();
-            }
-            stopRefreshAnimation();
-        }
+	}
 
-        for (BorrowMoney borrowMoney : borrowMoneyList) {
-            if (mSet.add(borrowMoney.getId())) {
-                mBorrowMoneyAdapter.add(borrowMoney);
-            }
-        }
-    }
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int topRowVerticalPosition =
+				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+	}
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		BorrowMoney item = (BorrowMoney) parent.getItemAtPosition(position);
+		if (item != null) {
+			Launcher.with(BorrowMoneyActivity.this, BorrowMoneyDetailsActivity.class)
+					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+					.executeForResult(REQ_CODE_USERDATA);
+		}
+	}
 
-    }
+	static class BorrowMoneyAdapter extends BaseAdapter {
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-    }
+		interface Callback {
+			void onAvatarBorrowMoneyClick(BorrowMoney economicCircle);
+		}
 
-    static class BorrowMoneyAdapter extends BaseAdapter {
+		private Callback mCallback;
+		private Context mContext;
+		private List<BorrowMoney> mBorrowMoneyList;
 
-        interface Callback {
-            void onAvatarBorrowMoneyClick(BorrowMoney economicCircle);
-        }
+		private BorrowMoneyAdapter(Context context, List<BorrowMoney> borrowMoneyList) {
+			this.mContext = context;
+			this.mBorrowMoneyList = borrowMoneyList;
+		}
 
-        private Callback mCallback;
-        private Context mContext;
-        private List<BorrowMoney> mBorrowMoneyList;
+		public void setCallback(Callback callback) {
+			mCallback = callback;
+		}
 
-        private BorrowMoneyAdapter(Context context, List<BorrowMoney> borrowMoneyList) {
-            this.mContext = context;
-            this.mBorrowMoneyList = borrowMoneyList;
-        }
+		public void clear() {
+			mBorrowMoneyList.clear();
+			notifyDataSetChanged();
+		}
 
-        public void setCallback(Callback callback) {
-            mCallback = callback;
-        }
+		public void add(BorrowMoney borrowMoney) {
+			mBorrowMoneyList.add(borrowMoney);
+			notifyDataSetChanged();
+		}
 
-        public void clear() {
-            mBorrowMoneyList.clear();
-            notifyDataSetChanged();
-        }
+		public void addAll(List<BorrowMoney> economicCircleList) {
+			mBorrowMoneyList.clear();
+			mBorrowMoneyList.addAll(economicCircleList);
+			notifyDataSetChanged();
+		}
 
-        public void add(BorrowMoney borrowMoney) {
-            mBorrowMoneyList.add(borrowMoney);
-            notifyDataSetChanged();
-        }
+		@Override
+		public int getCount() {
+			return mBorrowMoneyList.size();
+		}
 
-        public void addAll(List<BorrowMoney> economicCircleList) {
-            mBorrowMoneyList.clear();
-            mBorrowMoneyList.addAll(economicCircleList);
-            notifyDataSetChanged();
-        }
+		@Override
+		public Object getItem(int position) {
+			return mBorrowMoneyList.get(position);
+		}
 
-        @Override
-        public int getCount() {
-            return mBorrowMoneyList.size();
-        }
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
 
-        @Override
-        public Object getItem(int position) {
-            return mBorrowMoneyList.get(position);
-        }
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.row_borrow_money, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindingData(mContext, (BorrowMoney) getItem(position), mCallback, position);
+			return convertView;
+		}
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+		static class ViewHolder {
+			@BindView(R.id.divider)
+			View mDivider;
+			@BindView(R.id.avatar)
+			ImageView mAvatar;
+			@BindView(R.id.userName)
+			TextView mUserName;
+			@BindView(R.id.publishTime)
+			TextView mPublishTime;
+			@BindView(R.id.location)
+			TextView mLocation;
+			@BindView(R.id.borrowMoneyContent)
+			TextView mBorrowMoneyContent;
+			@BindView(R.id.needAmount)
+			TextView mNeedAmount;
+			@BindView(R.id.borrowDeadline)
+			TextView mBorrowDeadline;
+			@BindView(R.id.borrowInterest)
+			TextView mBorrowInterest;
+			@BindView(R.id.isAttention)
+			TextView mIsAttention;
+			@BindView(R.id.borrowingImg)
+			ImageView mBorrowingImg;
+			@BindView(R.id.circleMoreIcon)
+			ImageView mCircleMoreIcon;
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_borrow_money, null);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.bindingData(mContext, (BorrowMoney) getItem(position), mCallback, position);
-            return convertView;
-        }
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
 
-        static class ViewHolder {
-            @BindView(R.id.divider)
-            View mDivider;
-            @BindView(R.id.avatar)
-            ImageView mAvatar;
-            @BindView(R.id.userName)
-            TextView mUserName;
-            @BindView(R.id.publishTime)
-            TextView mPublishTime;
-            @BindView(R.id.location)
-            TextView mLocation;
-            @BindView(R.id.needAmount)
-            TextView mNeedAmount;
-            @BindView(R.id.borrowTime)
-            TextView mBorrowTime;
-            @BindView(R.id.borrowInterest)
-            TextView mBorrowInterest;
-            @BindView(R.id.borrowMoneyContent)
-            TextView mBorrowMoneyContent;
-            @BindView(R.id.isAttention)
-            TextView mIsAttention;
-            @BindView(R.id.contentImg)
-            LinearLayout mContentImg;
-            @BindView(R.id.image1)
-            ImageView mImage1;
-            @BindView(R.id.image2)
-            ImageView mImage2;
-            @BindView(R.id.image3)
-            ImageView mImage3;
-            @BindView(R.id.image4)
-            ImageView mImage4;
+			private void bindingData(final Context context, final BorrowMoney item, final Callback callback, int position) {
+				if (item == null) return;
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
-            }
+				Glide.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mAvatar);
 
-            private void bindingData(final Context context, final BorrowMoney item, final Callback callback, int position) {
-                if (item == null) return;
+				mUserName.setText(item.getUserName());
 
-                if (position == 0) {
-                    mDivider.setVisibility(View.GONE);
-                } else {
-                    mDivider.setVisibility(View.VISIBLE);
-                }
-                Glide.with(context).load(item.getUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
-                        .into(mAvatar);
+				if (item.getIsAttention() == 2) {
+					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
+				}
 
-                mUserName.setText(item.getUserName());
-                mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+				mBorrowMoneyContent.setText(item.getContent());
+				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
+				mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
+				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
 
-                if (item.getIsAttention() == 2) {
-                    mIsAttention.setText(R.string.is_attention);
-                } else {
-                    mIsAttention.setText("");
-                }
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+				if (TextUtils.isEmpty(item.getLand())) {
+					mLocation.setText(R.string.no_location_information);
+				} else {
+					mLocation.setText(item.getLand());
+				}
 
-                if (TextUtils.isEmpty(item.getLand())) {
-                    mLocation.setText(R.string.no_location_information);
-                } else {
-                    mLocation.setText(item.getLand());
-                }
+				mAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.onAvatarBorrowMoneyClick(item);
+						}
+					}
+				});
 
-                mNeedAmount.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getMoney()))));
-                mBorrowTime.setText(context.getString(R.string.day, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getDays()))));
-                mBorrowInterest.setText(context.getString(R.string.RMB, String.valueOf(FinanceUtil.formatWithScaleNoZero(item.getInterest()))));
-                mBorrowMoneyContent.setText(item.getContent());
+				if (!TextUtils.isEmpty(item.getContentImg())) {
+					String[] images = item.getContentImg().split(",");
+					Glide.with(context).load(images[0])
+							.placeholder(R.drawable.ic_loading_pic)
+							.into(mBorrowingImg);
+					if (images.length >= 2) {
+						mCircleMoreIcon.setVisibility(View.VISIBLE);
+					} else {
+						mCircleMoreIcon.setVisibility(View.GONE);
+					}
+				} else {
+					mBorrowingImg.setVisibility(View.GONE);
+					mCircleMoreIcon.setVisibility(View.GONE);
+				}
+			}
+		}
+	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
+			if (data != null) {
+				WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+						(WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
-                mAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (callback != null) {
-                            callback.onAvatarBorrowMoneyClick(item);
-                        }
-                    }
-                });
+				AttentionAndFansNumberModel attentionAndFansNumberModel =
+						(AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
-                if (!TextUtils.isEmpty(item.getContentImg())) {
-                    String[] images = item.getContentImg().split(",");
-                    switch (images.length) {
-                        case 1:
-                            mContentImg.setVisibility(View.VISIBLE);
-                            mImage1.setVisibility(View.VISIBLE);
-                            loadImage(context, images[0], mImage1);
-                            mImage2.setVisibility(View.INVISIBLE);
-                            mImage3.setVisibility(View.INVISIBLE);
-                            mImage4.setVisibility(View.INVISIBLE);
-                            imageClick(context, images, mImage1, 0);
-                            break;
-                        case 2:
-                            mContentImg.setVisibility(View.VISIBLE);
-                            mImage1.setVisibility(View.VISIBLE);
-                            loadImage(context, images[0], mImage1);
-                            mImage2.setVisibility(View.VISIBLE);
-                            loadImage(context, images[1], mImage2);
-                            mImage3.setVisibility(View.INVISIBLE);
-                            mImage4.setVisibility(View.INVISIBLE);
-                            imageClick(context, images, mImage1, 0);
-                            imageClick(context, images, mImage2, 1);
-                            break;
-                        case 3:
-                            mContentImg.setVisibility(View.VISIBLE);
-                            mImage1.setVisibility(View.VISIBLE);
-                            loadImage(context, images[0], mImage1);
-                            mImage2.setVisibility(View.VISIBLE);
-                            loadImage(context, images[1], mImage2);
-                            mImage3.setVisibility(View.VISIBLE);
-                            loadImage(context, images[2], mImage3);
-                            mImage4.setVisibility(View.INVISIBLE);
-                            imageClick(context, images, mImage1, 0);
-                            imageClick(context, images, mImage2, 1);
-                            imageClick(context, images, mImage3, 2);
-                            break;
-                        case 4:
-                            mContentImg.setVisibility(View.VISIBLE);
-                            mImage1.setVisibility(View.VISIBLE);
-                            loadImage(context, images[0], mImage1);
-                            mImage2.setVisibility(View.VISIBLE);
-                            loadImage(context, images[1], mImage2);
-                            mImage3.setVisibility(View.VISIBLE);
-                            loadImage(context, images[2], mImage3);
-                            mImage4.setVisibility(View.VISIBLE);
-                            loadImage(context, images[3], mImage4);
-                            imageClick(context, images, mImage1, 0);
-                            imageClick(context, images, mImage2, 1);
-                            imageClick(context, images, mImage3, 2);
-                            imageClick(context, images, mImage4, 3);
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    mContentImg.setVisibility(View.GONE);
-                }
-            }
+				if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+					for (BorrowMoney borrowMoney : mBorrowMoneyList) {
+						if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()) {
+							if (whetherAttentionShieldOrNot.isFollow()) {
+								borrowMoney.setIsAttention(2);
+								mBorrowMoneyAdapter.notifyDataSetChanged();
+							} else {
+								borrowMoney.setIsAttention(1);
+								mBorrowMoneyAdapter.notifyDataSetChanged();
+							}
+						}
+					}
 
-            private void loadImage(Context context, String src, ImageView image) {
-                Glide.with(context)
-                        .load(src)
-                        .placeholder(R.drawable.img_loading)
-                        .error(R.drawable.logo_login)
-                        .into(image);
-            }
-
-            private void imageClick(final Context context, final String[] images,
-                                    ImageView imageView, final int i) {
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, ContentImgActivity.class);
-                        intent.putExtra(Launcher.EX_PAYLOAD, images);
-                        intent.putExtra(Launcher.EX_PAYLOAD_1, i);
-                        context.startActivity(intent);
-                    }
-                });
-            }
-        }
-    }
-
-    private void registerRefreshReceiver() {
-        mReceiver = new RefreshAttentionReceiver();
-        IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
-    }
-
-    private class RefreshAttentionReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-                    (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-            AttentionAndFansNumberModel attentionAndFansNumberModel =
-                    (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-
-            if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
-                for (BorrowMoney borrowMoney : mBorrowMoneyList) {
-                    if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()) {
-                        if (whetherAttentionShieldOrNot.isFollow()) {
-                            borrowMoney.setIsAttention(2);
-                            mBorrowMoneyAdapter.notifyDataSetChanged();
-                        } else {
-                            borrowMoney.setIsAttention(1);
-                            mBorrowMoneyAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-                if (whetherAttentionShieldOrNot.isShield()) {
-                    for (Iterator it = mBorrowMoneyList.iterator(); it.hasNext(); ) {
-                        BorrowMoney borrowMoney = (BorrowMoney) it.next();
-                        if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()) {
-                            it.remove();
-                        }
-                    }
-                    mBorrowMoneyAdapter.addAll(mBorrowMoneyList);
-                }
-            }
-        }
-    }
+					if (whetherAttentionShieldOrNot.isShield()) {
+						for (Iterator it = mBorrowMoneyList.iterator(); it.hasNext(); ) {
+							BorrowMoney borrowMoney = (BorrowMoney) it.next();
+							if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()) {
+								it.remove();
+							}
+						}
+						mBorrowMoneyAdapter.addAll(mBorrowMoneyList);
+					}
+				}
+			}
+		}
+	}
 }

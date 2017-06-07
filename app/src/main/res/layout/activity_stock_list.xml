@@ -4,7 +4,7 @@
               xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/greyLightAssist"
+              android:background="@color/splitLineColor"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -31,7 +31,7 @@
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/greyLightAssist"/>
+            android:background="@color/splitLineColor"/>
         <TextView
             android:id="@+id/shenZhen"
             style="@style/MarketDataStock"
@@ -41,7 +41,7 @@
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/greyLightAssist"/>
+            android:background="@color/splitLineColor"/>
 
         <TextView
             android:id="@+id/board"
@@ -50,7 +50,7 @@
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
     </LinearLayout>
 
-    <include layout="@layout/layout_hq_header"/>
+    <include layout="@layout/layout_variety_header"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

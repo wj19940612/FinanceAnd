@@ -2,21 +2,21 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true" android:state_pressed="false">
         <shape>
-            <solid android:color="@color/yellowAssist"/>
-            <corners android:radius="@dimen/common_four_radius"/>
+            <solid android:color="@color/bgAssist"/>
+            <corners android:radius="@dimen/hundred_radius"/>
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="#7Fe5b96c"/>
-            <corners android:radius="@dimen/common_four_radius"/>
+            <solid android:color="#7FF5F5F5"/>
+            <corners android:radius="@dimen/hundred_radius"/>
         </shape>
     </item>
     <item>
         <shape>
-            <corners android:radius="@dimen/common_four_radius"/>
-            <solid android:color="@color/greyAssist"/>
+            <corners android:radius="@dimen/hundred_radius"/>
+            <solid android:color="@color/bgAssist"/>
         </shape>
     </item>
 </selector>

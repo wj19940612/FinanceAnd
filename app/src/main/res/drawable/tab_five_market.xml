@@ -8,7 +8,7 @@
                 android:bottomRightRadius="0dp"
                 android:topLeftRadius="@dimen/common_radius"
                 android:topRightRadius="0dp"/>
-            <solid android:color="@color/greyLightAssist"/>
+            <solid android:color="@color/splitLineColor"/>
         </shape>
     </item>
     <item android:state_selected="true">

@@ -48,7 +48,7 @@ public class ShareDiglogFragment extends DialogFragment {
     private String mShareTitle;  //分享标题
     private String mShareUrl;   //链接地址
     private String mShareImageUrl; //分享图像地址
-    private String mShareDescription = "乐米金融"; //分享描述
+    private String mShareDescription; //分享描述
 
     public static ShareDiglogFragment newInstance() {
         ShareDiglogFragment fragment = new ShareDiglogFragment();

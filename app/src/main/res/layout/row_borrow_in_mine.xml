@@ -74,7 +74,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/borrow_time"
+                    android:text="@string/borrow_deadline"
                     android:textColor="@color/secondaryText"
                     android:textSize="10sp"/>
 
@@ -210,7 +210,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/greyLightAssist"
+        android:background="@color/splitLineColor"
         android:orientation="vertical">
         <TextView
             android:id="@+id/helperAmount"

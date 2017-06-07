@@ -29,6 +29,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
+import com.sbai.finance.activity.mine.setting.LocationActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mutual.BorrowProtocol;
@@ -43,6 +44,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.GrapeGridView;
+import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
@@ -64,12 +66,12 @@ public class BorrowActivity extends BaseActivity {
 	EditText mBorrowTimeLimit;
 	@BindView(R.id.borrowRemark)
 	EditText mBorrowRemark;
-	@BindView(R.id.warn)
-	TextView mWarn;
 	@BindView(R.id.publish)
 	TextView mPublish;
 	@BindView(R.id.agree)
 	CheckBox mAgree;
+	@BindView(R.id.location)
+	IconTextRow mLocation;
 	@BindView(R.id.contentDays)
 	LinearLayout mContentDays;
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -127,6 +129,8 @@ public class BorrowActivity extends BaseActivity {
 			}
 		});
 		mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
+		mBorrowLimit.requestFocus();
+		mBorrowLimit.setFocusable(true);
 		mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
 		mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
 		mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
@@ -148,7 +152,7 @@ public class BorrowActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol})
+	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol,R.id.location})
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
@@ -178,9 +182,8 @@ public class BorrowActivity extends BaseActivity {
 				}
 				requestPublishBorrow(content,contentImg.toString(),days,interest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
 				break;
-			case R.id.contentDays:
-				mBorrowTimeLimit.requestFocus();
-				mBorrowTimeLimit.setFocusable(true);
+			case R.id.location:
+                Launcher.with(getActivity(), LocationActivity.class).putExtra("type",LocationActivity.TYPE_BORROW).execute();
 				break;
 			case R.id.protocol:
 				Client.getBorrowProcotol().setTag(TAG)
@@ -236,44 +239,41 @@ public class BorrowActivity extends BaseActivity {
 		boolean isEmpty = TextUtils.isEmpty(borrowMoney);
 		if (isEmpty||borrowMoney.length()>4|| Integer.parseInt(borrowMoney)>2000||Integer.parseInt(borrowMoney)<500) {
              if (!isEmpty){
-				 mWarn.setVisibility(View.VISIBLE);
-				 mWarn.setText(getString(R.string.borrow_over_money));
+				 ToastUtil.curt(getString(R.string.borrow_over_money));
 			 }
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+			//mWarn.setVisibility(View.INVISIBLE);
+
 		}
 		String borrowInterest = mBorrowInterest.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowInterest);
 		if (isEmpty||borrowInterest.length()>3||Integer.valueOf(borrowInterest)<1||Integer.valueOf(borrowInterest)>200){
 			if (!isEmpty){
-				mWarn.setVisibility(View.VISIBLE);
-				mWarn.setText(getString(R.string.borrow_over_interest));
+				ToastUtil.curt(getString(R.string.borrow_over_interest));
 			}
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+			//mWarn.setVisibility(View.INVISIBLE);
 		}
 		String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
 		isEmpty = TextUtils.isEmpty(borrowTimeLimit);
 		if (isEmpty||borrowTimeLimit.length()>3|| Integer.parseInt(borrowTimeLimit)>60){
 			if (!isEmpty){
-				mWarn.setVisibility(View.VISIBLE);
-				mWarn.setText(getString(R.string.borrow_overdue));
+				ToastUtil.curt(getString(R.string.borrow_overdue));
 			}
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+			//mWarn.setVisibility(View.INVISIBLE);
 		}
 		if (!mAgree.isChecked()){
 			return false;
 		}
 		if (TextUtils.isEmpty(mBorrowRemark.getText())){
-			mWarn.setVisibility(View.VISIBLE);
-			mWarn.setText(getString(R.string.no_remark));
+			ToastUtil.curt(getString(R.string.no_remark));
 			return false;
 		}else{
-			mWarn.setVisibility(View.INVISIBLE);
+		//	mWarn.setVisibility(View.INVISIBLE);
 		}
 		return true;
 	}
@@ -344,8 +344,8 @@ public class BorrowActivity extends BaseActivity {
 		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 			if (position == getCount()-1){
 					convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_add_photo, null);
-					TextView mAddPhoto = (TextView) convertView.findViewById(R.id.addPhoto);
-					mAddPhoto.setOnClickListener(new View.OnClickListener() {
+					ImageView imageView = (ImageView) convertView.findViewById(R.id.addPhoto);
+				    imageView.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							mOnItemClickListener.onClick(position);

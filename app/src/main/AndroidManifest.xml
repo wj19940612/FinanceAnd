@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.sbai.finance">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- Storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -58,6 +61,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.OptionalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.SearchOptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.TopicActivity"
@@ -124,15 +130,6 @@
             android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.ShieldRelieveSettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.SetNotificationSwitchActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.mine.UserDataActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -159,6 +156,9 @@
         <activity
             android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.LocationActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 交易 H5 -->
         <activity
@@ -179,8 +179,6 @@
         <activity
             android:name=".activity.web.StockNewsActivity"
             android:screenOrientation="portrait"/>
-
-
         <activity
             android:name=".activity.economiccircle.WantHelpHimOrYouActivity"
             android:screenOrientation="portrait"/>
@@ -239,6 +237,25 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
+        <!-- 我的设置模块 -->
+        <activity
+            android:name=".activity.mine.setting.SettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.ShieldRelieveSettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.SetNotificationSwitchActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.SafetySettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.ModifySafetyPassActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
         <!-- service -->
         <service android:name=".service.PushIntentService"/>
         <service
@@ -251,12 +268,13 @@
             android:name="UMENG_APPKEY"
             android:value="${UMENG_APP_KEY}">
         </meta-data>
-
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL}"/>
 
-
+        <activity
+            android:name=".activity.mine.AreaTakePhoneActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

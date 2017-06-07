@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,11 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.activity.economiccircle.OpinionDetailsActivity.REFRESH_ATTENTION;
-
 public class UserDataActivity extends BaseActivity {
-
-
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -85,13 +80,11 @@ public class UserDataActivity extends BaseActivity {
 		mWhetherAttentionShieldOrNot = new WhetherAttentionShieldOrNot();
 
 		initData(getIntent());
-
 		requestUserData();
-
 	}
 
 	private void initData(Intent intent) {
-		mUserId = intent.getIntExtra(Launcher.USER_ID, 0);
+		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
 	}
 
 	private void requestUserData() {
@@ -126,7 +119,7 @@ public class UserDataActivity extends BaseActivity {
 
 	private void initView() {
 		if (mUserData != null) {
-			Glide.with(getActivity()).load(mUserData.getUserPortrait())
+			Glide.with(this).load(mUserData.getUserPortrait())
 					.placeholder(R.drawable.ic_default_avatar_big)
 					.transform(new GlideCircleTransform(this))
 					.dontAnimate()
@@ -146,23 +139,23 @@ public class UserDataActivity extends BaseActivity {
 				mLocation.setText(mUserData.getLand());
 			}
 
-			if (mUserData.getCertificationStatus() == 0) {
-				mAuthentication.setText(R.string.unauthorized);
-				mAuthentication.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_failed, 0, 0, 0);
-			} else {
+			if (mUserData.getCertificationStatus() == 1) {
 				mAuthentication.setText(R.string.authenticated);
 				mAuthentication.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
+			} else {
+				mAuthentication.setText(R.string.unauthorized);
+				mAuthentication.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_failed, 0, 0, 0);
 			}
 		}
 
 		if (mAttentionAndFansNum != null) {
 			if (mAttentionAndFansNum.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
 				mAttentionShieldArea.setVisibility(View.GONE);
-				mHisPublishText.setText(R.string.mine_publish);
+				mHisPublishText.setText(R.string.my_publish);
 			}
 			mDiagonal.setText(" / ");
-			mAttentionNum.setText(getString(R.string.attention_number, String.valueOf(mAttentionAndFansNum.getAttention())));
-			mFansNum.setText(getString(R.string.fans_number, String.valueOf(mAttentionAndFansNum.getFollower())));
+			mAttentionNum.setText(getString(R.string.attention_number, mAttentionAndFansNum.getAttention()));
+			mFansNum.setText(getString(R.string.fans_number, mAttentionAndFansNum.getFollower()));
 		}
 
 		if (mWhetherAttentionShieldOrNot != null) {
@@ -186,24 +179,20 @@ public class UserDataActivity extends BaseActivity {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.attention:
-				if (mWhetherAttentionShieldOrNot != null) {
+				if (mUserData != null && mWhetherAttentionShieldOrNot != null) {
 					if (mWhetherAttentionShieldOrNot.isFollow()) {
-						//取消关注
 						cancelAttention();
 					} else {
-						//进行关注
 						doAttention();
 					}
 				}
 
 				break;
 			case R.id.shield:
-				if (mWhetherAttentionShieldOrNot != null) {
+				if (mUserData != null && mWhetherAttentionShieldOrNot != null) {
 					if (mWhetherAttentionShieldOrNot.isShield()) {
-						//解除屏蔽
 						relieveShield();
 					} else {
-						//进行屏蔽
 						doShield();
 					}
 				}
@@ -217,9 +206,11 @@ public class UserDataActivity extends BaseActivity {
 				break;
 
 			case R.id.hisPublish:
-				Launcher.with(this, PublishActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mAttentionAndFansNum.getUserId())
-						.execute();
+				if (mAttentionAndFansNum != null) {
+					Launcher.with(this, PublishActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mAttentionAndFansNum.getUserId())
+							.execute();
+				}
 				break;
 		}
 	}
@@ -236,8 +227,7 @@ public class UserDataActivity extends BaseActivity {
 									@Override
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
-											mShield.setText(R.string.is_shield);
-											mWhetherAttentionShieldOrNot.setShield(true);
+											requestUserData();
 											ToastUtil.curt("已屏蔽" + mUserData.getUserName());
 										}
 									}
@@ -264,8 +254,7 @@ public class UserDataActivity extends BaseActivity {
 									@Override
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
-											mShield.setText(R.string.shield_him);
-											mWhetherAttentionShieldOrNot.setShield(false);
+											requestUserData();
 											ToastUtil.curt("解除屏蔽"+ mUserData.getUserName());
 										}
 									}
@@ -288,12 +277,8 @@ public class UserDataActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 						if (resp.isSuccess()) {
-							mAttention.setText(R.string.is_attention);
-							mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.greenAssist));
-							mWhetherAttentionShieldOrNot.setFollow(true);
+							requestUserData();
 							ToastUtil.curt("已关注" + mUserData.getUserName());
-
-							refreshAttention();
 						}
 					}
 				}).fire();
@@ -311,39 +296,27 @@ public class UserDataActivity extends BaseActivity {
 									@Override
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
-											mAttention.setText(R.string.attention);
-											mAttention.setTextColor(ContextCompat.getColor(UserDataActivity.this, R.color.redPrimary));
-											mWhetherAttentionShieldOrNot.setFollow(false);
+											requestUserData();
 											ToastUtil.curt("取消关注" + mUserData.getUserName());
-											refreshAttention();
 										}
 									}
 								}).fire();
 						dialog.dismiss();
 					}
 				})
-				.setMessageTextSize(16)
+				.setMessageTextSize(17)
 				.setTitleMaxLines(2)
 				.setMessageTextColor(ContextCompat.getColor(this, R.color.blackAssist))
 				.setNegative(R.string.cancel)
 				.show();
 	}
 
-	private void refreshAttention() {
-		sendBroadcast();
-	}
-
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
-		sendBroadcast();
-	}
-
-	private void sendBroadcast() {
-		Intent intent = new Intent(REFRESH_ATTENTION);
+		Intent intent = new Intent();
 		intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
 		intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNum);
-		LocalBroadcastManager.getInstance(UserDataActivity.this)
-				.sendBroadcast(intent);
+		setResult(RESULT_OK, intent);
+		super.onBackPressed();
 	}
 }

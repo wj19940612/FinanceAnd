@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyLightAssist"
+    android:background="@color/bgAssist"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.SettingActivity">
+    tools:context="com.sbai.finance.activity.mine.setting.SettingActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
@@ -16,39 +16,51 @@
         app:titleText="@string/setting"/>
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/shieldSetting"
+        android:id="@+id/safety_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="60dp"
-        android:textSize="15sp"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
         android:drawableRight="@drawable/ic_arrow_right_tint"
         android:gravity="center_vertical"
-        android:padding="@dimen/common_padding"
-        android:text="@string/shield_setting"
-        android:textColor="@color/primaryText"/>
+        android:minHeight="@dimen/common_height"
+        android:padding="@dimen/common_margin"
+        android:text="@string/safety_center"
+        android:textColor="@color/primaryText"
+        android:textSize="15sp"/>
+
+    <include layout="@layout/split_line"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/shieldSetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:drawableRight="@drawable/ic_arrow_right_tint"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/common_height"
+        android:padding="@dimen/common_margin"
+        android:text="@string/shield"
+        android:textColor="@color/primaryText"
+        android:textSize="15sp"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/newNewsNotification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
         android:drawableRight="@drawable/ic_arrow_right_tint"
         android:gravity="center_vertical"
-        android:textSize="15sp"
-        android:minHeight="60dp"
-        android:padding="@dimen/common_padding"
+        android:minHeight="@dimen/common_height"
+        android:padding="@dimen/common_margin"
         android:text="@string/new_news_notification"
-        android:textColor="@color/primaryText"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:textColor="@color/primaryText"
+        android:textSize="15sp"/>
 
     <View
         android:id="@+id/appInfo"
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>

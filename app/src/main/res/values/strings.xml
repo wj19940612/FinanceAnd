@@ -11,38 +11,41 @@
     <string name="mine">我的</string>
 
     <!-- EconomicCircle -->
+    <string name="big_variety_name">%1$s:</string>
     <string name="no_data">暂无数据</string>
-    <string name="need_amount">需要金额</string>
-    <string name="RMB">￥%1$s</string>
-    <string name="borrow_time">借款时间</string>
+    <string name="need_amount">需要金额:</string>
+    <string name="RMB">%1$s元</string>
+    <string name="borrow_deadline">借款期限:</string>
     <string name="day">%1$s天</string>
-    <string name="borrow_interest">借款利息</string>
+    <string name="borrow_interest">回报利息:</string>
     <string name="details">详情</string>
-    <string name="discussion_area">讨论区</string>
-    <string name="comment_number">(%1$s)</string>
+    <string name="comment_number">评论(%1$d)</string>
     <string name="share">分享</string>
     <string name="borrow_money">借款</string>
-    <string name="comment">评论....</string>
-    <string name="reply">回复</string>
+    <string name="comment">发表评论....</string>
     <string name="people_want_help_him">想要帮助他的人</string>
     <string name="people_want_help_her">想要帮助她的人</string>
     <string name="people_want_help_you">想要帮助你的人</string>
-    <string name="people_want_help_him_number">(%1$s)</string>
+    <string name="people_want_help_him_number">(%1$d)</string>
+    <string name="leave_message">留言(%1$s)</string>
     <string name="give_help">给予帮助</string>
-    <string name="borrow_money_details">借款详情</string>
     <string name="no_location_information">暂无位置信息</string>
     <item name="tag_opinion" type="id">1</item>
     <item name="tag_borrow_money" type="id">2</item>
 
     <!--login   page-->
     <string name="phone_number">手机号</string>
-    <string name="please_input_phone_number">请输入手机号码</string>
+    <string name="please_input_phone_number">手机号码</string>
     <string name="auth_code">验证码</string>
-    <string name="please_input_auth_code">请输入验证码</string>
     <string name="get_auth_code">获取验证码</string>
-    <string name="login">登  录</string>
+    <string name="login">登录</string>
+    <string name="login_ing">登陆中</string>
     <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
+    <string name="login_hint">登录即表示同意</string>
+    <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
+    <string name="confirm_agree">确认即同意</string>
+    <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
 
     <!--Home-->
     <string name="future">期货</string>
@@ -59,6 +62,13 @@
     <string name="accuracy_rate">看盘准确率</string>
     <string name="no_opinion">现在还没有大神上榜哦!</string>
 
+    <!--optional-->
+    <string name="add_option">添加自选</string>
+    <string name="choose_optional">选择自选类型</string>
+    <string name="stock_optional">股票自选</string>
+    <string name="future_optional">期货自选</string>
+    <string name="stock_optional_hint">股票名称/代码</string>
+    <string name="future_optional_hint">期货名称/代码</string>
     <!--Future-->
     <string name="future_foreign">国际期货</string>
     <string name="future_china">国内期货</string>
@@ -66,10 +76,18 @@
     <string name="lastPrice">最新价格</string>
     <string name="rate">涨跌幅</string>
     <string name="borrow_title">借款有道</string>
+    <string name="borrow_mine">我的借款</string>
     <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="idea_title">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
+    <string name="choose_trade_type">选择交易类型</string>
+    <string name="quick_trade">快速交易</string>
+    <string name="strategy_buy_sell">策略买卖(暂未开放)</string>
+    <string name="firm_offer_open_account">实盘开户(暂未开放)</string>
+    <string name="confirm_login">确认登录</string>
+    <string name="crude_oil_future">原油期货宝</string>
+    <string name="quick_trade_offer_by_company">快速交易由“上海幸福网络科技有限公司”提供</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>
@@ -81,7 +99,7 @@
     <string name="borrow_in">我的借入</string>
     <string name="borrow_out">我的借出</string>
     <string name="borrow">我要借款</string>
-    <string name="help_borrow">互助-借款</string>
+    <string name="help_borrow">互助借款</string>
 
     <!--event-->
     <string name="no_event_record">还没有大事发生!</string>
@@ -114,7 +132,7 @@
     <string name="fail_list">跌幅榜</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
-    <string name="no_option">暂无自选</string>
+    <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
     <string name="ask_3">卖3</string>
@@ -131,7 +149,7 @@
     <!-- 我的界面 -->
     <string name="attention">关注</string>
     <string name="fans">粉丝</string>
-    <string name="mine_publish">我的发表</string>
+    <string name="my_publish">我的发表</string>
     <string name="her_publish">TA的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
@@ -140,6 +158,7 @@
     <string name="detail">明细</string>
     <string name="feed_back">意见反馈</string>
     <string name="new_message">新消息</string>
+    <string name="wallet">钱包</string>
     <string name="item">条</string>
     <string name="now_not_has_data">暂无消息</string>
     <string name="please_input_here">请在此输入......</string>
@@ -153,21 +172,26 @@
     <string name="sex">性别</string>
     <string name="age">年龄</string>
     <string name="location">地区</string>
+    <string name="location_hint">定位到当前位置</string>
+    <string name="location_choice">手动选择地区</string>
+    <string name="choice_location">选择地区</string>
     <string name="credit">信用</string>
     <string name="logout">退出登录</string>
     <string name="modify_user_name">修改用户名</string>
     <string name="please_input_user_name">请输入用户名</string>
     <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-    <string name="nick_name_hint">昵称最多8个字符,请勿使用不良词汇</string>
+    <string name="nick_name_hint">1-8个字符，可由中英文、数字组成</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取  消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
-    <string name="real_name">真实姓名</string>
-    <string name="identity_card_number">身份证号码</string>
+    <string name="real_name">姓名</string>
+    <string name="identity_card_number">身份证</string>
     <string name="identity_card_font">身份证正面照片</string>
     <string name="identity_card_reverse">身份证反面照片</string>
+    <string name="identity_card_phone">身份证照片</string>
+    <string name="again_submit">重新提交</string>
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -175,8 +199,24 @@
     <string name="up_load_more">加载更多</string>
     <string name="load_all">已加载全部</string>
 
+    <!--设置-->
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
+    <string name="safety_setting">安全设置</string>
+    <string name="safety_center">安全中心</string>
+    <string name="setting_safety_password">设置安全密码</string>
+    <string name="modify_safety_password">修改安全密码</string>
+    <string name="forget_safety_password">忘记安全密码</string>
+
+    <!--安全设置-->
+    <string name="please_input_old_password">请输入旧安全密码</string>
+    <string name="please_input_new_password">请输入新安全密码</string>
+    <string name="please_confirm_new_password">请确认新安全密码</string>
+
+    <string name="modify_fail">修改失败</string>
+    <string name="new_password_is_same_as_old_pass">新密码与旧密码相同</string>
+    <string name="twice_password_is_different">两次新安全密码输入不一致</string>
+
 
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>
@@ -203,10 +243,11 @@
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
+    <string name="authenticated_info">已认证信息</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
-    <string name="attention_number">关注 %1$s</string>
-    <string name="fans_number">粉丝 %1$s</string>
+    <string name="attention_number">关注 %1$d</string>
+    <string name="fans_number">粉丝 %1$d</string>
     <string name="real_name_error">姓名输入错误</string>
     <string name="identity_card_error">身份证输入错误</string>
 
@@ -231,6 +272,7 @@
     </string>
     <string name="number">%1$d</string>
     <string name="number999">999+</string>
+    <string name="comment_number999">(999+)</string>
     <string name="number99">99+</string>
 
     <!--introduce-->
@@ -264,6 +306,7 @@
     <string name="prediction_rule3">3.每个预测时间段内预测一次后，将不能进行重复预测</string>
     <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="publish_opinion">发表观点</string>
+    <string name="opinion_length">%1$d/300</string>
     <string name="submit_has_empty">提  交</string>
     <string name="please_enter_the_text">请输入文字...</string>
 
@@ -273,22 +316,26 @@
     <string name="borrow_amount">500~2000元</string>
     <string name="borrow_interest_amount">1~200元</string>
     <string name="borrow_day_limit">借款期限</string>
-    <string name="borrow_day_limit_hint">1~60</string>
+    <string name="borrow_location">所在地址</string>
+    <string name="borrow_day_limit_hint">1~60天</string>
     <string name="borrow_remark">备注</string>
-    <string name="borrow_remark_hint">请填写有助于借款的信息哦,但不能填写联系方式哦!</string>
-    <string name="borrow_photo_tips">最多可上传四张照片,不得带有联系方式和不好的图片哦!</string>
+    <string name="borrow_remark_hint">简单描述一下您的借款需求，有助快速达成借款</string>
+    <string name="borrow_photo_tips">添加照片：最多可以上传4张</string>
     <string name="borrow_add_photo">添加照片</string>
     <string name="borrow_day">天</string>
+    <string name="money">元</string>
     <string name="borrow_publish">确认发布</string>
-    <string name="want_borrow">我要借款</string>
+    <string name="publish">我要发布</string>
+    <string name="want_borrow">发布借款</string>
     <string name="borrow_overdue">超出借款期限</string>
     <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
-    <string name="borrow_agree">阅读并同意</string>
+    <string name="borrow_agree">发布即同意</string>
     <string name="borrow_agreement">《乐米借款规则与用户须知》</string>
     <string name="publish_success">发布成功</string>
     <string name="protocol">借款规则与用户须知</string>
+    <string name="no_record">暂无借款</string>
     <!--mutual-->
     <string name="good_heart">好心人</string>
     <string name="load_person">借款人</string>

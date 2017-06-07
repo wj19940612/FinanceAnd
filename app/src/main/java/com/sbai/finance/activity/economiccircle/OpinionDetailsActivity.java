@@ -1,13 +1,10 @@
 package com.sbai.finance.activity.economiccircle;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,7 +45,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 
@@ -66,8 +62,6 @@ import static com.sbai.finance.activity.trade.PublishOpinionActivity.REFRESH_POI
 
 public class OpinionDetailsActivity extends BaseActivity {
 
-	public static final String REFRESH_ATTENTION = "refresh_point";
-
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
 	@BindView(R.id.avatar)
@@ -82,18 +76,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 	TextView mOpinionContent;
 	@BindView(R.id.variety)
 	LinearLayout mVariety;
+	@BindView(R.id.label)
+	ImageView mLabel;
 	@BindView(R.id.bigVarietyName)
 	TextView mBigVarietyName;
 	@BindView(R.id.varietyName)
 	TextView mVarietyName;
-	@BindView(R.id.lastPrice)
-	TextView mLastPrice;
-	@BindView(R.id.upDownPrice)
-	TextView mUpDownPrice;
-	@BindView(R.id.upDownPercent)
-	TextView mUpDownPercent;
-	@BindView(R.id.upDownArea)
-	LinearLayout mUpDownArea;
 	@BindView(R.id.loveNum)
 	TextView mLoveNum;
 	@BindView(R.id.commentNum)
@@ -113,8 +101,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 	private OpinionDetails mOpinionDetails;
 	private List<OpinionReply> mOpinionReplyList;
 	private TextView mFootView;
-	private RefreshAttentionReceiver mReceiver;
-
 	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<Integer> mSet;
@@ -137,8 +123,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		requestOpinionDetails(false);
 		initSwipeRefreshLayout();
-
-		registerRefreshReceiver();
 	}
 
 	private void initData(Intent intent) {
@@ -146,7 +130,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		mReplyId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
 
-	private void requestOpinionDetails(final boolean isSendBroadcast) {
+	private void requestOpinionDetails(final boolean isRefreshCommentCount) {
 		Client.getOpinionDetails(mDataId).setTag(TAG)
 				.setCallback(new Callback2D<Resp<OpinionDetails>, OpinionDetails>() {
 					@Override
@@ -155,16 +139,11 @@ public class OpinionDetailsActivity extends BaseActivity {
 						updateOpinionDetails();
 						requestOpinionReplyList();
 
-						if (isSendBroadcast) {
+						if (isRefreshCommentCount) {
 							Intent intent = new Intent(REFRESH_POINT);
 							intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
-							LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
-									.sendBroadcast(intent);
+							setResult(RESULT_OK, intent);
 						}
-
-						Intent intent = new Intent(REFRESH_POINT);
-						intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
-						setResult(RESULT_OK, intent);
 					}
 				}).fire();
 	}
@@ -223,7 +202,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mFootView.setText(getText(R.string.load_more));
 			mFootView.setGravity(Gravity.CENTER);
 			mFootView.setTextColor(ContextCompat.getColor(this, R.color.greyAssist));
-			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.greyLightAssist));
+			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.splitLineColor));
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -257,98 +236,61 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 
 	private void updateOpinionDetails() {
-		if (mOpinionDetails != null) {
+		if (mOpinionDetails == null) return;
 
-			mUserName.setText(mOpinionDetails.getUserName());
+		mUserName.setText(mOpinionDetails.getUserName());
 
-			Glide.with(this).load(mOpinionDetails.getUserPortrait())
-					.placeholder(R.drawable.ic_default_avatar)
-					.bitmapTransform(new GlideCircleTransform(this))
-					.into(mAvatar);
+		Glide.with(this).load(mOpinionDetails.getUserPortrait())
+				.placeholder(R.drawable.ic_default_avatar)
+				.bitmapTransform(new GlideCircleTransform(this))
+				.into(mAvatar);
 
-			if (mOpinionDetails.getIsAttention() == 2) {
-				mIsAttention.setText(R.string.is_attention);
-			} else {
-				mIsAttention.setText("");
-			}
-
-			mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
-
-			if (mOpinionDetails.getDirection() == 1) {
-				if (mOpinionDetails.getGuessPass() == 1) {
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_succeed));
-				} else if (mOpinionDetails.getGuessPass() == 2) {
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up_failed));
-				} else {
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_up));
-				}
-			} else {
-				if (mOpinionDetails.getGuessPass() == 1) {
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_succeed));
-				} else if (mOpinionDetails.getGuessPass() == 2) {
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down_failed));
-				} else {
-					mOpinionContent.setText(StrUtil.mergeTextWithImage(this, mOpinionDetails.getContent(), R.drawable.ic_opinion_down));
-				}
-			}
-
-			mBigVarietyName.setText(mOpinionDetails.getBigVarietyTypeName());
-			mVarietyName.setText(mOpinionDetails.getVarietyName());
-
-			/*if (TextUtils.isEmpty(mOpinionDetails.getLastPrice())) {
-			    mLastPrice.setText("--");
-				mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-			} else {
-				if (mOpinionDetails.getRisePrice().startsWith("-")) {
-					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
-				} else {
-					mLastPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-				}
-				mLastPrice.setText(mOpinionDetails.getLastPrice());
-			}
-
-			if (TextUtils.isEmpty(mOpinionDetails.getRisePrice())) {
-				mUpDownPrice.setText("--");
-				mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-			} else {
-				if (mOpinionDetails.getRisePrice().startsWith("-")) {
-					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
-				} else {
-					mUpDownPrice.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-				}
-				mUpDownPrice.setText(mOpinionDetails.getRisePrice());
-			}
-
-			if (TextUtils.isEmpty(mOpinionDetails.getRisePre())) {
-				mUpDownPercent.setText("--");
-				mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-			} else {
-				if (mOpinionDetails.getRisePre().startsWith("-")) {
-					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.greenPrimary));
-				} else {
-					mUpDownPercent.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-				}
-				mUpDownPercent.setText(mOpinionDetails.getRisePre());
-			}*/
-
-
-			if (mOpinionDetails.getIsPraise() == 1) {
-				mLoveNum.setSelected(true);
-			} else {
-				mLoveNum.setSelected(false);
-			}
-			if (mOpinionDetails.getPraiseCount() > 999) {
-				mLoveNum.setText("999+");
-			} else {
-				mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
-			}
-			if (mOpinionDetails.getReplyCount() > 999) {
-				mCommentNum.setText("(999+)");
-			} else {
-				mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionDetails.getReplyCount())));
-			}
-			mScrollView.smoothScrollTo(0, 0);
+		if (mOpinionDetails.getIsAttention() == 2) {
+			mIsAttention.setText(R.string.is_attention);
+		} else {
+			mIsAttention.setText("");
 		}
+
+		mOpinionContent.setText(mOpinionDetails.getContent());
+
+		if (mOpinionDetails.getDirection() == 1) {
+			if (mOpinionDetails.getGuessPass() == 1) {
+				mLabel.setBackgroundResource(R.drawable.ic_opinion_up_succeed);
+			} else if (mOpinionDetails.getGuessPass() == 2) {
+				mLabel.setBackgroundResource(R.drawable.ic_opinion_up_failed);
+			} else {
+				mLabel.setBackgroundResource(R.drawable.ic_opinion_up);
+			}
+		} else {
+			if (mOpinionDetails.getGuessPass() == 1) {
+				mLabel.setBackgroundResource(R.drawable.ic_opinion_down_succeed);
+			} else if (mOpinionDetails.getGuessPass() == 2) {
+				mLabel.setBackgroundResource(R.drawable.ic_opinion_down_failed);
+			} else {
+				mLabel.setBackgroundResource(R.drawable.ic_opinion_down);
+			}
+		}
+
+		mBigVarietyName.setText(getString(R.string.big_variety_name, mOpinionDetails.getBigVarietyTypeName()));
+		mVarietyName.setText(mOpinionDetails.getVarietyName());
+		mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
+
+		if (mOpinionDetails.getIsPraise() == 1) {
+			mLoveNum.setSelected(true);
+		} else {
+			mLoveNum.setSelected(false);
+		}
+		if (mOpinionDetails.getPraiseCount() > 999) {
+			mLoveNum.setText(R.string.number999);
+		} else {
+			mLoveNum.setText(String.valueOf(mOpinionDetails.getPraiseCount()));
+		}
+		if (mOpinionDetails.getReplyCount() > 999) {
+			mCommentNum.setText(R.string.comment_number999);
+		} else {
+			mCommentNum.setText(getString(R.string.comment_number, mOpinionDetails.getReplyCount()));
+		}
+		mScrollView.smoothScrollTo(0, 0);
 	}
 
 	@OnClick(R.id.variety)
@@ -472,7 +414,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 						if (LocalUser.getUser().isLogin()) {
 							Launcher.with(context, UserDataActivity.class)
 									.putExtra(Launcher.USER_ID, item.getUserId())
-									.execute();
+									.executeForResult(REQ_CODE_USERDATA);
 						} else {
 							Launcher.with(context, LoginActivity.class).execute();
 						}
@@ -568,13 +510,9 @@ public class OpinionDetailsActivity extends BaseActivity {
 											}
 										}
 
-
-										Intent intent = new Intent(REFRESH_POINT);
+										Intent intent = new Intent();
 										intent.putExtra(Launcher.EX_PAYLOAD, mOpinionDetails);
 										setResult(RESULT_OK, intent);
-										LocalBroadcastManager.getInstance(OpinionDetailsActivity.this)
-												.sendBroadcast(intent);
-
 									}
 								}
 							}).fire();
@@ -601,7 +539,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 										mSet.clear();
 										mCreateTime = null;
 										mSwipeRefreshLayout.setRefreshing(true);
-										requestOpinionReplyList();
 										requestOpinionDetails(true);
 										mCommentContent.setText("");
 										mScrollView.smoothScrollTo(0, 0);
@@ -622,7 +559,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 					}
 					Launcher.with(this, UserDataActivity.class)
 							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
-							.execute();
+							.executeForResult(REQ_CODE_USERDATA);
 				} else {
 					Launcher.with(this, LoginActivity.class).execute();
 				}
@@ -630,55 +567,56 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	private void registerRefreshReceiver() {
-		mReceiver = new RefreshAttentionReceiver();
-		IntentFilter filter = new IntentFilter(REFRESH_ATTENTION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
-	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
+			if (data != null) {
+				WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+						(WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
-	private class RefreshAttentionReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-					(WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-			AttentionAndFansNumberModel attentionAndFansNumberModel =
-					(AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+				AttentionAndFansNumberModel attentionAndFansNumberModel =
+						(AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
 
-			if (whetherAttentionShieldOrNot != null) {
-				if (whetherAttentionShieldOrNot.isFollow()) {
-					mIsAttention.setText(R.string.is_attention);
-				} else {
-					mIsAttention.setText("");
-				}
-			}
-
-			if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
-				for (OpinionReply opinionReply : mOpinionReplyList) {
-					if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
-						if (whetherAttentionShieldOrNot.isFollow()) {
-							opinionReply.setIsAttention(2);
-							mOpinionReplyAdapter.notifyDataSetChanged();
-						} else {
-							opinionReply.setIsAttention(1);
-							mOpinionReplyAdapter.notifyDataSetChanged();
-						}
+				if (whetherAttentionShieldOrNot != null) {
+					if (whetherAttentionShieldOrNot.isFollow()) {
+						mIsAttention.setText(R.string.is_attention);
+					} else {
+						mIsAttention.setText("");
 					}
 				}
 
-				if (whetherAttentionShieldOrNot.isShield()) {
-					for (Iterator it = mOpinionReplyList.iterator(); it.hasNext(); ) {
-						OpinionReply opinionReply = (OpinionReply) it.next();
+				if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+					for (OpinionReply opinionReply : mOpinionReplyList) {
 						if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
-							it.remove();
+							if (whetherAttentionShieldOrNot.isFollow()) {
+								opinionReply.setIsAttention(2);
+								mOpinionReplyAdapter.notifyDataSetChanged();
+							} else {
+								opinionReply.setIsAttention(1);
+								mOpinionReplyAdapter.notifyDataSetChanged();
+							}
 						}
 					}
 
-					mOpinionReplyAdapter.addAll(mOpinionReplyList);
-					mOpinionReplyAdapter.notifyDataSetChanged();
-					mCommentNum.setText(getString(R.string.comment_number, String.valueOf(mOpinionReplyList.size())));
+					if (whetherAttentionShieldOrNot.isShield()) {
+						for (Iterator it = mOpinionReplyList.iterator(); it.hasNext(); ) {
+							OpinionReply opinionReply = (OpinionReply) it.next();
+							if (opinionReply.getUserId() == attentionAndFansNumberModel.getUserId()) {
+								it.remove();
+							}
+						}
+
+						mOpinionReplyAdapter.addAll(mOpinionReplyList);
+						mCommentNum.setText(getString(R.string.comment_number, mOpinionReplyList.size()));
+					}
 				}
+
+				Intent intent = new Intent();
+				intent.putExtra(Launcher.EX_PAYLOAD_1, whetherAttentionShieldOrNot);
+				intent.putExtra(Launcher.EX_PAYLOAD_2, attentionAndFansNumberModel);
+				setResult(RESULT_OK, intent);
 			}
 		}
 	}

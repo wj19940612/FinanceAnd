@@ -94,7 +94,7 @@ public class IconTextRow extends LinearLayout {
     private void init() {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
         setPadding(padding, padding, padding, padding);
         if (mVerticalPaddingTop != 0) {
             setPadding(padding, mVerticalPaddingTop, padding, mVerticalPaddingTop);
@@ -163,12 +163,26 @@ public class IconTextRow extends LinearLayout {
         mSubTextView.setText(resid);
     }
 
+    public void setSubTextColor(int color) {
+        mSubTextView.setTextColor(color);
+    }
+
     public String getSubText() {
         return mSubTextView.getText().toString();
     }
 
     public TextView getSubTextView() {
         return mSubTextView;
+    }
+
+    public void setRightTextMargin(int margin){
+        LinearLayout.LayoutParams params = (LayoutParams) mSubTextView.getLayoutParams();
+        params.setMargins(0, 0, margin, 0);
+        mSubTextView.setLayoutParams(params);
+    }
+
+    public void setRightTextDrawable(int res){
+        mSubTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, res, 0);
     }
 
 }

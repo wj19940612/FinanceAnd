@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/greyLightAssist">
+        android:background="@color/bgAssist">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,10 +31,10 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/greyLightAssist"
-                android:paddingBottom="@dimen/dp_10"
+                android:background="@color/bgAssist"
                 android:clipToPadding="false"
                 android:divider="@null"
+                android:paddingBottom="@dimen/dp_10"
                 android:visibility="visible"/>
 
             <TextView
@@ -45,8 +45,8 @@
                 android:drawablePadding="10dp"
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
-                android:text="@string/now_not_has_feedback_data"
                 android:paddingTop="150dp"
+                android:text="@string/now_not_has_feedback_data"
                 android:visibility="gone"/>
         </LinearLayout>
 
@@ -63,11 +63,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="6dp"
             android:layout_weight="5"
-            android:background="@null"
+            android:background="@drawable/bg_feedback_edit"
             android:hint="@string/please_input_here"
             android:maxLength="400"
-            android:padding="13dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
             android:textColorHint="@color/hintText"
             android:textSize="15sp"/>
 
@@ -84,7 +88,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="@color/greyLightAssist"/>
+            android:background="@color/splitLineColor"/>
 
         <TextView
             android:id="@+id/send"
