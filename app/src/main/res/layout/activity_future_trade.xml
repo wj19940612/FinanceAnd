@@ -209,10 +209,4 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:hasTradeButton="true"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignTop="@id/tradeFloatButtons"
-        android:background="@color/splitLineColor"/>
 </RelativeLayout>
