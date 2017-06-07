@@ -28,13 +28,13 @@
             android:visibility="visible">
 
             <ImageButton
-                android:layout_width="12dp"
+                android:layout_width="18dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:background="@null"
                 android:scaleType="center"
-                android:src="@drawable/ic_tb_back"/>
+                android:src="@drawable/ic_tb_back_white"/>
         </RelativeLayout>
 
         <TextView

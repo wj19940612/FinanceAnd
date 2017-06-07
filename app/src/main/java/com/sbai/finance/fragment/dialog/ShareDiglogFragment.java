@@ -57,7 +57,7 @@ public class ShareDiglogFragment extends DialogFragment {
 
     public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, String shareImageUrl) {
         mActivity = activity;
-        mShareTitle = shareTitle;
+        mShareDescription = mShareTitle = getString(R.string.wonderful_viewpoint, shareTitle);
         mShareUrl = shareUrl;
         mShareImageUrl = shareImageUrl;
         return this;
