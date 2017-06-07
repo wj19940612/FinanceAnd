@@ -57,7 +57,7 @@ public class ShareDiglogFragment extends DialogFragment {
 
     public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, String shareImageUrl) {
         mActivity = activity;
-        mShareDescription = mShareTitle = getString(R.string.wonderful_viewpoint, shareTitle);
+        mShareDescription = mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
         mShareUrl = shareUrl;
         mShareImageUrl = shareImageUrl;
         return this;
@@ -114,7 +114,11 @@ public class ShareDiglogFragment extends DialogFragment {
     private void shareToPlatform(SHARE_MEDIA platform) {
         UMWeb mWeb = new UMWeb(mShareUrl);
         mWeb.setTitle(mShareTitle);
-        mWeb.setDescription(mShareDescription);
+        if (platform == SHARE_MEDIA.SINA) {
+            mWeb.setDescription(mShareDescription + mShareUrl);
+        } else {
+            mWeb.setDescription(mShareDescription);
+        }
         UMImage thumb = new UMImage(mActivity, mShareImageUrl);
         mWeb.setThumb(thumb);
         new ShareAction(mActivity)
