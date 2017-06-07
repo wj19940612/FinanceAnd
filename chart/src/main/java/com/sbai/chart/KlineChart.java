@@ -21,9 +21,9 @@ public class KlineChart extends ChartView {
 
     private static final int CANDLES_WIDTH_DP = 6; //dp
 
-    private static final String MA_BLUE = "#869BCB";
-    private static final String MA_PURPLE = "#A63BEB";
-    private static final String MA_YELLOW = "#D7CE51";
+    private static final String MA_BLUE = "#6a96ef";
+    private static final String MA_PURPLE = "#dc6aef";
+    private static final String MA_YELLOW = "#efc86a";
 
     public static final String DATE_FORMAT_DAY_MIN = "HH:mm";
 
@@ -172,7 +172,7 @@ public class KlineChart extends ChartView {
     }
 
     protected void setTouchLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartColor.RED.get()));
+        paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
     }
@@ -328,14 +328,7 @@ public class KlineChart extends ChartView {
             setBaseLinePaint(sPaint);
             canvas.drawPath(path, sPaint);
 
-            if (i == 0) {
-                setDefaultTextPaint(sPaint);
-                String baseLineValue = formatNumber(baselines[i]);
-                float textWidth = sPaint.measureText(baseLineValue);
-                float x = left + width - mPriceAreaWidth + (mPriceAreaWidth - textWidth) / 2;
-                float y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-                canvas.drawText(baseLineValue, x, y, sPaint);
-            } else if (i != 0 && i % 2 == 0) {
+            if (i != 0) {
                 setDefaultTextPaint(sPaint);
                 String baseLineValue = formatNumber(baselines[i]);
                 float textWidth = sPaint.measureText(baseLineValue);
@@ -480,21 +473,18 @@ public class KlineChart extends ChartView {
 
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
-        if (mDataList != null && mDataList.size() > 0) {
-            float textY = top + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-            for (int i = mStart; i < mEnd; i += 8) {
-                KlineViewData data = mDataList.get(i);
-                setDefaultTextPaint(sPaint);
-                if (i == mStart) {
-                    float textX = left + mTextMargin;
-                    String timeStr = data.getDay();
-                    canvas.drawText(timeStr, textX, textY, sPaint);
-                } else {
-                    String displayTime = formatTimestamp(data);
-                    float textWidth = sPaint.measureText(displayTime);
-                    float textX = getChartXOfScreen(i) - textWidth / 2;
-                    canvas.drawText(displayTime, textX, textY, sPaint);
-                }
+        float textY = top + mTextMargin * 2.5f + mFontHeight / 2 + mOffset4CenterText;
+        for (int i = mStart; i < mEnd; i += 8) {
+            KlineViewData data = mDataList.get(i);
+            setDefaultTextPaint(sPaint);
+            if (i == mStart) {
+                String timeStr = data.getDay();
+                canvas.drawText(timeStr, left - mTextMargin * 2, textY, sPaint);
+            } else {
+                String displayTime = formatTimestamp(data);
+                float textWidth = sPaint.measureText(displayTime);
+                float textX = getChartXOfScreen(i) - textWidth / 2;
+                canvas.drawText(displayTime, textX, textY, sPaint);
             }
         }
     }

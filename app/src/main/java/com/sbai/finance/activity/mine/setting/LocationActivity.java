@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,10 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.GpsUtils;
-import com.sbai.finance.view.IconTextRow;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -155,7 +151,7 @@ public class LocationActivity extends BaseActivity {
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
                 picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.bgAssist));
+                lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.background));
                 picker.setLineConfig(lineConfig);
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override

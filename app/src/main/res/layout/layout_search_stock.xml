@@ -23,13 +23,13 @@
             android:background="@null"
             android:maxLines="1"
             android:paddingLeft="@dimen/common_padding"
-            android:textColorHint="@color/splitLineColor"
+            android:textColorHint="@color/split"
             android:textSize="@dimen/list_title_size"
             android:hint="股票名称、代码"/>
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/splitLineColor"/>
+            android:background="@color/split"/>
 
         <ImageView
             android:id="@+id/search"

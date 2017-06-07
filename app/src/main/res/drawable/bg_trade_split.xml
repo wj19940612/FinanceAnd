@@ -3,13 +3,14 @@
 
     <item>
         <shape>
-            <solid android:color="@color/split"/>
+            <solid android:color="@color/split" />
         </shape>
     </item>
 
-    <item android:bottom="0.7dp">
+    <item android:top="0.5dp">
         <shape>
-            <solid android:color="@color/blackAssist"/>
+            <solid android:color="@color/background" />
         </shape>
     </item>
+
 </layer-list>

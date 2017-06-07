@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/bgAssist">
+              android:background="@color/background">
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:padding="5dp"
             android:background="@drawable/bg_search_stock"
             android:drawableLeft="@drawable/ic_search"
-            android:textColorHint="@color/bgAssist"
+            android:textColorHint="@color/background"
             android:textSize="@dimen/list_title_size"
             android:hint="股票名称、代码"/>
     </LinearLayout>
