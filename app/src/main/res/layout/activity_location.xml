@@ -29,7 +29,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/white"
-        android:drawableLeft="@drawable/help_edit_money"
+        android:drawableLeft="@drawable/ic_location"
         android:drawablePadding="8dp"
         android:padding="@dimen/common_padding"
         android:textColor="@color/blackAssist"
