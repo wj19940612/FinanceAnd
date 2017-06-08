@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mutual;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -54,8 +55,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.sbai.finance.R.string.item;
 
 public class BorrowMineDetailsActivity extends BaseActivity {
     @BindView(R.id.avatar)
@@ -114,7 +113,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     LinearLayout mBorrowStatus;
     @BindView(R.id.writeMessage)
     TextView mWriteMessage;
-    private int mDataId;
+    private boolean mStatusChange = false;
     private int mMax;
     private BorrowMine mBorrowMine;
     private MessageAdapter mMessageAdapter;
@@ -183,6 +182,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     }
 
     private void updateMessage(List<BorrowMessage> data) {
+        mLeaveMessageNum.setText(getString(R.string.leave_message,data.size()));
         mMessageAdapter.clear();
         mMessageAdapter.addAll(data);
         mMessageAdapter.notifyDataSetChanged();
@@ -216,7 +216,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mDataId)
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -228,7 +228,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mDataId)
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -253,7 +253,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mDataId)
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -368,6 +368,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_END_NO_ALLOW:
             case BorrowMine.STATUS_END_NO_CHOICE_HELP:
             case BorrowMine.STATUS_END_REPAY:
+            case  BorrowMine.STATUS_END_FIIL:
                 mStatus.setText(getActivity().getString(R.string.end));
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                 mBorrowStatus.setVisibility(View.GONE);
@@ -444,14 +445,14 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                                 dialog.dismiss();
                             }
                         })
-                        .setTitleMaxLines(1)
-                        .setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist))
-                        .setMessageTextColor(ContextCompat.getColor(getActivity(), R.color.opinionText))
                         .setNegative(R.string.cancel)
                         .show();
                 break;
             case R.id.alreadyRepay:
                 requestRepay(mBorrowMine.getId());
+                break;
+            case R.id.writeMessage:
+                
                 break;
 
         }
@@ -462,7 +463,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            ToastUtil.show("success");
+                            mStatus.setText(getActivity().getString(R.string.end));
+                            mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                            mBorrowStatus.setVisibility(View.GONE);
+                            mBorrowMine.setStatus(BorrowMine.STATUS_END_CANCEL);
+                            mStatusChange  = true;
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -475,7 +480,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()){
-                            ToastUtil.curt(getString(R.string.submit_success));
+                            mStatus.setText(getActivity().getString(R.string.end));
+                            mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                            mBorrowStatus.setVisibility(View.GONE);
+                            mBorrowMine.setStatus(BorrowMine.STATUS_END_REPAY);
+                            mStatusChange = true;
                         }else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -495,6 +504,17 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     }
                 }).fireSync();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mStatusChange){
+            Intent intent = new Intent();
+            intent.putExtra(Launcher.EX_PAYLOAD,mBorrowMine);
+            setResult(RESULT_OK,intent);
+        }
+        super.onBackPressed();
+    }
+
     private void callPhone(CallPhone phone){
         if (phone.getSelectedPhone()!=null){
             Intent intent=new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone.getSelectedPhone()));

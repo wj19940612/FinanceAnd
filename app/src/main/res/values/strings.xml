@@ -27,7 +27,7 @@
     <string name="people_want_help_her">想要帮助她的人</string>
     <string name="people_want_help_you">想要帮助你的人</string>
     <string name="people_want_help_him_number">(%1$d)</string>
-    <string name="leave_message">留言(%1$s)</string>
+    <string name="leave_message">留言(%1$d)</string>
     <string name="write_message">写留言</string>
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>

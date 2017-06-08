@@ -25,7 +25,7 @@
             android:id="@+id/publish"
             android:layout_width="match_parent"
             android:layout_height="49dp"
-            android:background="@color/redPrimary"
+            android:background="@drawable/bg_pressable_red"
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="@dimen/list_title_size"
