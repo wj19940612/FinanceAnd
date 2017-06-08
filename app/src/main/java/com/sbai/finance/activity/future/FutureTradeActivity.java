@@ -27,6 +27,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.ShareDiglogFragment;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
@@ -37,6 +38,7 @@ import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -553,8 +555,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         double priceChangePercent = FinanceUtil.divide(priceChange, data.getPreSetPrice(), 4)
                 .multiply(new BigDecimal(100)).doubleValue();
 
-        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenPrimary));
-        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenPrimary));
+        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
         String priceChangeStr = FinanceUtil.formatWithScale(priceChange, mVariety.getPriceScale());
         String priceChangePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
         if (priceChange >= 0) {
@@ -593,6 +595,17 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             productTypeStr = getString(R.string.future_foreign);
         }
         productType.setText(productTypeStr);
+
+        final String shareUrl = API.getHost() + getString(R.string.future_share_host, mVariety.getVarietyId());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareDiglogFragment
+                        .newInstance()
+                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl, false)
+                        .show(getSupportFragmentManager());
+            }
+        });
     }
 
     @Override

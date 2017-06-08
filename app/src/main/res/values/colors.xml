@@ -6,12 +6,6 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="redPrimary">#cd4a47</color>
-    <color name="greenPrimary">#7aa431</color>
-    <color name="fortyPercentWhite">#66FFFFFF</color>
-
-    <color name="redRaise">#ef6d6a</color>
-    <color name="ColorTitleBar">#FFFFFF</color>
-    <color name="greenDown">#2ecc9f</color>
 
     <!--Assist-->
     <color name="pinkAssist">#E5A19F</color>

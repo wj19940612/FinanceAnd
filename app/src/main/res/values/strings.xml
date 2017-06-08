@@ -465,6 +465,9 @@
     <string name="wechat_circle">朋友圈</string>
     <string name="weibo">微博</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
+    <string name="future_share_host">/mobi/future/future_quota?varietyId=%1$d</string>
+    <string name="stock_share_host">/mobi/stock/stock_quota?varietyType=%1$s&amp;varietyId=%2$d</string>
+
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
     <string name="pay_count">支付金额: %1$s</string>

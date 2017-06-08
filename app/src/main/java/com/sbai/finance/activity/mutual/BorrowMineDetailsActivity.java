@@ -470,7 +470,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 break;
             case BorrowMine.STATUS_GIVE_HELP:
             case BorrowMine.STATUS_NO_CHECKED:
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redRaise));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.wait_help));
                     mCancel.setEnabled(true);
@@ -488,7 +488,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_INTENTION:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mCancel.setVisibility(View.GONE);
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redRaise));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.borrow_in_days,DateUtil.compareDateDifference(mBorrowMine.getModifyDate())));
                     mCallOnly.setVisibility(View.VISIBLE);

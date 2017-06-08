@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
+        app:rightImage="@drawable/ic_share"
+        app:rightVisible="true"
         app:customView="@layout/tb_product_name"/>
 
     <LinearLayout
@@ -97,7 +99,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="15dp"
             android:orientation="vertical">
 
             <TextView

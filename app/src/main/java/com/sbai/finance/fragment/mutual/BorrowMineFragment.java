@@ -26,8 +26,6 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mutual.BorrowMineDetailsActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.BorrowMoney;
-import com.sbai.finance.model.mutual.BorrowDetails;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -288,7 +286,7 @@ public class BorrowMineFragment extends BaseFragment implements
                         break;
                     case BorrowMine.STATUS_GIVE_HELP:
                     case BorrowMine.STATUS_NO_CHECKED:
-                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.redRaise));
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
                         if (isSelf){
                             mStatus.setText(context.getString(R.string.wait_help));
                         }else{
@@ -296,7 +294,7 @@ public class BorrowMineFragment extends BaseFragment implements
                         }
                         break;
                      case BorrowMine.STATUS_INTENTION:
-                         mStatus.setTextColor(ContextCompat.getColor(context,R.color.redRaise));
+                         mStatus.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
                          if (isSelf){
                              mStatus.setText(context.getString(R.string.borrow_in_days,DateUtil.compareDateDifference(item.getModifyDate())));
                          }else {
