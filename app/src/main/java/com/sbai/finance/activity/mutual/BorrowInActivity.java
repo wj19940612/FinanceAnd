@@ -23,12 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
-import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowIn;
@@ -42,7 +40,6 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -245,7 +242,7 @@ public class BorrowInActivity extends BaseActivity implements AbsListView.OnScro
     }
 
     private void launcherWantHelpMe(int loadId) {
-        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD, loadId)
                 .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId())
                 .execute();

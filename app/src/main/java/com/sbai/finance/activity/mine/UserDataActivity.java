@@ -36,34 +36,28 @@ import butterknife.OnClick;
 
 public class UserDataActivity extends BaseActivity {
 
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
-    @BindView(R.id.avatar)
-    ImageView mAvatar;
-    @BindView(R.id.userName)
-    TextView mUserName;
-    @BindView(R.id.location)
-    TextView mLocation;
-    @BindView(R.id.attentionNum)
-    TextView mAttentionNum;
-    @BindView(R.id.diagonal)
-    TextView mDiagonal;
-    @BindView(R.id.fansNum)
-    TextView mFansNum;
-    @BindView(R.id.hisPublish)
-    RelativeLayout mHisPublish;
-    @BindView(R.id.authentication)
-    TextView mAuthentication;
-    @BindView(R.id.realNameAuthentication)
-    RelativeLayout mRealNameAuthentication;
-    @BindView(R.id.attention)
-    TextView mAttention;
-    @BindView(R.id.shield)
-    TextView mShield;
-    @BindView(R.id.hisPublishText)
-    TextView mHisPublishText;
-    @BindView(R.id.attentionShieldArea)
-    LinearLayout mAttentionShieldArea;
+	@BindView(R.id.avatar)
+	ImageView mAvatar;
+	@BindView(R.id.userName)
+	TextView mUserName;
+	@BindView(R.id.location)
+	TextView mLocation;
+	@BindView(R.id.attentionNum)
+	TextView mAttentionNum;
+	@BindView(R.id.fansNum)
+	TextView mFansNum;
+	@BindView(R.id.hisPublishArea)
+	RelativeLayout mHisPublishArea;
+	@BindView(R.id.attention)
+	TextView mAttention;
+	@BindView(R.id.shield)
+	TextView mShield;
+	@BindView(R.id.hisPublish)
+	TextView mHisPublish;
+	@BindView(R.id.attentionShieldArea)
+	LinearLayout mAttentionShieldArea;
+	@BindView(R.id.authenticationIcon)
+	ImageView mAuthenticationIcon;
 
     private int mUserId;
     private UserData mUserData;
@@ -127,11 +121,11 @@ public class UserDataActivity extends BaseActivity {
 
             mUserName.setText(mUserData.getUserName());
 
-            if (mUserData.getUserSex() == 1) {
-                mUserName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_female, 0, 0, 0);
-            } else {
-                mUserName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_male, 0, 0, 0);
-            }
+			if (mUserData.getUserSex() == 1) {
+				mUserName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_female, 0);
+			} else {
+				mUserName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_male, 0);
+			}
 
             if (TextUtils.isEmpty(mUserData.getLand())) {
                 mLocation.setText(R.string.no_location_information);
@@ -139,33 +133,28 @@ public class UserDataActivity extends BaseActivity {
                 mLocation.setText(mUserData.getLand());
             }
 
-            if (mUserData.getCertificationStatus() == 1) {
-                mAuthentication.setText(R.string.authenticated);
-                mAuthentication.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_news_succeed, 0, 0, 0);
-            } else {
-                mAuthentication.setText(R.string.unauthorized);
-                mAuthentication.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_failed, 0, 0, 0);
-            }
-        }
+			if (mUserData.getCertificationStatus() == 1) {
+				mAuthenticationIcon.setImageResource(R.drawable.ic_authenticated);
+			} else {
+				mAuthenticationIcon.setImageResource(R.drawable.ic_unauthorized);
+			}
+		}
 
-        if (mAttentionAndFansNum != null) {
-            if (mAttentionAndFansNum.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                mAttentionShieldArea.setVisibility(View.GONE);
-                mHisPublishText.setText(R.string.my_publish);
-            }
-            mDiagonal.setText(" / ");
-            mAttentionNum.setText(getString(R.string.attention_number, mAttentionAndFansNum.getAttention()));
-            mFansNum.setText(getString(R.string.fans_number, mAttentionAndFansNum.getFollower()));
-        }
+		if (mAttentionAndFansNum != null) {
+			if (mAttentionAndFansNum.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+				mAttentionShieldArea.setVisibility(View.GONE);
+				mHisPublish.setText(R.string.my_publish);
+			}
+			mAttentionNum.setText(getString(R.string.attention_number, mAttentionAndFansNum.getAttention()));
+			mFansNum.setText(getString(R.string.fans_number, mAttentionAndFansNum.getFollower()));
+		}
 
-        if (mWhetherAttentionShieldOrNot != null) {
-            if (mWhetherAttentionShieldOrNot.isFollow()) {
-                mAttention.setText(R.string.is_attention);
-                mAttention.setTextColor(ContextCompat.getColor(this, R.color.greenAssist));
-            } else {
-                mAttention.setText(R.string.attention);
-                mAttention.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-            }
+		if (mWhetherAttentionShieldOrNot != null) {
+			if (mWhetherAttentionShieldOrNot.isFollow()) {
+				mAttention.setText(R.string.is_attention);
+			} else {
+				mAttention.setText(R.string.plus_attention);
+			}
 
             if (mWhetherAttentionShieldOrNot.isShield()) {
                 mShield.setText(R.string.is_shield);
@@ -175,17 +164,17 @@ public class UserDataActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.attention, R.id.shield, R.id.avatar, R.id.hisPublish})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.attention:
-                if (mUserData != null && mWhetherAttentionShieldOrNot != null) {
-                    if (mWhetherAttentionShieldOrNot.isFollow()) {
-                        cancelAttention();
-                    } else {
-                        doAttention();
-                    }
-                }
+	@OnClick({R.id.attention, R.id.shield, R.id.avatar, R.id.hisPublishArea})
+	public void onViewClicked(View view) {
+		switch (view.getId()) {
+			case R.id.attention:
+				if (mUserData != null && mWhetherAttentionShieldOrNot != null) {
+					if (mWhetherAttentionShieldOrNot.isFollow()) {
+						cancelAttention();
+					} else {
+						doAttention();
+					}
+				}
 
                 break;
             case R.id.shield:
@@ -205,15 +194,15 @@ public class UserDataActivity extends BaseActivity {
                 }
                 break;
 
-            case R.id.hisPublish:
-                if (mAttentionAndFansNum != null) {
-                    Launcher.with(this, PublishActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mAttentionAndFansNum.getUserId())
-                            .execute();
-                }
-                break;
-        }
-    }
+			case R.id.hisPublishArea:
+				if (mAttentionAndFansNum != null) {
+					Launcher.with(this, PublishActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mAttentionAndFansNum.getUserId())
+							.execute();
+				}
+				break;
+		}
+	}
 
     private void doShield() {
         SmartDialog.with(getActivity(),
@@ -239,29 +228,32 @@ public class UserDataActivity extends BaseActivity {
                 .show();
     }
 
-    private void relieveShield() {
-        SmartDialog.with(getActivity(),
-                getString(R.string.relieve_shield_dialog_content, mUserData.getUserName())
-                , getString(R.string.relieve_shield_dialog_title, mUserData.getUserName()))
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        Client.shieldOrRelieveShieldUser(mUserId, 1).setTag(TAG).setIndeterminate(UserDataActivity.this)
-                                .setCallback(new Callback<Resp<JsonPrimitive>>() {
-                                    @Override
-                                    protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                                        if (resp.isSuccess()) {
-                                            requestUserData();
-                                            ToastUtil.curt("解除屏蔽" + mUserData.getUserName());
-                                        }
-                                    }
-                                }).fire();
-                        dialog.dismiss();
-                    }
-                })
-                .setIconUrl(mUserData.getUserPortrait())
-                .show();
-    }
+	private void relieveShield() {
+		SmartDialog.with(getActivity(),
+				getString(R.string.relieve_shield_dialog_content, mUserData.getUserName())
+				, getString(R.string.relieve_shield_dialog_title, mUserData.getUserName()))
+				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						Client.shieldOrRelieveShieldUser(mUserId, 1).setTag(TAG).setIndeterminate(UserDataActivity.this)
+								.setCallback(new Callback<Resp<JsonPrimitive>>() {
+									@Override
+									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+										if (resp.isSuccess()) {
+											requestUserData();
+											ToastUtil.curt("解除屏蔽" + mUserData.getUserName());
+										}
+									}
+								}).fire();
+						dialog.dismiss();
+					}
+				})
+				.setTitleMaxLines(2)
+				.setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+				.setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+				.setNegative(R.string.cancel)
+				.show();
+	}
 
     private void doAttention() {
         Client.attentionOrRelieveAttentionUser(mUserId, 0)
@@ -278,29 +270,32 @@ public class UserDataActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void cancelAttention() {
-        SmartDialog.with(getActivity(), getString(R.string.cancel_attention_dialog_title, mUserData.getUserName()))
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        Client.attentionOrRelieveAttentionUser(mUserId, 1)
-                                .setTag(TAG)
-                                .setIndeterminate(UserDataActivity.this)
-                                .setCallback(new Callback<Resp<JsonPrimitive>>() {
-                                    @Override
-                                    protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                                        if (resp.isSuccess()) {
-                                            requestUserData();
-                                            ToastUtil.curt("取消关注" + mUserData.getUserName());
-                                        }
-                                    }
-                                }).fire();
-                        dialog.dismiss();
-                    }
-                })
-                .setIconUrl(mUserData.getUserPortrait())
-                .show();
-    }
+	private void cancelAttention() {
+		SmartDialog.with(getActivity(), getString(R.string.cancel_attention_dialog_title, mUserData.getUserName()))
+				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						Client.attentionOrRelieveAttentionUser(mUserId, 1)
+								.setTag(TAG)
+								.setIndeterminate(UserDataActivity.this)
+								.setCallback(new Callback<Resp<JsonPrimitive>>() {
+									@Override
+									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+										if (resp.isSuccess()) {
+											requestUserData();
+											ToastUtil.curt("取消关注" + mUserData.getUserName());
+										}
+									}
+								}).fire();
+						dialog.dismiss();
+					}
+				})
+				.setMessageTextSize(17)
+				.setTitleMaxLines(2)
+				.setMessageTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+				.setNegative(R.string.cancel)
+				.show();
+	}
 
     @Override
     public void onBackPressed() {

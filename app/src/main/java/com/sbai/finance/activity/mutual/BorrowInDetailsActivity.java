@@ -21,12 +21,10 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.model.mutual.BorrowHelper;
 import com.sbai.finance.model.mutual.BorrowIn;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -35,7 +33,6 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyGridView;
 
 import java.util.List;
@@ -265,7 +262,7 @@ public class BorrowInDetailsActivity extends BaseActivity {
         mMax = (int) ((screenWidth - margin - more + horizontalSpacing) / (horizontalSpacing + avatarWidth));
     }
     private void launcherWantHelpMe(int loadId){
-        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD,loadId)
                 .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId())
                 .execute();

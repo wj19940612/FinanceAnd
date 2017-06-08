@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,7 +24,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
+import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
@@ -33,6 +35,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
@@ -92,28 +95,58 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	MyListView mList;
 	@BindView(android.R.id.empty)
 	TextView mEmpty;
+	@BindView(R.id.writeMessage)
+	TextView mWriteMessage;
+	@BindView(R.id.leaveMessage)
+	EditText mLeaveMessage;
+	@BindView(R.id.send)
+	TextView mSend;
+	@BindView(R.id.leaveMessageArea)
+	LinearLayout mLeaveMessageArea;
 
 	private int mMax;
 	private int mDataId;
 	private BorrowMoneyDetails mBorrowMoneyDetails;
-	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
+	private List<GoodHeartPeople> mGoodHeartPeopleList;
+	private KeyBoardHelper mKeyBoardHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_borrow_money_details);
 		ButterKnife.bind(this);
-		mWantHelpHimOrYouList = new ArrayList<>();
+		mGoodHeartPeopleList = new ArrayList<>();
 
 		initData(getIntent());
 		calculateAvatarNum(this);
 		requestBorrowMoneyDetails();
 		requestWantHelpHimList();
+		requestMessageList();
+		setKeyboardHelper();
 	}
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 	}
+
+	private void setKeyboardHelper() {
+		mKeyBoardHelper = new KeyBoardHelper(this);
+		mKeyBoardHelper.onCreate();
+		mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
+	}
+
+	private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener(){
+
+		@Override
+		public void OnKeyBoardPop(int keyboardHeight) {
+
+		}
+
+		@Override
+		public void OnKeyBoardClose(int oldKeyboardHeight) {
+			mLeaveMessageArea.setVisibility(View.GONE);
+		}
+	};
 
 	private void requestBorrowMoneyDetails() {
 		Client.getBorrowMoneyDetail(mDataId).setTag(TAG).setIndeterminate(this)
@@ -128,23 +161,32 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 	private void requestWantHelpHimList() {
 		Client.getWantHelpHimOrYouList(mDataId).setTag(TAG).setIndeterminate(this)
-				.setCallback(new Callback2D<Resp<List<WantHelpHimOrYou>>, List<WantHelpHimOrYou>>() {
+				.setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
 					@Override
-					protected void onRespSuccessData(List<WantHelpHimOrYou> wantHelpHimOrYouList) {
-						mWantHelpHimOrYouList = wantHelpHimOrYouList;
-						updateWantHelpHimList(mWantHelpHimOrYouList);
+					protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
+						mGoodHeartPeopleList = goodHeartPeopleList;
+						updateWantHelpHimList(mGoodHeartPeopleList);
 					}
 				}).fire();
 	}
 
-	private void updateWantHelpHimList(final List<WantHelpHimOrYou> wantHelpHimOrYouList) {
+	private void requestMessageList() {
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mKeyBoardHelper.onDestroy();
+	}
+
+	private void updateWantHelpHimList(final List<GoodHeartPeople> goodHeartPeopleList) {
 		int width = (int) Display.dp2Px(32, getResources());
 		int height = (int) Display.dp2Px(32, getResources());
 		int margin = (int) Display.dp2Px(10, getResources());
 
 		mAvatarList.removeAllViews();
 
-		int size = mWantHelpHimOrYouList.size();
+		int size = mGoodHeartPeopleList.size();
 		if (size > 0) {
 			mGoodHeartPeopleArea.setVisibility(View.VISIBLE);
 		}
@@ -155,7 +197,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
 				params.leftMargin = (i == 0 ? 0 : margin);
 				imageView.setLayoutParams(params);
-				Glide.with(this).load(wantHelpHimOrYouList.get(i).getPortrait())
+				Glide.with(this).load(goodHeartPeopleList.get(i).getPortrait())
 						.bitmapTransform(new GlideCircleTransform(this))
 						.placeholder(R.drawable.ic_default_avatar)
 						.into(imageView);
@@ -164,7 +206,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				mAvatarList.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
+						Launcher.with(BorrowMoneyDetailsActivity.this, GoodHeartPeopleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
 								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
@@ -176,7 +218,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				mMore.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
+						Launcher.with(BorrowMoneyDetailsActivity.this, GoodHeartPeopleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
 								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
@@ -191,7 +233,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
 				params.leftMargin = (i == 0 ? 0 : margin);
 				imageView.setLayoutParams(params);
-				Glide.with(this).load(wantHelpHimOrYouList.get(i).getPortrait())
+				Glide.with(this).load(goodHeartPeopleList.get(i).getPortrait())
 						.bitmapTransform(new GlideCircleTransform(this))
 						.placeholder(R.drawable.ic_default_avatar)
 						.into(imageView);
@@ -201,7 +243,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				mAvatarList.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Launcher.with(BorrowMoneyDetailsActivity.this, WantHelpHimOrYouActivity.class)
+						Launcher.with(BorrowMoneyDetailsActivity.this, GoodHeartPeopleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
 								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
@@ -253,12 +295,11 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		});
 
 		if (borrowMoneyDetails.getIsIntention() == 1) {
-			mGiveHelp.setBackgroundResource(R.drawable.bg_to_confirm);
-			mGiveHelp.setText(R.string.wait_to_confirm);
+			mGiveHelp.setText(R.string.submitted);
 			mGiveHelp.setEnabled(false);
 		} else {
-			mGiveHelp.setBackgroundResource(R.drawable.btn_give_help);
 			mGiveHelp.setText(R.string.give_help);
+			mGiveHelp.setEnabled(true);
 		}
 
 
@@ -310,6 +351,21 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 							.setNegative(R.string.cancel)
 							.show();
 				}
+			}
+		});
+
+		mWriteMessage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mLeaveMessageArea.setVisibility(View.VISIBLE);
+				InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+				mSend.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				});
 			}
 		});
 
