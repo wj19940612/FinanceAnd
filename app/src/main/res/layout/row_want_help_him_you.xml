@@ -12,8 +12,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="8dp"
             android:src="@drawable/ic_default_avatar"/>
 
         <TextView
@@ -22,8 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/avatar"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/redPrimary"
-            android:textSize="15sp"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp"
             tools:text="古天乐"/>
 
         <TextView
@@ -32,9 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/assistText"
-            android:textSize="11sp"
-            tools:text="中国 香港"/>
+            android:textColor="@color/hintText"
+            android:textSize="10sp"
+            tools:text="杭州 滨江"/>
 
         <ImageView
             android:id="@+id/checkboxClick"
@@ -42,9 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="13dp"
-            android:src="@drawable/ic_checkbox_click"
-            android:visibility="invisible"/>
+            android:layout_marginRight="14dp"
+            tools:src="@drawable/ic_checkbox_unchecked"/>
 
         <View
             android:layout_width="match_parent"

@@ -26,12 +26,12 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
+import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.mutual.BorrowMessage;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.model.mutual.CallPhone;
@@ -165,9 +165,9 @@ public class BorrowMineDetailsActivity extends BaseActivity {
 
     private void requestWantHelpHimList() {
         Client.getWantHelpHimOrYouList(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<WantHelpHimOrYou>>, List<WantHelpHimOrYou>>() {
+                .setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
                     @Override
-                    protected void onRespSuccessData(List<WantHelpHimOrYou> wantHelpHimOrYouList) {
+                    protected void onRespSuccessData(List<GoodHeartPeople> wantHelpHimOrYouList) {
                         updateWantHelpHimList(wantHelpHimOrYouList);
                     }
                 }).fire();
@@ -188,7 +188,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         mMessageAdapter.notifyDataSetChanged();
     }
 
-    private void updateWantHelpHimList(List<WantHelpHimOrYou> data) {
+    private void updateWantHelpHimList(List<GoodHeartPeople> data) {
         int width = (int) Display.dp2Px(32, getResources());
         int height = (int) Display.dp2Px(32, getResources());
         int margin = (int) Display.dp2Px(10, getResources());
@@ -215,7 +215,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mAvatarList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mDataId)
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
@@ -227,7 +227,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mDataId)
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
@@ -252,7 +252,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mAvatarList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mDataId)
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())

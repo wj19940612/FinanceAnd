@@ -10,6 +10,7 @@
     <color name="fortyPercentWhite">#66FFFFFF</color>
 
     <color name="redRaise">#ef6d6a</color>
+    <color name="ColorTitleBar">#FFFFFF</color>
     <color name="greenDown">#2ecc9f</color>
 
     <!--Assist-->
@@ -33,12 +34,16 @@
     <!--泛理新规范-->
     <!--Assist-->
     <color name="blackAssist">#222222</color>
+    <color name="splitLineColor">#DDDDDD</color>
     <color name="split">#ddd</color>
     <color name="greyAssist">#7B7B7B</color>
     <color name="background">#F5F5F5</color>
     <color name="blueAssist">#6A9CEF</color>
 
     <!--Text-->
+
+    <color name="lucky_text">#666666</color>
+    <color name="hintText">#999999</color>
     <color name="luckyText">#666666</color>
     <color name="unluckyText">#999999</color>
     <color name="primaryText">#222222</color>
