@@ -69,6 +69,7 @@
                 android:layout_marginLeft="54dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:lineSpacingExtra="8dp"
                 android:textColor="#222222"
                 android:textSize="14sp"
@@ -85,6 +86,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:text="@string/need_amount"
                     android:textColor="#999999"
                     android:textSize="14sp"/>
@@ -109,6 +111,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:text="@string/borrow_deadline"
                     android:textColor="#999999"
                     android:textSize="14sp"/>
@@ -134,6 +137,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:text="@string/borrow_interest"
                     android:textColor="#999999"
                     android:textSize="14sp"/>
@@ -236,7 +240,7 @@
 
                 <View
                     android:layout_width="3dp"
-                    android:layout_height="15dp"
+                    android:layout_height="match_parent"
                     android:background="#ef6d6a"/>
 
                 <TextView
@@ -286,7 +290,7 @@
 
                 <View
                     android:layout_width="3dp"
-                    android:layout_height="15dp"
+                    android:layout_height="match_parent"
                     android:background="#ef6d6a"/>
 
                 <TextView

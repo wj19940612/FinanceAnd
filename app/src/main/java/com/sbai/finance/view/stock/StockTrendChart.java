@@ -55,7 +55,7 @@ public class StockTrendChart extends ChartView {
     }
 
     protected void setRealTimeLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.BLUE.get()));
+        paint.setColor(Color.parseColor(ChartView.ChartColor.BLACK.get()));
         paint.setStrokeWidth(1);
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);

@@ -1,6 +1,8 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -16,6 +18,12 @@ public class BaseFragment extends Fragment implements
     private TimerHandler mTimerHandler;
     protected String TAG;
     public static final int REQ_CODE_USERDATA = 1001;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MobclickAgent.openActivityDurationTrack(false);
+    }
 
     @Override
     public void onPause() {

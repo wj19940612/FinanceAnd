@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgAssist"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.UserDataActivity">
 
     <com.sbai.finance.view.TitleBar
-        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"

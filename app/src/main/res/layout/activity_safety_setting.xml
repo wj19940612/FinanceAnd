@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.setting.SafetySettingActivity">
 
@@ -33,6 +33,7 @@
         android:id="@+id/modifySafetyLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -49,11 +50,7 @@
             android:textColor="@color/primaryText"
             android:textSize="15sp"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="@dimen/avatar_margin"
-            android:background="@color/splitLineColor"/>
+        <include layout="@layout/split_line"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/forget_safety_password"

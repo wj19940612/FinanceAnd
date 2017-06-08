@@ -23,12 +23,13 @@
     <string name="share">分享</string>
     <string name="borrow_money">借款</string>
     <string name="comment">发表评论&#8230;</string>
-    <string name="leave_message">留言...</string>
+    <string name="leave_message">留言&#8230;</string>
     <string name="people_want_help_him">想要帮助他的人</string>
     <string name="people_want_help_her">想要帮助她的人</string>
     <string name="people_want_help_you">想要帮助你的人</string>
     <string name="people_want_help_him_number">(%1$d)</string>
     <string name="leave_message_number">留言(%1$s)</string>
+    <string name="write_message">写留言</string>
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
     <item name="tag_opinion" type="id">1</item>
@@ -45,6 +46,8 @@
     <string name="obtain_auth_code_continue">重新获取</string>
     <string name="login_hint">登录即表示同意</string>
     <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
+    <string name="confirm_agree">确认即同意</string>
+    <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
 
     <!--Home-->
     <string name="future">期货</string>
@@ -80,6 +83,13 @@
     <string name="idea_title">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
+    <string name="choose_trade_type">选择交易类型</string>
+    <string name="quick_trade">快速交易</string>
+    <string name="strategy_buy_sell">策略买卖(暂未开放)</string>
+    <string name="firm_offer_open_account">实盘开户(暂未开放)</string>
+    <string name="confirm_login">确认登录</string>
+    <string name="crude_oil_future">原油期货宝</string>
+    <string name="quick_trade_offer_by_company">快速交易由“上海幸福网络科技有限公司”提供</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>
@@ -157,6 +167,11 @@
     <string name="please_input_here">请在此输入......</string>
     <string name="you_dont_have_trade">你还没有交易过哦</string>
     <string name="now_not_has_feedback_data">暂无反馈消息</string>
+    <string name="about_le_mi">关于乐米</string>
+    <string name="action_product">功能介绍</string>
+    <string name="user_protocol">用户协议</string>
+    <string name="check_update">检测更新</string>
+    <string name="company">浙江松柏信息技术有限公司 \nCopyright2017</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -174,15 +189,20 @@
     <string name="please_input_user_name">请输入用户名</string>
     <string name="save">保  存</string>
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
-    <string name="nick_name_hint">昵称最多8个字符,请勿使用不良词汇</string>
+    <string name="nick_name_hint">1-8个字符，可由中英文、数字组成</string>
     <string name="take_phone_from_camera">拍照</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
-    <string name="take_phone_cancel">取  消</string>
+    <string name="take_phone_cancel">取消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>
-    <string name="real_name">真实姓名</string>
-    <string name="identity_card_number">身份证号码</string>
+    <string name="real_name">姓名</string>
+    <string name="identity_card_number">身份证</string>
     <string name="identity_card_font">身份证正面照片</string>
     <string name="identity_card_reverse">身份证反面照片</string>
+    <string name="identity_card_phone">身份证照片</string>
+    <string name="again_submit">重新提交</string>
+    <string name="boy">男</string>
+    <string name="girl">女</string>
+
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -234,12 +254,14 @@
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
+    <string name="authenticated_info">已认证信息</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
     <string name="attention_number">%1$d</string>
     <string name="fans_number">%1$d</string>
     <string name="real_name_error">姓名输入错误</string>
     <string name="identity_card_error">身份证输入错误</string>
+    <string name="hint">提示</string>
 
     <string name="shield_him">屏蔽TA</string>
     <string name="is_shield">已屏蔽</string>
@@ -299,6 +321,7 @@
     <string name="opinion_length">%1$d/300</string>
     <string name="submit_has_empty">提  交</string>
     <string name="please_enter_the_text">请输入文字...</string>
+    <string name="describe_your_opinion">描述一下你的观点吧</string>
 
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
@@ -320,12 +343,24 @@
     <string name="borrow_overdue">超出借款期限</string>
     <string name="no_remark">备注信息不能为空</string>
     <string name="borrow_over_money">借款金额不符合要求</string>
+    <string name="money_less_500">借款金额少于500元</string>
+    <string name="money_more_2000">借款金额超过2000元</string>
+    <string name="interest_less_1">借款利息少于1元</string>
+    <string name="interest_more_200">借款利息超过200元</string>
+    <string name="days_less_1">借款期限少于1天</string>
+    <string name="days_more_60">借款期限超过60天</string>
+    <string name="no_address">请选择地址</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">发布即同意</string>
     <string name="borrow_agreement">《乐米借款规则与用户须知》</string>
     <string name="publish_success">发布成功</string>
     <string name="protocol">借款规则与用户须知</string>
     <string name="no_record">暂无借款</string>
+    <string name="commit">已提交</string>
+    <string name="wait_help">等待互助</string>
+    <string name="end">已结束</string>
+    <string name="borrow_in_days">已借入 %1$d天</string>
+    <string name="borrow_out_days">已借出 %1$d天</string>
     <!--mutual-->
     <string name="good_heart_people">好心人</string>
     <string name="load_person">借款人</string>
@@ -356,7 +391,7 @@
     <string name="borrow_in_time_success">借入</string>
     <string name="borrow_in_time_failure">失败</string>
     <string name="call">联系对方</string>
-    <string name="already_repay">已经还款</string>
+    <string name="already_repay">确认还款</string>
     <string name="already_repayment">已还款</string>
     <string name="is_pay_intention">已支付意向金</string>
     <string name="not_allow">审核失败</string>
@@ -424,6 +459,12 @@
     <string name="company_address">公司地址</string>
     <string name="business_scope">经营范围</string>
 
+    <!--分享-->
+    <string name="share_to">分享到:</string>
+    <string name="wechat_friend">微信</string>
+    <string name="wechat_circle">朋友圈</string>
+    <string name="weibo">微博</string>
+    <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
     <string name="pay_count">支付金额: %1$s</string>

@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="#222222"
+            android:textColor="@color/primaryText"
             android:textSize="16sp"
             tools:text="张三丰"/>
 
@@ -39,7 +39,7 @@
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/userName"
             android:textColor="@color/assistText"
-            android:textSize="11sp"
+            android:textSize="10sp"
             tools:text="@string/is_attention"/>
 
     </RelativeLayout>
@@ -60,7 +60,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="12dp"
             android:maxLines="2"
-            android:textColor="#222222"
+            android:textColor="@color/primaryText"
             android:textSize="14sp"
             tools:text="涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
     </RelativeLayout>
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/prediction"
             android:paddingLeft="8dp"
-            android:textColor="#999999"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="2008/08/08 08:00"/>
 
@@ -113,7 +113,7 @@
             android:drawableLeft="@drawable/ic_like_future"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>
@@ -121,5 +121,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/splitLineColor"/>
+        android:background="@color/split"/>
 </LinearLayout>

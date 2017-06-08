@@ -1,12 +1,19 @@
 package com.sbai.finance.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -17,6 +24,88 @@ import java.io.UnsupportedEncodingException;
 public class ImageUtils {
 
     private static final String TAG = "ImageUtils";
+
+    private File mRoot;
+
+    private static ImageUtils sImageUtil;
+
+    private ImageUtils() {
+    }
+
+    public static ImageUtils getUtil() {
+        if (sImageUtil == null) {
+            sImageUtil = new ImageUtils();
+        }
+        return sImageUtil;
+    }
+
+    public File saveGalleryBitmap(Context context, Bitmap bitmap, String fileName) {
+        File file = saveBitmap(bitmap, fileName);
+        String[] paths = {file.getAbsolutePath()};
+        String[] mimeTypes = {"image/jpeg"};
+        MediaScannerConnection.scanFile(context, paths, mimeTypes, new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String path, Uri uri) {
+                Log.d(TAG, "Scanned " + path + ":" + "-> uri= " + uri);
+            }
+        });
+        return file;
+    }
+
+    public File saveBitmap(Bitmap bitmap, String fileName) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) { // Ues external storage first
+            try {
+                mRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                if (!mRoot.mkdirs()) {
+                    Log.d(TAG, "ImageUtil: external picture storage is exist");
+                }
+            } catch (Exception e) { // In case of folder missing, should not be call
+                mRoot = Environment.getExternalStorageDirectory();
+                e.printStackTrace();
+            } finally {
+                Log.d(TAG, "ImageUtil: external storage is " + mRoot.getAbsolutePath());
+            }
+        }
+        File file = createFile(mRoot, fileName);
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return file;
+    }
+
+    public File createFile(File root, String fileName) {
+        int lastIndexOfSeparator = fileName.lastIndexOf(File.separator);
+        if (lastIndexOfSeparator != -1) {
+            String subDir = fileName.substring(0, lastIndexOfSeparator);
+            String newFileName = fileName.substring(lastIndexOfSeparator + 1, fileName.length());
+            File fullDir = new File(root, subDir);
+            if (!fullDir.mkdirs()) {
+                Log.d(TAG, "createFile: directory create failure or directory had created");
+            }
+
+            if (fullDir.exists()) {
+                return new File(fullDir, newFileName);
+            }
+            return new File(root, newFileName);
+
+        } else {
+            return new File(root, fileName);
+        }
+    }
+
 
     /**
      * bitmap转为base64
@@ -52,6 +141,7 @@ public class ImageUtils {
         }
         return result;
     }
+
     public static String compressImageToBase64(String urlPath) {
         return bitmapToBase64(compressScale(urlPath));
     }
@@ -59,8 +149,9 @@ public class ImageUtils {
     public static String compressImageToBase64(Bitmap bitmap) {
         return bitmapToBase64(compressScale(bitmap));
     }
-    public static String compressImageToBase64(String urlPath,float ratio) {
-        return bitmapToBase64(compressScale(urlPath,ratio));
+
+    public static String compressImageToBase64(String urlPath, float ratio) {
+        return bitmapToBase64(compressScale(urlPath, ratio));
     }
 
 
@@ -156,7 +247,8 @@ public class ImageUtils {
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
         return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
     }
-    public static Bitmap compressScale(String srcPath,float ratio) {
+
+    public static Bitmap compressScale(String srcPath, float ratio) {
 
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         // 开始读入图片，此时把options.inJustDecodeBounds 设回true了

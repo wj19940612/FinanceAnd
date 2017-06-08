@@ -27,8 +27,22 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
-
-
+    /**
+     * 期货搜索
+     */
+    public static API searchFuture(String search){
+        return new API("/order/future/query/search.do",
+                new ApiParams()
+                        .put("search", search));
+    }
+    /**
+     * 股票搜索
+     */
+    public static API searchStock(String search){
+        return new API("/order/stock/query/search.do",
+                new ApiParams()
+                        .put("search", search));
+    }
     /**
      * 股票除指数品种
      *
@@ -36,12 +50,19 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getStockVariety(Integer page, Integer pageSize, String search) {
+    public static API getStockVariety(int page, int pageSize, String search) {
         return new API("/order/order/getStockVariety.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize)
                         .put("search", search));
+    }
+
+    public static API getMyLoad(int page, int pageSize) {
+        return new API("/coterie/help/loan/myLoan.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 
     /**
@@ -913,11 +934,11 @@ public class Client {
      * @param days
      * @param interest
      * @param money
-     * @param userId
      * @return
      */
 
-    public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money, String userId) {
+    public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money,
+                               String location,double locationLng,double locationLat) {
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
@@ -925,7 +946,9 @@ public class Client {
                         .put("days", days)
                         .put("interest", interest)
                         .put("money", money)
-                        .put("userId", userId));
+                        .put("location",location)
+                        .put("locationLng",locationLng)
+                        .put("locationLat",locationLat));
     }
 
     /**
@@ -952,7 +975,7 @@ public class Client {
      * @param id
      * @return
      */
-    public static API cancelBorrowIn(Integer id) {
+    public static API cancelBorrowIn(int id) {
         return new API("/coterie/help/loan/cancelLoan.do",
                 new ApiParams()
                         .put("id", id));
@@ -964,7 +987,7 @@ public class Client {
      * @param id
      * @return
      */
-    public static API repayed(Integer id) {
+    public static API repayed(int id) {
         return new API("/coterie/help/loan/repayed.do",
                 new ApiParams()
                         .put("id", id));
@@ -976,7 +999,7 @@ public class Client {
      * @param id
      * @return
      */
-    public static API getHelper(Integer id) {
+    public static API getHelper(int id) {
         return new API("/coterie/help/loan/intentionCount.do",
                 new ApiParams()
                         .put("id", id));
@@ -988,7 +1011,7 @@ public class Client {
      * @param id
      * @return
      */
-    public static API selectHelper(Integer id, String userId) {
+    public static API selectHelper(int id, String userId) {
         return new API("/coterie/help/loan/intentionCount.do",
                 new ApiParams()
                         .put("userId", userId)
@@ -1031,9 +1054,18 @@ public class Client {
                         .put("id", id));
     }
 
+    //借款协议
     public static API getBorrowProcotol() {
         return new API("/user/article/articleDetail.do",
                 new ApiParams().put("id", 2));
+    }
+    /**
+     *借款留言
+     */
+    public static API getBorrowMessage(int loanId) {
+        return new API("/coterie/help/loanNote/showNotes.do",
+                new ApiParams()
+                        .put("loanId", loanId));
     }
 
     /**
@@ -1272,4 +1304,9 @@ public class Client {
     public static API getStockNewsInfo(String id) {
         return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
+
+    //h5关于我们的界面网址
+    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about?nohead=1";
+
+
 }

@@ -87,7 +87,8 @@ public class IconTextRow extends LinearLayout {
             mPaint.setColor(mSplitLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mSplitLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
-            canvas.drawLine(0, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
+            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+            canvas.drawLine(padding, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
         }
     }
 
@@ -161,6 +162,10 @@ public class IconTextRow extends LinearLayout {
 
     public void setSubText(int resid) {
         mSubTextView.setText(resid);
+    }
+
+    public void setSubTextColor(int color) {
+        mSubTextView.setTextColor(color);
     }
 
     public String getSubText() {

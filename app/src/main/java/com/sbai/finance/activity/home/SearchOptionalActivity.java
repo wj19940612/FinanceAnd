@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,14 +18,26 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.TitleBar;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,7 +89,47 @@ public class SearchOptionalActivity extends BaseActivity {
             }
         });
         mOptionalAdapter = new OptionalAdapter(this);
+        mOptionalAdapter.setOnClickListener(new OptionalAdapter.OnClickListener() {
+            @Override
+            public void onClick(Variety variety) {
+                Client.addOption(variety.getVarietyId())
+                        .setTag(TAG)
+                        .setCallback(new Callback<Resp<JsonObject>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<JsonObject> resp) {
+                                if (resp.isSuccess()) {
+                                    //CustomToast.getInstance().showText(getActivity(), R.string.add_option_succeed);
+                                    requestSearch(mSearch.getText().toString());
+                                } else {
+                                    ToastUtil.curt(resp.getMsg());
+                                }
+                            }
+                        }).fireSync();
+            }
+        });
         mListView.setAdapter(mOptionalAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Variety variety = (Variety) parent.getItemAtPosition(position);
+                if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
+                    Launcher.with(getActivity(), FutureTradeActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    finish();
+                }
+                if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
+                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)){
+                        Launcher.with(getActivity(), StockIndexActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                        finish();
+                    }else{
+                        Launcher.with(getActivity(), StockDetailActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                        finish();
+                    }
+                }
+            }
+        });
     }
     private void requestSearch(String key) {
         try {
@@ -84,7 +137,30 @@ public class SearchOptionalActivity extends BaseActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        if (type.equalsIgnoreCase(Variety.VAR_STOCK)) {
+            Client.searchStock(key).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Variety> data) {
+                            updateSearchData(data);
+                        }
+                    }).fire();
+        } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
+            Client.searchFuture(key).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Variety> data) {
+                            updateSearchData(data);
+                        }
+                    }).fire();
+        }
 
+    }
+
+    private void updateSearchData(List<Variety> data) {
+        mOptionalAdapter.clear();
+        mOptionalAdapter.addAll(data);
+        mOptionalAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -138,6 +214,13 @@ public class SearchOptionalActivity extends BaseActivity {
                     mFutureCode.setText(variety.getContractsCode());
                 }else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
                     mFutureCode.setText(variety.getVarietyType());
+                }
+                if (variety.getCheckOptional()==Variety.OPTIONAL){
+                    mAddOptional.setVisibility(View.GONE);
+                    mStatus.setVisibility(View.VISIBLE);
+                }else{
+                    mStatus.setVisibility(View.GONE);
+                    mAddOptional.setVisibility(View.VISIBLE);
                 }
                 mAddOptional.setOnClickListener(new View.OnClickListener() {
                     @Override

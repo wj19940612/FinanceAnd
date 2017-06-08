@@ -12,7 +12,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/splitLineColor">
+        android:background="@color/background">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -43,7 +43,8 @@
                     android:layout_marginRight="15dp"
                     android:gravity="right"
                     android:background="@null"
-                    android:textColorHint="@color/hintText"
+                    android:textColorHint="@color/unluckyText"
+                    android:textCursorDrawable="@null"
                     android:inputType="number"
                     android:textSize="@dimen/list_title_size"
                     android:hint="@string/borrow_amount"/>
@@ -80,8 +81,9 @@
                     android:layout_gravity="center"
                     android:gravity="right"
                     android:layout_marginRight="15dp"
+                    android:textCursorDrawable="@null"
                     android:background="@null"
-                    android:textColorHint="@color/hintText"
+                    android:textColorHint="@color/unluckyText"
                     android:inputType="number"
                     android:textSize="@dimen/list_title_size"
                     android:hint="@string/borrow_interest_amount"/>
@@ -119,7 +121,8 @@
                     android:layout_marginRight="15dp"
                     android:gravity="right"
                     android:background="@null"
-                    android:textColorHint="@color/hintText"
+                    android:textColorHint="@color/unluckyText"
+                    android:textCursorDrawable="@null"
                     android:inputType="number"
                     android:textSize="@dimen/list_title_size"
                     android:hint="@string/borrow_day_limit_hint"/>
@@ -160,9 +163,9 @@
                     android:layout_marginBottom="34dp"
                     android:background="@null"
                     android:textColorHint="@color/assistText"
+                    android:hint="@string/borrow_remark_hint"
                     android:textColor="@color/blackAssist"
-                    android:textSize="12sp"
-                    android:hint="@string/borrow_remark_hint"/>
+                    android:textSize="15sp"/>
                 <include layout="@layout/split_line_grey_light"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -212,7 +215,8 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:clickable="true"
-                    android:button="@drawable/checkbox_style"/>
+                    android:button="@drawable/checkbox_style"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"

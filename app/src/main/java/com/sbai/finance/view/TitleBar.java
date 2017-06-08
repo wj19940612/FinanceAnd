@@ -46,13 +46,17 @@ public class TitleBar extends RelativeLayout {
 
         init();
     }
+
     private OnBackClickListener mBackClickListener;
-    public  interface OnBackClickListener{
+
+    public interface OnBackClickListener {
         void onClick();
     }
-    public void setBackClickLisenter(OnBackClickListener onBackClickListener){
-        mBackClickListener =onBackClickListener;
+
+    public void setBackClickLisenter(OnBackClickListener onBackClickListener) {
+        mBackClickListener = onBackClickListener;
     }
+
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TitleBar);
 
@@ -79,13 +83,14 @@ public class TitleBar extends RelativeLayout {
 
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
 
-
         typedArray.recycle();
     }
 
     private void init() {
         setBackgroundResource(mBackgroundRes);
         int fixedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+                getResources().getDisplayMetrics());
+        int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14,
                 getResources().getDisplayMetrics());
 
         // center view
@@ -99,14 +104,24 @@ public class TitleBar extends RelativeLayout {
         }
 
         // left view
-        int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics());
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         mLeftView = new TextView(getContext());
         mLeftView.setGravity(Gravity.CENTER);
         mLeftView.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
         addView(mLeftView, params);
+        if (mBackFeature) {
+            setBackButtonIcon(mBackIcon);
+            mLeftView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackClick(view);
+                    if (mBackClickListener != null) {
+                        mBackClickListener.onClick();
+                    }
+                }
+            });
+        }
 
         // right view
         mRightViewParent = new LinearLayout(getContext());
@@ -118,18 +133,6 @@ public class TitleBar extends RelativeLayout {
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         addView(mRightViewParent, params);
-        if (mBackFeature) {
-            setBackButtonIcon(mBackIcon);
-            mLeftView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackClick(view);
-                    if (mBackClickListener!=null){
-                        mBackClickListener.onClick();
-                    }
-                }
-            });
-        }
 
         setTitle(mTitle);
         setTitleSize(mTitleSize);
@@ -151,11 +154,9 @@ public class TitleBar extends RelativeLayout {
 
     public void setBackButtonIcon(Drawable backIcon) {
         if (backIcon != null) {
-            mLeftView.setCompoundDrawables(backIcon, null, null, null);
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(backIcon, null, null, null);
         } else { // default icon
-
-            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back, 0, 0, 0);
-
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_white, 0, 0, 0);
         }
     }
 
@@ -236,7 +237,7 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
-    public void setRightViewEnable(boolean enable){
+    public void setRightViewEnable(boolean enable) {
         mRightView.setEnabled(enable);
     }
 

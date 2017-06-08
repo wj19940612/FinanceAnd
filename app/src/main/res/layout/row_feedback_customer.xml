@@ -27,27 +27,17 @@
                     android:layout_height="1dp"
                     android:layout_weight="1"/>
 
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:background="@color/secondaryText"/>
-
                 <TextView
                     android:id="@+id/endLineTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/ic_feedback_time_bg"
                     android:gravity="center"
                     android:textColor="@color/secondaryText"
                     android:textSize="12sp"/>
 
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:background="@color/secondaryText"/>
 
                 <Space
                     android:layout_width="0dp"
@@ -95,6 +85,7 @@
                         android:id="@+id/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:lineSpacingExtra="5dp"
                         android:paddingLeft="5dp"/>
 

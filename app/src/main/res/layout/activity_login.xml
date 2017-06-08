@@ -5,23 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_login"
+    android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.LoginActivity">
 
     <RelativeLayout
-        android:background="#ffE9D7"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#ffE9D7"
+        android:fitsSystemWindows="true">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/deletePage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:layout_marginTop="25dp"
+            android:paddingLeft="@dimen/common_margin"
+            android:paddingRight="30dp"
+            android:paddingTop="25dp"
             app:srcCompat="@drawable/ic_login_head_close"/>
 
         <android.support.v7.widget.AppCompatTextView
@@ -77,13 +78,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:visibility="invisible"
-                    app:srcCompat="@drawable/ic_login_label_delete"/>
+                    app:srcCompat="@drawable/ic_data_clear"/>
             </android.support.v7.widget.LinearLayoutCompat>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/splitLineColor"/>
+                android:background="@color/split"/>
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -120,7 +121,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/splitLineColor"/>
+                android:background="@color/split"/>
         </LinearLayout>
 
 
@@ -168,7 +169,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_hint"
-            android:textColor="@color/lucky_text"
+            android:textColor="@color/luckyText"
             android:textSize="12sp"/>
 
         <TextView

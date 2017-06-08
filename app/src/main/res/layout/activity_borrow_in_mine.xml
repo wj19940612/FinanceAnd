@@ -16,7 +16,7 @@
      <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/splitLineColor">
+        android:background="@color/split">
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:layout_alignParentTop="true"
             android:layout_above="@+id/borrowInHis"
             android:dividerHeight="10dp"
-            android:divider="@color/splitLineColor"
+            android:divider="@color/split"
             android:visibility="gone"/>
         <TextView
             android:id="@+id/empty"
