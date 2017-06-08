@@ -38,6 +38,7 @@ import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -595,12 +596,13 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         }
         productType.setText(productTypeStr);
 
+        final String shareUrl = API.getHost() + getString(R.string.future_share_host, mVariety.getVarietyId());
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDiglogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), "", false)
+                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl, false)
                         .show(getSupportFragmentManager());
             }
         });
