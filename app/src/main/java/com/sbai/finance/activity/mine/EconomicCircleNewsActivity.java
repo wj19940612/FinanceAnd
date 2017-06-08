@@ -13,13 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.mine.HistoryNewsModel;
-import com.sbai.finance.model.mine.UserInfo;
-import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,16 +98,16 @@ public class EconomicCircleNewsActivity extends BaseActivity {
 
             public void bindDataWithView(HistoryNewsModel item, Context context) {
                 if (item == null) return;
-                UserInfo userInfo = item.getUserInfo();
-                if (userInfo != null) {
-                    Glide.with(context).load(userInfo.getUserPortrait())
-                            .bitmapTransform(new GlideCircleTransform(context))
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .into(mUserHeadImage);
-                    mUserAction.setText(userInfo.getUserName());
-                }
-                mContent.setText(item.getMsg());
-                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+//                UserInfo userInfo = item.getUserInfo();
+//                if (userInfo != null) {
+//                    Glide.with(context).load(userInfo.getUserPortrait())
+//                            .bitmapTransform(new GlideCircleTransform(context))
+//                            .placeholder(R.drawable.ic_default_avatar)
+//                            .into(mUserHeadImage);
+//                    mUserAction.setText(userInfo.getUserName());
+//                }
+//                mContent.setText(item.getMsg());
+//                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
 
                 // TODO: 2017/6/8 借款需要分开
             }

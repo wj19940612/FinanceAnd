@@ -5,6 +5,8 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.httplib.ApiParams;
 
+import static android.R.attr.password;
+
 
 public class Client {
 
@@ -381,16 +383,18 @@ public class Client {
      * 请求类型 post
      * 请求Url  msg/msg/history.do
      *
-     * @param classify 消息类型{1.系统消息 2.互助消息 3.经济圈消息}
+     * @param classify 消息类型 1系统 2观点 3借款
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, int classify, int page) {
+    public static API requestHistoryNews(boolean autoRead, String classify, int page, Integer status, long createTime) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
                 .put("size", DEFAULT_PAGE_SIZE)
-                .put("autoRead", autoRead));
+                .put("status", status)
+                .put("autoRead", autoRead)
+                .put("createTime", createTime));
     }
 
     /**
@@ -1312,6 +1316,39 @@ public class Client {
      */
     public static API getStockNewsInfo(String id) {
         return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
+    }
+
+    /**
+     * GET 查看是否创建过密码（wms）
+     *
+     * @return
+     */
+    public static API getUserHasPassWord() {
+        return new API("/user/userAccount/hasPassword.do", null);
+    }
+
+    /**
+     * /user/userAccount/setPassword.do
+     * POST
+     * 设置安全密码
+     *
+     * @param password
+     * @return
+     */
+    public static API submitSetPassword(String password) {
+        return new API(POST, "/user/userAccount/setPassword.do", new ApiParams().put("password", password));
+    }
+
+    /**
+     * /user/userAccount/updatePassword.do
+     * POST
+     * 修改安全密码（wms）
+     *
+     * @param newPassword
+     * @return
+     */
+    public static API updatePassword(String newPassword) {
+        return new API(POST, "/user/userAccount/updatePassword.do", new ApiParams().put("password", newPassword));
     }
 
     //h5关于我们的界面网址
