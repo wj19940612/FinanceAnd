@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +37,11 @@ public class PayIntentionActivity extends BaseActivity {
 	TextView mIntentionAmount;
 	@BindView(android.R.id.list)
 	MyListView mListView;
-	@BindView(R.id.payIntention)
-	TextView mPayIntention;
+	@BindView(R.id.confirmPayment)
+	TextView mConfirmPayment;
 
 	private double mAmount;
 	private int mDataId;
-	private int mUserId;
 	private static int mType;
 	private static String mPlatform;
 	private String mPaymentPath;
@@ -65,9 +63,9 @@ public class PayIntentionActivity extends BaseActivity {
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				mConfirmPayment.setEnabled(true);
 				mPayIntentionAdapter.setChecked(position);
 				mPayIntentionAdapter.notifyDataSetChanged();
-				Log.i(TAG, "onItemClick: " + position);
 			}
 		});
 
@@ -77,7 +75,6 @@ public class PayIntentionActivity extends BaseActivity {
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
 	}
 
 	private void requestIntentionAmount() {
@@ -142,8 +139,8 @@ public class PayIntentionActivity extends BaseActivity {
 		}
 
 		static class ViewHolder {
-			@BindView(R.id.checkbox)
-			ImageView mCheckbox;
+			@BindView(R.id.checkboxClick)
+			ImageView mCheckboxClick;
 			@BindView(R.id.payName)
 			TextView mPayName;
 
@@ -155,18 +152,24 @@ public class PayIntentionActivity extends BaseActivity {
 				if (item == null) return;
 				mPayName.setText(item.getName());
 
+				if(item.getType() == 1) {
+					mPayName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alipay, 0, 0, 0);
+				} else {
+					mPayName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_we_chat_pay, 0, 0, 0);
+				}
+
 				if (checked == position) {
-					mCheckbox.setBackgroundResource(R.drawable.ic_checkbox_checked);
+					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_checked);
 					mPlatform = item.getPlatform();
 					mType = item.getType();
 				} else {
-					mCheckbox.setBackgroundResource(R.drawable.ic_checkbox);
+					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_unchecked);
 				}
 			}
 		}
 	}
 
-	@OnClick(R.id.payIntention)
+	@OnClick(R.id.confirmPayment)
 	public void onViewClicked() {
 		Client.getPaymentPath(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {

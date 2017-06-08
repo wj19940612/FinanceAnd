@@ -154,8 +154,7 @@ public class GpsUtils {
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            ToastUtil.show(e.getMessage());
-//            e.printStackTrace();
+            Log.d(TAG, " e: " + e.getMessage());
         }
         if (mcityName.length() != 0) {
             return mcityName.substring(0, (mcityName.length() - 1));

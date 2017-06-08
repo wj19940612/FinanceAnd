@@ -10,18 +10,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.AreaTakePhoneActivity;
@@ -41,7 +35,7 @@ import butterknife.Unbinder;
  * 上传用户头像
  */
 
-public class UploadUserImageDialogFragment extends DialogFragment {
+public class UploadUserImageDialogFragment extends BaseDialogFragment {
     private static final String TAG = "UploadUserImageDialogFr";
 
     private static final String KEY_IF_CLIP_IMAGE = "IF_CLIP_IMAGE";
@@ -134,20 +128,9 @@ public class UploadUserImageDialogFragment extends DialogFragment {
             mImagePathIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
             mIsAreaTakePhone = getArguments().getBoolean(KEY_IS_AREA_TAKE_PHONE, false);
         }
-        setStyle(STYLE_NO_TITLE, R.style.UpLoadHeadImageDialog);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Window window = getDialog().getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.BOTTOM);
-            DisplayMetrics dm = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
-        }
-    }
+
 
     @Nullable
     @Override
@@ -196,10 +179,6 @@ public class UploadUserImageDialogFragment extends DialogFragment {
                 this.dismiss();
                 break;
         }
-    }
-
-    public void show(FragmentManager manager) {
-        this.show(manager, UploadUserImageDialogFragment.class.getSimpleName());
     }
 
     @Override

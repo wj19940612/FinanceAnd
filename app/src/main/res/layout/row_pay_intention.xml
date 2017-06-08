@@ -3,36 +3,38 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@android:color/white"
-              android:gravity="center_vertical"
-              android:orientation="vertical">
+              android:background="@android:color/white">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            tools:src="@drawable/ic_checkbox"/>
+        android:layout_height="60dp">
 
         <TextView
             android:id="@+id/payName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:textColor="@color/blackAssist"
-            tools:text="@string/we_chat_pay"/>
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"
+            tools:drawableLeft="@drawable/ic_we_chat_pay"
+            tools:text="微信支付"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/split"/>
+        <ImageView
+            android:id="@+id/checkboxClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            tools:src="@drawable/ic_checkbox_unchecked"/>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/splitLineColor"/>
+    </RelativeLayout>
 </LinearLayout>
