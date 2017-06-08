@@ -27,6 +27,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.ShareDiglogFragment;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
@@ -593,6 +594,16 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             productTypeStr = getString(R.string.future_foreign);
         }
         productType.setText(productTypeStr);
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareDiglogFragment
+                        .newInstance()
+                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), "", false)
+                        .show(getSupportFragmentManager());
+            }
+        });
     }
 
     @Override

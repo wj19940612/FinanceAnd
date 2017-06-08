@@ -23,6 +23,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.ShareDiglogFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
@@ -369,6 +370,16 @@ public abstract class StockTradeActivity extends BaseActivity {
         } else {
             exchangeStatus.setVisibility(View.VISIBLE);
         }
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareDiglogFragment
+                        .newInstance()
+                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), "", true)
+                        .show(getSupportFragmentManager());
+            }
+        });
     }
 
     private void initData() {
