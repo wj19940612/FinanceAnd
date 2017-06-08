@@ -184,7 +184,7 @@
                         android:id="@android:id/list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:divider="@drawable/divider_economic_circle_list"
+                        android:divider="@color/split"
                         android:dividerHeight="0.5dp"
                         android:footerDividersEnabled="false"
                         android:headerDividersEnabled="false"

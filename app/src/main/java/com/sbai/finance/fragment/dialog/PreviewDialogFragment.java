@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.mine;
+package com.sbai.finance.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,15 +25,15 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/5/11.
  */
 
-public class PreviewFragment extends DialogFragment {
+public class PreviewDialogFragment extends DialogFragment {
     private String mUserPortrait;
 
     @BindView(R.id.imageview)
     ImageView mImageview;
     Unbinder unbinder;
 
-    public static PreviewFragment newInstance(String userPortrait) {
-        PreviewFragment fragment = new PreviewFragment();
+    public static PreviewDialogFragment newInstance(String userPortrait) {
+        PreviewDialogFragment fragment = new PreviewDialogFragment();
         Bundle args = new Bundle();
         args.putString(Launcher.EX_PAYLOAD, userPortrait);
         fragment.setArguments(args);
@@ -78,7 +78,7 @@ public class PreviewFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, PreviewFragment.class.getSimpleName());
+        this.show(manager, PreviewDialogFragment.class.getSimpleName());
     }
 
 
