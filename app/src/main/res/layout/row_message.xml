@@ -10,6 +10,6 @@
        android:layout_height="wrap_content"
        android:textSize="@dimen/sp_14"
        android:textColor="@color/warningText"
-       android:lineSpacingExtra="2dp"
+       android:lineSpacingExtra="4dp"
        tools:text="威廉 :我可以帮助你，怎么转给你呢?我可以帮助你，怎么转给你呢?"/>
 </LinearLayout>

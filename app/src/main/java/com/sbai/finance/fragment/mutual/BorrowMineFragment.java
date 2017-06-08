@@ -1,6 +1,8 @@
 package com.sbai.finance.fragment.mutual;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,9 +44,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.R.attr.id;
+import static android.app.Activity.RESULT_OK;
+
 
 public class BorrowMineFragment extends BaseFragment implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
+    public static final int REQ_CODE_STATUS_CHANGE=250;
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.empty)
@@ -92,9 +98,9 @@ public class BorrowMineFragment extends BaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BorrowMine item = (BorrowMine) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), BorrowMineDetailsActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, item)
-                            .execute();
+                    Intent intent = new Intent(getActivity(), BorrowMineDetailsActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD,item);
+                    startActivityForResult(intent,REQ_CODE_STATUS_CHANGE);
                 }
             }
         });
@@ -167,6 +173,34 @@ public class BorrowMineFragment extends BaseFragment implements
         }
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQ_CODE_STATUS_CHANGE&&resultCode== RESULT_OK){
+            updateBorrowStatus((BorrowMine) data.getParcelableExtra(Launcher.EX_PAYLOAD));
+        }
+    }
+
+    private void updateBorrowStatus(BorrowMine data) {
+        if (data!= null&&mListView!=null&&mBorrowMoneyAdapter!=null){
+            int first = mListView.getFirstVisiblePosition();
+            int last = mListView.getLastVisiblePosition();
+            for (int i = first; i <= last; i++) {
+                BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
+                if (borrowMine!=null&&borrowMine.getId() == data.getId()){
+                    borrowMine.setStatus(data.getStatus());
+                    View childView = mListView.getChildAt(i - mListView.getFirstVisiblePosition());
+                    if (childView!=null){
+                        TextView status = (TextView) childView.findViewById(R.id.status);
+                        status.setText(getActivity().getString(R.string.end));
+                        status.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -246,6 +280,7 @@ public class BorrowMineFragment extends BaseFragment implements
                     case BorrowMine.STATUS_END_NO_ALLOW:
                     case BorrowMine.STATUS_END_NO_CHOICE_HELP:
                     case BorrowMine.STATUS_END_REPAY:
+                    case  BorrowMine.STATUS_END_FIIL:
                         mStatus.setText(context.getString(R.string.end));
                         mStatus.setTextColor(ContextCompat.getColor(context,R.color.luckyText));
                         break;
