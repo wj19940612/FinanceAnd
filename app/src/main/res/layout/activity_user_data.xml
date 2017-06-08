@@ -5,115 +5,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/bgAssist"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.UserDataActivity">
 
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleTextColor="@color/blackAssist"
+        app:titleText="@string/user_data"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/bg_userdata_head">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
-        <com.sbai.finance.view.TitleBar
-            android:id="@+id/titleBar"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="16dp"
+            tools:src="@drawable/ic_default_avatar_big"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:backFeature="true"
-            app:barBackground="@android:color/transparent"
-            app:titleText="@string/user_data"/>
+            android:layout_alignTop="@+id/avatar"
+            android:layout_toRightOf="@+id/avatar"
+            android:drawablePadding="5dp"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp"
+            tools:drawableRight="@drawable/ic_male"
+            tools:text="反方向的钟"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userName"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/avatar"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/hintText"
+            android:textSize="12sp"
+            tools:text="杭州 滨江"/>
+
+        <ImageView
+            android:id="@+id/authenticationIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/avatar"
+            tools:src="@drawable/ic_unauthorized"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/splitLineColor"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_below="@+id/titleBar">
-
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="15dp"
-                tools:src="@drawable/ic_default_avatar_big"/>
-
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/avatar"
-                android:layout_toRightOf="@+id/avatar"
-                android:drawablePadding="8dp"
-                android:textColor="@android:color/white"
-                android:textSize="17sp"
-                tools:drawableLeft="@drawable/ic_male"
-                tools:text="古天乐"/>
-
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/userName"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@+id/avatar"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/greyAssist"
-                android:textSize="12sp"
-                tools:text="中国 香港"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/attentionNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/location"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/avatar"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                tools:text="@string/attention_number"/>
+                android:text="@string/attention_number"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"/>
 
             <TextView
-                android:id="@+id/diagonal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/location"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/attentionNum"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                tools:text=" / "/>
+                android:text="@string/attention"
+                android:textColor="@color/hintText"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="18dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/splitLineColor"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/fansNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/location"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/diagonal"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                tools:text="@string/fans_number"/>
-        </RelativeLayout>
-    </RelativeLayout>
+                android:text="@string/fans_number"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fans"
+                android:textColor="@color/hintText"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/hisPublish"
+        android:id="@+id/hisPublishArea"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/bg_white"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp">
+        android:layout_height="45dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_white">
 
         <TextView
-            android:id="@+id/hisPublishText"
+            android:id="@+id/hisPublish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
             android:drawableLeft="@drawable/ic_his_publish"
-            android:drawablePadding="15dp"
+            android:drawablePadding="5dp"
             android:gravity="center"
             android:text="TA的发表"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"/>
 
         <ImageView
@@ -121,40 +163,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
             android:src="@drawable/ic_arrow_right_tint"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/realNameAuthentication"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_white"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/ic_real_name_authentication"
-            android:drawablePadding="15dp"
-            android:gravity="center"
-            android:text="@string/real_name_authentication"
-            android:textColor="@color/blackAssist"/>
-
-        <TextView
-            android:id="@+id/authentication"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="@string/unauthorized"
-            android:textColor="@color/assistSecondText"
-            android:textSize="13sp"
-            tools:drawableLeft="@drawable/ic_failed"/>
     </RelativeLayout>
 
     <View
@@ -174,17 +184,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_white"
             android:gravity="center"
             android:textColor="@color/redPrimary"
             android:textSize="16sp"
-            tools:text="@string/attention"/>
+            tools:text="@string/plus_attention"/>
 
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@color/splitLineColor"/>
 
         <TextView
@@ -192,9 +201,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_white"
             android:gravity="center"
-            android:textColor="@color/primaryText"
+            android:textColor="@color/hintText"
             android:textSize="16sp"
             tools:text="@string/shield_him"/>
     </LinearLayout>

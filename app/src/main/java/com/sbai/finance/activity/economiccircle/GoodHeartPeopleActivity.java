@@ -24,7 +24,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
+import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -32,7 +32,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
@@ -40,12 +39,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class WantHelpHimOrYouActivity extends BaseActivity {
+public class GoodHeartPeopleActivity extends BaseActivity {
 
 	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1001;
 
-	@BindView(R.id.titleBar)
-	TitleBar mTitleBar;
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
@@ -54,15 +51,14 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 	TextView mPayIntention;
 
 	private int mDataId;
-	private int mUserId;
-	private int mSex;
-	private List<WantHelpHimOrYou> mWantHelpHimOrYouList;
-	private WantHelpHimOrYouAdapter mWantHelpHimOrYouAdapter;
+	private static int mUserId;
+	private List<GoodHeartPeople> mGoodHeartPeopleList;
+	private GoodHeartPeopleAdapter mGoodHeartPeopleAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_want_help_him_or_you);
+		setContentView(R.layout.activity_good_heart_people);
 		ButterKnife.bind(this);
 
 		initData(getIntent());
@@ -75,27 +71,26 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 	private void initViews() {
 		if (LocalUser.getUser().isLogin()) {
 			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
-				mTitleBar.setTitle(R.string.people_want_help_you);
 				mPayIntention.setVisibility(View.VISIBLE);
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-						final WantHelpHimOrYou wantHelpHimOrYou = (WantHelpHimOrYou) parent.getItemAtPosition(position);
+						final GoodHeartPeople goodHeartPeople = (GoodHeartPeople) parent.getItemAtPosition(position);
 						mPayIntention.setEnabled(true);
-						mWantHelpHimOrYouAdapter.setChecked(position);
-						mWantHelpHimOrYouAdapter.notifyDataSetInvalidated();
+						mGoodHeartPeopleAdapter.setChecked(position);
+						mGoodHeartPeopleAdapter.notifyDataSetInvalidated();
 
 						mPayIntention.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								SmartDialog.with(getActivity(),
-										getString(R.string.select_help, wantHelpHimOrYou.getUserName()))
+										getString(R.string.select_help, goodHeartPeople.getUserName()))
 										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 											@Override
 											public void onClick(final Dialog dialog) {
-												Client.chooseGoodPeople(mDataId, mWantHelpHimOrYouList.get(position).getUserId())
+												Client.chooseGoodPeople(mDataId, mGoodHeartPeopleList.get(position).getUserId())
 														.setTag(TAG)
-														.setIndeterminate(WantHelpHimOrYouActivity.this)
+														.setIndeterminate(GoodHeartPeopleActivity.this)
 														.setCallback(new Callback<Resp<JsonPrimitive>>() {
 															@Override
 															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
@@ -108,7 +103,7 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 											}
 										})
 										.setMessageTextSize(16)
-										.setMessageTextColor(ContextCompat.getColor(WantHelpHimOrYouActivity.this, R.color.blackAssist))
+										.setMessageTextColor(ContextCompat.getColor(GoodHeartPeopleActivity.this, R.color.blackAssist))
 										.setNegative(R.string.cancel)
 										.show();
 
@@ -116,55 +111,42 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 						});
 					}
 				});
-			} else {
-				if (mSex == 1) {
-					mTitleBar.setTitle(R.string.people_want_help_her);
-				} else {
-					mTitleBar.setTitle(R.string.people_want_help_him);
-				}
-			}
-		} else {
-			if (mSex == 1) {
-				mTitleBar.setTitle(R.string.people_want_help_her);
-			} else {
-				mTitleBar.setTitle(R.string.people_want_help_him);
 			}
 		}
 
-		mWantHelpHimOrYouAdapter = new WantHelpHimOrYouAdapter(this);
+		mGoodHeartPeopleAdapter = new GoodHeartPeopleAdapter(this);
 		mListView.setEmptyView(mEmpty);
-		mListView.setAdapter(mWantHelpHimOrYouAdapter);
+		mListView.setAdapter(mGoodHeartPeopleAdapter);
 	}
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
-		mSex = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
 
 	private void requestWantHelpHimList() {
 		Client.getWantHelpHimOrYouList(mDataId).setTag(TAG).setIndeterminate(this)
-				.setCallback(new Callback2D<Resp<List<WantHelpHimOrYou>>, List<WantHelpHimOrYou>>() {
+				.setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
 					@Override
-					protected void onRespSuccessData(List<WantHelpHimOrYou> wantHelpHimOrYouList) {
-						mWantHelpHimOrYouList = wantHelpHimOrYouList;
+					protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
+						mGoodHeartPeopleList = goodHeartPeopleList;
 						updateWantHelpHimList();
 					}
 				}).fire();
 	}
 
 	private void updateWantHelpHimList() {
-		mWantHelpHimOrYouAdapter.clear();
-		mWantHelpHimOrYouAdapter.addAll(mWantHelpHimOrYouList);
-		mWantHelpHimOrYouAdapter.notifyDataSetChanged();
+		mGoodHeartPeopleAdapter.clear();
+		mGoodHeartPeopleAdapter.addAll(mGoodHeartPeopleList);
+		mGoodHeartPeopleAdapter.notifyDataSetChanged();
 	}
 
-	static class WantHelpHimOrYouAdapter extends ArrayAdapter<WantHelpHimOrYou> {
+	static class GoodHeartPeopleAdapter extends ArrayAdapter<GoodHeartPeople> {
 
 		private Context mContext;
 		private int mChecked = -1;
 
-		private WantHelpHimOrYouAdapter(Context context) {
+		private GoodHeartPeopleAdapter(Context context) {
 			super(context, 0);
 			mContext = context;
 		}
@@ -202,8 +184,9 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(final Context context, final WantHelpHimOrYou item, int checked, int position) {
+			private void bindingData(final Context context, final GoodHeartPeople item, int checked, int position) {
 				if (item == null) return;
+
 				Glide.with(context).load(item.getPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
@@ -215,6 +198,16 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 					mLocation.setText(R.string.no_location_information);
 				} else {
 					mLocation.setText(item.getLocation());
+				}
+
+				if (LocalUser.getUser().isLogin()) {
+					if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
+						mCheckboxClick.setVisibility(View.VISIBLE);
+					}else {
+						mCheckboxClick.setVisibility(View.INVISIBLE);
+					}
+				} else {
+					mCheckboxClick.setVisibility(View.INVISIBLE);
 				}
 
 				mAvatar.setOnClickListener(new View.OnClickListener() {
@@ -231,9 +224,9 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 				});
 
 				if (checked == position) {
-					mCheckboxClick.setVisibility(View.VISIBLE);
+					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_checked);
 				} else {
-					mCheckboxClick.setVisibility(View.GONE);
+					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_unchecked);
 				}
 
 			}
@@ -246,31 +239,30 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 		if (requestCode == REQ_WANT_HELP_HIM_OR_YOU && resultCode == RESULT_OK) {
 			setResult(RESULT_OK);
 			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
-				mTitleBar.setTitle(R.string.people_want_help_you);
 				mPayIntention.setVisibility(View.VISIBLE);
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-						final WantHelpHimOrYou wantHelpHimOrYou = (WantHelpHimOrYou) parent.getItemAtPosition(position);
+						final GoodHeartPeople goodHeartPeople = (GoodHeartPeople) parent.getItemAtPosition(position);
 						mPayIntention.setEnabled(true);
-						mWantHelpHimOrYouAdapter.setChecked(position);
-						mWantHelpHimOrYouAdapter.notifyDataSetInvalidated();
+						mGoodHeartPeopleAdapter.setChecked(position);
+						mGoodHeartPeopleAdapter.notifyDataSetInvalidated();
 
 						mPayIntention.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								SmartDialog.with(getActivity(),
-										getString(R.string.select_help, wantHelpHimOrYou.getUserName()))
+										getString(R.string.select_help, goodHeartPeople.getUserName()))
 										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 											@Override
 											public void onClick(final Dialog dialog) {
-												Client.chooseGoodPeople(mDataId,  mWantHelpHimOrYouList.get(position).getUserId())
+												Client.chooseGoodPeople(mDataId, mGoodHeartPeopleList.get(position).getUserId())
 														.setTag(TAG)
-														.setIndeterminate(WantHelpHimOrYouActivity.this)
+														.setIndeterminate(GoodHeartPeopleActivity.this)
 														.setCallback(new Callback<Resp<JsonPrimitive>>() {
 															@Override
 															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-																Launcher.with(getActivity(),PayIntentionActivity.class)
+																Launcher.with(getActivity(), PayIntentionActivity.class)
 																		.putExtra(Launcher.EX_PAYLOAD, mDataId)
 																		.execute();
 																dialog.dismiss();
@@ -279,7 +271,7 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 											}
 										})
 										.setMessageTextSize(16)
-										.setMessageTextColor(ContextCompat.getColor(WantHelpHimOrYouActivity.this, R.color.blackAssist))
+										.setMessageTextColor(ContextCompat.getColor(GoodHeartPeopleActivity.this, R.color.blackAssist))
 										.setNegative(R.string.cancel)
 										.show();
 
@@ -287,12 +279,6 @@ public class WantHelpHimOrYouActivity extends BaseActivity {
 						});
 					}
 				});
-			} else {
-				if (mSex == 1) {
-					mTitleBar.setTitle(R.string.people_want_help_her);
-				} else {
-					mTitleBar.setTitle(R.string.people_want_help_him);
-				}
 			}
 		}
 	}

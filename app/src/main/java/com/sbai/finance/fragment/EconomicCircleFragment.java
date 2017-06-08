@@ -197,7 +197,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		}
 
 		if (mFootView == null) {
-			mFootView = View.inflate(getActivity(), R.layout.view_footer, null);
+			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

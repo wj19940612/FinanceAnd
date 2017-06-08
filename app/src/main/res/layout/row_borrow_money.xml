@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="6dp"
             android:layout_toRightOf="@+id/avatar"
             android:textColor="#222222"
             android:textSize="16sp"
@@ -56,7 +56,7 @@
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:lineSpacingExtra="8dp"
+        android:lineSpacingExtra="6dp"
         android:maxLines="2"
         android:textColor="#222222"
         android:textSize="14sp"
@@ -67,6 +67,7 @@
         android:layout_height="88dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/bg_product"
         android:padding="14dp">
 
@@ -156,6 +157,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:background="@drawable/bg_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

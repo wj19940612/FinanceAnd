@@ -22,12 +22,13 @@
     <string name="comment_number">评论(%1$d)</string>
     <string name="share">分享</string>
     <string name="borrow_money">借款</string>
-    <string name="comment">发表评论....</string>
+    <string name="comment">发表评论&#8230;</string>
+    <string name="leave_message">留言...</string>
     <string name="people_want_help_him">想要帮助他的人</string>
     <string name="people_want_help_her">想要帮助她的人</string>
     <string name="people_want_help_you">想要帮助你的人</string>
     <string name="people_want_help_him_number">(%1$d)</string>
-    <string name="leave_message">留言(%1$s)</string>
+    <string name="leave_message_number">留言(%1$s)</string>
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
     <item name="tag_opinion" type="id">1</item>
@@ -139,6 +140,7 @@
 
     <!-- 我的界面 -->
     <string name="attention">关注</string>
+    <string name="plus_attention">+ 关注</string>
     <string name="fans">粉丝</string>
     <string name="my_publish">我的发表</string>
     <string name="her_publish">TA的发表</string>
@@ -234,8 +236,8 @@
     <string name="authenticated">已认证</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
-    <string name="attention_number">关注 %1$d</string>
-    <string name="fans_number">粉丝 %1$d</string>
+    <string name="attention_number">%1$d</string>
+    <string name="fans_number">%1$d</string>
     <string name="real_name_error">姓名输入错误</string>
     <string name="identity_card_error">身份证输入错误</string>
 
@@ -325,7 +327,7 @@
     <string name="protocol">借款规则与用户须知</string>
     <string name="no_record">暂无借款</string>
     <!--mutual-->
-    <string name="good_heart">好心人</string>
+    <string name="good_heart_people">好心人</string>
     <string name="load_person">借款人</string>
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
     <string name="mutual_no_borrow_out">您暂无向他人借出款项哦~</string>
@@ -378,15 +380,17 @@
     <!--借款有道-->
     <string name="give_help_dialog_title">是否要帮助“%1$s”?</string>
     <string name="give_help_dialog_content">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
-    <string name="wait_to_confirm">等待确认中</string>
+    <string name="submitted">已提交</string>
     <string name="want_help_him">想要帮助TA的人</string>
     <string name="pay_intention">支付意向金</string>
     <string name="intention">意向金</string>
-    <string name="pay_intention_hint">意向金为平台服务费,无论用户是否成功借款都不予退还,请谅解</string>
+    <string name="confirm_payment">确认支付</string>
+    <string name="pay_intention_hint1">意向金为平台服务费</string>
+    <string name="pay_intention_hint2">无论用户是否成功借款都不予退还,请谅解</string>
     <string name="we_chat_pay">微信支付</string>
     <string name="ali_pay">支付宝支付</string>
     <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
-    <string name="intention_amount">￥%1$s元</string>
+    <string name="intention_amount">￥%1$s</string>
     <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
     <string name="ali_pay_hint_1">1.如果未打开支付宝或未完成付款,请点击“继续支付”。</string>
     <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>

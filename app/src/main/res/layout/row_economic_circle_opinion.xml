@@ -56,11 +56,11 @@
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:lineSpacingExtra="12dp"
+        android:lineSpacingExtra="6dp"
         android:maxLines="2"
         android:textColor="#222222"
         android:textSize="14sp"
-        tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
+        android:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,20 +81,20 @@
 
         <TextView
             android:id="@+id/bigVarietyName"
-            android:textSize="14sp"
-            android:textColor="#222222"
-            tools:text="@string/big_variety_name"
-            android:layout_marginLeft="8dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="#222222"
+            android:textSize="14sp"
+            tools:text="@string/big_variety_name"/>
 
         <TextView
             android:id="@+id/varietyName"
-            android:textSize="14sp"
-            android:textColor="#222222"
-            tools:text="乐米金融"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#222222"
+            android:textSize="14sp"
+            tools:text="乐米金融"/>
     </LinearLayout>
 
     <TextView
