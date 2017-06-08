@@ -34,7 +34,7 @@ public class SmartDialog {
     private AppCompatImageView mIcon;
 //    TextView mSingleButton;
 
-    private int mPositiveId;
+    private int mPositiveId = R.string.ok;
     private int mNegativeId = R.string.cancel;
     private OnClickListener mPositiveListener;
     private OnClickListener mNegativeListener;

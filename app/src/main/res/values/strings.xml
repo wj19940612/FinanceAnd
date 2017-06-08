@@ -201,7 +201,9 @@
     <string name="again_submit">重新提交</string>
     <string name="boy">男</string>
     <string name="girl">女</string>
-
+    <string name="gps_is_close">定位服务已关闭</string>
+    <string name="please_open_gps_service">请到设置中开启开启[%1$s]定位服务</string>
+    <string name="restart_get_location">点击重新获取位置</string>
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>

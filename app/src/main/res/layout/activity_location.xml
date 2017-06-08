@@ -4,7 +4,7 @@
               xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/background">
+              android:background="@color/background"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -32,9 +32,9 @@
         android:drawableLeft="@drawable/ic_location"
         android:drawablePadding="8dp"
         android:padding="@dimen/common_padding"
+        android:text="@string/restart_get_location"
         android:textColor="@color/blackAssist"
-        android:textSize="15sp"
-        tool:text="浙江 杭州 滨江"/>
+        android:textSize="15sp"/>
 
     <TextView
         android:layout_width="match_parent"

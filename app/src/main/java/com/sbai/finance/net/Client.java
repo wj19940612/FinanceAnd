@@ -2,6 +2,7 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.sbai.finance.Preference;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.httplib.ApiParams;
 
 
@@ -27,22 +28,25 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
+
     /**
      * 期货搜索
      */
-    public static API searchFuture(String search){
+    public static API searchFuture(String search) {
         return new API("/order/future/query/search.do",
                 new ApiParams()
                         .put("search", search));
     }
+
     /**
      * 股票搜索
      */
-    public static API searchStock(String search){
+    public static API searchStock(String search) {
         return new API("/order/stock/query/search.do",
                 new ApiParams()
                         .put("search", search));
     }
+
     /**
      * 股票除指数品种
      *
@@ -411,14 +415,18 @@ public class Client {
      * @param age
      * @param land
      * @param userSex 1女2男0未知
+     *                longitude 经度
+     *                latitude  经度
      * @return
      */
-
     public static API updateUserInfo(int age, String land, Integer userSex) {
         return new API(POST, "/user/user/updateUser.do", new ApiParams()
                 .put("age", age)
                 .put("land", land)
-                .put("userSex", userSex));
+                .put("userSex", userSex)
+                .put("longitude", LocalUser.getUser().getUserInfo().getLongitude())
+                .put("latitude", LocalUser.getUser().getUserInfo().getLatitude())
+        );
     }
 
     /**
@@ -938,7 +946,7 @@ public class Client {
      */
 
     public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money,
-                               String location,double locationLng,double locationLat) {
+                               String location, double locationLng, double locationLat) {
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
@@ -946,9 +954,9 @@ public class Client {
                         .put("days", days)
                         .put("interest", interest)
                         .put("money", money)
-                        .put("location",location)
-                        .put("locationLng",locationLng)
-                        .put("locationLat",locationLat));
+                        .put("location", location)
+                        .put("locationLng", locationLng)
+                        .put("locationLat", locationLat));
     }
 
     /**
@@ -1059,8 +1067,9 @@ public class Client {
         return new API("/user/article/articleDetail.do",
                 new ApiParams().put("id", 2));
     }
+
     /**
-     *借款留言
+     * 借款留言
      */
     public static API getBorrowMessage(int loanId) {
         return new API("/coterie/help/loanNote/showNotes.do",

@@ -54,7 +54,26 @@ public class UserInfo implements Parcelable {
     private int status;
     //1 女 2男
     private int userSex;
-    private String chinaSex;
+    //经度
+    private double longitude;
+    //纬度
+    private double latitude;
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
     public static boolean isGril(int userSex) {
         return userSex == 1;
@@ -215,14 +234,6 @@ public class UserInfo implements Parcelable {
         this.userSex = userSex;
     }
 
-    public String getChinaSex() {
-        return chinaSex;
-    }
-
-    public void setChinaSex(String chinaSex) {
-        this.chinaSex = chinaSex;
-    }
-
 
     @Override
     public String toString() {
@@ -245,8 +256,10 @@ public class UserInfo implements Parcelable {
                 ", registrationIp='" + registrationIp + '\'' +
                 ", status=" + status +
                 ", userSex=" + userSex +
-                ", chinaSex='" + chinaSex + '\'' +
                 '}';
+    }
+
+    public UserInfo() {
     }
 
     @Override
@@ -263,7 +276,7 @@ public class UserInfo implements Parcelable {
         dest.writeByte(this.bIsSetNickName ? (byte) 1 : (byte) 0);
         dest.writeString(this.userPortrait);
         dest.writeInt(this.agencyId);
-        dest.writeInt(this.certificationStatus);
+        dest.writeValue(this.certificationStatus);
         dest.writeLong(this.createTime);
         dest.writeInt(this.id);
         dest.writeLong(this.lastLoginTime);
@@ -274,10 +287,8 @@ public class UserInfo implements Parcelable {
         dest.writeString(this.registrationIp);
         dest.writeInt(this.status);
         dest.writeInt(this.userSex);
-        dest.writeString(this.chinaSex);
-    }
-
-    public UserInfo() {
+        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitude);
     }
 
     protected UserInfo(Parcel in) {
@@ -288,7 +299,7 @@ public class UserInfo implements Parcelable {
         this.bIsSetNickName = in.readByte() != 0;
         this.userPortrait = in.readString();
         this.agencyId = in.readInt();
-        this.certificationStatus = in.readInt();
+        this.certificationStatus = (Integer) in.readValue(Integer.class.getClassLoader());
         this.createTime = in.readLong();
         this.id = in.readInt();
         this.lastLoginTime = in.readLong();
@@ -299,7 +310,8 @@ public class UserInfo implements Parcelable {
         this.registrationIp = in.readString();
         this.status = in.readInt();
         this.userSex = in.readInt();
-        this.chinaSex = in.readString();
+        this.longitude = in.readDouble();
+        this.latitude = in.readDouble();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
