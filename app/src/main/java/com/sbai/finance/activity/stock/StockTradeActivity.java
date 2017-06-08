@@ -2,7 +2,6 @@ package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +22,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.ShareDiglogFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
@@ -33,6 +33,7 @@ import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -75,8 +76,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     TextView mLastPrice;
     @BindView(R.id.priceChange)
     TextView mPriceChange;
-    @BindView(R.id.marketArea)
-    LinearLayout mMarketArea;
 
     @BindView(R.id.todayOpen)
     TextView mTodayOpen;
@@ -116,10 +115,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_trade);
         ButterKnife.bind(this);
-        translucentStatusBar();
-        if (Build.VERSION.SDK_INT >= 19) {
-            addStatusBarHeightTopPadding(mTitleBar);
-        }
 
         initData();
 
@@ -340,7 +335,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             String lastPrice = mStockRTData.getLast_price();
             if (!TextUtils.isEmpty(risePrice)) {
                 if (risePrice.startsWith("-")) {
-                    color = ContextCompat.getColor(getActivity(), R.color.greenPrimary);
+                    color = ContextCompat.getColor(getActivity(), R.color.greenAssist);
                 } else {
                     risePrice = "+" + risePrice;
                     risePercent = "+" + risePercent;
@@ -355,8 +350,8 @@ public abstract class StockTradeActivity extends BaseActivity {
 
             mStockTrendView.setStockRTData(mStockRTData);
         }
-        mMarketArea.setBackgroundColor(color);
-        mTitleBar.setBackgroundColor(color);
+        mLastPrice.setTextColor(color);
+        mPriceChange.setTextColor(color);
     }
 
     private void initTitleBar() {
@@ -369,6 +364,18 @@ public abstract class StockTradeActivity extends BaseActivity {
         } else {
             exchangeStatus.setVisibility(View.VISIBLE);
         }
+
+        final String shareUrl = API.getHost() +
+                getString(R.string.stock_share_host, mVariety.getVarietyType(), mVariety.getVarietyId());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareDiglogFragment
+                        .newInstance()
+                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), shareUrl, true)
+                        .show(getSupportFragmentManager());
+            }
+        });
     }
 
     private void initData() {

@@ -249,10 +249,10 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
 
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-                if (TextUtils.isEmpty(item.getLand())) {
+                if (TextUtils.isEmpty(item.getLocation())) {
                     mLocation.setText(R.string.no_location_information);
                 } else {
-                    mLocation.setText(item.getLand());
+                    mLocation.setText(item.getLocation());
                 }
 
                 mAvatar.setOnClickListener(new View.OnClickListener() {

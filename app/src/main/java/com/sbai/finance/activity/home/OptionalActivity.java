@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -19,10 +18,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
-import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.fragment.dialog.AddOptionalDialogFragment;
-import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -327,7 +325,7 @@ public class OptionalActivity extends BaseActivity implements
                         mLastPrice.setText(stockData.getLast_price());
                         String priceChange = stockData.getRise_pre();
                         if (priceChange.startsWith("-")) {
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenDown));
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                             mRate.setSelected(false);
                             mRate.setText(priceChange + "%");
                         } else {
@@ -356,7 +354,7 @@ public class OptionalActivity extends BaseActivity implements
                             mRate.setSelected(true);
                             mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                         } else {
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenDown));
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                             mRate.setSelected(false);
                             mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
                         }

@@ -22,8 +22,10 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -47,6 +49,7 @@ import butterknife.ButterKnife;
  */
 
 public class SearchOptionalActivity extends BaseActivity {
+    public static final String TYPE_STOCK_ONLY="stock_only";
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.search)
@@ -74,6 +77,9 @@ public class SearchOptionalActivity extends BaseActivity {
         if (type.equalsIgnoreCase(Variety.VAR_STOCK)) {
             mTitleBar.setTitle(getString(R.string.stock_optional));
             mSearch.setHint(getString(R.string.stock_optional_hint));
+        }else if (type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
+            mTitleBar.setTitle(getString(R.string.stock));
+            mSearch.setHint(getString(R.string.stock_optional_hint));
         } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
             mTitleBar.setTitle(getString(R.string.future_optional));
             mSearch.setHint(getString(R.string.future_optional_hint));
@@ -92,19 +98,22 @@ public class SearchOptionalActivity extends BaseActivity {
         mOptionalAdapter.setOnClickListener(new OptionalAdapter.OnClickListener() {
             @Override
             public void onClick(Variety variety) {
-                Client.addOption(variety.getVarietyId())
-                        .setTag(TAG)
-                        .setCallback(new Callback<Resp<JsonObject>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<JsonObject> resp) {
-                                if (resp.isSuccess()) {
-                                    //CustomToast.getInstance().showText(getActivity(), R.string.add_option_succeed);
-                                    requestSearch(mSearch.getText().toString());
-                                } else {
-                                    ToastUtil.curt(resp.getMsg());
+                if (LocalUser.getUser().isLogin()) {
+                    Client.addOption(variety.getVarietyId())
+                            .setTag(TAG)
+                            .setCallback(new Callback<Resp<JsonObject>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<JsonObject> resp) {
+                                    if (resp.isSuccess()) {
+                                        requestSearch(mSearch.getText().toString());
+                                    } else {
+                                        ToastUtil.curt(resp.getMsg());
+                                    }
                                 }
-                            }
-                        }).fireSync();
+                            }).fireSync();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         mListView.setAdapter(mOptionalAdapter);
@@ -137,7 +146,7 @@ public class SearchOptionalActivity extends BaseActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (type.equalsIgnoreCase(Variety.VAR_STOCK)) {
+        if (type.equalsIgnoreCase(Variety.VAR_STOCK)||type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
             Client.searchStock(key).setTag(TAG)
                     .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
                         @Override

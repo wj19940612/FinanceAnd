@@ -13,7 +13,25 @@
         app:backFeature="true"
         app:titleText="@string/stock"/>
 
-    <include layout="@layout/layout_search_stock"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#c9c9ce">
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="7dp"
+            android:padding="5dp"
+            android:background="@drawable/bg_search_stock"
+            android:drawableLeft="@drawable/ic_search"
+            android:textColorHint="@color/unluckyText"
+            android:textSize="@dimen/list_title_size"
+            android:hint="股票名称、代码"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
