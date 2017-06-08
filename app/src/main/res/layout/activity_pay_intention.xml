@@ -9,6 +9,9 @@
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleTextColor="@color/blackAssist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
