@@ -3,15 +3,17 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/split"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:barBackground="@color/blackAssist"
-        app:titleText="@string/economic_circle"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/economic_circle"
+        app:titleTextColor="@color/blackAssist"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

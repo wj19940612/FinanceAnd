@@ -15,13 +15,10 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.model.mutual.BorrowDetails;
 import com.sbai.finance.model.mutual.BorrowHelper;
-import com.sbai.finance.model.mutual.BorrowOut;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -143,7 +140,7 @@ public class BorrowOutDetailsActivity extends BaseActivity {
         mImageGridAdapter.notifyDataSetChanged();
     }
     private void launcherWantHelpHer(int loadId){
-        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD,loadId)
                 .putExtra(Launcher.EX_PAYLOAD_1,mBorrowDetails.getSex())
                 .execute();

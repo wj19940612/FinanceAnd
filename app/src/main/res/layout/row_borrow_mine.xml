@@ -52,7 +52,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="center"
-            android:textColor="@color/redRaise"
+            android:textColor="@color/redAssist"
             android:textSize="12sp"
             tools:text="已提交"/>
     </RelativeLayout>

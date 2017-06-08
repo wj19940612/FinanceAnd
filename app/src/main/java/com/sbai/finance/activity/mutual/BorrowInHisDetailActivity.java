@@ -1,43 +1,30 @@
 package com.sbai.finance.activity.mutual;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
 import com.sbai.finance.model.mutual.BorrowDetails;
 import com.sbai.finance.model.mutual.BorrowHelper;
-import com.sbai.finance.model.mutual.BorrowIn;
-import com.sbai.finance.model.mutual.BorrowInHis;
-import com.sbai.finance.model.mutual.CallPhone;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -46,7 +33,6 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.TitleBar;
 
@@ -296,7 +282,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
         mMax = (int) ((screenWidth - margin - more + horizontalSpacing) / (horizontalSpacing + avatarWidth));
     }
     private void launcherWantHelpMe(int loadId){
-        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                 .putExtra(Launcher.EX_PAYLOAD,loadId)
                 .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId())
                 .execute();

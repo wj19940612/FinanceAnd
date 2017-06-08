@@ -42,6 +42,15 @@ public class BorrowMoney {
 	private String userName;
 	private String userPortrait;
 
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	private String location;
 	public int getAuditStatus() {
 		return auditStatus;
 	}

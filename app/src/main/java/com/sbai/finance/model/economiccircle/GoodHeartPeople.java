@@ -1,10 +1,6 @@
 package com.sbai.finance.model.economiccircle;
 
-/**
- * Created by lixiaokuan0819 on 2017/5/11.
- */
-
-public class WantHelpHimOrYou {
+public class GoodHeartPeople {
 
 	/**
 	 * location : 测试内容i457
@@ -52,7 +48,7 @@ public class WantHelpHimOrYou {
 
 	@Override
 	public String toString() {
-		return "WantHelpHimOrYou{" +
+		return "GoodHeartPeople{" +
 				"location='" + location + '\'' +
 				", portrait='" + portrait + '\'' +
 				", userId=" + userId +

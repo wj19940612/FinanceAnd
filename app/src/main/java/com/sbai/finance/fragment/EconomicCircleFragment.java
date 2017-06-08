@@ -197,7 +197,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		}
 
 		if (mFootView == null) {
-			mFootView = View.inflate(getActivity(), R.layout.view_footer, null);
+			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -525,14 +525,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 				if (!TextUtils.isEmpty(item.getContentImg())) {
 					String[] images = item.getContentImg().split(",");
-					Glide.with(context).load(images[0])
-							.placeholder(R.drawable.ic_loading_pic)
-							.into(mBorrowingImg);
 					if (images.length >= 2) {
 						mCircleMoreIcon.setVisibility(View.VISIBLE);
 					} else {
 						mCircleMoreIcon.setVisibility(View.GONE);
 					}
+					Glide.with(context).load(images[0])
+							.placeholder(R.drawable.ic_loading_pic)
+							.into(mBorrowingImg);
 				} else {
 					mBorrowingImg.setVisibility(View.GONE);
 					mCircleMoreIcon.setVisibility(View.GONE);

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mutual;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,15 +11,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,12 +31,10 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
-import com.sbai.finance.model.economiccircle.WantHelpHimOrYou;
+import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.mutual.BorrowMessage;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.model.mutual.CallPhone;
@@ -43,6 +46,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
@@ -54,8 +58,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.sbai.finance.R.string.item;
 
 public class BorrowMineDetailsActivity extends BaseActivity {
     @BindView(R.id.avatar)
@@ -96,8 +98,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     RelativeLayout mGoodHeartPeopleArea;
     @BindView(R.id.leaveMessageNum)
     TextView mLeaveMessageNum;
-    @BindView(android.R.id.list)
-    MyListView mList;
+    @BindView(R.id.listView)
+    MyListView mListView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
     @BindView(R.id.call)
@@ -114,10 +116,17 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     LinearLayout mBorrowStatus;
     @BindView(R.id.writeMessage)
     TextView mWriteMessage;
-    private int mDataId;
+    @BindView(R.id.leaveMessage)
+    EditText mLeaveMessage;
+    @BindView(R.id.send)
+    TextView mSend;
+    @BindView(R.id.leaveMessageArea)
+    LinearLayout mLeaveMessageArea;
+    private boolean mStatusChange = false;
     private int mMax;
     private BorrowMine mBorrowMine;
     private MessageAdapter mMessageAdapter;
+    private KeyBoardHelper mKeyBoardHelper;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +142,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     }
 
     private void initView() {
+        setKeyboardHelper();
         mMessageAdapter = new MessageAdapter(getActivity());
         mMessageAdapter.setCallback(new MessageAdapter.Callback() {
             @Override
@@ -142,8 +152,32 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         .execute();
             }
         });
-        mList.setAdapter(mMessageAdapter);
+        mListView.setAdapter(mMessageAdapter);
     }
+    private void setKeyboardHelper() {
+        mKeyBoardHelper = new KeyBoardHelper(this);
+        mKeyBoardHelper.onCreate();
+        mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
+    }
+
+    private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener(){
+
+        @Override
+        public void OnKeyBoardPop(int keyboardHeight) {
+
+        }
+
+        @Override
+        public void OnKeyBoardClose(int oldKeyboardHeight) {
+            mLeaveMessageArea.setVisibility(View.GONE);
+            if (mBorrowMine.getStatus()== BorrowMine.STATUS_GIVE_HELP
+              ||mBorrowMine.getStatus()== BorrowMine.STATUS_NO_CHECKED
+              ||mBorrowMine.getStatus()== BorrowMine.STATUS_NO_CHECKED){
+
+                mBorrowStatus.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     private void calculateAvatarNum(Context context) {
         int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
@@ -165,9 +199,9 @@ public class BorrowMineDetailsActivity extends BaseActivity {
 
     private void requestWantHelpHimList() {
         Client.getWantHelpHimOrYouList(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<WantHelpHimOrYou>>, List<WantHelpHimOrYou>>() {
+                .setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
                     @Override
-                    protected void onRespSuccessData(List<WantHelpHimOrYou> wantHelpHimOrYouList) {
+                    protected void onRespSuccessData(List<GoodHeartPeople> wantHelpHimOrYouList) {
                         updateWantHelpHimList(wantHelpHimOrYouList);
                     }
                 }).fire();
@@ -181,14 +215,75 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     }
                 }).fire();
     }
+    private void requestSendMessage(){
+         Client.sendBorrowMessage(mBorrowMine.getId(),mLeaveMessage.getText().toString()).setTag(TAG)
+                 .setCallback(new Callback<Resp<Object>>() {
+                     @Override
+                     protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()){
+                            requestMessages();
+                        }else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                     }
+                 }).fireSync();
+    }
+    private void requestCancelBorrow(Integer id) {
+        Client.cancelBorrowIn(id).setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            mStatus.setText(getActivity().getString(R.string.end));
+                            mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                            mBorrowStatus.setVisibility(View.GONE);
+                            mBorrowMine.setStatus(BorrowMine.STATUS_END_CANCEL);
+                            mStatusChange  = true;
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fire();
+    }
+    private void requestRepay(int id){
+        Client.repayed(id).setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()){
+                            mStatus.setText(getActivity().getString(R.string.end));
+                            mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                            mBorrowStatus.setVisibility(View.GONE);
+                            mBorrowMine.setStatus(BorrowMine.STATUS_END_REPAY);
+                            mStatusChange = true;
+                        }else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                }).fireSync();
+    }
+    private void requestPhone(int id){
+        Client.getPhone(id).setTag(TAG)
+                .setCallback(new Callback<Resp<CallPhone>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<CallPhone> resp) {
+                        if (resp.isSuccess()){
+                            callPhone(resp.getData());
+                        }else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
+                    }
+                }).fireSync();
+    }
 
     private void updateMessage(List<BorrowMessage> data) {
+        mLeaveMessageNum.setText(getString(R.string.leave_message_number,data.size()));
         mMessageAdapter.clear();
         mMessageAdapter.addAll(data);
         mMessageAdapter.notifyDataSetChanged();
     }
 
-    private void updateWantHelpHimList(List<WantHelpHimOrYou> data) {
+    private void updateWantHelpHimList(List<GoodHeartPeople> data) {
         int width = (int) Display.dp2Px(32, getResources());
         int height = (int) Display.dp2Px(32, getResources());
         int margin = (int) Display.dp2Px(10, getResources());
@@ -215,8 +310,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mAvatarList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mDataId)
+                        Launcher.with(getActivity(), GoodHeartPeople.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -227,8 +322,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mDataId)
+                        Launcher.with(getActivity(), GoodHeartPeople.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -252,8 +347,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mAvatarList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mDataId)
+                        Launcher.with(getActivity(), GoodHeartPeople.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -368,13 +463,14 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_END_NO_ALLOW:
             case BorrowMine.STATUS_END_NO_CHOICE_HELP:
             case BorrowMine.STATUS_END_REPAY:
+            case  BorrowMine.STATUS_END_FIIL:
                 mStatus.setText(getActivity().getString(R.string.end));
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                 mBorrowStatus.setVisibility(View.GONE);
                 break;
             case BorrowMine.STATUS_GIVE_HELP:
             case BorrowMine.STATUS_NO_CHECKED:
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redRaise));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.wait_help));
                     mCancel.setEnabled(true);
@@ -392,7 +488,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_INTENTION:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mCancel.setVisibility(View.GONE);
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redRaise));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.borrow_in_days,DateUtil.compareDateDifference(mBorrowMine.getModifyDate())));
                     mCallOnly.setVisibility(View.VISIBLE);
@@ -427,7 +523,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.writeMessage, R.id.call, R.id.callOnly, R.id.alreadyRepay, R.id.cancel})
+    @OnClick({R.id.writeMessage, R.id.call, R.id.callOnly, R.id.alreadyRepay, R.id.cancel,R.id.send})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.call:
@@ -444,57 +540,40 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                                 dialog.dismiss();
                             }
                         })
-                        .setTitleMaxLines(1)
-                        .setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist))
-                        .setMessageTextColor(ContextCompat.getColor(getActivity(), R.color.opinionText))
                         .setNegative(R.string.cancel)
                         .show();
                 break;
             case R.id.alreadyRepay:
                 requestRepay(mBorrowMine.getId());
                 break;
+            case R.id.writeMessage:
+                mLeaveMessageArea.setVisibility(View.VISIBLE);
+                mBorrowStatus.setVisibility(View.GONE);
+                mLeaveMessage.setText("");
+                mLeaveMessage.requestFocus();
+                mLeaveMessage.setFocusable(true);
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                break;
+            case R.id.send:
+                if (!TextUtils.isEmpty(mLeaveMessage.getText())){
+                    requestSendMessage();
+                }
+                break;
 
         }
     }
-    private void requestCancelBorrow(Integer id) {
-        Client.cancelBorrowIn(id).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            ToastUtil.show("success");
-                        } else {
-                            ToastUtil.show(resp.getMsg());
-                        }
-                    }
-                }).fire();
+
+    @Override
+    public void onBackPressed() {
+        if (mStatusChange){
+            Intent intent = new Intent();
+            intent.putExtra(Launcher.EX_PAYLOAD,mBorrowMine);
+            setResult(RESULT_OK,intent);
+        }
+        super.onBackPressed();
     }
-    private void requestRepay(int id){
-        Client.repayed(id).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()){
-                            ToastUtil.curt(getString(R.string.submit_success));
-                        }else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                }).fireSync();
-    }
-    private void requestPhone(int id){
-        Client.getPhone(id).setTag(TAG)
-                .setCallback(new Callback<Resp<CallPhone>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<CallPhone> resp) {
-                        if (resp.isSuccess()){
-                            callPhone(resp.getData());
-                        }else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                }).fireSync();
-    }
+
     private void callPhone(CallPhone phone){
         if (phone.getSelectedPhone()!=null){
             Intent intent=new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone.getSelectedPhone()));
@@ -543,6 +622,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View widget) {
                          callback.onUserClick(item.getUserId());
+                    }
+
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        ds.setUnderlineText(false);
                     }
                 },0,item.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mMessage.setText(attentionSpannableString);

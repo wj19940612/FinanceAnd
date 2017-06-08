@@ -5,10 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/split"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleTextColor="@color/blackAssist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -16,69 +19,68 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="315dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_pay_intention"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/intention"
-                    android:textColor="@color/assistText"
-                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/intentionAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="48dp"
+                    tools:text="@string/intention_amount"
                     android:textColor="@color/redPrimary"
-                    android:textSize="38sp"
-                    tools:text="@string/intention_amount"/>
-            </LinearLayout>
+                    android:textSize="38sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/pay_intention_hint"
-                android:textColor="@color/secondaryText"
-                android:textSize="@dimen/dp_10"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/pay_intention_hint1"
+                    android:textColor="@color/hintText"
+                    android:textSize="10sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="38dp"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/pay_intention_hint2"
+                    android:textColor="@color/hintText"
+                    android:textSize="10sp"/>
+            </LinearLayout>
 
             <com.sbai.finance.view.MyListView
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="14dp"
                 android:divider="@null">
             </com.sbai.finance.view.MyListView>
-
-            <TextView
-                android:id="@+id/payIntention"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="50dp"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="13dp"
-                android:background="@drawable/btn_red_primary"
-                android:gravity="center"
-                android:text="@string/pay_intention"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_16"/>
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/confirmPayment"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/btn_red_primary_no_radius"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/confirm_payment"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"/>
 </LinearLayout>

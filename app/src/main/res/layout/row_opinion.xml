@@ -39,7 +39,7 @@
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/userName"
             android:textColor="@color/assistText"
-            android:textSize="11sp"
+            android:textSize="10sp"
             tools:text="@string/is_attention"/>
 
     </RelativeLayout>
@@ -113,7 +113,7 @@
             android:drawableLeft="@drawable/ic_like_future"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="8888"/>
     </RelativeLayout>

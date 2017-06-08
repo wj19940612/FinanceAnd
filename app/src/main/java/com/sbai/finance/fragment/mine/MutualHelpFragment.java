@@ -23,7 +23,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.economiccircle.WantHelpHimOrYouActivity;
+import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mutual.BorrowOutHisActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -197,7 +197,7 @@ public class MutualHelpFragment extends BaseFragment implements AdapterView.OnIt
             switch (item.getType()) {
                 case HistoryNewsModel.ACTION_TYPE_WANT_TO_HELP_FOR_YOU:
                     if (!item.isLossEfficacy()) {
-                        Launcher.with(getActivity(), WantHelpHimOrYouActivity.class)
+                        Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
                                 .putExtra(Launcher.USER_ID, item.getUserId())
                                 .execute();

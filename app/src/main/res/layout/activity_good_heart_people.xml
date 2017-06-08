@@ -3,7 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/split"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -11,12 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:barBackground="@color/blackAssist"
-        app:titleText="@string/want_help_him"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/good_heart_people"
+        app:titleTextColor="@color/blackAssist"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="14dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
