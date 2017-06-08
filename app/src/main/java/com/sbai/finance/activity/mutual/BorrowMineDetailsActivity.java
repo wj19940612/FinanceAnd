@@ -30,7 +30,6 @@ import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.mutual.BorrowMessage;
 import com.sbai.finance.model.mutual.BorrowMine;
@@ -54,8 +53,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.sbai.finance.R.string.item;
 
 public class BorrowMineDetailsActivity extends BaseActivity {
     @BindView(R.id.avatar)
@@ -374,7 +371,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 break;
             case BorrowMine.STATUS_GIVE_HELP:
             case BorrowMine.STATUS_NO_CHECKED:
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redRaise));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.wait_help));
                     mCancel.setEnabled(true);
@@ -392,7 +389,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_INTENTION:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mCancel.setVisibility(View.GONE);
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redRaise));
+                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.borrow_in_days,DateUtil.compareDateDifference(mBorrowMine.getModifyDate())));
                     mCallOnly.setVisibility(View.VISIBLE);

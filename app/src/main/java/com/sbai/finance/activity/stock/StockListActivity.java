@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -228,7 +227,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private void updateStockIndexMarketData(List<StockData> data) {
         // 2.判断涨跌
         int s2Color = ContextCompat.getColor(this, R.color.redPrimary);
-        int s3Color = ContextCompat.getColor(this, R.color.greenDown);
+        int s3Color = ContextCompat.getColor(this, R.color.greenAssist);
         int color;
         Variety variety;
         SpannableString spannableString;
@@ -400,7 +399,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setText(stockData.getLast_price());
                     String priceChange = stockData.getRise_pre();
                     if (priceChange.startsWith("-")) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenDown));
+                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenAssist));
                         mRate.setSelected(false);
                         mRate.setText(priceChange + "%");
                     } else {

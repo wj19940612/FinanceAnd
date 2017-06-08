@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,8 +19,8 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -160,7 +159,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                                 rate.setSelected(true);
                                 rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                             } else {
-                                lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenDown));
+                                lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
                                 rate.setSelected(false);
                                 rate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                             }
@@ -312,7 +311,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         mRate.setSelected(true);
                         mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                     } else {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenDown));
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                         mRate.setSelected(false);
                         mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                     }

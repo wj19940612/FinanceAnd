@@ -2,7 +2,6 @@ package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -77,8 +76,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     TextView mLastPrice;
     @BindView(R.id.priceChange)
     TextView mPriceChange;
-    @BindView(R.id.marketArea)
-    LinearLayout mMarketArea;
 
     @BindView(R.id.todayOpen)
     TextView mTodayOpen;
@@ -118,10 +115,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_trade);
         ButterKnife.bind(this);
-        translucentStatusBar();
-        if (Build.VERSION.SDK_INT >= 19) {
-            addStatusBarHeightTopPadding(mTitleBar);
-        }
 
         initData();
 
@@ -342,7 +335,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             String lastPrice = mStockRTData.getLast_price();
             if (!TextUtils.isEmpty(risePrice)) {
                 if (risePrice.startsWith("-")) {
-                    color = ContextCompat.getColor(getActivity(), R.color.greenPrimary);
+                    color = ContextCompat.getColor(getActivity(), R.color.greenAssist);
                 } else {
                     risePrice = "+" + risePrice;
                     risePercent = "+" + risePercent;
@@ -357,8 +350,8 @@ public abstract class StockTradeActivity extends BaseActivity {
 
             mStockTrendView.setStockRTData(mStockRTData);
         }
-        mMarketArea.setBackgroundColor(color);
-        mTitleBar.setBackgroundColor(color);
+        mLastPrice.setTextColor(color);
+        mPriceChange.setTextColor(color);
     }
 
     private void initTitleBar() {

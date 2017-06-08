@@ -555,8 +555,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         double priceChangePercent = FinanceUtil.divide(priceChange, data.getPreSetPrice(), 4)
                 .multiply(new BigDecimal(100)).doubleValue();
 
-        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenPrimary));
-        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenPrimary));
+        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
         String priceChangeStr = FinanceUtil.formatWithScale(priceChange, mVariety.getPriceScale());
         String priceChangePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
         if (priceChange >= 0) {
