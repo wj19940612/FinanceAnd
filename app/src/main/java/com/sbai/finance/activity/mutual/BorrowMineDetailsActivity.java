@@ -99,7 +99,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     @BindView(R.id.leaveMessageNum)
     TextView mLeaveMessageNum;
     @BindView(R.id.listView)
-    ListView mListView;
+    MyListView mListView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
     @BindView(R.id.call)
