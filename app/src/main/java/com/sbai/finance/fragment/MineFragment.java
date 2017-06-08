@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.AttentionActivity;
 import com.sbai.finance.activity.mine.FansActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
@@ -56,8 +56,6 @@ public class MineFragment extends BaseFragment {
     private static final int REQ_CODE_NEW_NEWS = 18;
     private static final int REQ_CODE_FANS_PAGE = 322;
     private static final int REQ_CODE_ATTENTION_PAGE = 4555;
-    private static final String ABOUT_US = "http://fanli.esongbai.xyz/mobi/user/about/about?nohead=1";
-
 
     Unbinder unbinder;
     @BindView(R.id.userHeadImage)
@@ -190,7 +188,7 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
             mUserName.setText(R.string.login);
-            int color = ContextCompat.getColor(getActivity(), R.color.hintText);
+            int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
             SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, color);
             mAttention.setText(attentionSpannableString);
             SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, color);
@@ -267,8 +265,7 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), SettingActivity.class).execute();
                 break;
             case R.id.aboutUs:
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, ABOUT_US)
+                Launcher.with(getActivity(), AboutUsActivity.class)
                         .execute();
                 break;
             case R.id.wallet:
@@ -305,7 +302,7 @@ public class MineFragment extends BaseFragment {
     private void updateUserNumber(AttentionAndFansNumberModel data) {
         if (data == null)
             data = new AttentionAndFansNumberModel();
-        int color = ContextCompat.getColor(getActivity(), R.color.hintText);
+        int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1f, color);
         mAttention.setText(attentionSpannableString);
         SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1f,color);

@@ -28,6 +28,7 @@
     <string name="people_want_help_you">想要帮助你的人</string>
     <string name="people_want_help_him_number">(%1$d)</string>
     <string name="leave_message">留言(%1$s)</string>
+    <string name="write_message">写留言</string>
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
     <item name="tag_opinion" type="id">1</item>
@@ -164,6 +165,11 @@
     <string name="please_input_here">请在此输入......</string>
     <string name="you_dont_have_trade">你还没有交易过哦</string>
     <string name="now_not_has_feedback_data">暂无反馈消息</string>
+    <string name="about_le_mi">关于乐米</string>
+    <string name="action_product">功能介绍</string>
+    <string name="user_protocol">用户协议</string>
+    <string name="check_update">检测更新</string>
+    <string name="company">浙江松柏信息技术有限公司 \nCopyright2017</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -192,6 +198,9 @@
     <string name="identity_card_reverse">身份证反面照片</string>
     <string name="identity_card_phone">身份证照片</string>
     <string name="again_submit">重新提交</string>
+    <string name="boy">男</string>
+    <string name="girl">女</string>
+
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -338,12 +347,18 @@
     <string name="interest_more_200">借款利息超过200元</string>
     <string name="days_less_1">借款期限少于1天</string>
     <string name="days_more_60">借款期限超过60天</string>
+    <string name="no_address">请选择地址</string>
     <string name="borrow_over_interest">愿付利息不符合要求</string>
     <string name="borrow_agree">发布即同意</string>
     <string name="borrow_agreement">《乐米借款规则与用户须知》</string>
     <string name="publish_success">发布成功</string>
     <string name="protocol">借款规则与用户须知</string>
     <string name="no_record">暂无借款</string>
+    <string name="commit">已提交</string>
+    <string name="wait_help">等待互助</string>
+    <string name="end">已结束</string>
+    <string name="borrow_in_days">已借入 %1$d天</string>
+    <string name="borrow_out_days">已借出 %1$d天</string>
     <!--mutual-->
     <string name="good_heart">好心人</string>
     <string name="load_person">借款人</string>

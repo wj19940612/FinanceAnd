@@ -180,7 +180,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/splitLineColor"/>
+                android:background="@color/split"/>
 
             <com.sbai.finance.view.slidingTab.SlidingTabLayout
                 android:id="@+id/slidingTab"
@@ -204,5 +204,4 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:hasTradeButton="false"/>
-
 </LinearLayout>

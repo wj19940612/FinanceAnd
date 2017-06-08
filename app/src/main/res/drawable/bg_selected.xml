@@ -6,5 +6,5 @@
         </shape>
     </item>
 
-    <item android:drawable="@color/splitLineColor"/>
+    <item android:drawable="@color/split"/>
 </selector>

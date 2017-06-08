@@ -47,7 +47,7 @@ public class TrendChart extends ChartView {
     }
 
     protected void setDashLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.BLUE.get()));
+        paint.setColor(Color.parseColor(ChartColor.DASH.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(new DashPathEffect(new float[]{8, 3}, 1));
     }
@@ -59,13 +59,13 @@ public class TrendChart extends ChartView {
     }
 
     protected void setUnstablePriceBgPaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.BLUE.get()));
+        paint.setColor(Color.parseColor(ChartView.ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
     }
 
     protected void setRealTimeLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.BLUE.get()));
+        paint.setColor(Color.parseColor(ChartView.ChartColor.BLACK.get()));
         paint.setStrokeWidth(1);
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
@@ -86,13 +86,13 @@ public class TrendChart extends ChartView {
     }
 
     protected void setRedRectBgPaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+        paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
     }
 
     protected void setRedTouchLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+        paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
     }
@@ -236,15 +236,7 @@ public class TrendChart extends ChartView {
             setBaseLinePaint(sPaint);
             canvas.drawPath(path, sPaint);
 
-            if (i == 0) {
-                setDefaultTextPaint(sPaint);
-                String baseLineValue = formatNumber(baselines[i]);
-                float textWidth = sPaint.measureText(baseLineValue);
-                float x = left + width - mPriceAreaWidth + (mPriceAreaWidth - textWidth) / 2;
-                float y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-                canvas.drawText(baseLineValue, x, y, sPaint);
-
-            } else if (i != 0 && i % 2 == 0) {
+            if (i != 0) {
                 setDefaultTextPaint(sPaint);
                 String baseLineValue = formatNumber(baselines[i]);
                 float textWidth = sPaint.measureText(baseLineValue);
@@ -348,24 +340,22 @@ public class TrendChart extends ChartView {
 
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
-        if (mDataList != null && mDataList.size() > 0) {
-            String[] displayMarketTimes = mSettings.getDisplayMarketTimes();
-            if (displayMarketTimes.length != 0) {
-                setDefaultTextPaint(sPaint);
-                float textY = top + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-                for (int i = 0; i < displayMarketTimes.length; i++) {
-                    if (i == 0) {
-                        float textX = left + mTextMargin;
-                        canvas.drawText(displayMarketTimes[i], textX, textY, sPaint);
-                    } else if (i == displayMarketTimes.length - 1) {
-                        float textWidth = sPaint.measureText(displayMarketTimes[i]);
-                        float textX = left + width - mPriceAreaWidth - textWidth;
-                        canvas.drawText(displayMarketTimes[i], textX, textY, sPaint);
-                    } else {
-                        float textWidth = sPaint.measureText(displayMarketTimes[i]);
-                        float textX = getChartX(getIndexFromDate(displayMarketTimes[i])) - textWidth / 2;
-                        canvas.drawText(displayMarketTimes[i], textX, textY, sPaint);
-                    }
+        String[] displayMarketTimes = mSettings.getDisplayMarketTimes();
+        if (displayMarketTimes.length != 0) {
+            setDefaultTextPaint(sPaint);
+            float textY = top + mTextMargin * 2.5f + mFontHeight / 2 + mOffset4CenterText;
+            for (int i = 0; i < displayMarketTimes.length; i++) {
+                if (i == 0) {
+                    float textWidth = sPaint.measureText(displayMarketTimes[i]);
+                    canvas.drawText(displayMarketTimes[i], left - textWidth / 2, textY, sPaint);
+                } else if (i == displayMarketTimes.length - 1) {
+                    float textWidth = sPaint.measureText(displayMarketTimes[i]);
+                    float textX = left + width - textWidth / 2;
+                    canvas.drawText(displayMarketTimes[i], textX, textY, sPaint);
+                } else {
+                    float textWidth = sPaint.measureText(displayMarketTimes[i]);
+                    float textX = getChartX(getIndexFromDate(displayMarketTimes[i])) - textWidth / 2;
+                    canvas.drawText(displayMarketTimes[i], textX, textY, sPaint);
                 }
             }
         }

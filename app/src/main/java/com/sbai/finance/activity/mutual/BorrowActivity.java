@@ -56,11 +56,6 @@ import com.sbai.httplib.CookieManger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.qqtheme.framework.util.CompatUtils;
-
-/**
- * Created by Administrator on 2017-04-25.
- */
 
 public class BorrowActivity extends BaseActivity {
 	public static final int REQ_CODE_ADDRESS = 100;
@@ -238,8 +233,11 @@ public class BorrowActivity extends BaseActivity {
 					mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
 					return;
 				}
-
 				int days = Integer.valueOf(borrowTimeLimit);
+				if (TextUtils.isEmpty(mLocation.getSubText())){
+					ToastUtil.curt(getString(R.string.no_address));
+					return;
+				}
 				String content = mBorrowRemark.getText().toString();
 				if (content.length()>=300){
 					content = content.substring(0,300);
@@ -260,10 +258,14 @@ public class BorrowActivity extends BaseActivity {
 				if(contentImg.length()>0){
 					contentImg.deleteCharAt(contentImg.length()-1);
 				}
-				requestPublishBorrow(content,contentImg.toString(),days,borrowInterest,money,String.valueOf(LocalUser.getUser().getUserInfo().getId()));
+				if (mAddress == null){
+					return;
+				}
+				requestPublishBorrow(content,contentImg.toString(),days,borrowInterest,money,
+						mLocation.getSubText(),mAddress.getLongitude(),mAddress.getLatitude());
 				break;
 			case R.id.location:
-                Launcher.with(getActivity(), LocationActivity.class).putExtra("type",LocationActivity.TYPE_BORROW).executeForResult(REQ_CODE_ADDRESS);
+                Launcher.with(getActivity(), LocationActivity.class).executeForResult(REQ_CODE_ADDRESS);
 				break;
 			case R.id.protocol:
 				Client.getBorrowProcotol().setTag(TAG)
@@ -291,8 +293,9 @@ public class BorrowActivity extends BaseActivity {
 				break;
 		}
 	}
-	private void requestPublishBorrow(String content,String contentImg,Integer days,String interest,Integer money,String userId){
-		Client.borrowIn(content,contentImg,days,interest,money,userId).setTag(TAG)
+	private void requestPublishBorrow(String content,String contentImg,Integer days,String interest,Integer money,
+									  String location,double locationLng,double locationLat){
+		Client.borrowIn(content,contentImg,days,interest,money,location,locationLng,locationLat).setTag(TAG)
 				.setIndeterminate(this)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override

@@ -13,7 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/splitLineColor">
+        android:background="@color/split">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/common_padding"
-                android:background="@color/splitLineColor"
+                android:background="@color/split"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/helperAmount"

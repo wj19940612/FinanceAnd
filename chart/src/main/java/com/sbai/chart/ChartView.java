@@ -21,12 +21,13 @@ public abstract class ChartView extends View {
 
     protected enum ChartColor {
 
-        BASE("#B3B3B3"),
-        TEXT("#B3B3B3"),
-        WHITE("#FFFFFF"),
-        GREEN("#33D37E"),
-        BLUE("#869BCB"),
-        RED("#CD4A47");
+        BASE("#dddddd"),
+        TEXT("#999999"),
+        WHITE("#ffffff"),
+        GREEN("#2ecc9f"),
+        BLACK("#222222"),
+        DASH("#979797"),
+        RED("#ef6d6a");
 
         private String value;
 
@@ -46,13 +47,13 @@ public abstract class ChartView extends View {
         ZOOM
     }
 
-    private static final int FONT_SIZE_DP = 8;
-    private static final int FONT_BIG_SIZE_DP = 9;
-    private static final int FONT_MA_TITLE_DP = 8;
+    private static final int FONT_SIZE_DP = 10;
+    private static final int FONT_BIG_SIZE_DP = 10;
+    private static final int FONT_MA_TITLE_DP = 9;
     private static final int TEXT_MARGIN_WITH_LINE_DP = 3;
     private static final int RECT_PADDING_DP = 3;
     private static final int MIDDLE_EXTRA_SPACE_DP = 2;
-    private static final int HEIGHT_TIME_LINE_DP = 14;
+    private static final int HEIGHT_TIME_LINE_DP = 30;
     private static final float RATIO_OF_TOP = 0.73f;
     private static final float BASELINE_WIDTH = 0.5f;
 
@@ -196,8 +197,8 @@ public abstract class ChartView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int left = getLeft();
-        int top = getTop();
+        int left = getLeft() + getPaddingLeft();
+        int top = getTop() + getPaddingTop();
         int width = getWidth() - getPaddingLeft() - getPaddingRight();
         int topPartHeight = getTopPartHeight();
         int bottomPartHeight = getBottomPartHeight();
@@ -640,11 +641,11 @@ public abstract class ChartView extends View {
         return getBigFontBgRectF(0, 0, priceWidth).width();
     }
 
-    protected float dp2Px(float value) {
+    public float dp2Px(float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getResources().getDisplayMetrics());
     }
 
-    protected float sp2Px(int value) {
+    public float sp2Px(int value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, getResources().getDisplayMetrics());
     }
 

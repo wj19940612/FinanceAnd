@@ -5,7 +5,7 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splitLineColor"
+    android:background="@color/split"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -36,7 +36,7 @@
             android:hint="@string/describe_your_opinion"
             android:maxLength="300"
             android:textColor="@color/greyAssist"
-            android:textColorHint="@color/hintText"
+            android:textColorHint="@color/unluckyText"
             android:textSize="15sp"/>
 
 
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:textSize="10sp"
-                android:textColor="@color/hintText"
+                android:textColor="@color/unluckyText"
                 android:layout_alignBottom="@id/opinionType"
                 tool:text="33/300"/>
 

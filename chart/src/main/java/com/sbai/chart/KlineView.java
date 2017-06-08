@@ -47,11 +47,11 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
     private void init() {
         mKlineChart = new KlineChart(getContext());
         mKlineChart.setOnTouchLinesAppearListener(this);
-        int margin = (int) dp2Px(12f, getResources());
+        int padding = (int) mKlineChart.dp2Px(14);
         RelativeLayout.LayoutParams params = new LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0, 0, 0, margin);
+        mKlineChart.setPadding(padding, 0 , padding, 0);
         addView(mKlineChart, params);
 
         mLeftSideBar = LayoutInflater.from(getContext()).inflate(R.layout.kline_side_bar, null);

@@ -18,7 +18,7 @@
     <LinearLayout
         android:id="@+id/marketArea"
         android:layout_width="match_parent"
-        android:layout_height="97dp"
+        android:layout_height="94dp"
         android:layout_below="@id/titleBar"
         android:background="@color/colorPrimaryDark"
         android:gravity="center_vertical"
@@ -28,7 +28,7 @@
             android:id="@+id/exchangeCloseView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:text="@string/market_close"
             android:textColor="@color/secondaryText"
@@ -39,7 +39,7 @@
             android:id="@+id/priceDataArea"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="14dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -63,7 +63,6 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -94,18 +93,11 @@
                 android:text="--"/>
         </LinearLayout>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@color/greyAssist"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
             android:orientation="vertical">
 
             <TextView
@@ -163,11 +155,11 @@
                         android:id="@+id/tabLayout"
                         style="@style/TradeFixedTab"
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"/>
+                        android:layout_height="34dp"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="240dp">
+                        android:layout_height="170dp">
 
                         <com.sbai.chart.TrendView
                             android:id="@+id/trendView"
@@ -186,7 +178,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/splitLineColor"/>
+                android:background="@drawable/bg_trade_split"/>
 
             <com.sbai.finance.view.slidingTab.SlidingTabLayout
                 android:id="@+id/slidingTab"

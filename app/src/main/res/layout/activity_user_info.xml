@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgAssist"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.ModifyUserInfoActivity">
 
@@ -63,7 +63,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/nick_name"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
 
@@ -73,26 +73,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/sex"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
-        app:subTextSize="@dimen/common_default_size"/>
+        app:splitLineColor="@color/normalDivider"
+        app:subTextColor="@color/unluckyText"/>
 
-    <include layout="@layout/split_line"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/age"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
-        app:subTextSize="@dimen/common_default_size"/>
 
-    <include layout="@layout/split_line"/>
+        app:splitLineColor="@color/normalDivider"
+        app:subTextColor="@color/unluckyText"/>
+
 
     <LinearLayout
         android:id="@+id/ll_Location"
@@ -122,7 +123,7 @@
             android:ellipsize="end"
             android:gravity="right"
             android:maxLines="1"
-            android:textColor="@color/hintText"/>
+            android:textColor="@color/unluckyText"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -141,7 +142,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/credit"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
     <Space

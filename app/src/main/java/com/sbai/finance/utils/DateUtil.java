@@ -422,6 +422,19 @@ public class DateUtil {
         }
     }
 
+    /**
+     * 比较两个时间相差的天数
+     * @param timestamp
+     * @return
+     */
+    public static int compareDateDifference(long timestamp){
+        long systemTime = System.currentTimeMillis();
+        if (timestamp>=systemTime){
+            return 0;
+        }
+        long days =(systemTime - timestamp)/(1000*60*60*24);
+        return (int) days;
+    }
     public static String getTodayStartTime(long timestamp) {
         return format(timestamp, "yyyy-MM-dd") + " 00:00:00";
     }

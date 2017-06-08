@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/bgAssist">
+        android:background="@color/background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bgAssist"
+                android:background="@color/background"
                 android:clipToPadding="false"
                 android:divider="@null"
                 android:paddingBottom="@dimen/dp_10"
@@ -75,7 +75,7 @@
             android:maxLength="400"
             android:paddingLeft="13dp"
             android:paddingRight="13dp"
-            android:textColorHint="@color/hintText"
+            android:textColorHint="@color/unluckyText"
             android:textSize="15sp"/>
 
         <ImageButton
@@ -91,7 +91,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="@color/splitLineColor"/>
+            android:background="@color/split"/>
 
         <TextView
             android:id="@+id/send"

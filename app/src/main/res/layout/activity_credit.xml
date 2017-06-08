@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgAssist"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.CreditActivity">
 
@@ -28,6 +28,6 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/real_name_authentication"
         app:rowTextColor="@color/blackAssist"
-        app:subTextColor="@color/hintText"
+        app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 </LinearLayout>
