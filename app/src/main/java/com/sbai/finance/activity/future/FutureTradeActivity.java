@@ -141,6 +141,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         requestExchangeStatus();
         requestOptionalStatus();
+
+        requestTrendDataAndSet();
     }
 
     @Override
@@ -201,8 +203,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
-
-        requestTrendDataAndSet();
     }
 
     private void requestTrendDataAndSet() {
