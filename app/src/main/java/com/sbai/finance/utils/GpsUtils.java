@@ -15,6 +15,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 
 import java.io.IOException;
+import java.security.Provider;
 import java.util.List;
 
 /**
@@ -47,17 +48,21 @@ public class GpsUtils {
             locationManager = (LocationManager) App.getAppContext().getSystemService(serviceName);
 
             //provider的类型
-            String provider = LocationManager.NETWORK_PROVIDER;
-
+            //获取所有可用的位置提供器
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);   //高精度
             criteria.setAltitudeRequired(false);    //不要求海拔
             criteria.setBearingRequired(false); //不要求方位
             criteria.setCostAllowed(false); //不允许有话费
             criteria.setPowerRequirement(Criteria.POWER_LOW);   //低功耗
-
+            String provider = mLocationManager.getBestProvider(criteria,true);
             //通过最后一次的地理位置来获得Location对象
-            Location location = locationManager.getLastKnownLocation(provider);
+//            Location location = locationManager.getLastKnownLocation(provider);
+            Location location;
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
 
             String queryed_name = updateWithNewLocation(location);
             if ((queryed_name != null) && (0 != queryed_name.length())) {
@@ -70,8 +75,8 @@ public class GpsUtils {
          */
             locationManager.requestLocationUpdates(provider, 30000, 50,
                     locationListener);
-            //移除监听器
-            locationManager.removeUpdates(locationListener);
+         //   移除监听器
+//            locationManager.removeUpdates(locationListener);
         }
     }
 
@@ -91,7 +96,7 @@ public class GpsUtils {
         }
 
         public void onProviderDisabled(String provider) {
-            tempCityName = updateWithNewLocation(null);
+            tempCityName = updateWithNewLocation(mLocationManager.getLastKnownLocation(provider));
             if ((tempCityName != null) && (tempCityName.length() != 0)) {
                 cityName = tempCityName;
             }

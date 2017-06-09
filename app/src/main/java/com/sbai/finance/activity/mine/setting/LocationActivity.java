@@ -1,12 +1,21 @@
 package com.sbai.finance.activity.mine.setting;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +27,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.SmartDialog;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,6 +44,7 @@ import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
 public class LocationActivity extends BaseActivity {
+    public static final int GPS_REQUEST_CODE=250;
 
     @BindView(R.id.location)
     TextView mLocation;
@@ -54,22 +65,49 @@ public class LocationActivity extends BaseActivity {
         mIsNeedUpdateLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
     }
 
-    @OnClick(R.id.choiceLocation)
+    @OnClick({R.id.choiceLocation,R.id.location})
     public void onClick(View view) {
-        showLocationPicker();
-    }
-
-    private void updateLocationInfo() {
-        mAddress = new GpsUtils().getAddress();
-        if (mAddress != null) {
-            String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
-            mLocation.setText(land);
-            if (mIsNeedUpdateLocation) {
-                LocalUser.getUser().getUserInfo().setLand(land);
-            }
+        switch (view.getId()){
+            case R.id.choiceLocation:
+                showLocationPicker();
+                break;
+            case R.id.location:
+                updateLocationInfo();
+                break;
         }
     }
 
+    private void updateLocationInfo() {
+
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (Build.VERSION.SDK_INT >= 23) {
+
+            int check = ContextCompat.checkSelfPermission(this,permissions[0]);
+
+            if (check == PackageManager.PERMISSION_GRANTED) {
+                openGPSSettings();
+            } else {
+                requestPermissions(permissions, 1);
+            }
+        } else {
+            openGPSSettings();
+        }
+    }
+
+   private void requestLocation(){
+       mLocation.setText("");
+       mAddress = new GpsUtils().getAddress();
+       if (mAddress != null) {
+           String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
+           mLocation.setText(land);
+           if (mIsNeedUpdateLocation) {
+               LocalUser.getUser().getUserInfo().setLand(land);
+           }
+       }
+       if (TextUtils.isEmpty(mLocation.getText())){
+           mLocation.setText(getString(R.string.re_location));
+       }
+   }
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
         addressInitTask.setmIsNeedUpdateLocation(mIsNeedUpdateLocation);
@@ -81,6 +119,13 @@ public class LocationActivity extends BaseActivity {
             province = split[0];
             city = split[1];
             country = split[2];
+        }else{
+            split=LocalUser.getUser().getUserInfo().getLand().split("-");
+            if (split.length == 3) {
+                province = split[0];
+                city = split[1];
+                country = split[2];
+            }
         }
         addressInitTask.execute(province, city, country);
     }
@@ -96,6 +141,44 @@ public class LocationActivity extends BaseActivity {
     public void onBackPressed() {
         returnAddress();
         super.onBackPressed();
+    }
+    /**
+     * GPS设置
+     */
+    private void openGPSSettings() {
+        LocationManager locationManager = (LocationManager) this
+                .getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+            SmartDialog.with(getActivity(), getString(R.string.open_gps))
+                    .setMessageTextSize(15)
+                    .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, GPS_REQUEST_CODE);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegative(R.string.cancel)
+                    .show();
+        }else{
+            requestLocation();
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GPS_REQUEST_CODE) {
+            requestLocation();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //写入你需要权限才能使用的方法
+            requestLocation();
+        }
     }
 
     private class AddressInitTask extends AsyncTask<String, Void, ArrayList<Province>> {
@@ -187,8 +270,11 @@ public class LocationActivity extends BaseActivity {
                             LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
                         }
 
-                        if (mAddress == null)
+                        if (mAddress == null){
                             mAddress = new Address(new Locale(Locale.CHINA.getLanguage()));
+                            mAddress.setLatitude(0.00);
+                            mAddress.setLongitude(0.00);
+                        }
                         mAddress.setAdminArea(province.getAreaName());
                         mAddress.setLocality(city.getAreaName());
                         mAddress.setSubLocality(county.getAreaName());

@@ -937,7 +937,7 @@ public class Client {
      * @return
      */
 
-    public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money,
+    public static API borrowIn(String content, String contentImg, String days, String interest, String money,
                                String location,double locationLng,double locationLat) {
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
@@ -1316,9 +1316,12 @@ public class Client {
     public static API getStockNewsInfo(String id) {
         return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
-
+    /**
+     * 图片上传
+     */
+    public static API uploadPicture(String picture){
+        return new API(POST,"/user/upload/images.do", new ApiParams().put("picture", picture));
+    }
     //h5关于我们的界面网址
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about?nohead=1";
-
-
 }
