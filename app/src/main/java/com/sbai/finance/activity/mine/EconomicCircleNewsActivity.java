@@ -107,7 +107,7 @@ public class EconomicCircleNewsActivity extends BaseActivity {
 //                    mUserAction.setText(userInfo.getUserName());
 //                }
 //                mContent.setText(item.getMsg());
-//                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+//                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
                 // TODO: 2017/6/8 借款需要分开
             }

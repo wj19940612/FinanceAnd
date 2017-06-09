@@ -253,7 +253,6 @@ public class LoginActivity extends BaseActivity {
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
         Client.login(authCode, phoneNumber)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<UserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<UserInfo> resp) {
