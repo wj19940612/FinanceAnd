@@ -14,6 +14,12 @@ public class HistoryNewsModel implements Parcelable {
     public static final String NEW_TYPE_ECONOMIC_CIRCLE_NEWS = "2,3";
 
 
+//   type : 0注册 1 关注 2.点赞帖子 3.点赞评论 4. 评论 *
+// 10.想帮你的人11拒绝你的人12.接受你帮助的人 13.借款单审核未通过 14.借款发布成功 15.借款超时 16.借款取消 *
+//  20.成为观点大神 21.实名认证已通过 22.实名认证未通过 * 25.涨跌预测成功 26.涨跌预测失败 * 30.意向金支付成功
+//
+//    dataId:关联id 如果是 评论就是评论id 依此类推 根据type判断
+
     //1 关注 2.点赞帖子 3.点赞评论 4. 评论 *
     public static final int ACTION_TYPE_ATTENTION = 1;
     public static final int ACTION_TYPE_LIKE_POST = 2;
@@ -51,7 +57,7 @@ public class HistoryNewsModel implements Parcelable {
      * type : 11
      * userId : 185
      * status : 1
-     * createDate : 1495453263000
+     * createTime : 1495453263000
      */
 
     private int classify;
@@ -63,8 +69,13 @@ public class HistoryNewsModel implements Parcelable {
     private String title;
     private int type;
     private int userId;
+    /**
+     * 0  未读
+     * 1 已读
+     * 3 失效
+     */
     private int status;
-    private long createDate;
+    private long createTime;
 
 
     public boolean isTheEarnestMoneyPaySuccess() {
@@ -162,12 +173,12 @@ public class HistoryNewsModel implements Parcelable {
         this.status = status;
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
 
@@ -215,6 +226,13 @@ public class HistoryNewsModel implements Parcelable {
                 return new DataBean[size];
             }
         };
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "contentImg='" + contentImg + '\'' +
+                    '}';
+        }
     }
 
     public static class SourceUserBean implements Parcelable {
@@ -297,6 +315,16 @@ public class HistoryNewsModel implements Parcelable {
                 return new SourceUserBean[size];
             }
         };
+
+        @Override
+        public String toString() {
+            return "SourceUserBean{" +
+                    "id=" + id +
+                    ", userName='" + userName + '\'' +
+                    ", userPhone='" + userPhone + '\'' +
+                    ", userPortrait='" + userPortrait + '\'' +
+                    '}';
+        }
     }
 
     @Override
@@ -316,7 +344,7 @@ public class HistoryNewsModel implements Parcelable {
         dest.writeInt(this.type);
         dest.writeInt(this.userId);
         dest.writeInt(this.status);
-        dest.writeLong(this.createDate);
+        dest.writeLong(this.createTime);
     }
 
     public HistoryNewsModel() {
@@ -333,7 +361,7 @@ public class HistoryNewsModel implements Parcelable {
         this.type = in.readInt();
         this.userId = in.readInt();
         this.status = in.readInt();
-        this.createDate = in.readLong();
+        this.createTime = in.readLong();
     }
 
     public static final Creator<HistoryNewsModel> CREATOR = new Creator<HistoryNewsModel>() {
@@ -347,4 +375,21 @@ public class HistoryNewsModel implements Parcelable {
             return new HistoryNewsModel[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "HistoryNewsModel{" +
+                "classify=" + classify +
+                ", dataId=" + dataId +
+                ", data=" + data +
+                ", sourceUser=" + sourceUser +
+                ", id=" + id +
+                ", sourceUserId=" + sourceUserId +
+                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", userId=" + userId +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

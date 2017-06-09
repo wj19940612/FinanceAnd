@@ -54,12 +54,14 @@ public class SafetySettingActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.modify_safety_password:
                 Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).execute();
+                finish();
                 break;
             case R.id.forget_safety_password:
                 Launcher.with(getActivity(), ForgetPassWordActivity.class).execute();
                 break;
             case R.id.setting_safety_password:
                 Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).execute();
+                finish();
                 break;
             case R.id.modifySafetyLL:
                 break;

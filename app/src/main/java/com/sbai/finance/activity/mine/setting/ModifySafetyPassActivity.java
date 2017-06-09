@@ -40,6 +40,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     private int mPasswordInputCount;
     //用户是否设置过密码
     private boolean mHasPassword;
+    private String mAuthCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
         ButterKnife.bind(this);
         mHasPassword = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
         mPasswordInputCount = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+        mAuthCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
         mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
         if (!mHasPassword) {
             mTitleBar.setTitle(R.string.add_safety_pass);
@@ -92,6 +94,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                     Log.d(TAG, "onRespSuccess: " + resp.toString());
                                     if (resp.isSuccess()) {
                                         ToastUtil.curt(resp.getMsg());
+                                        finish();
                                     } else {
                                         ToastUtil.curt(resp.getMsg());
                                     }
@@ -151,7 +154,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     }
 
     private void confirmNewPassword(String newPassWord) {
-        Client.updatePassword(newPassWord, mOldPassword)
+        Client.updatePassword(newPassWord, mOldPassword, mAuthCode)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
@@ -159,6 +162,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.curt(resp.getMsg());
+                            finish();
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }

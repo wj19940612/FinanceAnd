@@ -17,6 +17,8 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,6 +34,8 @@ public class AboutUsActivity extends BaseActivity {
     IconTextRow mUserProtocol;
     @BindView(R.id.checkUpdate)
     IconTextRow mCheckUpdate;
+    @BindView(R.id.company)
+    AppCompatTextView mCompany;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class AboutUsActivity extends BaseActivity {
 
         String version = this.getString(R.string.app_name) + "v" + AppInfo.getVersionName(this);
         mVersionName.setText(version);
+        mCompany.setText(getString(R.string.company, Calendar.getInstance().get(Calendar.YEAR)));
     }
 
     @OnClick({R.id.versionName, R.id.action_product, R.id.user_protocol, R.id.checkUpdate})
@@ -65,7 +70,6 @@ public class AboutUsActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
-
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
                                 .putExtra(WebActivity.EX_HTML, data.getContent())

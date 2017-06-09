@@ -63,10 +63,12 @@ public class MutualActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
     @OnClick(R.id.publish)
-    public void onClick(View view){
-        Launcher.with(getActivity(),BorrowActivity.class).execute();
+    public void onClick(View view) {
+        Launcher.with(getActivity(), BorrowActivity.class).execute();
     }
+
     static class MutualPagesAdapter extends FragmentPagerAdapter {
 
         private Context mContext;

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,9 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
+                        for (HistoryNewsModel i : data) {
+                            Log.d(TAG, "系统消息: " + i.toString());
+                        }
                         updateSystemNewsData(data);
                     }
 
@@ -101,8 +105,6 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     }
                 })
                 .fire();
-
-
     }
 
     private void stopRefreshAnimation() {
@@ -297,7 +299,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     mNotReadNewsHint.setVisibility(View.INVISIBLE);
                 }
 
-                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mTitle.setText(item.getTitle());
 //                mContent.setText(item.getMsg());
             }
