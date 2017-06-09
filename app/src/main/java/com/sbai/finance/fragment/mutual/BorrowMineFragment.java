@@ -268,8 +268,6 @@ public class BorrowMineFragment extends BaseFragment implements
         }
 
         static class ViewHolder {
-            @BindView(R.id.divider)
-            View mDivider;
             @BindView(R.id.avatar)
             ImageView mAvatar;
             @BindView(R.id.userName)
@@ -331,9 +329,9 @@ public class BorrowMineFragment extends BaseFragment implements
                      case BorrowMine.STATUS_INTENTION:
                          mStatus.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
                          if (isSelf){
-                             mStatus.setText(context.getString(R.string.borrow_in_days,DateUtil.compareDateDifference(item.getModifyDate())));
+                             mStatus.setText(context.getString(R.string.borrow_in_days,item.getConfirmDays()));
                          }else {
-                             mStatus.setText(context.getString(R.string.borrow_out_days,DateUtil.compareDateDifference(item.getModifyDate())));
+                             mStatus.setText(context.getString(R.string.borrow_out_days,item.getConfirmDays()));
                          }
                          break;
                     case BorrowMine.STATUS_INTENTION_OVER_TIME:

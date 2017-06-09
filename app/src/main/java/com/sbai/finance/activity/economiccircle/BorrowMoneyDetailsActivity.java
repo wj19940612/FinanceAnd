@@ -154,7 +154,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			public void onUserClick(int userId) {
 				Launcher.with(getActivity(), UserDataActivity.class)
 						.putExtra(Launcher.USER_ID, userId)
-						.execute();
+						.executeForResult(REQ_CODE_USERDATA);
 			}
 		});
 		mListView.setEmptyView(mEmpty);
@@ -322,7 +322,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				.transform(new GlideCircleTransform(context))
 				.into(mAvatar);
 		mUserName.setText(borrowMoneyDetails.getUserName());
-		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getAuditTime()));
+		mPublishTime.setText(DateUtil.getFormatTime(borrowMoneyDetails.getCreateDate()));
 
 		if (TextUtils.isEmpty(borrowMoneyDetails.getLocation())) {
 			mLocation.setText(R.string.no_location_information);
@@ -354,19 +354,20 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 			}
 		});
 
-		if (borrowMoneyDetails.getIsIntention() == 1) {
-			mGiveHelp.setText(R.string.submitted);
-			mGiveHelp.setEnabled(false);
-		} else {
-			mGiveHelp.setText(R.string.give_help);
-			mGiveHelp.setEnabled(true);
-		}
 
 
 		if (LocalUser.getUser().isLogin()) {
 			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
 				mGiveHelp.setVisibility(View.GONE);
 			}
+		}
+
+		if (borrowMoneyDetails.getIsIntention() == 1) {
+			mGiveHelp.setText(R.string.submitted);
+			mGiveHelp.setEnabled(false);
+		} else {
+			mGiveHelp.setText(R.string.give_help);
+			mGiveHelp.setEnabled(true);
 		}
 
 		mGiveHelp.setOnClickListener(new View.OnClickListener() {
@@ -376,7 +377,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					Launcher.with(BorrowMoneyDetailsActivity.this, LoginActivity.class).executeForResult(REQ_BORROW_MONEY_DETAILS);
 				} else {
 					SmartDialog.with(getActivity(),
-							getString(R.string.give_help_dialog_content, borrowMoneyDetails.getUserName())
+							getString(R.string.give_help_dialog_content)
 							, getString(R.string.give_help_dialog_title, borrowMoneyDetails.getUserName()))
 							.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 								@Override

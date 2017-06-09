@@ -41,6 +41,15 @@ public class BorrowMoney {
 	private int userId;
 	private String userName;
 	private String userPortrait;
+	private int confirmDays;
+
+	public int getConfirmDays() {
+		return confirmDays;
+	}
+
+	public void setConfirmDays(int confirmDays) {
+		this.confirmDays = confirmDays;
+	}
 
 	public String getLocation() {
 		return location;

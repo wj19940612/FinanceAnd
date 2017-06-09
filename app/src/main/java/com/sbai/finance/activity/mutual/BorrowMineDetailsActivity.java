@@ -151,7 +151,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             public void onUserClick(int userId) {
                 Launcher.with(getActivity(), UserDataActivity.class)
                         .putExtra(Launcher.USER_ID, userId)
-                        .execute();
+                        .executeForResult(REQ_CODE_USERDATA);
             }
         });
         mListView.setEmptyView(mEmpty);
@@ -506,11 +506,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 mCancel.setVisibility(View.GONE);
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
-                    mStatus.setText(getActivity().getString(R.string.borrow_in_days,DateUtil.compareDateDifference(mBorrowMine.getModifyDate())));
+                    mStatus.setText(getActivity().getString(R.string.borrow_in_days,mBorrowMine.getConfirmDays()));
                     mCallOnly.setVisibility(View.VISIBLE);
                     mBorrowOutSuccess.setVisibility(View.GONE);
                 }else {
-                    mStatus.setText(getActivity().getString(R.string.borrow_out_days,DateUtil.compareDateDifference(mBorrowMine.getModifyDate())));
+                    mStatus.setText(getActivity().getString(R.string.borrow_out_days,mBorrowMine.getConfirmDays()));
                     mCallOnly.setVisibility(View.GONE);
                     mBorrowOutSuccess.setVisibility(View.VISIBLE);
                 }
