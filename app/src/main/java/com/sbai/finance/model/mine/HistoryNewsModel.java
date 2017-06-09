@@ -9,10 +9,9 @@ import android.os.Parcelable;
  */
 
 public class HistoryNewsModel implements Parcelable {
-    //	消息类型{1.系统消息 2.互助消息 3.经济圈消息}
-    public static final int NEW_TYPE_SYSTEM_NEWS = 1;
-    public static final int NEW_TYPE_MUTUAL_HELP = 2;
-    public static final int NEW_TYPE_ECONOMIC_CIRCLE = 3;
+    //	消息类型 1系统 2观点 3借款
+    public static final String NEW_TYPE_SYSTEM_NEWS = "1";
+    public static final String NEW_TYPE_ECONOMIC_CIRCLE_NEWS = "2,3";
 
 
     //1 关注 2.点赞帖子 3.点赞评论 4. 评论 *
@@ -42,42 +41,31 @@ public class HistoryNewsModel implements Parcelable {
     //   30.意向金支付成功
     public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
     /**
-     * msg : 我
-     * classify : 1
-     * viewpointId : 31
-     * dataId : 11
-     * data : {}
-     * sourceUser : {"id":78,"userName":"用户235","userPhone":"17317322083","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493705928691.png"}
-     * id : 7
-     * sourceUserId : 78
-     * type : 26
-     * userId : 86
-     * status : 0
-     * createDate : 1493693125000
+     * classify : 2
+     * dataId : 252
+     * data : {"contentImg":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1495431415800.png"}
+     * sourceUser : {"id":254,"userName":"DEER","userPhone":"18888888881","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1495431080405.png"}
+     * id : 2298
+     * sourceUserId : 254
+     * title : 感谢并婉拒了你的帮助
+     * type : 11
+     * userId : 185
+     * status : 1
+     * createDate : 1495453263000
      */
 
-    private String msg;
     private int classify;
-    private int viewpointId;
     private int dataId;
     private DataBean data;
-    private UserInfo sourceUser;
+    private SourceUserBean sourceUser;
     private int id;
     private int sourceUserId;
+    private String title;
     private int type;
     private int userId;
-    //0  未读 1 已读 3失效
     private int status;
     private long createDate;
-    /**
-     * title : test
-     */
 
-    private String title;
-
-    /**
-     * data : {"content":"第一次发表观点，这个品种一定涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！"}
-     */
 
     public boolean isTheEarnestMoneyPaySuccess() {
         return getType() == THE_EARNEST_MONEY_APY_SUCCESS;
@@ -94,28 +82,12 @@ public class HistoryNewsModel implements Parcelable {
                 || getType() == BORROW_MONEY_CANCEL;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     public int getClassify() {
         return classify;
     }
 
     public void setClassify(int classify) {
         this.classify = classify;
-    }
-
-    public int getViewpointId() {
-        return viewpointId;
-    }
-
-    public void setViewpointId(int viewpointId) {
-        this.viewpointId = viewpointId;
     }
 
     public int getDataId() {
@@ -134,11 +106,11 @@ public class HistoryNewsModel implements Parcelable {
         this.data = data;
     }
 
-    public UserInfo getUserInfo() {
+    public SourceUserBean getSourceUser() {
         return sourceUser;
     }
 
-    public void setSourceUser(UserInfo sourceUser) {
+    public void setSourceUser(SourceUserBean sourceUser) {
         this.sourceUser = sourceUser;
     }
 
@@ -156,6 +128,14 @@ public class HistoryNewsModel implements Parcelable {
 
     public void setSourceUserId(int sourceUserId) {
         this.sourceUserId = sourceUserId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getType() {
@@ -190,51 +170,21 @@ public class HistoryNewsModel implements Parcelable {
         this.createDate = createDate;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
 
     public static class DataBean implements Parcelable {
-
         /**
-         * content : 第一次发表观点，这个品种一定涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！涨！
+         * contentImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1495431415800.png
          */
 
-        private String content;
-        private double money;
-        private String source;
+        private String contentImg;
 
-        public String getContent() {
-            return content;
+
+        public String getContentImg() {
+            return contentImg;
         }
 
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public DataBean() {
-
-        }
-
-        public double getMoney() {
-            return money;
-        }
-
-        public void setMoney(double money) {
-            this.money = money;
-        }
-
-        public String getSource() {
-            return source;
-        }
-
-        public void setSource(String source) {
-            this.source = source;
+        public void setContentImg(String contentImg) {
+            this.contentImg = contentImg;
         }
 
         @Override
@@ -244,11 +194,14 @@ public class HistoryNewsModel implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.content);
+            dest.writeString(this.contentImg);
+        }
+
+        public DataBean() {
         }
 
         protected DataBean(Parcel in) {
-            this.content = in.readString();
+            this.contentImg = in.readString();
         }
 
         public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
@@ -262,28 +215,90 @@ public class HistoryNewsModel implements Parcelable {
                 return new DataBean[size];
             }
         };
-
-        @Override
-        public String toString() {
-            return "DataBean{" +
-                    "content='" + content + '\'' +
-                    ", money=" + money +
-                    ", source='" + source + '\'' +
-                    '}';
-        }
     }
 
-    /**
-     * create_date : 35203
-     * dataId : 41874
-     * id : 1
-     * msg : 测试内容8oyc
-     * source_user : {"age":1,"id":1,"land":1,"userName":1,"userPhone":1,"userPortrait":1,"userSex":1}
-     * status : 30556
-     * type : 52888
-     */
+    public static class SourceUserBean implements Parcelable {
+        /**
+         * id : 254
+         * userName : DEER
+         * userPhone : 18888888881
+         * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1495431080405.png
+         */
 
-    //{"msg":"评论......吵吵吵","classify":1,"viewpointId":31,"dataId":13,"source_user":{"id":78,"userPhone":"17317322083"},"id":9,"sourceUserId":78,"type":30,"userId":86,"status":0}
+        private int id;
+        private String userName;
+        private String userPhone;
+        private String userPortrait;
+
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getUserPhone() {
+            return userPhone;
+        }
+
+        public void setUserPhone(String userPhone) {
+            this.userPhone = userPhone;
+        }
+
+        public String getUserPortrait() {
+            return userPortrait;
+        }
+
+        public void setUserPortrait(String userPortrait) {
+            this.userPortrait = userPortrait;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
+            dest.writeString(this.userName);
+            dest.writeString(this.userPhone);
+            dest.writeString(this.userPortrait);
+        }
+
+        public SourceUserBean() {
+        }
+
+        protected SourceUserBean(Parcel in) {
+            this.id = in.readInt();
+            this.userName = in.readString();
+            this.userPhone = in.readString();
+            this.userPortrait = in.readString();
+        }
+
+        public static final Creator<SourceUserBean> CREATOR = new Creator<SourceUserBean>() {
+            @Override
+            public SourceUserBean createFromParcel(Parcel source) {
+                return new SourceUserBean(source);
+            }
+
+            @Override
+            public SourceUserBean[] newArray(int size) {
+                return new SourceUserBean[size];
+            }
+        };
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -291,14 +306,13 @@ public class HistoryNewsModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.msg);
         dest.writeInt(this.classify);
-        dest.writeInt(this.viewpointId);
         dest.writeInt(this.dataId);
         dest.writeParcelable(this.data, flags);
         dest.writeParcelable(this.sourceUser, flags);
         dest.writeInt(this.id);
         dest.writeInt(this.sourceUserId);
+        dest.writeString(this.title);
         dest.writeInt(this.type);
         dest.writeInt(this.userId);
         dest.writeInt(this.status);
@@ -309,14 +323,13 @@ public class HistoryNewsModel implements Parcelable {
     }
 
     protected HistoryNewsModel(Parcel in) {
-        this.msg = in.readString();
         this.classify = in.readInt();
-        this.viewpointId = in.readInt();
         this.dataId = in.readInt();
         this.data = in.readParcelable(DataBean.class.getClassLoader());
-        this.sourceUser = in.readParcelable(UserInfo.class.getClassLoader());
+        this.sourceUser = in.readParcelable(SourceUserBean.class.getClassLoader());
         this.id = in.readInt();
         this.sourceUserId = in.readInt();
+        this.title = in.readString();
         this.type = in.readInt();
         this.userId = in.readInt();
         this.status = in.readInt();
@@ -334,22 +347,4 @@ public class HistoryNewsModel implements Parcelable {
             return new HistoryNewsModel[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "HistoryNewsModel{" +
-                "msg='" + msg + '\'' +
-                ", classify=" + classify +
-                ", viewpointId=" + viewpointId +
-                ", dataId=" + dataId +
-                ", data=" + data +
-                ", sourceUser=" + sourceUser +
-                ", id=" + id +
-                ", sourceUserId=" + sourceUserId +
-                ", type=" + type +
-                ", userId=" + userId +
-                ", status=" + status +
-                ", createDate=" + createDate +
-                '}';
-    }
 }

@@ -1,23 +1,33 @@
 package com.sbai.finance.activity.mine.setting;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.SmartDialog;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,14 +45,21 @@ import cn.qqtheme.framework.widget.WheelView;
 
 public class LocationActivity extends BaseActivity {
 
+    private static final int REQ_CODE_GPS = 426;
+
     @BindView(R.id.location)
     TextView mLocation;
+    @BindView(R.id.choiceLocation)
+    IconTextRow mChoiceLocation;
     private Address mAddress;
     private boolean mIsNeedUpdateLocation;
+    //是否更新最新的地址
+    private boolean isUpdateLand = false;
+
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         updateLocationInfo();
     }
 
@@ -52,21 +69,63 @@ public class LocationActivity extends BaseActivity {
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
         mIsNeedUpdateLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
+        Log.d(TAG, "onCreate: " + isUpdateLand);
     }
 
-    @OnClick(R.id.choiceLocation)
-    public void onClick(View view) {
-        showLocationPicker();
+    @OnClick({R.id.location, R.id.choiceLocation})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.location:
+                isUpdateLand = true;
+                updateLocationInfo();
+                break;
+            case R.id.choiceLocation:
+                showLocationPicker();
+                break;
+        }
     }
 
     private void updateLocationInfo() {
-        mAddress = new GpsUtils().getAddress();
-        if (mAddress != null) {
-            String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
-            mLocation.setText(land);
-            if (mIsNeedUpdateLocation) {
-                LocalUser.getUser().getUserInfo().setLand(land);
+        LocationManager locationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            SmartDialog.with(this, getString(R.string.please_open_gps_service, getString(R.string.app_name)), getString(R.string.gps_is_close))
+                    .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, REQ_CODE_GPS);
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            GpsUtils gpsUtils = new GpsUtils();
+            mAddress = gpsUtils.getAddress();
+            if (mAddress != null) {
+                String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
+                mLocation.setText(land);
+                if (isUpdateLand && getCallingActivity() != null &&
+                        getCallingActivity().getClassName().equalsIgnoreCase(ModifyUserInfoActivity.class.getName())) {
+                    //更新地址和经纬度
+                    UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                    userInfo.setLand(land);
+                    if (gpsUtils.getlongitude() != 0) {
+                        userInfo.setLongitude(gpsUtils.getlongitude());
+                    }
+                    if (gpsUtils.getLatitude() != 0) {
+                        userInfo.setLatitude(gpsUtils.getLatitude());
+                    }
+                    LocalUser.getUser().setUserInfo(userInfo);
+                }
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_GPS && resultCode == RESULT_OK) {
+            updateLocationInfo();
         }
     }
 
@@ -97,6 +156,7 @@ public class LocationActivity extends BaseActivity {
         returnAddress();
         super.onBackPressed();
     }
+
 
     private class AddressInitTask extends AsyncTask<String, Void, ArrayList<Province>> {
         private static final String TAG = "AddressInitTask";
