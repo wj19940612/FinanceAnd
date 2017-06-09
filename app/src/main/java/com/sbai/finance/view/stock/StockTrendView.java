@@ -68,6 +68,8 @@ public class StockTrendView extends LinearLayout {
 
     private StockTrendChart mTrendView;
     private StockTouchView mTouchView;
+    private StockTwinkleView mTwinkleView;
+
     private View mFivePriceView;
 
     public StockTrendView(Context context) {
@@ -84,25 +86,27 @@ public class StockTrendView extends LinearLayout {
         setOrientation(HORIZONTAL);
 
         mTrendView = new StockTrendChart(getContext());
+        int padding = (int) mTrendView.dp2Px(14);
+        mTrendView.setPadding(padding, 0, padding, 0);
+
         mTouchView = new StockTouchView(getContext(), mTrendView);
+        mTouchView.setPadding(padding, 0, padding, 0);
+
+        mTwinkleView = new StockTwinkleView(getContext(), mTrendView);
+        mTwinkleView.setPadding(padding, 0, padding, 0);
+
         mFivePriceView = LayoutInflater.from(getContext()).inflate(R.layout.view_five_price, null);
-        View splitLine = mFivePriceView.findViewById(R.id.splitLine);
-        LayoutParams params = (LayoutParams) splitLine.getLayoutParams();
-        params.height = (int) dp2Px(0.5f, getResources());
 
         FrameLayout container = new FrameLayout(getContext());
         container.addView(mTrendView);
         container.addView(mTouchView);
-        params = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-        int margin = (int) dp2Px(12f, getResources());
+        container.addView(mTwinkleView);
+        LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
-        params.setMargins(0, 0, 0, margin);
         addView(container, params);
 
         int width = (int) dp2Px(125f, getResources());
-        margin = (int) dp2Px(6f, getResources());
         params = new LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0, 0, 0, margin);
         addView(mFivePriceView, params);
 
         ButterKnife.bind(this, mFivePriceView);
@@ -115,6 +119,7 @@ public class StockTrendView extends LinearLayout {
     public void setSettings(ChartSettings settings) {
         mTrendView.setSettings(settings);
         mTouchView.setSettings(settings);
+        mTwinkleView.setSettings(settings);
     }
 
     public ChartSettings getSettings() {
@@ -123,6 +128,13 @@ public class StockTrendView extends LinearLayout {
 
     public void setDataList(List<StockTrendData> dataList) {
         mTrendView.setDataList(dataList);
+        mTwinkleView.setDataList(dataList);
+    }
+
+    public void setUnstableData(StockTrendData unstableData) {
+        mTrendView.setUnstableData(unstableData);
+        mTwinkleView.setUnstableData(unstableData);
+        mTouchView.setUnstableData(unstableData);
     }
 
     public void setHasFiveMarketView(boolean hasFiveMarketView) {

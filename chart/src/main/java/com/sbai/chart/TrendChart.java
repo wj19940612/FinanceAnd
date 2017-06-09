@@ -295,16 +295,19 @@ public class TrendChart extends ChartView {
                                     int left, int top, int width, int topPartHeight,
                                     int left2, int top2, int width1, int bottomPartHeight,
                                     Canvas canvas) {
-        if (mDataList != null && mDataList.size() > 0 && mUnstableData != null) {
+        if (mUnstableData != null) {
             // last point connect to unstable point
             Path path = getPath();
-            TrendViewData lastData = mDataList.get(mDataList.size() - 1);
-            path.moveTo(getChartX(lastData), getChartY(lastData.getLastPrice()));
             float chartX = getChartX(mUnstableData);
             float chartY = getChartY(mUnstableData.getLastPrice());
-            path.lineTo(chartX, chartY);
-            setRealTimeLinePaint(sPaint);
-            canvas.drawPath(path, sPaint);
+
+            if (mDataList != null && mDataList.size() > 0) {
+                TrendViewData lastData = mDataList.get(mDataList.size() - 1);
+                path.moveTo(getChartX(lastData), getChartY(lastData.getLastPrice()));
+                path.lineTo(chartX, chartY);
+                setRealTimeLinePaint(sPaint);
+                canvas.drawPath(path, sPaint);
+            }
 
             // dash line
             path = getPath();
@@ -331,11 +334,6 @@ public class TrendChart extends ChartView {
             setUnstablePricePaint(sPaint);
             canvas.drawText(unstablePrice, priceX, priceY, sPaint);
         }
-    }
-
-    @Override
-    protected boolean enableDrawUnstableData() {
-        return false;
     }
 
     @Override
