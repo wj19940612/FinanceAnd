@@ -365,8 +365,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
-//                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
-//                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
+                                .putExtra(Launcher.USER_ID, mBorrowMine.getUserId())
                                 .execute();
                     }
                 });
