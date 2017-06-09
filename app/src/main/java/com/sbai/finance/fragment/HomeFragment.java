@@ -66,10 +66,6 @@ public class HomeFragment extends BaseFragment {
     MyGridView mTopicGv;
     @BindView(R.id.nestedScrollView)
     ScrollView mNestedScrollView;
-    @BindView(R.id.borrowMoney)
-    LinearLayout mBorrowMoney;
-    @BindView(R.id.borrowTitle)
-    TextView mBorrowTitle;
     @BindView(R.id.idea)
     LinearLayout mIdea;
     @BindView(R.id.ideaTitle)
@@ -172,9 +168,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initView() {
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
-                "\n" + getString(R.string.borrow_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
-        mBorrowTitle.setText(attentionSpannableString);
+//        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
+//                "\n" + getString(R.string.borrow_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
+//        mBorrowTitle.setText(attentionSpannableString);
         SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.idea_title),
                 "\n" + getString(R.string.idea_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
         mIdeaTitle.setText(fansSpannableString);
@@ -257,14 +253,11 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.borrowMoney, R.id.idea, R.id.bigEvent})
+    @OnClick({ R.id.idea, R.id.bigEvent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bigEvent:
                 Launcher.with(getActivity(), EventActivity.class).execute();
-                break;
-            case R.id.borrowMoney:
-                Launcher.with(getActivity(), BorrowMoneyActivity.class).execute();
                 break;
             case R.id.idea:
                 Launcher.with(getActivity(), OpinionActivity.class).execute();

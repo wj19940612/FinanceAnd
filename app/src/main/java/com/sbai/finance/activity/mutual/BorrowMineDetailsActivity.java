@@ -3,6 +3,7 @@ package com.sbai.finance.activity.mutual;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -492,8 +493,9 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     mCancel.setEnabled(true);
                     mCancel.setText(getString(R.string.cancel_borrow_in));
                 }else{
-                    mStatus.setText(getActivity().getString(R.string.commit));
                     mCancel.setEnabled(false);
+                    mCancel.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.unluckyText));
+                    mCancel.setTextColor( Color.WHITE);
                     mCancel.setText(getString(R.string.commit));
                 }
                 mBorrowStatus.setVisibility(View.VISIBLE);

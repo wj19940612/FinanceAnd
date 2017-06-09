@@ -136,11 +136,14 @@ public class LocationActivity extends BaseActivity {
         String province = "";
         String city = "";
         String country = "";
-        String[] split = mLocation.getText().toString().split(" ");
-        if (split.length == 3) {
+        String[] split;
+        if (!TextUtils.isEmpty(mLocation.getText())){
+          split = mLocation.getText().toString().split(" ");
+          if (split.length == 3) {
             province = split[0];
             city = split[1];
             country = split[2];
+          }
         }else{
             split=LocalUser.getUser().getUserInfo().getLand().split("-");
             if (split.length == 3) {
