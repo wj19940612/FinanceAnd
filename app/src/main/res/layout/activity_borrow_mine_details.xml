@@ -332,11 +332,9 @@
                     android:textSize="12sp"/>
 
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="54dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="8dp"
@@ -345,16 +343,14 @@
                 <com.sbai.finance.view.MyListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:divider="@null"
-                    android:dividerHeight="8dp"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@android:id/empty"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"/>
+                    android:layout_height="match_parent"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -50,6 +50,7 @@
             android:id="@+id/addOptional"
             android:layout_width="match_parent"
             android:layout_height="49dp"
+            android:layout_marginTop="0.5dp"
             android:layout_alignParentBottom="true"
             android:background="@android:color/white"
             android:gravity="center"

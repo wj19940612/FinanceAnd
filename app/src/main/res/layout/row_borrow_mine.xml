@@ -10,7 +10,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="14dp"
-        android:background="@drawable/divider_economic_circle_list"/>
+        android:background="@color/normalDivider"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

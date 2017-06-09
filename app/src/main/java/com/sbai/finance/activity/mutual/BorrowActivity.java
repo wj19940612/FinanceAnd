@@ -31,14 +31,14 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.zxing.common.StringUtils;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.setting.LocationActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
-import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mutual.BorrowProtocol;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -52,6 +52,9 @@ import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.GrapeGridView;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
+
+import java.lang.reflect.Array;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -188,34 +191,37 @@ public class BorrowActivity extends BaseActivity {
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
+				mPublish.setEnabled(false);
 				String borrowMoney = mBorrowLimit.getText().toString().trim();
 				if (borrowMoney.length()>4|| Integer.parseInt(borrowMoney)>2000){
 					ToastUtil.curt(getString(R.string.money_more_2000));
 					mBorrowLimit.requestFocus();
 					mBorrowLimit.setFocusable(true);
 					mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					mPublish.setEnabled(true);
 					return;
 				}else if (Integer.parseInt(borrowMoney)<500){
 					ToastUtil.curt(getString(R.string.money_less_500));
 					mBorrowLimit.requestFocus();
 					mBorrowLimit.setFocusable(true);
 					mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					mPublish.setEnabled(true);
 					return;
 				}
-				int money = Integer.valueOf( borrowMoney);
-
 				String borrowInterest = mBorrowInterest.getText().toString().trim();
 				if (borrowInterest.length()>3||Integer.valueOf(borrowInterest)>200){
 					ToastUtil.curt(getString(R.string.interest_more_200));
 					mBorrowInterest.requestFocus();
 					mBorrowInterest.setFocusable(true);
 					mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					mPublish.setEnabled(true);
 					return;
 				}else if (Integer.valueOf(borrowInterest)<1){
 					ToastUtil.curt(getString(R.string.interest_less_1));
 					mBorrowInterest.requestFocus();
 					mBorrowInterest.setFocusable(true);
 					mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					mPublish.setEnabled(true);
 					return;
 				}
 
@@ -225,17 +231,19 @@ public class BorrowActivity extends BaseActivity {
 					mBorrowTimeLimit.requestFocus();
 					mBorrowTimeLimit.setFocusable(true);
 					mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					mPublish.setEnabled(true);
 					return;
 				}else if (Integer.parseInt(borrowTimeLimit)<1){
 					ToastUtil.curt(getString(R.string.days_less_1));
 					mBorrowTimeLimit.requestFocus();
 					mBorrowTimeLimit.setFocusable(true);
 					mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.redPrimary));
+					mPublish.setEnabled(true);
 					return;
 				}
-				int days = Integer.valueOf(borrowTimeLimit);
 				if (TextUtils.isEmpty(mLocation.getSubText())){
 					ToastUtil.curt(getString(R.string.no_address));
+					mPublish.setEnabled(true);
 					return;
 				}
 				String content = mBorrowRemark.getText().toString();
@@ -251,7 +259,7 @@ public class BorrowActivity extends BaseActivity {
 				StringBuilder contentImg = new StringBuilder();
 				int photoAmount =mPhotoGridAdapter.getCount();
 				for (int i = 0; i<photoAmount-1;i++){
-					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),400f);
+					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),600f);
 					Log.d(TAG, "image: "+image.length());
 					contentImg.append(image+",");
 				}
@@ -259,19 +267,46 @@ public class BorrowActivity extends BaseActivity {
 					contentImg.deleteCharAt(contentImg.length()-1);
 				}
 				if (mAddress == null){
+					mPublish.setEnabled(true);
 					return;
 				}
-				requestPublishBorrow(content,contentImg.toString(),days,borrowInterest,money,
-						mLocation.getSubText(),mAddress.getLongitude(),mAddress.getLatitude());
+				String picture = contentImg.toString();
+				if (!TextUtils.isEmpty(picture)){
+					Client.uploadPicture(picture).setTag(TAG).setIndeterminate(this)
+							.setCallback(new Callback2D<Resp<List<String>>,List<String>>() {
+								@Override
+								protected void onRespSuccessData(List<String> data) {
+									StringBuilder sb = new StringBuilder();
+									for (int i = 0; i < data.size(); i++) {
+										sb.append(data.get(i)).append(",");
+									}
+									if(sb.length()>0){
+										sb.deleteCharAt(sb.length()-1);
+									}
+									requestPublishBorrow(mBorrowRemark.getText().toString(),sb.toString(),mBorrowTimeLimit.getText().toString(),
+											mBorrowInterest.getText().toString(),mBorrowLimit.getText().toString(),
+											mLocation.getSubText(),mAddress.getLongitude(),mAddress.getLatitude());
+								}
+								@Override
+								public void onFailure(VolleyError volleyError) {
+									super.onFailure(volleyError);
+									mPublish.setEnabled(true);
+								}
+							}).fireSync();
+				}else{
+					requestPublishBorrow(content,picture,mBorrowTimeLimit.getText().toString(),
+							mBorrowInterest.getText().toString(),mBorrowLimit.getText().toString(),
+							mLocation.getSubText(),mAddress.getLongitude(),mAddress.getLatitude());
+				}
 				break;
 			case R.id.location:
                 Launcher.with(getActivity(), LocationActivity.class).executeForResult(REQ_CODE_ADDRESS);
 				break;
 			case R.id.protocol:
-				Client.getBorrowProcotol().setTag(TAG)
-						.setCallback(new Callback2D<Resp<BorrowProtocol>,BorrowProtocol>() {
+				Client.getArticleProtocol(2).setTag(TAG)
+						.setCallback(new Callback2D<Resp<ArticleProtocol>,ArticleProtocol>() {
 							@Override
-							protected void onRespSuccessData(BorrowProtocol data) {
+							protected void onRespSuccessData(ArticleProtocol data) {
 								Launcher.with(getActivity(), WebActivity.class)
 										.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
 										.putExtra(WebActivity.EX_HTML,data.getContent())
@@ -293,7 +328,7 @@ public class BorrowActivity extends BaseActivity {
 				break;
 		}
 	}
-	private void requestPublishBorrow(String content,String contentImg,Integer days,String interest,Integer money,
+	private void requestPublishBorrow(String content,String contentImg,String days,String interest,String money,
 									  String location,double locationLng,double locationLat){
 		Client.borrowIn(content,contentImg,days,interest,money,location,locationLng,locationLat).setTag(TAG)
 				.setIndeterminate(this)
@@ -302,12 +337,18 @@ public class BorrowActivity extends BaseActivity {
 					protected void onRespSuccess(Resp<Object> resp) {
 						if (resp.isSuccess()){
 							CustomToast.getInstance().showText(getActivity(),getString(R.string.publish_success));
-							Launcher.with(getActivity(),BorrowInActivity.class).execute();
+							Launcher.with(getActivity(),MutualActivity.class).execute();
 							finish();
 						}else{
 							mPublish.setEnabled(true);
 							ToastUtil.curt(resp.getMsg());
 						}
+					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						mPublish.setEnabled(true);
 					}
 				}).fire();
 	}
@@ -325,6 +366,9 @@ public class BorrowActivity extends BaseActivity {
 			return false;
 		}
 		if (TextUtils.isEmpty(mBorrowTimeLimit.getText())){
+			return false;
+		}
+		if (TextUtils.isEmpty(mLocation.getSubText())){
 			return false;
 		}
         return true;
@@ -361,19 +405,21 @@ public class BorrowActivity extends BaseActivity {
 	private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
 		@Override
 	public void afterTextChanged(Editable s) {
-			mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.blackAssist));
-		  setPublishStatus();
+			mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.blackAssist));
+		    setPublishStatus();
 	}
 };
 	private ValidationWatcher mBorrowInterestValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
+			mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(),R.color.blackAssist));
 			setPublishStatus();
 		}
 	};
 	private ValidationWatcher mBorrowTimeLimitValidationWatcher = new ValidationWatcher() {
 		@Override
 		public void afterTextChanged(Editable s) {
+			mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(),R.color.blackAssist));
 			setPublishStatus();
 		}
 	};

@@ -25,6 +25,9 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mutual.BorrowMineDetailsActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.economiccircle.BorrowMoney;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -78,9 +81,9 @@ public class BorrowMineFragment extends BaseFragment implements
             @Override
             public void onAvatarBorrowMoneyClick(int userId) {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, userId)
-                            .execute();
+                    Intent intent = new Intent(getActivity(),UserDataActivity.class);
+                    intent.putExtra(Launcher.USER_ID,userId);
+                    startActivityForResult(intent,REQ_CODE_USERDATA);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -179,6 +182,40 @@ public class BorrowMineFragment extends BaseFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==REQ_CODE_STATUS_CHANGE&&resultCode== RESULT_OK){
             updateBorrowStatus((BorrowMine) data.getParcelableExtra(Launcher.EX_PAYLOAD));
+        }
+        if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
+            if (data != null) {
+                WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                        (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+                AttentionAndFansNumberModel attentionAndFansNumberModel =
+                        (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+
+                if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+                    for (int i=0;i<mBorrowMoneyAdapter.getCount();i++){
+                        BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
+                        if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()){
+                            if (whetherAttentionShieldOrNot.isFollow()) {
+                                borrowMine.setIsAttention(2);
+                                mBorrowMoneyAdapter.notifyDataSetChanged();
+                            } else {
+                                borrowMine.setIsAttention(1);
+                                mBorrowMoneyAdapter.notifyDataSetChanged();
+                            }
+                            break;
+                        }
+                    }
+                    if (whetherAttentionShieldOrNot.isShield()) {
+                        for (int i=0;i<mBorrowMoneyAdapter.getCount();i++){
+                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
+                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()){
+                                mBorrowMoneyAdapter.remove(borrowMine);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -299,12 +336,17 @@ public class BorrowMineFragment extends BaseFragment implements
                              mStatus.setText(context.getString(R.string.borrow_out_days,DateUtil.compareDateDifference(item.getModifyDate())));
                          }
                          break;
+                    case BorrowMine.STATUS_INTENTION_OVER_TIME:
+                        mStatus.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
+                        mStatus.setText(context.getString(R.string.over_time));
+                        break;
+
                 }
-//                if (item.getIsAttention() == 2) {
-//                    mIsAttention.setText(R.string.is_attention);
-//                } else {
-//                    mIsAttention.setText("");
-//                }
+                if (item.getIsAttention() == 2) {
+                    mIsAttention.setText(R.string.is_attention);
+                } else {
+                    mIsAttention.setText("");
+                }
                 mBorrowMoneyContent.setText(item.getContent());
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
@@ -342,4 +384,5 @@ public class BorrowMineFragment extends BaseFragment implements
             }
         }
     }
+
 }
