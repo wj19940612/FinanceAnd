@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/split">
+              android:background="@color/background"
+              android:orientation="vertical">
+
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/help_borrow"/>
-        <com.sbai.finance.view.slidingTab.SlidingTabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"/>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/publish"
-            android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/bg_pressable_red"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/list_title_size"
-            android:text="@string/publish"/>
+    <com.sbai.finance.view.slidingTab.SlidingTabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"/>
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/publish"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/bg_pressable_red"
+        android:gravity="center"
+        android:text="@string/publish"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/list_title_size"/>
 </LinearLayout>
