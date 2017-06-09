@@ -505,6 +505,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case BorrowMine.STATUS_INTENTION:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mCancel.setVisibility(View.GONE);
+                mWriteMessage.setVisibility(View.GONE);
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.borrow_in_days,mBorrowMine.getConfirmDays()));
@@ -515,10 +516,12 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     mCallOnly.setVisibility(View.GONE);
                     mBorrowOutSuccess.setVisibility(View.VISIBLE);
                 }
+
                 break;
             case BorrowMine.STATUS_INTENTION_OVER_TIME:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mCancel.setVisibility(View.GONE);
+                mWriteMessage.setVisibility(View.GONE);
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 mStatus.setText(getActivity().getString(R.string.over_time));
                 if (isSelf){
@@ -574,7 +577,17 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         .show();
                 break;
             case R.id.alreadyRepay:
-                requestRepay(mBorrowMine.getId());
+                SmartDialog.with(getActivity(), getString(R.string.repay_confirm))
+                        .setMessageTextSize(15)
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                requestRepay(mBorrowMine.getId());
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegative(R.string.cancel)
+                        .show();
                 break;
             case R.id.writeMessage:
                 mLeaveMessageArea.setVisibility(View.VISIBLE);
