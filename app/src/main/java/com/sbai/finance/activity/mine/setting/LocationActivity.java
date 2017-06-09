@@ -16,17 +16,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 
 import java.lang.reflect.Type;
@@ -46,14 +51,21 @@ import cn.qqtheme.framework.widget.WheelView;
 public class LocationActivity extends BaseActivity {
     public static final int GPS_REQUEST_CODE=250;
 
+    private static final int REQ_CODE_GPS = 426;
+
     @BindView(R.id.location)
     TextView mLocation;
+    @BindView(R.id.choiceLocation)
+    IconTextRow mChoiceLocation;
     private Address mAddress;
     private boolean mIsNeedUpdateLocation;
+    //是否更新最新的地址
+    private boolean isUpdateLand = false;
+
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         updateLocationInfo();
     }
 
@@ -63,8 +75,8 @@ public class LocationActivity extends BaseActivity {
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
         mIsNeedUpdateLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
+        Log.d(TAG, "onCreate: " + isUpdateLand);
     }
-
     @OnClick({R.id.choiceLocation,R.id.location})
     public void onClick(View view) {
         switch (view.getId()){
@@ -78,12 +90,9 @@ public class LocationActivity extends BaseActivity {
     }
 
     private void updateLocationInfo() {
-
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
         if (Build.VERSION.SDK_INT >= 23) {
-
             int check = ContextCompat.checkSelfPermission(this,permissions[0]);
-
             if (check == PackageManager.PERMISSION_GRANTED) {
                 openGPSSettings();
             } else {
@@ -96,18 +105,31 @@ public class LocationActivity extends BaseActivity {
 
    private void requestLocation(){
        mLocation.setText("");
-       mAddress = new GpsUtils().getAddress();
+       GpsUtils gpsUtils = new GpsUtils();
+       mAddress = gpsUtils.getAddress();
        if (mAddress != null) {
            String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
            mLocation.setText(land);
-           if (mIsNeedUpdateLocation) {
-               LocalUser.getUser().getUserInfo().setLand(land);
+           if (isUpdateLand && getCallingActivity() != null &&
+                   getCallingActivity().getClassName().equalsIgnoreCase(ModifyUserInfoActivity.class.getName())) {
+               //更新地址和经纬度
+               UserInfo userInfo = LocalUser.getUser().getUserInfo();
+               userInfo.setLand(land);
+               if (gpsUtils.getlongitude() != 0) {
+                   userInfo.setLongitude(gpsUtils.getlongitude());
+               }
+               if (gpsUtils.getLatitude() != 0) {
+                   userInfo.setLatitude(gpsUtils.getLatitude());
+               }
+               LocalUser.getUser().setUserInfo(userInfo);
            }
        }
        if (TextUtils.isEmpty(mLocation.getText())){
            mLocation.setText(getString(R.string.re_location));
        }
    }
+
+
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
         addressInitTask.setmIsNeedUpdateLocation(mIsNeedUpdateLocation);
@@ -176,10 +198,10 @@ public class LocationActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            //写入你需要权限才能使用的方法
             requestLocation();
         }
     }
+
 
     private class AddressInitTask extends AsyncTask<String, Void, ArrayList<Province>> {
         private static final String TAG = "AddressInitTask";

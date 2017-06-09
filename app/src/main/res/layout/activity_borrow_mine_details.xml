@@ -2,16 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
         app:titleText="@string/details"
-        app:backFeature="true"/>
+        app:titleTextColor="@color/blackAssist"/>
 
-      <ScrollView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
+
+    <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,8 +30,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -57,6 +67,7 @@
                     android:textColor="#999999"
                     android:textSize="10sp"
                     tools:text="@string/is_attention"/>
+
                 <TextView
                     android:id="@+id/status"
                     android:layout_width="wrap_content"
@@ -65,17 +76,16 @@
                     android:gravity="center"
                     android:textSize="12sp"
                     tools:text="已提交"/>
-
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/borrowMoneyContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="54dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:lineSpacingExtra="8dp"
                 android:textColor="#222222"
                 android:textSize="14sp"
@@ -301,145 +311,145 @@
                     android:id="@+id/leaveMessageNum"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginLeft="5dp"
-                    tools:text="@string/leave_message"
+                    android:layout_weight="1"
                     android:textColor="#222222"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="@string/leave_message"/>
+
                 <TextView
                     android:id="@+id/writeMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/bg_write_message"
+                    android:paddingBottom="4dp"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
                     android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/bg_write_message"
                     android:text="@string/write_message"
                     android:textColor="@color/luckyText"
                     android:textSize="12sp"/>
 
             </LinearLayout>
-            <com.sbai.finance.view.MyListView
-                android:id="@+id/listView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="54dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="8dp"
-                android:dividerHeight="8dp"
-                android:divider="@null"
-                android:scrollbars="none"
-                android:visibility="visible"/>
+                android:orientation="vertical">
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="54dp"-->
-                <!--android:layout_marginRight="14dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:orientation="vertical">-->
+                <com.sbai.finance.view.MyListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:visibility="gone"/>
 
-                <!--<com.sbai.finance.view.MyListView-->
-                    <!--android:id="@+id/listView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:dividerHeight="8dp"-->
-                    <!--android:divider="@null"-->
-                    <!--android:visibility="visible"/>-->
-            <!--</LinearLayout>-->
+                <TextView
+                    android:id="@android:id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
         </LinearLayout>
-        </ScrollView>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/borrowStatus"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
         <LinearLayout
-            android:id="@+id/borrowStatus"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone">
-            <LinearLayout
-                android:id="@+id/borrowOutSuccess"
+            android:id="@+id/borrowOutSuccess"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/call"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/call"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:background="@drawable/bg_pressable"
-                    android:textSize="15sp"
-                    android:textColor="@color/redPrimary"
-                    android:text="@string/call"/>
-                <TextView
-                    android:id="@+id/alreadyRepay"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_pressable_red"
-                    android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@android:color/white"
-                    android:text="@string/already_repay"/>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:background="@drawable/bg_pressable"
+                android:gravity="center"
+                android:text="@string/call"
+                android:textColor="@color/redPrimary"
+                android:textSize="15sp"/>
+
             <TextView
-                android:id="@+id/callOnly"
+                android:id="@+id/alreadyRepay"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/bg_pressable_red"
                 android:gravity="center"
-                android:textSize="15sp"
+                android:text="@string/already_repay"
                 android:textColor="@android:color/white"
-                android:text="@string/call"/>
-            <TextView
-                android:id="@+id/cancel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_cancel_commit"
-                android:gravity="center"
-                android:textSize="15sp"
-                android:textColor="@android:color/white"
-                tools:text="@string/cancel_borrow_in"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/leaveMessageArea"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/tab_background"
-            android:orientation="horizontal"
-            android:visibility="gone">
-            <EditText
-                android:id="@+id/leaveMessage"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="3"
-                android:background="@null"
-                android:hint="@string/leave_message"
-                android:maxLength="300"
-                android:padding="14dp"
-                android:textColorHint="@color/hintText"
-                android:textSize="15sp"/>
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:background="#d8d8d8"/>
-
-            <TextView
-                android:id="@+id/send"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/send"
-                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/callOnly"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_pressable_red"
+            android:gravity="center"
+            android:text="@string/call"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_cancel_commit"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            tools:text="@string/cancel_borrow_in"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/leaveMessageArea"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/tab_background"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/leaveMessage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:background="@null"
+            android:hint="@string/leave_message"
+            android:maxLength="300"
+            android:padding="14dp"
+            android:textColorHint="@color/hintText"
+            android:textSize="15sp"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#d8d8d8"/>
+
+        <TextView
+            android:id="@+id/send"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/send"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+    </LinearLayout>
 </LinearLayout>

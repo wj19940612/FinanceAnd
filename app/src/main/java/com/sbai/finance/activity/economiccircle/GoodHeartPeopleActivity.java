@@ -125,7 +125,7 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 	}
 
 	private void requestWantHelpHimList() {
-		Client.getWantHelpHimOrYouList(mDataId).setTag(TAG).setIndeterminate(this)
+		Client.getGoodHeartPeopleList(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
 					@Override
 					protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {

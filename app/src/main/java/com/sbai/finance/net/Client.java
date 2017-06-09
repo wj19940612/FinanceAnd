@@ -2,6 +2,7 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.sbai.finance.Preference;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.httplib.ApiParams;
 
 
@@ -27,22 +28,25 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
+
     /**
      * 期货搜索
      */
-    public static API searchFuture(String search){
+    public static API searchFuture(String search) {
         return new API("/order/future/query/search.do",
                 new ApiParams()
                         .put("search", search));
     }
+
     /**
      * 股票搜索
      */
-    public static API searchStock(String search){
+    public static API searchStock(String search) {
         return new API("/order/stock/query/search.do",
                 new ApiParams()
                         .put("search", search));
     }
+
     /**
      * 股票除指数品种
      *
@@ -95,7 +99,7 @@ public class Client {
      * @param id
      * @return
      */
-    public static API getWantHelpHimOrYouList(int id) {
+    public static API getGoodHeartPeopleList(int id) {
         return new API(POST, "/coterie/help/loan/intentionCount.do",
                 new ApiParams()
                         .put("id", id));
@@ -377,16 +381,18 @@ public class Client {
      * 请求类型 post
      * 请求Url  msg/msg/history.do
      *
-     * @param classify 消息类型{1.系统消息 2.互助消息 3.经济圈消息}
+     * @param classify 消息类型 1系统 2观点 3借款
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, int classify, int page) {
+    public static API requestHistoryNews(boolean autoRead, String classify, int page, Integer status, long createTime) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
                 .put("size", DEFAULT_PAGE_SIZE)
-                .put("autoRead", autoRead));
+                .put("status", status)
+                .put("autoRead", autoRead)
+                .put("createTime", createTime));
     }
 
     /**
@@ -411,14 +417,18 @@ public class Client {
      * @param age
      * @param land
      * @param userSex 1女2男0未知
+     *                longitude 经度
+     *                latitude  经度
      * @return
      */
-
     public static API updateUserInfo(int age, String land, Integer userSex) {
         return new API(POST, "/user/user/updateUser.do", new ApiParams()
                 .put("age", age)
                 .put("land", land)
-                .put("userSex", userSex));
+                .put("userSex", userSex)
+                .put("longitude", LocalUser.getUser().getUserInfo().getLongitude())
+                .put("latitude", LocalUser.getUser().getUserInfo().getLatitude())
+        );
     }
 
     /**
@@ -939,6 +949,7 @@ public class Client {
 
     public static API borrowIn(String content, String contentImg, String days, String interest, String money,
                                String location,double locationLng,double locationLat) {
+
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
@@ -946,9 +957,9 @@ public class Client {
                         .put("days", days)
                         .put("interest", interest)
                         .put("money", money)
-                        .put("location",location)
-                        .put("locationLng",locationLng)
-                        .put("locationLat",locationLat));
+                        .put("location", location)
+                        .put("locationLng", locationLng)
+                        .put("locationLat", locationLat));
     }
 
     /**
@@ -1055,12 +1066,13 @@ public class Client {
     }
 
     //借款协议
-    public static API getBorrowProcotol() {
+    public static API getArticleProtocol(int id) {
         return new API("/user/article/articleDetail.do",
-                new ApiParams().put("id", 2));
+                new ApiParams().put("id", id));
     }
+
     /**
-     *借款留言
+     * 借款留言
      */
     public static API getBorrowMessage(int loanId) {
         return new API("/coterie/help/loanNote/showNotes.do",
@@ -1070,16 +1082,18 @@ public class Client {
 
     /**
      * 发送借款留言
+     *
      * @param loanId
      * @param content
      * @return
      */
-    public static API sendBorrowMessage(int loanId,String content) {
+    public static API sendBorrowMessage(int loanId, String content) {
         return new API("/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
-                        .put("content",content));
+                        .put("content", content));
     }
+
     /**
      * 发表观点
      *
@@ -1322,6 +1336,84 @@ public class Client {
     public static API uploadPicture(String picture){
         return new API(POST,"/user/upload/images.do", new ApiParams().put("picture", picture));
     }
+
+    /**
+     * GET 查看是否创建过密码（wms）
+     *
+     * @return
+     */
+    public static API getUserHasPassWord() {
+        return new API("/user/userAccount/hasPassword.do", null);
+    }
+
+    /**
+     * /user/userAccount/setPassword.do
+     * POST
+     * 设置安全密码
+     *
+     * @param password
+     * @return
+     */
+    public static API submitSetPassword(String password) {
+        return new API(POST, "/user/userAccount/setPassword.do", new ApiParams().put("password", password));
+    }
+
+    /**
+     * /user/userAccount/updatePassword.do
+     * POST
+     * 修改安全密码（wms）
+     *
+     * @param newPassword
+     * @return
+     */
+    public static API updatePassword(String newPassword, String oldPassword) {
+        return new API(POST, "/user/userAccount/updatePassword.do", new ApiParams()
+                .put("password", newPassword)
+                .put("oldPassword", oldPassword));
+    }
+
+    /**
+     * /user/userAccount/checkPassword.do
+     * POST
+     * 安全密码验证（wms）
+     *
+     * @param password
+     * @return
+     */
+    public static API checkPassword(String password) {
+        return new API(POST, "/user/userAccount/checkPassword.do", new ApiParams().put("password", password));
+    }
+
+    /**
+     * /user/userAccount/sendMsgCodeForPass.do
+     * POST
+     * 忘记密码发送手机消息
+     *
+     * @param phone
+     * @return
+     */
+    public static API sendMsgCodeForPassWord(String phone) {
+        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
+    }
+
+    /**
+     * /user/userAccount/forgetPassword.do
+     * POST
+     * 忘记密码（wms）
+     *
+     * @param code
+     * @param phone
+     * @return
+     */
+    public static API forgetPassWord(String code, String phone) {
+        return new API(POST, "/user/userAccount/forgetPassword.do", new ApiParams()
+                .put("code", code)
+                .put("phone", phone));
+    }
+
     //h5关于我们的界面网址
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about?nohead=1";
+    //h5的用户协议界面网址
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
+
 }

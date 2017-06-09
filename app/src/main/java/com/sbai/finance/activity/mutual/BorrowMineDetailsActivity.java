@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -102,6 +101,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     TextView mLeaveMessageNum;
     @BindView(R.id.listView)
     MyListView mListView;
+    @BindView(android.R.id.empty)
+    TextView mEmpty;
     @BindView(R.id.call)
     TextView mCall;
     @BindView(R.id.cancel)
@@ -137,8 +138,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         calculateAvatarNum(this);
         updateBorrowDetails();
      //   requestBorrowMoneyDetails();
-        requestWantHelpHimList();
-        requestMessages();
+        requestGoodHeartPeopleList();
+        requestMessageList();
     }
 
     private void initView() {
@@ -153,6 +154,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         .execute();
             }
         });
+        mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mMessageAdapter);
     }
     private void setKeyboardHelper() {
@@ -198,21 +200,21 @@ public class BorrowMineDetailsActivity extends BaseActivity {
 //                }).fire();
 //    }
 
-    private void requestWantHelpHimList() {
-        Client.getWantHelpHimOrYouList(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
+    private void requestGoodHeartPeopleList() {
+        Client.getGoodHeartPeopleList(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
                     @Override
-                    protected void onRespSuccessData(List<GoodHeartPeople> wantHelpHimOrYouList) {
-                        updateWantHelpHimList(wantHelpHimOrYouList);
+                    protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
+                        updateGoodHeartPeopleList(goodHeartPeopleList);
                     }
                 }).fire();
     }
-    private void requestMessages(){
+    private void requestMessageList(){
         Client.getBorrowMessage(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<BorrowMessage>>,List<BorrowMessage>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowMessage> data) {
-                        updateMessage(data);
+                        updateMessageList(data);
                     }
                 }).fire();
     }
@@ -226,7 +228,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                      @Override
                      protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()){
-                            requestMessages();
+                            requestMessageList();
                         }else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -283,14 +285,20 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 }).fireSync();
     }
 
-    private void updateMessage(List<BorrowMessage> data) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mKeyBoardHelper.onDestroy();
+    }
+
+    private void updateMessageList(List<BorrowMessage> data) {
         mLeaveMessageNum.setText(getString(R.string.leave_message_number,data.size()));
         mMessageAdapter.clear();
         mMessageAdapter.addAll(data);
         mMessageAdapter.notifyDataSetChanged();
     }
 
-    private void updateWantHelpHimList(List<GoodHeartPeople> data) {
+    private void updateGoodHeartPeopleList(List<GoodHeartPeople> data) {
         int width = (int) Display.dp2Px(32, getResources());
         int height = (int) Display.dp2Px(32, getResources());
         int margin = (int) Display.dp2Px(10, getResources());

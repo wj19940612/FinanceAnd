@@ -65,7 +65,7 @@ android {
     }
 
     aaptOptions {
-        cruncherEnabled false // !!set true when package release apk
+        cruncherEnabled true // !!set true when package release apk
     }
 
     dexOptions {
@@ -76,7 +76,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 19
+            minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"

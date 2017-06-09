@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.fragment.dialog.ChooseEconomicCircleNewsDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.mine.UserPublishModel;
@@ -66,21 +67,20 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
         ButterKnife.bind(this);
-        mListView.setEmptyView(mEmpty);
-        mSet = new HashSet<Integer>();
-        mPublishAdapter = new PublishAdapter(getActivity());
-        mListView.setAdapter(mPublishAdapter);
-        mListView.setOnItemClickListener(this);
-        mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
-        int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-        if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
-            mPublishAdapter.setIsHimSelf(true);
-            mTitleBar.setTitle(R.string.my_publish);
-        } else {
-            mTitleBar.setTitle(R.string.her_publish);
-            mPublishAdapter.setIsHimSelf(false);
-        }
+        initData();
 
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ChooseEconomicCircleNewsDialogFragment().show(getSupportFragmentManager());
+            }
+        });
+
+        initSwipeRefreshLayout();
+        requestUserPublishList();
+    }
+
+    private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -97,7 +97,23 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                 requestUserPublishList();
             }
         });
-        requestUserPublishList();
+    }
+
+    private void initData() {
+        mListView.setEmptyView(mEmpty);
+        mSet = new HashSet<Integer>();
+        mPublishAdapter = new PublishAdapter(getActivity());
+        mListView.setAdapter(mPublishAdapter);
+        mListView.setOnItemClickListener(this);
+        mUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        int userSex = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+        if (mUserId == -1 || mUserId == LocalUser.getUser().getUserInfo().getId()) {
+            mPublishAdapter.setIsHimSelf(true);
+            mTitleBar.setTitle(R.string.my_publish);
+        } else {
+            mTitleBar.setTitle(R.string.her_publish);
+            mPublishAdapter.setIsHimSelf(false);
+        }
     }
 
     private void requestUserPublishList() {
@@ -176,7 +192,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                     for (UserPublishModel userPublishModel : mUserPublishModelList) {
                         if (userPublishModel.getId() == opinionDetails.getId()) {
                             userPublishModel.setPraiseCount(opinionDetails.getPraiseCount());
-	                        userPublishModel.setReplyCount(opinionDetails.getReplyCount());
+                            userPublishModel.setReplyCount(opinionDetails.getReplyCount());
                         }
                     }
                     mPublishAdapter.notifyDataSetChanged();
@@ -204,7 +220,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_publish, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -231,10 +247,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             TextView mBigVarietyName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
-            @BindView(R.id.replyCount)
-            AppCompatTextView mReplyCount;
-            @BindView(R.id.praiseCount)
-            AppCompatTextView mPraiseCount;
+
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -246,16 +259,6 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mAvatar);
-                if (item.getReplyCount() > 999) {
-                    mReplyCount.setText(R.string.number999);
-                } else {
-                    mReplyCount.setText(context.getString(R.string.number, item.getReplyCount()));
-                }
-                if (item.getPraiseCount() > 999) {
-                    mPraiseCount.setText(R.string.number999);
-                } else {
-                    mPraiseCount.setText(context.getString(R.string.number, item.getPraiseCount()));
-                }
                 mVarietyName.setText(item.getVarietyName());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mBigVarietyName.setText(item.getBigVarietyTypeName());

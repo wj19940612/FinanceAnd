@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/my_publish"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:rightImage="@drawable/ic_common_more"
+        app:rightVisible="true"
+        app:titleText="@string/my_publish"
+        app:titleTextColor="@color/blackAssist"/>
+
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>

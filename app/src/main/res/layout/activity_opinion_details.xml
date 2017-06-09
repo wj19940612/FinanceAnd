@@ -11,8 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:barBackground="@color/blackAssist"
-        app:titleText="@string/details"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/details"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -155,10 +162,10 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:background="@android:color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
+                    android:background="@android:color/white"
                     android:orientation="horizontal"
                     android:paddingTop="20dp">
 

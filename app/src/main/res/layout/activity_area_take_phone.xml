@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/titleBar"
-        android:background="#8D8f92">
+        android:background="#66000000">
 
         <com.sbai.finance.view.camera.CameraSurfaceView
             android:id="@+id/cameraSurfaceView"

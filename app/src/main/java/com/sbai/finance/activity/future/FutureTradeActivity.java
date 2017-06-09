@@ -27,7 +27,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
-import com.sbai.finance.fragment.dialog.ShareDiglogFragment;
+import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
@@ -56,6 +56,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+import com.umeng.socialize.UMShareAPI;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -140,6 +141,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         requestExchangeStatus();
         requestOptionalStatus();
+
+        requestTrendDataAndSet();
     }
 
     @Override
@@ -200,8 +203,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
-
-        requestTrendDataAndSet();
     }
 
     private void requestTrendDataAndSet() {
@@ -502,6 +503,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        UMShareAPI.get(this).release();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
@@ -600,9 +602,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareDiglogFragment
+                ShareDialogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl, false)
+                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl)
                         .show(getSupportFragmentManager());
             }
         });
@@ -611,6 +613,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
         if (resultCode == FragmentActivity.RESULT_OK) {
             if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
                 updateViewPoint(data);

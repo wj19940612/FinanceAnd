@@ -6,6 +6,9 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -38,7 +41,17 @@ public class SettingActivity extends BaseActivity {
                 Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
                 break;
             case R.id.safety_setting:
-                Launcher.with(getActivity(), SafetySettingActivity.class).execute();
+                Client.getUserHasPassWord()
+                        .setTag(TAG)
+                        .setIndeterminate(this)
+                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                            @Override
+                            protected void onRespSuccessData(Boolean data) {
+                                Launcher.with(getActivity(), SafetySettingActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
+                            }
+                        })
+                        .fire();
+
                 break;
             case R.id.appInfo:
                 ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "

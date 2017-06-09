@@ -4,7 +4,7 @@ package com.sbai.finance.model.mutual;
  * Created by Administrator on 2017-05-23.
  */
 
-public class BorrowProtocol {
+public class ArticleProtocol {
 
     /**
      * content : 如影随形

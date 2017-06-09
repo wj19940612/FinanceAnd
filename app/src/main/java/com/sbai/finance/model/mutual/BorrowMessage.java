@@ -6,6 +6,7 @@ public class BorrowMessage {
     private int userId;
     private String content;
     private String userName;
+    private int id;
 
     public int getLoanId() {
         return loanId;
@@ -37,5 +38,24 @@ public class BorrowMessage {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "BorrowMessage{" +
+                "loanId=" + loanId +
+                ", userId=" + userId +
+                ", content='" + content + '\'' +
+                ", userName='" + userName + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

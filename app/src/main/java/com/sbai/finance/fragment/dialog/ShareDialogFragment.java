@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.view.CustomToast;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -31,7 +32,7 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/5/16.
  */
 
-public class ShareDiglogFragment extends DialogFragment {
+public class ShareDialogFragment extends DialogFragment {
 
     @BindView(R.id.weChatFriend)
     TextView mWeChatFriend;
@@ -49,18 +50,15 @@ public class ShareDiglogFragment extends DialogFragment {
     private String mShareUrl;   //链接地址
     private String mShareDescription; //分享描述
 
-    boolean mIsStock;//是否为股票
-
-    public static ShareDiglogFragment newInstance() {
-        ShareDiglogFragment fragment = new ShareDiglogFragment();
+    public static ShareDialogFragment newInstance() {
+        ShareDialogFragment fragment = new ShareDialogFragment();
         return fragment;
     }
 
-    public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, boolean isStock) {
+    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareUrl) {
         mActivity = activity;
         mShareDescription = mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
         mShareUrl = shareUrl;
-        mIsStock = isStock;
         return this;
     }
 
@@ -122,12 +120,7 @@ public class ShareDiglogFragment extends DialogFragment {
             mWeb.setDescription(mShareDescription);
         }
 
-        UMImage thumb = null;
-        if (mIsStock) {
-            thumb = new UMImage(mActivity, R.drawable.fanli_content_icon_shares);
-        } else {
-            thumb = new UMImage(mActivity, R.drawable.fanli_content_icon_futures);
-        }
+        UMImage thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
         mWeb.setThumb(thumb);
 
         new ShareAction(mActivity)
@@ -141,27 +134,26 @@ public class ShareDiglogFragment extends DialogFragment {
     private UMShareListener mUMShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-            
         }
 
         @Override
         public void onResult(SHARE_MEDIA share_media) {
-
+            CustomToast.getInstance().showText(mActivity, R.string.share_succeed);
         }
 
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-
+            CustomToast.getInstance().showText(mActivity, R.string.share_failed);
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
-            dismiss();
+            CustomToast.getInstance().showText(mActivity, R.string.share_cancel);
         }
     };
 
     public void show(FragmentManager manager) {
-        this.show(manager, ShareDiglogFragment.class.getSimpleName());
+        this.show(manager, ShareDialogFragment.class.getSimpleName());
     }
 
     @Override
