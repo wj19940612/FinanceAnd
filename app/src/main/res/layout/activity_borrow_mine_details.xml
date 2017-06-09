@@ -409,9 +409,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_cancel_commit"
+            android:background="@drawable/bg_pressable"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/redAssist"
             android:textSize="15sp"
             tools:text="@string/cancel_borrow_in"/>
     </LinearLayout>
