@@ -1065,9 +1065,9 @@ public class Client {
     }
 
     //借款协议
-    public static API getBorrowProcotol() {
+    public static API getArticleProtocol(int id) {
         return new API("/user/article/articleDetail.do",
-                new ApiParams().put("id", 2));
+                new ApiParams().put("id", id));
     }
 
     /**
@@ -1406,6 +1406,7 @@ public class Client {
 
     //h5关于我们的界面网址
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about?nohead=1";
-
+    //h5的用户协议界面网址
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
 
 }

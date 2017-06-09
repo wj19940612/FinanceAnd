@@ -37,8 +37,7 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.setting.LocationActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
-import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mutual.BorrowProtocol;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -268,10 +267,10 @@ public class BorrowActivity extends BaseActivity {
                 Launcher.with(getActivity(), LocationActivity.class).executeForResult(REQ_CODE_ADDRESS);
 				break;
 			case R.id.protocol:
-				Client.getBorrowProcotol().setTag(TAG)
-						.setCallback(new Callback2D<Resp<BorrowProtocol>,BorrowProtocol>() {
+				Client.getArticleProtocol(2).setTag(TAG)
+						.setCallback(new Callback2D<Resp<ArticleProtocol>,ArticleProtocol>() {
 							@Override
-							protected void onRespSuccessData(BorrowProtocol data) {
+							protected void onRespSuccessData(ArticleProtocol data) {
 								Launcher.with(getActivity(), WebActivity.class)
 										.putExtra(WebActivity.EX_TITLE,getString(R.string.protocol))
 										.putExtra(WebActivity.EX_HTML,data.getContent())
