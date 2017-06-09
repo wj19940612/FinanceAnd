@@ -61,7 +61,7 @@ public class AddOptionalDialogFragment extends DialogFragment {
             window.setGravity(Gravity.BOTTOM);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout((int) (dm.widthPixels*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
         }
     }
 

@@ -35,6 +35,7 @@
             android:textColor="@color/redAssist"
             android:textSize="17sp"/>
     </LinearLayout>
+    <include layout="@layout/split_line_grey_light"/>
     <TextView
         android:id="@+id/cancel"
         android:layout_width="match_parent"
