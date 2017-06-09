@@ -51,7 +51,7 @@ public class PreviewDialogFragment extends DialogFragment {
         super.onStart();
         // 设置宽度为屏宽、靠近屏幕底部。
         final Window window = getDialog().getWindow();
-        window.setBackgroundDrawableResource(R.color.transparent);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
         window.getDecorView().setPadding(0, 0, 0, 0);
         WindowManager.LayoutParams wlp = window.getAttributes();
         wlp.gravity = Gravity.CENTER;
