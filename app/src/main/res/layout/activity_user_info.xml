@@ -77,7 +77,7 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/sex"
         app:rowTextColor="@color/blackAssist"
-        app:splitLineColor="@color/normalDivider"
+        app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"/>
 
 
@@ -91,7 +91,7 @@
         app:rowText="@string/age"
         app:rowTextColor="@color/blackAssist"
 
-        app:splitLineColor="@color/normalDivider"
+        app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"/>
 
 
