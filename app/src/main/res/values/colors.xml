@@ -30,9 +30,8 @@
     <color name="blueAssist">#6A9CEF</color>
 
     <!--Text-->
-    <color name="hintText">#999999</color>
-    <color name="luckyText">#666666</color>
     <color name="unluckyText">#999999</color>
+    <color name="luckyText">#666666</color>
     <color name="primaryText">#222222</color>
 
 </resources>

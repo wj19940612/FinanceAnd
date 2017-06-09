@@ -54,7 +54,7 @@
             android:layout_toRightOf="@+id/avatar"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/hintText"
+            android:textColor="@color/unluckyText"
             android:textSize="12sp"
             tools:text="杭州 滨江"/>
 
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/attention"
-                android:textColor="@color/hintText"
+                android:textColor="@color/unluckyText"
                 android:textSize="14sp"/>
         </LinearLayout>
 
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fans"
-                android:textColor="@color/hintText"
+                android:textColor="@color/unluckyText"
                 android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
@@ -201,7 +201,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/hintText"
+            android:textColor="@color/unluckyText"
             android:textSize="16sp"
             tools:text="@string/shield_him"/>
     </LinearLayout>

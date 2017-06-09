@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text="@string/pay_intention_hint1"
-                    android:textColor="@color/hintText"
+                    android:textColor="@color/unluckyText"
                     android:textSize="10sp"/>
 
                 <TextView
@@ -59,7 +59,7 @@
                     android:layout_marginBottom="38dp"
                     android:layout_marginTop="6dp"
                     android:text="@string/pay_intention_hint2"
-                    android:textColor="@color/hintText"
+                    android:textColor="@color/unluckyText"
                     android:textSize="10sp"/>
             </LinearLayout>
 

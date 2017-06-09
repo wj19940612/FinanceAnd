@@ -15,7 +15,7 @@
 
     <item android:state_enabled="false">
         <shape>
-            <solid android:color="@color/hintText"/>
+            <solid android:color="@color/unluckyText"/>
         </shape>
     </item>
 </selector>
