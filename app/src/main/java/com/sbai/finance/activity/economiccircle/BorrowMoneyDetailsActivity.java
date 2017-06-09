@@ -4,10 +4,20 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +37,7 @@ import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.mutual.BorrowMessage;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -37,6 +48,8 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -45,6 +58,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class BorrowMoneyDetailsActivity extends BaseActivity {
 
@@ -92,7 +106,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
 	@BindView(android.R.id.list)
-	MyListView mList;
+	MyListView mListView;
 	@BindView(android.R.id.empty)
 	TextView mEmpty;
 	@BindView(R.id.writeMessage)
@@ -108,6 +122,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	private int mDataId;
 	private BorrowMoneyDetails mBorrowMoneyDetails;
 	private List<GoodHeartPeople> mGoodHeartPeopleList;
+	private List<BorrowMessage> mBorrowMessageList;
+	private MessageAdapter mMessageAdapter;
 	private KeyBoardHelper mKeyBoardHelper;
 
 	@Override
@@ -116,17 +132,33 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		setContentView(R.layout.activity_borrow_money_details);
 		ButterKnife.bind(this);
 		mGoodHeartPeopleList = new ArrayList<>();
+		mBorrowMessageList = new ArrayList<>();
 
 		initData(getIntent());
+		initView();
 		calculateAvatarNum(this);
 		requestBorrowMoneyDetails();
-		requestWantHelpHimList();
+		requestGoodHeartPeopleList();
 		requestMessageList();
-		setKeyboardHelper();
 	}
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+	}
+
+	private void initView() {
+		setKeyboardHelper();
+		mMessageAdapter = new MessageAdapter(getActivity());
+		mMessageAdapter.setCallback(new MessageAdapter.Callback() {
+			@Override
+			public void onUserClick(int userId) {
+				Launcher.with(getActivity(), UserDataActivity.class)
+						.putExtra(Launcher.USER_ID, userId)
+						.execute();
+			}
+		});
+		mListView.setEmptyView(mEmpty);
+		mListView.setAdapter(mMessageAdapter);
 	}
 
 	private void setKeyboardHelper() {
@@ -135,7 +167,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
 	}
 
-	private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener(){
+	private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
 
 		@Override
 		public void OnKeyBoardPop(int keyboardHeight) {
@@ -159,18 +191,40 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				}).fire();
 	}
 
-	private void requestWantHelpHimList() {
-		Client.getWantHelpHimOrYouList(mDataId).setTag(TAG).setIndeterminate(this)
+	private void requestGoodHeartPeopleList() {
+		Client.getGoodHeartPeopleList(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
 					@Override
 					protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
 						mGoodHeartPeopleList = goodHeartPeopleList;
-						updateWantHelpHimList(mGoodHeartPeopleList);
+						updateGoodHeartPeopleList(mGoodHeartPeopleList);
 					}
 				}).fire();
 	}
 
 	private void requestMessageList() {
+		Client.getBorrowMessage(mDataId).setTag(TAG).setIndeterminate(this)
+				.setCallback(new Callback2D<Resp<List<BorrowMessage>>, List<BorrowMessage>>() {
+					@Override
+					protected void onRespSuccessData(List<BorrowMessage> borrowMessageList) {
+						mBorrowMessageList = borrowMessageList;
+						updateMessageList(mBorrowMessageList);
+					}
+				}).fire();
+	}
+
+	private void requestSendMessage() {
+		Client.sendBorrowMessage(mDataId, mLeaveMessage.getText().toString().trim()).setTag(TAG)
+				.setCallback(new Callback<Resp<Object>>() {
+					@Override
+					protected void onRespSuccess(Resp<Object> resp) {
+						if (resp.isSuccess()) {
+							requestMessageList();
+						} else {
+							ToastUtil.show(resp.getMsg());
+						}
+					}
+				}).fireSync();
 	}
 
 	@Override
@@ -179,7 +233,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		mKeyBoardHelper.onDestroy();
 	}
 
-	private void updateWantHelpHimList(final List<GoodHeartPeople> goodHeartPeopleList) {
+	private void updateMessageList(List<BorrowMessage> data) {
+		mLeaveMessageNum.setText(getString(R.string.leave_message_number, data.size()));
+		mMessageAdapter.clear();
+		mMessageAdapter.addAll(data);
+		mMessageAdapter.notifyDataSetChanged();
+	}
+
+	private void updateGoodHeartPeopleList(final List<GoodHeartPeople> goodHeartPeopleList) {
 		int width = (int) Display.dp2Px(32, getResources());
 		int height = (int) Display.dp2Px(32, getResources());
 		int margin = (int) Display.dp2Px(10, getResources());
@@ -227,7 +288,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				});
 			}
 		} else {
-
 			for (int i = 0; i < size; i++) {
 				ImageView imageView = new ImageView(this);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
@@ -329,7 +389,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 												protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 													if (resp.isSuccess()) {
 														requestBorrowMoneyDetails();
-														requestWantHelpHimList();
+														requestGoodHeartPeopleList();
 													}
 												}
 
@@ -338,7 +398,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 													super.onFailure(volleyError);
 													//处理多端问题
 													requestBorrowMoneyDetails();
-													requestWantHelpHimList();
+													requestGoodHeartPeopleList();
 												}
 											}).fire();
 
@@ -351,21 +411,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 							.setNegative(R.string.cancel)
 							.show();
 				}
-			}
-		});
-
-		mWriteMessage.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mLeaveMessageArea.setVisibility(View.VISIBLE);
-				InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-				inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-				mSend.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-
-					}
-				});
 			}
 		});
 
@@ -455,6 +500,85 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				context.startActivity(intent);
 			}
 		});
+	}
+
+	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send})
+	public void onViewClicked(View view) {
+		switch (view.getId()) {
+			case R.id.writeMessage:
+				mLeaveMessageArea.setVisibility(View.VISIBLE);
+				mLeaveMessage.setText("");
+				mLeaveMessage.requestFocus();
+				mLeaveMessage.setFocusable(true);
+				InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+				break;
+			case R.id.giveHelp:
+				break;
+			case R.id.send:
+				if (!TextUtils.isEmpty(mLeaveMessage.getText())) {
+					requestSendMessage();
+				}
+				break;
+		}
+	}
+
+	static class MessageAdapter extends ArrayAdapter<BorrowMessage> {
+		interface Callback {
+			void onUserClick(int userId);
+		}
+
+		private Callback mCallback;
+
+		public void setCallback(Callback callback) {
+			mCallback = callback;
+		}
+
+		public MessageAdapter(@NonNull Context context) {
+			super(context, 0);
+		}
+
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_message, parent, false);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindDataWithView(getItem(position), getContext(), mCallback);
+			return convertView;
+		}
+
+		static class ViewHolder {
+			@BindView(R.id.message)
+			TextView mMessage;
+
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			private void bindDataWithView(final BorrowMessage item, Context context, final Callback callback) {
+				SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
+						" :" + item.getContent(), 1.0f, ContextCompat.getColor(context, R.color.blackAssist));
+				attentionSpannableString.setSpan(new ClickableSpan() {
+					@Override
+					public void onClick(View widget) {
+						callback.onUserClick(item.getUserId());
+					}
+
+					@Override
+					public void updateDrawState(TextPaint ds) {
+						ds.setUnderlineText(false);
+					}
+				}, 0, item.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				mMessage.setText(attentionSpannableString);
+				mMessage.setMovementMethod(LinkMovementMethod.getInstance());
+			}
+		}
 	}
 
 	@Override
