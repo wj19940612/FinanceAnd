@@ -46,8 +46,9 @@ public class ModifySafetyPassActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_safety_pass);
         ButterKnife.bind(this);
-        mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
         mHasPassword = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
+        mPasswordInputCount = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+        mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
         if (!mHasPassword) {
             mTitleBar.setTitle(R.string.add_safety_pass);
             mSafetyPasswordHint.setText(R.string.please_set_safety_pass);
@@ -58,7 +59,9 @@ public class ModifySafetyPassActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             String password = s.toString();
-            mPasswordHint.setText(s.toString());
+            if (mPasswordHint.isShown()) {
+                mPasswordHint.setVisibility(View.GONE);
+            }
             if (!mHasPassword) {
                 addPassWord(password);
             } else {
@@ -80,7 +83,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
                 } else {
-
                     Client.submitSetPassword(password)
                             .setTag(TAG)
                             .setIndeterminate(this)
@@ -102,13 +104,27 @@ public class ModifySafetyPassActivity extends BaseActivity {
     }
 
     //设置新的安全密码流程
-    private void setNewPassWord(String passWord) {
+    private void setNewPassWord(final String passWord) {
         if (passWord.length() == 6) {
             if (mPasswordInputCount == 0) {
-                mOldPassword = passWord;
-                mPasswordInputCount++;
-                mSafetyPasswordHint.setText(R.string.please_input_new_password);
-                mSafetyPasswordNumber.clearSafetyNumber();
+                Client.checkPassword(passWord)
+                        .setTag(TAG)
+                        .setIndeterminate(this)
+                        .setCallback(new Callback<Resp<Object>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Object> resp) {
+                                if (resp.isSuccess()) {
+                                    mOldPassword = passWord;
+                                    mPasswordInputCount++;
+                                    mSafetyPasswordHint.setText(R.string.please_input_new_password);
+                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                } else {
+                                    ToastUtil.curt(resp.getMsg());
+                                }
+                            }
+                        })
+                        .fire();
+
             } else if (mPasswordInputCount == 1) {
                 mNewPassWord = passWord;
                 if (!isSameNewPasswordAndOldPass(mOldPassword, mNewPassWord)) {
@@ -118,7 +134,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 } else {
                     SmartDialog.with(ModifySafetyPassActivity.this,
                             R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
-                            .setMessageTextSize(14)
                             .show();
                     mSafetyPasswordNumber.clearSafetyNumber();
                 }
@@ -128,7 +143,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 } else {
                     SmartDialog.with(ModifySafetyPassActivity.this,
                             R.string.twice_password_is_different, R.string.modify_fail)
-                            .setMessageTextSize(14)
                             .show();
                     mSafetyPasswordNumber.clearSafetyNumber();
                 }
@@ -137,7 +151,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     }
 
     private void confirmNewPassword(String newPassWord) {
-        Client.updatePassword(newPassWord)
+        Client.updatePassword(newPassWord, mOldPassword)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {

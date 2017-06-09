@@ -5,8 +5,6 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.httplib.ApiParams;
 
-import static android.R.attr.password;
-
 
 public class Client {
 
@@ -949,8 +947,9 @@ public class Client {
      * @return
      */
 
-    public static API borrowIn(String content, String contentImg, Integer days, String interest, Integer money,
-                               String location, double locationLng, double locationLat) {
+    public static API borrowIn(String content, String contentImg, String days, String interest, String money,
+                               String location,double locationLng,double locationLat) {
+
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
                         .put("content", content)
@@ -1067,9 +1066,9 @@ public class Client {
     }
 
     //借款协议
-    public static API getBorrowProcotol() {
+    public static API getArticleProtocol(int id) {
         return new API("/user/article/articleDetail.do",
-                new ApiParams().put("id", 2));
+                new ApiParams().put("id", id));
     }
 
     /**
@@ -1083,16 +1082,18 @@ public class Client {
 
     /**
      * 发送借款留言
+     *
      * @param loanId
      * @param content
      * @return
      */
-    public static API sendBorrowMessage(int loanId,String content) {
+    public static API sendBorrowMessage(int loanId, String content) {
         return new API("/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
-                        .put("content",content));
+                        .put("content", content));
     }
+
     /**
      * 发表观点
      *
@@ -1329,6 +1330,12 @@ public class Client {
     public static API getStockNewsInfo(String id) {
         return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
+    /**
+     * 图片上传
+     */
+    public static API uploadPicture(String picture){
+        return new API(POST,"/user/upload/images.do", new ApiParams().put("picture", picture));
+    }
 
     /**
      * GET 查看是否创建过密码（wms）
@@ -1359,12 +1366,54 @@ public class Client {
      * @param newPassword
      * @return
      */
-    public static API updatePassword(String newPassword) {
-        return new API(POST, "/user/userAccount/updatePassword.do", new ApiParams().put("password", newPassword));
+    public static API updatePassword(String newPassword, String oldPassword) {
+        return new API(POST, "/user/userAccount/updatePassword.do", new ApiParams()
+                .put("password", newPassword)
+                .put("oldPassword", oldPassword));
+    }
+
+    /**
+     * /user/userAccount/checkPassword.do
+     * POST
+     * 安全密码验证（wms）
+     *
+     * @param password
+     * @return
+     */
+    public static API checkPassword(String password) {
+        return new API(POST, "/user/userAccount/checkPassword.do", new ApiParams().put("password", password));
+    }
+
+    /**
+     * /user/userAccount/sendMsgCodeForPass.do
+     * POST
+     * 忘记密码发送手机消息
+     *
+     * @param phone
+     * @return
+     */
+    public static API sendMsgCodeForPassWord(String phone) {
+        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
+    }
+
+    /**
+     * /user/userAccount/forgetPassword.do
+     * POST
+     * 忘记密码（wms）
+     *
+     * @param code
+     * @param phone
+     * @return
+     */
+    public static API forgetPassWord(String code, String phone) {
+        return new API(POST, "/user/userAccount/forgetPassword.do", new ApiParams()
+                .put("code", code)
+                .put("phone", phone));
     }
 
     //h5关于我们的界面网址
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about?nohead=1";
-
+    //h5的用户协议界面网址
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
 
 }

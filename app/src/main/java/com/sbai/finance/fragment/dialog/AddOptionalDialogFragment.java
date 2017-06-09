@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,9 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-/**
- * Created by linrongfang on 2017/5/10.
- */
 
 public class AddOptionalDialogFragment extends DialogFragment {
 
@@ -65,7 +61,7 @@ public class AddOptionalDialogFragment extends DialogFragment {
             window.setGravity(Gravity.BOTTOM);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout((int) (dm.widthPixels*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
         }
     }
 

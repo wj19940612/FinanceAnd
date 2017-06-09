@@ -69,6 +69,15 @@ public class BorrowMine implements Parcelable {
     private int status;
     private int userId;
     private String userName;
+    private int isAttention;
+
+    public int getIsAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(int isAttention) {
+        this.isAttention = isAttention;
+    }
 
     public String getContent() {
         return content;

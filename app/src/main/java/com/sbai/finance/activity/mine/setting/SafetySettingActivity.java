@@ -41,7 +41,7 @@ public class SafetySettingActivity extends BaseActivity {
         isUserHasPassword = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
         if (isUserHasPassword) {
             mModifySafetyLL.setVisibility(View.VISIBLE);
-            mSettingSafetyPassword.setVisibility(View.VISIBLE);
+            mSettingSafetyPassword.setVisibility(View.GONE);
         } else {
             mModifySafetyLL.setVisibility(View.GONE);
             mSettingSafetyPassword.setVisibility(View.VISIBLE);
@@ -56,12 +56,10 @@ public class SafetySettingActivity extends BaseActivity {
                 Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).execute();
                 break;
             case R.id.forget_safety_password:
-
+                Launcher.with(getActivity(), ForgetPassWordActivity.class).execute();
                 break;
             case R.id.setting_safety_password:
-                mModifySafetyLL.setVisibility(View.VISIBLE);
-                mSettingSafetyPassword.setVisibility(View.GONE);
-                isSettingSafetyPage = true;
+                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).execute();
                 break;
             case R.id.modifySafetyLL:
                 break;
@@ -70,13 +68,6 @@ public class SafetySettingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (isSettingSafetyPage) {
-            mTitleBar.setTitle(R.string.safety_center);
-            mModifySafetyLL.setVisibility(View.GONE);
-            mSettingSafetyPassword.setVisibility(View.VISIBLE);
-            isSettingSafetyPage = false;
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 }

@@ -18,6 +18,7 @@
     <string name="borrow_deadline">借款期限:</string>
     <string name="day">%1$s天</string>
     <string name="borrow_interest">回报利息:</string>
+    <string name="interest">愿付利息</string>
     <string name="details">详情</string>
     <string name="comment_number">评论(%1$d)</string>
     <string name="share">分享</string>
@@ -32,6 +33,7 @@
     <string name="write_message">写留言</string>
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
+    <string name="re_location">点击重新获取位置</string>
     <item name="tag_opinion" type="id">1</item>
     <item name="tag_borrow_money" type="id">2</item>
 
@@ -364,6 +366,7 @@
     <string name="end">已结束</string>
     <string name="borrow_in_days">已借入 %1$d天</string>
     <string name="borrow_out_days">已借出 %1$d天</string>
+    <string name="over_time">逾期</string>
     <!--mutual-->
     <string name="good_heart_people">好心人</string>
     <string name="load_person">借款人</string>
@@ -405,6 +408,7 @@
     <string name="no_phone">暂无联系电话</string>
     <string name="borrow_failure">借款失败</string>
     <string name="cancel_confirm">是否要取消借款?</string>
+    <string name="open_gps">请在设置中开启[乐米金融] 定位服务，以便发布借款</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
@@ -483,5 +487,5 @@
     <string name="add_safety_pass">添加安全密码</string>
     <string name="please_set_safety_pass">请设置安全密码</string>
     <string name="please_confirm_safety_pass">请再次确认安全密码</string>
-    <string name="twice_pass_is_different">两次密码输入不一致</string>
+    <string name="twice_pass_is_different">两次输入不一致</string>
 </resources>

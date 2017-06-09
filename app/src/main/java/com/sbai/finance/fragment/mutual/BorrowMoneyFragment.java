@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.mutual;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,8 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoney;
+import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
+import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mutual.BorrowDetails;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -36,12 +39,15 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.app.Activity.RESULT_OK;
 
 public class BorrowMoneyFragment extends BaseFragment implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
@@ -74,9 +80,9 @@ public class BorrowMoneyFragment extends BaseFragment implements
             @Override
             public void onAvatarBorrowMoneyClick(BorrowMoney borrowMoney) {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, borrowMoney.getUserId())
-                            .execute();
+                    Intent intent = new Intent(getActivity(),UserDataActivity.class);
+                    intent.putExtra(Launcher.USER_ID,borrowMoney.getUserId());
+                    startActivityForResult(intent,REQ_CODE_USERDATA);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -242,7 +248,6 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 } else {
                     mIsAttention.setText("");
                 }
-
                 mBorrowMoneyContent.setText(item.getContent());
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
@@ -279,6 +284,45 @@ public class BorrowMoneyFragment extends BaseFragment implements
                     mCircleMoreIcon.setVisibility(View.GONE);
                 }
 
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
+            if (data != null) {
+                WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                        (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+
+                AttentionAndFansNumberModel attentionAndFansNumberModel =
+                        (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+
+                if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+                    for (int i=0;i<mBorrowMoneyAdapter.getCount();i++){
+                        BorrowMoney borrowMoney = mBorrowMoneyAdapter.getItem(i);
+                        if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()){
+                            if (whetherAttentionShieldOrNot.isFollow()) {
+                                borrowMoney.setIsAttention(2);
+                                mBorrowMoneyAdapter.notifyDataSetChanged();
+                            } else {
+                                borrowMoney.setIsAttention(1);
+                                mBorrowMoneyAdapter.notifyDataSetChanged();
+                            }
+                            break;
+                        }
+                    }
+                    if (whetherAttentionShieldOrNot.isShield()) {
+                        for (int i=0;i<mBorrowMoneyAdapter.getCount();i++){
+                            BorrowMoney borrowMoney = mBorrowMoneyAdapter.getItem(i);
+                            if (borrowMoney.getUserId() == attentionAndFansNumberModel.getUserId()){
+                                mBorrowMoneyAdapter.remove(borrowMoney);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
