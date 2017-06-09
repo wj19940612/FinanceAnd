@@ -361,7 +361,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				mGiveHelp.setVisibility(View.GONE);
 			}
 		}
-
 		if (borrowMoneyDetails.getIsIntention() == 1) {
 			mGiveHelp.setText(R.string.submitted);
 			mGiveHelp.setEnabled(false);

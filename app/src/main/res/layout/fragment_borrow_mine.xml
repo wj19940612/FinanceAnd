@@ -12,16 +12,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="14dp"
-                android:background="@color/normalDivider"/>
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/normalDivider"
-                android:dividerHeight="14dp"
                 android:visibility="gone"/>
             <TextView
                 android:id="@+id/empty"

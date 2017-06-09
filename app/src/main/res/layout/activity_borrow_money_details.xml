@@ -314,7 +314,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/transparent"/>
+                    android:background="@android:color/transparent"/>
 
                 <TextView
                     android:id="@+id/writeMessage"
@@ -384,7 +384,7 @@
                 android:hint="@string/leave_message"
                 android:maxLength="300"
                 android:padding="14dp"
-                android:textColorHint="@color/hintText"
+                android:textColorHint="@color/unluckyText"
                 android:textSize="15sp"/>
 
             <View

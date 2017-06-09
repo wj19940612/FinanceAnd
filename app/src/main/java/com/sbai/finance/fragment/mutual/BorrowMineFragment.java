@@ -203,7 +203,6 @@ public class BorrowMineFragment extends BaseFragment implements
                                 borrowMine.setIsAttention(1);
                                 mBorrowMoneyAdapter.notifyDataSetChanged();
                             }
-                            break;
                         }
                     }
                     if (whetherAttentionShieldOrNot.isShield()) {
@@ -211,7 +210,6 @@ public class BorrowMineFragment extends BaseFragment implements
                             BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
                             if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
                                 mBorrowMoneyAdapter.remove(borrowMine);
-                                break;
                             }
                         }
                     }

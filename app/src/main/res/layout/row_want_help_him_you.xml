@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/userName"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/hintText"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="杭州 滨江"/>
 

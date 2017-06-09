@@ -86,7 +86,7 @@
             android:layout_width="1dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="@color/normalDivider"/>
+            android:background="@color/split"/>
 
         <TextView
             android:id="@+id/fans"
