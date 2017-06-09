@@ -391,6 +391,7 @@ public class BorrowActivity extends BaseActivity {
 			if (mAddress!=null){
 				mLocation.setSubText(mAddress.getLocality()+" "+mAddress.getSubLocality());
 			}
+			setPublishStatus();
 
 		}
 	}

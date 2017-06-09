@@ -70,6 +70,15 @@ public class BorrowMine implements Parcelable {
     private int userId;
     private String userName;
     private int isAttention;
+    private int confirmDays;
+
+    public int getConfirmDays() {
+        return confirmDays;
+    }
+
+    public void setConfirmDays(int confirmDays) {
+        this.confirmDays = confirmDays;
+    }
 
     public int getIsAttention() {
         return isAttention;
