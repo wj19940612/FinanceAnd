@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.dialog;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.AreaTakePhoneActivity;
 import com.sbai.finance.activity.mine.ClipHeadImageActivity;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.PermissionUtil;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.io.File;
@@ -41,6 +44,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     private static final String KEY_IF_CLIP_IMAGE = "IF_CLIP_IMAGE";
     private static final String KEY_IMAGE_URL_INDEX = "KEY_IMAGE_URL_INDEX";
     private static final String KEY_IS_AREA_TAKE_PHONE = "KEY_isAreaTakePhone";
+    private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
 
     /**
      * 打开相机的请求码
@@ -67,6 +71,8 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     AppCompatTextView mTakePhoneFromGallery;
     @BindView(R.id.takePhoneCancel)
     AppCompatTextView mTakePhoneCancel;
+    @BindView(R.id.lookHDPicture)
+    AppCompatTextView mLookHDPicture;
 
     private Unbinder mBind;
     private File mFile;
@@ -77,12 +83,23 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     private boolean mIsAreaTakePhone;
     private OnImagePathListener mOnImagePathListener;
 
+    private String[] HDPictureUrl;
+
     public interface OnImagePathListener {
         void onImagePath(int index, String imagePath);
     }
 
     public UploadUserImageDialogFragment() {
 
+    }
+
+    public static UploadUserImageDialogFragment newInstance(boolean ifClipImage, String url[]) {
+        Bundle args = new Bundle();
+        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
+        args.putStringArray(KEY_IMAGE_URL, url);
+        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public static UploadUserImageDialogFragment newInstance(boolean ifClipImage) {
@@ -127,10 +144,18 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
             mNeedClipImage = getArguments().getBoolean(KEY_IF_CLIP_IMAGE, true);
             mImagePathIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
             mIsAreaTakePhone = getArguments().getBoolean(KEY_IS_AREA_TAKE_PHONE, false);
+            HDPictureUrl = getArguments().getStringArray(KEY_IMAGE_URL);
         }
     }
 
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (HDPictureUrl != null) {
+            mLookHDPicture.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Nullable
     @Override
@@ -146,14 +171,15 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.takePhoneFromCamera, R.id.takePhoneFromGallery, R.id.takePhoneCancel})
+    @OnClick({R.id.takePhoneFromCamera, R.id.takePhoneFromGallery, R.id.takePhoneCancel, R.id.lookHDPicture})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
-                if (mIsAreaTakePhone) {
-                    startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
-                } else {
-                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) &&
+                        PermissionUtil.checkPermission(getContext(), Manifest.permission.CAMERA)) {
+                    if (mIsAreaTakePhone) {
+                        startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
+                    } else {
                         Intent openCameraIntent = new Intent(
                                 MediaStore.ACTION_IMAGE_CAPTURE);
                         mFile = new File(Environment
@@ -163,6 +189,8 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
                         startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
                     }
+                } else {
+                    ToastUtil.curt(getString(R.string.please_open_camera_permission));
                 }
                 break;
             case R.id.takePhoneFromGallery:
@@ -178,8 +206,15 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
             case R.id.takePhoneCancel:
                 this.dismiss();
                 break;
+
+            case R.id.lookHDPicture:
+                Launcher.with(getActivity(), ContentImgActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, HDPictureUrl)
+                        .execute();
+                break;
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

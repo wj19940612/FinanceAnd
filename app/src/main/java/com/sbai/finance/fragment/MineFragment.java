@@ -144,7 +144,10 @@ public class MineFragment extends BaseFragment {
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
                         int count = 0;
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
-                            count = count + notReadMessageNumberData.getCount();
+                            if (notReadMessageNumberData.isSystemNews()) {
+                                count = notReadMessageNumberData.getCount();
+                                break;
+                            }
                         }
                         if (count != 0) {
                             mNews.setRightTextDrawable(R.drawable.ic_new_message);

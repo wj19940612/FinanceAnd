@@ -27,6 +27,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.utils.ValidityDecideUtil;
@@ -66,12 +67,14 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     private boolean mEnable;
     private SparseArray<String> mImagePath;
     private UserIdentityCardInfo mUserIdentityCardInfo;
+    private int mDataId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_approve);
         ButterKnife.bind(this);
+        mDataId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
         mImagePath = new SparseArray<>();
         requestUserCreditApproveStatus();
         mRealNameInput.addTextChangedListener(mValidationWatcher);
@@ -100,20 +103,38 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
     }
 
     private void requestUserCreditApproveStatus() {
-        Client.getUserCreditApproveStatus()
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
-                    @Override
-                    protected void onRespSuccessData(UserIdentityCardInfo data) {
-                        UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                        userInfo.setStatus(data.getStatus());
-                        LocalUser.getUser().setUserInfo(userInfo);
-                        updateUserCreditStatus(data);
-                        mUserIdentityCardInfo = data;
-                    }
-                })
-                .fireSync();
+        if (mDataId != -1) {
+            mSubmit.setEnabled(true);
+            Client.queryCertification(mDataId)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
+                        @Override
+                        protected void onRespSuccessData(UserIdentityCardInfo data) {
+                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                            userInfo.setStatus(data.getStatus());
+                            LocalUser.getUser().setUserInfo(userInfo);
+                            updateUserCreditStatus(data);
+                            mUserIdentityCardInfo = data;
+                        }
+                    })
+                    .fireSync();
+        } else {
+            Client.getUserCreditApproveStatus()
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
+                        @Override
+                        protected void onRespSuccessData(UserIdentityCardInfo data) {
+                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                            userInfo.setStatus(data.getStatus());
+                            LocalUser.getUser().setUserInfo(userInfo);
+                            updateUserCreditStatus(data);
+                            mUserIdentityCardInfo = data;
+                        }
+                    })
+                    .fireSync();
+        }
     }
 
     private void updateUserCreditStatus(UserIdentityCardInfo data) {

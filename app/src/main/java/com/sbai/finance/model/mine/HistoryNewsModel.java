@@ -69,6 +69,7 @@ public class HistoryNewsModel implements Parcelable {
     private String title;
     private int type;
     private int userId;
+    private String msg;
     /**
      * 0  未读
      * 1 已读
@@ -76,6 +77,15 @@ public class HistoryNewsModel implements Parcelable {
      */
     private int status;
     private long createTime;
+
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
 
     public boolean isTheEarnestMoneyPaySuccess() {
@@ -188,7 +198,24 @@ public class HistoryNewsModel implements Parcelable {
          */
 
         private String contentImg;
+        private double money;
+        private String source;
 
+        public double getMoney() {
+            return money;
+        }
+
+        public void setMoney(double money) {
+            this.money = money;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
 
         public String getContentImg() {
             return contentImg;
@@ -231,6 +258,8 @@ public class HistoryNewsModel implements Parcelable {
         public String toString() {
             return "DataBean{" +
                     "contentImg='" + contentImg + '\'' +
+                    ", money=" + money +
+                    ", source='" + source + '\'' +
                     '}';
         }
     }

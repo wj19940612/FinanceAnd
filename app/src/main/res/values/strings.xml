@@ -194,6 +194,7 @@
     <string name="is_only_a_chinese_name">姓名填写不正确</string>
     <string name="nick_name_hint">1-8个字符，可由中英文、数字组成</string>
     <string name="take_phone_from_camera">拍照</string>
+    <string name="look_big_picture">查看大图</string>
     <string name="take_phone_from_phone">从手机相册选择</string>
     <string name="take_phone_cancel">取消</string>
     <string name="sd_is_not_useful">sd卡不可使用</string>

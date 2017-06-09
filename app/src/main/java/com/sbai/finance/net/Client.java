@@ -385,7 +385,7 @@ public class Client {
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, String classify, int page, Integer status, long createTime) {
+    public static API requestHistoryNews(boolean autoRead, String classify, int page, Integer status, Long createTime) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
@@ -578,6 +578,18 @@ public class Client {
      */
     public static API getUserCreditApproveStatus() {
         return new API("/user/user/userCertification.do");
+    }
+
+    /**
+     * 接口名称 查询实名记录
+     * 请求类型 get
+     * 请求Url  /user/user/queryCertification.do
+     *
+     * @param id
+     * @return
+     */
+    public static API queryCertification(int id) {
+        return new API("/user/user/queryCertification.do", new ApiParams().put("id", id));
     }
 
     /**
@@ -948,7 +960,7 @@ public class Client {
      */
 
     public static API borrowIn(String content, String contentImg, String days, String interest, String money,
-                               String location,double locationLng,double locationLat) {
+                               String location, double locationLng, double locationLat) {
 
         return new API(POST, "/coterie/help/loan/addLoan.do",
                 new ApiParams()
@@ -1330,11 +1342,12 @@ public class Client {
     public static API getStockNewsInfo(String id) {
         return new API("/crawler/crawler/newsDetail.do", new ApiParams().put("id", id));
     }
+
     /**
      * 图片上传
      */
-    public static API uploadPicture(String picture){
-        return new API(POST,"/user/upload/images.do", new ApiParams().put("picture", picture));
+    public static API uploadPicture(String picture) {
+        return new API(POST, "/user/upload/images.do", new ApiParams().put("picture", picture));
     }
 
     /**

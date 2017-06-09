@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -43,7 +42,6 @@ public class Launcher {
         sInstance.mContext = new WeakReference<>(context).get();
         sInstance.mIntent.setClass(sInstance.mContext, clazz);
         sInstance.mClass = clazz;
-        Log.d(TAG, "with: " + clazz.getName());
         return sInstance;
     }
 
