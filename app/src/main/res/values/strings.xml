@@ -467,6 +467,9 @@
     <string name="wechat_friend">微信</string>
     <string name="wechat_circle">朋友圈</string>
     <string name="weibo">微博</string>
+    <string name="share_succeed">分享成功了</string>
+    <string name="share_failed">分享失败了</string>
+    <string name="share_cancel">分享取消了</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <string name="future_share_host">/mobi/future/future_quota?varietyId=%1$d</string>
     <string name="stock_share_host">/mobi/stock/stock_quota?varietyType=%1$s&amp;varietyId=%2$d</string>

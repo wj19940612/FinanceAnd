@@ -56,6 +56,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+import com.umeng.socialize.UMShareAPI;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -502,6 +503,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        UMShareAPI.get(this).release();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
@@ -602,7 +604,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl, false)
+                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl)
                         .show(getSupportFragmentManager());
             }
         });
@@ -611,6 +613,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
         if (resultCode == FragmentActivity.RESULT_OK) {
             if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
                 updateViewPoint(data);

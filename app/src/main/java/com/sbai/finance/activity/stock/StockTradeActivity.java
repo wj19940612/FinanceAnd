@@ -50,6 +50,7 @@ import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.finance.view.stock.StockTrendView;
+import com.umeng.socialize.UMShareAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -254,6 +255,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        UMShareAPI.get(this).release();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
@@ -261,6 +263,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PUBLISH_VIEWPOINT:
@@ -372,7 +375,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), shareUrl, true)
+                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), shareUrl)
                         .show(getSupportFragmentManager());
             }
         });
