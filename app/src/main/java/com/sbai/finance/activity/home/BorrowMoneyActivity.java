@@ -56,7 +56,6 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 
 	private List<BorrowMoney> mBorrowMoneyList;
 	private BorrowMoneyAdapter mBorrowMoneyAdapter;
-
 	private TextView mFootView;
 	private int mPage = 0;
 	private int mPageSize = 15;
