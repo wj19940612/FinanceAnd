@@ -80,13 +80,13 @@
         android:layout_weight="1"/>
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="11dp"
         android:gravity="center"
         android:lineSpacingExtra="3dp"
-        android:text="@string/company"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"/>
 

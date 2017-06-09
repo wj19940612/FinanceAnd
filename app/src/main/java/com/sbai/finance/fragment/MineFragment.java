@@ -227,7 +227,6 @@ public class MineFragment extends BaseFragment {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
-                    getActivity().overridePendingTransition(R.anim.slide_in_from_bottom,0);
                 }
                 break;
             case R.id.userHeadImage:
@@ -262,7 +261,11 @@ public class MineFragment extends BaseFragment {
                 startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_NEW_NEWS);
                 break;
             case R.id.setting:
-                Launcher.with(getActivity(), SettingActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), SettingActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.aboutUs:
                 Launcher.with(getActivity(), AboutUsActivity.class)
@@ -305,7 +308,7 @@ public class MineFragment extends BaseFragment {
         int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
         SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1f, color);
         mAttention.setText(attentionSpannableString);
-        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1f,color);
+        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1f, color);
         mFans.setText(fansSpannableString);
         SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n" + data.getViewpoint(), 1f, color);
         mMinePublish.setText(minePublishSpannableString);
