@@ -5,8 +5,6 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.httplib.ApiParams;
 
-import static android.R.attr.password;
-
 
 public class Client {
 
@@ -1083,16 +1081,18 @@ public class Client {
 
     /**
      * 发送借款留言
+     *
      * @param loanId
      * @param content
      * @return
      */
-    public static API sendBorrowMessage(int loanId,String content) {
+    public static API sendBorrowMessage(int loanId, String content) {
         return new API("/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
-                        .put("content",content));
+                        .put("content", content));
     }
+
     /**
      * 发表观点
      *
@@ -1359,8 +1359,49 @@ public class Client {
      * @param newPassword
      * @return
      */
-    public static API updatePassword(String newPassword) {
-        return new API(POST, "/user/userAccount/updatePassword.do", new ApiParams().put("password", newPassword));
+    public static API updatePassword(String newPassword, String oldPassword) {
+        return new API(POST, "/user/userAccount/updatePassword.do", new ApiParams()
+                .put("password", newPassword)
+                .put("oldPassword", oldPassword));
+    }
+
+    /**
+     * /user/userAccount/checkPassword.do
+     * POST
+     * 安全密码验证（wms）
+     *
+     * @param password
+     * @return
+     */
+    public static API checkPassword(String password) {
+        return new API(POST, "/user/userAccount/checkPassword.do", new ApiParams().put("password", password));
+    }
+
+    /**
+     * /user/userAccount/sendMsgCodeForPass.do
+     * POST
+     * 忘记密码发送手机消息
+     *
+     * @param phone
+     * @return
+     */
+    public static API sendMsgCodeForPassWord(String phone) {
+        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
+    }
+
+    /**
+     * /user/userAccount/forgetPassword.do
+     * POST
+     * 忘记密码（wms）
+     *
+     * @param code
+     * @param phone
+     * @return
+     */
+    public static API forgetPassWord(String code, String phone) {
+        return new API(POST, "/user/userAccount/forgetPassword.do", new ApiParams()
+                .put("code", code)
+                .put("phone", phone));
     }
 
     //h5关于我们的界面网址
