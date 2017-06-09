@@ -126,28 +126,23 @@ public class CameraTopRectView extends View {
         canvas.drawRect(rect, wordPaint);
 
         int height = viewHeight / 2 + rectHeight / 2 - offest;
-        int subCount = viewHeight / 2 - rectHeight / 2 -offest;
+        int subCount = viewHeight / 2 - rectHeight / 2 - offest;
 
         //画蒙层
-        wordPaint.setColor(Color.parseColor("#8D8f92"));
-//        rect = new Rect(0, viewHeight / 2 + rectHeight / 2, viewWidth, viewHeight);
+        wordPaint.setColor(Color.parseColor("#66000000"));
         rect = new Rect(0, height, viewWidth, viewHeight);
         canvas.drawRect(rect, wordPaint);
 
-//        rect = new Rect(0, 0, viewWidth, viewHeight / 2 - rectHeight / 2);
         rect = new Rect(0, 0, viewWidth, subCount);
         canvas.drawRect(rect, wordPaint);
 
-//        rect = new Rect(0, viewHeight / 2 - rectHeight / 2, (viewWidth - rectWidth) / 2, viewHeight / 2 + rectHeight / 2);
         rect = new Rect(0, subCount, (viewWidth - rectWidth) / 2, height);
         canvas.drawRect(rect, wordPaint);
 
-//        rect = new Rect(viewWidth - (viewWidth - rectWidth) / 2, viewHeight / 2 - rectHeight / 2, viewWidth, viewHeight / 2 + rectHeight / 2);
         rect = new Rect(viewWidth - (viewWidth - rectWidth) / 2, subCount, viewWidth, height);
         canvas.drawRect(rect, wordPaint);
 
         rect = new Rect(rectLeft, subCount, rectRight, 0);
-//        rect = new Rect(rectLeft, viewWidth - rectHeight - 13, rectRight, 0);
         wordPaint.setColor(Color.WHITE);
         wordPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
         canvas.drawText(TIPS, rect.centerX(), rectBottom + 60, wordPaint);

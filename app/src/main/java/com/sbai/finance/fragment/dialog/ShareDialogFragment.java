@@ -31,7 +31,7 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/5/16.
  */
 
-public class ShareDiglogFragment extends DialogFragment {
+public class ShareDialogFragment extends DialogFragment {
 
     @BindView(R.id.weChatFriend)
     TextView mWeChatFriend;
@@ -51,12 +51,12 @@ public class ShareDiglogFragment extends DialogFragment {
 
     boolean mIsStock;//是否为股票
 
-    public static ShareDiglogFragment newInstance() {
-        ShareDiglogFragment fragment = new ShareDiglogFragment();
+    public static ShareDialogFragment newInstance() {
+        ShareDialogFragment fragment = new ShareDialogFragment();
         return fragment;
     }
 
-    public ShareDiglogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, boolean isStock) {
+    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareUrl, boolean isStock) {
         mActivity = activity;
         mShareDescription = mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
         mShareUrl = shareUrl;
@@ -161,7 +161,7 @@ public class ShareDiglogFragment extends DialogFragment {
     };
 
     public void show(FragmentManager manager) {
-        this.show(manager, ShareDiglogFragment.class.getSimpleName());
+        this.show(manager, ShareDialogFragment.class.getSimpleName());
     }
 
     @Override

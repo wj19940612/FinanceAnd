@@ -22,6 +22,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
+import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
@@ -32,6 +33,7 @@ import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -363,6 +365,18 @@ public abstract class StockTradeActivity extends BaseActivity {
         } else {
             exchangeStatus.setVisibility(View.VISIBLE);
         }
+
+        final String shareUrl = API.getHost() +
+                getString(R.string.stock_share_host, mVariety.getVarietyType(), mVariety.getVarietyId());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareDialogFragment
+                        .newInstance()
+                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), shareUrl, true)
+                        .show(getSupportFragmentManager());
+            }
+        });
     }
 
     private void initData() {

@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.sbai.finance.App;
-import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.UserInfo;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +27,9 @@ public class GpsUtils {
     public Address getAddress() {
         return mAddress;
     }
+
+    public double lat = 0;
+    public double lng = 0;
 
     //public static String cityName = "深圳";  //城市名
     public String cityName;  //城市名
@@ -75,6 +76,13 @@ public class GpsUtils {
         }
     }
 
+    public double getlongitude() {
+        return lng;
+    }
+
+    public double getLatitude() {
+        return lat;
+    }
 
     /**
      * 方位改变时触发，进行调用
@@ -112,8 +120,6 @@ public class GpsUtils {
      */
     private String updateWithNewLocation(Location location) {
         String mcityName = "";
-        double lat = 0;
-        double lng = 0;
         List<Address> addList = null;
         if (location != null) {
             lat = location.getLatitude();
@@ -147,9 +153,9 @@ public class GpsUtils {
                     Log.d(TAG, "updateWithNewLocation:     getLocality  " + add.getLocality());
                 }
                 Log.d(TAG, "具体地址 : " + province + " " + city + " " + country);
-                UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                userInfo.setLand(province + "-" + city + "-" + country);
-                LocalUser.getUser().setUserInfo(userInfo);
+//                UserInfo userInfo = LocalUser.getUser().getUserInfo();
+//                userInfo.setLand(province + "-" + city + "-" + country);
+//                LocalUser.getUser().setUserInfo(userInfo);
             }
 
         } catch (IOException e) {

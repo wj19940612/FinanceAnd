@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
-import com.sbai.finance.fragment.mine.PreviewFragment;
+import com.sbai.finance.fragment.dialog.PreviewDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.Feedback;
 import com.sbai.finance.net.Callback;
@@ -451,7 +451,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         @Override
                         public void onClick(View v) {
                             if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
-                                PreviewFragment.newInstance(feedback.getContent())
+                                PreviewDialogFragment.newInstance(feedback.getContent())
                                         .show(((FeedbackActivity) context).getSupportFragmentManager());
                             }
                         }

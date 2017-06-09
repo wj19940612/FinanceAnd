@@ -11,8 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:barBackground="@color/blackAssist"
-        app:titleText="@string/details"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/details"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -66,10 +73,10 @@
                 android:id="@+id/borrowMoneyContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="54dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:lineSpacingExtra="8dp"
                 android:textColor="#222222"
                 android:textSize="14sp"
@@ -317,7 +324,7 @@
                     android:background="@drawable/bg_leave_message"
                     android:gravity="center"
                     android:text="写留言"
-                    android:textColor="@color/hintText"
+                    android:textColor="@color/luckyText"
                     android:textSize="12sp"/>
             </LinearLayout>
 
@@ -326,6 +333,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="54dp"
                 android:layout_marginRight="14dp"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
                 <com.sbai.finance.view.MyListView

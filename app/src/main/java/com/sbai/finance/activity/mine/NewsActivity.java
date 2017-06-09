@@ -19,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mutual.BorrowInActivity;
 import com.sbai.finance.activity.mutual.BorrowInHisActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
@@ -87,7 +86,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, null, 0)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -157,26 +156,26 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
 
 //                    break;
                     //点赞评论
-                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        if (historyNewsModel.getViewpointId() != 0) {
-                            Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                                    putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
-                        } else {
-                            Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                                    putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
-                        }
-                    }
-                    break;
-                //评论
-                case HistoryNewsModel.ACTION_TYPE_COMMENT:
-                    //观点详情页面  将选择的这条评论置顶显示，
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
-                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
-                                .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
-                                .execute();
-                    }
+//                case HistoryNewsModel.ACTION_TYPE_LIKE_COMMENT:
+//                    if (!historyNewsModel.isLossEfficacy()) {
+//                        if (historyNewsModel.getViewpointId() != 0) {
+//                            Launcher.with(getActivity(), OpinionDetailsActivity.class).
+//                                    putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId()).execute();
+//                        } else {
+//                            Launcher.with(getActivity(), OpinionDetailsActivity.class).
+//                                    putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getDataId()).execute();
+//                        }
+//                    }
+//                    break;
+//                //评论
+//                case HistoryNewsModel.ACTION_TYPE_COMMENT:
+//                    //观点详情页面  将选择的这条评论置顶显示，
+//                    if (!historyNewsModel.isLossEfficacy()) {
+//                        Launcher.with(getActivity(), OpinionDetailsActivity.class).
+//                                putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getViewpointId())
+//                                .putExtra(Launcher.EX_PAYLOAD_1, historyNewsModel.getDataId())
+//                                .execute();
+//                    }
 
                     //借款单审核未通过
                 case HistoryNewsModel.BORROW_MONEY_AUDIT_IS_NOT_PASS:
@@ -300,7 +299,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
 
                 mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
                 mTitle.setText(item.getTitle());
-                mContent.setText(item.getMsg());
+//                mContent.setText(item.getMsg());
             }
         }
     }

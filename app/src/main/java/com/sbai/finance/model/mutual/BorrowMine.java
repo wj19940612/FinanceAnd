@@ -17,6 +17,7 @@ public class BorrowMine implements Parcelable {
     //审批不通过  已结束
     public static final int STATUS_END_NO_ALLOW=2;
    //无人帮助超时 已结束
+    public static final int STATUS_END_FIIL=4;
     public static final int STASTU_END_NO_HELP=41;
     //未选择好心人超时  已结束
     public static final int STATUS_END_NO_CHOICE_HELP=42;

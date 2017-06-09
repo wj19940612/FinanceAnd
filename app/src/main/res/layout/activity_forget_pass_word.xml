@@ -5,20 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.AttentionActivity">
+    tools:context="com.sbai.finance.activity.mine.setting.ForgetPassWordActivity">
 
     <com.sbai.finance.view.TitleBar
-        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        app:barBackground="@android:color/white"
-        app:rightImage="@drawable/ic_common_more"
-        app:rightVisible="true"
-        app:titleText="@string/my_publish"
-        app:titleTextColor="@color/blackAssist"/>
-
-    <include layout="@layout/layout_refresh_listview"/>
+        app:barBackground="@android:color/white"/>
 </LinearLayout>

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
@@ -56,10 +57,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     ListView mListView;
     @BindView(R.id.empty)
     TextView mEmpty;
-    @BindView(R.id.stock)
-    EditText mStock;
     @BindView(R.id.search)
-    ImageView mSearch;
+    TextView mSearch;
 
     private int mPage = 0;
     private int mPageSize = 15;
@@ -80,7 +79,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void initView() {
         mSet = new HashSet<>();
-        mStock.setFocusable(false);
+        mSearch.setFocusable(false);
         mStockListAdapter = new StockListAdapter(this);
         mListView.setAdapter(mStockListAdapter);
         mListView.setEmptyView(mEmpty);
@@ -279,12 +278,11 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mStockListAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.stock, R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
+    @OnClick({ R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.stock:
             case R.id.search:
-                Launcher.with(getActivity(), SearchStockActivity.class).execute();
+                Launcher.with(getActivity(),SearchOptionalActivity.class).putExtra("type",SearchOptionalActivity.TYPE_STOCK_ONLY ).execute();
                 break;
             case R.id.shangHai:
                 launcherIndexActivity((Variety) mShangHai.getTag());
