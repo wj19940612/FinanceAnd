@@ -10,7 +10,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="14dp"
-        android:background="@color/normalDivider"/>
+        android:background="@color/split"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

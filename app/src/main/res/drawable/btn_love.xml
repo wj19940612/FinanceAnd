@@ -11,7 +11,7 @@
     <item>
         <shape>
             <solid android:color="@android:color/transparent"/>
-            <stroke android:width="0.5dp" android:color="@color/lucky_text"/>
+            <stroke android:width="0.5dp" android:color="@color/luckyText"/>
             <corners android:radius="100dp"/>
         </shape>
     </item>

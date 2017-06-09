@@ -338,7 +338,7 @@
 //                    mTitle.setSelected(true);
 //                }
 //                mTitle.setText(item.getTitle());
-//                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+//                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 //                if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
 //                    mContent.setText(context.getString(R.string.pay_count, FinanceUtil.formatWithScale(item.getData().getMoney()) + " \n" +
 //                            context.getString(R.string.pay_source, item.getData().getSource())));

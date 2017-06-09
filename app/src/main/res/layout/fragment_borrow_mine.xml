@@ -15,12 +15,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="14dp"
-                android:background="@color/normalDivider"/>
+                android:background="@color/split"/>
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/normalDivider"
+                android:divider="@color/split"
                 android:dividerHeight="14dp"
                 android:visibility="gone"/>
             <TextView

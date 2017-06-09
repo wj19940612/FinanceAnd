@@ -2,15 +2,14 @@ package com.sbai.finance.activity.mine.setting;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -28,8 +27,6 @@ public class ForgetPassWordActivity extends BaseActivity {
 
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
-    @BindView(R.id.phoneNumberClear)
-    AppCompatImageView mPhoneNumberClear;
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
     @BindView(R.id.getAuthCode)
@@ -46,23 +43,10 @@ public class ForgetPassWordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_pass_word);
         ButterKnife.bind(this);
-        mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
 
+        mPhoneNumber.setText(StrFormatter.getFormatPhoneNumber(LocalUser.getUser().getPhone()));
     }
-
-    private ValidationWatcher mPhoneValidationWatcher = new ValidationWatcher() {
-        @Override
-        public void afterTextChanged(Editable s) {
-            mValidationWatcher.afterTextChanged(s);
-            formatPhoneNumber();
-            mPhoneNumberClear.setVisibility(checkClearPhoneNumButtonVisible() ? View.VISIBLE : View.INVISIBLE);
-            boolean authCodeEnable = checkObtainAuthCodeEnable();
-            if (mGetAuthCode.isEnabled() != authCodeEnable) {
-                mGetAuthCode.setEnabled(authCodeEnable);
-            }
-        }
-    };
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
@@ -74,19 +58,6 @@ public class ForgetPassWordActivity extends BaseActivity {
         }
     };
 
-    private void formatPhoneNumber() {
-        String oldPhone = mPhoneNumber.getText().toString();
-        String phoneNoSpace = oldPhone.replaceAll(" ", "");
-        String newPhone = StrFormatter.getFormatPhoneNumber(phoneNoSpace);
-        if (!newPhone.equalsIgnoreCase(oldPhone)) {
-            mPhoneNumber.setText(newPhone);
-            mPhoneNumber.setSelection(newPhone.length());
-        }
-    }
-
-    private boolean checkClearPhoneNumButtonVisible() {
-        return !TextUtils.isEmpty(mPhoneNumber.getText().toString().trim());
-    }
 
     private boolean checkObtainAuthCodeEnable() {
         String phone = getPhoneNumber();
@@ -108,12 +79,9 @@ public class ForgetPassWordActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.phoneNumberClear, R.id.getAuthCode, R.id.submit})
+    @OnClick({R.id.getAuthCode, R.id.submit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.phoneNumberClear:
-                mPhoneNumber.setText("");
-                break;
             case R.id.getAuthCode:
                 getAuthCodeForPass();
                 break;
@@ -125,12 +93,14 @@ public class ForgetPassWordActivity extends BaseActivity {
                         .setCallback(new Callback<Resp<Object>>() {
                             @Override
                             protected void onRespSuccess(Resp<Object> resp) {
-                                Log.d(TAG, "onRespSuccess: " + resp.toString());
                                 if (resp.isSuccess()) {
                                     ToastUtil.curt(resp.getMsg());
                                     Launcher.with(getActivity(), ModifySafetyPassActivity.class)
                                             .putExtra(Launcher.EX_PAYLOAD, true)
-                                            .putExtra(Launcher.EX_PAYLOAD_1, 1).execute();
+                                            .putExtra(Launcher.EX_PAYLOAD_1, 1)
+                                            .putExtra(Launcher.EX_PAYLOAD_2, authCode)
+                                            .execute();
+                                    restartGetAuthCode();
                                 } else {
                                     ToastUtil.curt(resp.getMsg());
                                 }
@@ -154,7 +124,6 @@ public class ForgetPassWordActivity extends BaseActivity {
                             mGetAuthCode.setEnabled(false);
                             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
 
-                            ToastUtil.curt(resp.getMsg());
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -168,12 +137,16 @@ public class ForgetPassWordActivity extends BaseActivity {
     public void onTimeUp(int count) {
         mCounter--;
         if (mCounter <= 0) {
-            mFreezeObtainAuthCode = false;
-            mGetAuthCode.setEnabled(true);
-            mGetAuthCode.setText(R.string.obtain_auth_code_continue);
-            stopScheduleJob();
+            restartGetAuthCode();
         } else {
             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
         }
+    }
+
+    private void restartGetAuthCode() {
+        mFreezeObtainAuthCode = false;
+        mGetAuthCode.setEnabled(true);
+        mGetAuthCode.setText(R.string.obtain_auth_code_continue);
+        stopScheduleJob();
     }
 }
