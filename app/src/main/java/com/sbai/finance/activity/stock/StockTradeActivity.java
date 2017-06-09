@@ -124,7 +124,6 @@ public abstract class StockTradeActivity extends BaseActivity {
 
         requestStockRTData();
         requestOptionalStatus();
-
     }
 
     private void initTradeFloatButton() {
@@ -240,6 +239,8 @@ public abstract class StockTradeActivity extends BaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        requestStockTrendDataAndSet();
+
         startScheduleJob(1 * 1000);
     }
 
@@ -308,18 +309,18 @@ public abstract class StockTradeActivity extends BaseActivity {
                     public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
                         if (!result.isEmpty()) {
                             mStockRTData = result.get(0);
-                            updateStockTrendView(mStockRTData);
+                            updateStockTrendView();
                         }
                         updateMarketDataView();
                     }
                 }).fireSync();
     }
 
-    private void updateStockTrendView(StockRTData stockRTData) {
+    private void updateStockTrendView() {
         ChartSettings settings = mStockTrendView.getSettings();
         if (settings != null && settings.getPreClosePrice() == 0) {
-            if (!TextUtils.isEmpty(stockRTData.getPrev_price())) {
-                settings.setPreClosePrice(Float.valueOf(stockRTData.getPrev_price()).floatValue());
+            if (!TextUtils.isEmpty(mStockRTData.getPrev_price())) {
+                settings.setPreClosePrice(Float.valueOf(mStockRTData.getPrev_price()).floatValue());
                 mStockTrendView.setSettings(settings);
             }
         }
@@ -379,7 +380,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     protected void initChartViews() {
         ChartSettings settings = new ChartSettings();
-        settings.setBaseLines(3);
+        settings.setBaseLines(5);
         settings.setNumberScale(2);
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
@@ -387,7 +388,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
-        settings2.setBaseLines(7);
+        settings2.setBaseLines(5);
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
@@ -396,8 +397,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         mStockKlineView.setDayLine(true);
         mStockKlineView.setSettings(settings2);
         mStockKlineView.setOnAchieveTheLastListener(null);
-
-        requestStockTrendDataAndSet();
     }
 
     private void requestStockTrendDataAndSet() {

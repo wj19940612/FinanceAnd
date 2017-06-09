@@ -1,13 +1,13 @@
-package com.sbai.chart;
+package com.sbai.finance.view.stock;
 
 import android.content.Context;
 import android.graphics.Canvas;
 
-public class TwinkleView extends TrendChart {
+public class StockTwinkleView extends StockTrendChart {
 
-    private TrendChart mTrendChart;
+    private StockTrendChart mTrendChart;
 
-    public TwinkleView(Context context, TrendChart chart) {
+    public StockTwinkleView(Context context, StockTrendChart chart) {
         super(context);
         mTrendChart = chart;
         setVisibleList(mTrendChart.getVisibleList());
@@ -44,5 +44,4 @@ public class TwinkleView extends TrendChart {
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
     }
-
 }

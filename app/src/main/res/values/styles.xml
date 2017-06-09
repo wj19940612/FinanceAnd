@@ -107,18 +107,18 @@
 
     <style name="FiveMarketDataStockItem">
         <item name="android:textColor">#838489</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="FiveMarketDataStockAmount">
         <item name="android:textColor">#838489</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:maxLines">1</item>
     </style>
 
     <style name="FiveMarketDataStockAskLastPrice">
         <item name="android:textColor">#33D37D</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:maxLines">1</item>
     </style>
 

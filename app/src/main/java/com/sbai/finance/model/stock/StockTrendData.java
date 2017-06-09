@@ -36,4 +36,10 @@ public class StockTrendData {
     public void setBusinessVolume(long businessVolume) {
         this.businessVolume = businessVolume;
     }
+
+
+    public boolean isSameData(StockTrendData unstableData) {
+        return business_amount.equals(unstableData.getBusiness_amount())
+                && last_price.equals(unstableData.getLast_price());
+    }
 }

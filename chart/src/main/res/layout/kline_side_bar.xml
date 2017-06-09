@@ -14,7 +14,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
         android:textColor="@color/colorDisable"
-        android:textSize="10sp"
+        android:textSize="9sp"
         tools:text="2017/10/23\n14:53"/>
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/openPrice"
         android:textColor="@android:color/white"
-        android:textSize="11sp"/>
+        android:textSize="9sp"/>
 
     <TextView
         android:id="@+id/openPrice"
@@ -33,7 +33,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:textColor="@color/colorRed"
-        android:textSize="15sp"
+        android:textSize="12sp"
         tools:text="51264"/>
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/highestPrice"
         android:textColor="@android:color/white"
-        android:textSize="11sp"/>
+        android:textSize="9sp"/>
 
     <TextView
         android:id="@+id/highestPrice"
@@ -52,7 +52,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:textColor="@color/colorRed"
-        android:textSize="15sp"
+        android:textSize="12sp"
         tools:text="51264"/>
 
     <TextView
@@ -62,7 +62,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/lowestPrice"
         android:textColor="@android:color/white"
-        android:textSize="11sp"/>
+        android:textSize="9sp"/>
 
     <TextView
         android:id="@+id/lowestPrice"
@@ -71,7 +71,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:textColor="@color/colorRed"
-        android:textSize="15sp"
+        android:textSize="12sp"
         tools:text="51264"/>
 
     <TextView
@@ -81,7 +81,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/closePrice"
         android:textColor="@android:color/white"
-        android:textSize="11sp"/>
+        android:textSize="9sp"/>
 
     <TextView
         android:id="@+id/closePrice"
@@ -91,6 +91,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:textColor="@color/colorRed"
-        android:textSize="15sp"
+        android:textSize="12sp"
         tools:text="51264"/>
 </LinearLayout>

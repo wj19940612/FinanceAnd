@@ -167,7 +167,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/split"/>
+                android:background="@drawable/bg_trade_split"/>
 
             <com.sbai.finance.view.slidingTab.SlidingTabLayout
                 android:id="@+id/slidingTab"
