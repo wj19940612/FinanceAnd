@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -39,7 +38,7 @@ public class ClipHeadImageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clip_head_image);
         ButterKnife.bind(this);
-        translucentStatusBar(Color.TRANSPARENT);
+        translucentStatusBar();
 
         Intent intent = getIntent();
         String bitmapPath = intent.getStringExtra(KEY_CLIP_USER_IMAGE);

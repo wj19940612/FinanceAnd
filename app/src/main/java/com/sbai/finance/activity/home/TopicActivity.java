@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.home;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -58,7 +57,7 @@ public class TopicActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_topic);
 		ButterKnife.bind(this);
-		translucentStatusBar(Color.TRANSPARENT);
+		translucentStatusBar();
 
 		initData();
 		initView();
