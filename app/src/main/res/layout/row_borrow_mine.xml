@@ -8,7 +8,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="14dp"
-        android:background="@color/split"/>
+        android:background="@color/background"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:id="@+id/avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_default_avatar"/>
+            tools:src="@drawable/ic_default_avatar"/>
 
         <TextView
             android:id="@+id/userName"
@@ -177,7 +177,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/img_loading"/>
+                tools:src="@drawable/img_loading"/>
 
             <ImageView
                 android:id="@+id/circleMoreIcon"
@@ -185,8 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/borrowingImg"
                 android:layout_alignRight="@+id/borrowingImg"
-                android:src="@drawable/ic_circle_more"
-                android:visibility="gone"/>
+                android:src="@drawable/ic_circle_more"/>
         </RelativeLayout>
     </RelativeLayout>
 

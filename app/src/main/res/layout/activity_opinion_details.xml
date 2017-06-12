@@ -166,6 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:background="@android:color/white"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingTop="20dp">
 
@@ -177,17 +178,29 @@
 
                     <TextView
                         android:id="@+id/commentNum"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
                         android:text="@string/comment_number"
                         android:textColor="#222222"
                         android:textSize="15sp"/>
+
+                    <TextView
+                        android:id="@+id/noComment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="14dp"
+                        android:text="@string/no_comment"
+                        android:textColor="@color/unluckyText"
+                        android:textSize="10sp"/>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/commentArea"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
                     <com.sbai.finance.view.MyListView

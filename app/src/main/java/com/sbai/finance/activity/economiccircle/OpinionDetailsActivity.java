@@ -96,6 +96,10 @@ public class OpinionDetailsActivity extends BaseActivity {
 	TextView mReply;
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
+	@BindView(R.id.noComment)
+	TextView mNoComment;
+	@BindView(R.id.commentArea)
+	LinearLayout mCommentArea;
 
 	private OpinionReplyAdapter mOpinionReplyAdapter;
 	private OpinionDetails mOpinionDetails;
@@ -290,6 +294,12 @@ public class OpinionDetailsActivity extends BaseActivity {
 		} else {
 			mCommentNum.setText(getString(R.string.comment_number, mOpinionDetails.getReplyCount()));
 		}
+
+		if (mOpinionDetails.getReplyCount() > 0) {
+			mNoComment.setVisibility(View.GONE);
+			mCommentArea.setBackgroundColor(ContextCompat.getColor(this, R.color.background));
+		}
+
 		mScrollView.smoothScrollTo(0, 0);
 	}
 

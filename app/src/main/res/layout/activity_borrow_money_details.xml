@@ -247,7 +247,8 @@
 
                 <View
                     android:layout_width="3dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
                     android:background="#ef6d6a"/>
 
                 <TextView
@@ -297,7 +298,8 @@
 
                 <View
                     android:layout_width="3dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
                     android:background="#ef6d6a"/>
 
                 <TextView

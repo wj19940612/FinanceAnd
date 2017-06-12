@@ -62,6 +62,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<String> mSet;
+	private List<NewMessage> mNewMessageList;
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -186,7 +187,16 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		Client.getNewMessageCount().setTag(TAG).setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>() {
 			@Override
 			protected void onRespSuccessData(List<NewMessage> newMessageList) {
-				if (mNewMessageHeaderView == null) {
+				mNewMessageList = newMessageList;
+
+				int count = 0;
+				for (NewMessage newMessage : mNewMessageList) {
+					if (newMessage.getClassify() == 2 || newMessage.getClassify() == 3) {
+						count += newMessage.getCount();
+					}
+				}
+
+				if (mNewMessageHeaderView == null && count > 0) {
 					mNewMessageHeaderView = View.inflate(getActivity(), R.layout.view_header_new_message, null);
 					mNewMessageHeaderView.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -197,19 +207,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					});
 
+					mListView.addHeaderView(mNewMessageHeaderView);
+					TextView textView = (TextView) mNewMessageHeaderView.findViewById(R.id.newMessageCount);
+					textView.setText(getString(R.string.new_message_count, count));
+				}
 
-					int count = 0;
-					for (NewMessage newMessage : newMessageList) {
-						if (newMessage.getClassify() == 2 || newMessage.getClassify() == 3) {
-							count += newMessage.getCount();
-						}
-					}
-
-					if (count > 0) {
-						TextView textView = (TextView) mNewMessageHeaderView.findViewById(R.id.newMessageCount);
-						textView.setText(getString(R.string.new_message_count, count));
-						mListView.addHeaderView(mNewMessageHeaderView);
-					}
+				if (mNewMessageHeaderView != null) {
+					TextView textView = (TextView) mNewMessageHeaderView.findViewById(R.id.newMessageCount);
+					textView.setText(getString(R.string.new_message_count, count));
 				}
 			}
 		}).fire();

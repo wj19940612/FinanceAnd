@@ -26,6 +26,7 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoney;
+import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mutual.BorrowDetails;
@@ -98,9 +99,9 @@ public class BorrowMoneyFragment extends BaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BorrowMoney item = (BorrowMoney) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), BorrowMoneyDetailsActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-                            .execute();
+                    Intent intent = new Intent(getActivity(),BorrowMoneyDetailsActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD,item.getDataId());
+                    startActivityForResult(intent,REQ_CODE_USERDATA);
                 }
             }
         });

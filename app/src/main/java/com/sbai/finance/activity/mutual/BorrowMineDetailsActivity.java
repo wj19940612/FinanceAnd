@@ -124,11 +124,12 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     TextView mSend;
     @BindView(R.id.leaveMessageArea)
     LinearLayout mLeaveMessageArea;
-    private boolean mStatusChange = false;
     private int mMax;
     private BorrowMine mBorrowMine;
     private MessageAdapter mMessageAdapter;
     private KeyBoardHelper mKeyBoardHelper;
+    private AttentionAndFansNumberModel mAttentionAndFansNumberModel;
+    private WhetherAttentionShieldOrNot mWhetherAttentionShieldOrNot;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,9 +247,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mWriteMessage.setVisibility(View.GONE);
                             mBorrowStatus.setVisibility(View.GONE);
-
                             mBorrowMine.setStatus(BorrowMine.STATUS_END_CANCEL);
-                            mStatusChange  = true;
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -265,7 +264,6 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mBorrowStatus.setVisibility(View.GONE);
                             mBorrowMine.setStatus(BorrowMine.STATUS_END_REPAY);
-                            mStatusChange = true;
                         }else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -610,11 +608,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mStatusChange){
-            Intent intent = new Intent();
-            intent.putExtra(Launcher.EX_PAYLOAD,mBorrowMine);
-            setResult(RESULT_OK,intent);
-        }
+        Intent intent = new Intent();
+        intent.putExtra(Launcher.EX_PAYLOAD,mBorrowMine);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
+        intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
+        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
 
@@ -683,17 +681,18 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
             if (data != null) {
-                WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
+                mWhetherAttentionShieldOrNot=
                         (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-                if (whetherAttentionShieldOrNot != null) {
-                    if (whetherAttentionShieldOrNot.isFollow()) {
+                mAttentionAndFansNumberModel  =
+                        (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
+                if (mWhetherAttentionShieldOrNot != null) {
+                    if (mWhetherAttentionShieldOrNot.isFollow()) {
                         mIsAttention.setText(R.string.is_attention);
                         mBorrowMine.setIsAttention(2);
                     } else {
                         mIsAttention.setText("");
                         mBorrowMine.setIsAttention(1);
                     }
-                    mStatusChange = true;;
                 }
             }
         }

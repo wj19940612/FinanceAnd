@@ -259,7 +259,7 @@ public class BorrowActivity extends BaseActivity {
 				StringBuilder contentImg = new StringBuilder();
 				int photoAmount =mPhotoGridAdapter.getCount();
 				for (int i = 0; i<photoAmount-1;i++){
-					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),600f);
+					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),800f);
 					Log.d(TAG, "image: "+image.length());
 					contentImg.append(image+",");
 				}

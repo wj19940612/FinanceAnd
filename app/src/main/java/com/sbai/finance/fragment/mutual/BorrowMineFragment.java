@@ -100,7 +100,7 @@ public class BorrowMineFragment extends BaseFragment implements
                 if (item != null) {
                     Intent intent = new Intent(getActivity(), BorrowMineDetailsActivity.class);
                     intent.putExtra(Launcher.EX_PAYLOAD, item);
-                    startActivityForResult(intent, REQ_CODE_STATUS_CHANGE);
+                    startActivityForResult(intent, REQ_CODE_USERDATA);
                 }
             }
         });
@@ -181,60 +181,45 @@ public class BorrowMineFragment extends BaseFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_STATUS_CHANGE && resultCode == RESULT_OK) {
-            updateBorrowStatus((BorrowMine) data.getParcelableExtra(Launcher.EX_PAYLOAD));
-        }
         if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
             if (data != null) {
+                BorrowMine borrowMine =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
+
                 WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
                         (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
                 AttentionAndFansNumberModel attentionAndFansNumberModel =
                         (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
 
-                if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
                     for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
-                        BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
-                        if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
-                            if (whetherAttentionShieldOrNot.isFollow()) {
-                                borrowMine.setIsAttention(2);
-                                mBorrowMoneyAdapter.notifyDataSetChanged();
-                            } else {
-                                borrowMine.setIsAttention(1);
+                        BorrowMine item = mBorrowMoneyAdapter.getItem(i);
+                        if (borrowMine!=null){
+                            if (item.getId()==borrowMine.getId()&&item.getStatus()!=borrowMine.getStatus()){
+                                item.setStatus(borrowMine.getStatus());
                                 mBorrowMoneyAdapter.notifyDataSetChanged();
                             }
                         }
-                    }
-                    if (whetherAttentionShieldOrNot.isShield()) {
-                        for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
-                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
-                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
-                                mBorrowMoneyAdapter.remove(borrowMine);
+                        if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
+                            if (item.getUserId() == attentionAndFansNumberModel.getUserId()) {
+                                if (whetherAttentionShieldOrNot.isFollow()) {
+                                    item.setIsAttention(2);
+                                    mBorrowMoneyAdapter.notifyDataSetChanged();
+                                } else {
+                                    item.setIsAttention(1);
+                                    mBorrowMoneyAdapter.notifyDataSetChanged();
+                                }
                             }
                         }
                     }
+//                    if (whetherAttentionShieldOrNot.isShield()) {
+//                        for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
+//                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
+//                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
+//                                mBorrowMoneyAdapter.remove(borrowMine);
+//                            }
+//                        }
+//                    }
                 }
-            }
-        }
-    }
-
-    private void updateBorrowStatus(BorrowMine data) {
-        if (data != null && mListView != null && mBorrowMoneyAdapter != null) {
-            int first = mListView.getFirstVisiblePosition();
-            int last = mListView.getLastVisiblePosition();
-            for (int i = first; i <= last; i++) {
-                BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
-                if (borrowMine != null && borrowMine.getId() == data.getId()) {
-                    borrowMine.setStatus(data.getStatus());
-                    View childView = mListView.getChildAt(i - mListView.getFirstVisiblePosition());
-                    if (childView != null) {
-                        TextView status = (TextView) childView.findViewById(R.id.status);
-                        status.setText(getActivity().getString(R.string.end));
-                        status.setTextColor(ContextCompat.getColor(getActivity(), R.color.luckyText));
-                    }
-                    break;
-                }
-            }
         }
     }
 

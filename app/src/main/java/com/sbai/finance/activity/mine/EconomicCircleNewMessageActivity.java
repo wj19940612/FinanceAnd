@@ -42,9 +42,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 	private List<HistoryNewsModel> mHistoryNewsModelList;
 	private EconomicCircleNewsAdapter mEconomicCircleNewsAdapter;
 
-	private int mPage = 0;
-	private int mSize = 15;
-	private Long mCreateTime;
+	private Long mCreateTime = null;
 	private HashSet<Integer> mSet;
 	private View mFootView;
 	private View mCheckoutEarlierNewsFootView;
@@ -63,7 +61,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 	}
 
 	private void requestEconomicCircleNewsList() {
-		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, 0, null)
+		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, 0, mCreateTime)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override
@@ -93,13 +91,13 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateTime();
-					updateEconomicCircleNewsList();
+					loadMoreEconomicCircleNewsList();
 				}
 			});
 			mListView.addFooterView(mFootView, null, true);
 		}
 
-		if (mHistoryNewsModelList.size() < mSize) {
+		if (mHistoryNewsModelList.size() <15) {
 			mListView.removeFooterView(mFootView);
 			mFootView = null;
 		}
@@ -174,7 +172,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 			public void bindDataWithView(HistoryNewsModel item, Context context) {
 				if (item == null) return;
 
-				Glide.with(context).load(item.getData().getContentImg())
+				Glide.with(context).load(item.getSourceUser().getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mUserHeadImage);
