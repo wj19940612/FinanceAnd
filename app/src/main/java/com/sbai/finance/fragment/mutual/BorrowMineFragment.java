@@ -205,14 +205,14 @@ public class BorrowMineFragment extends BaseFragment implements
                             }
                         }
                     }
-                    if (whetherAttentionShieldOrNot.isShield()) {
-                        for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
-                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
-                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
-                                mBorrowMoneyAdapter.remove(borrowMine);
-                            }
-                        }
-                    }
+//                    if (whetherAttentionShieldOrNot.isShield()) {
+//                        for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
+//                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
+//                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
+//                                mBorrowMoneyAdapter.remove(borrowMine);
+//                            }
+//                        }
+//                    }
                 }
             }
         }
