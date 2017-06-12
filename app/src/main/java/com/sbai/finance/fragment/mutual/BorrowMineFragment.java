@@ -72,7 +72,7 @@ public class BorrowMineFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSet = new HashSet();
+        mSet = new HashSet<>();
         mBorrowMoneyAdapter = new BorrowMoneyAdapter(getActivity());
         mBorrowMoneyAdapter.setCallback(new BorrowMoneyAdapter.Callback() {
             @Override

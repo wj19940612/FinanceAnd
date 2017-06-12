@@ -24,6 +24,7 @@
     <string name="borrow_money">借款</string>
     <string name="comment">发表评论&#8230;</string>
     <string name="leave_message">留言&#8230;</string>
+    <string name="new_message_count">%1$d条消息</string>
     <string name="people_want_help_him">想要帮助他的人</string>
     <string name="people_want_help_her">想要帮助她的人</string>
     <string name="people_want_help_you">想要帮助你的人</string>
@@ -210,6 +211,7 @@
     <!--   消息 -->
     <string name="system_news">系统消息</string>
     <string name="load_more">点击加载更多</string>
+    <string name="check_out_earlier_news">查看更早期的消息&#8230;</string>
     <string name="up_load_more">加载更多</string>
     <string name="load_all">已加载全部</string>
 

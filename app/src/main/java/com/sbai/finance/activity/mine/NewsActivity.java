@@ -52,6 +52,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     private SystemNewsAdapter mSystemNewsAdapter;
 
     private int mPage = 0;
+    private int mSize = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void requestSystemNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, null, 0)
+        Client.getHistoryNews(HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, false, mPage, mSize, null, null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override

@@ -64,8 +64,16 @@ public class HistoryNewsModel implements Parcelable {
     private int type;
     private int userId;
     private int status;
-    private long createDate;
+    private long createTime;
+    private String msg;
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
     public boolean isTheEarnestMoneyPaySuccess() {
         return getType() == THE_EARNEST_MONEY_APY_SUCCESS;
@@ -163,11 +171,11 @@ public class HistoryNewsModel implements Parcelable {
     }
 
     public long getCreateDate() {
-        return createDate;
+        return createTime;
     }
 
     public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+        this.createTime = createDate;
     }
 
 
@@ -316,7 +324,7 @@ public class HistoryNewsModel implements Parcelable {
         dest.writeInt(this.type);
         dest.writeInt(this.userId);
         dest.writeInt(this.status);
-        dest.writeLong(this.createDate);
+        dest.writeLong(this.createTime);
     }
 
     public HistoryNewsModel() {
@@ -333,7 +341,7 @@ public class HistoryNewsModel implements Parcelable {
         this.type = in.readInt();
         this.userId = in.readInt();
         this.status = in.readInt();
-        this.createDate = in.readLong();
+        this.createTime = in.readLong();
     }
 
     public static final Creator<HistoryNewsModel> CREATOR = new Creator<HistoryNewsModel>() {

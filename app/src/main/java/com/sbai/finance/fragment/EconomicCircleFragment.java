@@ -22,10 +22,12 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
+import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback2D;
@@ -56,6 +58,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	private List<EconomicCircle> mEconomicCircleList;
 	private EconomicCircleAdapter mEconomicCircleAdapter;
 	private View mFootView;
+	private View mNewMessageHeaderView;
 	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<String> mSet;
@@ -128,6 +131,29 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (LocalUser.getUser().isLogin()) {
+			requestNewMessageCount();
+			startScheduleJob(10000);
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		stopScheduleJob();
+	}
+
+	@Override
+	public void onTimeUp(int count) {
+		super.onTimeUp(count);
+		if (LocalUser.getUser().isLogin()) {
+			requestNewMessageCount();
+		}
+	}
+
+	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
 	}
@@ -154,6 +180,39 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			}
 		}
+	}
+
+	private void requestNewMessageCount() {
+		Client.getNewMessageCount().setTag(TAG).setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>() {
+			@Override
+			protected void onRespSuccessData(List<NewMessage> newMessageList) {
+				if (mNewMessageHeaderView == null) {
+					mNewMessageHeaderView = View.inflate(getActivity(), R.layout.view_header_new_message, null);
+					mNewMessageHeaderView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Launcher.with(getActivity(), EconomicCircleNewMessageActivity.class).execute();
+							mListView.removeHeaderView(mNewMessageHeaderView);
+							mNewMessageHeaderView = null;
+						}
+					});
+
+
+					int count = 0;
+					for (NewMessage newMessage : newMessageList) {
+						if (newMessage.getClassify() == 2 || newMessage.getClassify() == 3) {
+							count += newMessage.getCount();
+						}
+					}
+
+					if (count > 0) {
+						TextView textView = (TextView) mNewMessageHeaderView.findViewById(R.id.newMessageCount);
+						textView.setText(getString(R.string.new_message_count, count));
+						mListView.addHeaderView(mNewMessageHeaderView);
+					}
+				}
+			}
+		}).fire();
 	}
 
 	private void initSwipeRefreshLayout() {

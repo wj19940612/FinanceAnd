@@ -266,6 +266,10 @@
             android:name=".activity.mine.EconomicCircleNewsActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".activity.mine.EconomicCircleNewMessageActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- service -->
         <service android:name=".service.PushIntentService"/>
         <service

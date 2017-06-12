@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeRefreshLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.sbai.finance.fragment.mine.EconomicCircleNewsFragment">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:rightImage="@drawable/ic_common_more"
+        app:titleText="@string/news"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <ListView
+        android:divider="@null"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@android:color/white"
+        android:visibility="visible"/>
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:visibility="visible"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@android:id/empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/img_no_message"
-            android:gravity="center_horizontal"
-            android:paddingTop="150dp"
-            android:visibility="gone"/>
-    </LinearLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/img_no_message"
+        android:gravity="center_horizontal"
+        android:paddingTop="150dp"
+        android:visibility="gone"/>
+</LinearLayout>
