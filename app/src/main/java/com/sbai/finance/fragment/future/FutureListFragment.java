@@ -317,7 +317,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                     }
                 } else {
                     mLastPrice.setText("--");
-                    mRate.setText("--");
+                    mRate.setText("--.--%");
                     mRate.setSelected(true);
                 }
             }
