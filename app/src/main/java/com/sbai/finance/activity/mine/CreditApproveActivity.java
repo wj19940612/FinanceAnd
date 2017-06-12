@@ -104,16 +104,14 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
 
     private void requestUserCreditApproveStatus() {
         if (mDataId != -1) {
-            mSubmit.setEnabled(true);
             Client.queryCertification(mDataId)
                     .setTag(TAG)
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
                         @Override
                         protected void onRespSuccessData(UserIdentityCardInfo data) {
-                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                            userInfo.setStatus(data.getStatus());
-                            LocalUser.getUser().setUserInfo(userInfo);
+                            mImagePath.append(0,data.getCertPositive());
+                            mImagePath.append(1,data.getCertBack());
                             updateUserCreditStatus(data);
                             mUserIdentityCardInfo = data;
                         }
@@ -129,6 +127,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             UserInfo userInfo = LocalUser.getUser().getUserInfo();
                             userInfo.setStatus(data.getStatus());
                             LocalUser.getUser().setUserInfo(userInfo);
+                            mImagePath.append(0,data.getCertPositive());
+                            mImagePath.append(1,data.getCertBack());
                             updateUserCreditStatus(data);
                             mUserIdentityCardInfo = data;
                         }
