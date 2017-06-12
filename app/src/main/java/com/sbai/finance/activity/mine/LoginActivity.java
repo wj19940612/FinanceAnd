@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatEditText;
@@ -80,7 +81,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        translucentStatusBar();
+        translucentStatusBar(Color.TRANSPARENT);
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPhoneNumber.setText(LocalUser.getUser().getPhone());

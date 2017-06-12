@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -14,12 +15,10 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
-import com.sbai.finance.activity.stock.StockTradeActivity;
-import com.sbai.finance.fragment.future.FutureListFragment;
-import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -59,7 +58,7 @@ public class TopicActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_topic);
 		ButterKnife.bind(this);
-		translucentStatusBar();
+		translucentStatusBar(Color.TRANSPARENT);
 
 		initData();
 		initView();

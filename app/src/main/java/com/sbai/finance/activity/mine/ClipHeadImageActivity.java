@@ -2,6 +2,7 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -38,6 +39,7 @@ public class ClipHeadImageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clip_head_image);
         ButterKnife.bind(this);
+        translucentStatusBar(Color.TRANSPARENT);
 
         Intent intent = getIntent();
         String bitmapPath = intent.getStringExtra(KEY_CLIP_USER_IMAGE);
@@ -47,10 +49,6 @@ public class ClipHeadImageActivity extends BaseActivity {
         mClipImageLayout.setZoomImageViewImage(forMi5);
     }
 
-    @Override
-    protected void translucentStatusBar() {
-        super.translucentStatusBar();
-    }
 
     @OnClick({R.id.cancel, R.id.complete})
     public void onViewClicked(View view) {
