@@ -1077,7 +1077,13 @@ public class Client {
                         .put("id", id));
     }
 
-    //借款协议
+    //乐米协议
+
+    /**
+     *
+     * @param id  2 借款协议  3 用户协议
+     * @return
+     */
     public static API getArticleProtocol(int id) {
         return new API("/user/article/articleDetail.do",
                 new ApiParams().put("id", id));
