@@ -355,6 +355,7 @@ public class BorrowMineFragment extends BaseFragment implements
 
                 if (!TextUtils.isEmpty(item.getContentImg())) {
                     String[] images = item.getContentImg().split(",");
+                    mBorrowingImg.setVisibility(View.VISIBLE);
                     Glide.with(context).load(images[0])
                             .placeholder(R.drawable.ic_loading_pic)
                             .into(mBorrowingImg);
