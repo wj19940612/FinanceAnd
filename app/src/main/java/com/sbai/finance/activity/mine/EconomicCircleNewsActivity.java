@@ -4,13 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
@@ -39,9 +40,7 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
     AppCompatTextView mEmpty;
     private List<HistoryNewsModel> mHistoryNewsModelList;
     private EconomicCircleNewsAdapter mEconomicCircleNewsAdapter;
-
-    private int mSize = 15;
-    private Long mCreateTime;
+    private Long mCreateTime = null;
     private View mFootView;
     private HashSet<Integer> mSet;
 
@@ -59,7 +58,7 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
     }
 
     private void requestEconomicCircleNewsList() {
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, null, null)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, null, mCreateTime)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -79,13 +78,13 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
                 @Override
                 public void onClick(View v) {
                     mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateTime();
-                    updateEconomicCircleNewsList();
+                    requestEconomicCircleNewsList();
                 }
             });
             mListView.addFooterView(mFootView, null, true);
         }
 
-        if (mHistoryNewsModelList.size() < mSize) {
+        if (mHistoryNewsModelList.size() < 15) {
             mListView.removeFooterView(mFootView);
             mFootView = null;
         }
@@ -120,17 +119,17 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
 
         static class ViewHolder {
             @BindView(R.id.userHeadImage)
-            AppCompatImageView mUserHeadImage;
+            ImageView mUserHeadImage;
             @BindView(userName)
-            AppCompatTextView mUserName;
+            TextView mUserName;
             @BindView(R.id.content)
-            AppCompatTextView mContent;
+            TextView mContent;
             @BindView(R.id.time)
-            AppCompatTextView mTime;
+            TextView mTime;
             @BindView(R.id.presentation)
-            AppCompatTextView mPresentation;
+            TextView mPresentation;
             @BindView(R.id.rightPicture)
-            AppCompatImageView mRightPicture;
+            ImageView mRightPicture;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -139,7 +138,7 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
             public void bindDataWithView(HistoryNewsModel item, Context context) {
                 if (item == null) return;
 
-                Glide.with(context).load(item.getData().getContentImg())
+                Glide.with(context).load(item.getSourceUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
