@@ -486,6 +486,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 break;
             case BorrowMine.STATUS_GIVE_HELP:
             case BorrowMine.STATUS_NO_CHECKED:
+            case BorrowMine.STATUS_ACCEPTY:
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.wait_help));
