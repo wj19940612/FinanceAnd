@@ -8,31 +8,35 @@ import android.os.Parcelable;
  */
 
 public class Topic implements Parcelable {
-
+	public static final int CONTEXT_TYPE_VARIETY=1;
+	public static final int CONTEXT_TYPE_H5=2;
+	public static final int CONTEXT_TYPE_TEXT=3;
 
 	/**
-	 * backgroundImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493709712809021409.png
-	 * count : 2
-	 * createActor : 0
-	 * createDate : 1493709736000
-	 * id : 54
-	 * introduction : 大专题大专题大专题大专题
-	 * modifyActor : 0
-	 * modifyDate : 1493713139000
-	 * sort : 2
+	 * backgroundImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1496907625107013973.png
+	 * click : 7
+	 * context : 4
+	 * contextType : 3
+	 * count : 0
+	 * createDate : 1496907628000
+	 * id : 100
+	 * introduction : 大文本专题简介
+	 * modifyDate : 1496908299000
+	 * sort : 3
 	 * status : 1
-	 * subTitle : 小专题
-	 * title : 大专题
+	 * subTitle : 大文本专题标题
+	 * title : 大文本专题
 	 * type : future
 	 */
 
 	private String backgroundImg;
+	private int click;
+	private String context;
+	private int contextType;
 	private int count;
-	private int createActor;
 	private long createDate;
 	private int id;
 	private String introduction;
-	private int modifyActor;
 	private long modifyDate;
 	private int sort;
 	private int status;
@@ -48,20 +52,36 @@ public class Topic implements Parcelable {
 		this.backgroundImg = backgroundImg;
 	}
 
+	public int getClick() {
+		return click;
+	}
+
+	public void setClick(int click) {
+		this.click = click;
+	}
+
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
+
+	public int getContextType() {
+		return contextType;
+	}
+
+	public void setContextType(int contextType) {
+		this.contextType = contextType;
+	}
+
 	public int getCount() {
 		return count;
 	}
 
 	public void setCount(int count) {
 		this.count = count;
-	}
-
-	public int getCreateActor() {
-		return createActor;
-	}
-
-	public void setCreateActor(int createActor) {
-		this.createActor = createActor;
 	}
 
 	public long getCreateDate() {
@@ -86,14 +106,6 @@ public class Topic implements Parcelable {
 
 	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
-	}
-
-	public int getModifyActor() {
-		return modifyActor;
-	}
-
-	public void setModifyActor(int modifyActor) {
-		this.modifyActor = modifyActor;
 	}
 
 	public long getModifyDate() {
@@ -152,12 +164,13 @@ public class Topic implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(this.backgroundImg);
+		dest.writeInt(this.click);
+		dest.writeString(this.context);
+		dest.writeInt(this.contextType);
 		dest.writeInt(this.count);
-		dest.writeInt(this.createActor);
 		dest.writeLong(this.createDate);
 		dest.writeInt(this.id);
 		dest.writeString(this.introduction);
-		dest.writeInt(this.modifyActor);
 		dest.writeLong(this.modifyDate);
 		dest.writeInt(this.sort);
 		dest.writeInt(this.status);
@@ -171,12 +184,13 @@ public class Topic implements Parcelable {
 
 	protected Topic(Parcel in) {
 		this.backgroundImg = in.readString();
+		this.click = in.readInt();
+		this.context = in.readString();
+		this.contextType = in.readInt();
 		this.count = in.readInt();
-		this.createActor = in.readInt();
 		this.createDate = in.readLong();
 		this.id = in.readInt();
 		this.introduction = in.readString();
-		this.modifyActor = in.readInt();
 		this.modifyDate = in.readLong();
 		this.sort = in.readInt();
 		this.status = in.readInt();

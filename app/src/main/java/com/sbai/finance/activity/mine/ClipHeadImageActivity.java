@@ -47,6 +47,11 @@ public class ClipHeadImageActivity extends BaseActivity {
         mClipImageLayout.setZoomImageViewImage(forMi5);
     }
 
+    @Override
+    protected void translucentStatusBar() {
+        super.translucentStatusBar();
+    }
+
     @OnClick({R.id.cancel, R.id.complete})
     public void onViewClicked(View view) {
         switch (view.getId()) {

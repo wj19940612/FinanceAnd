@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
@@ -171,7 +170,9 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
-                UploadUserImageDialogFragment.newInstance(true).show(getSupportFragmentManager());
+                String url[] = new String[]{LocalUser.getUser().getUserInfo().getUserPortrait()};
+                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(true, url);
+                uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
                 Launcher.with(getActivity(), ModifyUserNameActivity.class).executeForResult(REQ_CODE_USER_NAME);

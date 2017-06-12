@@ -341,7 +341,7 @@
 ////                    mPresentation.setText(item.getData().getContent());
 ////                }
 //
-//                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+//                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 //
 //                mUserHeadImage.setOnClickListener(new View.OnClickListener() {
 //                    @Override

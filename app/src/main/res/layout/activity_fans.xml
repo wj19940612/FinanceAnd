@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/fans"/>
+        app:titleText="@string/fans"
+        app:titleTextColor="@color/blackAssist"/>
 
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>

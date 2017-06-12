@@ -40,17 +40,27 @@ public class ModifySafetyPassActivity extends BaseActivity {
     private int mPasswordInputCount;
     //用户是否设置过密码
     private boolean mHasPassword;
+    private String mAuthCode;
+    private boolean mIsForgetPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_safety_pass);
         ButterKnife.bind(this);
-        mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
         mHasPassword = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
+        mPasswordInputCount = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+        mAuthCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+        mIsForgetPass = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_3, false);
+        mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
+
         if (!mHasPassword) {
             mTitleBar.setTitle(R.string.add_safety_pass);
             mSafetyPasswordHint.setText(R.string.please_set_safety_pass);
+        }
+
+        if (mIsForgetPass) {
+            mSafetyPasswordHint.setText(R.string.please_input_new_password);
         }
     }
 
@@ -58,14 +68,40 @@ public class ModifySafetyPassActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             String password = s.toString();
-            mPasswordHint.setText(s.toString());
-            if (!mHasPassword) {
+            if (mPasswordHint.isShown()) {
+                mPasswordHint.setVisibility(View.GONE);
+            }
+
+            if (mIsForgetPass) {
+                setForgetPass(password);
+            } else if (!mHasPassword) {
                 addPassWord(password);
             } else {
                 setNewPassWord(password);
             }
         }
     };
+
+    private void setForgetPass(String password) {
+        if (password.length() == 6) {
+            if (mPasswordInputCount == 1) {
+                mNewPassWord = password;
+                mPasswordInputCount++;
+//                mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
+                mSafetyPasswordNumber.clearSafetyNumber();
+
+            } else if (mPasswordInputCount == 2) {
+                if (mNewPassWord.equalsIgnoreCase(password)) {
+                    confirmNewPassword(mNewPassWord);
+                } else {
+                    SmartDialog.with(ModifySafetyPassActivity.this,
+                            R.string.twice_password_is_different, R.string.modify_fail)
+                            .show();
+                    mSafetyPasswordNumber.clearSafetyNumber();
+                }
+            }
+        }
+    }
 
     //添加密码流程
     private void addPassWord(String password) {
@@ -80,7 +116,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
                 } else {
-
                     Client.submitSetPassword(password)
                             .setTag(TAG)
                             .setIndeterminate(this)
@@ -89,9 +124,10 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                 protected void onRespSuccess(Resp<Object> resp) {
                                     Log.d(TAG, "onRespSuccess: " + resp.toString());
                                     if (resp.isSuccess()) {
-                                        ToastUtil.curt(resp.getMsg());
+                                        ToastMassage(resp);
+                                        finish();
                                     } else {
-                                        ToastUtil.curt(resp.getMsg());
+                                        ToastMassage(resp);
                                     }
                                 }
                             })
@@ -101,14 +137,36 @@ public class ModifySafetyPassActivity extends BaseActivity {
         }
     }
 
+    private void ToastMassage(Resp<Object> resp) {
+        if (resp.hasData()) {
+            ToastUtil.curt(resp.getData().toString());
+        } else {
+            ToastUtil.curt(resp.getMsg());
+        }
+    }
+
     //设置新的安全密码流程
-    private void setNewPassWord(String passWord) {
+    private void setNewPassWord(final String passWord) {
         if (passWord.length() == 6) {
             if (mPasswordInputCount == 0) {
-                mOldPassword = passWord;
-                mPasswordInputCount++;
-                mSafetyPasswordHint.setText(R.string.please_input_new_password);
-                mSafetyPasswordNumber.clearSafetyNumber();
+                Client.checkPassword(passWord)
+                        .setTag(TAG)
+                        .setIndeterminate(this)
+                        .setCallback(new Callback<Resp<Object>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Object> resp) {
+                                if (resp.isSuccess()) {
+                                    mOldPassword = passWord;
+                                    mPasswordInputCount++;
+                                    mSafetyPasswordHint.setText(R.string.please_input_new_password);
+                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                } else {
+                                    ToastMassage(resp);
+                                }
+                            }
+                        })
+                        .fire();
+
             } else if (mPasswordInputCount == 1) {
                 mNewPassWord = passWord;
                 if (!isSameNewPasswordAndOldPass(mOldPassword, mNewPassWord)) {
@@ -118,7 +176,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 } else {
                     SmartDialog.with(ModifySafetyPassActivity.this,
                             R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
-                            .setMessageTextSize(14)
                             .show();
                     mSafetyPasswordNumber.clearSafetyNumber();
                 }
@@ -128,7 +185,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 } else {
                     SmartDialog.with(ModifySafetyPassActivity.this,
                             R.string.twice_password_is_different, R.string.modify_fail)
-                            .setMessageTextSize(14)
                             .show();
                     mSafetyPasswordNumber.clearSafetyNumber();
                 }
@@ -137,16 +193,17 @@ public class ModifySafetyPassActivity extends BaseActivity {
     }
 
     private void confirmNewPassword(String newPassWord) {
-        Client.updatePassword(newPassWord)
+        Client.updatePassword(newPassWord, mOldPassword, mAuthCode)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastMassage(resp);
+                            finish();
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastMassage(resp);
                         }
                     }
                 })

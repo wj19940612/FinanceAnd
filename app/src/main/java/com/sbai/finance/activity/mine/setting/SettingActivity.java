@@ -47,9 +47,7 @@ public class SettingActivity extends BaseActivity {
                         .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
                             @Override
                             protected void onRespSuccessData(Boolean data) {
-
                                 Launcher.with(getActivity(), SafetySettingActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
-
                             }
                         })
                         .fire();

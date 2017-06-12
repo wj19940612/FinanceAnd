@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 
 import com.sbai.chart.ChartView;
 import com.sbai.finance.model.stock.StockTrendData;
@@ -91,10 +92,49 @@ public class StockTrendChart extends ChartView {
         paint.setPathEffect(null);
     }
 
+    protected void setUnstablePricePaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
+        paint.setTextSize(mBigFontSize);
+        paint.setPathEffect(null);
+    }
+
+    protected void setUnstablePriceBgPaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartView.ChartColor.BLACK.get()));
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+    }
+
+    public List<StockTrendData> getDataList() {
+        return mDataList;
+    }
 
     public void setDataList(List<StockTrendData> dataList) {
         mDataList = dataList;
         redraw();
+    }
+
+    public void setUnstableData(StockTrendData unstableData) {
+        if (mUnstableData != null && unstableData != null
+                && mUnstableData.isSameData(unstableData)) {
+            return;
+        }
+
+        mUnstableData = unstableData;
+
+        ViewGroup viewGroup = (ViewGroup) getParent();
+        if (viewGroup.getVisibility() != VISIBLE || getVisibility() != VISIBLE) {
+            return;
+        }
+
+        if (enableDrawUnstableData()) {
+            redraw();
+        } else if (mSettings != null && mUnstableData != null) { // When unstable data > top || < bottom, still redraw
+            float[] baseLines = mSettings.getBaseLines();
+            if (mUnstableData.getLastPrice() > baseLines[0]
+                    || mUnstableData.getLastPrice() < baseLines[baseLines.length - 1]) {
+                redraw();
+            }
+        }
     }
 
     public void setVisibleList(SparseArray<StockTrendData> visibleList) {
@@ -123,9 +163,11 @@ public class StockTrendChart extends ChartView {
 
     @Override
     protected void calculateBaseLines(float[] baselines) {
-        if (mDataList != null && mDataList.size() > 0) {
-            float max = Float.MIN_VALUE;
-            float min = Float.MAX_VALUE;
+        float preClosePrice = mSettings.getPreClosePrice();
+        float max = Float.MIN_VALUE;
+        float min = Float.MAX_VALUE;
+
+        if (mDataList != null) {
             for (StockTrendData stockTrendData : mDataList) {
                 if (max < stockTrendData.getLastPrice()) {
                     max = stockTrendData.getLastPrice();
@@ -134,25 +176,39 @@ public class StockTrendChart extends ChartView {
                     min = stockTrendData.getLastPrice();
                 }
             }
+        }
 
-            if (mUnstableData != null) {
-                if (max < mUnstableData.getLastPrice()) {
-                    max = mUnstableData.getLastPrice();
-                }
-                if (min > mUnstableData.getLastPrice()) {
-                    min = mUnstableData.getLastPrice();
+        if (mUnstableData != null) {
+            if (max < mUnstableData.getLastPrice()) {
+                max = mUnstableData.getLastPrice();
+            }
+            if (min > mUnstableData.getLastPrice()) {
+                min = mUnstableData.getLastPrice();
+            }
+        }
+
+        if (max == Float.MIN_VALUE || min == Float.MAX_VALUE) {
+            max = preClosePrice * (1 + 0.1f);
+            min = preClosePrice * (1 - 0.1f);
+        } else {
+            if (preClosePrice != 0) {
+                if (Math.abs(preClosePrice - max) > Math.abs(preClosePrice - min)) {
+                    min = preClosePrice - Math.abs(preClosePrice - max);
+                } else {
+                    max = preClosePrice + Math.abs(preClosePrice - min);
                 }
             }
+        }
 
-            float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
-                    .divide(new BigDecimal(baselines.length - 1), RoundingMode.HALF_EVEN)
-                    .floatValue();
+        float priceRange =
+                BigDecimal.valueOf(max).subtract(new BigDecimal(min))
+                        .divide(new BigDecimal(baselines.length - 1), mSettings.getNumberScale() + 2, RoundingMode.HALF_EVEN)
+                        .floatValue();
 
-            baselines[0] = max;
-            baselines[baselines.length - 1] = min;
-            for (int i = baselines.length - 2; i > 0; i--) {
-                baselines[i] = baselines[i + 1] + priceRange;
-            }
+        baselines[0] = max;
+        baselines[baselines.length - 1] = min;
+        for (int i = baselines.length - 2; i > 0; i--) {
+            baselines[i] = baselines[i + 1] + priceRange;
         }
     }
 
@@ -190,19 +246,11 @@ public class StockTrendChart extends ChartView {
         for (int i = 0; i < baselines.length; i++) {
             Path path = getPath();
             path.moveTo(left, topY);
-            path.lineTo(left + width, topY);
+            path.lineTo(left + (i == 0 ? width + getPaddingRight() : width), topY);
             setBaseLinePaint(sPaint);
             canvas.drawPath(path, sPaint);
 
-            if (i == 0) {
-                setDefaultTextPaint(sPaint);
-                String baseLineValue = formatNumber(baselines[i]);
-                float textWidth = sPaint.measureText(baseLineValue);
-                float x = left + width - mPriceAreaWidth + (mPriceAreaWidth - textWidth) / 2;
-                float y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-                canvas.drawText(baseLineValue, x, y, sPaint);
-
-            } else if (i != 0) {
+            if (i != 0) {
                 setDefaultTextPaint(sPaint);
                 String baseLineValue = formatNumber(baselines[i]);
                 float textWidth = sPaint.measureText(baseLineValue);
@@ -214,24 +262,24 @@ public class StockTrendChart extends ChartView {
             topY += verticalInterval;
         }
 
-        float preClosePrice = mSettings.getPreClosePrice();
-        if (preClosePrice < baselines[0] && preClosePrice > baselines[baselines.length - 1]) {
-            setDashLinePaint(sPaint);
-            topY = getChartY(preClosePrice);
-            Path path = getPath();
-            path.moveTo(left, topY);
-            path.lineTo(left + width, topY);
-            canvas.drawPath(path, sPaint);
-
-            setDefaultTextPaint(sPaint);
-            String preClosePriceStr = formatNumber(preClosePrice);
-            float x = left + mTextMargin;
-            float y = topY - mTextMargin - mFontHeight / 2 + mOffset4CenterText;
-            if (topY - mTextMargin - mFontHeight <= top) { // preClosePriceText beyond top
-                y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-            }
-            canvas.drawText(preClosePriceStr, x, y, sPaint);
-        }
+//        float preClosePrice = mSettings.getPreClosePrice();
+//        if (preClosePrice < baselines[0] && preClosePrice > baselines[baselines.length - 1]) {
+//            setDashLinePaint(sPaint);
+//            topY = getChartY(preClosePrice);
+//            Path path = getPath();
+//            path.moveTo(left, topY);
+//            path.lineTo(left + width, topY);
+//            canvas.drawPath(path, sPaint);
+//
+//            setDefaultTextPaint(sPaint);
+//            String preClosePriceStr = formatNumber(preClosePrice);
+//            float x = left + mTextMargin;
+//            float y = topY - mTextMargin - mFontHeight / 2 + mOffset4CenterText;
+//            if (topY - mTextMargin - mFontHeight <= top) { // preClosePriceText beyond top
+//                y = topY + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
+//            }
+//            canvas.drawText(preClosePriceStr, x, y, sPaint);
+//        }
     }
 
 
@@ -292,6 +340,53 @@ public class StockTrendChart extends ChartView {
         }
     }
 
+    @Override
+    protected void drawUnstableData(boolean indexesEnable,
+                                    int left, int top, int width, int topPartHeight,
+                                    int left2, int top2, int width1, int bottomPartHeight,
+                                    Canvas canvas) {
+        if (mUnstableData != null) {
+            // last point connect to unstable point
+            Path path = getPath();
+            int unstableIndex = mDataList != null ? mDataList.size() : 0;
+            float chartX = getChartX(unstableIndex, mUnstableData);
+            float chartY = getChartY(mUnstableData.getLastPrice());
+
+            if (mDataList != null && mDataList.size() > 0) {
+                StockTrendData lastData = mDataList.get(mDataList.size() - 1);
+                path.moveTo(getChartX(mDataList.size() - 1, lastData), getChartY(lastData.getLastPrice()));
+                path.lineTo(chartX, chartY);
+                setRealTimeLinePaint(sPaint);
+                canvas.drawPath(path, sPaint);
+            }
+
+            // dash line
+            path = getPath();
+            path.moveTo(chartX, chartY);
+            path.lineTo(left + width - mPriceAreaWidth, chartY);
+            setDashLinePaint(sPaint);
+            canvas.drawPath(path, sPaint);
+
+            // unstable price
+            setUnstablePricePaint(sPaint);
+            String unstablePrice = formatNumber(mUnstableData.getLastPrice());
+            float priceWidth = sPaint.measureText(unstablePrice);
+            float priceMargin = (mPriceAreaWidth - priceWidth) / 2;
+            float priceX = left + width - priceMargin - priceWidth;
+            RectF blueRect = getBigFontBgRectF(priceX, chartY + mOffset4CenterBigText, priceWidth);
+            //// the center of rect is connected to dashLine
+            //// add offset and let the bottom of rect connect to dashLine
+            float rectHeight = blueRect.height();
+            blueRect.top -= rectHeight / 2;
+            blueRect.bottom -= rectHeight / 2;
+            setUnstablePriceBgPaint(sPaint);
+            canvas.drawRoundRect(blueRect, 2, 2, sPaint);
+            float priceY = chartY - rectHeight / 2 + mOffset4CenterBigText;
+            setUnstablePricePaint(sPaint);
+            canvas.drawText(unstablePrice, priceX, priceY, sPaint);
+        }
+    }
+
     private float getChartX(int index, StockTrendData data) {
         updateFirstLastVisibleIndex(index);
         mVisibleList.put(index, data);
@@ -312,16 +407,17 @@ public class StockTrendChart extends ChartView {
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
         setDefaultTextPaint(sPaint);
-        float textY = top + mTextMargin + mFontHeight / 2 + mOffset4CenterText;
-        float textX = left + mTextMargin;
+        float textWidth = sPaint.measureText(mTimeLine[0]);
+        float textY = top + mTextMargin * 2.5f + mFontHeight / 2 + mOffset4CenterText;
+        float textX = left - textWidth / 2;
         canvas.drawText(mTimeLine[0], textX, textY, sPaint);
 
-        float textWidth = sPaint.measureText(mTimeLine[1]);
+        textWidth = sPaint.measureText(mTimeLine[1]);
         textX = (left + width) / 2 - textWidth / 2;
         canvas.drawText(mTimeLine[1], textX, textY, sPaint);
 
         textWidth = sPaint.measureText(mTimeLine[3]);
-        textX = left + width - textWidth;
+        textX = left + width - textWidth / 2;
         canvas.drawText(mTimeLine[3], textX, textY, sPaint);
     }
 
@@ -461,6 +557,12 @@ public class StockTrendChart extends ChartView {
         }
     }
 
+    /**
+     *
+     * @param startDate
+     * @param count
+     * @return startData + count min
+     */
     public String getTimeFrom(String startDate, int count) {
         SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
         long result = 0;
@@ -473,4 +575,13 @@ public class StockTrendChart extends ChartView {
             return parser.format(new Date(result));
         }
     }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        setBaseLinePaint(sPaint);
+        canvas.drawLine(getWidth(), getTop(), getWidth(), getHeight(), sPaint);
+    }
+
 }

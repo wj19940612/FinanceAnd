@@ -383,6 +383,8 @@ public class SmartDialog {
             public void onClick(View view) {
                 if (mPositiveListener != null) {
                     mPositiveListener.onClick(mDialog);
+                } else {
+                    mDialog.dismiss();
                 }
             }
         });

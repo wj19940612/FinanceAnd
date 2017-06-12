@@ -4,14 +4,15 @@
               xmlns:tool="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/split"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="@string/home"/>
+        app:titleText="@string/home"
+        app:titleTextColor="@color/blackAssist"/>
 
     <ScrollView
         android:id="@+id/nestedScrollView"

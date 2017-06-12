@@ -7,31 +7,9 @@
               android:layout_height="match_parent"
               android:background="@color/split">
     <LinearLayout
-       android:id="@+id/borrowMoney"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:padding="@dimen/common_padding"
-       android:orientation="horizontal"
-       android:background="@drawable/bg_pressable">
-        <TextView
-            android:id="@+id/borrowTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:drawablePadding="13dp"
-            android:drawableLeft="@drawable/fanli_list_icon_borrow"
-            android:drawableRight="@drawable/ic_arrow_right_tint"
-            android:lineSpacingExtra="8dp"
-            android:textSize="@dimen/list_title_size"
-            android:textColor="@color/blackAssist"
-            tool:text="@string/borrow_title"/>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/idea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0.5dp"
         android:padding="@dimen/common_padding"
         android:orientation="horizontal"
         android:background="@drawable/bg_pressable">

@@ -56,7 +56,7 @@ public class TradeFloatButtons extends LinearLayout {
         addView(mTrade, params);
 
         View splitLine = new View(getContext());
-        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.normalDivider));
+        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.split));
         int splitLineWidth = (int) dp2Px(0.5f);
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);
@@ -67,7 +67,7 @@ public class TradeFloatButtons extends LinearLayout {
         addView(mAddOptional, params);
 
         splitLine = new View(getContext());
-        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.normalDivider));
+        splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.split));
         splitLineWidth = (int) dp2Px(0.5f);
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);

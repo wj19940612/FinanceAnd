@@ -515,8 +515,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		}
 
 		static class BorrowMoneyViewHolder {
-			@BindView(R.id.divider)
-			View mDivider;
 			@BindView(R.id.avatar)
 			ImageView mAvatar;
 			@BindView(R.id.userName)

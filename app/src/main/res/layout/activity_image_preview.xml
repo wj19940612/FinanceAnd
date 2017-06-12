@@ -17,7 +17,8 @@
         app:rightTextColor="@android:color/white"
         app:rightTextSize="15sp"
         app:rightVisible="true"
-        app:titleText="@string/preview"/>
+        app:titleText="@string/preview"
+        app:titleTextColor="@color/blackAssist"/>
 
     <ImageView
         android:id="@+id/imageview"

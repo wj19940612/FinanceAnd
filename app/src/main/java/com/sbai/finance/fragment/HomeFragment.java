@@ -30,6 +30,7 @@ import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
+import com.sbai.finance.activity.web.TopicDetailActivity;
 import com.sbai.finance.model.mutual.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
@@ -65,10 +66,6 @@ public class HomeFragment extends BaseFragment {
     MyGridView mTopicGv;
     @BindView(R.id.nestedScrollView)
     ScrollView mNestedScrollView;
-    @BindView(R.id.borrowMoney)
-    LinearLayout mBorrowMoney;
-    @BindView(R.id.borrowTitle)
-    TextView mBorrowTitle;
     @BindView(R.id.idea)
     LinearLayout mIdea;
     @BindView(R.id.ideaTitle)
@@ -101,9 +98,23 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Topic topic = (Topic) parent.getItemAtPosition(position);
                 if (topic != null) {
+                    if (topic.getContextType()==Topic.CONTEXT_TYPE_VARIETY){
                     Launcher.with(getContext(), TopicActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, topic)
                             .execute();
+                    }else if (topic.getContextType()==Topic.CONTEXT_TYPE_H5){
+                        Launcher.with(getActivity(), HideTitleWebActivity.class)
+                                .putExtra(HideTitleWebActivity.EX_URL, topic.getContext())
+                                .putExtra(HideTitleWebActivity.EX_TITLE, topic.getTitle())
+                                .putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+
+                    }else if (topic.getContextType()==Topic.CONTEXT_TYPE_TEXT){
+                        Launcher.with(getActivity(), TopicDetailActivity.class)
+                                .putExtra(TopicDetailActivity.TOPIC, topic)
+                                .putExtra(TopicDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
                 }
             }
         });
@@ -157,9 +168,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initView() {
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
-                "\n" + getString(R.string.borrow_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
-        mBorrowTitle.setText(attentionSpannableString);
+//        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
+//                "\n" + getString(R.string.borrow_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
+//        mBorrowTitle.setText(attentionSpannableString);
         SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.idea_title),
                 "\n" + getString(R.string.idea_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
         mIdeaTitle.setText(fansSpannableString);
@@ -242,14 +253,11 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.borrowMoney, R.id.idea, R.id.bigEvent})
+    @OnClick({ R.id.idea, R.id.bigEvent})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bigEvent:
                 Launcher.with(getActivity(), EventActivity.class).execute();
-                break;
-            case R.id.borrowMoney:
-                Launcher.with(getActivity(), BorrowMoneyActivity.class).execute();
                 break;
             case R.id.idea:
                 Launcher.with(getActivity(), OpinionActivity.class).execute();

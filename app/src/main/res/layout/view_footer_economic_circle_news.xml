@@ -10,7 +10,7 @@
         android:background="@drawable/bg_white"
         android:gravity="center"
         android:text="@string/check_out_earlier_news"
-        android:textColor="@color/hintText"
+        android:textColor="@color/unluckyText"
         android:textSize="14sp"/>
 
     <View

@@ -65,6 +65,7 @@ public class TrendView extends FrameLayout {
     public void setUnstableData(TrendViewData unstableData) {
         mChart.setUnstableData(unstableData);
         mTwinkleView.setUnstableData(unstableData);
+        mTouchView.setUnstableData(unstableData);
     }
 
     public List<TrendViewData> getDataList() {

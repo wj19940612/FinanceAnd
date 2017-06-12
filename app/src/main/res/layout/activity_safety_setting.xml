@@ -14,7 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/safety_center"/>
+        app:titleText="@string/safety_center"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        android:layout_marginBottom="@dimen/common_split_height"
+        app:titleTextColor="@color/blackAssist"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/setting_safety_password"
@@ -33,7 +37,6 @@
         android:id="@+id/modifySafetyLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_split_height"
         android:orientation="vertical"
         android:visibility="gone">
 

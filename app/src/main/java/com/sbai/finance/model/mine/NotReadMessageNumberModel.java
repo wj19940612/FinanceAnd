@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by ${wangJie} on 2017/4/26.
  */
 
-public class NotReadMessageNumberModel implements Parcelable{
+public class NotReadMessageNumberModel implements Parcelable {
 
     /**
      * classify : 77008
@@ -16,6 +16,10 @@ public class NotReadMessageNumberModel implements Parcelable{
 
     private int classify;
     private int count;
+
+    public boolean isSystemNews() {
+        return classify == 1;
+    }
 
 
     public int getClassify() {

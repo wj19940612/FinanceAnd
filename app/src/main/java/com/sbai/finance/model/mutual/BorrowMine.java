@@ -69,6 +69,24 @@ public class BorrowMine implements Parcelable {
     private int status;
     private int userId;
     private String userName;
+    private int isAttention;
+    private int confirmDays;
+
+    public int getConfirmDays() {
+        return confirmDays;
+    }
+
+    public void setConfirmDays(int confirmDays) {
+        this.confirmDays = confirmDays;
+    }
+
+    public int getIsAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(int isAttention) {
+        this.isAttention = isAttention;
+    }
 
     public String getContent() {
         return content;
@@ -239,6 +257,7 @@ public class BorrowMine implements Parcelable {
         dest.writeInt(this.status);
         dest.writeInt(this.userId);
         dest.writeString(this.userName);
+        dest.writeInt(this.isAttention);
     }
 
     public BorrowMine() {
@@ -263,6 +282,7 @@ public class BorrowMine implements Parcelable {
         this.status = in.readInt();
         this.userId = in.readInt();
         this.userName = in.readString();
+        this.isAttention=in.readInt();
     }
 
     public static final Parcelable.Creator<BorrowMine> CREATOR = new Parcelable.Creator<BorrowMine>() {

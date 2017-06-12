@@ -59,7 +59,7 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
     }
 
     private void requestEconomicCircleNewsList() {
-        Client.getHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, false, null, mSize, null, null)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, null, null)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -78,7 +78,7 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
             mFootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateDate();
+                    mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateTime();
                     updateEconomicCircleNewsList();
                 }
             });
@@ -146,8 +146,7 @@ public class EconomicCircleNewsActivity extends BaseActivity  {
 
                 mUserName.setText(item.getSourceUser().getUserName());
                 mContent.setText(item.getMsg());
-                mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
-
+                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
             }
         }

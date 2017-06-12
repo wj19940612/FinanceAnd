@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/self_choice"/>
+        app:titleText="@string/self_choice"
+        app:titleTextColor="@color/blackAssist"/>
     <include layout="@layout/layout_variety_header"/>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,8 +27,7 @@
                 <com.sbai.finance.view.slidingListView.SlideListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:headerDividersEnabled="true"
                     android:background="@android:color/white"
                     android:visibility="visible"/>
@@ -50,6 +50,7 @@
             android:id="@+id/addOptional"
             android:layout_width="match_parent"
             android:layout_height="49dp"
+            android:layout_marginTop="0.5dp"
             android:layout_alignParentBottom="true"
             android:background="@android:color/white"
             android:gravity="center"

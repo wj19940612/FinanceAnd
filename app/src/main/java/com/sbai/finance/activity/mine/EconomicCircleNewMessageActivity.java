@@ -63,7 +63,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 	}
 
 	private void requestEconomicCircleNewsList() {
-		Client.getHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, true, null, null, 0, null)
+		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, 0, null)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override
@@ -75,7 +75,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 	}
 
 	private void loadMoreEconomicCircleNewsList() {
-		Client.getHistoryNews(HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, true, mPage, mSize, 1, mCreateTime)
+		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, 1, mCreateTime)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override
@@ -92,7 +92,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateDate();
+					mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateTime();
 					updateEconomicCircleNewsList();
 				}
 			});
@@ -117,7 +117,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 			mCheckoutEarlierNewsFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateDate();
+					mCreateTime = mHistoryNewsModelList.get(mHistoryNewsModelList.size() - 1).getCreateTime();
 					loadMoreEconomicCircleNewsList();
 					mListView.removeFooterView(mCheckoutEarlierNewsFootView);
 					mCheckoutEarlierNewsFootView = null;
@@ -181,7 +181,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 
 				mUserName.setText(item.getSourceUser().getUserName());
 				mContent.setText(item.getMsg());
-				mTime.setText(DateUtil.getFormatTime(item.getCreateDate()));
+				mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
 
 			}
