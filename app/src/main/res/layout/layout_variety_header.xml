@@ -12,14 +12,14 @@
         style="@style/futureListTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="6"
         android:text="@string/name"/>
 
     <TextView
         style="@style/futureListTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:layout_marginRight="20dp"
         android:gravity="right"
         android:text="@string/lastPrice"/>
@@ -29,7 +29,7 @@
         style="@style/futureListTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:gravity="right"
         android:text="@string/rate"/>
 </LinearLayout>
