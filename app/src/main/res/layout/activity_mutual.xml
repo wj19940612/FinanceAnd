@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/help_borrow"/>
+        app:titleText="@string/help_borrow"
+        app:titleTextColor="@color/blackAssist"/>
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout
         android:id="@+id/tabLayout"
