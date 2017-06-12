@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:backFeature="true"
-            app:titleText="@string/company_info"/>
+            app:titleText="@string/company_info"
+            app:titleTextColor="@color/blackAssist"/>
 
         <com.sbai.finance.view.BottomTextViewLayout
             android:id="@+id/company_name"

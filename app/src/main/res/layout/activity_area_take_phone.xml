@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/take_phone_from_camera"/>
+        app:titleText="@string/take_phone_from_camera"
+        app:titleTextColor="@color/blackAssist"/>
 
     <FrameLayout
         android:layout_width="match_parent"

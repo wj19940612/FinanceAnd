@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/want_borrow"/>
+        app:titleText="@string/want_borrow"
+        app:titleTextColor="@color/blackAssist"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -164,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:layout_marginBottom="34dp"
+                    android:layout_marginBottom="20dp"
                     android:background="@null"
                     android:textColorHint="@color/assistText"
                     android:hint="@string/borrow_remark_hint"

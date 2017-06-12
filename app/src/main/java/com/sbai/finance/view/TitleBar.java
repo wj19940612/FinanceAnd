@@ -81,7 +81,7 @@ public class TitleBar extends RelativeLayout {
             mCustomView = LayoutInflater.from(getContext()).inflate(customViewResId, null);
         }
 
-        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.colorPrimaryDark);
+        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.white);
 
         typedArray.recycle();
     }

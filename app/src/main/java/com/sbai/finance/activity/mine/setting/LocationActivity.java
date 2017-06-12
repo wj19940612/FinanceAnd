@@ -84,7 +84,11 @@ public class LocationActivity extends BaseActivity {
                 showLocationPicker();
                 break;
             case R.id.location:
-                updateLocationInfo();
+                if (!TextUtils.isEmpty(mLocation.getText())&&mLocation.getText().toString().split(" ").length==3){
+                      returnAddress();
+                }else{
+                     updateLocationInfo();
+                }
                 break;
         }
     }

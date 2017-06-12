@@ -257,6 +257,7 @@ public class BorrowMine implements Parcelable {
         dest.writeInt(this.status);
         dest.writeInt(this.userId);
         dest.writeString(this.userName);
+        dest.writeInt(this.isAttention);
     }
 
     public BorrowMine() {
@@ -281,6 +282,7 @@ public class BorrowMine implements Parcelable {
         this.status = in.readInt();
         this.userId = in.readInt();
         this.userName = in.readString();
+        this.isAttention=in.readInt();
     }
 
     public static final Parcelable.Creator<BorrowMine> CREATOR = new Parcelable.Creator<BorrowMine>() {

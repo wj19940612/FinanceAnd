@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/safety_center"/>
+        app:titleText="@string/safety_center"
+        app:titleTextColor="@color/blackAssist"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/setting_safety_password"
