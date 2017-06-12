@@ -15,5 +15,7 @@
         app:titleText="@string/attention"
         app:titleTextColor="@color/blackAssist"/>
 
+    <include layout="@layout/split_line_grey_light"/>
+
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>
