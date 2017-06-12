@@ -93,6 +93,7 @@ public class LoginActivity extends BaseActivity {
         mPhoneNumber.removeTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.removeTextChangedListener(mValidationWatcher);
         mKeyBoardHelper.onDestroy();
+        mLoading.clearAnimation();
     }
 
     /**

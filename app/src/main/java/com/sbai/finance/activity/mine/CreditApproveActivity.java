@@ -144,6 +144,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     setViewEnable(true);
                     mEnable = true;
                     mSubmit.setText(R.string.submit_has_empty);
+                    updateUserInfo(data);
                     break;
                 case UserInfo.CREDIT_IS_APPROVE_ING:
                     mRealNameInput.removeTextChangedListener(mValidationWatcher);
@@ -151,6 +152,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     mSubmit.setText(R.string.is_auditing);
                     mEnable = false;
                     setViewEnable(false);
+                    updateUserInfo(data);
                     break;
                 case UserInfo.CREDIT_IS_ALREADY_APPROVE:
                     mRealNameInput.removeTextChangedListener(mValidationWatcher);
@@ -161,9 +163,33 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     mSubmit.setVisibility(View.GONE);
                     mPhoneLl.setVisibility(View.GONE);
                     mIdentityCardPhone.setVisibility(View.GONE);
+                    mRealNameInput.setText(formatUserName(data.getRealName()));
+                    mIdentityCardNumber.setText(formatIdentityCard(data.getCertCode()));
                     break;
             }
         }
+    }
+
+
+    private String formatUserName(String userName) {
+        int length = userName.length();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length - 1; i++) {
+            stringBuilder.append("*");
+        }
+        return userName.substring(0, 1) + stringBuilder.toString();
+    }
+
+    private String formatIdentityCard(String certCode) {
+        int length = certCode.length();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length - 6; i++) {
+            stringBuilder.append("*");
+        }
+        return certCode.substring(0, 4) + stringBuilder.toString() + certCode.substring(length - 2);
+    }
+
+    private void updateUserInfo(UserIdentityCardInfo data) {
         mRealNameInput.setText(data.getRealName());
         mIdentityCardNumber.setText(data.getCertCode());
         loadIdentityCardFontImage(data.getCertPositive());

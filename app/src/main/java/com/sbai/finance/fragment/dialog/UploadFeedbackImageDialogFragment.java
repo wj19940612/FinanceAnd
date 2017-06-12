@@ -1,7 +1,6 @@
 package com.sbai.finance.fragment.dialog;
 
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.view.WindowManager;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.ImageSelectActivity;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.PermissionUtil;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.io.File;
@@ -107,8 +105,7 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) &&
-                        PermissionUtil.checkPermission(getContext(), Manifest.permission.CAMERA)) {
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                     Intent openCameraIntent = new Intent(
                             MediaStore.ACTION_IMAGE_CAPTURE);
                     mFile = new File(Environment
