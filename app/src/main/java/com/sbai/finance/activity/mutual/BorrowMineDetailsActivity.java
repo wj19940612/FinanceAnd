@@ -265,7 +265,6 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mBorrowStatus.setVisibility(View.GONE);
                             mBorrowMine.setStatus(BorrowMine.STATUS_END_REPAY);
-                            mStatusChange = true;
                         }else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -486,6 +485,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 break;
             case BorrowMine.STATUS_GIVE_HELP:
             case BorrowMine.STATUS_NO_CHECKED:
+            case BorrowMine.STATUS_ACCEPTY:
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                 if (isSelf){
                     mStatus.setText(getActivity().getString(R.string.wait_help));
@@ -684,6 +684,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             if (data != null) {
                 WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
                         (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
+                AttentionAndFansNumberModel attentionAndFansNumberModel =
+                        (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
                 if (whetherAttentionShieldOrNot != null) {
                     if (whetherAttentionShieldOrNot.isFollow()) {
                         mIsAttention.setText(R.string.is_attention);
@@ -692,8 +694,13 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         mIsAttention.setText("");
                         mBorrowMine.setIsAttention(1);
                     }
-                    mStatusChange = true;;
+                    mStatusChange = true;
                 }
+                Intent intent = new Intent();
+                intent.putExtra(Launcher.EX_PAYLOAD,mBorrowMine);
+                intent.putExtra(Launcher.EX_PAYLOAD_1, whetherAttentionShieldOrNot);
+                intent.putExtra(Launcher.EX_PAYLOAD_2, attentionAndFansNumberModel);
+                setResult(RESULT_OK, intent);
             }
         }
     }

@@ -85,7 +85,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		addTopPaddingWithStatusBar(mTitleBar);
+//		addTopPaddingWithStatusBar(mTitleBar);
 		mEconomicCircleList = new ArrayList<>();
 		mSet = new HashSet<>();
 		mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);

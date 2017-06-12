@@ -205,14 +205,14 @@ public class BorrowMineFragment extends BaseFragment implements
                             }
                         }
                     }
-                    if (whetherAttentionShieldOrNot.isShield()) {
-                        for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
-                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
-                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
-                                mBorrowMoneyAdapter.remove(borrowMine);
-                            }
-                        }
-                    }
+//                    if (whetherAttentionShieldOrNot.isShield()) {
+//                        for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
+//                            BorrowMine borrowMine = mBorrowMoneyAdapter.getItem(i);
+//                            if (borrowMine.getUserId() == attentionAndFansNumberModel.getUserId()) {
+//                                mBorrowMoneyAdapter.remove(borrowMine);
+//                            }
+//                        }
+//                    }
                 }
             }
         }
@@ -321,6 +321,7 @@ public class BorrowMineFragment extends BaseFragment implements
                         break;
                     case BorrowMine.STATUS_GIVE_HELP:
                     case BorrowMine.STATUS_NO_CHECKED:
+                    case BorrowMine.STATUS_ACCEPTY:
                         mStatus.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         if (isSelf) {
                             mStatus.setText(context.getString(R.string.wait_help));
