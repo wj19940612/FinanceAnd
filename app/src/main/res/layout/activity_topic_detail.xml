@@ -10,13 +10,15 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backFeature="true"/>
+        app:backFeature="true"
+        app:titleTextColor="@color/blackAssist"/>
     <LinearLayout
         android:id="@+id/eventTitleInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginBottom="35dp"
+        android:background="@color/background"
+        android:paddingTop="35dp"
+        android:paddingBottom="35dp"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:orientation="vertical">

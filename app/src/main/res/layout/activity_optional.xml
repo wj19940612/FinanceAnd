@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/self_choice"/>
+        app:titleText="@string/self_choice"
+        app:titleTextColor="@color/blackAssist"/>
     <include layout="@layout/layout_variety_header"/>
     <RelativeLayout
         android:layout_width="match_parent"
