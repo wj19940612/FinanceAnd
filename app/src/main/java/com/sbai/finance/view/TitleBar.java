@@ -82,7 +82,6 @@ public class TitleBar extends RelativeLayout {
         }
 
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.white);
-
         typedArray.recycle();
     }
 
@@ -156,7 +155,7 @@ public class TitleBar extends RelativeLayout {
         if (backIcon != null) {
             mLeftView.setCompoundDrawablesWithIntrinsicBounds(backIcon, null, null, null);
         } else { // default icon
-            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_white, 0, 0, 0);
+            mLeftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_black, 0, 0, 0);
         }
     }
 
@@ -224,7 +223,7 @@ public class TitleBar extends RelativeLayout {
         if (mTitleColor != null) {
             mTitleView.setTextColor(mTitleColor);
         } else {
-            mTitleView.setTextColor(ColorStateList.valueOf(Color.WHITE));
+            mTitleView.setTextColor(ColorStateList.valueOf(Color.parseColor("#222222")));
         }
     }
 
@@ -233,7 +232,7 @@ public class TitleBar extends RelativeLayout {
         if (mRightTextColor != null) {
             mRightView.setTextColor(mRightTextColor);
         } else {
-            mRightView.setTextColor(ColorStateList.valueOf(Color.WHITE));
+            mRightView.setTextColor(ColorStateList.valueOf(Color.parseColor("#222222")));
         }
     }
 
