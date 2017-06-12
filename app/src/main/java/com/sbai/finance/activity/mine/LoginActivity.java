@@ -266,7 +266,15 @@ public class LoginActivity extends BaseActivity {
                             finish();
                         } else {
                             ToastUtil.curt(resp.getMsg());
+                            mLoading.clearAnimation();
                         }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        mLoading.clearAnimation();
+
                     }
                 })
                 .fire();

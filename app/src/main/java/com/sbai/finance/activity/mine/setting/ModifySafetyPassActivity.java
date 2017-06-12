@@ -41,6 +41,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     //用户是否设置过密码
     private boolean mHasPassword;
     private String mAuthCode;
+    private boolean mIsForgetPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,16 @@ public class ModifySafetyPassActivity extends BaseActivity {
         mHasPassword = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
         mPasswordInputCount = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
         mAuthCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+        mIsForgetPass = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_3, false);
         mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
+
         if (!mHasPassword) {
             mTitleBar.setTitle(R.string.add_safety_pass);
             mSafetyPasswordHint.setText(R.string.please_set_safety_pass);
+        }
+
+        if (mIsForgetPass) {
+            mSafetyPasswordHint.setText(R.string.please_input_new_password);
         }
     }
 
@@ -64,13 +71,37 @@ public class ModifySafetyPassActivity extends BaseActivity {
             if (mPasswordHint.isShown()) {
                 mPasswordHint.setVisibility(View.GONE);
             }
-            if (!mHasPassword) {
+
+            if (mIsForgetPass) {
+                setForgetPass(password);
+            } else if (!mHasPassword) {
                 addPassWord(password);
             } else {
                 setNewPassWord(password);
             }
         }
     };
+
+    private void setForgetPass(String password) {
+        if (password.length() == 6) {
+            if (mPasswordInputCount == 1) {
+                mNewPassWord = password;
+                mPasswordInputCount++;
+//                mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
+                mSafetyPasswordNumber.clearSafetyNumber();
+
+            } else if (mPasswordInputCount == 2) {
+                if (mNewPassWord.equalsIgnoreCase(password)) {
+                    confirmNewPassword(mNewPassWord);
+                } else {
+                    SmartDialog.with(ModifySafetyPassActivity.this,
+                            R.string.twice_password_is_different, R.string.modify_fail)
+                            .show();
+                    mSafetyPasswordNumber.clearSafetyNumber();
+                }
+            }
+        }
+    }
 
     //添加密码流程
     private void addPassWord(String password) {
@@ -93,16 +124,24 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                 protected void onRespSuccess(Resp<Object> resp) {
                                     Log.d(TAG, "onRespSuccess: " + resp.toString());
                                     if (resp.isSuccess()) {
-                                        ToastUtil.curt(resp.getMsg());
+                                        ToastMassage(resp);
                                         finish();
                                     } else {
-                                        ToastUtil.curt(resp.getMsg());
+                                        ToastMassage(resp);
                                     }
                                 }
                             })
                             .fire();
                 }
             }
+        }
+    }
+
+    private void ToastMassage(Resp<Object> resp) {
+        if (resp.hasData()) {
+            ToastUtil.curt(resp.getData().toString());
+        } else {
+            ToastUtil.curt(resp.getMsg());
         }
     }
 
@@ -122,7 +161,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
                                     mSafetyPasswordNumber.clearSafetyNumber();
                                 } else {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastMassage(resp);
                                 }
                             }
                         })
@@ -161,10 +200,10 @@ public class ModifySafetyPassActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastMassage(resp);
                             finish();
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastMassage(resp);
                         }
                     }
                 })
