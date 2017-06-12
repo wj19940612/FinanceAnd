@@ -16,8 +16,8 @@
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
-        app:titleText="@string/forget_safety_password"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/blackAssist"
+        app:titleText="@string/forget_safety_password"/>
 
     <LinearLayout
         android:layout_width="match_parent"

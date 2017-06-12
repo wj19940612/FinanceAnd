@@ -13,7 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/setting"/>
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/setting"
+        app:titleTextColor="@color/blackAssist"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/safety_setting"
