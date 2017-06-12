@@ -3,6 +3,7 @@ package com.sbai.finance.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Build;
 import android.support.v4.content.PermissionChecker;
 
@@ -48,6 +49,29 @@ public class PermissionUtil {
         return result;
     }
 
+    //6.0 以下判断照相机权限是否打开
+    public static boolean cameraIsCanUse() {
+        boolean isCanUse = true;
+        Camera mCamera = null;
+        try {
+            mCamera = Camera.open();
+            Camera.Parameters mParameters = mCamera.getParameters(); //针对魅族手机
+            mCamera.setParameters(mParameters);
+        } catch (Exception e) {
+            isCanUse = false;
+        }
+
+        if (mCamera != null) {
+            try {
+                mCamera.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return isCanUse;
+            }
+        }
+        return isCanUse;
+    }
+
     /**
      * 检测多项权限 只要有一项权限拒绝 立即返回
      *
@@ -91,6 +115,7 @@ public class PermissionUtil {
 
     /**
      * 检查权限
+     *
      * @param context
      * @param permissions
      * @return 所有被拒绝的权限
