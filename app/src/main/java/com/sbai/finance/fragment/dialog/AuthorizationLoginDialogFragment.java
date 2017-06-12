@@ -12,12 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.model.local.SysTime;
+import com.sbai.finance.model.mutual.ArticleProtocol;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,10 +104,33 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
                 dismiss();
                 break;
             case R.id.thirdPartyProtocol:
-                // TODO: 2017/6/6 跳转协议页面
-                this.dismiss();
+                openUserProtocolPage();
                 break;
         }
+    }
+
+    private void openUserProtocolPage() {
+        Client.getArticleProtocol(3)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.protocol))
+                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+                }).fire();
     }
 
 
