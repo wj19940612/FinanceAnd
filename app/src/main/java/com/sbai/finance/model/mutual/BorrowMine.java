@@ -59,36 +59,20 @@ public class BorrowMine implements Parcelable {
     private int days;
     private int id;
     private int intentionCount;
-    private int interest;
+    private double interest;
     private int loanInRepay;
     private int loanOutRepay;
     private String location;
     private double locationLat;
     private double locationLng;
     private long modifyDate;
-    private int money;
+    private double money;
     private String portrait;
     private int status;
     private int userId;
     private String userName;
     private int isAttention;
     private int confirmDays;
-
-    public int getConfirmDays() {
-        return confirmDays;
-    }
-
-    public void setConfirmDays(int confirmDays) {
-        this.confirmDays = confirmDays;
-    }
-
-    public int getIsAttention() {
-        return isAttention;
-    }
-
-    public void setIsAttention(int isAttention) {
-        this.isAttention = isAttention;
-    }
 
     public String getContent() {
         return content;
@@ -138,11 +122,11 @@ public class BorrowMine implements Parcelable {
         this.intentionCount = intentionCount;
     }
 
-    public int getInterest() {
+    public double getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(double interest) {
         this.interest = interest;
     }
 
@@ -194,11 +178,11 @@ public class BorrowMine implements Parcelable {
         this.modifyDate = modifyDate;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
@@ -234,6 +218,22 @@ public class BorrowMine implements Parcelable {
         this.userName = userName;
     }
 
+    public int getIsAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(int isAttention) {
+        this.isAttention = isAttention;
+    }
+
+    public int getConfirmDays() {
+        return confirmDays;
+    }
+
+    public void setConfirmDays(int confirmDays) {
+        this.confirmDays = confirmDays;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -247,19 +247,20 @@ public class BorrowMine implements Parcelable {
         dest.writeInt(this.days);
         dest.writeInt(this.id);
         dest.writeInt(this.intentionCount);
-        dest.writeInt(this.interest);
+        dest.writeDouble(this.interest);
         dest.writeInt(this.loanInRepay);
         dest.writeInt(this.loanOutRepay);
         dest.writeString(this.location);
         dest.writeDouble(this.locationLat);
         dest.writeDouble(this.locationLng);
         dest.writeLong(this.modifyDate);
-        dest.writeInt(this.money);
+        dest.writeDouble(this.money);
         dest.writeString(this.portrait);
         dest.writeInt(this.status);
         dest.writeInt(this.userId);
         dest.writeString(this.userName);
         dest.writeInt(this.isAttention);
+        dest.writeInt(this.confirmDays);
     }
 
     public BorrowMine() {
@@ -272,19 +273,20 @@ public class BorrowMine implements Parcelable {
         this.days = in.readInt();
         this.id = in.readInt();
         this.intentionCount = in.readInt();
-        this.interest = in.readInt();
+        this.interest = in.readDouble();
         this.loanInRepay = in.readInt();
         this.loanOutRepay = in.readInt();
         this.location = in.readString();
         this.locationLat = in.readDouble();
         this.locationLng = in.readDouble();
         this.modifyDate = in.readLong();
-        this.money = in.readInt();
+        this.money = in.readDouble();
         this.portrait = in.readString();
         this.status = in.readInt();
         this.userId = in.readInt();
         this.userName = in.readString();
-        this.isAttention=in.readInt();
+        this.isAttention = in.readInt();
+        this.confirmDays = in.readInt();
     }
 
     public static final Parcelable.Creator<BorrowMine> CREATOR = new Parcelable.Creator<BorrowMine>() {

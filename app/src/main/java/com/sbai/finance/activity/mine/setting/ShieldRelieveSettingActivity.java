@@ -27,6 +27,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,8 @@ public class ShieldRelieveSettingActivity extends BaseActivity {
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     private TextView mFootView;
     private ShieldRelieveAdapter mShieldRelieveAdapter;
@@ -57,6 +60,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         mSet = new HashSet<>();
         mListView.setEmptyView(mEmpty);
+        scrollToTop(mTitleBar, mListView);
         mShieldRelieveAdapter = new ShieldRelieveAdapter(getActivity());
         mListView.setAdapter(mShieldRelieveAdapter);
         mShieldRelieveAdapter.setOnRelieveShieldClickListener(new ShieldRelieveAdapter.OnRelieveShieldClickListener() {

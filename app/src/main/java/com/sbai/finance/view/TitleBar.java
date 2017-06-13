@@ -53,8 +53,12 @@ public class TitleBar extends RelativeLayout {
         void onClick();
     }
 
-    public void setBackClickLisenter(OnBackClickListener onBackClickListener) {
+    public void setBackClickListener(OnBackClickListener onBackClickListener) {
         mBackClickListener = onBackClickListener;
+    }
+
+    public void setOnTitleBarClickListener(OnClickListener listener) {
+        setOnClickListener(listener);
     }
 
     private void processAttrs(AttributeSet attrs) {

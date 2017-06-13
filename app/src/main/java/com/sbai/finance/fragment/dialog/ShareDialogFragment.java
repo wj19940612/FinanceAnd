@@ -143,12 +143,12 @@ public class ShareDialogFragment extends DialogFragment {
 
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-            CustomToast.getInstance().showText(mActivity, R.string.share_failed);
+//            CustomToast.getInstance().showText(mActivity, R.string.share_failed);
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
-            CustomToast.getInstance().showText(mActivity, R.string.share_cancel);
+//            CustomToast.getInstance().showText(mActivity, R.string.share_cancel);
         }
     };
 

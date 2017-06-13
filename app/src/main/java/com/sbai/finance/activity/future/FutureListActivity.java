@@ -8,25 +8,33 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
+import com.sbai.finance.fragment.stock.FinanceFragment;
+import com.sbai.finance.fragment.stock.StockNewsFragment;
+import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FutureListActivity extends BaseActivity {
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     @BindView(R.id.tabLayout)
     SlidingTabLayout mTabLayout;
     private FuturePagesAdapter mFuturePagesAdapter;
+    private int pagePosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,8 +67,32 @@ public class FutureListActivity extends BaseActivity {
         mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mTabLayout.setViewPager(mViewPager);
-    }
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pagePosition=position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = mFuturePagesAdapter.getFragment(pagePosition);
+                if (fragment instanceof FutureListFragment) {
+                    ((FutureListFragment) fragment).scrollToTop();
+                }
+            }
+        });
+    }
     static class FuturePagesAdapter extends FragmentPagerAdapter {
 
         private Context mContext;

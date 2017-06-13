@@ -13,10 +13,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.future.FutureListFragment;
 import com.sbai.finance.fragment.mutual.BorrowMineFragment;
 import com.sbai.finance.fragment.mutual.BorrowMoneyFragment;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
@@ -28,7 +30,8 @@ import butterknife.OnClick;
  */
 
 public class MutualActivity extends BaseActivity {
-
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     @BindView(R.id.tabLayout)
@@ -36,6 +39,7 @@ public class MutualActivity extends BaseActivity {
     @BindView(R.id.publish)
     TextView mPublish;
     private MutualPagesAdapter mMutualPagesAdapter;
+    private int pagePosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,13 +54,39 @@ public class MutualActivity extends BaseActivity {
         mViewPager.setCurrentItem(0, false);
         mMutualPagesAdapter = new MutualPagesAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mMutualPagesAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pagePosition=position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(70, getResources()));
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mTabLayout.setSelectedIndicatorColors(ContextCompat.getColor(this, R.color.blackAssist));
         mTabLayout.setViewPager(mViewPager);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = mMutualPagesAdapter.getFragment(pagePosition);
+                if (fragment instanceof BorrowMoneyFragment) {
+                    ((BorrowMoneyFragment) fragment).scrollToTop();
+                }else  if (fragment instanceof BorrowMineFragment) {
+                    ((BorrowMineFragment) fragment).scrollToTop();
+                }
+            }
+        });
     }
 
     @Override

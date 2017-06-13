@@ -71,6 +71,9 @@ public class BorrowMoneyFragment extends BaseFragment implements
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
+    public void scrollToTop(){
+        mListView.smoothScrollToPosition(0);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -105,13 +108,13 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 }
             }
         });
+        requestBorrowData();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestBorrowData();
     }
 
     @Override
@@ -262,6 +265,14 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 }
 
                 mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onAvatarBorrowMoneyClick(item);
+                        }
+                    }
+                });
+                mUserName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {

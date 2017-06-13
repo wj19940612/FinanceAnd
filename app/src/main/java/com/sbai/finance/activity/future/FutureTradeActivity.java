@@ -64,6 +64,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
@@ -389,6 +390,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         return null;
     }
 
+    private IntroduceFragment getIntroduceFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(1);
+        if (fragment instanceof IntroduceFragment) {
+            return (IntroduceFragment) (fragment);
+        }
+        return null;
+    }
+
     private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
@@ -616,7 +625,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         if (resultCode == FragmentActivity.RESULT_OK) {
             if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
                 updateViewPoint(data);

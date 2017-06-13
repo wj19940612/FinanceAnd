@@ -92,7 +92,9 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         mSet = new HashSet<>();
         initView();
     }
-
+    public void scrollToTop(){
+        mListView.smoothScrollToPosition(0);
+    }
     private void initView() {
         mFutureListAdapter = new FutureListAdapter(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(this);

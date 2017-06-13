@@ -70,7 +70,9 @@ public class BorrowMineFragment extends BaseFragment implements
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
-
+    public void scrollToTop(){
+        mListView.smoothScrollToPosition(0);
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -104,12 +106,12 @@ public class BorrowMineFragment extends BaseFragment implements
                 }
             }
         });
+        requestBorrowData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestBorrowData();
     }
 
     @Override
@@ -345,6 +347,14 @@ public class BorrowMineFragment extends BaseFragment implements
                     mLocation.setText(item.getLocation());
                 }
                 mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onAvatarBorrowMoneyClick(item.getUserId());
+                        }
+                    }
+                });
+                mUserName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {

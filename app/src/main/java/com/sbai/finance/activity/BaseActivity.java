@@ -13,9 +13,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ListView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.local.SysTime;
@@ -24,8 +26,11 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
+
+import static com.sbai.finance.R.id.listView;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
@@ -103,6 +108,24 @@ public class BaseActivity extends AppCompatActivity implements
         SysTime.getSysTime().sync();
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+    }
+
+    protected void scrollToTop(TitleBar titleBar, final ListView listView) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listView.smoothScrollToPosition(0);
+            }
+        });
+    }
+
+    protected void scrollToTop(TitleBar titleBar, final RecyclerView recyclerView) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
     }
 
     protected void translucentStatusBar() {
