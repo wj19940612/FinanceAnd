@@ -316,6 +316,19 @@ public class ViewpointFragment extends BaseFragment {
                     }
                 }
             });
+
+            helper.getView(R.id.userName).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, item.getUserId())
+                                .executeForResult(REQ_CODE_USERDATA);
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                }
+            });
             helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
