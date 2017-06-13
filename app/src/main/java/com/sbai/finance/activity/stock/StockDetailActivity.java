@@ -7,11 +7,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.StockNewsFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
+import com.sbai.finance.view.TitleBar;
 
 public class StockDetailActivity extends StockTradeActivity {
 
@@ -47,6 +49,18 @@ public class StockDetailActivity extends StockTradeActivity {
             }
         };
 
+    }
+
+    @Override
+    public void setUpTitleBar(TitleBar titleBar) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getViewpointFragment().scrollToTop();
+                // TODO: 2017/6/13 剩下新闻和财务的没滚动到顶部
+            }
+        });
+        super.setUpTitleBar(titleBar);
     }
 
     @Override

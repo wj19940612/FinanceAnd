@@ -61,20 +61,20 @@
             android:layout_marginTop="50dp"
             android:background="@drawable/bg_authorization_login"
             android:gravity="center"
-            android:text="@string/confirm_login"
+            android:text="@string/confirm"
             android:textColor="@android:color/white"
             android:textSize="15sp"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/thirdPartyProtocol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:paddingBottom="24dp">
+        android:paddingBottom="44dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -84,7 +84,6 @@
             android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/thirdPartyProtocol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lemi_the_third_party_protocol"

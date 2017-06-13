@@ -11,107 +11,99 @@ import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.netty.Netty;
-import com.sbai.finance.utils.MessageEvent;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
-	@BindView(R.id.viewPager)
-	ViewPager mViewPager;
-	@BindView(R.id.bottomTabs)
-	BottomTabs mBottomTabs;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.bottomTabs)
+    BottomTabs mBottomTabs;
 
-	private MainFragmentsAdapter mMainFragmentsAdapter;
+    private MainFragmentsAdapter mMainFragmentsAdapter;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		ButterKnife.bind(this);
-		EventBus.getDefault().register(this);
-		initView();
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        initView();
+    }
 
-	@Override
-	protected void onDestroy() {
-		Netty.get().shutdown();
-		super.onDestroy();
-		EventBus.getDefault().unregister(this);
-	}
+    @Override
+    protected void onDestroy() {
+        Netty.get().shutdown();
+        super.onDestroy();
+    }
 
-	private void initView() {
-		mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
-		mViewPager.setAdapter(mMainFragmentsAdapter);
-		mViewPager.setOffscreenPageLimit(2);
-		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			}
+    private void initView() {
+        mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mMainFragmentsAdapter);
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
-			@Override
-			public void onPageSelected(int position) {
-				mBottomTabs.selectTab(position);
-			}
+            @Override
+            public void onPageSelected(int position) {
+                mBottomTabs.selectTab(position);
+            }
 
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-		});
-		mViewPager.setCurrentItem(0);
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        mViewPager.setCurrentItem(0);
 
-		mBottomTabs.setOnTabClickListener(new BottomTabs.OnTabClickListener() {
-			@Override
-			public void onTabClick(int position) {
-				mBottomTabs.selectTab(position);
-				mViewPager.setCurrentItem(position, false);
-			}
-		});
-	}
+        mBottomTabs.setOnTabClickListener(new BottomTabs.OnTabClickListener() {
+            @Override
+            public void onTabClick(int position) {
+                mBottomTabs.selectTab(position);
+                mViewPager.setCurrentItem(position, false);
+            }
+        });
+    }
 
-	@Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-	public void onEvent(MessageEvent event) {
-		if (null != event) {
-			mBottomTabs.setPointNum(event.num);
-			EventBus.getDefault().removeAllStickyEvents();
-		}
-	}
 
-	private static class MainFragmentsAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onNoReadNewsNumber(int index, int count) {
+        mBottomTabs.setPointNum(count);
+    }
 
-		FragmentManager mFragmentManager;
+    private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 
-		public MainFragmentsAdapter(FragmentManager fm) {
-			super(fm);
-			mFragmentManager = fm;
-		}
+        FragmentManager mFragmentManager;
 
-		@Override
-		public Fragment getItem(int position) {
-			switch (position) {
-				case 0:
-					return new HomeFragment();
-				case 1:
-					return new EconomicCircleFragment();
-				case 2:
-					return new MineFragment();
-			}
-			return null;
-		}
+        public MainFragmentsAdapter(FragmentManager fm) {
+            super(fm);
+            mFragmentManager = fm;
+        }
 
-		@Override
-		public int getCount() {
-			return 3;
-		}
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new HomeFragment();
+                case 1:
+                    return new EconomicCircleFragment();
+                case 2:
+                    return new MineFragment();
+            }
+            return null;
+        }
 
-		public Fragment getFragment(int position) {
-			return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
-		}
-	}
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
+        }
+    }
 }

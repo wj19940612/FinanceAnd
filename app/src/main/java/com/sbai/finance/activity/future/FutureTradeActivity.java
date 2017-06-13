@@ -393,6 +393,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         return null;
     }
 
+    private IntroduceFragment getIntroduceFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(1);
+        if (fragment instanceof IntroduceFragment) {
+            return (IntroduceFragment) (fragment);
+        }
+        return null;
+    }
+
     private class SubPageAdapter extends FragmentPagerAdapter {
 
         FragmentManager mFragmentManager;
@@ -605,6 +613,13 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         .newInstance()
                         .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl)
                         .show(getSupportFragmentManager());
+            }
+        });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getViewpointFragment().scrollToTop();
+                getIntroduceFragment().scrollToTop();
             }
         });
     }

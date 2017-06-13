@@ -288,6 +288,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             if (details != null) {
                 viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
             } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
                 viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
             } else {
                 viewpointFragment.refreshPointList();
@@ -368,9 +369,13 @@ public abstract class StockTradeActivity extends BaseActivity {
             exchangeStatus.setVisibility(View.VISIBLE);
         }
 
+        setUpTitleBar(mTitleBar);
+    }
+
+    public void setUpTitleBar(TitleBar titleBar){
         final String shareUrl = String.format(Client.STOCK_SHARE_URL,
                 mVariety.getVarietyType(), mVariety.getVarietyId());
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDialogFragment
