@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +99,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
                     @Override
                     public void onDataMsg(ArrayList<StockData> result, StockResp.Msg msg) {
                         updateStockSort(result);
+                        for (StockData data : result) {
+                            Log.d(TAG, "onDataMsg: " + data.toString());
+                        }
                     }
 
                     @Override
@@ -121,6 +125,10 @@ public class PriceLimitRankingFragment extends BaseFragment {
         }
     }
 
+
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
 
     @Override
     public void onResume() {
@@ -214,12 +222,12 @@ public class PriceLimitRankingFragment extends BaseFragment {
                 String priceLimit = item.getValue1();
                 if (!TextUtils.isEmpty(priceLimit)) {
                     if (priceLimit.startsWith("-")) {
-                        mLastPrice.setSelected(true);
-                        mRate.setSelected(true);
-                        mRate.setText(priceLimit + "%");
-                    } else {
                         mLastPrice.setSelected(false);
                         mRate.setSelected(false);
+                        mRate.setText(priceLimit + "%");
+                    } else {
+                        mLastPrice.setSelected(true);
+                        mRate.setSelected(true);
                         mRate.setText("+" + priceLimit + "%");
                     }
                 }
