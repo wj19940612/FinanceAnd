@@ -659,7 +659,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             }
             private void bindDataWithView(final BorrowMessage item, Context context, final Callback callback){
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        " :"+item.getContent(),1.0f, ContextCompat.getColor(context, R.color.blackAssist));
+                        ": "+item.getContent(),1.0f, ContextCompat.getColor(context, R.color.blackAssist));
                 attentionSpannableString.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {
