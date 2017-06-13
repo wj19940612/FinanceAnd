@@ -288,6 +288,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             if (details != null) {
                 viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
             } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
                 viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
             } else {
                 viewpointFragment.refreshPointList();
