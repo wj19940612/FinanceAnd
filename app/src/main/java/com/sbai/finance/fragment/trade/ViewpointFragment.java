@@ -329,7 +329,7 @@ public class ViewpointFragment extends BaseFragment {
                     }
                 }
             });
-            helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
+            helper.getView(R.id.layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin()) {
@@ -341,18 +341,7 @@ public class ViewpointFragment extends BaseFragment {
                     }
                 }
             });
-            helper.getView(R.id.commentRl).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                                .executeForResult(REQ_CODE_ATTENTION);
-                    } else {
-                        Launcher.with(getActivity(), LoginActivity.class).execute();
-                    }
-                }
-            });
+
         }
     }
 }
