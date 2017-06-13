@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_subject"
         android:fitsSystemWindows="true">
@@ -21,18 +21,19 @@
             app:backIcon="@drawable/ic_tb_back_white"
             app:backFeature="true"
             app:titleText="妖股推荐"/>
+
         <TextView
             android:id="@+id/topicTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
+            android:lineSpacingExtra="11dp"
             android:paddingBottom="20dp"
             android:paddingLeft="@dimen/common_padding"
             android:paddingRight="@dimen/common_padding"
-            android:lineSpacingExtra="11dp"
-            android:textSize="13sp"
+            android:paddingTop="20dp"
             android:textColor="@android:color/white"
-            android:text="妖股来袭！日涨50%! 发家致富，赢取拜服美，走上人生巅峰de几乎机会再延期"/>
+            android:textSize="13sp"
+            tool:text="股市上通常把那些股价走势奇特、怪异的股票称为“妖股”。它们走势与大盘或常理相悖，完全不符合基本的技术分析规律。妖股就是走势明显比别的股走势异常，不合常理，让人难以琢磨，一般的都是暴涨暴跌。明明这家上市公司亏损，却连连拉出涨停；明明这家公司的股票达不到这么高的价位，却涨的很高。股市上通常把那些股价走势奇特、怪异的股票称为“妖股”。它们走势与大盘或常理相悖，完全不符合基本的技术分析规律"/>
     </LinearLayout>
     <include layout="@layout/layout_variety_header"/>
     <ListView
