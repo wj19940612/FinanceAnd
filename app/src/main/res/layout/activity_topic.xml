@@ -34,6 +34,7 @@
             android:textColor="@android:color/white"
             android:text="妖股来袭！日涨50%! 发家致富，赢取拜服美，走上人生巅峰de几乎机会再延期"/>
     </LinearLayout>
+    <include layout="@layout/layout_variety_header"/>
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
