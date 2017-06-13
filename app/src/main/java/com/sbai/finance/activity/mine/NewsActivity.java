@@ -32,6 +32,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +49,8 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     AppCompatTextView mEmpty;
     @BindView(R.id.customSwipeRefreshLayout)
     CustomSwipeRefreshLayout mCustomSwipeRefreshLayout;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private HashSet<Integer> mSet;
     private SystemNewsAdapter mSystemNewsAdapter;
 
@@ -63,7 +66,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
         mListView.setEmptyView(mEmpty);
         mListView.setDivider(null);
         mSet = new HashSet<>();
-
+        scrollToTop(mTitleBar, mListView);
         mSystemNewsAdapter = new SystemNewsAdapter(this);
         mListView.setAdapter(mSystemNewsAdapter);
         requestSystemNewsList();
@@ -263,8 +266,14 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     mNotReadNewsHint.setVisibility(View.INVISIBLE);
                 }
 
+                if (item.titleIsUserName() && item.getSourceUser() != null) {
+                    mTitle.setText(item.getSourceUser().getUserName());
+                } else {
+                    mTitle.setText(item.getTitle());
+                }
+
                 mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-                mTitle.setText(item.getTitle());
+
                 if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
                     mContent.setText(context.getString(R.string.pay_count, FinanceUtil.formatWithScale(item.getData().getMoney()) + " \n" +
                             context.getString(R.string.pay_source, item.getData().getSource())));

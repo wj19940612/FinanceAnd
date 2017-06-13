@@ -618,8 +618,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getViewpointFragment().scrollToTop();
-                getIntroduceFragment().scrollToTop();
+                ViewpointFragment viewpointFragment = getViewpointFragment();
+                if (viewpointFragment != null) {
+                    viewpointFragment.scrollToTop();
+                }
+                IntroduceFragment introduceFragment = getIntroduceFragment();
+                if (introduceFragment != null) {
+                    introduceFragment.scrollToTop();
+                }
             }
         });
     }
@@ -627,7 +633,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         if (resultCode == FragmentActivity.RESULT_OK) {
             if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
                 updateViewPoint(data);

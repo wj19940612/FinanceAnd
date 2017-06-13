@@ -172,6 +172,10 @@ public class FinanceFragment extends BaseFragment {
 
     }
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

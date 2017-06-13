@@ -16,6 +16,7 @@ import com.sbai.finance.view.TitleBar;
 public class StockIndexActivity extends StockTradeActivity {
 
     private SubPageAdapter mSubPageAdapter;
+    private int pagePosition;
 
     @Override
     protected void initChartViews() {
@@ -25,7 +26,22 @@ public class StockIndexActivity extends StockTradeActivity {
 
     @Override
     protected ViewPager.OnPageChangeListener createPageChangeListener() {
-        return null;
+        return new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pagePosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        };
     }
 
     @Override
@@ -48,11 +64,25 @@ public class StockIndexActivity extends StockTradeActivity {
         titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getViewpointFragment().scrollToTop();
-                // TODO: 2017/6/13 剩下涨幅榜和跌幅榜的没滚动到顶部
+                Fragment fragment = mSubPageAdapter.getFragment(pagePosition);
+                if(fragment!=null){
+                    if(fragment instanceof ViewpointFragment){
+                        ((ViewpointFragment)fragment).scrollToTop();
+                    }else if(fragment instanceof PriceLimitRankingFragment){
+                        ((PriceLimitRankingFragment)fragment).scrollToTop();
+                    }
+                }
             }
         });
         super.setUpTitleBar(titleBar);
+    }
+
+    private PriceLimitRankingFragment getPriceLimitRankingFragment() {
+        Fragment fragment = mSubPageAdapter.getFragment(1);
+        if (fragment != null && fragment instanceof PriceLimitRankingFragment) {
+            return (PriceLimitRankingFragment) fragment;
+        }
+        return null;
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {

@@ -85,6 +85,12 @@ public class LoginActivity extends BaseActivity {
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPhoneNumber.setText(LocalUser.getUser().getPhone());
         setKeyboardHelper();
+        mAuthCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPhoneNumberClear.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     @Override
@@ -208,6 +214,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.getAuthCode:
                 getAuthCode();
+                mPhoneNumberClear.setVisibility(View.INVISIBLE);
                 mAuthCode.requestFocus();
                 break;
             case R.id.login:
@@ -257,6 +264,7 @@ public class LoginActivity extends BaseActivity {
                 .setCallback(new Callback<Resp<UserInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<UserInfo> resp) {
+                        resetLoginButton();
                         if (resp.isSuccess()) {
                             if (resp.hasData()) {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
@@ -270,9 +278,21 @@ public class LoginActivity extends BaseActivity {
                             mLoading.clearAnimation();
                         }
                     }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        resetLoginButton();
+                    }
                 })
                 .fire();
 
+    }
+
+    private void resetLoginButton() {
+        mLogin.setText(R.string.login);
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
     }
 
     private void getAuthCode() {

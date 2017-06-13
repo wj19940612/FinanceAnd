@@ -61,6 +61,8 @@ import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public abstract class StockTradeActivity extends BaseActivity {
 
+    protected int pagePosition;
+
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
 
     protected abstract PagerAdapter createSubPageAdapter();
@@ -263,7 +265,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PUBLISH_VIEWPOINT:
@@ -372,7 +374,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         setUpTitleBar(mTitleBar);
     }
 
-    public void setUpTitleBar(TitleBar titleBar){
+    public void setUpTitleBar(TitleBar titleBar) {
         final String shareUrl = String.format(Client.STOCK_SHARE_URL,
                 mVariety.getVarietyType(), mVariety.getVarietyId());
         titleBar.setOnRightViewClickListener(new View.OnClickListener() {
