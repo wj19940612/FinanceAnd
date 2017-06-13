@@ -141,6 +141,7 @@
     <string name="fail_list">跌幅榜</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
+    <string name="market_trading">交易中</string>
     <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>

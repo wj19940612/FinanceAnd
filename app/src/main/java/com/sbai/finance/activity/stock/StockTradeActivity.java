@@ -395,12 +395,14 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     protected void initChartViews() {
-        ChartSettings settings = new ChartSettings();
+        StockTrendView.Settings settings = new StockTrendView.Settings();
         settings.setBaseLines(5);
         settings.setNumberScale(2);
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
         settings.setXAxis(240);
+//        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
+//        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();

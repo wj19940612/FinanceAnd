@@ -104,10 +104,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     LinearLayout mChartArea;
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
-    @BindView(R.id.exchangeCloseView)
-    TextView mExchangeCloseView;
-    @BindView(R.id.priceDataArea)
-    LinearLayout mPriceDataArea;
 
     private PredictionDialogFragment mPredictionFragment;
     private SubPageAdapter mSubPageAdapter;
@@ -127,8 +123,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         initChartViews();
         initSlidingTab();
         initFloatBar();
+        initTitleBar();
 
-        updateTitleBar();
         updateExchangeStatusView();
     }
 
@@ -531,6 +527,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
+
+                int exchangeStatus = mVariety.getExchangeStatus();
+                if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
+                    requestExchangeStatus();
+                }
             }
         }
     };
@@ -577,26 +578,13 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private void updateExchangeStatusView() {
         int exchangeStatus = mVariety.getExchangeStatus();
         if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
-            mExchangeCloseView.setVisibility(View.VISIBLE);
-            mPriceDataArea.setVisibility(View.GONE);
-            mTodayOpen.setText("--");
+            updateTitleBar(getString(R.string.market_close));
         } else {
-            mExchangeCloseView.setVisibility(View.GONE);
-            mPriceDataArea.setVisibility(View.VISIBLE);
+            updateTitleBar(getString(R.string.market_trading));
         }
     }
 
-    private void updateTitleBar() {
-        View customView = mTitleBar.getCustomView();
-        TextView productName = (TextView) customView.findViewById(R.id.productName);
-        TextView productType = (TextView) customView.findViewById(R.id.productType);
-        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getContractsCode() + ")");
-        String productTypeStr = getString(R.string.future_china);
-        if (mVariety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.FUTURE_FOREIGN)) {
-            productTypeStr = getString(R.string.future_foreign);
-        }
-        productType.setText(productTypeStr);
-
+    private void initTitleBar() {
         final String shareUrl = String.format(Client.FUTURE_SHARE_URL, mVariety.getVarietyId());
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
@@ -607,6 +595,22 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         .show(getSupportFragmentManager());
             }
         });
+        updateTitleBar(null);
+    }
+
+    private void updateTitleBar(String exchangeStatus) {
+        View customView = mTitleBar.getCustomView();
+        TextView productName = (TextView) customView.findViewById(R.id.productName);
+        TextView productType = (TextView) customView.findViewById(R.id.productType);
+        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getContractsCode() + ")");
+        String productTypeStr = getString(R.string.future_china);
+        if (mVariety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.FUTURE_FOREIGN)) {
+            productTypeStr = getString(R.string.future_foreign);
+        }
+        if (!TextUtils.isEmpty(exchangeStatus)) {
+            productTypeStr += "-" + exchangeStatus;
+        }
+        productType.setText(productTypeStr);
     }
 
     @Override
