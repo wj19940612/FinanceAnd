@@ -126,6 +126,10 @@ public class PriceLimitRankingFragment extends BaseFragment {
     }
 
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
     @Override
     public void onResume() {
         super.onResume();

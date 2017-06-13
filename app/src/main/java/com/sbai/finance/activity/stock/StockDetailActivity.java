@@ -18,6 +18,7 @@ import com.sbai.finance.view.TitleBar;
 public class StockDetailActivity extends StockTradeActivity {
 
     private SubPageAdapter mSubPageAdapter;
+    private int pagePosition;
 
     @Override
     protected ViewPager.OnPageChangeListener createPageChangeListener() {
@@ -29,6 +30,7 @@ public class StockDetailActivity extends StockTradeActivity {
 
             @Override
             public void onPageSelected(int position) {
+                pagePosition = position;
                 if (position == 1) {
                     StockNewsFragment stockNewsFragment = getStockNewsFragment();
                     if (stockNewsFragment != null) {
@@ -37,7 +39,7 @@ public class StockDetailActivity extends StockTradeActivity {
                 }
 
                 if (position == 2) {
-                    FinanceFragment financeFragment= getFinanceFragment();
+                    FinanceFragment financeFragment = getFinanceFragment();
                     if (financeFragment != null) {
                         financeFragment.requestCompanyAnnualReport(0);
                     }
@@ -56,8 +58,14 @@ public class StockDetailActivity extends StockTradeActivity {
         titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getViewpointFragment().scrollToTop();
-                // TODO: 2017/6/13 剩下新闻和财务的没滚动到顶部
+                Fragment fragment = mSubPageAdapter.getFragment(pagePosition);
+                if (fragment instanceof StockNewsFragment) {
+                    ((StockNewsFragment) fragment).scrollToTop();
+                } else if (fragment instanceof FinanceFragment) {
+                    ((FinanceFragment) fragment).scrollToTop();
+                } else if (fragment instanceof ViewpointFragment) {
+                    ((ViewpointFragment) fragment).scrollToTop();
+                }
             }
         });
         super.setUpTitleBar(titleBar);

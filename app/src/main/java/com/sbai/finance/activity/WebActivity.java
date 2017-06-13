@@ -77,9 +77,14 @@ public class WebActivity extends BaseActivity {
         ButterKnife.bind(this);
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
-
         initData(getIntent());
         initWebView();
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebView.scrollTo(0, 0);
+            }
+        });
     }
 
     @Override
@@ -225,6 +230,7 @@ public class WebActivity extends BaseActivity {
             openWebView(mPureHtml);
         }
     }
+
     private void openWebView(String urlData) {
         String content;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
