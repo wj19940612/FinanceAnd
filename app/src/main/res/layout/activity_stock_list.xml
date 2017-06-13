@@ -46,7 +46,7 @@
         <TextView
             android:id="@+id/shangHai"
             style="@style/MarketDataStock"
-            android:background="@drawable/bg_pressable"
+            android:background="@drawable/bg_white"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
         <View
             android:layout_width="0.5dp"
@@ -55,7 +55,7 @@
         <TextView
             android:id="@+id/shenZhen"
             style="@style/MarketDataStock"
-            android:background="@drawable/bg_pressable"
+            android:background="@drawable/bg_white"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
 
         <View
@@ -66,7 +66,7 @@
         <TextView
             android:id="@+id/board"
             style="@style/MarketDataStock"
-            android:background="@drawable/bg_pressable"
+            android:background="@drawable/bg_white"
             tool:text="上证\n24396.26\n+50.59 +12.00%"/>
     </LinearLayout>
 

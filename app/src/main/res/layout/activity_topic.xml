@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
         android:orientation="vertical"
         android:background="@drawable/bg_subject"
         android:fitsSystemWindows="true">
@@ -17,6 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:barBackground="@android:color/transparent"
+            app:titleTextColor="@android:color/white"
+            app:backIcon="@drawable/ic_tb_back_white"
             app:backFeature="true"
             app:titleText="妖股推荐"/>
         <TextView
@@ -32,10 +34,11 @@
             android:textColor="@android:color/white"
             android:text="妖股来袭！日涨50%! 发家致富，赢取拜服美，走上人生巅峰de几乎机会再延期"/>
     </LinearLayout>
+    <include layout="@layout/layout_variety_header"/>
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"/>
     <TextView
         android:id="@+id/empty"

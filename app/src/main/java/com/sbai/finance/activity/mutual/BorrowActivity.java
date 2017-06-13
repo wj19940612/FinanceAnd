@@ -31,7 +31,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.google.zxing.common.StringUtils;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
@@ -53,7 +52,6 @@ import com.sbai.finance.view.GrapeGridView;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 import butterknife.BindView;
@@ -259,7 +257,7 @@ public class BorrowActivity extends BaseActivity {
 				StringBuilder contentImg = new StringBuilder();
 				int photoAmount =mPhotoGridAdapter.getCount();
 				for (int i = 0; i<photoAmount-1;i++){
-					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),600f);
+					String image = ImageUtils.compressImageToBase64( mPhotoGridAdapter.getItem(i),800f);
 					Log.d(TAG, "image: "+image.length());
 					contentImg.append(image+",");
 				}
@@ -300,7 +298,7 @@ public class BorrowActivity extends BaseActivity {
 				}
 				break;
 			case R.id.location:
-                Launcher.with(getActivity(), LocationActivity.class).executeForResult(REQ_CODE_ADDRESS);
+                Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD_1,true).executeForResult(REQ_CODE_ADDRESS);
 				break;
 			case R.id.protocol:
 				Client.getArticleProtocol(2).setTag(TAG)

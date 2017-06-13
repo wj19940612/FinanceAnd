@@ -247,7 +247,8 @@
 
                 <View
                     android:layout_width="3dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
                     android:background="#ef6d6a"/>
 
                 <TextView
@@ -297,7 +298,8 @@
 
                 <View
                     android:layout_width="3dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
                     android:background="#ef6d6a"/>
 
                 <TextView
@@ -353,12 +355,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="49dp">
-
+        android:layout_height="wrap_content"
+        android:visibility="visible">
         <TextView
             android:id="@+id/giveHelp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:background="@drawable/btn_red_primary_no_radius"
             android:gravity="center"
             android:textColor="@android:color/white"
@@ -369,7 +371,7 @@
         <LinearLayout
             android:id="@+id/leaveMessageArea"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:background="@drawable/tab_background"
             android:orientation="horizontal"
             android:visibility="gone">

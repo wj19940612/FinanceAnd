@@ -249,8 +249,8 @@ public class ImageUtils {
             be = 1;
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
+        return BitmapFactory.decodeFile(srcPath, newOpts);
+      //  return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
     }
 
     public static Bitmap compressScale(String srcPath, float ratio) {

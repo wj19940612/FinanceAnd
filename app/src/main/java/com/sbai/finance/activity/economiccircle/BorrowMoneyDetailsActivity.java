@@ -517,7 +517,11 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				break;
 			case R.id.send:
 				if (!TextUtils.isEmpty(mLeaveMessage.getText())) {
-					requestSendMessage();
+					if (LocalUser.getUser().isLogin()) {
+						requestSendMessage();
+					} else {
+						Launcher.with(getActivity(), LoginActivity.class).execute();
+					}
 				}
 				break;
 		}

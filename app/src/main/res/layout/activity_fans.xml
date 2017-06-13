@@ -7,12 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.FansActivity">
+
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/fans"
         app:titleTextColor="@color/blackAssist"/>
+
+    <include layout="@layout/split_line_grey_light"/>
 
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>

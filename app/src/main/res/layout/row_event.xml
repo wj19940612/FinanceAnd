@@ -9,7 +9,6 @@
               android:paddingLeft="@dimen/common_padding"
               android:paddingRight="@dimen/common_padding"
               android:paddingTop="20dp">
-
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="match_parent"

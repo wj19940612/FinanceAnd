@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/split">
+              android:background="@color/background">
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,15 +22,15 @@
             style="@style/futureListTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="6"
             android:gravity="center_vertical"
             android:text="@string/opinion"/>
         <TextView
             style="@style/futureListTitle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="center_vertical"
+            android:layout_weight="4"
+            android:gravity="right|center"
             android:text="@string/skilled"/>
         <TextView
             android:id="@+id/rate"
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:gravity="center_vertical"
+            android:gravity="right|center"
             android:text="@string/accuracy_rate"/>
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
@@ -52,8 +52,7 @@
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:headerDividersEnabled="true"
                 android:background="@android:color/white"
                 android:visibility="visible"/>
