@@ -263,8 +263,14 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     mNotReadNewsHint.setVisibility(View.INVISIBLE);
                 }
 
+                if (item.titleIsUserName() && item.getSourceUser() != null) {
+                    mTitle.setText(item.getSourceUser().getUserName());
+                } else {
+                    mTitle.setText(item.getTitle());
+                }
+
                 mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-                mTitle.setText(item.getTitle());
+
                 if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
                     mContent.setText(context.getString(R.string.pay_count, FinanceUtil.formatWithScale(item.getData().getMoney()) + " \n" +
                             context.getString(R.string.pay_source, item.getData().getSource())));
