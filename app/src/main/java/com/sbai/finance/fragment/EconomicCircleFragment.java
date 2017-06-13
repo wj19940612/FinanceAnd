@@ -192,7 +192,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	}
 
 	private void requestNewMessageCount() {
-		Client.getNewMessageCount().setTag(TAG).setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>() {
+		Client.getNewMessageCount().setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>() {
 			@Override
 			protected void onRespSuccessData(List<NewMessage> newMessageList) {
 				mNewMessageList = newMessageList;
@@ -602,8 +602,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				if (!TextUtils.isEmpty(item.getContentImg())) {
 					String[] images = item.getContentImg().split(",");
 					if (images.length >= 2) {
+						mBorrowingImg.setVisibility(View.VISIBLE);
 						mCircleMoreIcon.setVisibility(View.VISIBLE);
 					} else {
+						mBorrowingImg.setVisibility(View.VISIBLE);
 						mCircleMoreIcon.setVisibility(View.GONE);
 					}
 					Glide.with(context).load(images[0])

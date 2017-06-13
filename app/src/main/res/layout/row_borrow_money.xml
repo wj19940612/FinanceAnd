@@ -174,7 +174,7 @@
                 android:layout_height="60dp"
                 android:background="@drawable/bg_image"
                 android:scaleType="fitXY"
-                tools:src="@drawable/img_loading"/>
+                android:src="@drawable/img_loading"/>
 
             <ImageView
                 android:id="@+id/circleMoreIcon"
