@@ -272,6 +272,14 @@ public class BorrowMoneyFragment extends BaseFragment implements
                         }
                     }
                 });
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onAvatarBorrowMoneyClick(item);
+                        }
+                    }
+                });
 
                 if (!TextUtils.isEmpty(item.getContentImg())) {
                     String[] images = item.getContentImg().split(",");

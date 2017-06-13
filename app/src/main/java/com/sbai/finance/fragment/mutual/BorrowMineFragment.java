@@ -354,6 +354,14 @@ public class BorrowMineFragment extends BaseFragment implements
                         }
                     }
                 });
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onAvatarBorrowMoneyClick(item.getUserId());
+                        }
+                    }
+                });
 
                 if (!TextUtils.isEmpty(item.getContentImg())) {
                     String[] images = item.getContentImg().split(",");
