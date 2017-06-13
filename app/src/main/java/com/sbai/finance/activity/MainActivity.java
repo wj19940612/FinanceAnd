@@ -5,16 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
-import com.igexin.sdk.PushManager;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.netty.Netty;
-import com.sbai.finance.service.PushIntentService;
-import com.sbai.finance.service.PushService;
 import com.sbai.finance.utils.MessageEvent;
 import com.sbai.finance.view.BottomTabs;
 
@@ -41,13 +37,6 @@ public class MainActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		EventBus.getDefault().register(this);
 		initView();
-
-		// init getui push
-		PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
-		// 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
-		// AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
-		// IntentService, 必须在 AndroidManifest 中声明)
-		PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), PushIntentService.class);
 	}
 
 	@Override
