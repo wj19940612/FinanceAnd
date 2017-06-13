@@ -76,7 +76,7 @@ public class Client {
      * @return
      */
     public static API getBorrowMoneyDetail(int id) {
-        return new API(POST, "/coterie/help/loan/showDetails.do",
+        return new API(POST, "/coterie/help/loan/showDetail.do",
                 new ApiParams()
                         .put("id", id));
     }
