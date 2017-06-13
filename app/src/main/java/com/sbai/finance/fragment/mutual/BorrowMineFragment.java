@@ -104,12 +104,12 @@ public class BorrowMineFragment extends BaseFragment implements
                 }
             }
         });
+        requestBorrowData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestBorrowData();
     }
 
     @Override

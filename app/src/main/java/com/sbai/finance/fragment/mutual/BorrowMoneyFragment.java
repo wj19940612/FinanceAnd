@@ -105,13 +105,13 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 }
             }
         });
+        requestBorrowData();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestBorrowData();
     }
 
     @Override

@@ -11,6 +11,8 @@ public class BannerModel implements Serializable {
      * 首页banner
      */
     public static final int TYPE_BANNER = 0;
+    public static final int STATUS_HIDE=0;
+    public static final int STATUS_SHOW=1;
     /**
      * summary : 测试内容q550
      * content : N多美图

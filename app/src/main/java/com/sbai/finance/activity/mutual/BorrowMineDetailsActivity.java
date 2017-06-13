@@ -491,6 +491,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     mCancel.setEnabled(true);
                     mCancel.setText(getString(R.string.cancel_borrow_in));
                 }else{
+                    mStatus.setText(getString(R.string.commit));
                     mCancel.setEnabled(false);
                     mCancel.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.unluckyText));
                     mCancel.setTextColor( Color.WHITE);
