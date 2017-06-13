@@ -13,7 +13,7 @@
         android:background="@drawable/bg_subject"
         android:fitsSystemWindows="true">
         <com.sbai.finance.view.TitleBar
-            android:id="@+id/title"
+            android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:barBackground="@android:color/transparent"

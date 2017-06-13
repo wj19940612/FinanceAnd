@@ -214,7 +214,11 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	}
 
 	private void requestSendMessage() {
-		Client.sendBorrowMessage(mDataId, mLeaveMessage.getText().toString().trim()).setTag(TAG)
+		String content = mLeaveMessage.getText().toString();
+		if (content.length()>=100){
+			content = content.substring(0,100);
+		}
+		Client.sendBorrowMessage(mDataId, content).setTag(TAG)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {
@@ -337,20 +341,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getMoney())));
 		mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays())));
 		mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest())));
-
-		mAvatar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(context, UserDataActivity.class)
-							.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
-							.executeForResult(REQ_CODE_USERDATA);
-				} else {
-					Launcher.with(context, LoginActivity.class).execute();
-				}
-			}
-		});
-
 
 
 		if (LocalUser.getUser().isLogin()) {
@@ -499,9 +489,19 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		});
 	}
 
-	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send})
+	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send,R.id.userName,R.id.avatar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
+			case R.id.userName:
+			case R.id.avatar:
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(getActivity(), UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
+							.executeForResult(REQ_CODE_USERDATA);
+				} else {
+					Launcher.with(getActivity(), LoginActivity.class).execute();
+				}
+				break;
 			case R.id.writeMessage:
 				mLeaveMessageArea.setVisibility(View.VISIBLE);
 				mLeaveMessage.setText("");

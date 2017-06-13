@@ -308,7 +308,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
-                    android:text="@string/leave_message_number"
+                    android:text="留言(0)"
                     android:textColor="#222222"
                     android:textSize="14sp"/>
 

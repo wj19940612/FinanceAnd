@@ -71,6 +71,9 @@ public class BorrowMoneyFragment extends BaseFragment implements
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
+    public void scrollToTop(){
+        mListView.smoothScrollToPosition(0);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

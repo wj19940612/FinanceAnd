@@ -48,7 +48,7 @@ public class TopicActivity extends BaseActivity {
 	@BindView(R.id.top)
 	LinearLayout mTop;
 	@BindView(R.id.title)
-	TitleBar mTitle;
+	TitleBar mTitleBar;
 	@BindView(R.id.topicTitle)
 	TextView mTopicTitle;
 	@BindView(R.id.listView)
@@ -75,7 +75,13 @@ public class TopicActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mTitle.setTitle(mTopic.getTitle());
+		mTitleBar.setTitle(mTopic.getTitle());
+		mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mListView.smoothScrollToPosition(0);
+			}
+		});
 		mTopicTitle.setText(mTopic.getIntroduction());
 
 		mTopicListAdapter = new ListAdapter(this);

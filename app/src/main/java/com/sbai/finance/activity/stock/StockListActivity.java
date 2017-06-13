@@ -30,6 +30,7 @@ import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +60,8 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     TextView mEmpty;
     @BindView(R.id.search)
     TextView mSearch;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     private int mPage = 0;
     private int mPageSize = 15;
@@ -278,7 +281,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mStockListAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({ R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
+    @OnClick({ R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board,R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search:
@@ -292,6 +295,14 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 break;
             case R.id.board:
                 launcherIndexActivity((Variety) mBoard.getTag());
+                break;
+            case R.id.titleBar:
+                mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListView.smoothScrollToPosition(0);
+                    }
+                });
                 break;
         }
     }

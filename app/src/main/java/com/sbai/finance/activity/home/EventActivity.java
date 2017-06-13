@@ -26,6 +26,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-04-18.
@@ -45,6 +47,8 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 	TextView mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
 	CustomSwipeRefreshLayout mSwipeRefreshLayout;
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 
 	private EventListAdapter mEventListAdapter;
 	private int mPageSize = 30;
@@ -177,7 +181,16 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 		mSet.clear();
 		mSwipeRefreshLayout.setLoadMoreEnable(true);
 	}
+	@OnClick(R.id.titleBar)
+	public void OnClick(View view){
+		mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mListView.smoothScrollToPosition(0);
+			}
+		});
 
+	}
 
 	static class EventListAdapter extends ArrayAdapter<EventModel> {
 		Context mContext;
