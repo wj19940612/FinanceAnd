@@ -111,6 +111,10 @@ public class ViewpointFragment extends BaseFragment {
         mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
