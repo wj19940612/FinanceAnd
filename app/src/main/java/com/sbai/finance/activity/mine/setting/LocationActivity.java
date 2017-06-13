@@ -150,19 +150,32 @@ public class LocationActivity extends BaseActivity {
                 country = split[2];
             }
         } else {
-            split = LocalUser.getUser().getUserInfo().getLand().split(" ");
-            if (split.length == 3) {
-                province = split[0];
-                city = split[1];
-                country = split[2];
-            } else {
-                split = LocalUser.getUser().getUserInfo().getLand().split("-");
+            String land = LocalUser.getUser().getUserInfo().getLand();
+            if (!TextUtils.isEmpty(land)) {
+                split = land.split(" ");
                 if (split.length == 3) {
                     province = split[0];
                     city = split[1];
                     country = split[2];
+                } else {
+                    split = land.split("-");
+                    if (split.length == 3) {
+                        province = split[0];
+                        city = split[1];
+                        country = split[2];
+                    }
+                }
+            } else {
+                if (!TextUtils.isEmpty(mLocation.getText())) {
+                    split = mLocation.getText().toString().split(" ");
+                    if (split.length == 3) {
+                        province = split[0];
+                        city = split[1];
+                        country = split[2];
+                    }
                 }
             }
+
         }
         addressInitTask.execute(province, city, country);
     }
