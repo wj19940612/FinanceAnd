@@ -15,10 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Administrator on 2017-04-14.
- */
-
 public class HomeHeader extends FrameLayout {
 	@BindView(R.id.future)
 	TextView mFuture;

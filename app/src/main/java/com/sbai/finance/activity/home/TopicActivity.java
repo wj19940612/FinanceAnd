@@ -1,10 +1,15 @@
 package com.sbai.finance.activity.home;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,10 +32,12 @@ import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.slidingListView.SlideItem;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,7 +56,7 @@ public class TopicActivity extends BaseActivity {
 	@BindView(R.id.empty)
 	TextView mEmpty;
 
-	private OptionalActivity.SlideListAdapter mTopicListAdapter;
+	private ListAdapter mTopicListAdapter;
 	private Topic mTopic;
 
 	@Override
@@ -71,7 +78,7 @@ public class TopicActivity extends BaseActivity {
 		mTitle.setTitle(mTopic.getTitle());
 		mTopicTitle.setText(mTopic.getIntroduction());
 
-		mTopicListAdapter = new OptionalActivity.SlideListAdapter(this);
+		mTopicListAdapter = new ListAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mTopicListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -186,6 +193,110 @@ public class TopicActivity extends BaseActivity {
 							rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
 							rate.setText("-" + FinanceUtil.formatWithScale(priceChange) + "%");
 						}
+					}
+				}
+			}
+		}
+	}
+	public static class ListAdapter extends ArrayAdapter<Variety> {
+		Context mContext;
+		private HashMap<String, FutureData> mFutureDataList;
+		private HashMap<String, StockData> mStockDataList;
+
+		public void addFutureData(List<FutureData> futureDataList) {
+			for (FutureData futureData:futureDataList){
+				mFutureDataList.put(futureData.getInstrumentId(), futureData);
+			}
+			notifyDataSetChanged();
+		}
+		public void addStockData(List<StockData> stockDataList) {
+			for (StockData stockData : stockDataList) {
+				mStockDataList.put(stockData.getStock_code(), stockData);
+			}
+			notifyDataSetChanged();
+		}
+		public ListAdapter(@NonNull Context context) {
+			super(context, 0);
+			mContext = context;
+			mFutureDataList = new HashMap<>();
+			mStockDataList = new HashMap<>();
+		}
+
+		@NonNull
+		@Override
+		public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_optional, parent, false);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindDataWithView(getItem(position), mFutureDataList,mStockDataList, mContext);
+			return convertView;
+		}
+
+		static class ViewHolder {
+			@BindView(R.id.futureName)
+			TextView mFutureName;
+			@BindView(R.id.futureCode)
+			TextView mFutureCode;
+			@BindView(R.id.lastPrice)
+			TextView mLastPrice;
+			@BindView(R.id.rate)
+			TextView mRate;
+			ViewHolder(View content) {
+				ButterKnife.bind(this, content);
+			}
+
+			private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockData> stockMap, Context context) {
+				if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+					mFutureName.setText(item.getVarietyName());
+					mFutureCode.setText(item.getVarietyType());
+					//      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
+					StockData stockData = stockMap.get(item.getVarietyType());
+					if (stockData != null) {
+						mLastPrice.setText(stockData.getLast_price());
+						String priceChange = stockData.getRise_pre();
+						if (priceChange.startsWith("-")) {
+							mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+							mRate.setSelected(false);
+							mRate.setText(priceChange + "%");
+						} else {
+
+							mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+							mRate.setSelected(true);
+							mRate.setText("+" + priceChange + "%");
+						}
+					} else {
+						mLastPrice.setText("--");
+						mRate.setSelected(true);
+						mRate.setText("--");
+					}
+				}else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+					mFutureName.setText(item.getVarietyName());
+					mFutureCode.setText(item.getContractsCode());
+					//              mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
+					FutureData futureData = futureMap.get(item.getContractsCode());
+					if (futureData != null) {
+						double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
+								.divide(new BigDecimal(futureData.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
+								.multiply(new BigDecimal(100)).doubleValue();
+						mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
+						if (priceChange >= 0) {
+							mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+							mRate.setSelected(true);
+							mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
+						} else {
+							mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+							mRate.setSelected(false);
+							mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
+						}
+					} else {
+						mLastPrice.setText("--");
+						mRate.setSelected(true);
+						mRate.setText("--.--%");
 					}
 				}
 			}
