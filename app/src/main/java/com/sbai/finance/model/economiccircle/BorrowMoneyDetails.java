@@ -34,34 +34,21 @@ public class BorrowMoneyDetails {
 	 * userId : 150
 	 * userName : 三十个黄三
 	 */
-
-	private int aduitActorId;
-	private long auditTime;
-	private long confirmTime;
 	private String content;
-	private String contentImg;
 	private long createDate;
 	private int days;
-	private long endlineTime;
-	private String failMsg;
 	private int id;
-	private int intentionCount;
 	private double interest;
 	private int isAttention;
-	private String location;
-	private long modifyDate;
 	private double money;
 	private String portrait;
-	private String remark;
-	private String selectedLocation;
-	private String selectedPortrait;
-	private int selectedUserId;
-	private String selectedUserName;
-	private int sex;
 	private int status;
 	private int userId;
 	private String userName;
-	private int isIntention;
+	private String contentImg;
+	private String location;
+	private int confirmDays;
+	private String phoneNum;
 
 	public int getIsIntention() {
 		return isIntention;
@@ -71,44 +58,13 @@ public class BorrowMoneyDetails {
 		this.isIntention = isIntention;
 	}
 
-	public int getAduitActorId() {
-		return aduitActorId;
-	}
-
-	public void setAduitActorId(int aduitActorId) {
-		this.aduitActorId = aduitActorId;
-	}
-
-	public long getAuditTime() {
-		return auditTime;
-	}
-
-	public void setAuditTime(long auditTime) {
-		this.auditTime = auditTime;
-	}
-
-	public long getConfirmTime() {
-		return confirmTime;
-	}
-
-	public void setConfirmTime(long confirmTime) {
-		this.confirmTime = confirmTime;
-	}
-
+	private int isIntention;
 	public String getContent() {
 		return content;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public String getContentImg() {
-		return contentImg;
-	}
-
-	public void setContentImg(String contentImg) {
-		this.contentImg = contentImg;
 	}
 
 	public long getCreateDate() {
@@ -127,36 +83,12 @@ public class BorrowMoneyDetails {
 		this.days = days;
 	}
 
-	public long getEndlineTime() {
-		return endlineTime;
-	}
-
-	public void setEndlineTime(long endlineTime) {
-		this.endlineTime = endlineTime;
-	}
-
-	public String getFailMsg() {
-		return failMsg;
-	}
-
-	public void setFailMsg(String failMsg) {
-		this.failMsg = failMsg;
-	}
-
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getIntentionCount() {
-		return intentionCount;
-	}
-
-	public void setIntentionCount(int intentionCount) {
-		this.intentionCount = intentionCount;
 	}
 
 	public double getInterest() {
@@ -175,22 +107,6 @@ public class BorrowMoneyDetails {
 		this.isAttention = isAttention;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public long getModifyDate() {
-		return modifyDate;
-	}
-
-	public void setModifyDate(long modifyDate) {
-		this.modifyDate = modifyDate;
-	}
-
 	public double getMoney() {
 		return money;
 	}
@@ -205,54 +121,6 @@ public class BorrowMoneyDetails {
 
 	public void setPortrait(String portrait) {
 		this.portrait = portrait;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public String getSelectedLocation() {
-		return selectedLocation;
-	}
-
-	public void setSelectedLocation(String selectedLocation) {
-		this.selectedLocation = selectedLocation;
-	}
-
-	public String getSelectedPortrait() {
-		return selectedPortrait;
-	}
-
-	public void setSelectedPortrait(String selectedPortrait) {
-		this.selectedPortrait = selectedPortrait;
-	}
-
-	public int getSelectedUserId() {
-		return selectedUserId;
-	}
-
-	public void setSelectedUserId(int selectedUserId) {
-		this.selectedUserId = selectedUserId;
-	}
-
-	public String getSelectedUserName() {
-		return selectedUserName;
-	}
-
-	public void setSelectedUserName(String selectedUserName) {
-		this.selectedUserName = selectedUserName;
-	}
-
-	public int getSex() {
-		return sex;
-	}
-
-	public void setSex(int sex) {
-		this.sex = sex;
 	}
 
 	public int getStatus() {
@@ -279,36 +147,35 @@ public class BorrowMoneyDetails {
 		this.userName = userName;
 	}
 
-	@Override
-	public String toString() {
-		return "BorrowMoneyDetails{" +
-				"aduitActorId=" + aduitActorId +
-				", auditTime=" + auditTime +
-				", confirmTime=" + confirmTime +
-				", content='" + content + '\'' +
-				", contentImg='" + contentImg + '\'' +
-				", createDate=" + createDate +
-				", days=" + days +
-				", endlineTime=" + endlineTime +
-				", failMsg='" + failMsg + '\'' +
-				", id=" + id +
-				", intentionCount=" + intentionCount +
-				", interest=" + interest +
-				", isAttention=" + isAttention +
-				", location='" + location + '\'' +
-				", modifyDate=" + modifyDate +
-				", money=" + money +
-				", portrait='" + portrait + '\'' +
-				", remark='" + remark + '\'' +
-				", selectedLocation='" + selectedLocation + '\'' +
-				", selectedPortrait='" + selectedPortrait + '\'' +
-				", selectedUserId=" + selectedUserId +
-				", selectedUserName='" + selectedUserName + '\'' +
-				", sex=" + sex +
-				", status=" + status +
-				", userId=" + userId +
-				", userName='" + userName + '\'' +
-				", isIntention=" + isIntention +
-				'}';
+	public String getContentImg() {
+		return contentImg;
+	}
+
+	public void setContentImg(String contentImg) {
+		this.contentImg = contentImg;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public int getConfirmDays() {
+		return confirmDays;
+	}
+
+	public void setConfirmDays(int confirmDays) {
+		this.confirmDays = confirmDays;
+	}
+
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
 	}
 }

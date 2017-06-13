@@ -244,10 +244,10 @@
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>
     <string name="relieve_shield">解除屏蔽</string>
-    <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
+    <string name="relieve_shield_dialog_title">是否对“%1$s”解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
 
-    <string name="shield_dialog_title">是否对“%1$s”\n屏蔽?</string>
+    <string name="shield_dialog_title">是否对“%1$s”屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再展示在你的经济圈。</string>
 
     <string name="cancel_attention_dialog_title">是否不再关注“%1$s”?</string>
@@ -483,8 +483,6 @@
     <string name="share_failed">分享失败了</string>
     <string name="share_cancel">分享取消了</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
-    <string name="future_share_host">/mobi/future/future_quota?varietyId=%1$d</string>
-    <string name="stock_share_host">/mobi/stock/stock_quota?varietyType=%1$s&amp;varietyId=%2$d</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>

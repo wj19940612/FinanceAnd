@@ -180,7 +180,6 @@ public class ViewpointFragment extends BaseFragment {
         mOpinionList.clear();
         Client.findViewpoint(mPage, mPageSize, mVarietyId)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
                     protected void onRespSuccessData(List<Opinion> data) {

@@ -11,20 +11,27 @@
         app:backFeature="true"
         app:titleTextColor="@color/blackAssist"/>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/titleBar"
+        android:background="@color/split"/>
+
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/progress"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/progress"/>
 
     <ProgressBar
         android:id="@+id/progress"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@id/titleBar"
+        android:layout_below="@id/divider"
         android:progressDrawable="@drawable/progress_horizontal"/>
 
     <LinearLayout
