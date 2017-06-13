@@ -3,6 +3,7 @@
 
     <!-- Dialog -->
     <string name="ok">确定</string>
+    <string name="confirm">确认</string>
     <string name="cancel">取消</string>
 
     <!-- Main -->
@@ -483,8 +484,6 @@
     <string name="share_failed">分享失败了</string>
     <string name="share_cancel">分享取消了</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
-    <string name="future_share_host">/mobi/future/future_quota?varietyId=%1$d</string>
-    <string name="stock_share_host">/mobi/stock/stock_quota?varietyType=%1$s&amp;varietyId=%2$d</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>

@@ -412,7 +412,7 @@ public class StockTrendChart extends ChartView {
         float textX = left - textWidth / 2;
         canvas.drawText(mTimeLine[0], textX, textY, sPaint);
 
-        textWidth = sPaint.measureText(mTimeLine[1]);
+        textWidth = sPaint.measureText(mTimeLine[2]);
         textX = (left + width) / 2 - textWidth / 2;
         canvas.drawText(mTimeLine[1], textX, textY, sPaint);
 

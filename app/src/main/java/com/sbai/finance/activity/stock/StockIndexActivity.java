@@ -6,10 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.PriceLimitRankingFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
+import com.sbai.finance.view.TitleBar;
 
 public class StockIndexActivity extends StockTradeActivity {
 
@@ -39,6 +41,18 @@ public class StockIndexActivity extends StockTradeActivity {
             return (ViewpointFragment) fragment;
         }
         return null;
+    }
+
+    @Override
+    public void setUpTitleBar(TitleBar titleBar) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getViewpointFragment().scrollToTop();
+                // TODO: 2017/6/13 剩下涨幅榜和跌幅榜的没滚动到顶部
+            }
+        });
+        super.setUpTitleBar(titleBar);
     }
 
     private class SubPageAdapter extends FragmentPagerAdapter {

@@ -2,6 +2,7 @@ package com.sbai.finance.fragment.trade;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import butterknife.Unbinder;
 
 public class IntroduceFragment extends BaseFragment {
 
+    @BindView(R.id.scrollView)
+    NestedScrollView mScrollView;
     @BindView(R.id.tradeCategory)
     TextView mTradeCategory;
     @BindView(R.id.tradeCode)
@@ -77,6 +80,10 @@ public class IntroduceFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         requestVarietyTradeIntroduce();
+    }
+
+    public void scrollToTop() {
+        mScrollView.smoothScrollTo(0, 0);
     }
 
     private void requestVarietyTradeIntroduce() {
