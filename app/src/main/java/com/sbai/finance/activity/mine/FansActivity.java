@@ -27,6 +27,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,6 +43,8 @@ public class FansActivity extends BaseActivity {
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     private UserFansAdapter mUserFansAdapter;
 
@@ -55,6 +58,7 @@ public class FansActivity extends BaseActivity {
         setContentView(R.layout.activity_fans);
         ButterKnife.bind(this);
         mSet = new HashSet<>();
+        scrollToTop(mTitleBar, mListView);
         mListView.setEmptyView(mEmpty);
         mUserFansAdapter = new UserFansAdapter(this);
         mListView.setAdapter(mUserFansAdapter);

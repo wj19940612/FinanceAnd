@@ -30,6 +30,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +46,8 @@ public class AttentionActivity extends BaseActivity {
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     private RelieveAttentionAdapter mRelieveAttentionAdapter;
     private HashSet<Integer> mSet;
@@ -58,6 +61,7 @@ public class AttentionActivity extends BaseActivity {
         setContentView(R.layout.activity_attention);
         ButterKnife.bind(this);
         mSet = new HashSet<>();
+        scrollToTop(mTitleBar, mListView);
         mListView.setEmptyView(mEmpty);
         mRelieveAttentionAdapter = new RelieveAttentionAdapter(this);
         mListView.setAdapter(mRelieveAttentionAdapter);
