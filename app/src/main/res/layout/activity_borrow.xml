@@ -76,7 +76,7 @@
                         android:layout_marginRight="15dp"
                         android:textSize="@dimen/list_title_size"
                         android:textColor="@color/blackAssist"
-                        android:text="@string/interest"/>
+                        android:text="@string/will_interest"/>
                     <EditText
                         android:id="@+id/borrowInterest"
                         android:layout_width="0dp"

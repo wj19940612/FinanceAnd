@@ -4,23 +4,30 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
+import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +41,7 @@ import butterknife.ButterKnife;
  * Created by lixiaokuan0819 on 2017/6/12.
  */
 
-public class EconomicCircleNewMessageActivity extends BaseActivity {
+public class EconomicCircleNewMessageActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
@@ -57,6 +64,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 		mListView.setEmptyView(mEmpty);
 		mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(this);
 		mListView.setAdapter(mEconomicCircleNewsAdapter);
+		mListView.setOnItemClickListener(this);
 		requestEconomicCircleNewsList();
 	}
 
@@ -129,6 +137,20 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 		mEconomicCircleNewsAdapter.addAll(mHistoryNewsModelList);
 	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		HistoryNewsModel item  = (HistoryNewsModel) parent.getItemAtPosition(position);
+		if (item.getClassify() == 3) {
+			Launcher.with(this, OpinionDetailsActivity.class)
+					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+					.execute();
+		} else if (item.getClassify() == 2) {
+			Launcher.with(this, BorrowMoneyDetailsActivity.class)
+					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+					.execute();
+		}
+	}
+
 
 	static class EconomicCircleNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
@@ -152,18 +174,20 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 		}
 
 		static class ViewHolder {
-			@BindView(R.id.userHeadImage)
-			AppCompatImageView mUserHeadImage;
+			@BindView(R.id.avatar)
+			ImageView mAvatar;
 			@BindView(R.id.userName)
-			AppCompatTextView mUserName;
-			@BindView(R.id.content)
-			AppCompatTextView mContent;
+			TextView mUserName;
+			@BindView(R.id.message)
+			TextView mMessage;
 			@BindView(R.id.time)
-			AppCompatTextView mTime;
-			@BindView(R.id.presentation)
-			AppCompatTextView mPresentation;
-			@BindView(R.id.rightPicture)
-			AppCompatImageView mRightPicture;
+			TextView mTime;
+			@BindView(R.id.content)
+			TextView mContent;
+			@BindView(R.id.borrowMoneyImg)
+			ImageView mBorrowMoneyImg;
+			@BindView(R.id.contentArea)
+			RelativeLayout mContentArea;
 
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
@@ -172,16 +196,40 @@ public class EconomicCircleNewMessageActivity extends BaseActivity {
 			public void bindDataWithView(HistoryNewsModel item, Context context) {
 				if (item == null) return;
 
-				Glide.with(context).load(item.getSourceUser().getUserPortrait())
-						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
-						.into(mUserHeadImage);
+				if (item.getSourceUser() != null) {
+					Glide.with(context).load(item.getSourceUser().getUserPortrait())
+							.placeholder(R.drawable.ic_default_avatar)
+							.transform(new GlideCircleTransform(context))
+							.into(mAvatar);
+					mUserName.setText(item.getSourceUser().getUserName());
+				}
 
-				mUserName.setText(item.getSourceUser().getUserName());
-				mContent.setText(item.getMsg());
+				mMessage.setText(item.getMsg());
 				mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 
-
+				if (item.getClassify() == 3) {
+					mContent.setVisibility(View.VISIBLE);
+					if (item.getData() != null) {
+						mContent.setText(item.getData().getContent());
+					}
+				} else if (item.getClassify() == 2) {
+					if (!TextUtils.isEmpty(item.getData().getContentImg())) {
+						mBorrowMoneyImg.setVisibility(View.VISIBLE);
+						mContent.setVisibility(View.GONE);
+						Glide.with(context).load(item.getData().getContentImg().split(",")[0])
+								.placeholder(R.drawable.ic_loading_pic)
+								.into(mBorrowMoneyImg);
+					} else {
+						mContent.setVisibility(View.VISIBLE);
+						HistoryNewsModel.DataBean data = item.getData();
+						if (data != null) {
+							String content = context.getString(R.string.amount, String.valueOf(data.getMoney())) + "\n"
+									+ context.getString(R.string.limit, String.valueOf(data.getDays())) + "\n"
+									+ context.getString(R.string.interest, String.valueOf(data.getInterest()));
+							mContent.setText(content);
+						}
+					}
+				}
 			}
 		}
 	}

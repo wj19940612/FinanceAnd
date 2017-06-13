@@ -263,6 +263,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
 						.bitmapTransform(new GlideCircleTransform(context))
 						.into(mAvatar);
 				mVarietyName.setText(item.getVarietyName());
+				mOpinionContent.setText(item.getContent());
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 				mBigVarietyName.setText(item.getBigVarietyTypeName());
 				if (!isHimSelf) {

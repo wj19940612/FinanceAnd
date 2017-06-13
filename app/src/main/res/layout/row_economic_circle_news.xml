@@ -1,80 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/bg_white"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/common_padding"
-              android:paddingLeft="@dimen/common_padding"
-              android:paddingRight="@dimen/common_padding"
-              android:paddingTop="@dimen/common_padding">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
-
-        <ImageView
-            android:id="@+id/userHeadImage"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_default_avatar"/>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="51dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blackAssist"
-                android:textSize="15sp"
-                tools:text="溺水的鱼 "/>
-
-            <TextView
-                android:id="@+id/content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="3dp"
-                android:textColor="@color/blackAssist"
-                android:textSize="12sp"
-                tools:text="哈哈哈哈哈哈就撒返回键卡萨发货快了解撒旦大家开放好的撒尽快发货"/>
+                android:background="@drawable/bg_white">
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textColor="@color/unluckyText"
-                android:textSize="10sp"
-                tools:text="2017/12/12"/>
-        </LinearLayout>
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/ic_default_avatar"/>
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/avatar"
+        android:layout_toRightOf="@+id/avatar"
+        android:textColor="@color/blackAssist"
+        android:textSize="15sp"
+        tools:text="反方向的钟"/>
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userName"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:textColor="@color/blackAssist"
+        android:textSize="12sp"
+        tools:text="这里是消息的内容"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:textColor="@color/unluckyText"
+        android:textSize="10sp"
+        tools:text="10:00"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/time"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/split"/>
+
+    <RelativeLayout
+        android:id="@+id/contentArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="14dp">
 
         <TextView
-            android:id="@+id/presentation"
-            android:layout_width="61dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:lineSpacingExtra="7dp"
-            android:maxLines="4"
-            android:textColor="@color/secondaryText"
-            android:textSize="11sp"
-            tools:text="快乐大数据反馈了解到萨拉点开链接萨菲隆开始考虑大姐夫单身快乐荆防颗粒圣诞节"/>
-
-        <ImageView
-            android:id="@+id/rightPicture"
+            android:id="@+id/content"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:visibility="gone"/>
-    </LinearLayout>
+            android:ellipsize="end"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="3"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"
+            android:visibility="visible"
+            tools:text="阿萨德会撒\nskhdkjsahdjds\ndsdsjkdh"/>
 
-    <include layout="@layout/split_line"/>
-</LinearLayout>
+        <ImageView
+            android:id="@+id/borrowMoneyImg"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_loading_pic"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>

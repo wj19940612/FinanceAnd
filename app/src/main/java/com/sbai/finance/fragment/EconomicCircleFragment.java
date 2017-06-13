@@ -37,7 +37,10 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MessageEvent;
 import com.sbai.finance.view.TitleBar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -147,6 +150,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
 	public void onTimeUp(int count) {
 		super.onTimeUp(count);
 		if (LocalUser.getUser().isLogin()) {
@@ -204,6 +212,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							Launcher.with(getActivity(), EconomicCircleNewMessageActivity.class).execute();
 							mListView.removeHeaderView(mNewMessageHeaderView);
 							mNewMessageHeaderView = null;
+							EventBus.getDefault().postSticky(new MessageEvent(0));
+
 						}
 					});
 
@@ -215,6 +225,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				if (mNewMessageHeaderView != null) {
 					TextView textView = (TextView) mNewMessageHeaderView.findViewById(R.id.newMessageCount);
 					textView.setText(getString(R.string.new_message_count, count));
+				}
+
+				if (count > 0) {
+					EventBus.getDefault().postSticky(new MessageEvent(count));
 				}
 			}
 		}).fire();

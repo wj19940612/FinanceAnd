@@ -78,4 +78,15 @@
         <attr name="headline_text_padding_right" format="dimension|reference"/>
         <attr name="info_text_lineSpacingExtra" format="dimension|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="RedPointTextView">
+        <!-- 提示数字背景颜色 -->
+        <attr name="badge_bg_color" format="color"/>
+        <!-- 提示数字颜色 -->
+        <attr name="badge_txt_color" format="color"/>
+        <!-- 提示数字大小 -->
+        <attr name="badge_txt_size" format="dimension|reference"/>
+        <!-- 提示数字 -->
+        <attr name="badge_txt_num" format="integer"/>
+    </declare-styleable>
 </resources>
