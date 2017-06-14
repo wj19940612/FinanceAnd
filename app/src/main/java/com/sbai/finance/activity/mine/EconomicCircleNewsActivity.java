@@ -48,6 +48,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 	private Long mCreateTime = null;
 	private View mFootView;
 	private HashSet<Integer> mSet;
+	private int mSize = 15;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 	}
 
 	private void requestEconomicCircleNewsList() {
-		Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, null, mCreateTime)
+		Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, mSize, null, mCreateTime)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override

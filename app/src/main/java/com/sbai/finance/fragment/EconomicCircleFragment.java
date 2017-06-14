@@ -52,8 +52,7 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 
-
-public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
     private static final int TYPE_BORROW_MONEY = 1;
     private static final int TYPE_OPINION = 0;
@@ -106,9 +105,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         mListView.setAdapter(mEconomicCircleAdapter);
         mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(this);
+        mTitleBar.setOnTitleBarClickListener( this);
         mEconomicCircleAdapter.setCallback(new EconomicCircleAdapter.Callback() {
             @Override
-            public void onAvatarOpinionClick(EconomicCircle economicCircle) {
+            public void onOpinionAvatarClick(EconomicCircle economicCircle) {
                 if (LocalUser.getUser().isLogin()) {
                     Intent intent = new Intent(getContext(), UserDataActivity.class);
                     intent.putExtra(Launcher.USER_ID, economicCircle.getUserId());
@@ -119,7 +119,29 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
             }
 
             @Override
-            public void onAvatarBorrowMoneyClick(EconomicCircle economicCircle) {
+            public void onBorrowMoneyAvatarClick(EconomicCircle economicCircle) {
+                if (LocalUser.getUser().isLogin()) {
+                    Intent intent = new Intent(getContext(), UserDataActivity.class);
+                    intent.putExtra(Launcher.USER_ID, economicCircle.getUserId());
+                    startActivityForResult(intent, REQ_CODE_USERDATA);
+                } else {
+                    Launcher.with(getContext(), LoginActivity.class).execute();
+                }
+            }
+
+            @Override
+            public void onOpinionUserNameClick(EconomicCircle economicCircle) {
+                if (LocalUser.getUser().isLogin()) {
+                    Intent intent = new Intent(getContext(), UserDataActivity.class);
+                    intent.putExtra(Launcher.USER_ID, economicCircle.getUserId());
+                    startActivityForResult(intent, REQ_CODE_USERDATA);
+                } else {
+                    Launcher.with(getContext(), LoginActivity.class).execute();
+                }
+            }
+
+            @Override
+            public void onBorrowUserNameClick(EconomicCircle economicCircle) {
                 if (LocalUser.getUser().isLogin()) {
                     Intent intent = new Intent(getContext(), UserDataActivity.class);
                     intent.putExtra(Launcher.USER_ID, economicCircle.getUserId());
@@ -185,6 +207,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
     }
 
     @Override
+    public void onClick(View v) {
+        mListView.setSelection(0);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EconomicCircle item = (EconomicCircle) parent.getItemAtPosition(position);
         if (item != null) {
@@ -234,9 +261,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                     textView.setText(getString(R.string.new_message_count, count));
                 }
 
-                if (mNewMessageHeaderView != null) {
+                if (mNewMessageHeaderView != null && count >0) {
                     TextView textView = (TextView) mNewMessageHeaderView.findViewById(R.id.newMessageCount);
                     textView.setText(getString(R.string.new_message_count, count));
+                }
+
+                //多端问题
+                if (count == 0) {
+                    mListView.removeHeaderView(mNewMessageHeaderView);
+                    mNewMessageHeaderView = null;
+                    if (mOnNoReadNewsListener != null) {
+                        mOnNoReadNewsListener.onNoReadNewsNumber(1, 0);
+                    }
                 }
 
                 if (count > 0) {
@@ -365,12 +401,16 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
         unbinder.unbind();
     }
 
-    static class EconomicCircleAdapter extends BaseAdapter {
+	static class EconomicCircleAdapter extends BaseAdapter {
 
         interface Callback {
-            void onAvatarOpinionClick(EconomicCircle economicCircle);
+            void onOpinionAvatarClick(EconomicCircle economicCircle);
 
-            void onAvatarBorrowMoneyClick(EconomicCircle economicCircle);
+            void onBorrowMoneyAvatarClick(EconomicCircle economicCircle);
+
+            void onOpinionUserNameClick(EconomicCircle economicCircle);
+
+            void onBorrowUserNameClick(EconomicCircle economicCircle);
         }
 
         private Context mContext;
@@ -506,6 +546,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                         .into(mAvatar);
 
                 mUserName.setText(item.getUserName());
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onOpinionUserNameClick(item);
+                        }
+                    }
+                });
 
                 if (item.getIsAttention() == 2) {
                     mIsAttention.setText(R.string.is_attention);
@@ -540,7 +588,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {
-                            callback.onAvatarOpinionClick(item);
+                            callback.onOpinionAvatarClick(item);
                         }
                     }
                 });
@@ -585,6 +633,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                         .into(mAvatar);
 
                 mUserName.setText(item.getUserName());
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (callback != null) {
+                            callback.onBorrowUserNameClick(item);
+                        }
+                    }
+                });
 
                 if (item.getIsAttention() == 2) {
                     mIsAttention.setText(R.string.is_attention);
@@ -601,14 +657,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 if (TextUtils.isEmpty(item.getLand())) {
                     mLocation.setText(R.string.no_location_information);
                 } else {
-                    mLocation.setText(item.getLand());
+                    mLocation.setText(item.getLocation());
                 }
 
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {
-                            callback.onAvatarBorrowMoneyClick(item);
+                            callback.onBorrowMoneyAvatarClick(item);
                         }
                     }
                 });
@@ -616,8 +672,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 if (!TextUtils.isEmpty(item.getContentImg())) {
                     String[] images = item.getContentImg().split(",");
                     if (images.length >= 2) {
+                        mBorrowingImg.setVisibility(View.VISIBLE);
                         mCircleMoreIcon.setVisibility(View.VISIBLE);
                     } else {
+                        mBorrowingImg.setVisibility(View.VISIBLE);
                         mCircleMoreIcon.setVisibility(View.GONE);
                     }
                     Glide.with(context).load(images[0])

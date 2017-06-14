@@ -54,6 +54,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 	private HashSet<Integer> mSet;
 	private View mFootView;
 	private View mCheckoutEarlierNewsFootView;
+	private int mSize = 15;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 	}
 
 	private void requestEconomicCircleNewsList() {
-		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, 0, mCreateTime)
+		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, null, 0, mCreateTime)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override
@@ -82,7 +83,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 	}
 
 	private void loadMoreEconomicCircleNewsList() {
-		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, 1, mCreateTime)
+		Client.requestHistoryNews(true, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, mSize, 1, mCreateTime)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override
@@ -106,7 +107,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 			mListView.addFooterView(mFootView, null, true);
 		}
 
-		if (mHistoryNewsModelList.size() <15) {
+		if (mHistoryNewsModelList.size() < 15) {
 			mListView.removeFooterView(mFootView);
 			mFootView = null;
 		}
@@ -120,7 +121,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 
 	private void updateEconomicCircleNewsList() {
 		if (mCheckoutEarlierNewsFootView == null) {
-			mCheckoutEarlierNewsFootView =  View.inflate(this, R.layout.view_footer_economic_circle_news, null);
+			mCheckoutEarlierNewsFootView = View.inflate(this, R.layout.view_footer_economic_circle_news, null);
 			mCheckoutEarlierNewsFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -140,7 +141,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		HistoryNewsModel item  = (HistoryNewsModel) parent.getItemAtPosition(position);
+		HistoryNewsModel item = (HistoryNewsModel) parent.getItemAtPosition(position);
 		if (item.getClassify() == 3) {
 			Launcher.with(this, OpinionDetailsActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
@@ -227,7 +228,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 						if (data != null) {
 							String content = context.getString(R.string.amount, FinanceUtil.formatWithScaleNoZero(data.getMoney())) + "\n"
 									+ context.getString(R.string.limit, FinanceUtil.formatWithScaleNoZero(data.getDays())) + "\n"
-									+ context.getString(R.string.interest,  FinanceUtil.formatWithScaleNoZero(data.getInterest()));
+									+ context.getString(R.string.interest, FinanceUtil.formatWithScaleNoZero(data.getInterest()));
 							mContent.setText(content);
 						}
 					}

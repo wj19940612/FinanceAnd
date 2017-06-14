@@ -385,11 +385,11 @@ public class Client {
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, String classify, Integer page, Integer status, Long createTime) {
+    public static API requestHistoryNews(boolean autoRead, String classify, Integer page, Integer size, Integer status, Long createTime) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
-                .put("size", DEFAULT_PAGE_SIZE)
+                .put("size", size)
                 .put("status", status)
                 .put("autoRead", autoRead)
                 .put("createTime", createTime));

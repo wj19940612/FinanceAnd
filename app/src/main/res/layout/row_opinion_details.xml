@@ -26,6 +26,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/avatar"
+            android:background="@drawable/bg_user_name"
             android:textColor="@color/primaryText"
             android:textSize="16sp"
             tools:text="反方向的钟"/>
