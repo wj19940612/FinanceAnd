@@ -438,7 +438,7 @@ public class BorrowActivity extends BaseActivity {
         if (requestCode == REQ_CODE_ADDRESS && resultCode == RESULT_OK) {
             mAddress = data.getParcelableExtra(Launcher.EX_PAYLOAD_1);
             if (mAddress != null) {
-                mLocation.setSubText(mAddress.getLocality() + " " + mAddress.getSubLocality());
+                mLocation.setSubText(mAddress.getLocality() + "-" + mAddress.getSubLocality());
             }
             setPublishStatus();
 

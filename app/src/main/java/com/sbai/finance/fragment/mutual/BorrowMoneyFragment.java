@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
     private int mPage = 0;
     private int mPageSize = 15;
     private BorrowMoneyAdapter mBorrowMoneyAdapter;
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     @Nullable
     @Override
@@ -121,7 +123,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
         unbinder.unbind();
     }
 
-    private void requestBorrowData() {
+    public void requestBorrowData() {
         Client.getBorrowMoneyList(mPage, mPageSize).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<BorrowMoney>>, List<BorrowMoney>>() {
                     @Override

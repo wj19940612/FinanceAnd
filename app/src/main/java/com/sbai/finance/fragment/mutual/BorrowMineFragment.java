@@ -122,7 +122,7 @@ public class BorrowMineFragment extends BaseFragment implements
         unbinder.unbind();
     }
 
-    private void requestBorrowData() {
+    public void requestBorrowData() {
         Client.getMyLoad(mPage, mPageSize).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowMine>>, List<BorrowMine>>() {
                     @Override
