@@ -208,6 +208,42 @@ public class HistoryNewsModel implements Parcelable {
         private double money;
         private double interest;
         private String source;
+        /**
+         * bigVarietyTypeCode : stock
+         * bigVarietyTypeName : 股票
+         * createTime : 1494331155000
+         * exchangeId : 59
+         * exchangeName : 深圳证券交易所
+         * id : 1739
+         * initial : payx,payh
+         * isUse : 1
+         * quotaExchangeCode : 4609
+         * quotaVarietyCode : 000001
+         * smallVarietyTypeCode : shenzheng
+         * status : 1
+         * updateTime : 1494922083000
+         * varietyName : 平安银行
+         * varietySort : 1
+         * varietyType : 000001
+         */
+
+        private String bigVarietyTypeCode;
+        private String bigVarietyTypeName;
+        private long createTime;
+        private int exchangeId;
+        private String exchangeName;
+        private int id;
+        private String initial;
+        private int isUse;
+        private String quotaExchangeCode;
+        private String quotaVarietyCode;
+        private String smallVarietyTypeCode;
+        private int status;
+        private long updateTime;
+        private String varietyName;
+        private int varietySort;
+        private String varietyType;
+
 
         public String getContent() {
             return content;
@@ -293,6 +329,134 @@ public class HistoryNewsModel implements Parcelable {
                     ", money=" + money +
                     ", source='" + source + '\'' +
                     '}';
+        }
+
+        public String getBigVarietyTypeCode() {
+            return bigVarietyTypeCode;
+        }
+
+        public void setBigVarietyTypeCode(String bigVarietyTypeCode) {
+            this.bigVarietyTypeCode = bigVarietyTypeCode;
+        }
+
+        public String getBigVarietyTypeName() {
+            return bigVarietyTypeName;
+        }
+
+        public void setBigVarietyTypeName(String bigVarietyTypeName) {
+            this.bigVarietyTypeName = bigVarietyTypeName;
+        }
+
+        public long getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(long createTime) {
+            this.createTime = createTime;
+        }
+
+        public int getExchangeId() {
+            return exchangeId;
+        }
+
+        public void setExchangeId(int exchangeId) {
+            this.exchangeId = exchangeId;
+        }
+
+        public String getExchangeName() {
+            return exchangeName;
+        }
+
+        public void setExchangeName(String exchangeName) {
+            this.exchangeName = exchangeName;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getInitial() {
+            return initial;
+        }
+
+        public void setInitial(String initial) {
+            this.initial = initial;
+        }
+
+        public int getIsUse() {
+            return isUse;
+        }
+
+        public void setIsUse(int isUse) {
+            this.isUse = isUse;
+        }
+
+        public String getQuotaExchangeCode() {
+            return quotaExchangeCode;
+        }
+
+        public void setQuotaExchangeCode(String quotaExchangeCode) {
+            this.quotaExchangeCode = quotaExchangeCode;
+        }
+
+        public String getQuotaVarietyCode() {
+            return quotaVarietyCode;
+        }
+
+        public void setQuotaVarietyCode(String quotaVarietyCode) {
+            this.quotaVarietyCode = quotaVarietyCode;
+        }
+
+        public String getSmallVarietyTypeCode() {
+            return smallVarietyTypeCode;
+        }
+
+        public void setSmallVarietyTypeCode(String smallVarietyTypeCode) {
+            this.smallVarietyTypeCode = smallVarietyTypeCode;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public long getUpdateTime() {
+            return updateTime;
+        }
+
+        public void setUpdateTime(long updateTime) {
+            this.updateTime = updateTime;
+        }
+
+        public String getVarietyName() {
+            return varietyName;
+        }
+
+        public void setVarietyName(String varietyName) {
+            this.varietyName = varietyName;
+        }
+
+        public int getVarietySort() {
+            return varietySort;
+        }
+
+        public void setVarietySort(int varietySort) {
+            this.varietySort = varietySort;
+        }
+
+        public String getVarietyType() {
+            return varietyType;
+        }
+
+        public void setVarietyType(String varietyType) {
+            this.varietyType = varietyType;
         }
     }
 
