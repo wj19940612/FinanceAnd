@@ -64,7 +64,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
@@ -111,6 +110,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private Variety mVariety;
     private Prediction mPrediction;
     private FutureData mFutureData;
+
+    private int mPagePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -449,6 +450,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         @Override
         public void onPageSelected(int position) {
+            mPagePosition = position;
             if (position == 0) {
                 if (getViewpointFragment() != null) {
                     getViewpointFragment().refreshPointList();
@@ -602,6 +604,19 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         .newInstance()
                         .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl)
                         .show(getSupportFragmentManager());
+            }
+        });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = mSubPageAdapter.getFragment(mPagePosition);
+                if(fragment!=null){
+                    if(fragment instanceof ViewpointFragment){
+                        ((ViewpointFragment)fragment).scrollToTop();
+                    }else if(fragment instanceof IntroduceFragment){
+                        ((IntroduceFragment)fragment).scrollToTop();
+                    }
+                }
             }
         });
         updateTitleBar(null);
