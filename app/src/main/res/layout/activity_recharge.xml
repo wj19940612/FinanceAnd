@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.wallet.RechargeActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_split_height"
+        android:gravity="center_vertical"
+        app:backFeature="true"
+        app:titleText="@string/recharge"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:lineSpacingExtra="6dp"
+            android:text="@string/recharge_way"
+            android:textColor="@color/blackAssist"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/rechargeWay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/ic_arrow_right_tint"
+            android:gravity="center_vertical"
+            android:text="@string/ali"
+            android:textColor="@color/blackAssist"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+    <include layout="@layout/split_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:text="@string/recharge_count"
+            android:textColor="@color/blackAssist"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/rechargeCount"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/recharge_hint"
+            android:inputType="numberDecimal"
+            android:textColor="@color/blackAssist"
+            android:textColorHint="#bfbfbf"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/recharge"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_height"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="31dp"
+        android:background="@drawable/btn_red_rounded"
+        android:enabled="false"
+        android:text="@string/next"
+        android:textColor="@android:color/white"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/connect_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/recharge_service"
+        android:textColor="@color/unluckyText"
+        android:textSize="15sp"/>
+</LinearLayout>

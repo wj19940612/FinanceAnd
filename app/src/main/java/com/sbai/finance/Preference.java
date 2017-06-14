@@ -17,7 +17,8 @@ public class Preference {
         String AVAILABLE_MARGIN = "available_margin";
         String USER_HAS_HOLDING_ORDER = "has_order";
         String DATA_SOURCE = "data_source";
-        String AUTHORIZATION_LOGIN_TIME ="authorization_login_time";
+        String AUTHORIZATION_LOGIN_TIME = "authorization_login_time";
+        String RECHARGE_WAY = "recharge_way";
     }
 
     private static Preference sInstance;
@@ -117,5 +118,13 @@ public class Preference {
 
     public long getAuthorizationTime() {
         return mPrefs.getLong(Key.AUTHORIZATION_LOGIN_TIME, 0);
+    }
+
+    public void setRechargeWay(String way) {
+        apply(Key.RECHARGE_WAY, way);
+    }
+
+    public String getRechargeWay() {
+        return mPrefs.getString(Key.RECHARGE_WAY, "支付宝");
     }
 }

@@ -27,4 +27,8 @@
     <color name="unluckyText">#999999</color>
     <color name="luckyText">#666666</color>
     <color name="primaryText">#222222</color>
+
+    <color name="wallet_bg">#424242</color>
+
+    <color name="bank_card_hint">#bfbfbf</color>
 </resources>

@@ -30,6 +30,7 @@ import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
+import com.sbai.finance.activity.mine.wallet.WalletActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -276,7 +277,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.wallet:
                 if (LocalUser.getUser().isLogin()) {
-//                    Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                    Launcher.with(getActivity(), WalletActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

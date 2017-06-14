@@ -26,6 +26,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 
@@ -221,11 +222,12 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 								.into(mBorrowMoneyImg);
 					} else {
 						mContent.setVisibility(View.VISIBLE);
+						mBorrowMoneyImg.setVisibility(View.GONE);
 						HistoryNewsModel.DataBean data = item.getData();
 						if (data != null) {
-							String content = context.getString(R.string.amount, String.valueOf(data.getMoney())) + "\n"
-									+ context.getString(R.string.limit, String.valueOf(data.getDays())) + "\n"
-									+ context.getString(R.string.interest, String.valueOf(data.getInterest()));
+							String content = context.getString(R.string.amount, FinanceUtil.formatWithScaleNoZero(data.getMoney())) + "\n"
+									+ context.getString(R.string.limit, FinanceUtil.formatWithScaleNoZero(data.getDays())) + "\n"
+									+ context.getString(R.string.interest,  FinanceUtil.formatWithScaleNoZero(data.getInterest()));
 							mContent.setText(content);
 						}
 					}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.wallet.WalletActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:barBackground="@color/wallet_bg"
+        app:titleText="@string/wallet"
+        app:titleTextColor="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_split_height"
+        android:background="@color/wallet_bg"
+        android:paddingLeft="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="10dp"
+            android:paddingBottom="27dp"
+            android:paddingTop="29dp"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            tools:text="账户余额 \n0.00"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <!--ic_mine_bankcard_money-->
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/ic_launcher"/>
+    </LinearLayout>
+    <!--app:leftIcon="@drawable/ic_mine_wallet_recharge"-->
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/recharge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:hasBottomSplitLine="true"
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/recharge"
+        app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/split"/>
+    <!--      app:leftIcon="@drawable/ic_mine_wallet_withdrawal"-->
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/withdraw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:hasBottomSplitLine="true"
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/withdraw"
+        app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/split"/>
+    <!--app:leftIcon="@drawable/ic_mine_wallet_detail"-->
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/market_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+
+        app:leftIcon="@mipmap/ic_launcher_round"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/market_detail"
+        app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/split"/>
+    <!--app:leftIcon="@drawable/ic_mine_wallet_bankcard"-->
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/bankCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
+        android:background="@android:color/white"
+        app:leftIcon="@mipmap/ic_launcher_round"
+
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/bank_card"
+        app:rowTextColor="@color/blackAssist"
+        app:splitLineColor="@color/split"/>
+</LinearLayout>
