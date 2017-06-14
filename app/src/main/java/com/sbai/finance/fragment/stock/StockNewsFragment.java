@@ -199,12 +199,6 @@ public class StockNewsFragment extends BaseFragment {
             notifyDataSetChanged();
         }
 
-        public void updateData(ArrayList<StockNewsModel> stockNewsModels) {
-            this.mStockNewsModels.clear();
-            this.mStockNewsModels.addAll(stockNewsModels);
-            notifyDataSetChanged();
-        }
-
         public void clear() {
             mStockNewsModels.clear();
             notifyItemRangeRemoved(0, mStockNewsModels.size());
