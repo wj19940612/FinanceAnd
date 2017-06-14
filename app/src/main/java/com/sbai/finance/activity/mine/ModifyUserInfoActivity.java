@@ -27,6 +27,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.Calendar;
 
@@ -54,7 +55,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     @BindView(R.id.age)
     IconTextRow mAge;
     @BindView(R.id.location)
-    AppCompatTextView mLocation;
+    AutofitTextView mLocation;
     @BindView(R.id.credit)
     IconTextRow mCredit;
     @BindView(R.id.logout)
