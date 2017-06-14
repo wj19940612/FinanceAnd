@@ -1,11 +1,14 @@
 package com.sbai.finance.fragment.mutual;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -47,6 +50,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sbai.finance.activity.mutual.BorrowDetailsActivity.DATA_ID;
+import static com.sbai.finance.activity.mutual.BorrowDetailsActivity.DATA_STATUS;
 
 
 public class BorrowMineFragment extends BaseFragment implements
@@ -63,6 +68,8 @@ public class BorrowMineFragment extends BaseFragment implements
     private int mPage = 0;
     private int mPageSize = 15;
     private BorrowMoneyAdapter mBorrowMoneyAdapter;
+    private LocalBroadcastManager mLocalBroadcastManager;
+    private StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     @Nullable
     @Override
@@ -77,6 +84,11 @@ public class BorrowMineFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext());
+        mStatusBroadcastReceiver = new StatusBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BorrowDetailsActivity.STATUS_CHANAGE);
+        mLocalBroadcastManager.registerReceiver(mStatusBroadcastReceiver, intentFilter);
         mSet = new HashSet<>();
         mBorrowMoneyAdapter = new BorrowMoneyAdapter(getActivity());
         mBorrowMoneyAdapter.setCallback(new BorrowMoneyAdapter.Callback() {
@@ -92,7 +104,7 @@ public class BorrowMineFragment extends BaseFragment implements
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+     //   mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setAdapter(mListView, mBorrowMoneyAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowMoneyAdapter);
@@ -120,10 +132,11 @@ public class BorrowMineFragment extends BaseFragment implements
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        mLocalBroadcastManager.unregisterReceiver(mStatusBroadcastReceiver);
     }
 
     public void requestBorrowData() {
-        Client.getMyLoad(mPage, mPageSize).setTag(TAG)
+        Client.getMyLoad().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowMine>>, List<BorrowMine>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowMine> data) {
@@ -148,11 +161,11 @@ public class BorrowMineFragment extends BaseFragment implements
                 mBorrowMoneyAdapter.add(borrowMine);
             }
         }
-        if (data.size() < 15) {
-            mSwipeRefreshLayout.setLoadMoreEnable(false);
-        } else {
-            mPage++;
-        }
+//        if (data.size() < 15) {
+//            mSwipeRefreshLayout.setLoadMoreEnable(false);
+//        } else {
+//            mPage++;
+//        }
         mBorrowMoneyAdapter.notifyDataSetChanged();
     }
 
@@ -168,9 +181,10 @@ public class BorrowMineFragment extends BaseFragment implements
     }
 
     private void reset() {
-        mPage = 0;
+//        mPage = 0;
         mSet.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
+      //  mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
     private void stopRefreshAnimation() {
@@ -197,12 +211,6 @@ public class BorrowMineFragment extends BaseFragment implements
 
                     for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
                         BorrowMine item = mBorrowMoneyAdapter.getItem(i);
-                        if (borrowDetail!=null){
-                            if (item.getId()==borrowDetail.getId()&&item.getStatus()!=borrowDetail.getStatus()){
-                                item.setStatus(borrowDetail.getStatus());
-                                mBorrowMoneyAdapter.notifyDataSetChanged();
-                            }
-                        }
                         if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
                             if (item.getUserId() == attentionAndFansNumberModel.getUserId()) {
                                 if (whetherAttentionShieldOrNot.isFollow()) {
@@ -224,6 +232,24 @@ public class BorrowMineFragment extends BaseFragment implements
 //                        }
 //                    }
                 }
+        }
+    }
+    class StatusBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int dataId = intent.getExtras().getInt(DATA_ID);
+            int dataStatus = intent.getExtras().getInt(DATA_STATUS);
+            if (dataId>0){
+                for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
+                    BorrowMine item = mBorrowMoneyAdapter.getItem(i);
+                    if (item.getId()==dataId&&item.getStatus()!=dataStatus){
+                        item.setStatus(dataStatus);
+                        mBorrowMoneyAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -72,6 +73,9 @@ import butterknife.OnClick;
 public class BorrowDetailsActivity extends BaseActivity {
     private static final int REQ_BORROW_MONEY_DETAILS = 1001;
     private static final int REQ_WANT_HELP_HIM_OR_YOU = 1002;
+    public static final String STATUS_CHANAGE="xxx";
+    public static final String DATA_ID="id";
+    public static final String DATA_STATUS="status";
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.avatar)
@@ -148,6 +152,7 @@ public class BorrowDetailsActivity extends BaseActivity {
     private KeyBoardHelper mKeyBoardHelper;
     private AttentionAndFansNumberModel mAttentionAndFansNumberModel;
     private WhetherAttentionShieldOrNot mWhetherAttentionShieldOrNot;
+    private LocalBroadcastManager mLocalBroadcastManager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,6 +168,7 @@ public class BorrowDetailsActivity extends BaseActivity {
     }
 
     private void initView() {
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
             @Override
             public void onClick() {
@@ -262,7 +268,7 @@ private void requestBorrowMoneyDetails() {
                      }
                  }).fireSync();
     }
-    private void requestCancelBorrow(Integer id) {
+    private void requestCancelBorrow(final Integer id) {
         Client.cancelBorrowIn(id).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -273,13 +279,14 @@ private void requestBorrowMoneyDetails() {
                             mWriteMessage.setVisibility(View.GONE);
                             mBorrowStatus.setVisibility(View.GONE);
                             mBorrowDetail.setStatus(BorrowMine.STATUS_END_CANCEL);
+                            sendStatusChangeBroadCast(BorrowDetail.STATUS_END_CANCEL,id);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
                     }
                 }).fire();
     }
-    private void requestRepay(int id){
+    private void requestRepay(final int id){
         Client.repayed(id).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -289,6 +296,7 @@ private void requestBorrowMoneyDetails() {
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mBorrowStatus.setVisibility(View.GONE);
                             mBorrowDetail.setStatus(BorrowMine.STATUS_END_REPAY);
+                            sendStatusChangeBroadCast(BorrowDetail.STATUS_END_REPAY,id);
                         }else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -709,12 +717,18 @@ private void requestBorrowMoneyDetails() {
             Launcher.with(getActivity(), MainActivity.class).execute();
         }else{
             Intent intent = new Intent();
-            intent.putExtra(Launcher.EX_PAYLOAD,mBorrowDetail);
             intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
             intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
             setResult(RESULT_OK, intent);
         }
         super.onBackPressed();
+    }
+    private void sendStatusChangeBroadCast(int status,int id){
+        Intent intent = new Intent();
+        intent.setAction(STATUS_CHANAGE);
+        intent.putExtra(DATA_STATUS,status);
+        intent.putExtra(DATA_ID,id);
+        mLocalBroadcastManager.sendBroadcastSync(intent);
     }
 
     private void callPhone(CallPhone phone){

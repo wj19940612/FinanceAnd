@@ -152,8 +152,11 @@ public class ImageUtils {
         return bitmapToBase64(compressScale(bitmap));
     }
 
+//    public static String compressImageToBase64(String urlPath, float ratio) {
+//        return bitmapToBase64(decodeSampledBitmapFromResource(urlPath, ratio));
+//    }
     public static String compressImageToBase64(String urlPath, float ratio) {
-        return bitmapToBase64(decodeSampledBitmapFromResource(urlPath, ratio));
+        return bitmapToBase64(compressScale(urlPath, ratio));
     }
     public static String imageToBase64(String urlPath){
 
@@ -211,7 +214,7 @@ public class ImageUtils {
         image.compress(Bitmap.CompressFormat.WEBP, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 90;
 
-        while (baos.toByteArray().length / 1024 > 2000) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+        while (baos.toByteArray().length / 1024 > 1500) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
             baos.reset(); // 重置baos即清空baos
             image.compress(Bitmap.CompressFormat.WEBP, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
             options -= 10;// 每次都减少10
@@ -280,7 +283,7 @@ public class ImageUtils {
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        return compressImage(reviewPicRotate(bitmap,srcPath));// 压缩好比例大小后再进行质量压缩
+        return reviewPicRotate(bitmap,srcPath);// 压缩好比例大小后再进行质量压缩
     }
 
     /**
@@ -387,7 +390,7 @@ public class ImageUtils {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(urlPath, options);
+        return compressImage(BitmapFactory.decodeFile(urlPath, options));
     }
     public static int calculateInSampleSize(
             BitmapFactory.Options options, float reqWidth, float reqHeight) {

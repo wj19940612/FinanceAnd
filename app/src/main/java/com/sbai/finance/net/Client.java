@@ -62,11 +62,8 @@ public class Client {
                         .put("search", search));
     }
 
-    public static API getMyLoad(int page, int pageSize) {
-        return new API("/coterie/help/loan/myLoan.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize));
+    public static API getMyLoad() {
+        return new API("/coterie/help/loan/myLoan.do");
     }
 
     /**

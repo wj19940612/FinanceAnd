@@ -1,7 +1,9 @@
 package com.sbai.finance.fragment.mutual;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,6 +51,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sbai.finance.activity.mutual.BorrowDetailsActivity.DATA_ID;
+import static com.sbai.finance.activity.mutual.BorrowDetailsActivity.DATA_STATUS;
 
 public class BorrowMoneyFragment extends BaseFragment implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
@@ -64,6 +68,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
     private int mPageSize = 15;
     private BorrowMoneyAdapter mBorrowMoneyAdapter;
     private LocalBroadcastManager mLocalBroadcastManager;
+    private StatusBroadcastReceiver mStatusBroadcastReceiver;
 
     @Nullable
     @Override
@@ -80,6 +85,11 @@ public class BorrowMoneyFragment extends BaseFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet();
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext());
+        mStatusBroadcastReceiver = new StatusBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BorrowDetailsActivity.STATUS_CHANAGE);
+        mLocalBroadcastManager.registerReceiver(mStatusBroadcastReceiver, intentFilter);
         mBorrowMoneyAdapter = new BorrowMoneyAdapter(getActivity());
         mBorrowMoneyAdapter.setCallback(new BorrowMoneyAdapter.Callback() {
             @Override
@@ -111,6 +121,8 @@ public class BorrowMoneyFragment extends BaseFragment implements
         });
         requestBorrowData();
 
+
+
     }
 
     @Override
@@ -121,6 +133,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        mLocalBroadcastManager.unregisterReceiver(mStatusBroadcastReceiver);
     }
 
     public void requestBorrowData() {
@@ -179,6 +192,23 @@ public class BorrowMoneyFragment extends BaseFragment implements
         }
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
+        }
+    }
+    class StatusBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int dataId = intent.getExtras().getInt(DATA_ID);
+            int dataStatus = intent.getExtras().getInt(DATA_STATUS);
+            if (dataId>0&&dataStatus==BorrowDetail.STATUS_END_CANCEL){
+                for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
+                    BorrowMoney item = mBorrowMoneyAdapter.getItem(i);
+                    if (item.getDataId()==dataId){
+                        mBorrowMoneyAdapter.remove(item);
+                        break;
+                    }
+                }
+
+            }
         }
     }
 
@@ -308,23 +338,23 @@ public class BorrowMoneyFragment extends BaseFragment implements
         if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
             if (data != null) {
 
-                BorrowDetail borrowDetail =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
+           //     BorrowDetail borrowDetail =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
 
                 WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
                         (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
                 AttentionAndFansNumberModel attentionAndFansNumberModel =
                         (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-                if (borrowDetail!=null){
-                    for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
-                        BorrowMoney item = mBorrowMoneyAdapter.getItem(i);
-                        if (item.getDataId()==borrowDetail.getId()&&borrowDetail.getStatus()==BorrowMine.STATUS_END_CANCEL){
-                            mBorrowMoneyAdapter.remove(item);
-                            break;
-                        }
-                    }
-
-                }
+//                if (borrowDetail!=null){
+//                    for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
+//                        BorrowMoney item = mBorrowMoneyAdapter.getItem(i);
+//                        if (item.getDataId()==borrowDetail.getId()&&borrowDetail.getStatus()==BorrowMine.STATUS_END_CANCEL){
+//                            mBorrowMoneyAdapter.remove(item);
+//                            break;
+//                        }
+//                    }
+//
+//                }
 
                 if (attentionAndFansNumberModel != null && whetherAttentionShieldOrNot != null) {
                     for (int i=0;i<mBorrowMoneyAdapter.getCount();i++){
