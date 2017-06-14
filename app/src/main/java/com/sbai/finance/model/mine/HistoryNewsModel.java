@@ -209,6 +209,8 @@ public class HistoryNewsModel implements Parcelable {
         private double interest;
         private String source;
 
+
+
         public String getContent() {
             return content;
         }
@@ -290,7 +292,10 @@ public class HistoryNewsModel implements Parcelable {
         public String toString() {
             return "DataBean{" +
                     "contentImg='" + contentImg + '\'' +
+                    ", content='" + content + '\'' +
+                    ", days=" + days +
                     ", money=" + money +
+                    ", interest=" + interest +
                     ", source='" + source + '\'' +
                     '}';
         }
