@@ -110,8 +110,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
                         @Override
                         protected void onRespSuccessData(UserIdentityCardInfo data) {
-                            mImagePath.append(0,data.getCertPositive());
-                            mImagePath.append(1,data.getCertBack());
+                            mImagePath.append(0, data.getCertPositive());
+                            mImagePath.append(1, data.getCertBack());
                             updateUserCreditStatus(data);
                             mUserIdentityCardInfo = data;
                         }
@@ -127,8 +127,8 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             UserInfo userInfo = LocalUser.getUser().getUserInfo();
                             userInfo.setStatus(data.getStatus());
                             LocalUser.getUser().setUserInfo(userInfo);
-                            mImagePath.append(0,data.getCertPositive());
-                            mImagePath.append(1,data.getCertBack());
+                            mImagePath.append(0, data.getCertPositive());
+                            mImagePath.append(1, data.getCertBack());
                             updateUserCreditStatus(data);
                             mUserIdentityCardInfo = data;
                         }
@@ -287,22 +287,61 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        if (mUserIdentityCardInfo != null && mUserIdentityCardInfo.isCheckNotPass()) {
+                            updateUserCreditApprove(realName, identityCard);
+                        } else {
+                            submitUserCreditApprove(realName, identityCard);
+                        }
 
-                        submitUserCreditApprove(realName, identityCard);
                     }
                 }).show();
+    }
+
+    private void updateUserCreditApprove(String realName, String identityCard) {
+        if (mImagePath.size() > 1) {
+            String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
+            String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
+            if (TextUtils.isEmpty(imageFront)) {
+                imageFront = mImagePath.get(0);
+            }
+            if (TextUtils.isEmpty(imageReserve)) {
+                imageReserve = mImagePath.get(1);
+            }
+            Client.updateUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
+                    .setIndeterminate(this)
+                    .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            if (resp.isSuccess()) {
+                                setResult(RESULT_OK);
+                                CustomToast.getInstance().showText(CreditApproveActivity.this, R.string.submit_success);
+                                UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                                userInfo.setStatus(UserInfo.CREDIT_IS_APPROVE_ING);
+                                LocalUser.getUser().setUserInfo(userInfo);
+                                mSubmit.setText(R.string.is_auditing);
+                                mSubmit.setEnabled(false);
+                                setViewEnable(false);
+                            } else {
+                                mSubmit.setText(R.string.again_submit);
+                                ToastUtil.curt(resp.getMsg());
+                            }
+                        }
+                    })
+                    .fire();
+        }
     }
 
     private void submitUserCreditApprove(final String realName, String identityCard) {
         if (mImagePath.size() > 1) {
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
             String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
-            //            if (TextUtils.isEmpty(imageFront)) {
-//                imageFront = mImagePath.get(0);
-//            }
-//            if (TextUtils.isEmpty(imageReserve)) {
-//                imageReserve = mImagePath.get(1);
-//            }
+            if (TextUtils.isEmpty(imageFront)) {
+                imageFront = mImagePath.get(0);
+            }
+            if (TextUtils.isEmpty(imageReserve)) {
+                imageReserve = mImagePath.get(1);
+            }
             Client.submitUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
                     .setIndeterminate(this)
                     .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
@@ -327,6 +366,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     .fire();
         }
     }
+
 
     @Override
     public void onImagePath(int index, String imagePath) {

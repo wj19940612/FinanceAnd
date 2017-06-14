@@ -269,7 +269,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 if (item.titleIsUserName() && item.getSourceUser() != null) {
                     mTitle.setText(item.getSourceUser().getUserName());
                 } else if (item.isForcaest() && item.getData() != null) {
-                    mTitle.setText(item.getData().getVarietyName());
+                    mTitle.setText(item.getData().getContent());
                 } else {
                     mTitle.setText(item.getTitle());
                 }
