@@ -111,6 +111,10 @@ public class ViewpointFragment extends BaseFragment {
         mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -180,7 +184,6 @@ public class ViewpointFragment extends BaseFragment {
         mOpinionList.clear();
         Client.findViewpoint(mPage, mPageSize, mVarietyId)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Opinion>>, List<Opinion>>() {
                     @Override
                     protected void onRespSuccessData(List<Opinion> data) {
@@ -313,7 +316,20 @@ public class ViewpointFragment extends BaseFragment {
                     }
                 }
             });
-            helper.getView(R.id.contentRl).setOnClickListener(new View.OnClickListener() {
+
+            helper.getView(R.id.userName).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, item.getUserId())
+                                .executeForResult(REQ_CODE_USERDATA);
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                }
+            });
+            helper.getView(R.id.layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin()) {
@@ -325,18 +341,7 @@ public class ViewpointFragment extends BaseFragment {
                     }
                 }
             });
-            helper.getView(R.id.commentRl).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), OpinionDetailsActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                                .executeForResult(REQ_CODE_ATTENTION);
-                    } else {
-                        Launcher.with(getActivity(), LoginActivity.class).execute();
-                    }
-                }
-            });
+
         }
     }
 }

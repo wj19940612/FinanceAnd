@@ -127,6 +127,11 @@ public class StockNewsFragment extends BaseFragment {
         }
     };
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
         if (recyclerView == null) return false;
         if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())

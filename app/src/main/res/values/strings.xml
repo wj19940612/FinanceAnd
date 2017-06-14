@@ -3,6 +3,7 @@
 
     <!-- Dialog -->
     <string name="ok">确定</string>
+    <string name="confirm">确认</string>
     <string name="cancel">取消</string>
 
     <!-- Main -->
@@ -60,7 +61,7 @@
     <string name="future">期货</string>
     <string name="stock">股票</string>
     <string name="forex">外汇</string>
-    <string name="help">互助</string>
+    <string name="help">互助借款</string>
     <string name="self_choice">自选</string>
 
     <string name="banner_detail">活动详情</string>
@@ -141,6 +142,7 @@
     <string name="fail_list">跌幅榜</string>
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
+    <string name="market_trading">交易中</string>
     <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
@@ -244,10 +246,10 @@
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>
     <string name="relieve_shield">解除屏蔽</string>
-    <string name="relieve_shield_dialog_title">是否对“%1$s”\n解除屏蔽?</string>
+    <string name="relieve_shield_dialog_title">是否对“%1$s”解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
 
-    <string name="shield_dialog_title">是否对“%1$s”\n屏蔽?</string>
+    <string name="shield_dialog_title">是否对“%1$s”屏蔽?</string>
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再展示在你的经济圈。</string>
 
     <string name="cancel_attention_dialog_title">是否不再关注“%1$s”?</string>
@@ -324,6 +326,7 @@
     <string name="bullish">看涨</string>
     <string name="bearish">看跌</string>
     <string name="prediction_rule">预测规则</string>
+    <string name="about_prediction_rule">预测规则></string>
     <string name="big_god_to_predict_the_market_next_day">大神,来预测下一个交易日的涨跌</string>
     <string name="prediction_rule1">1.当前交易日开市后到下一个交易日开市前，预测下一个交易日的价格涨跌</string>
     <string name="prediction_rule2">2.价格涨跌以开盘价与收盘价对比，开盘价高于收盘价则价格跌，开盘价低于收盘价，则价格涨</string>
@@ -483,8 +486,6 @@
     <string name="share_failed">分享失败了</string>
     <string name="share_cancel">分享取消了</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
-    <string name="future_share_host">/mobi/future/future_quota?varietyId=%1$d</string>
-    <string name="stock_share_host">/mobi/stock/stock_quota?varietyType=%1$s&amp;varietyId=%2$d</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>

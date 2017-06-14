@@ -5,124 +5,105 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
-import com.igexin.sdk.PushManager;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.netty.Netty;
-import com.sbai.finance.service.PushIntentService;
-import com.sbai.finance.service.PushService;
-import com.sbai.finance.utils.MessageEvent;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
-	@BindView(R.id.viewPager)
-	ViewPager mViewPager;
-	@BindView(R.id.bottomTabs)
-	BottomTabs mBottomTabs;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.bottomTabs)
+    BottomTabs mBottomTabs;
 
-	private MainFragmentsAdapter mMainFragmentsAdapter;
+    private MainFragmentsAdapter mMainFragmentsAdapter;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		ButterKnife.bind(this);
-		EventBus.getDefault().register(this);
-		initView();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        initView();
+    }
 
-		// init getui push
-		PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
-		// 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
-		// AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
-		// IntentService, 必须在 AndroidManifest 中声明)
-		PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), PushIntentService.class);
-	}
+    @Override
+    protected void onDestroy() {
+        Netty.get().shutdown();
+        super.onDestroy();
+    }
 
-	@Override
-	protected void onDestroy() {
-		Netty.get().shutdown();
-		super.onDestroy();
-		EventBus.getDefault().unregister(this);
-	}
+    private void initView() {
+        mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mMainFragmentsAdapter);
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
-	private void initView() {
-		mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
-		mViewPager.setAdapter(mMainFragmentsAdapter);
-		mViewPager.setOffscreenPageLimit(2);
-		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			}
+            @Override
+            public void onPageSelected(int position) {
+                mBottomTabs.selectTab(position);
+            }
 
-			@Override
-			public void onPageSelected(int position) {
-				mBottomTabs.selectTab(position);
-			}
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        mViewPager.setCurrentItem(0);
 
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-		});
-		mViewPager.setCurrentItem(0);
+        mBottomTabs.setOnTabClickListener(new BottomTabs.OnTabClickListener() {
+            @Override
+            public void onTabClick(int position) {
+                mBottomTabs.selectTab(position);
+                mViewPager.setCurrentItem(position, false);
+            }
+        });
+    }
 
-		mBottomTabs.setOnTabClickListener(new BottomTabs.OnTabClickListener() {
-			@Override
-			public void onTabClick(int position) {
-				mBottomTabs.selectTab(position);
-				mViewPager.setCurrentItem(position, false);
-			}
-		});
-	}
 
-	@Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-	public void onEvent(MessageEvent event) {
-		if (null != event) {
-			mBottomTabs.setPointNum(event.num);
-			EventBus.getDefault().removeAllStickyEvents();
-		}
-	}
+    @Override
+    public void onNoReadNewsNumber(int index, int count) {
+        mBottomTabs.setPointNum(count);
+    }
 
-	private static class MainFragmentsAdapter extends FragmentPagerAdapter {
+    private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 
-		FragmentManager mFragmentManager;
+        FragmentManager mFragmentManager;
 
-		public MainFragmentsAdapter(FragmentManager fm) {
-			super(fm);
-			mFragmentManager = fm;
-		}
+        public MainFragmentsAdapter(FragmentManager fm) {
+            super(fm);
+            mFragmentManager = fm;
+        }
 
-		@Override
-		public Fragment getItem(int position) {
-			switch (position) {
-				case 0:
-					return new HomeFragment();
-				case 1:
-					return new EconomicCircleFragment();
-				case 2:
-					return new MineFragment();
-			}
-			return null;
-		}
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new HomeFragment();
+                case 1:
+                    return new EconomicCircleFragment();
+                case 2:
+                    return new MineFragment();
+            }
+            return null;
+        }
 
-		@Override
-		public int getCount() {
-			return 3;
-		}
+        @Override
+        public int getCount() {
+            return 3;
+        }
 
-		public Fragment getFragment(int position) {
-			return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
-		}
-	}
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
+        }
+    }
 }

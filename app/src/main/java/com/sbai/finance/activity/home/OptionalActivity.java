@@ -32,6 +32,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingListView.SlideItem;
 import com.sbai.finance.view.slidingListView.SlideListView;
 
@@ -57,6 +58,8 @@ public class OptionalActivity extends BaseActivity implements
     TextView mEmpty;
     @BindView(R.id.addOptional)
     TextView mAddOptional;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private SlideListAdapter mSlideListAdapter;
     private int mPage = 0;
     private int mPageSize = 200;
@@ -115,9 +118,21 @@ public class OptionalActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
     }
-    @OnClick(R.id.addOptional)
+    @OnClick({R.id.addOptional,R.id.titleBar})
     public void onClick(View view){
-        AddOptionalDialogFragment.newInstance().show(getSupportFragmentManager());
+        switch (view.getId()){
+            case R.id.addOptional:
+                AddOptionalDialogFragment.newInstance().show(getSupportFragmentManager());
+                break;
+            case R.id.titleBar:
+                mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListView.smoothScrollToPosition(0);
+                    }
+                });
+                break;
+        }
     }
 
     private void requestOptionalData() {

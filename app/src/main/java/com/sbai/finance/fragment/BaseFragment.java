@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ListView;
 
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -48,6 +51,24 @@ public class BaseFragment extends Fragment implements
         super.onDestroyView();
         stopScheduleJob();
         API.cancel(TAG);
+    }
+
+    protected void scrollToTop(TitleBar titleBar, final ListView listView) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listView.smoothScrollToPosition(0);
+            }
+        });
+    }
+
+    protected void scrollToTop(TitleBar titleBar, final RecyclerView recyclerView) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
     }
 
     protected void startScheduleJob(int millisecond) {

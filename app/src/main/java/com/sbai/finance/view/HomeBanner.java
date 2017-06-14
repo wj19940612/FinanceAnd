@@ -162,6 +162,10 @@ public class HomeBanner extends FrameLayout {
         public int getCount() {
             return mList.size();
         }
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
@@ -174,9 +178,10 @@ public class HomeBanner extends FrameLayout {
             ImageView imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             final BannerModel information = mList.get(pos);
-            container.addView(imageView, 0);
+
+            container.addView(imageView);
             if (!TextUtils.isEmpty(information.getCover())) {
-                Glide.with(mContext).load(information.getCover()).into(imageView);
+                Glide.with(mContext).load(information.getCover()).thumbnail(0.1f).into(imageView);
             }
             imageView.setOnClickListener(new OnClickListener() {
                 @Override

@@ -6,38 +6,39 @@ import android.os.Parcelable;
 public class StockRTData implements Parcelable {
 
     /**
-     * ask_price1 : 0
-     * ask_price2 : 0
-     * ask_price3 : 10.50
-     * ask_price4 : 0.02
-     * ask_price5 : -146525.10
-     * ask_volume1 : 0
-     * ask_volume2 : 1
-     * ask_volume3 : 0
-     * ask_volume4 : 157503016
-     * ask_volume5 : 16
-     * bid_price1 : 0
-     * bid_price2 : 0
-     * bid_price3 : 65.53
-     * bid_price4 : 0
-     * bid_price5 : 0
-     * bid_volume1 : 0
-     * bid_volume2 : 0
-     * bid_volume3 : 0
-     * bid_volume4 : 0
-     * bid_volume5 : 0
-     * business_amount : 36153456
-     * business_balance : 666589696.00
-     * code_name : 创业板
-     * high_price : 0
-     * last_price : 0
-     * low_price : 0
-     * open_price : 0
-     * prev_price : 515.00
-     * rise_pre : -100.00
-     * rise_price : -515.00
-     * stock_code : 395004
-     * stock_typename : 深证指数
+     * ask_price1 : 9.13
+     * ask_price2 : 9.14
+     * ask_price3 : 9.15
+     * ask_price4 : 9.16
+     * ask_price5 : 9.17
+     * ask_volume1 : 741573
+     * ask_volume2 : 458866
+     * ask_volume3 : 596709
+     * ask_volume4 : 399100
+     * ask_volume5 : 809260
+     * bid_price1 : 9.12
+     * bid_price2 : 9.11
+     * bid_price3 : 9.10
+     * bid_price4 : 9.09
+     * bid_price5 : 9.08
+     * bid_volume1 : 166140
+     * bid_volume2 : 163201
+     * bid_volume3 : 302327
+     * bid_volume4 : 872128
+     * bid_volume5 : 429800
+     * business_amount : 44843496
+     * business_balance : 407876704.00
+     * code_name : 平安银行
+     * high_price : 9.14
+     * last_price : 9.12
+     * low_price : 9.05
+     * open_price : 9.11
+     * prev_price : 9.11
+     * rise_pre : 0.11
+     * rise_price : 0.01
+     * status : 0
+     * stock_code : 000001
+     * stock_typename : 深证A股
      */
 
     private String ask_price1;
@@ -70,6 +71,7 @@ public class StockRTData implements Parcelable {
     private String prev_price;
     private String rise_pre;
     private String rise_price;
+    private String status;
     private String stock_code;
     private String stock_typename;
 
@@ -313,6 +315,14 @@ public class StockRTData implements Parcelable {
         this.rise_price = rise_price;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getStock_code() {
         return stock_code;
     }
@@ -366,6 +376,7 @@ public class StockRTData implements Parcelable {
         dest.writeString(this.prev_price);
         dest.writeString(this.rise_pre);
         dest.writeString(this.rise_price);
+        dest.writeString(this.status);
         dest.writeString(this.stock_code);
         dest.writeString(this.stock_typename);
     }
@@ -404,11 +415,12 @@ public class StockRTData implements Parcelable {
         this.prev_price = in.readString();
         this.rise_pre = in.readString();
         this.rise_price = in.readString();
+        this.status = in.readString();
         this.stock_code = in.readString();
         this.stock_typename = in.readString();
     }
 
-    public static final Parcelable.Creator<StockRTData> CREATOR = new Parcelable.Creator<StockRTData>() {
+    public static final Creator<StockRTData> CREATOR = new Creator<StockRTData>() {
         @Override
         public StockRTData createFromParcel(Parcel source) {
             return new StockRTData(source);

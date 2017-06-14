@@ -5,6 +5,8 @@ package com.sbai.finance.model.economiccircle;
  */
 
 public class BorrowMoney {
+	public static final int STATUS_NO_AUDIT=1;
+	public static final int STATUS_AUDITED=2;
 
 	/**
 	 * auditStatus : 2

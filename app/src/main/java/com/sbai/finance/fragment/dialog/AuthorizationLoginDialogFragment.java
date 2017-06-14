@@ -73,7 +73,7 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
     }
 
     private void initTitleBar() {
-        mTitleBar.setBackClickLisenter(new TitleBar.OnBackClickListener() {
+        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
             @Override
             public void onClick() {
                 dismiss();

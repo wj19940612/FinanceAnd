@@ -3,6 +3,7 @@ package com.sbai.finance.activity.trade;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 
 /**
@@ -15,16 +16,17 @@ public class TradeWebActivity extends WebActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadTestData();
+        setUpTitleBar();
+        loadUrl();
     }
 
-    @Override
-    protected boolean isNeedViewTitle() {
-        return false;
+    private void setUpTitleBar() {
+        getTitleBar().setTitle(getString(R.string.quick_trade));
     }
 
-    private void loadTestData() {
-        String testUrl = "https://www.dajiexin.com/";
-        getWebView().loadUrl(testUrl);
+
+    private void loadUrl() {
+        String url = "https://www.dajiexin.com/";
+        getWebView().loadUrl(url);
     }
 }

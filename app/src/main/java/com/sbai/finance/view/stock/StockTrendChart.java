@@ -12,6 +12,7 @@ import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
+import com.sbai.chart.ChartSettings;
 import com.sbai.chart.ChartView;
 import com.sbai.finance.model.stock.StockTrendData;
 
@@ -34,7 +35,7 @@ public class StockTrendChart extends ChartView {
 
     private String[] mTimeLine;
     private float mVolumeWidth;
-
+    private StockTrendView.Settings mSettings;
 
     public StockTrendChart(Context context) {
         super(context);
@@ -135,6 +136,13 @@ public class StockTrendChart extends ChartView {
                 redraw();
             }
         }
+    }
+
+    @Override
+    public void setSettings(ChartSettings settings) {
+        mSettings = (StockTrendView.Settings) settings;
+        super.setSettings(settings);
+        redraw();
     }
 
     public void setVisibleList(SparseArray<StockTrendData> visibleList) {
@@ -412,9 +420,9 @@ public class StockTrendChart extends ChartView {
         float textX = left - textWidth / 2;
         canvas.drawText(mTimeLine[0], textX, textY, sPaint);
 
-        textWidth = sPaint.measureText(mTimeLine[1]);
+        textWidth = sPaint.measureText(mTimeLine[2]);
         textX = (left + width) / 2 - textWidth / 2;
-        canvas.drawText(mTimeLine[1], textX, textY, sPaint);
+        canvas.drawText(mTimeLine[2], textX, textY, sPaint);
 
         textWidth = sPaint.measureText(mTimeLine[3]);
         textX = left + width - textWidth / 2;

@@ -76,7 +76,7 @@ public class Client {
      * @return
      */
     public static API getBorrowMoneyDetail(int id) {
-        return new API(POST, "/coterie/help/loan/showDetails.do",
+        return new API(POST, "/coterie/help/loan/showDetail.do",
                 new ApiParams()
                         .put("id", id));
     }
@@ -1444,5 +1444,9 @@ public class Client {
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
     public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
+    //期货分享地址
+    public static final String FUTURE_SHARE_URL = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
+    //股票分享地址
+    public static final String STOCK_SHARE_URL = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
 
 }

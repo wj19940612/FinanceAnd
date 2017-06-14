@@ -33,7 +33,6 @@ import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
-import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -61,6 +60,8 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public abstract class StockTradeActivity extends BaseActivity {
+
+    protected int pagePosition;
 
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
 
@@ -264,7 +265,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_PUBLISH_VIEWPOINT:
@@ -289,6 +290,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             if (details != null) {
                 viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
             } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
+                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
                 viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
             } else {
                 viewpointFragment.refreshPointList();
@@ -369,9 +371,13 @@ public abstract class StockTradeActivity extends BaseActivity {
             exchangeStatus.setVisibility(View.VISIBLE);
         }
 
-        final String shareUrl = API.getHost() +
-                getString(R.string.stock_share_host, mVariety.getVarietyType(), mVariety.getVarietyId());
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+        setUpTitleBar(mTitleBar);
+    }
+
+    public void setUpTitleBar(TitleBar titleBar) {
+        final String shareUrl = String.format(Client.STOCK_SHARE_URL,
+                mVariety.getVarietyType(), mVariety.getVarietyId());
+        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDialogFragment
@@ -396,12 +402,14 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     protected void initChartViews() {
-        ChartSettings settings = new ChartSettings();
+        StockTrendView.Settings settings = new StockTrendView.Settings();
         settings.setBaseLines(5);
         settings.setNumberScale(2);
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
         settings.setXAxis(240);
+//        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
+//        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();

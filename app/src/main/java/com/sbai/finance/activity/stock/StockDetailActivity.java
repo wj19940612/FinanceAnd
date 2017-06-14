@@ -7,15 +7,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.StockNewsFragment;
 import com.sbai.finance.fragment.trade.ViewpointFragment;
+import com.sbai.finance.view.TitleBar;
 
 public class StockDetailActivity extends StockTradeActivity {
 
     private SubPageAdapter mSubPageAdapter;
+    private int pagePosition;
 
     @Override
     protected ViewPager.OnPageChangeListener createPageChangeListener() {
@@ -27,6 +30,7 @@ public class StockDetailActivity extends StockTradeActivity {
 
             @Override
             public void onPageSelected(int position) {
+                pagePosition = position;
                 if (position == 1) {
                     StockNewsFragment stockNewsFragment = getStockNewsFragment();
                     if (stockNewsFragment != null) {
@@ -35,7 +39,7 @@ public class StockDetailActivity extends StockTradeActivity {
                 }
 
                 if (position == 2) {
-                    FinanceFragment financeFragment= getFinanceFragment();
+                    FinanceFragment financeFragment = getFinanceFragment();
                     if (financeFragment != null) {
                         financeFragment.requestCompanyAnnualReport(0);
                     }
@@ -47,6 +51,24 @@ public class StockDetailActivity extends StockTradeActivity {
             }
         };
 
+    }
+
+    @Override
+    public void setUpTitleBar(TitleBar titleBar) {
+        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = mSubPageAdapter.getFragment(pagePosition);
+                if (fragment instanceof StockNewsFragment) {
+                    ((StockNewsFragment) fragment).scrollToTop();
+                } else if (fragment instanceof FinanceFragment) {
+                    ((FinanceFragment) fragment).scrollToTop();
+                } else if (fragment instanceof ViewpointFragment) {
+                    ((ViewpointFragment) fragment).scrollToTop();
+                }
+            }
+        });
+        super.setUpTitleBar(titleBar);
     }
 
     @Override

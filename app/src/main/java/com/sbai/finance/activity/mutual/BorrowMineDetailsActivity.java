@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
@@ -62,6 +64,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BorrowMineDetailsActivity extends BaseActivity {
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.avatar)
     ImageView mAvatar;
     @BindView(R.id.userName)
@@ -124,6 +128,8 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     TextView mSend;
     @BindView(R.id.leaveMessageArea)
     LinearLayout mLeaveMessageArea;
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
     private int mMax;
     private BorrowMine mBorrowMine;
     private MessageAdapter mMessageAdapter;
@@ -398,18 +404,6 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         mBorrowDeadline.setText(getActivity().getString(R.string.day, FinanceUtil.formatWithScaleNoZero(mBorrowMine.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(mBorrowMine.getInterest())));
 
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, mBorrowMine.getUserId())
-                            .executeForResult(REQ_CODE_USERDATA);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-        });
         if (!TextUtils.isEmpty(mBorrowMine.getContentImg())) {
             String[] images = mBorrowMine.getContentImg().split(",");
             switch (images.length) {
@@ -491,6 +485,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     mCancel.setEnabled(true);
                     mCancel.setText(getString(R.string.cancel_borrow_in));
                 }else{
+                    mStatus.setText(getString(R.string.commit));
                     mCancel.setEnabled(false);
                     mCancel.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.unluckyText));
                     mCancel.setTextColor( Color.WHITE);
@@ -554,10 +549,19 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             }
         });
     }
-
-    @OnClick({R.id.writeMessage, R.id.call, R.id.callOnly, R.id.alreadyRepay, R.id.cancel,R.id.send})
+    @OnClick({R.id.writeMessage, R.id.call, R.id.callOnly, R.id.alreadyRepay, R.id.cancel,R.id.send,R.id.titleBar,R.id.userName,R.id.avatar})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.userName:
+            case R.id.avatar:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), UserDataActivity.class)
+                            .putExtra(Launcher.USER_ID, mBorrowMine.getUserId())
+                            .executeForResult(REQ_CODE_USERDATA);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
             case R.id.call:
             case R.id.callOnly:
                 requestPhone(mBorrowMine.getId());
@@ -601,6 +605,14 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(mLeaveMessage.getText())){
                     requestSendMessage();
                 }
+                break;
+            case R.id.titleBar:
+                mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mScrollView.smoothScrollTo(0,0);
+                    }
+                });
                 break;
 
         }
@@ -659,7 +671,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             }
             private void bindDataWithView(final BorrowMessage item, Context context, final Callback callback){
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        " :"+item.getContent(),1.0f, ContextCompat.getColor(context, R.color.blackAssist));
+                        ": "+item.getContent(),1.0f, ContextCompat.getColor(context, R.color.blackAssist));
                 attentionSpannableString.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {
@@ -693,7 +705,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         mIsAttention.setText("");
                         mBorrowMine.setIsAttention(1);
                     }
+                    if (mWhetherAttentionShieldOrNot.isShield()){
+                        requestMessageList();
+                    }
                 }
+
             }
         }
     }

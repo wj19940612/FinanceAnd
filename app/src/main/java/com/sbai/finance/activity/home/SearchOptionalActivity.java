@@ -43,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-06-0.
@@ -176,6 +177,16 @@ public class SearchOptionalActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mSearch.removeTextChangedListener(mValidationWatcher);
+    }
+    @OnClick(R.id.titleBar)
+    public void OnClick(View view){
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListView.smoothScrollToPosition(0);
+            }
+        });
+
     }
 
     static class OptionalAdapter extends ArrayAdapter<Variety> {

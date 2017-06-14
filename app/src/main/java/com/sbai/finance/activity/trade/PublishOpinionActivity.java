@@ -27,6 +27,7 @@ import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,6 +40,8 @@ public class PublishOpinionActivity extends BaseActivity {
 
     public static final String REFRESH_POINT = "refresh_point";
 
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.opinionType)
     ImageView mOpinionType;
     @BindView(R.id.opinionContent)
@@ -101,6 +104,12 @@ public class PublishOpinionActivity extends BaseActivity {
             mOpinionType.setImageResource(R.drawable.ic_opinion_down);
         }
         mTextLength.setText(getString(R.string.opinion_length, 0));
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOpinionContent.scrollTo(0, 0);
+            }
+        });
     }
 
     private ValidationWatcher mOptionContentWatcher = new ValidationWatcher() {
@@ -111,7 +120,7 @@ public class PublishOpinionActivity extends BaseActivity {
             } else {
                 mSubmitButton.setEnabled(false);
             }
-            mTextLength.setText(getString(R.string.opinion_length,s.length()));
+            mTextLength.setText(getString(R.string.opinion_length, s.length()));
         }
     };
 

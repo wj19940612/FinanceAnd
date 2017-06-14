@@ -98,7 +98,7 @@ public class BorrowInHisDetailActivity extends BaseActivity {
     private void initView() {
         calculateAvatarNum(this);
         if (mIsReturnHome!=-1){
-            mTitleBar.setBackClickLisenter(new TitleBar.OnBackClickListener() {
+            mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
                 @Override
                 public void onClick() {
                     Launcher.with(getActivity(), MainActivity.class)

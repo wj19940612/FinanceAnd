@@ -52,6 +52,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 	private static final int REQ_BORROW_MONEY_DETAILS = 1001;
 	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1002;
-
+    @BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.userName)
@@ -117,6 +119,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mSend;
 	@BindView(R.id.leaveMessageArea)
 	LinearLayout mLeaveMessageArea;
+	@BindView(R.id.status)
+	TextView mStatus;
 
 	private int mMax;
 	private int mDataId;
@@ -214,7 +218,11 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	}
 
 	private void requestSendMessage() {
-		Client.sendBorrowMessage(mDataId, mLeaveMessage.getText().toString().trim()).setTag(TAG)
+		String content = mLeaveMessage.getText().toString();
+		if (content.length()>=100){
+			content = content.substring(0,100);
+		}
+		Client.sendBorrowMessage(mDataId, content).setTag(TAG)
 				.setCallback(new Callback<Resp<Object>>() {
 					@Override
 					protected void onRespSuccess(Resp<Object> resp) {
@@ -269,7 +277,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, GoodHeartPeopleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 					}
@@ -281,7 +288,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, GoodHeartPeopleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 					}
@@ -305,7 +311,6 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 					public void onClick(View v) {
 						Launcher.with(BorrowMoneyDetailsActivity.this, GoodHeartPeopleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 								.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
 								.executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
 					}
@@ -341,34 +346,20 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getDays())));
 		mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowMoneyDetails.getInterest())));
 
-		mAvatar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(context, UserDataActivity.class)
-							.putExtra(Launcher.USER_ID, borrowMoneyDetails.getUserId())
-							.executeForResult(REQ_CODE_USERDATA);
-				} else {
-					Launcher.with(context, LoginActivity.class).execute();
-				}
-			}
-		});
-
-
 
 		if (LocalUser.getUser().isLogin()) {
 			if (borrowMoneyDetails.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
 				mGiveHelp.setVisibility(View.GONE);
 			}
 		}
-		if (borrowMoneyDetails.getIsIntention() == 1) {
+		if (borrowMoneyDetails.getIsIntention() == 2) {
 			mGiveHelp.setText(R.string.submitted);
 			mGiveHelp.setEnabled(false);
 		} else {
 			mGiveHelp.setText(R.string.give_help);
 			mGiveHelp.setEnabled(true);
 		}
-
+		mStatus.setText(getString(R.string.wait_help));
 		mGiveHelp.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -502,9 +493,19 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		});
 	}
 
-	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send})
+	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send,R.id.userName,R.id.avatar,R.id.titleBar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
+			case R.id.userName:
+			case R.id.avatar:
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(getActivity(), UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
+							.executeForResult(REQ_CODE_USERDATA);
+				} else {
+					Launcher.with(getActivity(), LoginActivity.class).execute();
+				}
+				break;
 			case R.id.writeMessage:
 				mLeaveMessageArea.setVisibility(View.VISIBLE);
 				mLeaveMessage.setText("");
@@ -523,6 +524,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
 				}
+				break;
+			case R.id.titleBar:
+				mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mScrollView.smoothScrollTo(0,0);
+					}
+				});
 				break;
 		}
 	}
@@ -567,7 +576,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 			private void bindDataWithView(final BorrowMessage item, Context context, final Callback callback) {
 				SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-						" :" + item.getContent(), 1.0f, ContextCompat.getColor(context, R.color.blackAssist));
+						": " + item.getContent(), 1.0f, ContextCompat.getColor(context, R.color.blackAssist));
 				attentionSpannableString.setSpan(new ClickableSpan() {
 					@Override
 					public void onClick(View widget) {
@@ -609,6 +618,9 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						mIsAttention.setText(R.string.is_attention);
 					} else {
 						mIsAttention.setText("");
+					}
+					if (whetherAttentionShieldOrNot.isShield()){
+						requestMessageList();
 					}
 				}
 

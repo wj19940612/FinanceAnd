@@ -91,7 +91,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         ButterKnife.bind(this);
-
+        scrollToTop(mTitleBar, mListView);
         initViews();
         requestFeedbackList(true);
     }
@@ -145,7 +145,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
             mListView.setSelection(View.FOCUS_DOWN);
-            new Handler() {}
+            new Handler() {
+            }
                     .postDelayed(new Runnable() {
                         @Override
                         public void run() {

@@ -27,6 +27,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -50,6 +51,7 @@ import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.GrapeGridView;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 
 import java.util.List;
@@ -78,6 +80,10 @@ public class BorrowActivity extends BaseActivity {
 	IconTextRow mLocation;
 	@BindView(R.id.contentDays)
 	LinearLayout mContentDays;
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
+	@BindView(R.id.scrollView)
+	ScrollView mScrollView;
     private LocalBroadcastManager mLocalBroadcastManager;
 	private DelPhotoBroadcastReceiver mDelPhotoBroadcastReceiver;
 	private IntentFilter mIntentFilter;
@@ -185,7 +191,7 @@ public class BorrowActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol,R.id.location})
+	@OnClick({R.id.publish,R.id.contentDays,R.id.protocol,R.id.location,R.id.titleBar})
 	public void onClick(View view){
 		switch (view.getId()){
 			case R.id.publish:
@@ -321,6 +327,14 @@ public class BorrowActivity extends BaseActivity {
 										.execute();
 							}
 						}).fire();
+				break;
+			case R.id.titleBar:
+				mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mScrollView.smoothScrollTo(0,0);
+					}
+				});
 				break;
 			default:
 				break;

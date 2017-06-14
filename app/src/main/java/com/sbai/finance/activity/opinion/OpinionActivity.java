@@ -27,11 +27,13 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class OpinionActivity extends BaseActivity implements AbsListView.OnScrollListener {
     @BindView(R.id.listView)
@@ -40,6 +42,8 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.empty)
     TextView mEmpty;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private OpinionListAdapter mOpinionListAdapter;
 
     @Override
@@ -118,6 +122,16 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+    @OnClick(R.id.titleBar)
+    public void OnClick(View view){
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListView.smoothScrollToPosition(0);
+            }
+        });
+
     }
 
     public static class OpinionListAdapter extends ArrayAdapter<ViewPointMater> {

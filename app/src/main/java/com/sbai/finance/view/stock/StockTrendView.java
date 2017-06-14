@@ -3,6 +3,7 @@ package com.sbai.finance.view.stock;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -68,7 +69,7 @@ public class StockTrendView extends LinearLayout {
 
     private StockTrendChart mTrendView;
     private StockTouchView mTouchView;
-    private StockTwinkleView mTwinkleView;
+    //private StockTwinkleView mTwinkleView;
 
     private View mFivePriceView;
 
@@ -92,15 +93,15 @@ public class StockTrendView extends LinearLayout {
         mTouchView = new StockTouchView(getContext(), mTrendView);
         mTouchView.setPadding(padding, 0, padding, 0);
 
-        mTwinkleView = new StockTwinkleView(getContext(), mTrendView);
-        mTwinkleView.setPadding(padding, 0, padding, 0);
+//        mTwinkleView = new StockTwinkleView(getContext(), mTrendView);
+//        mTwinkleView.setPadding(padding, 0, padding, 0);
 
         mFivePriceView = LayoutInflater.from(getContext()).inflate(R.layout.view_five_price, null);
 
         FrameLayout container = new FrameLayout(getContext());
         container.addView(mTrendView);
         container.addView(mTouchView);
-        container.addView(mTwinkleView);
+//        container.addView(mTwinkleView);
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
         addView(container, params);
@@ -119,7 +120,7 @@ public class StockTrendView extends LinearLayout {
     public void setSettings(ChartSettings settings) {
         mTrendView.setSettings(settings);
         mTouchView.setSettings(settings);
-        mTwinkleView.setSettings(settings);
+        //mTwinkleView.setSettings(settings);
     }
 
     public ChartSettings getSettings() {
@@ -128,12 +129,12 @@ public class StockTrendView extends LinearLayout {
 
     public void setDataList(List<StockTrendData> dataList) {
         mTrendView.setDataList(dataList);
-        mTwinkleView.setDataList(dataList);
+        //mTwinkleView.setDataList(dataList);
     }
 
     public void setUnstableData(StockTrendData unstableData) {
         mTrendView.setUnstableData(unstableData);
-        mTwinkleView.setUnstableData(unstableData);
+        //mTwinkleView.setUnstableData(unstableData);
         mTouchView.setUnstableData(unstableData);
     }
 
@@ -190,5 +191,36 @@ public class StockTrendView extends LinearLayout {
         BigDecimal decimal = BigDecimal.valueOf(askVolume)
                 .divide(new BigDecimal(10000), 1, BigDecimal.ROUND_HALF_EVEN);
         return decimal.toString() + "万";
+    }
+
+    public static class Settings extends ChartSettings {
+
+        private String mOpenMarketTimes;
+        private String mDisplayMarketTimes;
+
+        public void setOpenMarketTimes(String openMarketTimes) {
+            mOpenMarketTimes = openMarketTimes;
+        }
+
+        public void setDisplayMarketTimes(String displayMarketTimes) {
+            mDisplayMarketTimes = displayMarketTimes;
+        }
+
+        public String[] getOpenMarketTimes() {
+            String[] result = new String[0];
+            if (!TextUtils.isEmpty(mOpenMarketTimes)) {
+                return mOpenMarketTimes.split(";");
+            }
+            return result;
+        }
+
+        public String[] getDisplayMarketTimes() {
+            String[] result = new String[0];
+            if (TextUtils.isEmpty(mDisplayMarketTimes)) {
+                return mDisplayMarketTimes.split(";");
+            }
+            return result;
+        }
+
     }
 }
