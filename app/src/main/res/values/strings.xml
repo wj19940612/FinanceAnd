@@ -326,6 +326,7 @@
     <string name="bullish">看涨</string>
     <string name="bearish">看跌</string>
     <string name="prediction_rule">预测规则</string>
+    <string name="about_prediction_rule">预测规则></string>
     <string name="big_god_to_predict_the_market_next_day">大神,来预测下一个交易日的涨跌</string>
     <string name="prediction_rule1">1.当前交易日开市后到下一个交易日开市前，预测下一个交易日的价格涨跌</string>
     <string name="prediction_rule2">2.价格涨跌以开盘价与收盘价对比，开盘价高于收盘价则价格跌，开盘价低于收盘价，则价格涨</string>
