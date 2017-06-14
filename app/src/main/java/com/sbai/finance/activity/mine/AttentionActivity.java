@@ -245,6 +245,14 @@ public class AttentionActivity extends BaseActivity {
                         Launcher.with(context, UserDataActivity.class).putExtra(Launcher.USER_ID, item.getFollowUserId()).execute();
                     }
                 });
+
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class).putExtra(Launcher.USER_ID, item.getFollowUserId()).execute();
+                    }
+                });
+
                 mRelive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
