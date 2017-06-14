@@ -39,7 +39,7 @@ public class WalletActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
         ButterKnife.bind(this);
-        SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.balance), "\n" + FinanceUtil.formatWithScale(1000000000), 2.6f);
+        SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.balance), "\n" + FinanceUtil.formatWithScale(100000), 2.6f);
         mBalance.setText(spannableString);
     }
 
