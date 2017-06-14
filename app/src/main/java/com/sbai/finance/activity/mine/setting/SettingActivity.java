@@ -9,9 +9,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,8 +52,8 @@ public class SettingActivity extends BaseActivity {
 
                 break;
             case R.id.appInfo:
-                ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "
-                        + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
+//                ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "
+//                        + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
                 break;
         }
     }

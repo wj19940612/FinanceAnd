@@ -244,6 +244,13 @@ public class FansActivity extends BaseActivity {
                     }
                 });
 
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class).putExtra(Launcher.USER_ID, item.getUserId()).execute();
+                    }
+                });
+
                 if (item.isNotAttention()) {
                     mRelive.setText(R.string.attention);
                     mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_fans_follow, 0, 0);

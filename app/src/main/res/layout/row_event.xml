@@ -33,7 +33,7 @@
             android:paddingRight="25dp"
             android:textColor="@color/assistText"
             android:textSize="@dimen/list_hint_size"
-            android:visibility="visible"
+            android:visibility="gone"
             tool:text="中国财经网"/>
 
         <TextView

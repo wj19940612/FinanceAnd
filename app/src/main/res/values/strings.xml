@@ -162,7 +162,7 @@
     <string name="plus_attention">+ 关注</string>
     <string name="fans">粉丝</string>
     <string name="my_publish">我的发表</string>
-    <string name="economic_circle_news_list">经济圈列表</string>
+    <string name="economic_circle_news_list">经济圈消息列表</string>
     <string name="her_publish">TA的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
@@ -498,6 +498,32 @@
     <string name="please_confirm_safety_pass">请再次确认安全密码</string>
     <string name="twice_pass_is_different">两次密码输入不一致</string>
 
+
     <!--权限-->
     <string name="please_open_camera_permission">请打开相机权限</string>
+
+
+    <!--钱包-->
+    <string name="balance">账户余额</string>
+    <string name="recharge">充值</string>
+    <string name="withdraw">提现</string>
+    <string name="bank_card">银行卡</string>
+    <string name="recharge_way">充值方式</string>
+    <string name="bank_card_pay">%1$s(%2$d)</string>
+    <string name="bank_card_recharge_limit">单笔限额￥%1$d元</string>
+    <string name="recharge_count">充值金额</string>
+    <string name="recharge_hint">1元起充</string>
+    <string name="recharge_service">遇到任何问题，请联系客服></string>
+    <string name="ali">支付宝</string>
+    <string name="wei_xin">微信</string>
+    <string name="next">下一步</string>
+    <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
+    <string name="card_holder_name_hint">持卡人真实姓名</string>
+    <string name="card_holder_identity_card_hint">持卡人身份证号</string>
+    <string name="identity_card">身份证号</string>
+    <string name="bank_card_number">银行卡号</string>
+    <string name="bank_card_number_hint">仅限借记卡(储蓄卡)</string>
+    <string name="bank">银行</string>
+    <string name="bank_choose">请选择银行</string>
+    <string name="phone_number_hint">请输入银行预留手机号码</string>
 </resources>

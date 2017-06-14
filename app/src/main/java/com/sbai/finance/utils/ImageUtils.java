@@ -3,6 +3,8 @@ package com.sbai.finance.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -150,6 +152,9 @@ public class ImageUtils {
         return bitmapToBase64(compressScale(bitmap));
     }
 
+//    public static String compressImageToBase64(String urlPath, float ratio) {
+//        return bitmapToBase64(decodeSampledBitmapFromResource(urlPath, ratio));
+//    }
     public static String compressImageToBase64(String urlPath, float ratio) {
         return bitmapToBase64(compressScale(urlPath, ratio));
     }
@@ -209,7 +214,7 @@ public class ImageUtils {
         image.compress(Bitmap.CompressFormat.WEBP, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 90;
 
-        while (baos.toByteArray().length / 1024 > 100) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+        while (baos.toByteArray().length / 1024 > 1500) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
             baos.reset(); // 重置baos即清空baos
             image.compress(Bitmap.CompressFormat.WEBP, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
             options -= 10;// 每次都减少10
@@ -250,7 +255,7 @@ public class ImageUtils {
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         return BitmapFactory.decodeFile(srcPath, newOpts);
-      //  return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
+//        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
     }
 
     public static Bitmap compressScale(String srcPath, float ratio) {
@@ -265,7 +270,7 @@ public class ImageUtils {
         int h = newOpts.outHeight;
         // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
         float hh = ratio;// 这里设置高度为800f
-        float ww = ratio*0.6f;// 这里设置宽度为480f
+        float ww = ratio*0.8f;// 这里设置宽度为480f
         // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
         int be = 1;// be=1表示不缩放
         if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
@@ -278,7 +283,7 @@ public class ImageUtils {
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
+        return reviewPicRotate(bitmap,srcPath);// 压缩好比例大小后再进行质量压缩
     }
 
     /**
@@ -329,5 +334,84 @@ public class ImageUtils {
         return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
 
         //return bitmap;
+    }
+    /**
+     * 获取图片文件的信息，是否旋转了90度，如果是则反转
+     * @param bitmap 需要旋转的图片
+     * @param path   图片的路径
+     */
+    public static Bitmap reviewPicRotate(Bitmap bitmap,String path){
+        int degree = getPicRotate(path);
+        if(degree!=0){
+            Matrix m = new Matrix();
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            m.setRotate(degree); // 旋转angle度
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,m, true);// 从新生成图片
+        }
+        return bitmap;
+    }
+
+    /**
+     * 读取图片文件旋转的角度
+     * @param path 图片绝对路径
+     * @return 图片旋转的角度
+     */
+    public static int getPicRotate(String path) {
+        int degree  = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+    public static Bitmap decodeSampledBitmapFromResource(String urlPath, float ratio) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(urlPath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, ratio*0.8f, ratio);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return compressImage(BitmapFactory.decodeFile(urlPath, options));
+    }
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, float reqWidth, float reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

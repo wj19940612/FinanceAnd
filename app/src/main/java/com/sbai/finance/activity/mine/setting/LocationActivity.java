@@ -112,7 +112,7 @@ public class LocationActivity extends BaseActivity {
         GpsUtils gpsUtils = new GpsUtils();
         mAddress = gpsUtils.getAddress();
         if (mAddress != null) {
-            String land = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
+            String land = mAddress.getAdminArea() + "-" + mAddress.getLocality() + "-" + mAddress.getSubLocality();
             mLocation.setText(land);
             if (isClosePage) {
                 if (mIsFromModifyUserInfoPage) {
@@ -152,13 +152,13 @@ public class LocationActivity extends BaseActivity {
         } else {
             String land = LocalUser.getUser().getUserInfo().getLand();
             if (!TextUtils.isEmpty(land)) {
-                split = land.split(" ");
+                split = land.split("-");
                 if (split.length == 3) {
                     province = split[0];
                     city = split[1];
                     country = split[2];
                 } else {
-                    split = land.split("-");
+                    split = land.split(" ");
                     if (split.length == 3) {
                         province = split[0];
                         city = split[1];
@@ -322,7 +322,7 @@ public class LocationActivity extends BaseActivity {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
                         if (mIsNeedUpdateLand) {
-                            LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + " " + city.getAreaName() + " " + county.getAreaName());
+                            LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
                         }
 
                         if (mAddress == null) {

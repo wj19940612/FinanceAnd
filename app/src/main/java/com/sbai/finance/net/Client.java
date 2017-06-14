@@ -62,11 +62,8 @@ public class Client {
                         .put("search", search));
     }
 
-    public static API getMyLoad(int page, int pageSize) {
-        return new API("/coterie/help/loan/myLoan.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize));
+    public static API getMyLoad() {
+        return new API("/coterie/help/loan/myLoan.do");
     }
 
     /**
@@ -494,14 +491,12 @@ public class Client {
      * 请求类型 get
      * 请求Url  /user/followShield/myShield.do
      *
-     * @param page
-     * @param pageSize
+     * @param
+     * @param
      * @return
      */
-    public static API getShieldList(int page, int pageSize) {
-        return new API("/user/followShield/myShield.do", new ApiParams()
-                .put("page", page)
-                .put("pageSize", pageSize));
+    public static API getShieldList() {
+        return new API("/user/followShield/myShield.do", null);
     }
 
     /**
@@ -805,7 +800,7 @@ public class Client {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", 200));
+                        .put("pageSize", 10000));
     }
 
     /**
@@ -1439,6 +1434,29 @@ public class Client {
                 .put("phone", phone));
     }
 
+    /**
+     * /user/bankCard/addBankCard.do
+     * POST
+     * 绑定银行卡（wms）
+     *
+     * @param realName        姓名
+     * @param idCard          生份证号
+     * @param cardNumber      银行卡号
+     * @param cardPhone       手机号
+     * @param issuingBankName 银行
+     * @param bankId          银行ID
+     * @return
+     */
+    public static API bindBankCard(String realName, String idCard, String cardNumber,
+                                   String cardPhone, String issuingBankName, int bankId) {
+        return new API("/user/bankCard/addBankCard.do", new ApiParams()
+                .put("realName", realName)
+                .put("idCard", idCard)
+                .put("cardNumber", cardNumber)
+                .put("cardPhone", cardPhone)
+                .put("issuingBankName", issuingBankName)
+                .put("bankId", bankId));
+    }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
