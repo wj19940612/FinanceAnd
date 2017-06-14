@@ -3,6 +3,7 @@ package com.sbai.finance.activity.mutual;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,9 +28,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -38,6 +42,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.mutual.BorrowDetail;
 import com.sbai.finance.model.mutual.BorrowMessage;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.model.mutual.CallPhone;
@@ -57,13 +62,16 @@ import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BorrowMineDetailsActivity extends BaseActivity {
+public class BorrowDetailsActivity extends BaseActivity {
+    private static final int REQ_BORROW_MONEY_DETAILS = 1001;
+    private static final int REQ_WANT_HELP_HIM_OR_YOU = 1002;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.avatar)
@@ -130,8 +138,12 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     LinearLayout mLeaveMessageArea;
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.giveHelp)
+    TextView mGiveHelp;
     private int mMax;
-    private BorrowMine mBorrowMine;
+    private BorrowDetail mBorrowDetail;
+    private int mLoadId;
+    private int mReturnHome;
     private MessageAdapter mMessageAdapter;
     private KeyBoardHelper mKeyBoardHelper;
     private AttentionAndFansNumberModel mAttentionAndFansNumberModel;
@@ -139,18 +151,26 @@ public class BorrowMineDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_borrow_mine_details);
+        setContentView(R.layout.activity_borrow_details);
         ButterKnife.bind(this);
-        mBorrowMine = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mReturnHome=getIntent().getIntExtra(Launcher.EX_PAYLOAD_1,-1);
         initView();
         calculateAvatarNum(this);
-        updateBorrowDetails();
-     //   requestBorrowMoneyDetails();
+        requestBorrowMoneyDetails();
         requestGoodHeartPeopleList();
         requestMessageList();
     }
 
     private void initView() {
+        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
+            @Override
+            public void onClick() {
+                if (mReturnHome!=-1){
+                   Launcher.with(getActivity(), MainActivity.class).execute();
+                }
+            }
+        });
         setKeyboardHelper();
         mListView.setFocusable(false);
         mMessageAdapter = new MessageAdapter(getActivity());
@@ -189,27 +209,26 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         @Override
         public void OnKeyBoardClose(int oldKeyboardHeight) {
             mLeaveMessageArea.setVisibility(View.GONE);
-            if (mBorrowMine.getStatus()== BorrowMine.STATUS_GIVE_HELP
-              ||mBorrowMine.getStatus()== BorrowMine.STATUS_NO_CHECKED
-              ||mBorrowMine.getStatus()== BorrowMine.STATUS_NO_CHECKED){
+            if (mBorrowDetail.getStatus()== BorrowMine.STATUS_GIVE_HELP
+              ||mBorrowDetail.getStatus()== BorrowMine.STATUS_NO_CHECKED
+              ||mBorrowDetail.getStatus()== BorrowMine.STATUS_NO_CHECKED){
 
                 mBorrowStatus.setVisibility(View.VISIBLE);
             }
         }
     };
 
-//    private void requestBorrowMoneyDetails() {
-//        Client.getBorrowMoneyDetail(mDataId).setTag(TAG).setIndeterminate(this)
-//                .setCallback(new Callback2D<Resp<BorrowMoneyDetails>, BorrowMoneyDetails>() {
-//                    @Override
-//                    protected void onRespSuccessData(BorrowMoneyDetails borrowMoneyDetails) {
-//                        updateBorrowDetails(borrowMoneyDetails);
-//                    }
-//                }).fire();
-//    }
-
+private void requestBorrowMoneyDetails() {
+    Client.getBorrowMoneyDetail(mLoadId).setTag(TAG).setIndeterminate(this)
+            .setCallback(new Callback2D<Resp<BorrowDetail>, BorrowDetail>() {
+                @Override
+                protected void onRespSuccessData(BorrowDetail borrowDetail) {
+                    updateBorrowDetails( borrowDetail);
+                }
+            }).fire();
+}
     private void requestGoodHeartPeopleList() {
-        Client.getGoodHeartPeopleList(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
+        Client.getGoodHeartPeopleList(mLoadId).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
                     @Override
                     protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
@@ -218,7 +237,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 }).fire();
     }
     private void requestMessageList(){
-        Client.getBorrowMessage(mBorrowMine.getId()).setTag(TAG).setIndeterminate(this)
+        Client.getBorrowMessage(mLoadId).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<BorrowMessage>>,List<BorrowMessage>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowMessage> data) {
@@ -231,7 +250,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         if (content.length()>=100){
             content = content.substring(0,100);
         }
-         Client.sendBorrowMessage(mBorrowMine.getId(),content).setTag(TAG)
+         Client.sendBorrowMessage(mBorrowDetail.getId(),content).setTag(TAG)
                  .setCallback(new Callback<Resp<Object>>() {
                      @Override
                      protected void onRespSuccess(Resp<Object> resp) {
@@ -253,7 +272,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mWriteMessage.setVisibility(View.GONE);
                             mBorrowStatus.setVisibility(View.GONE);
-                            mBorrowMine.setStatus(BorrowMine.STATUS_END_CANCEL);
+                            mBorrowDetail.setStatus(BorrowMine.STATUS_END_CANCEL);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -269,7 +288,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                             mStatus.setText(getActivity().getString(R.string.end));
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mBorrowStatus.setVisibility(View.GONE);
-                            mBorrowMine.setStatus(BorrowMine.STATUS_END_REPAY);
+                            mBorrowDetail.setStatus(BorrowMine.STATUS_END_REPAY);
                         }else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -331,7 +350,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -343,7 +362,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
 //                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
 //                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
@@ -368,8 +387,9 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mBorrowMine.getId())
-                                .putExtra(Launcher.USER_ID, mBorrowMine.getUserId())
+                                .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_1,mBorrowDetail.getStatus())
+                                .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
                                 .execute();
                     }
                 });
@@ -377,35 +397,36 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         }
     }
 
-    private void updateBorrowDetails() {
-        if (null == mBorrowMine) return;
-        Glide.with(getActivity()).load(mBorrowMine.getPortrait())
+    private void updateBorrowDetails(BorrowDetail borrowDetail) {
+        if (null == borrowDetail) return;
+        mBorrowDetail = borrowDetail;
+        Glide.with(getActivity()).load(borrowDetail.getPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getActivity()))
                 .into(mAvatar);
 
-        mUserName.setText(mBorrowMine.getUserName());
-        mPublishTime.setText(DateUtil.getFormatTime(mBorrowMine.getCreateDate()));
+        mUserName.setText(borrowDetail.getUserName());
+        mPublishTime.setText(DateUtil.getFormatTime(borrowDetail.getCreateDate()));
 
-        if (TextUtils.isEmpty(mBorrowMine.getLocation())) {
+        if (TextUtils.isEmpty(borrowDetail.getLocation())) {
             mLocation.setText(R.string.no_location_information);
         } else {
-            mLocation.setText(mBorrowMine.getLocation());
+            mLocation.setText(borrowDetail.getLocation());
         }
 
-        if (mBorrowMine.getIsAttention() == 2) {
+        if (borrowDetail.getIsAttention() == BorrowDetail.ATTENTION) {
             mIsAttention.setText(R.string.is_attention);
         } else {
             mIsAttention.setText("");
         }
 
-        mBorrowMoneyContent.setText(mBorrowMine.getContent());
-        mNeedAmount.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(mBorrowMine.getMoney())));
-        mBorrowDeadline.setText(getActivity().getString(R.string.day, FinanceUtil.formatWithScaleNoZero(mBorrowMine.getDays())));
-        mBorrowInterest.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(mBorrowMine.getInterest())));
+        mBorrowMoneyContent.setText(borrowDetail.getContent());
+        mNeedAmount.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowDetail.getMoney())));
+        mBorrowDeadline.setText(getActivity().getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowDetail.getDays())));
+        mBorrowInterest.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowDetail.getInterest())));
 
-        if (!TextUtils.isEmpty(mBorrowMine.getContentImg())) {
-            String[] images = mBorrowMine.getContentImg().split(",");
+        if (!TextUtils.isEmpty(borrowDetail.getContentImg())) {
+            String[] images = borrowDetail.getContentImg().split(",");
             switch (images.length) {
                 case 1:
                     mContentImg.setVisibility(View.VISIBLE);
@@ -461,69 +482,133 @@ public class BorrowMineDetailsActivity extends BaseActivity {
         } else {
             mContentImg.setVisibility(View.GONE);
         }
+        mGiveHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_BORROW_MONEY_DETAILS);
+                } else {
+                    SmartDialog.with(getActivity(),
+                            getString(R.string.give_help_dialog_content)
+                            , getString(R.string.give_help_dialog_title, mBorrowDetail.getUserName()))
+                            .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                                @Override
+                                public void onClick(Dialog dialog) {
+                                    Client.giveHelp(mLoadId).setTag(TAG).
+                                            setIndeterminate(BorrowDetailsActivity.this)
+                                            .setCallback(new Callback<Resp<JsonPrimitive>>() {
 
-        boolean isSelf = mBorrowMine.getUserId() == LocalUser.getUser().getUserInfo().getId();
-        mUserName.setText(mBorrowMine.getUserName());
-        switch (mBorrowMine.getStatus()){
-            case BorrowMine.STASTU_END_NO_HELP:
-            case BorrowMine.STATUS_END_CANCEL:
-            case BorrowMine.STATUS_END_NO_ALLOW:
-            case BorrowMine.STATUS_END_NO_CHOICE_HELP:
-            case BorrowMine.STATUS_END_REPAY:
-            case  BorrowMine.STATUS_END_FIIL:
+                                                @Override
+                                                protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                                                    if (resp.isSuccess()) {
+                                                        requestBorrowMoneyDetails();
+                                                        requestGoodHeartPeopleList();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(VolleyError volleyError) {
+                                                    super.onFailure(volleyError);
+                                                    //处理多端问题
+                                                    requestBorrowMoneyDetails();
+                                                    requestGoodHeartPeopleList();
+                                                }
+                                            }).fire();
+
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setTitleMaxLines(2)
+                            .setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist))
+                            .setMessageTextColor(ContextCompat.getColor(getActivity(), R.color.opinionText))
+                            .setNegative(R.string.cancel)
+                            .show();
+                }
+            }
+        });
+        mUserName.setText(borrowDetail.getUserName());
+        boolean isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
+        boolean isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
+        switch (borrowDetail.getStatus()){
+            case BorrowDetail.STASTU_END_NO_HELP:
+            case BorrowDetail.STATUS_END_CANCEL:
+            case BorrowDetail.STATUS_END_NO_ALLOW:
+            case BorrowDetail.STATUS_END_NO_CHOICE_HELP:
+            case BorrowDetail.STATUS_END_REPAY:
+            case  BorrowDetail.STATUS_END_FIIL:
                 mStatus.setText(getActivity().getString(R.string.end));
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                 mBorrowStatus.setVisibility(View.GONE);
                 mWriteMessage.setVisibility(View.GONE);
                 break;
-            case BorrowMine.STATUS_GIVE_HELP:
-            case BorrowMine.STATUS_NO_CHECKED:
-            case BorrowMine.STATUS_ACCEPTY:
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
-                if (isSelf){
-                    mStatus.setText(getActivity().getString(R.string.wait_help));
-                    mCancel.setEnabled(true);
-                    mCancel.setText(getString(R.string.cancel_borrow_in));
-                }else{
-                    mStatus.setText(getString(R.string.commit));
-                    mCancel.setEnabled(false);
-                    mCancel.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.unluckyText));
-                    mCancel.setTextColor( Color.WHITE);
-                    mCancel.setText(getString(R.string.commit));
-                }
+            case BorrowDetail.STATUS_GIVE_HELP:
+            case BorrowDetail.STATUS_NO_CHECKED:
+            case BorrowDetail.STATUS_ACCEPTY:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mBorrowOutSuccess.setVisibility(View.GONE);
                 mCallOnly.setVisibility(View.GONE);
-                mCancel.setVisibility(View.VISIBLE);
-                break;
-            case BorrowMine.STATUS_INTENTION:
-                mBorrowStatus.setVisibility(View.VISIBLE);
-                mCancel.setVisibility(View.GONE);
-                mWriteMessage.setVisibility(View.GONE);
+                mWriteMessage.setVisibility(View.VISIBLE);
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
-                if (isSelf){
-                    mStatus.setText(getActivity().getString(R.string.borrow_in_days,mBorrowMine.getConfirmDays()));
-                    mCallOnly.setVisibility(View.VISIBLE);
-                    mBorrowOutSuccess.setVisibility(View.GONE);
-                }else {
-                    mStatus.setText(getActivity().getString(R.string.borrow_out_days,mBorrowMine.getConfirmDays()));
-                    mCallOnly.setVisibility(View.GONE);
-                    mBorrowOutSuccess.setVisibility(View.VISIBLE);
-                }
+                mStatus.setText(getActivity().getString(R.string.wait_help));
+                if (isSelfLoadIn){
+                    mCancel.setVisibility(View.VISIBLE);
+                    mGiveHelp.setVisibility(View.GONE);
+                    mCancel.setText(getString(R.string.cancel_borrow_in));
+                }else{
+                    mCancel.setVisibility(View.GONE);
+                    mGiveHelp.setVisibility(View.VISIBLE);
+                    if (borrowDetail.getIsIntention() == BorrowDetail.INTENTIONED) {
+                        mGiveHelp.setText(R.string.submitted);
+                        mGiveHelp.setEnabled(false);
+                    } else {
+                        mGiveHelp.setText(R.string.give_help);
+                        mGiveHelp.setEnabled(true);
+                    }
 
+                }
                 break;
-            case BorrowMine.STATUS_INTENTION_OVER_TIME:
+            case BorrowDetail.STATUS_INTENTION:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mCancel.setVisibility(View.GONE);
+                mGiveHelp.setVisibility(View.GONE);
                 mWriteMessage.setVisibility(View.GONE);
-                mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
-                mStatus.setText(getActivity().getString(R.string.over_time));
-                if (isSelf){
+                if (isSelfLoadIn){
+                    mStatus.setText(getActivity().getString(R.string.borrow_in_days,borrowDetail.getConfirmDays()));
+                    mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                     mCallOnly.setVisibility(View.VISIBLE);
                     mBorrowOutSuccess.setVisibility(View.GONE);
-                }else {
+                }else if (isSelfLoadOut){
+                    mStatus.setText(getActivity().getString(R.string.borrow_out_days,borrowDetail.getConfirmDays()));
+                    mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
                     mCallOnly.setVisibility(View.GONE);
                     mBorrowOutSuccess.setVisibility(View.VISIBLE);
+                }else{
+                    mStatus.setText(getActivity().getString(R.string.end));
+                    mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                    mCallOnly.setVisibility(View.GONE);
+                    mBorrowOutSuccess.setVisibility(View.GONE);
+                }
+                break;
+            case BorrowDetail.STATUS_INTENTION_OVER_TIME:
+                mBorrowStatus.setVisibility(View.VISIBLE);
+                mCancel.setVisibility(View.GONE);
+                mGiveHelp.setVisibility(View.GONE);
+                mWriteMessage.setVisibility(View.GONE);
+                if (isSelfLoadIn){
+                    mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
+                    mStatus.setText(getActivity().getString(R.string.over_time));
+                    mCallOnly.setVisibility(View.VISIBLE);
+                    mBorrowOutSuccess.setVisibility(View.GONE);
+                }else if (isSelfLoadOut){
+                    mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
+                    mStatus.setText(getActivity().getString(R.string.over_time));
+                    mCallOnly.setVisibility(View.GONE);
+                    mBorrowOutSuccess.setVisibility(View.VISIBLE);
+                }else{
+                    mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
+                    mStatus.setText(getActivity().getString(R.string.end));
+                    mCallOnly.setVisibility(View.GONE);
+                    mBorrowOutSuccess.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -556,7 +641,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             case R.id.avatar:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, mBorrowMine.getUserId())
+                            .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
                             .executeForResult(REQ_CODE_USERDATA);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -564,7 +649,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 break;
             case R.id.call:
             case R.id.callOnly:
-                requestPhone(mBorrowMine.getId());
+                requestPhone(mBorrowDetail.getId());
                 break;
             case R.id.cancel:
                 SmartDialog.with(getActivity(), getString(R.string.cancel_confirm))
@@ -572,7 +657,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
-                                requestCancelBorrow(mBorrowMine.getId());
+                                requestCancelBorrow(mBorrowDetail.getId());
                                 dialog.dismiss();
                             }
                         })
@@ -585,7 +670,7 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
-                                requestRepay(mBorrowMine.getId());
+                                requestRepay(mBorrowDetail.getId());
                                 dialog.dismiss();
                             }
                         })
@@ -620,11 +705,15 @@ public class BorrowMineDetailsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD,mBorrowMine);
-        intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
-        intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
-        setResult(RESULT_OK, intent);
+        if (mReturnHome!=-1){
+            Launcher.with(getActivity(), MainActivity.class).execute();
+        }else{
+            Intent intent = new Intent();
+            intent.putExtra(Launcher.EX_PAYLOAD,mBorrowDetail);
+            intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
+            intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
+            setResult(RESULT_OK, intent);
+        }
         super.onBackPressed();
     }
 
@@ -700,10 +789,10 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                 if (mWhetherAttentionShieldOrNot != null) {
                     if (mWhetherAttentionShieldOrNot.isFollow()) {
                         mIsAttention.setText(R.string.is_attention);
-                        mBorrowMine.setIsAttention(2);
+                        mBorrowDetail.setIsAttention(BorrowDetail.ATTENTION);
                     } else {
                         mIsAttention.setText("");
-                        mBorrowMine.setIsAttention(1);
+                        mBorrowDetail.setIsAttention(BorrowDetail.NO_ATTENTION);
                     }
                     if (mWhetherAttentionShieldOrNot.isShield()){
                         requestMessageList();

@@ -113,7 +113,12 @@ public class EventDetailActivity extends BaseActivity {
                     })
                     .fireSync();
         }
-
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebView.scrollTo(0,0);
+            }
+        });
         initWebView();
     }
 

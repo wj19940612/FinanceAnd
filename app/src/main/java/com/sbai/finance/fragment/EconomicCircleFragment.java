@@ -20,11 +20,11 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
@@ -192,7 +192,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
                 startActivityForResult(intent, REQ_CODE_USERDATA);
 
             } else {
-                Intent intent = new Intent(getContext(), BorrowMoneyDetailsActivity.class);
+                Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
                 intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
                 startActivityForResult(intent, REQ_CODE_USERDATA);
             }
