@@ -2,6 +2,7 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatEditText;
@@ -10,6 +11,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +78,7 @@ public class LoginActivity extends BaseActivity {
     private int mCounter;
     //获取验证是否开始
     private boolean mFreezeObtainAuthCode;
+    private int mHeightPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,16 @@ public class LoginActivity extends BaseActivity {
                 mAuthCode.requestFocus();
             }
         });
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+        } else {
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        }
+        mHeightPixels = displayMetrics.heightPixels;
+        Log.d(TAG, "onCreate: " + mHeightPixels);
+
     }
 
     @Override
@@ -125,7 +138,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void OnKeyBoardPop(int keyboardHeight) {
             if (bottomHeight < keyboardHeight) {
-                int offset = bottomHeight - keyboardHeight;
+                int offset = bottomHeight - keyboardHeight + ((int) (mHeightPixels * 0.17));
                 final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
                         .getLayoutParams();
                 lp.topMargin = offset;
