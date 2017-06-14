@@ -297,6 +297,12 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
         if (mImagePath.size() > 1) {
             String imageFront = ImageUtils.compressImageToBase64(mImagePath.get(0));
             String imageReserve = ImageUtils.compressImageToBase64(mImagePath.get(1));
+            //            if (TextUtils.isEmpty(imageFront)) {
+//                imageFront = mImagePath.get(0);
+//            }
+//            if (TextUtils.isEmpty(imageReserve)) {
+//                imageReserve = mImagePath.get(1);
+//            }
             Client.submitUserCreditApproveInfo(imageReserve, imageFront, identityCard, realName)
                     .setIndeterminate(this)
                     .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))

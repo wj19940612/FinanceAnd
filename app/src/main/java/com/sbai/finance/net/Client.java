@@ -494,14 +494,12 @@ public class Client {
      * 请求类型 get
      * 请求Url  /user/followShield/myShield.do
      *
-     * @param page
-     * @param pageSize
+     * @param
+     * @param
      * @return
      */
-    public static API getShieldList(int page, int pageSize) {
-        return new API("/user/followShield/myShield.do", new ApiParams()
-                .put("page", page)
-                .put("pageSize", pageSize));
+    public static API getShieldList() {
+        return new API("/user/followShield/myShield.do", null);
     }
 
     /**

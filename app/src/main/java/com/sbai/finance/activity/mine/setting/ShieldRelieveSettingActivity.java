@@ -19,12 +19,14 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.mine.ShieldedUserModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -90,12 +92,12 @@ public class ShieldRelieveSettingActivity extends BaseActivity {
                 requestShieldUserList();
             }
         });
-        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                requestShieldUserList();
-            }
-        });
+//        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore() {
+//                requestShieldUserList();
+//            }
+//        });
         requestShieldUserList();
     }
 
@@ -113,7 +115,7 @@ public class ShieldRelieveSettingActivity extends BaseActivity {
     }
 
     private void requestShieldUserList() {
-        Client.getShieldList(mPage, mPageSize)
+        Client.getShieldList()
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<ShieldedUserModel>>, List<ShieldedUserModel>>(false) {
                     @Override
@@ -215,12 +217,25 @@ public class ShieldRelieveSettingActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final ShieldedUserModel item, Context context, final OnRelieveShieldClickListener onRelieveShieldClickListener) {
+            public void bindViewWithData(final ShieldedUserModel item, final Context context, final OnRelieveShieldClickListener onRelieveShieldClickListener) {
                 if (item == null) return;
                 Glide.with(context).load(item.getShielduserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
+                mUserName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class).putExtra(Launcher.USER_ID, item.getShielduserId()).execute();
+                    }
+                });
+
+                mUserHeadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, UserDataActivity.class).putExtra(Launcher.USER_ID, item.getShielduserId()).execute();
+                    }
+                });
 
                 mUserName.setText(item.getShielduserName());
                 mRelive.setOnClickListener(new View.OnClickListener() {
