@@ -549,7 +549,6 @@ public class BorrowMineDetailsActivity extends BaseActivity {
             }
         });
     }
-
     @OnClick({R.id.writeMessage, R.id.call, R.id.callOnly, R.id.alreadyRepay, R.id.cancel,R.id.send,R.id.titleBar,R.id.userName,R.id.avatar})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -706,7 +705,11 @@ public class BorrowMineDetailsActivity extends BaseActivity {
                         mIsAttention.setText("");
                         mBorrowMine.setIsAttention(1);
                     }
+                    if (mWhetherAttentionShieldOrNot.isShield()){
+                        requestMessageList();
+                    }
                 }
+
             }
         }
     }

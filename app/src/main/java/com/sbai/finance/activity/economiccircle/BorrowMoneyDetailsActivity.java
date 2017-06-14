@@ -52,6 +52,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 
 	private static final int REQ_BORROW_MONEY_DETAILS = 1001;
 	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1002;
-
+    @BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.userName)
@@ -117,6 +119,8 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 	TextView mSend;
 	@BindView(R.id.leaveMessageArea)
 	LinearLayout mLeaveMessageArea;
+	@BindView(R.id.status)
+	TextView mStatus;
 
 	private int mMax;
 	private int mDataId;
@@ -348,14 +352,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 				mGiveHelp.setVisibility(View.GONE);
 			}
 		}
-		if (borrowMoneyDetails.getIsIntention() == 1) {
+		if (borrowMoneyDetails.getIsIntention() == 2) {
 			mGiveHelp.setText(R.string.submitted);
 			mGiveHelp.setEnabled(false);
 		} else {
 			mGiveHelp.setText(R.string.give_help);
 			mGiveHelp.setEnabled(true);
 		}
-
+		mStatus.setText(getString(R.string.wait_help));
 		mGiveHelp.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -489,7 +493,7 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 		});
 	}
 
-	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send,R.id.userName,R.id.avatar})
+	@OnClick({R.id.writeMessage, R.id.giveHelp, R.id.send,R.id.userName,R.id.avatar,R.id.titleBar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.userName:
@@ -520,6 +524,14 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
 				}
+				break;
+			case R.id.titleBar:
+				mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mScrollView.smoothScrollTo(0,0);
+					}
+				});
 				break;
 		}
 	}
@@ -606,6 +618,9 @@ public class BorrowMoneyDetailsActivity extends BaseActivity {
 						mIsAttention.setText(R.string.is_attention);
 					} else {
 						mIsAttention.setText("");
+					}
+					if (whetherAttentionShieldOrNot.isShield()){
+						requestMessageList();
 					}
 				}
 

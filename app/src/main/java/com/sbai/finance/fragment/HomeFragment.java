@@ -88,6 +88,12 @@ public class HomeFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initView();
 //        addTopPaddingWithStatusBar(mTitleBar);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNestedScrollView.smoothScrollTo(0,0);
+            }
+        });
         mTopicGridAdapter = new TopicGridAdapter(getContext());
         mTopicGv.setAdapter(mTopicGridAdapter);
         mTopicGv.setFocusable(false);
