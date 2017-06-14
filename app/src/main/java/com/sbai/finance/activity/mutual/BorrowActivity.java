@@ -84,6 +84,14 @@ public class BorrowActivity extends BaseActivity {
     TitleBar mTitleBar;
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.money)
+    TextView mMoney;
+    @BindView(R.id.interest)
+    TextView mInterest;
+    @BindView(R.id.days)
+    TextView mDays;
+    @BindView(R.id.protocol)
+    TextView mProtocol;
     private LocalBroadcastManager mLocalBroadcastManager;
     private DelPhotoBroadcastReceiver mDelPhotoBroadcastReceiver;
     private IntentFilter mIntentFilter;
@@ -149,7 +157,7 @@ public class BorrowActivity extends BaseActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mBorrowLimit.setSelection(0);
+                    mBorrowLimit.setSelection(mBorrowLimit.length());
                 }
             }
         });
@@ -193,7 +201,8 @@ public class BorrowActivity extends BaseActivity {
         super.onResume();
     }
 
-    @OnClick({R.id.publish, R.id.contentDays, R.id.protocol, R.id.location, R.id.titleBar})
+
+    @OnClick({R.id.publish, R.id.contentDays, R.id.protocol, R.id.location, R.id.titleBar, R.id.money, R.id.interest, R.id.days})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.publish:
@@ -203,6 +212,7 @@ public class BorrowActivity extends BaseActivity {
                     ToastUtil.curt(getString(R.string.money_more_2000));
                     mBorrowLimit.requestFocus();
                     mBorrowLimit.setFocusable(true);
+                    mBorrowLimit.setSelection(mBorrowLimit.length());
                     mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -210,6 +220,7 @@ public class BorrowActivity extends BaseActivity {
                     ToastUtil.curt(getString(R.string.money_less_500));
                     mBorrowLimit.requestFocus();
                     mBorrowLimit.setFocusable(true);
+                    mBorrowLimit.setSelection(mBorrowLimit.length());
                     mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -219,6 +230,7 @@ public class BorrowActivity extends BaseActivity {
                     ToastUtil.curt(getString(R.string.interest_more_200));
                     mBorrowInterest.requestFocus();
                     mBorrowInterest.setFocusable(true);
+                    mBorrowInterest.setSelection(mBorrowInterest.length());
                     mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -226,6 +238,7 @@ public class BorrowActivity extends BaseActivity {
                     ToastUtil.curt(getString(R.string.interest_less_1));
                     mBorrowInterest.requestFocus();
                     mBorrowInterest.setFocusable(true);
+                    mBorrowInterest.setSelection(mBorrowInterest.length());
                     mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -236,6 +249,7 @@ public class BorrowActivity extends BaseActivity {
                     ToastUtil.curt(getString(R.string.days_more_60));
                     mBorrowTimeLimit.requestFocus();
                     mBorrowTimeLimit.setFocusable(true);
+                    mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
                     mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -243,6 +257,7 @@ public class BorrowActivity extends BaseActivity {
                     ToastUtil.curt(getString(R.string.days_less_1));
                     mBorrowTimeLimit.requestFocus();
                     mBorrowTimeLimit.setFocusable(true);
+                    mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
                     mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -339,6 +354,21 @@ public class BorrowActivity extends BaseActivity {
                         mScrollView.smoothScrollTo(0, 0);
                     }
                 });
+                break;
+            case R.id.money:
+                mBorrowLimit.requestFocus();
+                mBorrowLimit.setFocusable(true);
+                mBorrowLimit.setSelection(mBorrowLimit.length());
+                break;
+            case R.id.interest:
+                mBorrowInterest.requestFocus();
+                mBorrowInterest.setFocusable(true);
+                mBorrowInterest.setSelection(mBorrowInterest.length());
+                break;
+            case R.id.days:
+                mBorrowTimeLimit.requestFocus();
+                mBorrowTimeLimit.setFocusable(true);
+                mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
                 break;
             default:
                 break;

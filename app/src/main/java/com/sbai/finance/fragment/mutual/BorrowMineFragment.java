@@ -22,11 +22,12 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.activity.mutual.BorrowMineDetailsActivity;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.mutual.BorrowDetail;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -100,8 +101,8 @@ public class BorrowMineFragment extends BaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BorrowMine item = (BorrowMine) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Intent intent = new Intent(getActivity(), BorrowMineDetailsActivity.class);
-                    intent.putExtra(Launcher.EX_PAYLOAD, item);
+                    Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
                     startActivityForResult(intent, REQ_CODE_USERDATA);
                 }
             }
@@ -114,13 +115,14 @@ public class BorrowMineFragment extends BaseFragment implements
         super.onResume();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    private void requestBorrowData() {
+    public void requestBorrowData() {
         Client.getMyLoad(mPage, mPageSize).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowMine>>, List<BorrowMine>>() {
                     @Override
@@ -185,7 +187,7 @@ public class BorrowMineFragment extends BaseFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
             if (data != null) {
-                BorrowMine borrowMine =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                BorrowDetail borrowDetail =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
 
                 WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
                         (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
@@ -195,9 +197,9 @@ public class BorrowMineFragment extends BaseFragment implements
 
                     for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
                         BorrowMine item = mBorrowMoneyAdapter.getItem(i);
-                        if (borrowMine!=null){
-                            if (item.getId()==borrowMine.getId()&&item.getStatus()!=borrowMine.getStatus()){
-                                item.setStatus(borrowMine.getStatus());
+                        if (borrowDetail!=null){
+                            if (item.getId()==borrowDetail.getId()&&item.getStatus()!=borrowDetail.getStatus()){
+                                item.setStatus(borrowDetail.getStatus());
                                 mBorrowMoneyAdapter.notifyDataSetChanged();
                             }
                         }

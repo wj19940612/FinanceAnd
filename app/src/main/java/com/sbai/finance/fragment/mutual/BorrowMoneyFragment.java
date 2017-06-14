@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,18 +20,15 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
-import com.sbai.finance.activity.home.BorrowMoneyActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.activity.mutual.BorrowMineDetailsActivity;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoney;
-import com.sbai.finance.model.economiccircle.BorrowMoneyDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
-import com.sbai.finance.model.mutual.BorrowDetails;
+import com.sbai.finance.model.mutual.BorrowDetail;
 import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -65,6 +63,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
     private int mPage = 0;
     private int mPageSize = 15;
     private BorrowMoneyAdapter mBorrowMoneyAdapter;
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     @Nullable
     @Override
@@ -104,34 +103,10 @@ public class BorrowMoneyFragment extends BaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BorrowMoney item = (BorrowMoney) parent.getItemAtPosition(position);
                 if (item != null) {
-                    if (item.getUserId()==LocalUser.getUser().getUserInfo().getId()){
-                        Intent intent = new Intent(getActivity(), BorrowMineDetailsActivity.class);
-                        BorrowMine borrowMine = new BorrowMine();
-                        borrowMine.setId(item.getDataId());
-                        borrowMine.setContentImg(item.getContentImg());
-                        borrowMine.setContent(item.getContent());
-                        borrowMine.setConfirmDays(item.getConfirmDays());
-                        borrowMine.setCreateDate(item.getCreateTime());
-                        borrowMine.setLocation(item.getLocation());
-                        borrowMine.setMoney(item.getMoney());
-                        borrowMine.setInterest(item.getInterest());
-                        borrowMine.setDays(item.getDays());
-                        borrowMine.setUserId(item.getUserId());
-                        borrowMine.setUserName(item.getUserName());
-                        borrowMine.setPortrait(item.getUserPortrait());
-                        if (item.getAuditStatus()==BorrowMoney.STATUS_NO_AUDIT){
-                            borrowMine.setStatus(BorrowMine.STATUS_NO_CHECKED);
-                        } else if (item.getAuditStatus()==BorrowMoney.STATUS_AUDITED){
-                            borrowMine.setStatus(BorrowMine.STATUS_WAIT_HELP);
-                        }
-                        intent.putExtra(Launcher.EX_PAYLOAD, borrowMine);
-                        startActivityForResult(intent, REQ_CODE_USERDATA);
-                    }else{
-                        Intent intent = new Intent(getActivity(),BorrowMoneyDetailsActivity.class);
+                        Intent intent = new Intent(getActivity(),BorrowDetailsActivity.class);
                         intent.putExtra(Launcher.EX_PAYLOAD,item.getDataId());
                         startActivityForResult(intent,REQ_CODE_USERDATA);
                     }
-                }
             }
         });
         requestBorrowData();
@@ -142,15 +117,14 @@ public class BorrowMoneyFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    private void requestBorrowData() {
-        Client.getBorrowMoneyList(mPage, mPageSize).setTag(TAG)
+    public void requestBorrowData() {
+        Client.getBorrowMoneyList(mPage, mPageSize).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<BorrowMoney>>, List<BorrowMoney>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowMoney> borrowMoneyList) {
@@ -194,6 +168,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
     }
 
     private void reset() {
+        mPage = 0;
         mSet.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
@@ -333,17 +308,17 @@ public class BorrowMoneyFragment extends BaseFragment implements
         if (requestCode == REQ_CODE_USERDATA && resultCode == RESULT_OK) {
             if (data != null) {
 
-                BorrowMine borrowMine =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                BorrowDetail borrowDetail =  data.getParcelableExtra(Launcher.EX_PAYLOAD);
 
                 WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
                         (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
 
                 AttentionAndFansNumberModel attentionAndFansNumberModel =
                         (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-                if (borrowMine!=null){
+                if (borrowDetail!=null){
                     for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
                         BorrowMoney item = mBorrowMoneyAdapter.getItem(i);
-                        if (item.getDataId()==borrowMine.getId()&&borrowMine.getStatus()==BorrowMine.STATUS_END_CANCEL){
+                        if (item.getDataId()==borrowDetail.getId()&&borrowDetail.getStatus()==BorrowMine.STATUS_END_CANCEL){
                             mBorrowMoneyAdapter.remove(item);
                             break;
                         }

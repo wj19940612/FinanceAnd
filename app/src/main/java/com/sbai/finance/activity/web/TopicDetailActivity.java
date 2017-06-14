@@ -100,6 +100,12 @@ public class TopicDetailActivity extends BaseActivity {
         Topic topic = getIntent().getParcelableExtra(TOPIC);
         mRawCookie = getIntent().getStringExtra(EX_RAW_COOKIE);
         initData(topic);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebView.scrollTo(0,0);
+            }
+        });
         initWebView();
     }
 

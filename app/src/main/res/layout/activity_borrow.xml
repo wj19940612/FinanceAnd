@@ -47,7 +47,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:layout_marginRight="15dp"
                         android:gravity="right"
                         android:background="@null"
                         android:textColorHint="@color/unluckyText"
@@ -56,8 +55,10 @@
                         android:textSize="@dimen/list_title_size"
                         android:hint="@string/borrow_amount"/>
                     <TextView
+                        android:id="@+id/money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
                         android:layout_gravity="center"
                         android:textSize="@dimen/list_title_size"
                         android:textColor="@color/blackAssist"
@@ -86,7 +87,6 @@
                         android:layout_weight="1"
                         android:layout_gravity="center"
                         android:gravity="right"
-                        android:layout_marginRight="15dp"
                         android:textCursorDrawable="@null"
                         android:background="@null"
                         android:textColorHint="@color/unluckyText"
@@ -94,9 +94,11 @@
                         android:textSize="@dimen/list_title_size"
                         android:hint="@string/borrow_interest_amount"/>
                     <TextView
+                        android:id="@+id/interest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:paddingLeft="15dp"
                         android:textSize="@dimen/list_title_size"
                         android:textColor="@color/blackAssist"
                         android:text="@string/money"/>
@@ -123,7 +125,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:layout_marginRight="15dp"
                         android:gravity="right"
                         android:background="@null"
                         android:textColorHint="@color/unluckyText"
@@ -132,9 +133,11 @@
                         android:textSize="@dimen/list_title_size"
                         android:hint="@string/borrow_day_limit_hint"/>
                     <TextView
+                        android:id="@+id/days"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:paddingLeft="15dp"
                         android:textColor="@color/blackAssist"
                         android:textSize="@dimen/list_title_size"
                         android:text="@string/borrow_day"/>

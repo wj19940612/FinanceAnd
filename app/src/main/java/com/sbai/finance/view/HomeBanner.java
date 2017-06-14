@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.model.mutual.BannerModel;
+import com.sbai.finance.model.BannerModel;
 
 import java.util.ArrayList;
 import java.util.List;
