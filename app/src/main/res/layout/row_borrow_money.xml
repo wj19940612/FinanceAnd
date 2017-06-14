@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="#222222"
+            android:textColor="@color/blackAssist"
             android:textSize="16sp"
             tools:text="反方向的钟"/>
 
@@ -43,24 +44,22 @@
             android:layout_alignBottom="@+id/userName"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/userName"
-            android:textColor="#999999"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="@string/is_attention"/>
     </RelativeLayout>
 
-    <TextView
+    <com.sbai.finance.view.CollapsedTextView
         android:id="@+id/borrowMoneyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
-        android:ellipsize="end"
         android:lineSpacingExtra="6dp"
-        android:maxLines="2"
-        android:textColor="#222222"
+        android:textColor="@color/blackAssist"
         android:textSize="14sp"
+        app:trimLines="2"
         tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
 
     <RelativeLayout
@@ -98,14 +97,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:text="@string/need_amount"
-                    android:textColor="#999999"
+                    android:textColor="@color/unluckyText"
                     android:textSize="14sp"/>
 
                 <TextView
                     android:id="@id/needAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#222222"
+                    android:textColor="@color/blackAssist"
                     android:textSize="14sp"
                     tools:text="@string/RMB"/>
 
@@ -123,14 +122,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:text="@string/borrow_deadline"
-                    android:textColor="#999999"
+                    android:textColor="@color/unluckyText"
                     android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/borrowDeadline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#222222"
+                    android:textColor="@color/blackAssist"
                     android:textSize="14sp"
                     tools:text="@string/day"/>
             </LinearLayout>
@@ -147,14 +146,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:text="@string/borrow_interest"
-                    android:textColor="#999999"
+                    android:textColor="@color/unluckyText"
                     android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/borrowInterest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#222222"
+                    android:textColor="@color/blackAssist"
                     android:textSize="14sp"
                     tools:text="@string/RMB"/>
             </LinearLayout>
@@ -199,7 +198,7 @@
             android:id="@+id/publishTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#999999"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="10:00"/>
 
@@ -208,7 +207,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:textColor="#999999"
+            android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="杭州 滨江"/>
     </LinearLayout>
