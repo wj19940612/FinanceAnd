@@ -318,7 +318,7 @@
                     android:layout_weight="1"
                     android:textColor="#222222"
                     android:textSize="14sp"
-                    android:text="留言(0)"/>
+                    android:text="留言"/>
 
                 <TextView
                     android:id="@+id/writeMessage"

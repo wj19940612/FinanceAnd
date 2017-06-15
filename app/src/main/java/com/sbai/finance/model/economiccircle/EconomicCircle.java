@@ -25,6 +25,16 @@ public class EconomicCircle implements Serializable {
 	private String varietyType;
 	private String content;
 	private String land;
+	private String location;
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	private double money;
 	private double interest;
 	private int days;
@@ -281,6 +291,7 @@ public class EconomicCircle implements Serializable {
 				", varietyType='" + varietyType + '\'' +
 				", content='" + content + '\'' +
 				", land='" + land + '\'' +
+				", location='" + location + '\'' +
 				", money=" + money +
 				", interest=" + interest +
 				", days=" + days +

@@ -25,6 +25,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.GoodHeartPeople;
+import com.sbai.finance.model.mutual.BorrowDetail;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -52,6 +53,8 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 
 	private int mDataId;
 	private static int mUserId;
+	private int mStatus;
+	private static int status;
 	private List<GoodHeartPeople> mGoodHeartPeopleList;
 	private GoodHeartPeopleAdapter mGoodHeartPeopleAdapter;
 
@@ -71,7 +74,10 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 	private void initViews() {
 		if (LocalUser.getUser().isLogin()) {
 			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
-				mPayIntention.setVisibility(View.VISIBLE);
+				if (mStatus==BorrowDetail.STATUS_WAIT_HELP||mStatus==BorrowDetail.STATUS_ACCEPTY){
+				  mPayIntention.setVisibility(View.VISIBLE);
+				}
+
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -122,6 +128,8 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
+		mStatus = intent.getIntExtra(Launcher.EX_PAYLOAD_1,-1);
+		status = mStatus;
 	}
 
 	private void requestWantHelpHimList() {
@@ -200,8 +208,10 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 					mLocation.setText(item.getLocation());
 				}
 
+
 				if (LocalUser.getUser().isLogin()) {
-					if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
+					if (mUserId == LocalUser.getUser().getUserInfo().getId()
+							&&(status==BorrowDetail.STATUS_WAIT_HELP||status==BorrowDetail.STATUS_ACCEPTY)) {
 						mCheckboxClick.setVisibility(View.VISIBLE);
 					}else {
 						mCheckboxClick.setVisibility(View.INVISIBLE);

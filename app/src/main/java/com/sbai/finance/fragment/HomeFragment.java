@@ -31,7 +31,7 @@ import com.sbai.finance.activity.web.HideTitleWebActivity;
 import com.sbai.finance.activity.web.TopicDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
-import com.sbai.finance.model.mutual.BannerModel;
+import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -88,6 +88,12 @@ public class HomeFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initView();
 //        addTopPaddingWithStatusBar(mTitleBar);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNestedScrollView.smoothScrollTo(0,0);
+            }
+        });
         mTopicGridAdapter = new TopicGridAdapter(getContext());
         mTopicGv.setAdapter(mTopicGridAdapter);
         mTopicGv.setFocusable(false);

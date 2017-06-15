@@ -47,6 +47,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -64,6 +65,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.userName)
@@ -412,6 +415,19 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			private void bindingData(final Context context, final OpinionReply item) {
 				mUserName.setText(item.getUserName());
+				mUserName.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LocalUser.getUser().isLogin()) {
+							Launcher.with(context, UserDataActivity.class)
+									.putExtra(Launcher.USER_ID, item.getUserId())
+									.executeForResult(REQ_CODE_USERDATA);
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
+					}
+				});
+
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -490,9 +506,17 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.loveNum, R.id.commentContent, R.id.reply, R.id.avatar})
+	@OnClick({R.id.titleBar, R.id.loveNum, R.id.commentContent, R.id.reply, R.id.avatar, R.id.userName})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
+			case R.id.titleBar:
+				mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mScrollView.scrollTo(0, 0);
+					}
+				});
+				break;
 			case R.id.loveNum:
 				if (LocalUser.getUser().isLogin()) {
 					Client.opinionPraise(mOpinionDetails.getId()).setTag(TAG)
@@ -562,6 +586,20 @@ public class OpinionDetailsActivity extends BaseActivity {
 				break;
 
 			case R.id.avatar:
+				if (LocalUser.getUser().isLogin()) {
+					ComponentName callingActivity = getCallingActivity();
+					if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
+						return;
+					}
+					Launcher.with(this, UserDataActivity.class)
+							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
+							.executeForResult(REQ_CODE_USERDATA);
+				} else {
+					Launcher.with(this, LoginActivity.class).execute();
+				}
+				break;
+
+			case R.id.userName:
 				if (LocalUser.getUser().isLogin()) {
 					ComponentName callingActivity = getCallingActivity();
 					if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {

@@ -89,4 +89,22 @@
         <!-- 提示数字 -->
         <attr name="badge_txt_num" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="CollapsedTextView">
+        <attr name="expandedText" format="string" />
+        <attr name="collapsedText" format="string" />
+        <attr name="trimLines" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="AutofitTextView">
+        <!-- Minimum size of the text. -->
+        <attr name="minTextSize" format="dimension"/>
+        <!-- Amount of precision used to calculate the correct text size to fit within its
+        bounds. Lower precision is more precise and takes more time. -->
+        <attr name="precision" format="float"/>
+        <!-- Defines whether to automatically resize text to fit to the view's bounds. -->
+        <attr name="sizeToFit" format="boolean"/>
+        <!-- Max view width that cannot beyond this -->
+        <attr name="maxViewWidth" format="dimension"/>
+    </declare-styleable>
 </resources>

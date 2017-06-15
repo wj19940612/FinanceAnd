@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -75,6 +76,19 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mOpinionListAdapter);
         mListView.setOnScrollListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ViewPointMater viewPointMater = mOpinionListAdapter.getItem(position);
+                if (viewPointMater!=null){
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, viewPointMater.getUserId()).execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -212,7 +226,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                 } else {
                     mSkilledType.setText(context.getString(R.string.future));
                 }
-                String s = item.getPassRat() * 100 + "%";
+                String s = Math.round(item.getPassRat() * 100)+ "%";
                 mAccuracyRate.setText(s);
 
             }

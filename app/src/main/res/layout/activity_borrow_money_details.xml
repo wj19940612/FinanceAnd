@@ -8,6 +8,7 @@
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -67,6 +68,15 @@
                     android:textColor="#999999"
                     android:textSize="10sp"
                     tools:text="@string/is_attention"/>
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="@color/redAssist"
+                    tools:text="已提交"/>
             </RelativeLayout>
 
             <TextView
@@ -308,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:gravity="center"
-                    android:text="留言(0)"
+                    android:text="留言"
                     android:textColor="#222222"
                     android:textSize="14sp"/>
 

@@ -16,17 +16,17 @@ public class TradeWebActivity extends WebActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadTestData();
         setUpTitleBar();
+        loadUrl();
     }
 
     private void setUpTitleBar() {
-        getTitleBar().setTitle(getString(R.string.crude_oil_future));
+        getTitleBar().setTitle(getString(R.string.quick_trade));
     }
 
 
-    private void loadTestData() {
-        String testUrl = "https://www.dajiexin.com/";
-        getWebView().loadUrl(testUrl);
+    private void loadUrl() {
+        String url = "https://www.dajiexin.com/";
+        getWebView().loadUrl(url);
     }
 }

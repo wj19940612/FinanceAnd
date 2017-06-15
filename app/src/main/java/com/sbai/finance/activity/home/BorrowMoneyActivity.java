@@ -22,9 +22,9 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.BorrowMoney;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
@@ -185,7 +185,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		BorrowMoney item = (BorrowMoney) parent.getItemAtPosition(position);
 		if (item != null) {
-			Launcher.with(BorrowMoneyActivity.this, BorrowMoneyDetailsActivity.class)
+			Launcher.with(BorrowMoneyActivity.this, BorrowDetailsActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
 					.executeForResult(REQ_CODE_USERDATA);
 		}

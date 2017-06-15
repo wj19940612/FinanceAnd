@@ -4,69 +4,84 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Administrator on 2017-04-28.
+ * Created by Administrator on 2017-06-14.
  */
 
-public class BorrowOutHistory implements Parcelable {
-    public static final int STATUS_PAY_FIVE=5;
-    public static final int STATUS_PAY_INTENTION=6;
-    public static final int STATUS_SUCCESS=7;
-    public static final int STATUS_ALREADY_REPAY=8;
-    public static final int STATUS_NO_REPAY=0;
-    public static final int STATUS_REPAY=1;
+public class BorrowDetail implements Parcelable {
+    //待审核
+    public static final int STATUS_NO_CHECKED=1;
+    // 给予帮助  状态:已提交(借出人)
+    public static final int STATUS_GIVE_HELP=3;
+    //等待互助
+    public static final  int STATUS_WAIT_HELP=3;
+    //审批不通过  已结束
+    public static final int STATUS_END_NO_ALLOW=2;
+    //无人帮助超时 已结束
+    public static final int STATUS_END_FIIL=4;
+    //确认接受帮助
+    public static final int STATUS_ACCEPTY=5;
+    public static final int STASTU_END_NO_HELP=41;
+    //未选择好心人超时  已结束
+    public static final int STATUS_END_NO_CHOICE_HELP=42;
+    //主动撤销 已结束
+    public static final int STATUS_END_CANCEL=43;
+    //缴纳意向金
+    public static final  int STATUS_INTENTION = 7;
+    //已还款
+    public static final int STATUS_END_REPAY=8;
+    //缴纳意向金超时
+    public static final int STATUS_INTENTION_OVER_TIME=9;
+
+    public static final int NO_ATTENTION=1;
+    public static final int ATTENTION=2;
+
+    public static final int INTENTIONED=2;
     /**
      * auditActorId : 0
-     * auditTime : 1494397076000
-     * confirmTime : 1494418161000
-     * content : 到底说了什么穿山甲
-     * contentImg : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494396996935.png
-     * createDate : 1494397037000
-     * days : 35
-     * endlineTime : 1494483476000
-     * id : 84
-     * intentionCount : 5
-     * intentionTime : 2017-05-10 14:58:46.0
-     * interest : 50
-     * location : 北京市-北京市-东城区
-     * modifyDate : 1494418202000
-     * money : 2000
-     * portrait : ../../img/head_visitor.png
-     * remark :
-     * selectedUserId : 150
-     * status : 5
-     * userId : 187
-     * userName : 233
+     * auditTime : 1497231066000
+     * confirmDays : 1
+     * confirmTime : 1497233361000
+     * content : 大声道多撒大所多所
+     * createDate : 1497231046000
+     * days : 12
+     * endlineTime : 1497317467000
+     * id : 532
+     * intentionCount : 1
+     * interest : 12
+     * isAttention : 1
+     * isIntention : 1
+     * location : 浙江省 杭州市 江干区
+     * modifyDate : 1497233361000
+     * money : 550
+     * portrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1497002179711.png
+     * selectedUserId : 127
+     * status : 7
+     * userId : 122
+     * userName : 用户82120
      */
-    private int loanOutRepay;
+
     private int auditActorId;
     private long auditTime;
+    private int confirmDays;
     private long confirmTime;
     private String content;
-    private String contentImg;
     private long createDate;
     private int days;
     private long endlineTime;
     private int id;
     private int intentionCount;
-    private String intentionTime;
-    private long interest;
+    private double interest;
+    private int isAttention;
+    private int isIntention;
     private String location;
     private long modifyDate;
-    private int money;
+    private double money;
     private String portrait;
-    private String remark;
     private int selectedUserId;
     private int status;
     private int userId;
     private String userName;
-
-    public int getLoanOutRepay() {
-        return loanOutRepay;
-    }
-
-    public void setLoanOutRepay(int loanOutRepay) {
-        this.loanOutRepay = loanOutRepay;
-    }
+    private String contentImg;
 
     public int getAuditActorId() {
         return auditActorId;
@@ -84,6 +99,14 @@ public class BorrowOutHistory implements Parcelable {
         this.auditTime = auditTime;
     }
 
+    public int getConfirmDays() {
+        return confirmDays;
+    }
+
+    public void setConfirmDays(int confirmDays) {
+        this.confirmDays = confirmDays;
+    }
+
     public long getConfirmTime() {
         return confirmTime;
     }
@@ -98,14 +121,6 @@ public class BorrowOutHistory implements Parcelable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getContentImg() {
-        return contentImg;
-    }
-
-    public void setContentImg(String contentImg) {
-        this.contentImg = contentImg;
     }
 
     public long getCreateDate() {
@@ -148,20 +163,28 @@ public class BorrowOutHistory implements Parcelable {
         this.intentionCount = intentionCount;
     }
 
-    public String getIntentionTime() {
-        return intentionTime;
-    }
-
-    public void setIntentionTime(String intentionTime) {
-        this.intentionTime = intentionTime;
-    }
-
-    public long getInterest() {
+    public double getInterest() {
         return interest;
     }
 
-    public void setInterest(int interest) {
+    public void setInterest(double interest) {
         this.interest = interest;
+    }
+
+    public int getIsAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(int isAttention) {
+        this.isAttention = isAttention;
+    }
+
+    public int getIsIntention() {
+        return isIntention;
+    }
+
+    public void setIsIntention(int isIntention) {
+        this.isIntention = isIntention;
     }
 
     public String getLocation() {
@@ -180,11 +203,11 @@ public class BorrowOutHistory implements Parcelable {
         this.modifyDate = modifyDate;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
@@ -194,14 +217,6 @@ public class BorrowOutHistory implements Parcelable {
 
     public void setPortrait(String portrait) {
         this.portrait = portrait;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public int getSelectedUserId() {
@@ -236,6 +251,14 @@ public class BorrowOutHistory implements Parcelable {
         this.userName = userName;
     }
 
+    public String getContentImg() {
+        return contentImg;
+    }
+
+    public void setContentImg(String contentImg) {
+        this.contentImg = contentImg;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -245,63 +268,65 @@ public class BorrowOutHistory implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.auditActorId);
         dest.writeLong(this.auditTime);
+        dest.writeInt(this.confirmDays);
         dest.writeLong(this.confirmTime);
         dest.writeString(this.content);
-        dest.writeString(this.contentImg);
         dest.writeLong(this.createDate);
         dest.writeInt(this.days);
         dest.writeLong(this.endlineTime);
         dest.writeInt(this.id);
         dest.writeInt(this.intentionCount);
-        dest.writeString(this.intentionTime);
-        dest.writeLong(this.interest);
+        dest.writeDouble(this.interest);
+        dest.writeInt(this.isAttention);
+        dest.writeInt(this.isIntention);
         dest.writeString(this.location);
         dest.writeLong(this.modifyDate);
-        dest.writeInt(this.money);
+        dest.writeDouble(this.money);
         dest.writeString(this.portrait);
-        dest.writeString(this.remark);
         dest.writeInt(this.selectedUserId);
         dest.writeInt(this.status);
         dest.writeInt(this.userId);
         dest.writeString(this.userName);
+        dest.writeString(this.contentImg);
     }
 
-    public BorrowOutHistory() {
+    public BorrowDetail() {
     }
 
-    protected BorrowOutHistory(Parcel in) {
+    protected BorrowDetail(Parcel in) {
         this.auditActorId = in.readInt();
         this.auditTime = in.readLong();
+        this.confirmDays = in.readInt();
         this.confirmTime = in.readLong();
         this.content = in.readString();
-        this.contentImg = in.readString();
         this.createDate = in.readLong();
         this.days = in.readInt();
         this.endlineTime = in.readLong();
         this.id = in.readInt();
         this.intentionCount = in.readInt();
-        this.intentionTime = in.readString();
-        this.interest = in.readLong();
+        this.interest = in.readDouble();
+        this.isAttention = in.readInt();
+        this.isIntention = in.readInt();
         this.location = in.readString();
         this.modifyDate = in.readLong();
-        this.money = in.readInt();
+        this.money = in.readDouble();
         this.portrait = in.readString();
-        this.remark = in.readString();
         this.selectedUserId = in.readInt();
         this.status = in.readInt();
         this.userId = in.readInt();
         this.userName = in.readString();
+        this.contentImg = in.readString();
     }
 
-    public static final Parcelable.Creator<BorrowOutHistory> CREATOR = new Parcelable.Creator<BorrowOutHistory>() {
+    public static final Parcelable.Creator<BorrowDetail> CREATOR = new Parcelable.Creator<BorrowDetail>() {
         @Override
-        public BorrowOutHistory createFromParcel(Parcel source) {
-            return new BorrowOutHistory(source);
+        public BorrowDetail createFromParcel(Parcel source) {
+            return new BorrowDetail(source);
         }
 
         @Override
-        public BorrowOutHistory[] newArray(int size) {
-            return new BorrowOutHistory[size];
+        public BorrowDetail[] newArray(int size) {
+            return new BorrowDetail[size];
         }
     };
 }

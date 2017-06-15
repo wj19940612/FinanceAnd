@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback2D;
@@ -54,8 +55,10 @@ public class SettingActivity extends BaseActivity {
 
                 break;
             case R.id.appInfo:
-                ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "
-                        + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
+                if (BuildConfig.DEBUG) {
+                    ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "
+                            + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
+                }
                 break;
         }
     }

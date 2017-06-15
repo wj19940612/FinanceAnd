@@ -62,11 +62,8 @@ public class Client {
                         .put("search", search));
     }
 
-    public static API getMyLoad(int page, int pageSize) {
-        return new API("/coterie/help/loan/myLoan.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize));
+    public static API getMyLoad() {
+        return new API("/coterie/help/loan/myLoan.do");
     }
 
     /**
@@ -385,11 +382,11 @@ public class Client {
      * @param autoRead 是否自动标记已读 默认为true
      * @return
      */
-    public static API requestHistoryNews(boolean autoRead, String classify, Integer page, Integer status, Long createTime) {
+    public static API requestHistoryNews(boolean autoRead, String classify, Integer page, Integer size, Integer status, Long createTime) {
         return new API("/msg/msg/history.do", new ApiParams()
                 .put("classify", classify)
                 .put("page", page)
-                .put("size", DEFAULT_PAGE_SIZE)
+                .put("size", size)
                 .put("status", status)
                 .put("autoRead", autoRead)
                 .put("createTime", createTime));
@@ -494,14 +491,12 @@ public class Client {
      * 请求类型 get
      * 请求Url  /user/followShield/myShield.do
      *
-     * @param page
-     * @param pageSize
+     * @param
+     * @param
      * @return
      */
-    public static API getShieldList(int page, int pageSize) {
-        return new API("/user/followShield/myShield.do", new ApiParams()
-                .put("page", page)
-                .put("pageSize", pageSize));
+    public static API getShieldList() {
+        return new API("/user/followShield/myShield.do", null);
     }
 
     /**
@@ -614,6 +609,14 @@ public class Client {
      */
     public static API submitUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
         return new API(POST, "/user/user/saveUserCertification.do", new ApiParams()
+                .put("Back", Back)
+                .put("Positive", Positive)
+                .put("certCode", certCode)
+                .put("realName", realName));
+    }
+
+    public static API updateUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
+        return new API(POST, "/user/user/updateUserCertification.do", new ApiParams()
                 .put("Back", Back)
                 .put("Positive", Positive)
                 .put("certCode", certCode)
@@ -805,7 +808,7 @@ public class Client {
         return new API("/order/optional/findOptional.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", 200));
+                        .put("pageSize", 10000));
     }
 
     /**
@@ -1439,6 +1442,29 @@ public class Client {
                 .put("phone", phone));
     }
 
+    /**
+     * /user/bankCard/addBankCard.do
+     * POST
+     * 绑定银行卡（wms）
+     *
+     * @param realName        姓名
+     * @param idCard          生份证号
+     * @param cardNumber      银行卡号
+     * @param cardPhone       手机号
+     * @param issuingBankName 银行
+     * @param bankId          银行ID
+     * @return
+     */
+    public static API bindBankCard(String realName, String idCard, String cardNumber,
+                                   String cardPhone, String issuingBankName, int bankId) {
+        return new API("/user/bankCard/addBankCard.do", new ApiParams()
+                .put("realName", realName)
+                .put("idCard", idCard)
+                .put("cardNumber", cardNumber)
+                .put("cardPhone", cardPhone)
+                .put("issuingBankName", issuingBankName)
+                .put("bankId", bankId));
+    }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";

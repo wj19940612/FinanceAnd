@@ -91,7 +91,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void requestSystemNewsList() {
 
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, null, null)
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize, null, null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
@@ -268,6 +268,8 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
 
                 if (item.titleIsUserName() && item.getSourceUser() != null) {
                     mTitle.setText(item.getSourceUser().getUserName());
+                } else if (item.isForcaest() && item.getData() != null) {
+                    mTitle.setText(item.getData().getContent());
                 } else {
                     mTitle.setText(item.getTitle());
                 }

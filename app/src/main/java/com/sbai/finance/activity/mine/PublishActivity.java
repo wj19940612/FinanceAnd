@@ -266,7 +266,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                 mVarietyName.setText(item.getVarietyName());
                 mOpinionContent.setText(item.getContent());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-                mBigVarietyName.setText(item.getBigVarietyTypeName());
+                mBigVarietyName.setText(context.getString(R.string.big_variety_name, item.getBigVarietyTypeName()));
                 if (!isHimSelf) {
                     mIsAttention.setText(item.isAttention() ? context.getString(R.string.is_attention) : "");
                 }

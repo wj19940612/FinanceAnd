@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mutual.BorrowInHisDetailActivity;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.completePayment;
-import static com.sbai.finance.activity.mutual.BorrowInHisDetailActivity.BORROW_IN_HIS;
 
 
 public class WeChatPayActivity extends BaseActivity {
@@ -155,9 +154,9 @@ public class WeChatPayActivity extends BaseActivity {
 				.setCallback(new Callback<Resp<JsonPrimitive>>() {
 					@Override
 					protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-						Launcher.with(WeChatPayActivity.this, BorrowInHisDetailActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD_2, mDataId)
-								.putExtra(BORROW_IN_HIS, mDataId)
+						Launcher.with(WeChatPayActivity.this, BorrowDetailsActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mDataId)
+								.putExtra(Launcher.EX_PAYLOAD_1,mDataId)
 								.execute();
 						finish();
 					}

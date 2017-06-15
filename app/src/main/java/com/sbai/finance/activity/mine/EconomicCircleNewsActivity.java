@@ -19,13 +19,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.economiccircle.BorrowMoneyDetailsActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 
@@ -47,6 +48,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 	private Long mCreateTime = null;
 	private View mFootView;
 	private HashSet<Integer> mSet;
+	private int mSize = 15;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 	}
 
 	private void requestEconomicCircleNewsList() {
-		Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, null, mCreateTime)
+		Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_ECONOMIC_CIRCLE_NEWS, null, mSize, null, mCreateTime)
 				.setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
 					@Override
@@ -109,7 +111,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
 					.execute();
 		} else if (item.getClassify() == 2) {
-			Launcher.with(this, BorrowMoneyDetailsActivity.class)
+			Launcher.with(this, BorrowDetailsActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
 					.execute();
 		}
@@ -185,11 +187,12 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 								.into(mBorrowMoneyImg);
 					} else {
 						mContent.setVisibility(View.VISIBLE);
+						mBorrowMoneyImg.setVisibility(View.GONE);
 						HistoryNewsModel.DataBean data = item.getData();
 						if (data != null) {
-							String content = context.getString(R.string.amount, String.valueOf(data.getMoney())) + "\n"
-									+ context.getString(R.string.limit, String.valueOf(data.getDays())) + "\n"
-									+ context.getString(R.string.interest, String.valueOf(data.getInterest()));
+							String content = context.getString(R.string.amount, FinanceUtil.formatWithScaleNoZero(data.getMoney())) + "\n"
+									+ context.getString(R.string.limit, FinanceUtil.formatWithScaleNoZero(data.getDays())) + "\n"
+									+ context.getString(R.string.interest,  FinanceUtil.formatWithScaleNoZero(data.getInterest()));
 							mContent.setText(content);
 						}
 					}
