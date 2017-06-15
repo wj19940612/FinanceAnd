@@ -28,6 +28,16 @@ public class StrFormatter {
         return phoneNoSpace;
     }
 
+    /**
+     * 安全密码手机号 格式话 181 **** 1111
+     *
+     * @param phoneNoSpace
+     * @return
+     */
+    public static String getFormatSafetyPhoneNumber(String phoneNoSpace) {
+        return phoneNoSpace.substring(0, 3) + " **** " + phoneNoSpace.substring(phoneNoSpace.length() - 4);
+    }
+
 
     /**
      * 格式化银行卡 4444 4444 4444 4444 444
@@ -69,10 +79,11 @@ public class StrFormatter {
 
     /**
      * 替换//为换行
+     *
      * @param text
      * @return
      */
-    public static String getFormatText(String text){
+    public static String getFormatText(String text) {
         return text.replace("//", "\n");
     }
 }
