@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
@@ -25,6 +26,8 @@ import butterknife.OnClick;
 
 public class ForgetPassWordActivity extends BaseActivity {
 
+    private static final int REQ_CODE_MODIFY_PASS = 24700;
+
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
     @BindView(R.id.authCode)
@@ -45,7 +48,7 @@ public class ForgetPassWordActivity extends BaseActivity {
         ButterKnife.bind(this);
         mAuthCode.addTextChangedListener(mValidationWatcher);
 
-        mPhoneNumber.setText(StrFormatter.getFormatPhoneNumber(LocalUser.getUser().getPhone()));
+        mPhoneNumber.setText(StrFormatter.getFormatSafetyPhoneNumber(LocalUser.getUser().getPhone()));
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -86,7 +89,7 @@ public class ForgetPassWordActivity extends BaseActivity {
                 getAuthCodeForPass();
                 break;
             case R.id.submit:
-                final String phoneNumber = getPhoneNumber();
+                final String phoneNumber = LocalUser.getUser().getPhone();
                 final String authCode = mAuthCode.getText().toString().trim();
                 Client.forgetPassWord(authCode, phoneNumber)
                         .setIndeterminate(this)
@@ -100,12 +103,10 @@ public class ForgetPassWordActivity extends BaseActivity {
                                             .putExtra(Launcher.EX_PAYLOAD_3, true)
                                             .putExtra(Launcher.EX_PAYLOAD_1, 1)
                                             .putExtra(Launcher.EX_PAYLOAD_2, authCode)
-                                            .execute();
-                                    finish();
+                                            .executeForResult(REQ_CODE_MODIFY_PASS);
+                                    ToastUtil.curt(resp.getMsg());
                                 } else {
-                                    if (resp.hasData()) {
-                                        ToastUtil.curt(resp.getData().toString());
-                                    }
+                                    ToastUtil.curt(resp.getMsg());
                                 }
                             }
                         })
@@ -115,7 +116,7 @@ public class ForgetPassWordActivity extends BaseActivity {
     }
 
     private void getAuthCodeForPass() {
-        Client.sendMsgCodeForPassWord(getPhoneNumber())
+        Client.sendMsgCodeForPassWord(LocalUser.getUser().getPhone())
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -126,7 +127,6 @@ public class ForgetPassWordActivity extends BaseActivity {
                             mCounter = 60;
                             mGetAuthCode.setEnabled(false);
                             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
-
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -151,5 +151,13 @@ public class ForgetPassWordActivity extends BaseActivity {
         mGetAuthCode.setEnabled(true);
         mGetAuthCode.setText(R.string.obtain_auth_code_continue);
         stopScheduleJob();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_MODIFY_PASS && resultCode == RESULT_OK) {
+            finish();
+        }
     }
 }

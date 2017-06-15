@@ -164,12 +164,13 @@ public class LoginActivity extends BaseActivity {
         public void afterTextChanged(Editable s) {
             mValidationWatcher.afterTextChanged(s);
 
+            mPhoneNumberClear.setVisibility(checkClearPhoneNumButtonVisible() ? View.VISIBLE : View.INVISIBLE);
             if (s.toString().replaceAll(" ", "").length() == 11) {
                 mAuthCode.requestFocus();
                 mPhoneNumber.clearFocus();
+                mPhoneNumberClear.setVisibility(View.INVISIBLE);
             }
             formatPhoneNumber();
-            mPhoneNumberClear.setVisibility(checkClearPhoneNumButtonVisible() ? View.VISIBLE : View.INVISIBLE);
             boolean authCodeEnable = checkObtainAuthCodeEnable();
             if (mGetAuthCode.isEnabled() != authCodeEnable) {
                 mGetAuthCode.setEnabled(authCodeEnable);
