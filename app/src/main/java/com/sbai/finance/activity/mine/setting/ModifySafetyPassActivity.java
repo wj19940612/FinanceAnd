@@ -115,6 +115,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 if (!password.equalsIgnoreCase(mNewPassWord)) {
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
+                    mSafetyPasswordNumber.clearSafetyNumber();
                 } else {
                     Client.submitSetPassword(password)
                             .setTag(TAG)
@@ -125,6 +126,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                     Log.d(TAG, "onRespSuccess: " + resp.toString());
                                     if (resp.isSuccess()) {
                                         ToastMassage(resp);
+                                        setResult(RESULT_OK);
                                         finish();
                                     } else {
                                         ToastMassage(resp);
@@ -138,11 +140,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     }
 
     private void ToastMassage(Resp<Object> resp) {
-        if (resp.hasData()) {
-            ToastUtil.curt(resp.getData().toString());
-        } else {
-            ToastUtil.curt(resp.getMsg());
-        }
+        ToastUtil.curt(resp.getMsg());
     }
 
     //设置新的安全密码流程
@@ -151,7 +149,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
             if (mPasswordInputCount == 0) {
                 Client.checkPassword(passWord)
                         .setTag(TAG)
-                        .setIndeterminate(this)
                         .setCallback(new Callback<Resp<Object>>() {
                             @Override
                             protected void onRespSuccess(Resp<Object> resp) {
@@ -201,6 +198,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastMassage(resp);
+                            setResult(RESULT_OK);
                             finish();
                         } else {
                             ToastMassage(resp);

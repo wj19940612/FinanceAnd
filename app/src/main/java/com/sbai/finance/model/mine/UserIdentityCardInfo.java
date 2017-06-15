@@ -34,6 +34,10 @@ public class UserIdentityCardInfo {
     //	待审核0、审核通过1、审核未通过 2
     private Integer status;
 
+    public boolean isCheckNotPass() {
+        return getStatus() == 2;
+    }
+
     public int getAuditeDate() {
         return auditeDate;
     }

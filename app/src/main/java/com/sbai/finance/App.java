@@ -22,9 +22,10 @@ public class App extends Application {
         sContext = this;
         API.init(sContext.getCacheDir());
         CookieManger.getInstance().init(sContext.getFilesDir());
-
         if (BuildConfig.DEBUG) {
-            handleUncaughtException();
+            if (!BuildConfig.isProd) {
+                handleUncaughtException();
+            }
             Config.DEBUG = true;
         }
         //友盟
@@ -42,9 +43,6 @@ public class App extends Application {
                 startActivity(intent);
 
                 Preference.get().setForeground(false);
-                /**
-                 * 如果开发者调用Process.kill或者System.exit之类的方法杀死进程，请务必在此之前调用MobclickAgent.onKillProcess(Context context)方法，用来保存统计数据。
-                 */
                 System.exit(1);
             }
         });

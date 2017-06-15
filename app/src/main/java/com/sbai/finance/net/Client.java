@@ -615,6 +615,14 @@ public class Client {
                 .put("realName", realName));
     }
 
+    public static API updateUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
+        return new API(POST, "/user/user/updateUserCertification.do", new ApiParams()
+                .put("Back", Back)
+                .put("Positive", Positive)
+                .put("certCode", certCode)
+                .put("realName", realName));
+    }
+
     /**
      * 接口名称 查看点击用户观点
      * 请求类型 post
@@ -1429,7 +1437,7 @@ public class Client {
      * @return
      */
     public static API forgetPassWord(String code, String phone) {
-        return new API(POST, "/user/userAccount/forgetPassword.do", new ApiParams()
+        return new API("/user/userAccount/forgetPassword.do", new ApiParams()
                 .put("code", code)
                 .put("phone", phone));
     }
