@@ -82,6 +82,15 @@ public class BorrowDetail implements Parcelable {
     private int userId;
     private String userName;
     private String contentImg;
+    private String phoneNum;
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
 
     public int getAuditActorId() {
         return auditActorId;

@@ -376,7 +376,8 @@
     <string name="end">已结束</string>
     <string name="borrow_in_days">已借入 %1$d天</string>
     <string name="borrow_out_days">已借出 %1$d天</string>
-    <string name="over_time">逾期</string>
+    <string name="borrow_in_over_time">已借入 逾期</string>
+    <string name="borrow_out_over_time">已借出 逾期</string>
     <!--mutual-->
     <string name="good_heart_people">好心人</string>
     <string name="load_person">借款人</string>
@@ -431,8 +432,8 @@
     <string name="all_image">所有图片</string>
 
     <!--借款有道-->
-    <string name="give_help_dialog_title">是否要帮助“%1$s”?</string>
-    <string name="give_help_dialog_content">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="give_help_dialog_title">确认帮助?</string>
+    <string name="give_help_dialog_content">资金往来,请谨慎操作</string>
     <string name="submitted">已提交</string>
     <string name="want_help_him">想要帮助TA的人</string>
     <string name="pay_intention">支付意向金</string>

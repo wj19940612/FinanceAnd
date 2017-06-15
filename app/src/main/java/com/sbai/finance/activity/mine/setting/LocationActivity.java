@@ -65,6 +65,8 @@ public class LocationActivity extends BaseActivity {
     //
     private boolean isClosePage = false;
 
+    private String mPublishLocation;
+
 
     @Override
     protected void onResume() {
@@ -79,6 +81,7 @@ public class LocationActivity extends BaseActivity {
         ButterKnife.bind(this);
         mIsFromModifyUserInfoPage = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
         isSelectGpsLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
+        mPublishLocation = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
     }
 
     @OnClick({R.id.choiceLocation, R.id.location})
@@ -143,7 +146,13 @@ public class LocationActivity extends BaseActivity {
         String country = "";
         String[] split;
         if (!TextUtils.isEmpty(mLocation.getText()) && isSelectGpsLocation) {
-            split = mLocation.getText().toString().split(" ");
+            String location;
+            if (!TextUtils.isEmpty(mPublishLocation)){
+                location=mPublishLocation;
+            }else{
+                location = mLocation.getText().toString();
+            }
+            split = location.split(" ");
             if (split.length == 3) {
                 province = split[0];
                 city = split[1];
