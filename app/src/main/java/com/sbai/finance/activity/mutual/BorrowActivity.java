@@ -19,8 +19,10 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -157,10 +159,6 @@ public class BorrowActivity extends BaseActivity {
         mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
         mBorrowLimit.requestFocus();
         mBorrowLimit.setFocusable(true);
-        int inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL;
-        mBorrowLimit.setInputType(inputType);
-        mBorrowInterest.setInputType(inputType);
-        mBorrowTimeLimit.setInputType(inputType);
         mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
         mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
         mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
@@ -351,7 +349,8 @@ public class BorrowActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
+                            ToastUtil.curt(getString(R.string.publish_success));
+//                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
                             Launcher.with(getActivity(), MutualActivity.class).execute();
                             finish();
                         } else {
@@ -421,10 +420,9 @@ public class BorrowActivity extends BaseActivity {
 
     }
     private void showSoftWare(EditText editText){
-        editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
-        //打开软键盘
+        editText.setSelection(editText.getText().length());
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
