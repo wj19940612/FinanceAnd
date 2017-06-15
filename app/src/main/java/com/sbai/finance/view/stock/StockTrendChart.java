@@ -131,8 +131,8 @@ public class StockTrendChart extends ChartView {
             redraw();
         } else if (mSettings != null && mUnstableData != null) { // When unstable data > top || < bottom, still redraw
             float[] baseLines = mSettings.getBaseLines();
-            if (mUnstableData.getLastPrice() > baseLines[0]
-                    || mUnstableData.getLastPrice() < baseLines[baseLines.length - 1]) {
+            if (mUnstableData.getClose_Price() > baseLines[0]
+                    || mUnstableData.getClose_Price() < baseLines[baseLines.length - 1]) {
                 redraw();
             }
         }
@@ -177,21 +177,21 @@ public class StockTrendChart extends ChartView {
 
         if (mDataList != null) {
             for (StockTrendData stockTrendData : mDataList) {
-                if (max < stockTrendData.getLastPrice()) {
-                    max = stockTrendData.getLastPrice();
+                if (max < stockTrendData.getClose_Price()) {
+                    max = stockTrendData.getClose_Price();
                 }
-                if (min > stockTrendData.getLastPrice()) {
-                    min = stockTrendData.getLastPrice();
+                if (min > stockTrendData.getClose_Price()) {
+                    min = stockTrendData.getClose_Price();
                 }
             }
         }
 
         if (mUnstableData != null) {
-            if (max < mUnstableData.getLastPrice()) {
-                max = mUnstableData.getLastPrice();
+            if (max < mUnstableData.getClose_Price()) {
+                max = mUnstableData.getClose_Price();
             }
-            if (min > mUnstableData.getLastPrice()) {
-                min = mUnstableData.getLastPrice();
+            if (min > mUnstableData.getClose_Price()) {
+                min = mUnstableData.getClose_Price();
             }
         }
 
@@ -223,10 +223,10 @@ public class StockTrendChart extends ChartView {
     @Override
     protected void calculateIndexesBaseLines(long[] indexesBaseLines) {
         if (mDataList != null && mDataList.size() > 0) {
-            mDataList.get(0).setBusinessVolume(mDataList.get(0).getBusinessAmount());
+            mDataList.get(0).setBusinessVolume(mDataList.get(0).getNow_Volume());
             long maxVolume = mDataList.get(0).getBusinessVolume();
             for (int i = 1; i < mDataList.size(); i++) {
-                long volume = mDataList.get(i).getBusinessAmount() - mDataList.get(i - 1).getBusinessAmount();
+                long volume = mDataList.get(i).getNow_Volume() - mDataList.get(i - 1).getNow_Volume();
                 mDataList.get(i).setBusinessVolume(volume);
                 if (maxVolume < mDataList.get(i).getBusinessVolume()) {
                     maxVolume = mDataList.get(i).getBusinessVolume();
@@ -303,7 +303,7 @@ public class StockTrendChart extends ChartView {
             float chartY = 0;
             for (int i = 0; i < size; i++) {
                 chartX = getChartX(i, mDataList.get(i));
-                chartY = getChartY(mDataList.get(i).getLastPrice());
+                chartY = getChartY(mDataList.get(i).getClose_Price());
                 if (path.isEmpty()) {
                     firstChartX = chartX;
                     path.moveTo(chartX, chartY);
@@ -333,7 +333,7 @@ public class StockTrendChart extends ChartView {
                 for (int i = 0; i < size; i++) {
                     ChartColor color = ChartColor.RED;
                     chartX = getChartX(i);
-                    if (i > 0 && mDataList.get(i).getLastPrice() < mDataList.get(i - 1).getLastPrice()) {
+                    if (i > 0 && mDataList.get(i).getClose_Price() < mDataList.get(i - 1).getClose_Price()) {
                         color = ChartColor.GREEN;
                     }
                     setCandleBodyPaint(sPaint, color.get());
@@ -358,11 +358,11 @@ public class StockTrendChart extends ChartView {
             Path path = getPath();
             int unstableIndex = mDataList != null ? mDataList.size() : 0;
             float chartX = getChartX(unstableIndex, mUnstableData);
-            float chartY = getChartY(mUnstableData.getLastPrice());
+            float chartY = getChartY(mUnstableData.getClose_Price());
 
             if (mDataList != null && mDataList.size() > 0) {
                 StockTrendData lastData = mDataList.get(mDataList.size() - 1);
-                path.moveTo(getChartX(mDataList.size() - 1, lastData), getChartY(lastData.getLastPrice()));
+                path.moveTo(getChartX(mDataList.size() - 1, lastData), getChartY(lastData.getClose_Price()));
                 path.lineTo(chartX, chartY);
                 setRealTimeLinePaint(sPaint);
                 canvas.drawPath(path, sPaint);
@@ -377,7 +377,7 @@ public class StockTrendChart extends ChartView {
 
             // unstable price
             setUnstablePricePaint(sPaint);
-            String unstablePrice = formatNumber(mUnstableData.getLastPrice());
+            String unstablePrice = formatNumber(mUnstableData.getClose_Price());
             float priceWidth = sPaint.measureText(unstablePrice);
             float priceMargin = (mPriceAreaWidth - priceWidth) / 2;
             float priceX = left + width - priceMargin - priceWidth;
@@ -437,7 +437,7 @@ public class StockTrendChart extends ChartView {
         if (hasThisTouchIndex(touchIndex)) {
             StockTrendData data = mVisibleList.get(touchIndex);
             float touchX = getChartX(touchIndex);
-            float touchY = getChartY(data.getLastPrice());
+            float touchY = getChartY(data.getClose_Price());
             float touchY2 = getIndexesChartY(data.getBusinessVolume());
 
             // draw cross line: vertical line and horizontal line
@@ -476,7 +476,7 @@ public class StockTrendChart extends ChartView {
             canvas.drawText(date, dateX, dateY, sPaint);
 
             // draw price connect to horizontal line
-            String price = formatNumber(data.getLastPrice());
+            String price = formatNumber(data.getClose_Price());
             setTouchLineTextPaint(sPaint);
             float priceWidth = sPaint.measureText(price);
             float priceMargin = (mPriceAreaWidth - priceWidth) / 2;

@@ -2,10 +2,9 @@ package com.sbai.finance.model.stock;
 
 public class StockTrendData {
 
-    /**
-     * business_amount : "116600"
-     * last_price : "8.68"
-     */
+    private String nowVolume;
+    private String closePrice;
+    private String time;
 
     private String business_amount;
     private String last_price;
@@ -13,20 +12,37 @@ public class StockTrendData {
     // extra local value
     private long businessVolume;
 
-    public String getBusiness_amount() {
-        return business_amount;
+
+    public String getNowVolume() {
+        return nowVolume;
     }
 
-    public String getLast_price() {
-        return last_price;
+    public void setNowVolume(String nowVolume) {
+        this.nowVolume = nowVolume;
     }
 
-    public float getLastPrice() {
-        return Float.valueOf(last_price).floatValue();
+    public String getClosePrice() {
+        return closePrice;
     }
 
-    public long getBusinessAmount() {
-        return Long.valueOf(business_amount).longValue();
+    public void setClosePrice(String closePrice) {
+        this.closePrice = closePrice;
+    }
+
+    public long getNow_Volume(){
+        return Long.valueOf(nowVolume).longValue();
+    }
+
+    public float getClose_Price(){
+        return Float.valueOf(closePrice).floatValue();
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public long getBusinessVolume() {
@@ -38,8 +54,9 @@ public class StockTrendData {
     }
 
 
+
     public boolean isSameData(StockTrendData unstableData) {
-        return business_amount.equals(unstableData.getBusiness_amount())
-                && last_price.equals(unstableData.getLast_price());
+        return nowVolume.equals(unstableData.getNowVolume())
+                && closePrice.equals(unstableData.getClosePrice());
     }
 }

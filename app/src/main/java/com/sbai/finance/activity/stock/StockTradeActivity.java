@@ -424,11 +424,24 @@ public abstract class StockTradeActivity extends BaseActivity {
         mStockKlineView.setOnAchieveTheLastListener(null);
     }
 
+//    private void requestStockTrendDataAndSet() {
+//        Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
+//                .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
+//                    @Override
+//                    public void onDataMsg(List<StockTrendData> result, StockResp.Msg msg) {
+//                        if (!result.isEmpty()) {
+//                            result.remove(0); // 第一条数据为集合竞价的数据
+//                            mStockTrendView.setDataList(result);
+//                        }
+//                    }
+//                }).fireSync();
+//    }
+
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
+                .setCallback(new Callback2D<Resp<List<StockTrendData>>,List<StockTrendData>>() {
                     @Override
-                    public void onDataMsg(List<StockTrendData> result, StockResp.Msg msg) {
+                    protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {
                             result.remove(0); // 第一条数据为集合竞价的数据
                             mStockTrendView.setDataList(result);

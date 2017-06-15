@@ -779,9 +779,9 @@ public class Client {
      * @return
      */
     public static API getStockTrendData(String stockCode) {
-        return new API("/stock/trend",
+        return new API("/stk/stk/trend.do",
                 new ApiParams()
-                        .put("stock_code", stockCode));
+                        .put("code", stockCode));
     }
 
     /**
