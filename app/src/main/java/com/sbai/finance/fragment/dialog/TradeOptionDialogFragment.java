@@ -94,6 +94,7 @@ public class TradeOptionDialogFragment extends DialogFragment {
         if (lastTime == 0 || overdue) {
             AuthorizationLoginDialogFragment.newInstance().show(getActivity().getSupportFragmentManager());
         } else {
+            Preference.get().setAuthorizationTime(SysTime.getSysTime().getSystemTimestamp());
             Launcher.with(getContext(), TradeWebActivity.class)
                     .putExtra(WebActivity.EX_TITLE,getString(R.string.quick_trade))
                     .execute();
