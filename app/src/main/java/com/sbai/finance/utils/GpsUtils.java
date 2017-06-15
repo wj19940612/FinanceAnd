@@ -13,7 +13,6 @@ import android.util.Log;
 import com.sbai.finance.App;
 
 import java.io.IOException;
-import java.security.Provider;
 import java.util.List;
 
 /**
@@ -56,7 +55,7 @@ public class GpsUtils {
             criteria.setBearingRequired(false); //不要求方位
             criteria.setCostAllowed(false); //不允许有话费
             criteria.setPowerRequirement(Criteria.POWER_LOW);   //低功耗
-            String provider = mLocationManager.getBestProvider(criteria,true);
+            String provider = mLocationManager.getBestProvider(criteria, true);
             //通过最后一次的地理位置来获得Location对象
 //            Location location = locationManager.getLastKnownLocation(provider);
             Location location;
@@ -76,7 +75,7 @@ public class GpsUtils {
          */
             locationManager.requestLocationUpdates(provider, 30000, 50,
                     locationListener);
-         //   移除监听器
+            //   移除监听器
 //            locationManager.removeUpdates(locationListener);
         }
     }
