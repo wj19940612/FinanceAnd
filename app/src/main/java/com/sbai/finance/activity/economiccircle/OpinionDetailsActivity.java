@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -67,6 +69,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 	ScrollView mScrollView;
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
+	@BindView(R.id.hotArea)
+	RelativeLayout mHotArea;
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.userName)
@@ -215,7 +219,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
 					mCreateTime = mOpinionReplyList.get(mOpinionReplyList.size() - 1).getCreateTime();
-					;
 					requestOpinionReplyList();
 				}
 			});
@@ -260,6 +263,36 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		mOpinionContent.setText(mOpinionDetails.getContent());
 
+		if (getCallingActivity() != null) {
+			String className = getCallingActivity().getClassName();
+
+			if (!TextUtils.isEmpty(className)) {
+				if (className.equalsIgnoreCase(FutureTradeActivity.class.getName())
+						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())
+						|| className.equalsIgnoreCase(StockIndexActivity.class.getName())) {
+					mVariety.setVisibility(View.GONE);
+					if (mOpinionDetails.getDirection() == 1) {
+						if (mOpinionDetails.getGuessPass() == 1) {
+							mPublishTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_opinion_up_succeed, 0, 0, 0);
+						} else if (mOpinionDetails.getGuessPass() == 2) {
+							mPublishTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_opinion_up_failed, 0, 0, 0);
+						} else {
+							mPublishTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_opinion_up, 0, 0, 0);
+						}
+					} else {
+						if (mOpinionDetails.getGuessPass() == 1) {
+							mPublishTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_opinion_down_succeed, 0, 0, 0);
+						} else if (mOpinionDetails.getGuessPass() == 2) {
+							mPublishTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_opinion_down_failed, 0, 0, 0);
+						} else {
+							mPublishTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_opinion_down, 0, 0, 0);
+						}
+					}
+					mPublishTime.setCompoundDrawablePadding((int) Display.dp2Px(8, getResources()));
+				}
+			}
+		}
+
 		if (mOpinionDetails.getDirection() == 1) {
 			if (mOpinionDetails.getGuessPass() == 1) {
 				mLabel.setBackgroundResource(R.drawable.ic_opinion_up_succeed);
@@ -280,6 +313,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 		mBigVarietyName.setText(getString(R.string.big_variety_name, mOpinionDetails.getBigVarietyTypeName()));
 		mVarietyName.setText(mOpinionDetails.getVarietyName());
+
+
 		mPublishTime.setText(DateUtil.getFormatTime(mOpinionDetails.getCreateTime()));
 
 		if (mOpinionDetails.getIsPraise() == 1) {
@@ -304,39 +339,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 
 		mScrollView.smoothScrollTo(0, 0);
-	}
-
-	@OnClick(R.id.variety)
-	public void onViewClicked() {
-		if (getCallingActivity() != null) {
-			String className = getCallingActivity().getClassName();
-			if (!TextUtils.isEmpty(className)) {
-				if (className.equalsIgnoreCase(FutureTradeActivity.class.getName())
-						|| className.equalsIgnoreCase(StockDetailActivity.class.getName())
-						|| className.equalsIgnoreCase(StockIndexActivity.class.getName())) {
-					return;
-				}
-			}
-		}
-
-		if (mOpinionDetails != null) {
-			Client.getVarietyDetails(mOpinionDetails.getVarietyId()).setTag(TAG)
-					.setCallback(new Callback2D<Resp<Variety>, Variety>() {
-						@Override
-						protected void onRespSuccessData(Variety variety) {
-							Log.d(TAG, "onRespSuccessData: " + variety.toString());
-							if (Variety.VAR_FUTURE.equals(mOpinionDetails.getBigVarietyTypeCode())) {
-								Launcher.with(OpinionDetailsActivity.this, FutureTradeActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, variety)
-										.execute();
-							} else {
-								Launcher.with(OpinionDetailsActivity.this, StockDetailActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, variety)
-										.execute();
-							}
-						}
-					}).fire();
-		}
 	}
 
 	static class OpinionReplyAdapter extends BaseAdapter {
@@ -396,6 +398,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 
 		static class ViewHolder {
+			@BindView(R.id.hotArea)
+			RelativeLayout mHotArea;
 			@BindView(R.id.avatar)
 			ImageView mAvatar;
 			@BindView(R.id.userName)
@@ -415,7 +419,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			private void bindingData(final Context context, final OpinionReply item) {
 				mUserName.setText(item.getUserName());
-				mUserName.setOnClickListener(new View.OnClickListener() {
+				mHotArea.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						if (LocalUser.getUser().isLogin()) {
@@ -433,19 +437,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
-
-				mAvatar.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (LocalUser.getUser().isLogin()) {
-							Launcher.with(context, UserDataActivity.class)
-									.putExtra(Launcher.USER_ID, item.getUserId())
-									.executeForResult(REQ_CODE_USERDATA);
-						} else {
-							Launcher.with(context, LoginActivity.class).execute();
-						}
-					}
-				});
 
 				if (item.getIsAttention() == 2) {
 					mIsAttention.setText(R.string.is_attention);
@@ -506,7 +497,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.titleBar, R.id.loveNum, R.id.commentContent, R.id.reply, R.id.avatar, R.id.userName})
+	@OnClick({R.id.titleBar, R.id.loveNum, R.id.commentContent, R.id.reply, R.id.hotArea, R.id.variety})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.titleBar:
@@ -585,7 +576,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				}
 				break;
 
-			case R.id.avatar:
+			case R.id.hotArea:
 				if (LocalUser.getUser().isLogin()) {
 					ComponentName callingActivity = getCallingActivity();
 					if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
@@ -599,17 +590,24 @@ public class OpinionDetailsActivity extends BaseActivity {
 				}
 				break;
 
-			case R.id.userName:
-				if (LocalUser.getUser().isLogin()) {
-					ComponentName callingActivity = getCallingActivity();
-					if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
-						return;
-					}
-					Launcher.with(this, UserDataActivity.class)
-							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
-							.executeForResult(REQ_CODE_USERDATA);
-				} else {
-					Launcher.with(this, LoginActivity.class).execute();
+			case R.id.variety:
+				if (mOpinionDetails != null) {
+					Client.getVarietyDetails(mOpinionDetails.getVarietyId()).setTag(TAG)
+							.setCallback(new Callback2D<Resp<Variety>, Variety>() {
+								@Override
+								protected void onRespSuccessData(Variety variety) {
+									Log.d(TAG, "onRespSuccessData: " + variety.toString());
+									if (Variety.VAR_FUTURE.equals(mOpinionDetails.getBigVarietyTypeCode())) {
+										Launcher.with(OpinionDetailsActivity.this, FutureTradeActivity.class)
+												.putExtra(Launcher.EX_PAYLOAD, variety)
+												.execute();
+									} else {
+										Launcher.with(OpinionDetailsActivity.this, StockDetailActivity.class)
+												.putExtra(Launcher.EX_PAYLOAD, variety)
+												.execute();
+									}
+								}
+							}).fire();
 				}
 				break;
 		}
