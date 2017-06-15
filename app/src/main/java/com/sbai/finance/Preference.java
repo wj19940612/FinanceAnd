@@ -125,6 +125,6 @@ public class Preference {
     }
 
     public String getRechargeWay() {
-        return mPrefs.getString(Key.RECHARGE_WAY, "支付宝");
+        return mPrefs.getString(Key.RECHARGE_WAY, "支付宝支付");
     }
 }

@@ -517,6 +517,8 @@
     <string name="ali">支付宝</string>
     <string name="wei_xin">微信</string>
     <string name="next">下一步</string>
+
+    <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
     <string name="card_holder_name_hint">持卡人真实姓名</string>
     <string name="card_holder_identity_card_hint">持卡人身份证号</string>
@@ -526,4 +528,8 @@
     <string name="bank">银行</string>
     <string name="bank_choose">请选择银行</string>
     <string name="phone_number_hint">请输入银行预留手机号码</string>
+    <string name="holder_card_state">持卡人说明</string>
+    <string name="holder_card_state_1">1.为了您的资金安全,只能绑定持卡人本人的银行卡。</string>
+    <string name="holder_card_state_2">2.未成年人禁止交易</string>
+
 </resources>

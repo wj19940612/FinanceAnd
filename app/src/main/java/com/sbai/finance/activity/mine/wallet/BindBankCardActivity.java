@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.sbai.finance.R;
+import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
 
@@ -69,8 +70,8 @@ public class BindBankCardActivity extends AppCompatActivity {
 
     private void formatBankCardNumber() {
         String oldPhone = mBankCardNumber.getText().toString();
-        String phoneNoSpace = oldPhone.replaceAll(" ", "");
-        String newPhone = StrFormatter.getFormatPhoneNumber(phoneNoSpace);
+        String backNoSpace = oldPhone.replaceAll(" ", "");
+        String newPhone = StrFormatter.getFormatBankCardNumber(backNoSpace);
         if (!newPhone.equalsIgnoreCase(oldPhone)) {
             mBankCardNumber.setText(newPhone);
             mBankCardNumber.setSelection(newPhone.length());
@@ -119,6 +120,7 @@ public class BindBankCardActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bindBankCardHint:
+                new BindBankHintDialogFragment().show(getSupportFragmentManager());
                 break;
             case R.id.bank:
                 break;

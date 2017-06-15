@@ -392,13 +392,14 @@ public class Client {
                 .put("createTime", createTime));
     }
 
-	/**
-	 * 获取新消息数量
-	 * @return
-	 */
-	public static API getNewMessageCount() {
-		return new API(POST, "/msg/msg/count.do", null);
-	}
+    /**
+     * 获取新消息数量
+     *
+     * @return
+     */
+    public static API getNewMessageCount() {
+        return new API(POST, "/msg/msg/count.do", null);
+    }
 
     /**
      * 接口名称 标记已读
@@ -1091,8 +1092,7 @@ public class Client {
     //乐米协议
 
     /**
-     *
-     * @param id  2 借款协议  3 用户协议
+     * @param id 2 借款协议  3 用户协议
      * @return
      */
     public static API getArticleProtocol(int id) {
@@ -1465,6 +1465,27 @@ public class Client {
                 .put("issuingBankName", issuingBankName)
                 .put("bankId", bankId));
     }
+
+
+    /**
+     * /user/userpayForDeposit/payDepositMoney.do
+     * POST
+     * 充值接口（nqc）
+     * <p>
+     * 提交至服务端充值信息
+     *
+     * @param platform
+     * @param money
+     * @param bankcardId
+     * @return
+     */
+    public static API submitRechargeData(String platform, String money, String bankcardId) {
+        return new API(POST, "/user/userpayForDeposit/payDepositMoney.do", new ApiParams()
+                .put("platform", platform)
+                .put("money", money)
+                .put("bankcardId", bankcardId));
+    }
+
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";

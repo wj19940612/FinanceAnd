@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/dialogDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/ic_popup_delete"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogDelete"
+        android:background="@drawable/bg_white_rounded"
+        android:orientation="vertical"
+        android:paddingBottom="34dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        android:paddingTop="@dimen/common_padding">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="15dp"
+            android:paddingTop="6dp"
+            android:text="@string/holder_card_state"
+            android:textColor="@color/blackAssist"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/content1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:text="@string/holder_card_state_1"
+            android:textColor="@color/blackAssist"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/content2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/holder_card_state_2"
+            android:textColor="@color/blackAssist"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/content3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/holder_card_state_2"
+            android:textColor="@color/blackAssist"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+    </LinearLayout>
+</RelativeLayout>

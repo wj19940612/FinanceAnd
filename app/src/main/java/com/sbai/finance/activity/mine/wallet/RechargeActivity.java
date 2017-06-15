@@ -9,14 +9,22 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
+import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,8 +34,6 @@ import cn.qqtheme.framework.widget.WheelView;
 
 
 public class RechargeActivity extends BaseActivity {
-
-    private static final int REQ_CODE_BIND_CARD = 417;
 
     @BindView(R.id.rechargeWay)
     AppCompatTextView mRechargeWay;
@@ -39,16 +45,33 @@ public class RechargeActivity extends BaseActivity {
     AppCompatTextView mConnectService;
 
     private String[] mPayData;
+    private List<UsablePlatform> mUsablePlatformList;
+    private UsablePlatform mUsablePlatform;
+    private String bankCardId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
-        mPayData = new String[]{getString(R.string.bank_card), getString(R.string.ali), getString(R.string.wei_xin),};
         mRechargeCount.addTextChangedListener(mValidationWatcher);
+        requestUsablePlatformList();
     }
 
+
+    private void requestUsablePlatformList() {
+        Client.getUsablePlatform().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<UsablePlatform>>, List<UsablePlatform>>() {
+                    @Override
+                    protected void onRespSuccessData(List<UsablePlatform> usablePlatformList) {
+                        mPayData = new String[usablePlatformList.size()];
+                        mUsablePlatformList = usablePlatformList;
+                        for (int i = 0; i < usablePlatformList.size(); i++) {
+                            mPayData[i] = usablePlatformList.get(i).getName();
+                        }
+                    }
+                }).fire();
+    }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
@@ -62,24 +85,61 @@ public class RechargeActivity extends BaseActivity {
 
     private boolean checkRechargeBtnEnable() {
         String count = mRechargeCount.getText().toString();
-        return !TextUtils.isEmpty(count) && Integer.parseInt(count) > 1;
+        return !TextUtils.isEmpty(count) && Double.parseDouble(count) > 1;
     }
 
     @OnClick({R.id.rechargeWay, R.id.rechargeCount, R.id.recharge, R.id.connect_service})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rechargeWay:
-                showRechargePicker();
+                if (mPayData != null && mPayData.length > 0) {
+                    showRechargePicker();
+                } else {
+                    requestUsablePlatformList();
+                }
                 break;
             case R.id.rechargeCount:
                 break;
             case R.id.recharge:
+                submitRechargeData();
                 break;
             case R.id.connect_service:
-                // TODO: 2017/6/14 先写绑定银行卡
-                Launcher.with(getActivity(), BindBankCardActivity.class).executeForResult(REQ_CODE_BIND_CARD);
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }
+    }
+
+    private void submitRechargeData() {
+        if (mUsablePlatform == null) return;
+        String money = mRechargeCount.getText().toString();
+        Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankCardId)
+                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                    @Override
+                    protected void onRespSuccessData(Object data) {
+                        Log.d(TAG, "提交充值信息: " + data.toString());
+
+                    }
+                })
+                .fire();
+
+//        if (mType == 1) {
+//            Launcher.with(getActivity(), AliPayActivity.class)
+//                    .putExtra(Launcher.EX_PAYLOAD, mPlatform)
+//                    .putExtra(Launcher.EX_PAYLOAD_1, mDataId)
+//                    .execute();
+//
+//            Intent intent = new Intent();
+//            intent.setAction("android.intent.action.VIEW");
+//            Uri content_url = Uri.parse(mPaymentPath);
+//            intent.setData(content_url);
+//            startActivity(intent);
+//        } else if(mType == 2) {
+//            Launcher.with(getActivity(), WeChatPayActivity.class)
+//                    .putExtra(Launcher.EX_PAYLOAD, mPaymentPath)
+//                    .putExtra(Launcher.EX_PAYLOAD_1, mDataId)
+//                    .putExtra(Launcher.EX_PAYLOAD_2, mPlatform)
+//                    .execute();
+//        }
     }
 
     private void showRechargePicker() {
@@ -100,15 +160,21 @@ public class RechargeActivity extends BaseActivity {
             public void onOptionPicked(int index, String item) {
                 if (!TextUtils.isEmpty(item)) {
                     Preference.get().setRechargeWay(item);
-                    if (index == 0) {
-                        // TODO: 2017/6/13 写死数据
-                        SpannableString 招商银行 = StrUtil.mergeTextWithRatioColor(getString(R.string.bank_card_pay, "招商银行", 0122),
-                                "\n" + getString(R.string.bank_card_recharge_limit, 444), 0.98f,
-                                ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
-                        mRechargeWay.setText(招商银行);
-                    } else {
-                        mRechargeWay.setText(item);
+
+                    mRechargeWay.setText(item);
+                    for (UsablePlatform data : mUsablePlatformList) {
+                        if (data.getName().equalsIgnoreCase(item)) {
+                            if (item.contains("银行卡")) {
+                                SpannableString 招商银行 = StrUtil.mergeTextWithRatioColor(getString(R.string.bank_card_pay, "招商银行", 0122),
+                                        "\n" + getString(R.string.bank_card_recharge_limit, 444), 0.98f,
+                                        ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
+                                mRechargeWay.setText(招商银行);
+                            }
+                            mUsablePlatform = data;
+                            break;
+                        }
                     }
+
                 }
             }
         });
@@ -120,8 +186,8 @@ public class RechargeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQ_CODE_BIND_CARD:
-                    break;
+//                case REQ_CODE_BIND_CARD:
+//                    break;
                 default:
                     break;
             }
