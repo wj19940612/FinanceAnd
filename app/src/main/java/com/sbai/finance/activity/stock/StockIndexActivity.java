@@ -123,7 +123,7 @@ public class StockIndexActivity extends StockTradeActivity {
                 case 1:
                     return PriceLimitRankingFragment.newInstance(1, mExchangeCode);
                 case 2:
-                    return PriceLimitRankingFragment.newInstance(2, mExchangeCode);
+                    return PriceLimitRankingFragment.newInstance(0, mExchangeCode);
             }
             return null;
         }

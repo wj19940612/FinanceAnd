@@ -37,8 +37,8 @@ import butterknife.Unbinder;
 
 public class PriceLimitRankingFragment extends BaseFragment {
 
-    private static final String KEY_SORT_TYPE = "sort_type";
-    private static final String KEY_STOCK_TYPE = "stock_type";
+    private static final String KEY_DIRECTION = "direction";
+    private static final String KEY_EXCHANGEID = "exchangeId";
 
 
     @BindView(R.id.recyclerView)
@@ -48,8 +48,8 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
     private Unbinder mBind;
 
-    private int mSortType;
-    private int mStockType;
+    private int mDirection;
+    private int mExchangeID;
     private StockSortAdapter mStockSortAdapter;
     private ArrayList<StockData> mStockDataArrayList;
 
@@ -59,8 +59,8 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public static PriceLimitRankingFragment newInstance(int sort_type, int stock_type) {
         PriceLimitRankingFragment fragment = new PriceLimitRankingFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_SORT_TYPE, sort_type);
-        args.putInt(KEY_STOCK_TYPE, stock_type);
+        args.putInt(KEY_DIRECTION, sort_type);
+        args.putInt(KEY_EXCHANGEID, stock_type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +69,8 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mSortType = getArguments().getInt(KEY_SORT_TYPE);
-            mStockType = getArguments().getInt(KEY_STOCK_TYPE);
+            mDirection = getArguments().getInt(KEY_DIRECTION);
+            mExchangeID = getArguments().getInt(KEY_EXCHANGEID);
         }
     }
 
@@ -93,7 +93,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
     }
 
     public void requestStockSortList() {
-        Client.getStockSort(mSortType, mStockType)
+        Client.getStockSort(mDirection, mExchangeID)
                 .setTag(TAG)
                 .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
                     @Override
