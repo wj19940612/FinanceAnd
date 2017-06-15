@@ -82,13 +82,15 @@ android {
             resConfigs "xxhdpi"
             buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
 //            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+            buildConfigField('boolean', 'isProd', 'false')
         }
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-            versionCode 17
-            versionName "0.2.0"
+            versionCode 18
+            versionName "0.2.1"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+            buildConfigField('boolean', 'isProd', 'false')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
@@ -103,6 +105,8 @@ android {
             versionCode 20
             versionName "1.0.0"
             buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
+            //为了在非正式环境可以收集bug
+            buildConfigField('boolean', 'isProd', 'true')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",

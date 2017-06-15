@@ -29,6 +29,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,8 +38,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EconomicCircleNewsActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class EconomicCircleNewsActivity extends BaseActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
@@ -61,6 +64,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 		mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(this);
 		mListView.setAdapter(mEconomicCircleNewsAdapter);
 		mListView.setOnItemClickListener(this);
+		mTitleBar.setOnTitleBarClickListener(this);
 		requestEconomicCircleNewsList();
 	}
 
@@ -105,7 +109,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		HistoryNewsModel item  = (HistoryNewsModel) parent.getItemAtPosition(position);
+		HistoryNewsModel item = (HistoryNewsModel) parent.getItemAtPosition(position);
 		if (item.getClassify() == 3) {
 			Launcher.with(this, OpinionDetailsActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
@@ -115,6 +119,11 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
 					.execute();
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		mListView.smoothScrollToPosition(0);
 	}
 
 	static class EconomicCircleNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
@@ -192,7 +201,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 						if (data != null) {
 							String content = context.getString(R.string.amount, FinanceUtil.formatWithScaleNoZero(data.getMoney())) + "\n"
 									+ context.getString(R.string.limit, FinanceUtil.formatWithScaleNoZero(data.getDays())) + "\n"
-									+ context.getString(R.string.interest,  FinanceUtil.formatWithScaleNoZero(data.getInterest()));
+									+ context.getString(R.string.interest, FinanceUtil.formatWithScaleNoZero(data.getInterest()));
 							mContent.setText(content);
 						}
 					}

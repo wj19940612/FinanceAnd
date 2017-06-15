@@ -5,6 +5,8 @@
     <string name="ok">确定</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
 
     <!-- Main -->
     <string name="home">乐米</string>
@@ -12,7 +14,7 @@
     <string name="mine">我的</string>
 
     <!-- EconomicCircle -->
-    <string name="big_variety_name">%1$s:</string>
+    <string name="big_variety_name">%1$s:  </string>
     <string name="no_data">暂无数据</string>
     <string name="need_amount">需要金额:</string>
     <string name="RMB">%1$s元</string>
@@ -483,9 +485,9 @@
     <string name="wechat_friend">微信</string>
     <string name="wechat_circle">朋友圈</string>
     <string name="weibo">微博</string>
-    <string name="share_succeed">分享成功了</string>
-    <string name="share_failed">分享失败了</string>
-    <string name="share_cancel">分享取消了</string>
+    <string name="share_succeed">分享成功</string>
+    <string name="share_failed">分享失败</string>
+    <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
 
     <!--股票排行榜-->

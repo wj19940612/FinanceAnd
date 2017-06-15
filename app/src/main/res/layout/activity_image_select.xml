@@ -15,7 +15,7 @@
         app:backFeature="true"
         app:rightText="@string/send"
         app:rightVisible="false"
-        app:rightTextColor="@android:color/white"
+        app:rightTextColor="@color/primaryText"
         app:rightTextSize="15sp"
         app:titleText="@string/gallery"/>
 

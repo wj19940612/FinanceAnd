@@ -29,6 +29,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,7 +43,10 @@ import butterknife.ButterKnife;
  * Created by lixiaokuan0819 on 2017/6/12.
  */
 
-public class EconomicCircleNewMessageActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class EconomicCircleNewMessageActivity extends BaseActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
@@ -67,6 +71,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 		mEconomicCircleNewsAdapter = new EconomicCircleNewsAdapter(this);
 		mListView.setAdapter(mEconomicCircleNewsAdapter);
 		mListView.setOnItemClickListener(this);
+		mTitleBar.setOnTitleBarClickListener(this);
 		requestEconomicCircleNewsList();
 	}
 
@@ -151,6 +156,11 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
 					.execute();
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		mListView.smoothScrollToPosition(0);
 	}
 
 

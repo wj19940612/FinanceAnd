@@ -24,6 +24,10 @@ public class TradeWebActivity extends WebActivity {
         getTitleBar().setTitle(getString(R.string.quick_trade));
     }
 
+    @Override
+    protected boolean isNeedViewTitle() {
+        return false;
+    }
 
     private void loadUrl() {
         String url = "https://www.dajiexin.com/";
