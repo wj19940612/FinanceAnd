@@ -182,9 +182,9 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void showDeleteOptionalDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional))
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional),getString(R.string.hint))
                 .setMessageTextSize(15)
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.yes, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
@@ -194,7 +194,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                 .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .setNegative(R.string.cancel)
+                .setNegative(R.string.no)
                 .show();
     }
 
