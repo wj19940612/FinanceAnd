@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:rightText="@string/send"
-        app:rightTextColor="@android:color/white"
+        app:rightTextColor="@color/primaryText"
         app:rightTextSize="15sp"
         app:rightVisible="true"
         app:titleText="@string/preview"

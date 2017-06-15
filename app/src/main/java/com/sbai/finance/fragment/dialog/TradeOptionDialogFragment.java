@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.utils.Launcher;
@@ -93,7 +94,9 @@ public class TradeOptionDialogFragment extends DialogFragment {
         if (lastTime == 0 || overdue) {
             AuthorizationLoginDialogFragment.newInstance().show(getActivity().getSupportFragmentManager());
         } else {
-            Launcher.with(getContext(), TradeWebActivity.class).execute();
+            Launcher.with(getContext(), TradeWebActivity.class)
+                    .putExtra(WebActivity.EX_TITLE,getString(R.string.quick_trade))
+                    .execute();
         }
         dismiss();
     }
