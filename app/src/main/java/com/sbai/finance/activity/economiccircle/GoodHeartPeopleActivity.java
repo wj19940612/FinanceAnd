@@ -86,39 +86,51 @@ public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClic
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 						final GoodHeartPeople goodHeartPeople = (GoodHeartPeople) parent.getItemAtPosition(position);
-						mPayIntention.setEnabled(true);
-						mGoodHeartPeopleAdapter.setChecked(position);
-						mGoodHeartPeopleAdapter.notifyDataSetInvalidated();
+						if (mStatus == BorrowDetail.STATUS_WAIT_HELP || mStatus == BorrowDetail.STATUS_ACCEPTY) {
+							mPayIntention.setEnabled(true);
+							mGoodHeartPeopleAdapter.setChecked(position);
+							mGoodHeartPeopleAdapter.notifyDataSetInvalidated();
 
-						mPayIntention.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								SmartDialog.with(getActivity(),
-										getString(R.string.select_help, goodHeartPeople.getUserName()))
-										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-											@Override
-											public void onClick(final Dialog dialog) {
-												Client.chooseGoodPeople(mDataId, mGoodHeartPeopleList.get(position).getUserId())
-														.setTag(TAG)
-														.setIndeterminate(GoodHeartPeopleActivity.this)
-														.setCallback(new Callback<Resp<JsonPrimitive>>() {
-															@Override
-															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-																Launcher.with(getActivity(), PayIntentionActivity.class)
-																		.putExtra(Launcher.EX_PAYLOAD, mDataId)
-																		.execute();
-																dialog.dismiss();
-															}
-														}).fire();
-											}
-										})
-										.setMessageTextSize(16)
-										.setMessageTextColor(ContextCompat.getColor(GoodHeartPeopleActivity.this, R.color.blackAssist))
-										.setNegative(R.string.cancel)
-										.show();
+							mPayIntention.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									SmartDialog.with(getActivity(),
+											getString(R.string.select_help, goodHeartPeople.getUserName()))
+											.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+												@Override
+												public void onClick(final Dialog dialog) {
+													Client.chooseGoodPeople(mDataId, mGoodHeartPeopleList.get(position).getUserId())
+															.setTag(TAG)
+															.setIndeterminate(GoodHeartPeopleActivity.this)
+															.setCallback(new Callback<Resp<JsonPrimitive>>() {
+																@Override
+																protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+																	Launcher.with(getActivity(), PayIntentionActivity.class)
+																			.putExtra(Launcher.EX_PAYLOAD, mDataId)
+																			.execute();
+																	dialog.dismiss();
+																}
+															}).fire();
+												}
+											})
+											.setMessageTextSize(16)
+											.setMessageTextColor(ContextCompat.getColor(GoodHeartPeopleActivity.this, R.color.blackAssist))
+											.setNegative(R.string.cancel)
+											.show();
 
-							}
-						});
+								}
+							});
+						} else {
+							mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+								@Override
+								public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+									GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+									Launcher.with(GoodHeartPeopleActivity.this, UserDataActivity.class)
+											.putExtra(Launcher.USER_ID, item.getUserId())
+											.execute();
+								}
+							});
+						}
 					}
 				});
 			} else {
