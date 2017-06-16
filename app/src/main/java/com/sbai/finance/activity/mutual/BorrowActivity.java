@@ -103,6 +103,7 @@ public class BorrowActivity extends BaseActivity {
     private String mImagePath;
     private Address mAddress;
     private String mProtocolUrl = API.getHost() + "/mobi/mutual/rules?nohead=1";
+    private InputMethodManager mInputMethodManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,6 +117,7 @@ public class BorrowActivity extends BaseActivity {
         SpannableString ss = new SpannableString(getString(R.string.borrow_remark_hint));//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12, true);//设置字体大小 true表示单位是sp
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mInputMethodManager=(InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mBorrowRemark.setHint(new SpannedString(ss));
         mPhotoGridAdapter = new PhotoGridAdapter(this);
         mPhotoGridAdapter.add("");
@@ -429,13 +431,13 @@ public class BorrowActivity extends BaseActivity {
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
-        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText,InputMethodManager.SHOW_FORCED);//强制显示
+        mInputMethodManager.showSoftInput(editText,InputMethodManager.SHOW_FORCED);//强制显示
     }
     private void hideSoftWare(){
-        InputMethodManager inputMethodManager =
-                (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(0, 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowLimit.getWindowToken(),0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowInterest.getWindowToken(),0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowTimeLimit.getWindowToken(),0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowRemark.getWindowToken(),0);
     }
     private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
         @Override
