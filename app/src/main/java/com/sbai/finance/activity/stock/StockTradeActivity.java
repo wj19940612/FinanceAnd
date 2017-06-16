@@ -31,7 +31,7 @@ import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
-import com.sbai.finance.model.stock.StockRTDataModel;
+import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -107,7 +107,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @BindView(R.id.chartArea)
     LinearLayout mChartArea;
 
-    private StockRTDataModel mStockRTData;
+    private StockRTData mStockRTData;
     private Prediction mPrediction;
 
     private PredictionDialogFragment mPredictionFragment;
@@ -329,10 +329,10 @@ public abstract class StockTradeActivity extends BaseActivity {
      */
     private void requestStockRTData(){
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new Callback2D<Resp<StockRTDataModel>, StockRTDataModel>() {
+                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
 
                     @Override
-                    protected void onRespSuccessData(StockRTDataModel result) {
+                    protected void onRespSuccessData(StockRTData result) {
                         if (result != null) {
                             mStockRTData = result;
                             updateStockTrendView();

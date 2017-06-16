@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.sbai.chart.ChartSettings;
 import com.sbai.finance.R;
-import com.sbai.finance.model.stock.StockRTDataModel;
+import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
 
 import java.math.BigDecimal;
@@ -146,7 +146,7 @@ public class StockTrendView extends LinearLayout {
         }
     }
 
-    public void setStockRTData(StockRTDataModel stockRTData) {
+    public void setStockRTData(StockRTData stockRTData) {
         mAskPrice1.setText(stockRTData.getAskPrice());
         mAskPrice2.setText(stockRTData.getAskPrice2());
         mAskPrice3.setText(stockRTData.getAskPrice3());

@@ -16,7 +16,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
-import com.sbai.finance.model.stock.StockRTDataModel;
+import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -188,11 +188,11 @@ public class PublishOpinionActivity extends BaseActivity {
      */
     private void requestStockRTData(final String content, final String calcuId){
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new Callback2D<Resp<StockRTDataModel>, StockRTDataModel>() {
+                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override
-                    protected void onRespSuccessData(StockRTDataModel result) {
+                    protected void onRespSuccessData(StockRTData result) {
                         if (result != null) {
-                            StockRTDataModel stockRTData = result;
+                            StockRTData stockRTData = result;
                             if (stockRTData != null) {
                                 String last_price = stockRTData.getLastPrice();
                                 String rise_price = stockRTData.getPreSetPrice();

@@ -18,7 +18,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.stock.StockDataModel;
+import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -49,7 +49,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
     private int mDirection;
     private int mExchangeID;
     private StockSortAdapter mStockSortAdapter;
-    private ArrayList<StockDataModel> mStockDataArrayList;
+    private ArrayList<StockData> mStockDataArrayList;
 
     public PriceLimitRankingFragment() {
     }
@@ -114,9 +114,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public void requestStockSortList() {
         Client.getStockSort(mDirection,mExchangeID)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockDataModel>>,List<StockDataModel>>() {
+                .setCallback(new Callback2D<Resp<List<StockData>>,List<StockData>>() {
                     @Override
-                    protected void onRespSuccessData(List<StockDataModel> result) {
+                    protected void onRespSuccessData(List<StockData> result) {
                         updateStockSort(result);
                     }
 
@@ -128,7 +128,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
                 }).fireSync();
     }
 
-    private void updateStockSort(List<StockDataModel> data) {
+    private void updateStockSort(List<StockData> data) {
         if (data == null || data.isEmpty() && mStockDataArrayList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
@@ -173,14 +173,14 @@ public class PriceLimitRankingFragment extends BaseFragment {
     class StockSortAdapter extends RecyclerView.Adapter<StockSortAdapter.ViewHolder> {
 
         Context mContext;
-        ArrayList<StockDataModel> mStockDataArrayList;
+        ArrayList<StockData> mStockDataArrayList;
 
         public StockSortAdapter(Context context) {
             this.mContext = context;
             mStockDataArrayList = new ArrayList<>();
         }
 
-        public void addAll(List<StockDataModel> datas) {
+        public void addAll(List<StockData> datas) {
             mStockDataArrayList.clear();
             mStockDataArrayList.addAll(datas);
             //先显示10个
@@ -230,7 +230,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final StockDataModel item, int position, final Context context) {
+            public void bindDataWithView(final StockData item, int position, final Context context) {
                 if (item == null) return;
                 mFutureName.setText(item.getName());
                 mFutureCode.setText(item.getInstrumentId());

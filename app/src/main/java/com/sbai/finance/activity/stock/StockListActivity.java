@@ -19,7 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.stock.StockDataModel;
+import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -181,9 +181,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
-                .setCallback(new Callback2D<Resp<List<StockDataModel>>, List<StockDataModel>>() {
+                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
                     @Override
-                    protected void onRespSuccessData(List<StockDataModel> result) {
+                    protected void onRespSuccessData(List<StockData> result) {
                         mStockListAdapter.addStockData(result);
                     }
                 }).fireSync();
@@ -218,9 +218,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
-                .setCallback(new Callback2D<Resp<List<StockDataModel>>, List<StockDataModel>>() {
+                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
                     @Override
-                    protected void onRespSuccessData(List<StockDataModel> result) {
+                    protected void onRespSuccessData(List<StockData> result) {
                         updateStockIndexMarketData(result);
                     }
                 }).fireSync();
@@ -265,14 +265,14 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     }
 
-    private void updateStockIndexMarketData(List<StockDataModel> data) {
+    private void updateStockIndexMarketData(List<StockData> data) {
         // 2.判断涨跌
         int s2Color = ContextCompat.getColor(this, R.color.redPrimary);
         int s3Color = ContextCompat.getColor(this, R.color.greenAssist);
         int color;
         Variety variety;
         SpannableString spannableString;
-        for (StockDataModel stockData : data) {
+        for (StockData stockData : data) {
             String rateChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
             if (rateChange.startsWith("-")) {
                 color = s3Color;
@@ -389,15 +389,15 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     public static class StockListAdapter extends ArrayAdapter<Variety> {
 
-        private HashMap<String, StockDataModel> mStockDataList;
+        private HashMap<String, StockData> mStockDataList;
 
         public StockListAdapter(@NonNull Context context) {
             super(context, 0);
             mStockDataList = new HashMap<>();
         }
 
-        public void addStockData(List<StockDataModel> stockDataList) {
-            for (StockDataModel data : stockDataList) {
+        public void addStockData(List<StockData> stockDataList) {
+            for (StockData data : stockDataList) {
                 mStockDataList.put(data.getInstrumentId(), data);
             }
             notifyDataSetChanged();
@@ -433,7 +433,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Variety item, HashMap<String, StockDataModel> map, Context context) {
+            private void bindingData(Variety item, HashMap<String, StockData> map, Context context) {
                 mFutureName.setText(item.getVarietyName());
                 if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     mFutureCode.setText(item.getContractsCode());
@@ -441,7 +441,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mFutureCode.setText(item.getVarietyType());
                 }
 
-                StockDataModel stockData = map.get(item.getVarietyType());
+                StockData stockData = map.get(item.getVarietyType());
                 if (stockData != null) {
                     mLastPrice.setText(stockData.getLastPrice());
                     String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());

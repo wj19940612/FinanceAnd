@@ -21,7 +21,7 @@ import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.fragment.dialog.AddOptionalDialogFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
-import com.sbai.finance.model.stock.StockDataModel;
+import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -188,10 +188,10 @@ public class OptionalActivity extends BaseActivity implements
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
-                .setCallback(new Callback2D<Resp<List<StockDataModel>>, List<StockDataModel>>() {
+                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
 
                     @Override
-                    protected void onRespSuccessData(List<StockDataModel> result) {
+                    protected void onRespSuccessData(List<StockData> result) {
                         if (result != null) {
                             mSlideListAdapter.addStockData(result);
                         }
@@ -283,7 +283,7 @@ public class OptionalActivity extends BaseActivity implements
         Context mContext;
         private OnDelClickListener mOnDelClickListener;
         private HashMap<String, FutureData> mFutureDataList;
-        private HashMap<String, StockDataModel> mStockDataList;
+        private HashMap<String, StockData> mStockDataList;
         interface OnDelClickListener {
             void onClick(int position);
         }
@@ -294,8 +294,8 @@ public class OptionalActivity extends BaseActivity implements
             }
             notifyDataSetChanged();
         }
-        public void addStockData(List<StockDataModel> stockDataList) {
-            for (StockDataModel stockData : stockDataList) {
+        public void addStockData(List<StockData> stockDataList) {
+            for (StockData stockData : stockDataList) {
                 mStockDataList.put(stockData.getInstrumentId(), stockData);
             }
             notifyDataSetChanged();
@@ -353,12 +353,12 @@ public class OptionalActivity extends BaseActivity implements
                 mDel = (TextView) menu.findViewById(R.id.del);
             }
 
-            private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockDataModel> stockMap, Context context) {
+            private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap, HashMap<String, StockData> stockMap, Context context) {
                 if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
                     mFutureName.setText(item.getVarietyName());
                     mFutureCode.setText(context.getString(R.string.stock)+" "+item.getVarietyType());
               //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
-                    StockDataModel stockData = stockMap.get(item.getVarietyType());
+                    StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
                         mLastPrice.setText(stockData.getLastPrice());
                         String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
