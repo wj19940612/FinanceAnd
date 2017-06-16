@@ -5,6 +5,8 @@
     <string name="ok">确定</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
 
     <!-- Main -->
     <string name="home">乐米</string>
@@ -12,7 +14,7 @@
     <string name="mine">我的</string>
 
     <!-- EconomicCircle -->
-    <string name="big_variety_name">%1$s:</string>
+    <string name="big_variety_name">%1$s:  </string>
     <string name="no_data">暂无数据</string>
     <string name="need_amount">需要金额:</string>
     <string name="RMB">%1$s元</string>
@@ -376,7 +378,8 @@
     <string name="end">已结束</string>
     <string name="borrow_in_days">已借入 %1$d天</string>
     <string name="borrow_out_days">已借出 %1$d天</string>
-    <string name="over_time">逾期</string>
+    <string name="borrow_in_over_time">已借入 逾期</string>
+    <string name="borrow_out_over_time">已借出 逾期</string>
     <!--mutual-->
     <string name="good_heart_people">好心人</string>
     <string name="load_person">借款人</string>
@@ -431,8 +434,8 @@
     <string name="all_image">所有图片</string>
 
     <!--借款有道-->
-    <string name="give_help_dialog_title">是否要帮助“%1$s”?</string>
-    <string name="give_help_dialog_content">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
+    <string name="give_help_dialog_title">确认帮助?</string>
+    <string name="give_help_dialog_content">资金往来,请谨慎操作</string>
     <string name="submitted">已提交</string>
     <string name="want_help_him">想要帮助TA的人</string>
     <string name="pay_intention">支付意向金</string>
@@ -443,7 +446,7 @@
     <string name="we_chat_pay">微信支付</string>
     <string name="ali_pay">支付宝支付</string>
     <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
-    <string name="intention_amount">￥%1$s</string>
+    <string name="intention_amount">￥0.01</string>
     <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
     <string name="ali_pay_hint_1">1.如果未打开支付宝或未完成付款,请点击“继续支付”。</string>
     <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
@@ -482,9 +485,9 @@
     <string name="wechat_friend">微信</string>
     <string name="wechat_circle">朋友圈</string>
     <string name="weibo">微博</string>
-    <string name="share_succeed">分享成功了</string>
-    <string name="share_failed">分享失败了</string>
-    <string name="share_cancel">分享取消了</string>
+    <string name="share_succeed">分享成功</string>
+    <string name="share_failed">分享失败</string>
+    <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
 
     <!--股票排行榜-->

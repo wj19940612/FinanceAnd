@@ -14,7 +14,8 @@
         android:background="@color/background"/>
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:id="@+id/hotArea"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
@@ -33,7 +34,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="6dp"
             android:layout_toRightOf="@+id/avatar"
-            android:background="@drawable/bg_user_name"
             android:textColor="@color/blackAssist"
             android:textSize="16sp"
             tools:text="反方向的钟"/>
@@ -57,9 +57,7 @@
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
-        android:ellipsize="end"
         android:lineSpacingExtra="6dp"
-        android:maxLines="2"
         android:textColor="@color/blackAssist"
         android:textSize="14sp"
         app:trimLines="2"

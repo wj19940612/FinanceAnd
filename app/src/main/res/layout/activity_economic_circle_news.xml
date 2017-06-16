@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -23,10 +24,10 @@
         android:background="@color/split"/>
 
     <ListView
-        android:divider="@null"
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@null"
         android:visibility="visible"/>
 
     <TextView

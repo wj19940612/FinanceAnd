@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -16,6 +17,8 @@ import butterknife.OnClick;
 
 
 public class SafetySettingActivity extends BaseActivity {
+
+    private static final int REQ_CODE_MODIFY_PASS = 247;
 
     @BindView(R.id.modify_safety_password)
     AppCompatTextView mModifySafetyPassword;
@@ -53,15 +56,13 @@ public class SafetySettingActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.modify_safety_password:
-                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).execute();
-                finish();
+                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).executeForResult(REQ_CODE_MODIFY_PASS);
                 break;
             case R.id.forget_safety_password:
-                Launcher.with(getActivity(), ForgetPassWordActivity.class).execute();
+                Launcher.with(getActivity(), ForgetPassWordActivity.class).executeForResult(REQ_CODE_MODIFY_PASS);
                 break;
             case R.id.setting_safety_password:
-                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).execute();
-                finish();
+                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).executeForResult(REQ_CODE_MODIFY_PASS);
                 break;
             case R.id.modifySafetyLL:
                 break;
@@ -69,7 +70,16 @@ public class SafetySettingActivity extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_MODIFY_PASS && resultCode == RESULT_OK) {
+
+            if (isUserHasPassword) {
+                mModifySafetyLL.setVisibility(View.VISIBLE);
+                mSettingSafetyPassword.setVisibility(View.GONE);
+            } else {
+                finish();
+            }
+        }
     }
 }

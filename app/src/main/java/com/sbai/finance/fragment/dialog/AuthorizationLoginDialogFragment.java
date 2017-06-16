@@ -100,7 +100,9 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
         switch (view.getId()) {
             case R.id.login:
                 Preference.get().setAuthorizationTime(SysTime.getSysTime().getSystemTimestamp());
-                Launcher.with(getContext(), TradeWebActivity.class).execute();
+                Launcher.with(getContext(), TradeWebActivity.class)
+                        .putExtra(WebActivity.EX_TITLE,getString(R.string.quick_trade))
+                        .execute();
                 dismiss();
                 break;
             case R.id.thirdPartyProtocol:

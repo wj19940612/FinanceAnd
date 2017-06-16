@@ -1117,7 +1117,7 @@ public class Client {
      * @return
      */
     public static API sendBorrowMessage(int loanId, String content) {
-        return new API("/coterie/help/loanNote/addNote.do",
+        return new API(POST,"/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
                         .put("content", content));
@@ -1437,7 +1437,7 @@ public class Client {
      * @return
      */
     public static API forgetPassWord(String code, String phone) {
-        return new API(POST, "/user/userAccount/forgetPassword.do", new ApiParams()
+        return new API("/user/userAccount/forgetPassword.do", new ApiParams()
                 .put("code", code)
                 .put("phone", phone));
     }

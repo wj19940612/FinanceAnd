@@ -8,6 +8,7 @@
        android:id="@+id/message"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
+       android:layout_marginLeft="54dp"
        android:textSize="@dimen/sp_14"
        android:textColor="@color/warningText"
        android:lineSpacingExtra="4dp"
