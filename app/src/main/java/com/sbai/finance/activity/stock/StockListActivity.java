@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,12 +19,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.model.stock.StockDataModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -155,6 +152,27 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 }).fireSync();
     }
 
+//    private void requestStockMarketData(List<Variety> data) {
+//        if (data.isEmpty()) return;
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (Variety variety : data) {
+//            stringBuilder.append(variety.getVarietyType()).append(",");
+//        }
+//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+//        Client.getStockMarketData(stringBuilder.toString())
+//                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+//                    @Override
+//                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+//                        mStockListAdapter.addStockData(result);
+//                    }
+//                }).fireSync();
+//    }
+
+
+    /**
+     * 新的批量股票接口
+     * @param data
+     */
     private void requestStockMarketData(List<Variety> data) {
         if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
@@ -163,14 +181,35 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
-                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+                .setCallback(new Callback2D<Resp<List<StockDataModel>>, List<StockDataModel>>() {
                     @Override
-                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+                    protected void onRespSuccessData(List<StockDataModel> result) {
                         mStockListAdapter.addStockData(result);
                     }
                 }).fireSync();
     }
 
+//    private void requestStockIndexMarketData(List<Variety> data) {
+//        if (data == null || data.isEmpty()) return;
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (Variety variety : data) {
+//            stringBuilder.append(variety.getVarietyType()).append(",");
+//        }
+//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+//        Client.getStockMarketData(stringBuilder.toString())
+//                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+//                    @Override
+//                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+//                        updateStockIndexMarketData(result);
+//                    }
+//                }).fireSync();
+//    }
+
+
+    /**
+     * 新的批量股票接口
+     * @param data
+     */
     private void requestStockIndexMarketData(List<Variety> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
@@ -179,9 +218,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
-                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+                .setCallback(new Callback2D<Resp<List<StockDataModel>>, List<StockDataModel>>() {
                     @Override
-                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+                    protected void onRespSuccessData(List<StockDataModel> result) {
                         updateStockIndexMarketData(result);
                     }
                 }).fireSync();
@@ -226,38 +265,37 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     }
 
-    private void updateStockIndexMarketData(List<StockData> data) {
+    private void updateStockIndexMarketData(List<StockDataModel> data) {
         // 2.判断涨跌
         int s2Color = ContextCompat.getColor(this, R.color.redPrimary);
         int s3Color = ContextCompat.getColor(this, R.color.greenAssist);
         int color;
         Variety variety;
         SpannableString spannableString;
-        for (StockData stockData : data) {
-            String rateChange = stockData.getRise_pre();
+        for (StockDataModel stockData : data) {
+            String rateChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
             if (rateChange.startsWith("-")) {
                 color = s3Color;
-                rateChange = rateChange + "%";
             } else {
                 color = s2Color;
-                rateChange = "+" + rateChange + "%";
+                rateChange = "+" + rateChange;
             }
             variety = (Variety) mShangHai.getTag();
-            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getStock_code())){
+            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLastPrice(), "\n" + stockData.getUpDropPrice() + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShangHai.setText(spannableString);
             }
             variety = (Variety) mShenZhen.getTag();
-            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getStock_code())){
+            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLastPrice(), "\n" + stockData.getUpDropPrice() + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShenZhen.setText(spannableString);
             }
             variety = (Variety) mBoard.getTag();
-            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getStock_code())){
+            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLast_price(), "\n" + stockData.getRise_price() + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLastPrice(), "\n" + stockData.getUpDropPrice() + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mBoard.setText(spannableString);
             }
         }
@@ -351,16 +389,16 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     public static class StockListAdapter extends ArrayAdapter<Variety> {
 
-        private HashMap<String, StockData> mStockDataList;
+        private HashMap<String, StockDataModel> mStockDataList;
 
         public StockListAdapter(@NonNull Context context) {
             super(context, 0);
             mStockDataList = new HashMap<>();
         }
 
-        public void addStockData(List<StockData> stockDataList) {
-            for (StockData data : stockDataList) {
-                mStockDataList.put(data.getStock_code(), data);
+        public void addStockData(List<StockDataModel> stockDataList) {
+            for (StockDataModel data : stockDataList) {
+                mStockDataList.put(data.getInstrumentId(), data);
             }
             notifyDataSetChanged();
         }
@@ -395,7 +433,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Variety item, HashMap<String, StockData> map, Context context) {
+            private void bindingData(Variety item, HashMap<String, StockDataModel> map, Context context) {
                 mFutureName.setText(item.getVarietyName());
                 if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     mFutureCode.setText(item.getContractsCode());
@@ -403,18 +441,18 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mFutureCode.setText(item.getVarietyType());
                 }
 
-                StockData stockData = map.get(item.getVarietyType());
+                StockDataModel stockData = map.get(item.getVarietyType());
                 if (stockData != null) {
-                    mLastPrice.setText(stockData.getLast_price());
-                    String priceChange = stockData.getRise_pre();
+                    mLastPrice.setText(stockData.getLastPrice());
+                    String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
                     if (priceChange.startsWith("-")) {
                         mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenAssist));
                         mRate.setSelected(false);
-                        mRate.setText(priceChange + "%");
+                        mRate.setText(priceChange);
                     } else {
                         mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.redPrimary));
                         mRate.setSelected(true);
-                        mRate.setText("+" + priceChange + "%");
+                        mRate.setText("+" + priceChange);
                     }
                 }
             }

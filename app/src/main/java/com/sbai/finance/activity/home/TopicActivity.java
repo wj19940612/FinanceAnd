@@ -23,16 +23,13 @@ import com.sbai.finance.model.Topic;
 import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
-import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.model.stock.StockDataModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
-import com.sbai.finance.view.slidingListView.SlideItem;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -141,6 +138,29 @@ public class TopicActivity extends BaseActivity {
 		requestFutureMarketData(futures);
 		requestStockMarketData(stocks);
 	}
+
+//	private void requestStockMarketData(List<Variety> data) {
+//		if (data == null || data.isEmpty()) return;
+//		StringBuilder stringBuilder = new StringBuilder();
+//		for (Variety variety : data) {
+//			stringBuilder.append(variety.getVarietyType()).append(",");
+//		}
+//		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+//		Client.getStockMarketData(stringBuilder.toString())
+//				.setCallback(new StockCallback<StockResp, List<StockData>>() {
+//					@Override
+//					public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
+//						if (result!=null){
+//							mTopicListAdapter.addStockData(result);
+//						}
+//					}
+//				}).fireSync();
+//	}
+
+	/**
+	 * 新批量请求股票行情接口
+	 * @param data
+	 */
 	private void requestStockMarketData(List<Variety> data) {
 		if (data == null || data.isEmpty()) return;
 		StringBuilder stringBuilder = new StringBuilder();
@@ -149,15 +169,17 @@ public class TopicActivity extends BaseActivity {
 		}
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 		Client.getStockMarketData(stringBuilder.toString())
-				.setCallback(new StockCallback<StockResp, List<StockData>>() {
+				.setCallback(new Callback2D<Resp<List<StockDataModel>>, List<StockDataModel>>() {
+
 					@Override
-					public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
-						if (result!=null){
+					protected void onRespSuccessData(List<StockDataModel> result) {
+						if (result != null) {
 							mTopicListAdapter.addStockData(result);
 						}
 					}
 				}).fireSync();
 	}
+
 	private void requestFutureMarketData(List<Variety> data) {
 		if (data == null || data.isEmpty()) return;
 		StringBuilder stringBuilder = new StringBuilder();
@@ -207,7 +229,7 @@ public class TopicActivity extends BaseActivity {
 	public static class ListAdapter extends ArrayAdapter<Variety> {
 		Context mContext;
 		private HashMap<String, FutureData> mFutureDataList;
-		private HashMap<String, StockData> mStockDataList;
+		private HashMap<String, StockDataModel> mStockDataList;
 
 		public void addFutureData(List<FutureData> futureDataList) {
 			for (FutureData futureData:futureDataList){
@@ -215,9 +237,9 @@ public class TopicActivity extends BaseActivity {
 			}
 			notifyDataSetChanged();
 		}
-		public void addStockData(List<StockData> stockDataList) {
-			for (StockData stockData : stockDataList) {
-				mStockDataList.put(stockData.getStock_code(), stockData);
+		public void addStockData(List<StockDataModel> stockDataList) {
+			for (StockDataModel stockData : stockDataList) {
+				mStockDataList.put(stockData.getInstrumentId(), stockData);
 			}
 			notifyDataSetChanged();
 		}
@@ -256,24 +278,24 @@ public class TopicActivity extends BaseActivity {
 				ButterKnife.bind(this, content);
 			}
 
-			private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockData> stockMap, Context context) {
-				if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+			private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockDataModel> stockMap, Context context) {
+				if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
 					mFutureName.setText(item.getVarietyName());
 					mFutureCode.setText(item.getVarietyType());
 					//      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
-					StockData stockData = stockMap.get(item.getVarietyType());
+					StockDataModel stockData = stockMap.get(item.getVarietyType());
 					if (stockData != null) {
-						mLastPrice.setText(stockData.getLast_price());
-						String priceChange = stockData.getRise_pre();
+						mLastPrice.setText(stockData.getLastPrice());
+						String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
 						if (priceChange.startsWith("-")) {
 							mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
 							mRate.setSelected(false);
-							mRate.setText(priceChange + "%");
+							mRate.setText(priceChange);
 						} else {
 
 							mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 							mRate.setSelected(true);
-							mRate.setText("+" + priceChange + "%");
+							mRate.setText("+" + priceChange);
 						}
 					} else {
 						mLastPrice.setText("--");

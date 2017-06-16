@@ -688,9 +688,9 @@ public class Client {
      * @return
      */
     public static API getStockMarketData(String stockCodes) {
-        return new API("/stock/comb",
+        return new API(POST, "/stk/stk/list.do",
                 new ApiParams()
-                        .put("stock_code", stockCodes));
+                        .put("codes", stockCodes));
     }
 
     /**
