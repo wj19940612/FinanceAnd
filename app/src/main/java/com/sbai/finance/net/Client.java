@@ -1117,7 +1117,7 @@ public class Client {
      * @return
      */
     public static API sendBorrowMessage(int loanId, String content) {
-        return new API(POST,"/coterie/help/loanNote/addNote.do",
+        return new API(POST, "/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
                         .put("content", content));
@@ -1418,12 +1418,12 @@ public class Client {
     /**
      * /user/userAccount/sendMsgCodeForPass.do
      * POST
-     * 忘记密码发送手机消息
+     * 忘记密码发送手机消息 银行卡充值发送验证码
      *
      * @param phone
      * @return
      */
-    public static API sendMsgCodeForPassWord(String phone) {
+    public static API sendMsgCodeForPassWordOrBankCardPay(String phone) {
         return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
     }
 
@@ -1457,7 +1457,7 @@ public class Client {
      */
     public static API bindBankCard(String realName, String idCard, String cardNumber,
                                    String cardPhone, String issuingBankName, int bankId) {
-        return new API("/user/bankCard/addBankCard.do", new ApiParams()
+        return new API(POST, "/user/bankCard/addBankCard.do", new ApiParams()
                 .put("realName", realName)
                 .put("idCard", idCard)
                 .put("cardNumber", cardNumber)
@@ -1486,6 +1486,53 @@ public class Client {
                 .put("bankcardId", bankcardId));
     }
 
+    /**
+     * user/userpayForDeposit/payCheckByQt.do
+     * POST
+     * 银行卡支付支付短信验证码确认（nqc）
+     *
+     * @param merchantOrderId 第三方订单id
+     * @param checkCode       确认码
+     * @return
+     */
+    public static API confirmBankPay(String merchantOrderId, String checkCode) {
+        return new API(POST, "user/userpayForDeposit/payCheckByQt.do", new ApiParams()
+                .put("merchantOrderId", merchantOrderId)
+                .put("checkCode", checkCode));
+    }
+
+    /**
+     * /user/userAccount/userAccountInfo.do
+     * POST
+     * 个人资金信息（wms）
+     *
+     * @return
+     */
+    public static API requestUserFundInfo() {
+        return new API(POST, "/user/userAccount/userAccountInfo.do", null);
+    }
+
+    /**
+     * /user/bankCard/queryBankCard.do
+     * POST
+     * 用户银行卡信息
+     *
+     * @return
+     */
+    public static API requestUserBankCardInfo() {
+        return new API(POST, "/user/bankCard/queryBankCard.do", null);
+    }
+
+    /**
+     * /user/bankCard/getBank.do
+     * GET
+     * 查询可用的银行
+     *
+     * @return
+     */
+    public static API requestCanUseBankList() {
+        return new API("/user/bankCard/getBank.do", null);
+    }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";

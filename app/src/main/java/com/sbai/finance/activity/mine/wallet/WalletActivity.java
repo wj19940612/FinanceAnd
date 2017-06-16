@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.TheDetailActivity;
 import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
+import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -48,8 +51,41 @@ public class WalletActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
         ButterKnife.bind(this);
-        SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.balance), "\n" + FinanceUtil.formatWithScale(100000), 2.6f);
+        updateUserFund(0);
+
+        requestUserFindInfo();
+        requestUserBankCardInfos();
+    }
+
+    private void requestUserBankCardInfos() {
+        Client.requestUserBankCardInfo()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserBankCardInfoModel>, UserBankCardInfoModel>() {
+                    @Override
+                    protected void onRespSuccessData(UserBankCardInfoModel data) {
+                        Log.d(TAG, "onRespSuccessData: " + data.toString());
+                    }
+                })
+                .fire();
+    }
+
+    private void updateUserFund(double fund) {
+        SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.balance), "\n" + FinanceUtil.formatWithScale(fund), 2.6f);
         mBalance.setText(spannableString);
+    }
+
+    private void requestUserFindInfo() {
+        Client.requestUserFundInfo()
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfoModel data) {
+                        updateUserFund(data.getMoney());
+                    }
+                })
+                .fireSync();
     }
 
     @OnClick({R.id.balance, R.id.recharge, R.id.withdraw, R.id.market_detail, R.id.bankCard})
@@ -87,7 +123,7 @@ public class WalletActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQ_CODE_ADD_SAFETY_PASS&&resultCode==RESULT_OK){
+        if (requestCode == REQ_CODE_ADD_SAFETY_PASS && resultCode == RESULT_OK) {
             // TODO: 2017/6/15 打开体现界面
         }
     }

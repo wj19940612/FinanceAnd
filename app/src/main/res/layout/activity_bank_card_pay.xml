@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.recharge.BankCardPayActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/confirm_recharge"/>
+
+    <include layout="@layout/split_line_grey_light"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/deal_money"/>
+
+        <TextView
+            android:id="@+id/dealMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/redPrimary"
+            android:textSize="24sp"
+            tools:text="@string/deal_money"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/deal_time"/>
+
+        <TextView
+            android:id="@+id/dealTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="14sp"
+            tools:text="2017-06-14  11:05:09"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/deal_time"/>
+
+        <TextView
+            android:id="@+id/dealId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="14sp"
+            tools:text="00251515145145151xx"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:paddingTop="20dp"
+            android:text="@string/bank_card_"/>
+
+        <TextView
+            android:id="@+id/bank_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="14sp"
+            tools:text="00251515145145151xx"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/name_"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="14sp"
+            tools:text="00251515145145151xx"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/identity_card_"/>
+
+        <TextView
+            android:id="@+id/identity_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="14sp"
+            tools:text="00251515145145151xx"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/phone_"/>
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:textColor="@color/blackAssist"
+            android:textSize="14sp"
+            tools:text="00251515145145151xx"/>
+    </LinearLayout>
+
+    <include layout="@layout/split_line_grey_light"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:minWidth="70dp"
+            android:text="@string/auth_code_"/>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/authCode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/getAuthCode"
+            android:layout_width="93dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/btn_auth_code_rounded"
+            android:enabled="true"
+            android:gravity="center"
+            android:text="@string/get_auth_code"
+            android:textColor="@color/login_get_auth_code_color"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/submitRechargeInfo"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/btn_red_rounded"
+        android:enabled="false"
+        android:text="@string/confirm_recharge"
+        android:textColor="@android:color/white"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin">
+
+        <CheckBox
+            android:id="@+id/agreeProtocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/btn_agree_selector"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:text="@string/read_and_agreed"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/serviceProtocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="@string/recharge_service_protocol"
+            android:textColor="@color/blueAssist"
+            android:textSize="13sp"/>
+    </LinearLayout>
+
+</LinearLayout>

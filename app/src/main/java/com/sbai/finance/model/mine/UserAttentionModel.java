@@ -26,6 +26,16 @@ public class UserAttentionModel {
     private String userPortrait;
     //	是否互相关注 0以关注1未关注
     private int status;
+    //自己加的，用来判断是否关注
+    private int other;
+
+    public int getOther() {
+        return other;
+    }
+
+    public void setOther(int other) {
+        this.other = other;
+    }
 
     public boolean isAttention() {
         return getStatus() == 0;

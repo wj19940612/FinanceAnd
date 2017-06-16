@@ -535,4 +535,17 @@
     <string name="holder_card_state_1">1.为了您的资金安全,只能绑定持卡人本人的银行卡。</string>
     <string name="holder_card_state_2">2.未成年人禁止交易</string>
 
+    <!--确认充值-->
+    <string name="confirm_recharge">确认充值</string>
+    <string name="deal_money">交易金额: </string>
+    <string name="deal_time">交易金额:</string>
+    <string name="deal_id">交易单号:</string>
+    <string name="bank_card_">银行卡号:</string>
+    <string name="name_">姓名:</string>
+    <string name="identity_card_">身份证:</string>
+    <string name="phone_">手机号:</string>
+    <string name="auth_code_">验证码:</string>
+    <string name="please_input_auth_code">请输入短信验证码</string>
+    <string name="read_and_agreed">  我已阅读并同意</string>
+    <string name="recharge_service_protocol">《充值服务协议》</string>
 </resources>

@@ -19,6 +19,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.utils.ValidityDecideUtil;
+import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +33,8 @@ public class ModifyUserNameActivity extends BaseActivity {
     AppCompatButton mSubmitUserName;
     @BindView(R.id.clear)
     AppCompatImageView mClear;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,4 +116,5 @@ public class ModifyUserNameActivity extends BaseActivity {
                 break;
         }
     }
+
 }
