@@ -156,9 +156,9 @@ public class BorrowActivity extends BaseActivity {
                 }
             }
         });
-        mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
         mBorrowLimit.requestFocus();
         mBorrowLimit.setFocusable(true);
+        mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
         mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
         mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
         mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
@@ -351,7 +351,9 @@ public class BorrowActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             ToastUtil.curt(getString(R.string.publish_success));
 //                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
-                            Launcher.with(getActivity(), MutualActivity.class).execute();
+                            Intent intent = new Intent(getActivity(), MutualActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             finish();
                         } else {
                             mPublish.setEnabled(true);
@@ -409,22 +411,31 @@ public class BorrowActivity extends BaseActivity {
                 mLocation.setSubText(mAddress.getLocality() + "-" + mAddress.getSubLocality());
             }
             setPublishStatus();
-
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideSoftWare();
     }
 
     private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)) {
             mPhotoGridAdapter.insert(helpImagePath, mPhotoGridAdapter.getCount() - 1);
         }
-
     }
     private void showSoftWare(EditText editText){
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        imm.showSoftInput(editText,InputMethodManager.SHOW_FORCED);//强制显示
+    }
+    private void hideSoftWare(){
+        InputMethodManager inputMethodManager =
+                (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(0, 0);
     }
     private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
         @Override

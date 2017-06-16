@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background"
-        android:paddingTop="35dp"
-        android:paddingBottom="35dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:orientation="vertical">
@@ -32,16 +32,25 @@
            android:textColor="@color/blackAssist"
            tool:text="证监会李主席发言:鼓励上市公司"
            />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="11sp"
+            android:textColor="@color/assistText"
+            tool:text="2017/03/26  12:31" />
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/split">
+        android:background="@color/background">
         <WebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/progress"
+            android:background="@color/background"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
 
