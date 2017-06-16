@@ -8,8 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,7 +109,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 	private OpinionReplyAdapter mOpinionReplyAdapter;
 	private OpinionDetails mOpinionDetails;
 	private List<OpinionReply> mOpinionReplyList;
-	private TextView mFootView;
+	private View mFootView;
 	private Long mCreateTime;
 	private int mPageSize = 15;
 	private HashSet<Integer> mSet;
@@ -133,6 +131,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 		mMyListView.setAdapter(mOpinionReplyAdapter);
 
 		requestOpinionDetails(false);
+		requestOpinionReplyList(true);
 		initSwipeRefreshLayout();
 	}
 
@@ -148,7 +147,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 					protected void onRespSuccessData(OpinionDetails opinionDetails) {
 						mOpinionDetails = opinionDetails;
 						updateOpinionDetails();
-						requestOpinionReplyList();
 
 						if (isRefreshCommentCount) {
 							Intent intent = new Intent(REFRESH_POINT);
@@ -170,28 +168,27 @@ public class OpinionDetailsActivity extends BaseActivity {
 					mReplyId = -1;
 				}
 				requestOpinionDetails(false);
+				requestOpinionReplyList(true);
 			}
 		});
 	}
 
-	private void requestOpinionReplyList() {
-		if (mOpinionDetails != null) {
-			Client.getOpinionReplyList(mCreateTime, mPageSize, mOpinionDetails.getId(),
-					mReplyId != -1 ? mReplyId : null).setTag(TAG)
-					.setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
-						@Override
-						protected void onRespSuccessData(List<OpinionReply> opinionReplyList) {
-							mOpinionReplyList = opinionReplyList;
-							updateEconomicCircleList(mOpinionReplyList);
-						}
+	private void requestOpinionReplyList(final boolean ifRefreshAdapter) {
+		Client.getOpinionReplyList(mCreateTime, mPageSize, mDataId,
+				mReplyId != -1 ? mReplyId : null).setTag(TAG)
+				.setCallback(new Callback2D<Resp<List<OpinionReply>>, List<OpinionReply>>() {
+					@Override
+					protected void onRespSuccessData(List<OpinionReply> opinionReplyList) {
+						mOpinionReplyList = opinionReplyList;
+						updateEconomicCircleList(mOpinionReplyList, ifRefreshAdapter);
+					}
 
-						@Override
-						public void onFailure(VolleyError volleyError) {
-							super.onFailure(volleyError);
-							stopRefreshAnimation();
-						}
-					}).fire();
-		}
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
+				}).fire();
 	}
 
 	private void stopRefreshAnimation() {
@@ -200,26 +197,21 @@ public class OpinionDetailsActivity extends BaseActivity {
 		}
 	}
 
-	private void updateEconomicCircleList(List<OpinionReply> opinionReplyList) {
+	private void updateEconomicCircleList(List<OpinionReply> opinionReplyList, boolean ifRefreshAdapter) {
 		if (opinionReplyList == null) {
 			stopRefreshAnimation();
 			return;
 		}
 
 		if (mFootView == null) {
-			mFootView = new TextView(getActivity());
-			int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-			mFootView.setPadding(padding, padding, padding, padding);
-			mFootView.setText(getText(R.string.load_more));
-			mFootView.setGravity(Gravity.CENTER);
-			mFootView.setTextColor(ContextCompat.getColor(this, R.color.greyAssist));
+			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
 			mFootView.setBackgroundColor(ContextCompat.getColor(this, R.color.split));
 			mFootView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
 					mCreateTime = mOpinionReplyList.get(mOpinionReplyList.size() - 1).getCreateTime();
-					requestOpinionReplyList();
+					requestOpinionReplyList(false);
 				}
 			});
 			mMyListView.addFooterView(mFootView);
@@ -230,7 +222,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 			mFootView = null;
 		}
 
-		if (mSwipeRefreshLayout.isRefreshing()) {
+		if (mSwipeRefreshLayout.isRefreshing() || ifRefreshAdapter) {
 			if (mOpinionReplyAdapter != null) {
 				mOpinionReplyAdapter.clear();
 			}
@@ -563,8 +555,8 @@ public class OpinionDetailsActivity extends BaseActivity {
 									if (resp.isSuccess()) {
 										mSet.clear();
 										mCreateTime = null;
-										mSwipeRefreshLayout.setRefreshing(true);
 										requestOpinionDetails(true);
+										requestOpinionReplyList(true);
 										mCommentContent.setText("");
 										mScrollView.smoothScrollTo(0, 0);
 

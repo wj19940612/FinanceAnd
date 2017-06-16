@@ -112,7 +112,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             mPublishAdapter.setIsHimSelf(true);
             mTitleBar.setTitle(R.string.my_publish);
         } else {
-            mTitleBar.setTitle(R.string.her_publish);
+            mTitleBar.setTitle(R.string.his_publish);
             mPublishAdapter.setIsHimSelf(false);
             mTitleBar.setRightVisible(false);
         }

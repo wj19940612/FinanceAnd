@@ -140,6 +140,15 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		if (LocalUser.getUser().isLogin()) {
 			requestNewMessageCount();
 			startScheduleJob(10000);
+		} else {
+			//退出登陆时
+			if (mNewMessageHeaderView != null) {
+				mListView.removeHeaderView(mNewMessageHeaderView);
+				mNewMessageHeaderView = null;
+				if (mOnNoReadNewsListener != null) {
+					mOnNoReadNewsListener.onNoReadNewsNumber(1, 0);
+				}
+			}
 		}
 	}
 
@@ -243,10 +252,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					}
 				}
 
-				mOnNoReadNewsListener.onNoReadNewsNumber(1, 99);
 				if (count > 0) {
 					if (mOnNoReadNewsListener != null) {
-//						mOnNoReadNewsListener.onNoReadNewsNumber(1, count);
+						mOnNoReadNewsListener.onNoReadNewsNumber(1, count);
 					}
 				}
 			}
