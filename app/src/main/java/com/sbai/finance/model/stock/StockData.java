@@ -1,5 +1,7 @@
 package com.sbai.finance.model.stock;
 
+import com.sbai.finance.utils.FinanceUtil;
+
 /**
  * Created by linrongfang on 2017/6/16.
  */
@@ -43,7 +45,7 @@ public class StockData {
     }
 
     public String getLastPrice() {
-        return lastPrice;
+        return FinanceUtil.accurateToString(lastPrice);
     }
 
     public void setLastPrice(String lastPrice) {
@@ -59,7 +61,7 @@ public class StockData {
     }
 
     public String getUpDropPrice() {
-        return upDropPrice;
+        return FinanceUtil.accurateToString(upDropPrice);
     }
 
     public void setUpDropPrice(String upDropPrice) {

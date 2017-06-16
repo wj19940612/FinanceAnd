@@ -3,6 +3,8 @@ package com.sbai.finance.model.stock;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.utils.FinanceUtil;
+
 /**
  * Created by linrongfang on 2017/6/16.
  */
@@ -93,7 +95,7 @@ public class StockRTData implements Parcelable {
     private String volume;
 
     public String getAskPrice() {
-        return askPrice;
+        return FinanceUtil.accurateToString(askPrice);
     }
 
     public void setAskPrice(String askPrice) {
@@ -101,7 +103,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice2() {
-        return askPrice2;
+        return FinanceUtil.accurateToString(askPrice2);
     }
 
     public void setAskPrice2(String askPrice2) {
@@ -109,7 +111,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice3() {
-        return askPrice3;
+        return FinanceUtil.accurateToString(askPrice3);
     }
 
     public void setAskPrice3(String askPrice3) {
@@ -117,7 +119,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice4() {
-        return askPrice4;
+        return FinanceUtil.accurateToString(askPrice4);
     }
 
     public void setAskPrice4(String askPrice4) {
@@ -125,7 +127,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice5() {
-        return askPrice5;
+        return FinanceUtil.accurateToString(askPrice5);
     }
 
     public void setAskPrice5(String askPrice5) {
@@ -173,7 +175,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice() {
-        return bidPrice;
+        return FinanceUtil.accurateToString(bidPrice);
     }
 
     public void setBidPrice(String bidPrice) {
@@ -181,7 +183,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice2() {
-        return bidPrice2;
+        return FinanceUtil.accurateToString(bidPrice2);
     }
 
     public void setBidPrice2(String bidPrice2) {
@@ -189,7 +191,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice3() {
-        return bidPrice3;
+        return FinanceUtil.accurateToString(bidPrice3);
     }
 
     public void setBidPrice3(String bidPrice3) {
@@ -197,7 +199,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice4() {
-        return bidPrice4;
+        return FinanceUtil.accurateToString(bidPrice4);
     }
 
     public void setBidPrice4(String bidPrice4) {
@@ -205,7 +207,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice5() {
-        return bidPrice5;
+        return FinanceUtil.accurateToString(bidPrice5);
     }
 
     public void setBidPrice5(String bidPrice5) {
@@ -269,7 +271,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getHighestPrice() {
-        return highestPrice;
+        return FinanceUtil.accurateToString(highestPrice);
     }
 
     public void setHighestPrice(String highestPrice) {
@@ -285,7 +287,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getLastPrice() {
-        return lastPrice;
+        return FinanceUtil.accurateToString(lastPrice);
     }
 
     public void setLastPrice(String lastPrice) {
@@ -293,7 +295,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getLowestPrice() {
-        return lowestPrice;
+        return FinanceUtil.accurateToString(lowestPrice);
     }
 
     public void setLowestPrice(String lowestPrice) {
@@ -301,7 +303,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getOpenPrice() {
-        return openPrice;
+        return FinanceUtil.accurateToString(openPrice);
     }
 
     public void setOpenPrice(String openPrice) {
@@ -317,7 +319,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getPreSetPrice() {
-        return preSetPrice;
+        return FinanceUtil.accurateToString(preSetPrice);
     }
 
     public void setPreSetPrice(String preSetPrice) {
@@ -357,7 +359,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getUpDropPrice() {
-        return upDropPrice;
+        return FinanceUtil.accurateToString(upDropPrice);
     }
 
     public void setUpDropPrice(String upDropPrice) {
