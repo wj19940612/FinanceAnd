@@ -27,6 +27,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.EventModel;
 import com.sbai.finance.model.Topic;
+import com.sbai.finance.model.TopicDetailModel;
 import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -70,8 +71,8 @@ public class TopicDetailActivity extends BaseActivity {
     Button mRefreshButton;
     @BindView(R.id.errorPage)
     LinearLayout mErrorPage;
-
-
+    @BindView(R.id.time)
+    TextView mTime;
     private boolean mLoadSuccess;
     protected String mPageUrl;
     protected String mTitle;
@@ -114,7 +115,15 @@ public class TopicDetailActivity extends BaseActivity {
         if (topic != null) {
             mTitleBar.setTitle(topic.getTitle());
             mSubTitle.setText(topic.getSubTitle());
-            mPureHtml =topic.getContext();
+            mTime.setText(DateUtil.getFormatTime(topic.getCreateDate()));
+            Client.getTopicDetailData(topic.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<TopicDetailModel>,TopicDetailModel>() {
+                        @Override
+                        protected void onRespSuccessData(TopicDetailModel data) {
+                            mPureHtml =data.getSubjectModel().getContext();
+                            loadPage();
+                        }
+                    }).fireSync();
         }
     }
 
@@ -195,8 +204,6 @@ public class TopicDetailActivity extends BaseActivity {
             }
         });
 
-
-        loadPage();
     }
 
     protected void loadPage() {

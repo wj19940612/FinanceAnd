@@ -67,7 +67,6 @@ import com.sbai.finance.view.TitleBar;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -129,7 +128,6 @@ public class BorrowDetailsActivity extends BaseActivity {
     private int mMax;
     private BorrowDetail mBorrowDetail;
     private int mLoadId;
-    private int mReturnHome;
     private MessageAdapter mMessageAdapter;
     private KeyBoardHelper mKeyBoardHelper;
     private AttentionAndFansNumberModel mAttentionAndFansNumberModel;
@@ -143,12 +141,18 @@ public class BorrowDetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_borrow_details);
         ButterKnife.bind(this);
         mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
-        mReturnHome=getIntent().getIntExtra(Launcher.EX_PAYLOAD_1,-1);
         initView();
         calculateAvatarNum(this);
         requestBorrowMoneyDetails();
         requestGoodHeartPeopleList();
 //        requestMessageList();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        requestBorrowMoneyDetails();
+        requestGoodHeartPeopleList();
     }
 
     private void initView() {
@@ -157,16 +161,8 @@ public class BorrowDetailsActivity extends BaseActivity {
         mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UserDataActivity.SHIELD);
+//        intentFilter.addAction(Launcher.EX_PAY_END);
         mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
-
-        mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
-            @Override
-            public void onClick() {
-                if (mReturnHome!=-1){
-                   Launcher.with(getActivity(), MainActivity.class).execute();
-                }
-            }
-        });
         setKeyboardHelper();
         mListView.addHeaderView(mheader);
         mMessageAdapter = new MessageAdapter(getActivity());
@@ -322,8 +318,8 @@ public class BorrowDetailsActivity extends BaseActivity {
         }
     };
 
-private void requestBorrowMoneyDetails() {
-    Client.getBorrowMoneyDetail(mLoadId).setTag(TAG).setIndeterminate(this)
+    private void requestBorrowMoneyDetails() {
+        Client.getBorrowMoneyDetail(mLoadId).setTag(TAG)
             .setCallback(new Callback2D<Resp<BorrowDetail>, BorrowDetail>() {
                 @Override
                 protected void onRespSuccessData(BorrowDetail borrowDetail) {
@@ -333,7 +329,7 @@ private void requestBorrowMoneyDetails() {
             }).fire();
 }
     private void requestGoodHeartPeopleList() {
-        Client.getGoodHeartPeopleList(mLoadId).setTag(TAG).setIndeterminate(this)
+        Client.getGoodHeartPeopleList(mLoadId).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
                     @Override
                     protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
@@ -342,7 +338,7 @@ private void requestBorrowMoneyDetails() {
                 }).fire();
     }
     private void requestMessageList(){
-        Client.getBorrowMessage(mLoadId).setTag(TAG).setIndeterminate(this)
+        Client.getBorrowMessage(mLoadId).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<BorrowMessage>>,List<BorrowMessage>>() {
                     @Override
                     protected void onRespSuccessData(List<BorrowMessage> data) {
@@ -352,11 +348,11 @@ private void requestBorrowMoneyDetails() {
     }
     private void requestSendMessage(){
         String content = mLeaveMessage.getText().toString();
-        try {
-            content = URLEncoder.encode(content, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            content = URLEncoder.encode(content, "utf-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         if (content.length()>=100){
             content = content.substring(0,100);
         }
@@ -365,6 +361,7 @@ private void requestBorrowMoneyDetails() {
                      @Override
                      protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()){
+                            hideSoftWare();
                             requestMessageList();
                         }else {
                             ToastUtil.show(resp.getMsg());
@@ -421,6 +418,11 @@ private void requestBorrowMoneyDetails() {
         super.onDestroy();
         mKeyBoardHelper.onDestroy();
         mLocalBroadcastManager.unregisterReceiver(mShieldBroadcastReceiver);
+    }
+    private void hideSoftWare(){
+        InputMethodManager inputMethodManager =
+                (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void updateMessageList(List<BorrowMessage> data) {
@@ -641,7 +643,7 @@ private void requestBorrowMoneyDetails() {
         switch (borrowDetail.getStatus()){
             case BorrowDetail.STASTU_END_NO_HELP:
             case BorrowDetail.STATUS_END_CANCEL:
-            case BorrowDetail.STATUS_END_NO_ALLOW:
+
             case BorrowDetail.STATUS_END_NO_CHOICE_HELP:
             case BorrowDetail.STATUS_END_REPAY:
             case  BorrowDetail.STATUS_END_FIIL:
@@ -653,6 +655,7 @@ private void requestBorrowMoneyDetails() {
             case BorrowDetail.STATUS_GIVE_HELP:
             case BorrowDetail.STATUS_NO_CHECKED:
             case BorrowDetail.STATUS_ACCEPTY:
+            case BorrowDetail.STATUS_NO_ALLOW:
                 mBorrowStatus.setVisibility(View.VISIBLE);
                 mBorrowOutSuccess.setVisibility(View.GONE);
                 mCallOnly.setVisibility(View.GONE);
@@ -768,14 +771,10 @@ private void requestBorrowMoneyDetails() {
 
     @Override
     public void onBackPressed() {
-        if (mReturnHome!=-1){
-            Launcher.with(getActivity(), MainActivity.class).execute();
-        }else{
-            Intent intent = new Intent();
-            intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
-            intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
-            setResult(RESULT_OK, intent);
-        }
+        Intent intent = new Intent();
+        intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
+        intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
+        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
     private void sendStatusChangeBroadCast(int status,int id){
@@ -797,10 +796,13 @@ private void requestBorrowMoneyDetails() {
     class ShieldBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int dataId = intent.getExtras().getInt(UserDataActivity.USER_ID);
-            if (dataId>0){
-                requestMessageList();
+            if (intent.getAction()==UserDataActivity.SHIELD){
+                int dataId = intent.getExtras().getInt(UserDataActivity.USER_ID);
+                if (dataId>0){
+                    requestMessageList();
+                 }
             }
+
         }
     }
     static class MessageAdapter extends ArrayAdapter<BorrowMessage> {

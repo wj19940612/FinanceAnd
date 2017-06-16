@@ -103,6 +103,7 @@ public class BorrowActivity extends BaseActivity {
     private String mImagePath;
     private Address mAddress;
     private String mProtocolUrl = API.getHost() + "/mobi/mutual/rules?nohead=1";
+    private InputMethodManager mInputMethodManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,6 +117,7 @@ public class BorrowActivity extends BaseActivity {
         SpannableString ss = new SpannableString(getString(R.string.borrow_remark_hint));//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12, true);//设置字体大小 true表示单位是sp
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mInputMethodManager=(InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mBorrowRemark.setHint(new SpannedString(ss));
         mPhotoGridAdapter = new PhotoGridAdapter(this);
         mPhotoGridAdapter.add("");
@@ -156,9 +158,9 @@ public class BorrowActivity extends BaseActivity {
                 }
             }
         });
-        mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
         mBorrowLimit.requestFocus();
         mBorrowLimit.setFocusable(true);
+        mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
         mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
         mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
         mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
@@ -351,7 +353,9 @@ public class BorrowActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             ToastUtil.curt(getString(R.string.publish_success));
 //                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
-                            Launcher.with(getActivity(), MutualActivity.class).execute();
+                            Intent intent = new Intent(getActivity(), MutualActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             finish();
                         } else {
                             mPublish.setEnabled(true);
@@ -409,22 +413,31 @@ public class BorrowActivity extends BaseActivity {
                 mLocation.setSubText(mAddress.getLocality() + "-" + mAddress.getSubLocality());
             }
             setPublishStatus();
-
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideSoftWare();
     }
 
     private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)) {
             mPhotoGridAdapter.insert(helpImagePath, mPhotoGridAdapter.getCount() - 1);
         }
-
     }
     private void showSoftWare(EditText editText){
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
-        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        mInputMethodManager.showSoftInput(editText,InputMethodManager.SHOW_FORCED);//强制显示
+    }
+    private void hideSoftWare(){
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowLimit.getWindowToken(),0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowInterest.getWindowToken(),0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowTimeLimit.getWindowToken(),0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowRemark.getWindowToken(),0);
     }
     private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
         @Override

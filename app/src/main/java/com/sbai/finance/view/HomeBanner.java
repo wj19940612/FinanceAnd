@@ -34,7 +34,6 @@ public class HomeBanner extends FrameLayout {
 
     private AdvertisementAdapter mAdapter;
     private int mInnerCounter;
-
     public interface OnViewClickListener {
         void onBannerClick(BannerModel information);
     }
