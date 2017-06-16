@@ -104,7 +104,7 @@ public class BorrowMineFragment extends BaseFragment implements
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(this);
-     //   mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
         mSwipeRefreshLayout.setAdapter(mListView, mBorrowMoneyAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mBorrowMoneyAdapter);
@@ -153,9 +153,8 @@ public class BorrowMineFragment extends BaseFragment implements
 
     private void updateBorrowData(List<BorrowMine> data) {
         stopRefreshAnimation();
-        if (mSet.isEmpty()) {
-            mBorrowMoneyAdapter.clear();
-        }
+        mSet.clear();
+        mBorrowMoneyAdapter.clear();
         for (BorrowMine borrowMine : data) {
             if (mSet.add(borrowMine.getId())) {
                 mBorrowMoneyAdapter.add(borrowMine);
@@ -171,7 +170,6 @@ public class BorrowMineFragment extends BaseFragment implements
 
     @Override
     public void onRefresh() {
-        reset();
         requestBorrowData();
     }
 
@@ -183,7 +181,6 @@ public class BorrowMineFragment extends BaseFragment implements
     private void reset() {
 //        mPage = 0;
         mSet.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(false);
       //  mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
@@ -240,9 +237,13 @@ public class BorrowMineFragment extends BaseFragment implements
             int dataId = intent.getExtras().getInt(DATA_ID);
             int dataStatus = intent.getExtras().getInt(DATA_STATUS);
             if (dataId>0){
+                if (dataStatus==BorrowDetail.STATUS_GIVE_HELP){
+                    requestBorrowData();
+                    return;
+                }
                 for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
                     BorrowMine item = mBorrowMoneyAdapter.getItem(i);
-                    if (item.getId()==dataId&&item.getStatus()!=dataStatus){
+                    if (item.getId()==dataId&&(dataStatus==BorrowDetail.STATUS_END_CANCEL||dataStatus==BorrowDetail.STATUS_END_REPAY)){
                         item.setStatus(dataStatus);
                         mBorrowMoneyAdapter.notifyDataSetChanged();
                         break;
@@ -354,7 +355,11 @@ public class BorrowMineFragment extends BaseFragment implements
                          break;
                     case BorrowMine.STATUS_INTENTION_OVER_TIME:
                         mStatus.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
-                        mStatus.setText(context.getString(R.string.over_time));
+                        if (isSelf){
+                            mStatus.setText(context.getString(R.string.borrow_in_over_time));
+                        }else {
+                            mStatus.setText(context.getString(R.string.borrow_out_over_time));
+                        }
                         break;
 
                 }

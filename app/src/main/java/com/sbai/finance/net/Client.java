@@ -1117,7 +1117,7 @@ public class Client {
      * @return
      */
     public static API sendBorrowMessage(int loanId, String content) {
-        return new API("/coterie/help/loanNote/addNote.do",
+        return new API(POST,"/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
                         .put("content", content));

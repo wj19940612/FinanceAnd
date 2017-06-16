@@ -93,9 +93,6 @@
        <activity
             android:name=".activity.mutual.BorrowDetailsActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mutual.BorrowMineDetailsActivity"
-            android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
         <activity
             android:name=".activity.opinion.OpinionActivity"

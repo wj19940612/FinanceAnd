@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
@@ -18,8 +19,11 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -153,34 +157,10 @@ public class BorrowActivity extends BaseActivity {
             }
         });
         mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
-        mBorrowLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mBorrowLimit.setSelection(mBorrowLimit.length());
-                }
-            }
-        });
         mBorrowLimit.requestFocus();
         mBorrowLimit.setFocusable(true);
         mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
-        mBorrowInterest.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mBorrowInterest.setSelection(mBorrowInterest.length());
-                }
-            }
-        });
         mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
-        mBorrowTimeLimit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
-                }
-            }
-        });
         mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
         mAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -210,17 +190,13 @@ public class BorrowActivity extends BaseActivity {
                 String borrowMoney = mBorrowLimit.getText().toString().trim();
                 if (borrowMoney.length() > 4 || Integer.parseInt(borrowMoney) > 2000) {
                     ToastUtil.curt(getString(R.string.money_more_2000));
-                    mBorrowLimit.requestFocus();
-                    mBorrowLimit.setFocusable(true);
-                    mBorrowLimit.setSelection(mBorrowLimit.length());
+                    showSoftWare(mBorrowLimit);
                     mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 } else if (Integer.parseInt(borrowMoney) < 500) {
                     ToastUtil.curt(getString(R.string.money_less_500));
-                    mBorrowLimit.requestFocus();
-                    mBorrowLimit.setFocusable(true);
-                    mBorrowLimit.setSelection(mBorrowLimit.length());
+                    showSoftWare(mBorrowLimit);
                     mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -228,17 +204,13 @@ public class BorrowActivity extends BaseActivity {
                 String borrowInterest = mBorrowInterest.getText().toString().trim();
                 if (borrowInterest.length() > 3 || Integer.valueOf(borrowInterest) > 200) {
                     ToastUtil.curt(getString(R.string.interest_more_200));
-                    mBorrowInterest.requestFocus();
-                    mBorrowInterest.setFocusable(true);
-                    mBorrowInterest.setSelection(mBorrowInterest.length());
+                    showSoftWare(mBorrowInterest);
                     mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 } else if (Integer.valueOf(borrowInterest) < 1) {
                     ToastUtil.curt(getString(R.string.interest_less_1));
-                    mBorrowInterest.requestFocus();
-                    mBorrowInterest.setFocusable(true);
-                    mBorrowInterest.setSelection(mBorrowInterest.length());
+                    showSoftWare(mBorrowInterest);
                     mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -247,17 +219,13 @@ public class BorrowActivity extends BaseActivity {
                 String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
                 if (borrowTimeLimit.length() > 3 || Integer.parseInt(borrowTimeLimit) > 60) {
                     ToastUtil.curt(getString(R.string.days_more_60));
-                    mBorrowTimeLimit.requestFocus();
-                    mBorrowTimeLimit.setFocusable(true);
-                    mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
+                    showSoftWare(mBorrowTimeLimit);
                     mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 } else if (Integer.parseInt(borrowTimeLimit) < 1) {
                     ToastUtil.curt(getString(R.string.days_less_1));
-                    mBorrowTimeLimit.requestFocus();
-                    mBorrowTimeLimit.setFocusable(true);
-                    mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
+                    showSoftWare(mBorrowTimeLimit);
                     mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
@@ -322,7 +290,11 @@ public class BorrowActivity extends BaseActivity {
                 }
                 break;
             case R.id.location:
-                Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD_1, true).executeForResult(REQ_CODE_ADDRESS);
+                String location = null;
+                if (mAddress!=null){
+                    location = mAddress.getAdminArea()+" "+mAddress.getLocality()+" "+mAddress.getSubLocality();
+                }
+                Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD_1, true).putExtra(Launcher.EX_PAYLOAD_2,location).executeForResult(REQ_CODE_ADDRESS);
                 break;
             case R.id.protocol:
                 Client.getArticleProtocol(2).setTag(TAG)
@@ -356,19 +328,13 @@ public class BorrowActivity extends BaseActivity {
                 });
                 break;
             case R.id.money:
-                mBorrowLimit.requestFocus();
-                mBorrowLimit.setFocusable(true);
-                mBorrowLimit.setSelection(mBorrowLimit.length());
+                showSoftWare(mBorrowLimit);
                 break;
             case R.id.interest:
-                mBorrowInterest.requestFocus();
-                mBorrowInterest.setFocusable(true);
-                mBorrowInterest.setSelection(mBorrowInterest.length());
+                showSoftWare(mBorrowInterest);
                 break;
             case R.id.days:
-                mBorrowTimeLimit.requestFocus();
-                mBorrowTimeLimit.setFocusable(true);
-                mBorrowTimeLimit.setSelection(mBorrowTimeLimit.length());
+                showSoftWare(mBorrowTimeLimit);
                 break;
             default:
                 break;
@@ -383,7 +349,8 @@ public class BorrowActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
+                            ToastUtil.curt(getString(R.string.publish_success));
+//                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
                             Launcher.with(getActivity(), MutualActivity.class).execute();
                             finish();
                         } else {
@@ -452,7 +419,13 @@ public class BorrowActivity extends BaseActivity {
         }
 
     }
-
+    private void showSoftWare(EditText editText){
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        editText.setSelection(editText.getText().length());
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
     private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
