@@ -4,14 +4,13 @@
     <item  android:state_selected="true">
         <shape>
             <solid android:color="@color/redAssist"/>
-            <stroke android:width="0.5dp" android:color="@android:color/white"/>
             <corners android:radius="100dp"/>
         </shape>
     </item>
     <item>
         <shape>
             <solid android:color="@android:color/transparent"/>
-            <stroke android:width="0.5dp" android:color="@color/luckyText"/>
+            <stroke android:width="0.5dp" android:color="@color/unluckyText"/>
             <corners android:radius="100dp"/>
         </shape>
     </item>

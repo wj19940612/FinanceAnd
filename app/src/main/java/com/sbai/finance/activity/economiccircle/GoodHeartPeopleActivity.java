@@ -33,6 +33,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
@@ -40,10 +41,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClickListener {
 
 	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1001;
 
+
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
@@ -74,8 +78,8 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 	private void initViews() {
 		if (LocalUser.getUser().isLogin()) {
 			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
-				if (mStatus==BorrowDetail.STATUS_WAIT_HELP||mStatus==BorrowDetail.STATUS_ACCEPTY){
-				  mPayIntention.setVisibility(View.VISIBLE);
+				if (mStatus == BorrowDetail.STATUS_WAIT_HELP || mStatus == BorrowDetail.STATUS_ACCEPTY) {
+					mPayIntention.setVisibility(View.VISIBLE);
 				}
 
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -118,19 +122,37 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 					}
 				});
 			} else {
-				mListView.setOnItemClickListener(this);
+				//不是自己跳转至用户详情界面
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+						Launcher.with(GoodHeartPeopleActivity.this, UserDataActivity.class)
+								.putExtra(Launcher.USER_ID, item.getUserId())
+								.execute();
+					}
+				});
 			}
+		} else {
+			//未登入跳转至登陆界面
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Launcher.with(GoodHeartPeopleActivity.this, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
+				}
+			});
 		}
 
 		mGoodHeartPeopleAdapter = new GoodHeartPeopleAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mGoodHeartPeopleAdapter);
+		mTitleBar.setOnTitleBarClickListener(this);
 	}
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
-		mStatus = intent.getIntExtra(Launcher.EX_PAYLOAD_1,-1);
+		mStatus = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 		status = mStatus;
 	}
 
@@ -152,15 +174,8 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
-		if (LocalUser.getUser().isLogin()) {
-			Launcher.with(this, UserDataActivity.class)
-					.putExtra(Launcher.USER_ID, item.getUserId())
-					.execute();
-		} else {
-			Launcher.with(this, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
-		}
+	public void onClick(View v) {
+		mListView.smoothScrollToPosition(0);
 	}
 
 	static class GoodHeartPeopleAdapter extends ArrayAdapter<GoodHeartPeople> {
@@ -225,9 +240,9 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 
 				if (LocalUser.getUser().isLogin()) {
 					if (mUserId == LocalUser.getUser().getUserInfo().getId()
-							&&(status==BorrowDetail.STATUS_WAIT_HELP||status==BorrowDetail.STATUS_ACCEPTY)) {
+							&& (status == BorrowDetail.STATUS_WAIT_HELP || status == BorrowDetail.STATUS_ACCEPTY)) {
 						mCheckboxClick.setVisibility(View.VISIBLE);
-					}else {
+					} else {
 						mCheckboxClick.setVisibility(View.INVISIBLE);
 					}
 				} else {
@@ -288,6 +303,17 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 
 							}
 						});
+					}
+				});
+			} else {
+				//不是自己,跳转至用户详情界面
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+						Launcher.with(GoodHeartPeopleActivity.this, UserDataActivity.class)
+								.putExtra(Launcher.USER_ID, item.getUserId())
+								.execute();
 					}
 				});
 			}
