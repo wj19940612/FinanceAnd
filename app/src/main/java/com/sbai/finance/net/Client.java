@@ -712,9 +712,9 @@ public class Client {
      * @return
      */
     public static API getStockRealtimeData(String stockCode) {
-        return new API("/stock/realtime",
+        return new API("/stk/stk/real.do",
                 new ApiParams()
-                        .put("stock_code", stockCode));
+                        .put("code", stockCode));
     }
 
     /**

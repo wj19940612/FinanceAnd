@@ -16,12 +16,11 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
-import com.sbai.finance.model.stock.StockRTData;
+import com.sbai.finance.model.stock.StockRTDataModel;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
@@ -30,7 +29,6 @@ import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -159,17 +157,46 @@ public class PublishOpinionActivity extends BaseActivity {
 
     }
 
-    private void requestStockRTData(final String content, final String calcuId) {
+//    private void requestStockRTData(final String content, final String calcuId) {
+//        Client.getStockRealtimeData(mVariety.getVarietyType())
+//                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+//                    @Override
+//                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
+//                        if (!result.isEmpty()) {
+//                            StockRTData stockRTData = result.get(0);
+//                            if (stockRTData != null) {
+//                                String last_price = stockRTData.getLast_price();
+//                                String rise_price = stockRTData.getRise_price();
+//                                String rise_pre = stockRTData.getRise_pre();
+//
+//                                if (last_price.startsWith("-")) {
+//                                    rise_price = "+" + rise_price;
+//                                    rise_pre = "+" + rise_pre;
+//                                }
+//                                submitViewpoint(content, calcuId, last_price, rise_price, rise_pre);
+//                            }
+//
+//                        }
+//                    }
+//                }).fireSync();
+//    }
+
+    /**
+     * 新实时行情接口
+     * @param content
+     * @param calcuId
+     */
+    private void requestStockRTData(final String content, final String calcuId){
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+                .setCallback(new Callback2D<Resp<StockRTDataModel>, StockRTDataModel>() {
                     @Override
-                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
-                        if (!result.isEmpty()) {
-                            StockRTData stockRTData = result.get(0);
+                    protected void onRespSuccessData(StockRTDataModel result) {
+                        if (result != null) {
+                            StockRTDataModel stockRTData = result;
                             if (stockRTData != null) {
-                                String last_price = stockRTData.getLast_price();
-                                String rise_price = stockRTData.getRise_price();
-                                String rise_pre = stockRTData.getRise_pre();
+                                String last_price = stockRTData.getLastPrice();
+                                String rise_price = stockRTData.getPreSetPrice();
+                                String rise_pre = FinanceUtil.formatToPercentage(stockRTData.getUpDropSpeed());
 
                                 if (last_price.startsWith("-")) {
                                     rise_price = "+" + rise_price;

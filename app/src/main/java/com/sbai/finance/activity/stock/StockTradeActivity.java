@@ -31,7 +31,7 @@ import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
-import com.sbai.finance.model.stock.StockRTData;
+import com.sbai.finance.model.stock.StockRTDataModel;
 import com.sbai.finance.model.stock.StockTrendData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -40,6 +40,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
@@ -106,7 +107,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @BindView(R.id.chartArea)
     LinearLayout mChartArea;
 
-    private StockRTData mStockRTData;
+    private StockRTDataModel mStockRTData;
     private Prediction mPrediction;
 
     private PredictionDialogFragment mPredictionFragment;
@@ -309,13 +310,31 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
 
-    private void requestStockRTData() {
+//    private void requestStockRTData() {
+//        Client.getStockRealtimeData(mVariety.getVarietyType())
+//                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+//                    @Override
+//                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
+//                        if (!result.isEmpty()) {
+//                            mStockRTData = result.get(0);
+//                            updateStockTrendView();
+//                        }
+//                        updateMarketDataView();
+//                    }
+//                }).fireSync();
+//    }
+
+    /**
+     * 新实时接口替换
+     */
+    private void requestStockRTData(){
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+                .setCallback(new Callback2D<Resp<StockRTDataModel>, StockRTDataModel>() {
+
                     @Override
-                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
-                        if (!result.isEmpty()) {
-                            mStockRTData = result.get(0);
+                    protected void onRespSuccessData(StockRTDataModel result) {
+                        if (result != null) {
+                            mStockRTData = result;
                             updateStockTrendView();
                         }
                         updateMarketDataView();
@@ -326,8 +345,8 @@ public abstract class StockTradeActivity extends BaseActivity {
     private void updateStockTrendView() {
         ChartSettings settings = mStockTrendView.getSettings();
         if (settings != null && settings.getPreClosePrice() == 0) {
-            if (!TextUtils.isEmpty(mStockRTData.getPrev_price())) {
-                settings.setPreClosePrice(Float.valueOf(mStockRTData.getPrev_price()).floatValue());
+            if (!TextUtils.isEmpty(mStockRTData.getPreSetPrice())) {
+                settings.setPreClosePrice(Float.valueOf(mStockRTData.getPreSetPrice()).floatValue());
                 mStockTrendView.setSettings(settings);
             }
         }
@@ -336,9 +355,9 @@ public abstract class StockTradeActivity extends BaseActivity {
     private void updateMarketDataView() {
         int color = ContextCompat.getColor(getActivity(), R.color.redPrimary);
         if (mStockRTData != null) {
-            String risePrice = mStockRTData.getRise_price();
-            String risePercent = mStockRTData.getRise_pre();
-            String lastPrice = mStockRTData.getLast_price();
+            String risePrice = mStockRTData.getUpDropPrice();
+            String risePercent = FinanceUtil.formatToPercentage(mStockRTData.getUpDropSpeed());
+            String lastPrice = mStockRTData.getLastPrice();
             if (!TextUtils.isEmpty(risePrice)) {
                 if (risePrice.startsWith("-")) {
                     color = ContextCompat.getColor(getActivity(), R.color.greenAssist);
@@ -348,11 +367,11 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }
             }
             mLastPrice.setText(lastPrice);
-            mPriceChange.setText(risePrice + "     " + risePercent + "%");
-            mTodayOpen.setText(mStockRTData.getOpen_price());
-            mHighest.setText(mStockRTData.getHigh_price());
-            mLowest.setText(mStockRTData.getLow_price());
-            mPreClose.setText(mStockRTData.getPrev_price());
+            mPriceChange.setText(risePrice + "     " + risePercent);
+            mTodayOpen.setText(mStockRTData.getOpenPrice());
+            mHighest.setText(mStockRTData.getHighestPrice());
+            mLowest.setText(mStockRTData.getLowestPrice());
+            mPreClose.setText(mStockRTData.getPreSetPrice());
 
             mStockTrendView.setStockRTData(mStockRTData);
         }
