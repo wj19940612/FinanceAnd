@@ -26,6 +26,20 @@ public class UserAttentionModel {
     private String userPortrait;
     //	是否互相关注 0以关注1未关注
     private int status;
+    // 是否解除关注 0 解除 1 不解除  本地加的
+    private int other;
+
+    public int getOther() {
+        return other;
+    }
+
+    public void setOther(int other) {
+        this.other = other;
+    }
+
+    public boolean isRelieve() {
+        return getOther() == 0;
+    }
 
     public boolean isAttention() {
         return getStatus() == 0;
@@ -115,6 +129,7 @@ public class UserAttentionModel {
                 ", userName='" + userName + '\'' +
                 ", userPortrait='" + userPortrait + '\'' +
                 ", status=" + status +
+                ", other=" + other +
                 '}';
     }
 }

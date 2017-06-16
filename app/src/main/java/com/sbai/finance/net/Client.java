@@ -537,7 +537,7 @@ public class Client {
      * @return
      */
     public static API attentionOrRelieveAttentionUser(int followId, int status) {
-        return new API(POST, "/coterie/userInterest/follow.do", new ApiParams()
+        return new API( "/coterie/userInterest/follow.do", new ApiParams()
                 .put("followId", followId)
                 .put("status", status));
     }

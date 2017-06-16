@@ -183,7 +183,7 @@
     <string name="action_product">功能介绍</string>
     <string name="user_protocol">用户协议</string>
     <string name="check_update">检测更新</string>
-    <string name="company">浙江松柏信息技术有限公司 \nCopyright%1$d</string>
+    <string name="company">浙江松柏信息技术有限公司 \nCopyright@%1$d</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>

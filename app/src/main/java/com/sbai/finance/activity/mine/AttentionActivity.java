@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,14 +68,17 @@ public class AttentionActivity extends BaseActivity {
         mListView.setAdapter(mRelieveAttentionAdapter);
         mRelieveAttentionAdapter.setOnRelieveAttentionClickListener(new RelieveAttentionAdapter.OnRelieveAttentionClickListener() {
             @Override
-            public void onRelieveAttention(final UserAttentionModel userAttentionModel) {
+            public void onRelieveAttention(final UserAttentionModel userAttentionModel, final int position) {
+
                 SmartDialog.with(getActivity(),
-                        getString(R.string.cancel_attention_dialog_title, userAttentionModel.getFollowuserName()))
+                        userAttentionModel.isRelieve() ?
+                                getString(R.string.cancel_attention_dialog_title, userAttentionModel.getFollowuserName()) :
+                                getString(R.string.if_attention, userAttentionModel.getFollowuserName()))
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                relieveAttentionUser(userAttentionModel);
+                                relieveAttentionUser(userAttentionModel, position);
                             }
                         })
                         .setMessageTextSize(16)
@@ -108,8 +112,9 @@ public class AttentionActivity extends BaseActivity {
         return super.getDelegate();
     }
 
-    private void relieveAttentionUser(final UserAttentionModel userAttentionModel) {
-        Client.attentionOrRelieveAttentionUser(userAttentionModel.getFollowUserId(), 1)
+    private void relieveAttentionUser(final UserAttentionModel userAttentionModel, final int position) {
+        Client.attentionOrRelieveAttentionUser(userAttentionModel.getFollowUserId(),
+                userAttentionModel.isRelieve() ? 1 : 0)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
@@ -117,6 +122,9 @@ public class AttentionActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             mRelieveAttentionAdapter.remove(userAttentionModel);
+                            userAttentionModel.setOther(userAttentionModel.isRelieve() ? 1 : 0);
+                            mRelieveAttentionAdapter.insert(userAttentionModel, position);
+                            Log.d(TAG, "onRespSuccess: " + userAttentionModel.toString());
                             setResult(RESULT_OK);
                         }
                     }
@@ -186,7 +194,7 @@ public class AttentionActivity extends BaseActivity {
         Context mContext;
 
         interface OnRelieveAttentionClickListener {
-            void onRelieveAttention(UserAttentionModel userAttentionModel);
+            void onRelieveAttention(UserAttentionModel userAttentionModel, int position);
         }
 
         public RelieveAttentionAdapter(@NonNull Context context) {
@@ -209,7 +217,7 @@ public class AttentionActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindViewWithData(getItem(position), mContext, mOnRelieveAttentionClickListener);
+            viewHolder.bindViewWithData(getItem(position), mContext, mOnRelieveAttentionClickListener, position);
             return convertView;
         }
 
@@ -225,13 +233,21 @@ public class AttentionActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindViewWithData(final UserAttentionModel item, final Context context, final OnRelieveAttentionClickListener onRelieveAttentionClickListener) {
+            public void bindViewWithData(final UserAttentionModel item, final Context context, final OnRelieveAttentionClickListener onRelieveAttentionClickListener, final int position) {
                 if (item == null) return;
                 Glide.with(context).load(item.getFollowUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mUserHeadImage);
-                mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
+
+                if (item.isRelieve()) {
+                    mRelive.setText(R.string.relieve);
+                    mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_follow_relieve, 0, 0);
+                } else {
+                    mRelive.setText(R.string.attention);
+                    mRelive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_fans_follow, 0, 0);
+                }
+
                 if (item.isAttention()) {
                     mUserName.setText(StrUtil.mergeTextWithRatioColor(item.getFollowuserName(),
                             "\n" + context.getString(R.string.is_already_attention_other), 0.8f,
@@ -257,7 +273,7 @@ public class AttentionActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         if (onRelieveAttentionClickListener != null) {
-                            onRelieveAttentionClickListener.onRelieveAttention(item);
+                            onRelieveAttentionClickListener.onRelieveAttention(item, position);
                         }
                     }
                 });
