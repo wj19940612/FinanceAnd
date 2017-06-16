@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,8 +35,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class UserDataActivity extends BaseActivity {
+import static com.umeng.socialize.utils.ContextUtil.getContext;
 
+public class UserDataActivity extends BaseActivity {
+	public static final String SHIELD="shield";
+	public static final String USER_ID="userId";
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.userName)
@@ -63,6 +67,7 @@ public class UserDataActivity extends BaseActivity {
     private UserData mUserData;
     private AttentionAndFansNumberModel mAttentionAndFansNum;
     private WhetherAttentionShieldOrNot mWhetherAttentionShieldOrNot;
+	private LocalBroadcastManager mLocalBroadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +77,7 @@ public class UserDataActivity extends BaseActivity {
         mUserData = new UserData();
         mAttentionAndFansNum = new AttentionAndFansNumberModel();
         mWhetherAttentionShieldOrNot = new WhetherAttentionShieldOrNot();
-
+		mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext());
         initData(getIntent());
         requestUserData();
     }
@@ -218,6 +223,7 @@ public class UserDataActivity extends BaseActivity {
                                         if (resp.isSuccess()) {
                                             requestUserData();
                                             ToastUtil.curt("已屏蔽" + mUserData.getUserName());
+											sendShieldBroadCast();
                                         }
                                     }
                                 }).fire();
@@ -305,4 +311,11 @@ public class UserDataActivity extends BaseActivity {
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
+	private void sendShieldBroadCast(){
+		Intent intent = new Intent();
+		intent.setAction(SHIELD);
+		intent.putExtra(USER_ID,mUserId);
+		mLocalBroadcastManager.sendBroadcastSync(intent);
+	}
+
 }
