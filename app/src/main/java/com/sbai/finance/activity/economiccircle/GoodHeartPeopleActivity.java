@@ -41,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class GoodHeartPeopleActivity extends BaseActivity {
+public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
 	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1001;
 
@@ -69,7 +69,7 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 
 		initViews();
 
-		requestWantHelpHimList();
+		requestGoodHeartPeopleList();
 	}
 
 	private void initViews() {
@@ -118,6 +118,8 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 						});
 					}
 				});
+			} else {
+				mListView.setOnItemClickListener(this);
 			}
 		}
 
@@ -133,21 +135,33 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 		status = mStatus;
 	}
 
-	private void requestWantHelpHimList() {
+	private void requestGoodHeartPeopleList() {
 		Client.getGoodHeartPeopleList(mDataId).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<GoodHeartPeople>>, List<GoodHeartPeople>>() {
 					@Override
 					protected void onRespSuccessData(List<GoodHeartPeople> goodHeartPeopleList) {
 						mGoodHeartPeopleList = goodHeartPeopleList;
-						updateWantHelpHimList();
+						updateGoodHeartPeopleList();
 					}
 				}).fire();
 	}
 
-	private void updateWantHelpHimList() {
+	private void updateGoodHeartPeopleList() {
 		mGoodHeartPeopleAdapter.clear();
 		mGoodHeartPeopleAdapter.addAll(mGoodHeartPeopleList);
 		mGoodHeartPeopleAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+		if (LocalUser.getUser().isLogin()) {
+			Launcher.with(this, UserDataActivity.class)
+					.putExtra(Launcher.USER_ID, item.getUserId())
+					.execute();
+		} else {
+			Launcher.with(this, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
+		}
 	}
 
 	static class GoodHeartPeopleAdapter extends ArrayAdapter<GoodHeartPeople> {
@@ -220,19 +234,6 @@ public class GoodHeartPeopleActivity extends BaseActivity {
 				} else {
 					mCheckboxClick.setVisibility(View.INVISIBLE);
 				}
-
-				mAvatar.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (LocalUser.getUser().isLogin()) {
-							Launcher.with(context, UserDataActivity.class)
-									.putExtra(Launcher.USER_ID, item.getUserId())
-									.execute();
-						} else {
-							Launcher.with(context, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
-						}
-					}
-				});
 
 				if (checked == position) {
 					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_checked);

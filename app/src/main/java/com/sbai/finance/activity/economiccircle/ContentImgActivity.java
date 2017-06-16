@@ -64,9 +64,7 @@ public class ContentImgActivity extends BaseActivity {
         int currentIndex = mViewPager.getCurrentItem();
         Intent intent = new Intent();
         intent.setAction(DEL_IMAGE);
-        Bundle bundle = new Bundle();
-        bundle.putInt(DEL_IMAGE, currentIndex);
-        intent.putExtras(bundle);
+        intent.putExtra(DEL_IMAGE, currentIndex);
         mLocalBroadcastManager.sendBroadcastSync(intent);
         if (mPhotoList.size() <= 1) {
             finish();

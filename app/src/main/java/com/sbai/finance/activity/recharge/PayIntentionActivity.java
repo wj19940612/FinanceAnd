@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.MyListView;
 
@@ -40,7 +44,6 @@ public class PayIntentionActivity extends BaseActivity {
 	@BindView(R.id.confirmPayment)
 	TextView mConfirmPayment;
 
-	private double mAmount;
 	private int mDataId;
 	private static int mType;
 	private static String mPlatform;
@@ -82,10 +85,18 @@ public class PayIntentionActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<Double>, Double>() {
 					@Override
 					protected void onRespSuccessData(Double amount) {
-						mAmount = amount;
-						mIntentionAmount.setText(getString(R.string.intention_amount, String.valueOf(mAmount)));
+						updateIntentionAmount(amount);
 					}
 				}).fire();
+	}
+
+	private void updateIntentionAmount(Double amount) {
+		SpannableStringBuilder spannableString = new SpannableStringBuilder();
+		spannableString.append("￥");
+		spannableString.append(String.valueOf(amount));
+		AbsoluteSizeSpan span = new AbsoluteSizeSpan((int) Display.sp2Px(15, getResources()));
+		spannableString.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		mIntentionAmount.setText(spannableString);
 	}
 
 	private void requestUsablePlatformList() {

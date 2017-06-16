@@ -328,7 +328,6 @@ public class BorrowMineFragment extends BaseFragment implements
                 switch (item.getStatus()) {
                     case BorrowMine.STASTU_END_NO_HELP:
                     case BorrowMine.STATUS_END_CANCEL:
-                    case BorrowMine.STATUS_END_NO_ALLOW:
                     case BorrowMine.STATUS_END_NO_CHOICE_HELP:
                     case BorrowMine.STATUS_END_REPAY:
                     case BorrowMine.STATUS_END_FIIL:
@@ -338,6 +337,7 @@ public class BorrowMineFragment extends BaseFragment implements
                     case BorrowMine.STATUS_GIVE_HELP:
                     case BorrowMine.STATUS_NO_CHECKED:
                     case BorrowMine.STATUS_ACCEPTY:
+                    case BorrowMine.STATUS_NO_ALLOW:
                         mStatus.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         if (isSelf) {
                             mStatus.setText(context.getString(R.string.wait_help));

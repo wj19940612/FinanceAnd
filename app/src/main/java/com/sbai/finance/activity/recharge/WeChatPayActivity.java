@@ -154,11 +154,12 @@ public class WeChatPayActivity extends BaseActivity {
 				.setCallback(new Callback<Resp<JsonPrimitive>>() {
 					@Override
 					protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-						Launcher.with(WeChatPayActivity.this, BorrowDetailsActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mDataId)
-								.putExtra(Launcher.EX_PAYLOAD_1,mDataId)
-								.execute();
-						finish();
+						Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
+//									intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//								    intent.putExtra(Launcher.EX_PAYLOAD, mDataId);
+						startActivity(intent);
 					}
 				}).fire();
 	}

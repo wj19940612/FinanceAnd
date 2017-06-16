@@ -15,7 +15,7 @@ public class BorrowDetail implements Parcelable {
     //等待互助
     public static final  int STATUS_WAIT_HELP=3;
     //审批不通过  已结束
-    public static final int STATUS_END_NO_ALLOW=2;
+    public static final int STATUS_NO_ALLOW=2;
     //无人帮助超时 已结束
     public static final int STATUS_END_FIIL=4;
     //确认接受帮助

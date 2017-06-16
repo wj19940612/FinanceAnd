@@ -19,5 +19,6 @@
         android:gravity="center"
         android:textColor="@android:color/darker_gray"
         android:textSize="8sp"
+        android:visibility="gone"
         tools:text="1.0.0"/>
 </RelativeLayout>

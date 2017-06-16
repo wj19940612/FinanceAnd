@@ -676,7 +676,7 @@ public class Client {
      * @param id
      * @return
      */
-    public static API getTopicDetailData(Integer id) {
+    public static API getTopicDetailData(int id) {
         return new API("/coterie/subject/findCoterieInfo.do",
                 new ApiParams()
                         .put("id", id));

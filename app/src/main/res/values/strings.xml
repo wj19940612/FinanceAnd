@@ -446,7 +446,7 @@
     <string name="we_chat_pay">微信支付</string>
     <string name="ali_pay">支付宝支付</string>
     <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
-    <string name="intention_amount">￥%1$s</string>
+    <string name="intention_amount">￥0.01</string>
     <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
     <string name="ali_pay_hint_1">1.如果未打开支付宝或未完成付款,请点击“继续支付”。</string>
     <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>

@@ -276,9 +276,10 @@ public class TopicActivity extends BaseActivity {
 							mRate.setText("+" + priceChange + "%");
 						}
 					} else {
+						mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 						mLastPrice.setText("--");
 						mRate.setSelected(true);
-						mRate.setText("--");
+						mRate.setText("--.--%");
 					}
 				}else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
 					mFutureName.setText(item.getVarietyName());
@@ -300,6 +301,7 @@ public class TopicActivity extends BaseActivity {
 							mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
 						}
 					} else {
+						mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
 						mLastPrice.setText("--");
 						mRate.setSelected(true);
 						mRate.setText("--.--%");
