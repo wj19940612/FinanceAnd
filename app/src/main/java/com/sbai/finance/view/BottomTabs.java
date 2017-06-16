@@ -23,6 +23,8 @@ public class BottomTabs extends LinearLayout {
 	private int mTextSize;
 	private ColorStateList mTextColor;
 	private int mInterval;
+	private int mPaddingTop;
+	private int mPaddingBottom;
 
 	private OnTabClickListener mOnTabClickListener;
 
@@ -46,6 +48,8 @@ public class BottomTabs extends LinearLayout {
 		mTextSize = typedArray.getDimensionPixelOffset(R.styleable.BottomTabs_textSize, 14);
 		mTextColor = typedArray.getColorStateList(R.styleable.BottomTabs_textColor);
 		mInterval = typedArray.getDimensionPixelOffset(R.styleable.BottomTabs_interval, 0);
+		mPaddingTop = typedArray.getDimensionPixelOffset(R.styleable.BottomTabs_interval, 10);
+		mPaddingBottom = typedArray.getDimensionPixelOffset(R.styleable.BottomTabs_interval, 6);
 		typedArray.recycle();
 	}
 
@@ -74,6 +78,7 @@ public class BottomTabs extends LinearLayout {
 		text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
 		text.setTextColor(mTextColor != null ? mTextColor : ColorStateList.valueOf(0));
 		text.setText(mTexts[i]);
+		text.setPadding(0,mPaddingTop,0,mPaddingBottom);
 		text.setCompoundDrawablePadding(mInterval);
 		text.setCompoundDrawablesWithIntrinsicBounds(0, mIcons[i], 0, 0);
 		text.setGravity(Gravity.CENTER);
@@ -100,6 +105,7 @@ public class BottomTabs extends LinearLayout {
 		text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
 		text.setTextColor(mTextColor != null ? mTextColor : ColorStateList.valueOf(0));
 		text.setText(mTexts[i]);
+		text.setPadding(0,mPaddingTop,0,mPaddingBottom);
 		text.setCompoundDrawablePadding(mInterval);
 		text.setCompoundDrawablesWithIntrinsicBounds(0, mIcons[i], 0, 0);
 		text.setGravity(Gravity.CENTER);
