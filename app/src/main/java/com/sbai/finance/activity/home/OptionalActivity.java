@@ -374,6 +374,7 @@ public class OptionalActivity extends BaseActivity implements
                             mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
                         }
                     } else {
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                         mLastPrice.setText("--");
                         mRate.setSelected(true);
                         mRate.setText("--.--%");
