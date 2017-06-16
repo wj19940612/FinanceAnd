@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mutual;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -63,12 +65,16 @@ import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class BorrowDetailsActivity extends BaseActivity {
     private static final int REQ_BORROW_MONEY_DETAILS = 1001;
@@ -78,48 +84,8 @@ public class BorrowDetailsActivity extends BaseActivity {
     public static final String DATA_STATUS="status";
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
-    @BindView(R.id.avatar)
-    ImageView mAvatar;
-    @BindView(R.id.userName)
-    TextView mUserName;
-    @BindView(R.id.isAttention)
-    TextView mIsAttention;
-    @BindView(R.id.status)
-    TextView mStatus;
-    @BindView(R.id.borrowMoneyContent)
-    TextView mBorrowMoneyContent;
-    @BindView(R.id.needAmount)
-    TextView mNeedAmount;
-    @BindView(R.id.borrowDeadline)
-    TextView mBorrowDeadline;
-    @BindView(R.id.borrowInterest)
-    TextView mBorrowInterest;
-    @BindView(R.id.image1)
-    ImageView mImage1;
-    @BindView(R.id.image2)
-    ImageView mImage2;
-    @BindView(R.id.image3)
-    ImageView mImage3;
-    @BindView(R.id.image4)
-    ImageView mImage4;
-    @BindView(R.id.contentImg)
-    LinearLayout mContentImg;
-    @BindView(R.id.publishTime)
-    TextView mPublishTime;
-    @BindView(R.id.location)
-    TextView mLocation;
-    @BindView(R.id.avatarList)
-    LinearLayout mAvatarList;
-    @BindView(R.id.more)
-    ImageView mMore;
-    @BindView(R.id.goodHeartPeopleArea)
-    RelativeLayout mGoodHeartPeopleArea;
-    @BindView(R.id.leaveMessageNum)
-    TextView mLeaveMessageNum;
     @BindView(R.id.listView)
-    MyListView mListView;
-    @BindView(android.R.id.empty)
-    TextView mEmpty;
+    ListView mListView;
     @BindView(R.id.call)
     TextView mCall;
     @BindView(R.id.cancel)
@@ -132,18 +98,34 @@ public class BorrowDetailsActivity extends BaseActivity {
     TextView mCallOnly;
     @BindView(R.id.borrowStatus)
     LinearLayout mBorrowStatus;
-    @BindView(R.id.writeMessage)
-    TextView mWriteMessage;
     @BindView(R.id.leaveMessage)
     EditText mLeaveMessage;
     @BindView(R.id.send)
     TextView mSend;
     @BindView(R.id.leaveMessageArea)
     LinearLayout mLeaveMessageArea;
-    @BindView(R.id.scrollView)
-    ScrollView mScrollView;
     @BindView(R.id.giveHelp)
     TextView mGiveHelp;
+    ImageView mAvatar;
+    TextView mUserName;
+    TextView mIsAttention;
+    TextView mStatus;
+    TextView mBorrowMoneyContent;
+    TextView mNeedAmount;
+    TextView mBorrowDeadline;
+    TextView mBorrowInterest;
+    ImageView mImage1;
+    ImageView mImage2;
+    ImageView mImage3;
+    ImageView mImage4;
+    LinearLayout mContentImg;
+    TextView mPublishTime;
+    TextView mLocation;
+    LinearLayout mAvatarList;
+    ImageView mMore;
+    RelativeLayout mGoodHeartPeopleArea;
+    TextView mLeaveMessageNum;
+    TextView mWriteMessage;
     private int mMax;
     private BorrowDetail mBorrowDetail;
     private int mLoadId;
@@ -153,6 +135,8 @@ public class BorrowDetailsActivity extends BaseActivity {
     private AttentionAndFansNumberModel mAttentionAndFansNumberModel;
     private WhetherAttentionShieldOrNot mWhetherAttentionShieldOrNot;
     private LocalBroadcastManager mLocalBroadcastManager;
+    private ShieldBroadcastReceiver mShieldBroadcastReceiver;
+    private LinearLayout mheader;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,11 +148,17 @@ public class BorrowDetailsActivity extends BaseActivity {
         calculateAvatarNum(this);
         requestBorrowMoneyDetails();
         requestGoodHeartPeopleList();
-        requestMessageList();
+//        requestMessageList();
     }
 
     private void initView() {
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        initHeaderView();
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext());
+        mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UserDataActivity.SHIELD);
+        mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
+
         mTitleBar.setBackClickListener(new TitleBar.OnBackClickListener() {
             @Override
             public void onClick() {
@@ -178,7 +168,7 @@ public class BorrowDetailsActivity extends BaseActivity {
             }
         });
         setKeyboardHelper();
-        mListView.setFocusable(false);
+        mListView.addHeaderView(mheader);
         mMessageAdapter = new MessageAdapter(getActivity());
         mMessageAdapter.setCallback(new MessageAdapter.Callback() {
             @Override
@@ -188,9 +178,117 @@ public class BorrowDetailsActivity extends BaseActivity {
                         .executeForResult(REQ_CODE_USERDATA);
             }
         });
-        mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mMessageAdapter);
     }
+
+    private void initHeaderView() {
+        mheader = (LinearLayout)getLayoutInflater().inflate( R.layout.view_borrow_detail_header, mListView,false);
+        mAvatar = (ImageView) mheader.findViewById(R.id.avatar);
+        mUserName = (TextView) mheader.findViewById(R.id.userName);
+        mIsAttention=(TextView) mheader.findViewById(R.id.isAttention);
+        mStatus=(TextView) mheader.findViewById(R.id.status);
+        mBorrowMoneyContent=(TextView) mheader.findViewById(R.id.borrowMoneyContent);
+        mNeedAmount=(TextView) mheader.findViewById(R.id.needAmount);
+        mBorrowDeadline=(TextView) mheader.findViewById(R.id.borrowDeadline);
+        mBorrowInterest=(TextView) mheader.findViewById(R.id.borrowInterest);
+        mImage1= (ImageView) mheader.findViewById(R.id.image1);
+        mImage2= (ImageView) mheader.findViewById(R.id.image2);
+        mImage3= (ImageView) mheader.findViewById(R.id.image3);
+        mImage4= (ImageView) mheader.findViewById(R.id.image4);
+        mContentImg= (LinearLayout) mheader.findViewById(R.id.contentImg);
+        mPublishTime= (TextView) mheader.findViewById(R.id.publishTime);
+        mLocation= (TextView) mheader.findViewById(R.id.location);
+        mAvatarList= (LinearLayout) mheader.findViewById(R.id.avatarList);
+        mMore= (ImageView) mheader.findViewById(R.id.more);
+        mGoodHeartPeopleArea= (RelativeLayout) mheader.findViewById(R.id.goodHeartPeopleArea);
+        mLeaveMessageNum= (TextView) mheader.findViewById(R.id.leaveMessageNum);
+        mWriteMessage = (TextView) mheader.findViewById(R.id.writeMessage);
+        mAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), UserDataActivity.class)
+                            .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
+                            .executeForResult(REQ_CODE_USERDATA);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+        mUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), UserDataActivity.class)
+                            .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
+                            .executeForResult(REQ_CODE_USERDATA);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+        mCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPhone(mBorrowDetail.getPhoneNum());
+            }
+        });
+        mCallOnly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPhone(mBorrowDetail.getPhoneNum());
+            }
+        });
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SmartDialog.with(getActivity(), getString(R.string.cancel_confirm))
+                        .setMessageTextSize(15)
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                requestCancelBorrow(mBorrowDetail.getId());
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegative(R.string.cancel)
+                        .show();
+            }
+        });
+        mAlreadyRepay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SmartDialog.with(getActivity(), getString(R.string.repay_confirm))
+                        .setMessageTextSize(15)
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                requestRepay(mBorrowDetail.getId());
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegative(R.string.cancel)
+                        .show();
+            }
+        });
+        mWriteMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()){
+                    mLeaveMessageArea.setVisibility(View.VISIBLE);
+                    mBorrowStatus.setVisibility(View.GONE);
+                    mLeaveMessage.setText("");
+                    mLeaveMessage.requestFocus();
+                    mLeaveMessage.setFocusable(true);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                }else {
+                    Launcher.with(getActivity(),LoginActivity.class).execute();
+                }
+            }
+        });
+    }
+
     private void setKeyboardHelper() {
         mKeyBoardHelper = new KeyBoardHelper(this);
         mKeyBoardHelper.onCreate();
@@ -230,6 +328,7 @@ private void requestBorrowMoneyDetails() {
                 @Override
                 protected void onRespSuccessData(BorrowDetail borrowDetail) {
                     updateBorrowDetails( borrowDetail);
+                    requestMessageList();
                 }
             }).fire();
 }
@@ -253,6 +352,11 @@ private void requestBorrowMoneyDetails() {
     }
     private void requestSendMessage(){
         String content = mLeaveMessage.getText().toString();
+        try {
+            content = URLEncoder.encode(content, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         if (content.length()>=100){
             content = content.substring(0,100);
         }
@@ -303,24 +407,20 @@ private void requestBorrowMoneyDetails() {
                     }
                 }).fireSync();
     }
-    private void requestPhone(int id){
-        Client.getPhone(id).setTag(TAG)
-                .setCallback(new Callback<Resp<CallPhone>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<CallPhone> resp) {
-                        if (resp.isSuccess()){
-                            callPhone(resp.getData());
-                        }else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                }).fireSync();
+    private void requestPhone(String phone){
+        if (!TextUtils.isEmpty(phone)){
+            Intent intent=new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone));
+            startActivity(intent);
+        }else {
+            ToastUtil.curt(getString(R.string.no_phone));
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mKeyBoardHelper.onDestroy();
+        mLocalBroadcastManager.unregisterReceiver(mShieldBroadcastReceiver);
     }
 
     private void updateMessageList(List<BorrowMessage> data) {
@@ -359,8 +459,6 @@ private void requestBorrowMoneyDetails() {
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
-//                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
-//                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
                     }
                 });
@@ -371,8 +469,6 @@ private void requestBorrowMoneyDetails() {
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
-//                                .putExtra(Launcher.EX_PAYLOAD_1, mBorrowMoneyDetails.getSex())
-//                                .putExtra(Launcher.USER_ID, mBorrowMoneyDetails.getUserId())
                                 .execute();
                     }
                 });
@@ -498,7 +594,7 @@ private void requestBorrowMoneyDetails() {
                 } else {
                     SmartDialog.with(getActivity(),
                             getString(R.string.give_help_dialog_content)
-                            , getString(R.string.give_help_dialog_title, mBorrowDetail.getUserName()))
+                            , getString(R.string.give_help_dialog_title))
                             .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                 @Override
                                 public void onClick(Dialog dialog) {
@@ -511,6 +607,7 @@ private void requestBorrowMoneyDetails() {
                                                     if (resp.isSuccess()) {
                                                         requestBorrowMoneyDetails();
                                                         requestGoodHeartPeopleList();
+                                                        sendStatusChangeBroadCast(BorrowDetail.STATUS_GIVE_HELP,mLoadId);
                                                     }
                                                 }
 
@@ -535,8 +632,12 @@ private void requestBorrowMoneyDetails() {
             }
         });
         mUserName.setText(borrowDetail.getUserName());
-        boolean isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
-        boolean isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
+        boolean isSelfLoadIn =false;
+        boolean isSelfLoadOut=false;
+        if (LocalUser.getUser().isLogin()) {
+             isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
+             isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
+        }
         switch (borrowDetail.getStatus()){
             case BorrowDetail.STASTU_END_NO_HELP:
             case BorrowDetail.STATUS_END_CANCEL:
@@ -557,18 +658,21 @@ private void requestBorrowMoneyDetails() {
                 mCallOnly.setVisibility(View.GONE);
                 mWriteMessage.setVisibility(View.VISIBLE);
                 mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
-                mStatus.setText(getActivity().getString(R.string.wait_help));
                 if (isSelfLoadIn){
+                    mStatus.setText(getActivity().getString(R.string.wait_help));
                     mCancel.setVisibility(View.VISIBLE);
                     mGiveHelp.setVisibility(View.GONE);
                     mCancel.setText(getString(R.string.cancel_borrow_in));
+
                 }else{
                     mCancel.setVisibility(View.GONE);
                     mGiveHelp.setVisibility(View.VISIBLE);
                     if (borrowDetail.getIsIntention() == BorrowDetail.INTENTIONED) {
+                        mStatus.setText(getActivity().getString(R.string.commit));
                         mGiveHelp.setText(R.string.submitted);
                         mGiveHelp.setEnabled(false);
                     } else {
+                        mStatus.setText(getActivity().getString(R.string.wait_help));
                         mGiveHelp.setText(R.string.give_help);
                         mGiveHelp.setEnabled(true);
                     }
@@ -604,12 +708,12 @@ private void requestBorrowMoneyDetails() {
                 mWriteMessage.setVisibility(View.GONE);
                 if (isSelfLoadIn){
                     mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
-                    mStatus.setText(getActivity().getString(R.string.over_time));
+                    mStatus.setText(getActivity().getString(R.string.borrow_in_over_time));
                     mCallOnly.setVisibility(View.VISIBLE);
                     mBorrowOutSuccess.setVisibility(View.GONE);
                 }else if (isSelfLoadOut){
                     mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.redAssist));
-                    mStatus.setText(getActivity().getString(R.string.over_time));
+                    mStatus.setText(getActivity().getString(R.string.borrow_out_over_time));
                     mCallOnly.setVisibility(View.GONE);
                     mBorrowOutSuccess.setVisibility(View.VISIBLE);
                 }else{
@@ -642,58 +746,9 @@ private void requestBorrowMoneyDetails() {
             }
         });
     }
-    @OnClick({R.id.writeMessage, R.id.call, R.id.callOnly, R.id.alreadyRepay, R.id.cancel,R.id.send,R.id.titleBar,R.id.userName,R.id.avatar})
+    @OnClick({R.id.send,R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.userName:
-            case R.id.avatar:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
-                            .executeForResult(REQ_CODE_USERDATA);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.call:
-            case R.id.callOnly:
-                requestPhone(mBorrowDetail.getId());
-                break;
-            case R.id.cancel:
-                SmartDialog.with(getActivity(), getString(R.string.cancel_confirm))
-                        .setMessageTextSize(15)
-                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                requestCancelBorrow(mBorrowDetail.getId());
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegative(R.string.cancel)
-                        .show();
-                break;
-            case R.id.alreadyRepay:
-                SmartDialog.with(getActivity(), getString(R.string.repay_confirm))
-                        .setMessageTextSize(15)
-                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                requestRepay(mBorrowDetail.getId());
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegative(R.string.cancel)
-                        .show();
-                break;
-            case R.id.writeMessage:
-                mLeaveMessageArea.setVisibility(View.VISIBLE);
-                mBorrowStatus.setVisibility(View.GONE);
-                mLeaveMessage.setText("");
-                mLeaveMessage.requestFocus();
-                mLeaveMessage.setFocusable(true);
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                break;
             case R.id.send:
                 if (!TextUtils.isEmpty(mLeaveMessage.getText())){
                     requestSendMessage();
@@ -703,7 +758,7 @@ private void requestBorrowMoneyDetails() {
                 mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mScrollView.smoothScrollTo(0,0);
+                        mListView.smoothScrollToPositionFromTop(0,mheader.getHeight());
                     }
                 });
                 break;
@@ -737,6 +792,15 @@ private void requestBorrowMoneyDetails() {
             startActivity(intent);
         }else {
             ToastUtil.curt(getString(R.string.no_phone));
+        }
+    }
+    class ShieldBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int dataId = intent.getExtras().getInt(UserDataActivity.USER_ID);
+            if (dataId>0){
+                requestMessageList();
+            }
         }
     }
     static class MessageAdapter extends ArrayAdapter<BorrowMessage> {
@@ -808,9 +872,9 @@ private void requestBorrowMoneyDetails() {
                         mIsAttention.setText("");
                         mBorrowDetail.setIsAttention(BorrowDetail.NO_ATTENTION);
                     }
-                    if (mWhetherAttentionShieldOrNot.isShield()){
-                        requestMessageList();
-                    }
+//                    if (mWhetherAttentionShieldOrNot.isShield()){
+//                        requestMessageList();
+//                    }
                 }
 
             }

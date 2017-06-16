@@ -110,7 +110,7 @@ public class CollapsedTextView extends android.support.v7.widget.AppCompatTextVi
 					obs.removeGlobalOnLayoutListener(this);
 				}
 				TextPaint tp = getPaint();
-				float width = tp.measureText(text);
+				float width = tp.measureText(getReplaceString(text));
 		        /* 计算行数 */
 				//获取显示宽度
 				int showWidth = getWidth() - getPaddingRight() - getPaddingLeft();
@@ -118,9 +118,9 @@ public class CollapsedTextView extends android.support.v7.widget.AppCompatTextVi
 				if (width % showWidth != 0) {
 					lines++;
 				}
-				allLines = (int) (tp.measureText(text + collapsedText) / showWidth);
+				allLines = (int) (tp.measureText(getReplaceString(text) + collapsedText) / showWidth);
 				if (lines > maxLine) {
-					int expect = text.length() / lines;
+					int expect = getReplaceString(text).length() / lines;
 					int end = 0;
 					int lastLineEnd = 0;
 					//...+expandedText的宽度，需要在最后一行加入计算
@@ -133,25 +133,25 @@ public class CollapsedTextView extends android.support.v7.widget.AppCompatTextVi
 							tempWidth = expandedTextWidth;
 						}
 						end += expect;
-						if (end > text.length()) {
-							end = text.length();
+						if (end > getReplaceString(text).length()) {
+							end = getReplaceString(text).length();
 						}
-						if (tp.measureText(text, lastLineEnd, end) > showWidth - tempWidth) {
+						if (tp.measureText(getReplaceString(text), lastLineEnd, end) > showWidth - tempWidth) {
 							//预期的第一行超过了实际显示的宽度
 							end--;
-							while (tp.measureText(text, lastLineEnd, end) > showWidth - tempWidth) {
+							while (tp.measureText(getReplaceString(text), lastLineEnd, end) > showWidth - tempWidth) {
 								end--;
 							}
 						} else {
 							end++;
-							while (tp.measureText(text, lastLineEnd, end) < showWidth - tempWidth) {
+							while (tp.measureText(getReplaceString(text), lastLineEnd, end) < showWidth - tempWidth) {
 								end++;
 							}
 							end--;
 						}
 						lastLineEnd = end;
 					}
-					SpannableStringBuilder s = new SpannableStringBuilder(text, 0, end)
+					SpannableStringBuilder s = new SpannableStringBuilder(getReplaceString(text), 0, end)
 							.append(ELLIPSE)
 							.append(expandedText);
 
@@ -159,9 +159,37 @@ public class CollapsedTextView extends android.support.v7.widget.AppCompatTextVi
 					s.setSpan(colorSpan, s.length() - expandedText.length(), s.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 					setText(s);
 				} else {
-					setText(text);
+					setText(getReplaceString(text));
 				}
 			}
 		});
 	}
+
+	private String getReplaceString(String text) {
+		//获取显示宽度
+		int showWidth = getWidth() - getPaddingRight() - getPaddingLeft();
+		String temp = " ";
+		TextPaint tp = new TextPaint();
+		int width = (int) tp.measureText(temp);
+		int rate = showWidth / width;
+
+		StringBuilder tempString = new StringBuilder();
+		for (int i = 0; i < rate; i++) {
+			tempString.append(temp);
+		}
+
+		StringBuilder replaceString = new StringBuilder();
+		int len = text.length();
+		for (int i = 0; i < len; i++) {
+			char c = text.charAt(i);
+			if (c == '\n') {
+				replaceString.append(tempString);
+			} else {
+				replaceString.append(c);
+			}
+		}
+
+		return replaceString.toString();
+	}
+
 }
