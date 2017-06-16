@@ -424,6 +424,9 @@ public abstract class StockTradeActivity extends BaseActivity {
         mStockKlineView.setOnAchieveTheLastListener(null);
     }
 
+    /**
+     * 过时的分时接口
+     */
 //    private void requestStockTrendDataAndSet() {
 //        Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
 //                .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
@@ -437,6 +440,9 @@ public abstract class StockTradeActivity extends BaseActivity {
 //                }).fireSync();
 //    }
 
+    /**
+     * 新分时接口
+     */
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockTrendData>>,List<StockTrendData>>() {

@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.model.stock.StockDataModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
     private int mDirection;
     private int mExchangeID;
     private StockSortAdapter mStockSortAdapter;
-    private ArrayList<StockData> mStockDataArrayList;
+    private ArrayList<StockDataModel> mStockDataArrayList;
 
     public PriceLimitRankingFragment() {
     }
@@ -92,16 +90,34 @@ public class PriceLimitRankingFragment extends BaseFragment {
         requestStockSortList();
     }
 
+//    public void requestStockSortList() {
+//        Client.getStockSort(mDirection, mExchangeID)
+//                .setTag(TAG)
+//                .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
+//                    @Override
+//                    public void onDataMsg(ArrayList<StockData> result, StockResp.Msg msg) {
+//                        updateStockSort(result);
+//                        for (StockData data : result) {
+//                            Log.d(TAG, "onDataMsg: " + data.toString());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(VolleyError volleyError) {
+//                        super.onFailure(volleyError);
+//                        updateStockSort(null);
+//                    }
+//                })
+//                .fireSync();
+//    }
+
     public void requestStockSortList() {
-        Client.getStockSort(mDirection, mExchangeID)
+        Client.getStockSort(mDirection,mExchangeID)
                 .setTag(TAG)
-                .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
+                .setCallback(new Callback2D<Resp<List<StockDataModel>>,List<StockDataModel>>() {
                     @Override
-                    public void onDataMsg(ArrayList<StockData> result, StockResp.Msg msg) {
+                    protected void onRespSuccessData(List<StockDataModel> result) {
                         updateStockSort(result);
-                        for (StockData data : result) {
-                            Log.d(TAG, "onDataMsg: " + data.toString());
-                        }
                     }
 
                     @Override
@@ -109,11 +125,10 @@ public class PriceLimitRankingFragment extends BaseFragment {
                         super.onFailure(volleyError);
                         updateStockSort(null);
                     }
-                })
-                .fireSync();
+                }).fireSync();
     }
 
-    private void updateStockSort(List<StockData> data) {
+    private void updateStockSort(List<StockDataModel> data) {
         if (data == null || data.isEmpty() && mStockDataArrayList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
@@ -158,14 +173,14 @@ public class PriceLimitRankingFragment extends BaseFragment {
     class StockSortAdapter extends RecyclerView.Adapter<StockSortAdapter.ViewHolder> {
 
         Context mContext;
-        ArrayList<StockData> mStockDataArrayList;
+        ArrayList<StockDataModel> mStockDataArrayList;
 
         public StockSortAdapter(Context context) {
             this.mContext = context;
             mStockDataArrayList = new ArrayList<>();
         }
 
-        public void addAll(List<StockData> datas) {
+        public void addAll(List<StockDataModel> datas) {
             mStockDataArrayList.clear();
             mStockDataArrayList.addAll(datas);
             //先显示10个
@@ -215,27 +230,27 @@ public class PriceLimitRankingFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final StockData item, int position, final Context context) {
+            public void bindDataWithView(final StockDataModel item, int position, final Context context) {
                 if (item == null) return;
-                mFutureName.setText(item.getCode_name());
-                mFutureCode.setText(item.getStock_code());
-                String priceLimit = item.getValue1();
+                mFutureName.setText(item.getName());
+                mFutureCode.setText(item.getInstrumentId());
+                String priceLimit = FinanceUtil.formatToPercentage(item.getUpDropSpeed());
                 if (!TextUtils.isEmpty(priceLimit)) {
                     if (priceLimit.startsWith("-")) {
                         mLastPrice.setSelected(false);
                         mRate.setSelected(false);
-                        mRate.setText(priceLimit + "%");
+                        mRate.setText(priceLimit);
                     } else {
                         mLastPrice.setSelected(true);
                         mRate.setSelected(true);
-                        mRate.setText("+" + priceLimit + "%");
+                        mRate.setText("+" + priceLimit);
                     }
                 }
-                mLastPrice.setText(item.getLast_price());
+                mLastPrice.setText(item.getLastPrice());
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Client.getStockInfo(item.getStock_code())
+                        Client.getStockInfo(item.getInstrumentId())
                                 .setCallback(new Callback2D<Resp<Variety>, Variety>() {
                                     @Override
                                     protected void onRespSuccessData(Variety data) {

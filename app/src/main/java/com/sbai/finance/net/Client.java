@@ -789,7 +789,7 @@ public class Client {
      * 请求类型 get
      * 请求Url  /stock/sort
      *
-     * @param direction  排序类别  0降序 1升序
+     * @param direction  排序类别  1降序 0升序
      * @param exchangeId 市场代码
      * @return
      */
