@@ -15,206 +15,263 @@
         app:backFeature="true"
         app:titleText="@string/bank_card"/>
 
-    <android.support.v7.widget.AppCompatTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#f3b071"
-        android:paddingBottom="5dp"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingTop="5dp"
-        android:text="@string/bind_bank_card_warn"
-        android:textColor="@android:color/white"
-        android:textSize="12sp"/>
-
     <LinearLayout
+        android:id="@+id/addBackLayout"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="28dp"
-            android:minWidth="60dp"
-            android:text="@string/real_name"
-            android:textColor="@color/blackAssist"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/card_holder_name_hint"
-            android:maxLines="1"
-            android:textColor="@color/blackAssist"
-            android:textColorHint="@color/bank_card_hint"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/bindBankCardHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            app:srcCompat="@drawable/ic_mine_bankcard_prompt"/>
-    </LinearLayout>
-
-    <include layout="@layout/split_line"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginBottom="@dimen/common_split_height"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="28dp"
-            android:minWidth="60dp"
-            android:text="@string/identity_card"
-            android:textColor="@color/blackAssist"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/identityCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:digits="0123456789Xx"
-            android:hint="@string/card_holder_identity_card_hint"
-            android:maxLength="18"
-            android:maxLines="1"
-            android:textColor="@color/blackAssist"
-            android:textColorHint="@color/bank_card_hint"
-            android:textSize="15sp"/>
+            android:background="#f3b071"
+            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingTop="5dp"
+            android:text="@string/bind_bank_card_warn"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingRight="@dimen/common_padding">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="28dp"
+                android:minWidth="60dp"
+                android:text="@string/real_name"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/card_holder_name_hint"
+                android:maxLines="1"
+                android:textColor="@color/blackAssist"
+                android:textColorHint="@color/bank_card_hint"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/bindBankCardHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                app:srcCompat="@drawable/ic_mine_bankcard_prompt"/>
+        </LinearLayout>
+
+        <include layout="@layout/split_line"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginBottom="@dimen/common_split_height"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingRight="@dimen/common_padding">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="28dp"
+                android:minWidth="60dp"
+                android:text="@string/identity_card"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/identityCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:digits="0123456789Xx"
+                android:hint="@string/card_holder_identity_card_hint"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:textColor="@color/blackAssist"
+                android:textColorHint="@color/bank_card_hint"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingRight="@dimen/common_padding">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="28dp"
+                android:minWidth="60dp"
+                android:text="@string/bank_card_number"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/bankCardNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/bank_card_number_hint"
+                android:inputType="number"
+                android:maxLength="26"
+                android:maxLines="1"
+                android:textColor="@color/blackAssist"
+                android:textColorHint="@color/bank_card_hint"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <include layout="@layout/split_line"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginBottom="@dimen/common_split_height"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingRight="@dimen/common_padding">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="28dp"
+                android:minWidth="60dp"
+                android:text="@string/bank"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/bank"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/bank_choose"
+                android:maxLines="1"
+                android:textColor="@color/blackAssist"
+                android:textColorHint="@color/bank_card_hint"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/bankChoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                app:srcCompat="@drawable/ic_arrow_right_tint"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginBottom="@dimen/common_split_height"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingRight="@dimen/common_padding">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="28dp"
+                android:minWidth="60dp"
+                android:text="@string/phone_number"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/phoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/phone_number_hint"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:textColor="@color/blackAssist"
+                android:textColorHint="@color/bank_card_hint"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/submitBankCardInfo"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="@dimen/common_padding"
+            android:layout_marginRight="@dimen/common_padding"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_red_rounded"
+            android:enabled="false"
+            android:text="@string/next"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/bankCardLayout"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
+        android:layout_height="100dp"
+        android:layout_margin="@dimen/common_padding"
+        android:background="@drawable/bg_mine_wallet_card"
+        android:paddingLeft="40dp"
+        android:paddingTop="@dimen/common_padding">
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
+            android:id="@+id/bindBankName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="28dp"
-            android:minWidth="60dp"
-            android:text="@string/bank_card_number"
-            android:textColor="@color/blackAssist"
-            android:textSize="15sp"/>
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            tools:text="招商银行\n储蓄卡"/>
 
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/bankCardNumber"
+        <TextView
+            android:id="@+id/unBind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/bindBankName"
+            android:gravity="right"
+            android:paddingRight="@dimen/common_padding"
+            android:text="@string/unbind"
+            android:textColor="#969696"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="@string/bank_card_number_hint"
-            android:inputType="number"
-            android:maxLength="26"
-            android:maxLines="1"
-            android:textColor="@color/blackAssist"
-            android:textColorHint="@color/bank_card_hint"
-            android:textSize="15sp"/>
-    </LinearLayout>
+            android:layout_alignParentBottom="true"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingRight="50dp">
 
-    <include layout="@layout/split_line"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginBottom="@dimen/common_split_height"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="28dp"
-            android:minWidth="60dp"
-            android:text="@string/bank"
-            android:textColor="@color/blackAssist"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/bank"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/bank_choose"
-            android:maxLines="1"
-            android:textColor="@color/blackAssist"
-            android:textColorHint="@color/bank_card_hint"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/bankChoose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            app:srcCompat="@drawable/ic_arrow_right_tint"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginBottom="@dimen/common_split_height"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="28dp"
-            android:minWidth="60dp"
-            android:text="@string/phone_number"
-            android:textColor="@color/blackAssist"
-            android:textSize="15sp"/>
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/phoneNumber"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/phone_number_hint"
-            android:inputType="phone"
-            android:maxLength="11"
-            android:maxLines="1"
-            android:textColor="@color/blackAssist"
-            android:textColorHint="@color/bank_card_hint"
-            android:textSize="15sp"/>
-    </LinearLayout>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/submitBankCardInfo"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="@dimen/common_padding"
-        android:layout_marginRight="@dimen/common_padding"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_red_rounded"
-        android:enabled="false"
-        android:text="@string/next"
-        android:textColor="@android:color/white"/>
-
+            <TextView
+                android:id="@+id/bindBankCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textColor="@android:color/white"
+                tools:text="0400"/>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

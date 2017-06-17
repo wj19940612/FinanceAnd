@@ -15,10 +15,14 @@ import android.widget.TextView;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.payment.PaymentPath;
+import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -32,8 +36,6 @@ public class BankCardPayActivity extends BaseActivity {
     TextView mDealMoney;
     @BindView(R.id.dealTime)
     TextView mDealTime;
-    @BindView(R.id.dealId)
-    TextView mDealId;
     @BindView(R.id.bank_card)
     TextView mBankCard;
     @BindView(R.id.name)
@@ -56,7 +58,9 @@ public class BankCardPayActivity extends BaseActivity {
     private int mCounter;
     //获取验证是否开始
     private boolean mFreezeObtainAuthCode;
-    private String mMerchantOrderId;
+    private PaymentPath mPaymentPath;
+    private UserBankCardInfoModel mUserBankCardInfoModel;
+    private String mMoney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +74,40 @@ public class BankCardPayActivity extends BaseActivity {
             }
         });
         mAuthCode.addTextChangedListener(mValidationWatcher);
-        mMerchantOrderId = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
+        mPaymentPath = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
+        mMoney = getIntent().getStringExtra(Launcher.EX_PAYLOAD_1);
+        mDealMoney.setText(getString(R.string.RMB, mMoney));
+        if (mUserBankCardInfoModel != null) {
+            String cardNumber = mUserBankCardInfoModel.getCardNumber();
+            mBankCard.setText(getString(R.string.text_number, mUserBankCardInfoModel.getIssuingBankName(), cardNumber.substring(cardNumber.length() - 4)));
+            mName.setText(formatUserName(mUserBankCardInfoModel.getRealName()));
+            mIdentityCard.setText(formatIdentityCard(mUserBankCardInfoModel.getIdCard()));
+            mPhone.setText(mUserBankCardInfoModel.getCardPhone());
+        }
+        if (mPaymentPath != null) {
+            mDealTime.setText(DateUtil.format(mPaymentPath.getTime(), DateUtil.DEFAULT_FORMAT));
+        }
+    }
+
+
+    private String formatUserName(String userName) {
+        int length = userName.length();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length - 1; i++) {
+            stringBuilder.append("*");
+        }
+        return userName.substring(0, 1) + stringBuilder.toString();
+    }
+
+
+    private String formatIdentityCard(String certCode) {
+        int length = certCode.length();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length - 8; i++) {
+            stringBuilder.append("*");
+        }
+        return certCode.substring(0, 4) + stringBuilder.toString() + certCode.substring(length - 4);
     }
 
     ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -108,36 +145,38 @@ public class BankCardPayActivity extends BaseActivity {
     }
 
     private void recharge() {
-        Client.confirmBankPay(mMerchantOrderId, "0000")
+        String authCode = mAuthCode.getText().toString().trim();
+        Client.confirmBankPay(mPaymentPath.getThridOrderId(), authCode)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         Log.d(TAG, "onRespSuccess: " + resp.toString());
+                        ToastUtil.curt(resp.toString());
                     }
                 })
                 .fire();
     }
 
     private void getBankPayAuthCode() {
-        // TODO: 2017/6/16 险些死 
-        Client.sendMsgCodeForPassWordOrBankCardPay("18182568000")
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            mFreezeObtainAuthCode = true;
-                            startScheduleJob(1000);
-                            mCounter = 60;
-                            mGetAuthCode.setEnabled(false);
-                            mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+        if (mUserBankCardInfoModel != null) {
+            Client.sendMsgCodeForPassWordOrBankCardPay(mUserBankCardInfoModel.getCardPhone())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            if (resp.isSuccess()) {
+                                mFreezeObtainAuthCode = true;
+                                startScheduleJob(1000);
+                                mCounter = 60;
+                                mGetAuthCode.setEnabled(false);
+                                mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+                            }
                         }
-                    }
-                })
-                .fire();
-
+                    })
+                    .fire();
+        }
     }
 
     @Override

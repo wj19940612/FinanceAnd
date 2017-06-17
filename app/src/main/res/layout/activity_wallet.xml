@@ -91,7 +91,6 @@
         android:layout_marginTop="@dimen/common_split_height"
         android:background="@android:color/white"
         app:leftIcon="@drawable/ic_mine_wallet_bankcard"
-
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/bank_card"
         app:rowTextColor="@color/blackAssist"

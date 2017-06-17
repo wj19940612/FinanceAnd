@@ -538,7 +538,7 @@ public class Client {
      * @return
      */
     public static API attentionOrRelieveAttentionUser(int followId, int status) {
-        return new API( "/coterie/userInterest/follow.do", new ApiParams()
+        return new API("/coterie/userInterest/follow.do", new ApiParams()
                 .put("followId", followId)
                 .put("status", status));
     }
@@ -1479,7 +1479,7 @@ public class Client {
      * @param bankcardId
      * @return
      */
-    public static API submitRechargeData(String platform, String money, String bankcardId) {
+    public static API submitRechargeData(String platform, String money, int bankcardId) {
         return new API(POST, "/user/userpayForDeposit/payDepositMoney.do", new ApiParams()
                 .put("platform", platform)
                 .put("money", money)
@@ -1533,6 +1533,28 @@ public class Client {
     public static API requestCanUseBankList() {
         return new API("/user/bankCard/getBank.do", null);
     }
+
+    //提现手续费
+    public static API requestWithDrawPoundage() {
+        return new API(POST, "/user/withdraw/getFee.do", null);
+    }
+
+    /**
+     * 提现
+     * /user/withdraw/withdrawByBankcard.do
+     *
+     * @param money
+     * @param BankCardId
+     * @param password
+     * @return
+     */
+    public static API withDraw(String money, int BankCardId, String password) {
+        return new API(POST, "/user/withdraw/withdrawByBankcard.do", new ApiParams()
+                .put("money", money)
+                .put("BankCardId", BankCardId)
+                .put("password", password));
+    }
+
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";

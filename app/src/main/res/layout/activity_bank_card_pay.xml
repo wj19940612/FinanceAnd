@@ -69,30 +69,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingBottom="@dimen/common_padding"
-        android:paddingLeft="@dimen/common_padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:minWidth="70dp"
-            android:text="@string/deal_time"/>
-
-        <TextView
-            android:id="@+id/dealId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:textColor="@color/blackAssist"
-            android:textSize="14sp"
-            tools:text="00251515145145151xx"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:background="@android:color/white"
         android:paddingBottom="@dimen/common_padding"

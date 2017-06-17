@@ -275,6 +275,10 @@
         </activity>
         <activity android:name=".activity.recharge.BankCardPayActivity">
         </activity>
+        <activity android:name=".activity.mine.wallet.WithDrawActivity">
+        </activity>
+        <activity android:name=".activity.mine.wallet.WithDrawDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

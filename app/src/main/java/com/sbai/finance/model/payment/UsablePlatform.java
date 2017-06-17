@@ -42,6 +42,10 @@ public class UsablePlatform {
         return TYPE_AIL_PAY == getType();
     }
 
+    public boolean isBankPay() {
+        return getType() == TYPE_BANK_PAY;
+    }
+
     public int getType() {
         return type;
     }

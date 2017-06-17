@@ -538,8 +538,7 @@
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
     <string name="deal_money">交易金额: </string>
-    <string name="deal_time">交易金额:</string>
-    <string name="deal_id">交易单号:</string>
+    <string name="deal_time">交易时间:</string>
     <string name="bank_card_">银行卡号:</string>
     <string name="name_">姓名:</string>
     <string name="identity_card_">身份证:</string>
@@ -548,4 +547,30 @@
     <string name="please_input_auth_code">请输入短信验证码</string>
     <string name="read_and_agreed">  我已阅读并同意</string>
     <string name="recharge_service_protocol">《充值服务协议》</string>
+    <string name="unbind">解绑</string>
+    <string name="bank_card_name">%1$s\n</string>
+    <string name="deposit_card">储蓄卡</string>
+    <string name="is_give_up_bind_bank_card">是否放弃绑定银行卡?</string>
+    <string name="un_bind_bank_card_title">解绑银行卡</string>
+    <string name="un_bind_bank_card_hint">为了保障用户信息安全，如需解绑银行卡请点击联系客服</string>
+    <string name="un_bind_bank_card_dialog_confirm">联系客服</string>
+    <string name="text_number">%1$s(%2$s)</string>
+
+    <string name="with_draw">提现</string>
+    <string name="with_draw_hint">工作日两小时到账,具体请看规则></string>
+    <string name="with_draw_bank">到账银行卡%1$s</string>
+    <string name="with_draw_money">提现金额</string>
+    <string name="can_with_draw_money">当前可提现余额:  %1$s元</string>
+    <string name="all_with_draw">全部提现</string>
+    <string name="can_with_poundage">提现手续费:    %1$s元</string>
+    <string name="can_with_rule">提现规则></string>
+    <string name="can_with_rule_content_1">1、用户提现收手续费2元/笔;</string>
+    <string name="can_with_rule_content_2">2、手续费将从提现金额内直接扣除</string>
+    <string name="can_with_rule_content_3">3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
+    <string name="with_draw_details">提现详情</string>
+    <string name="with_draw_check_is_submit">提现审核已提交</string>
+    <string name="complete">完成</string>
+    <string name="REM_HINT">￥</string>
+    <string name="yuan">￥%1$s</string>
+    <string name="please_input_pass">请输入安全密码</string>
 </resources>
