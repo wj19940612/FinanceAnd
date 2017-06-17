@@ -29,7 +29,6 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,7 +148,10 @@ public class UserDataActivity extends BaseActivity {
 			if (mAttentionAndFansNum.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
 				mAttentionShieldArea.setVisibility(View.GONE);
 				mHisPublish.setText(R.string.my_publish);
+			} else {
+				mHisPublish.setText(R.string.his_publish);
 			}
+
 			mAttentionNum.setText(getString(R.string.attention_number, mAttentionAndFansNum.getAttention()));
 			mFansNum.setText(getString(R.string.fans_number, mAttentionAndFansNum.getFollower()));
 		}

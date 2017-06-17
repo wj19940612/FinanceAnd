@@ -69,6 +69,7 @@ public class HistoryNewsModel implements Parcelable {
     private String title;
     private int type;
     private int userId;
+    private int viewpointId;
     /**
      * 0  未读
      * 1 已读
@@ -85,6 +86,14 @@ public class HistoryNewsModel implements Parcelable {
 
     public boolean isForcaest() {
         return getType() == FORCAEST_highs_and_lows_fail || getType() == FORCAEST_highs_and_lows_success;
+    }
+
+    public int getViewpointId() {
+        return viewpointId;
+    }
+
+    public void setViewpointId(int viewpointId) {
+        this.viewpointId = viewpointId;
     }
 
     public String getMsg() {

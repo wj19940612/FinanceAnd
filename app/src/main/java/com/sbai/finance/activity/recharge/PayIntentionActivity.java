@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -27,6 +28,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PayIntentionActivity extends BaseActivity {
+public class PayIntentionActivity extends BaseActivity implements View.OnClickListener {
 
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(R.id.intentionAmount)
 	TextView mIntentionAmount;
+	@BindView(R.id.scrollView)
+	ScrollView mScrollView;
 	@BindView(android.R.id.list)
 	MyListView mListView;
 	@BindView(R.id.confirmPayment)
@@ -74,6 +80,13 @@ public class PayIntentionActivity extends BaseActivity {
 
 		requestIntentionAmount();
 		requestUsablePlatformList();
+		mTitleBar.setOnTitleBarClickListener(this);
+		mScrollView.smoothScrollTo(0, 0);
+	}
+
+	@Override
+	public void onClick(View v) {
+		mScrollView.smoothScrollTo(0, 0);
 	}
 
 	private void initData(Intent intent) {
