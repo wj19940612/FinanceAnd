@@ -98,8 +98,8 @@
     <string name="strategy_buy_sell">策略买卖(暂未开放)</string>
     <string name="firm_offer_open_account">实盘开户(暂未开放)</string>
     <string name="confirm_login">确认登录</string>
-    <string name="crude_oil_future">原油期货宝</string>
-    <string name="quick_trade_offer_by_company">快速交易由“上海幸福网络科技有限公司”提供</string>
+    <string name="crude_oil_future">期货投资宝</string>
+    <string name="quick_trade_offer_by_company">快速交易由“深圳达捷鑫科技有限公司”提供</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>
