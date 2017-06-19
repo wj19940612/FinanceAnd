@@ -59,6 +59,8 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
     private String mPassWord;
     private int mWithDrawRuleRes[];
+    //手续费
+    private double mPoundage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 .setCallback(new Callback2D<Resp<Double>, Double>() {
                     @Override
                     protected void onRespSuccessData(Double data) {
+                        mPoundage = data;
                         mCanWithPoundage.setText(getString(R.string.can_with_poundage, FinanceUtil.formatWithScale(data)));
                     }
                 })
@@ -155,6 +158,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                                 Launcher.with(getActivity(), WithDrawDetailsActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel)
                                         .putExtra(Launcher.EX_PAY_END, mWithdrawMoney.getText().toString())
+                                        .putExtra(Launcher.EX_PAYLOAD_1, mPoundage)
                                         .execute();
                                 finish();
                             }

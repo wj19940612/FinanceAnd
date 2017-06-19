@@ -8,8 +8,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -22,6 +24,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -55,6 +58,10 @@ public class BankCardPayActivity extends BaseActivity {
     TextView mServiceProtocol;
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
+    @BindView(R.id.showLayout)
+    LinearLayout mShowLayout;
+    @BindView(R.id.hideLayout)
+    LinearLayout mHideLayout;
 
     private int mCounter;
     //获取验证是否开始
@@ -62,6 +69,8 @@ public class BankCardPayActivity extends BaseActivity {
     private PaymentPath mPaymentPath;
     private UserBankCardInfoModel mUserBankCardInfoModel;
     private String mMoney;
+    private KeyBoardHelper mKeyBoardHelper;
+    private int bottomHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +84,7 @@ public class BankCardPayActivity extends BaseActivity {
             }
         });
         mAuthCode.addTextChangedListener(mValidationWatcher);
-
+        setKeyboardHelper();
         mPaymentPath = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         if (mUserBankCardInfoModel != null) {
@@ -91,6 +100,47 @@ public class BankCardPayActivity extends BaseActivity {
         }
     }
 
+
+    private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
+
+        @Override
+        public void OnKeyBoardPop(int keyboardHeight) {
+            if (bottomHeight < keyboardHeight) {
+                int offset = bottomHeight - keyboardHeight;
+                final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
+                        .getLayoutParams();
+                lp.topMargin = offset;
+                mShowLayout.setLayoutParams(lp);
+            }
+
+        }
+
+        @Override
+        public void OnKeyBoardClose(int oldKeyboardHeight) {
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
+                    .getLayoutParams();
+            if (lp.topMargin != 0) {
+                lp.topMargin = 0;
+                mShowLayout.setLayoutParams(lp);
+            }
+
+        }
+    };
+
+    /**
+     * 设置对键盘高度的监听
+     */
+    private void setKeyboardHelper() {
+        mKeyBoardHelper = new KeyBoardHelper(this);
+        mKeyBoardHelper.onCreate();
+        mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
+        mHideLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                bottomHeight = mHideLayout.getHeight();
+            }
+        });
+    }
 
     private String formatUserName(String userName) {
         int length = userName.length();
@@ -129,6 +179,7 @@ public class BankCardPayActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mAuthCode.removeTextChangedListener(mValidationWatcher);
+        mKeyBoardHelper.onDestroy();
     }
 
     @OnClick({R.id.getAuthCode, R.id.submitRechargeInfo, R.id.serviceProtocol})

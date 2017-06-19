@@ -17,6 +17,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
+import com.sbai.finance.activity.recharge.AliPayActivity;
 import com.sbai.finance.activity.recharge.BankCardPayActivity;
 import com.sbai.finance.activity.recharge.WeChatPayActivity;
 import com.sbai.finance.model.payment.BankLimit;
@@ -28,6 +29,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import java.util.List;
@@ -119,6 +121,7 @@ public class RechargeActivity extends BaseActivity {
                                 } else {
                                     mSelectPayWayName = mUsablePlatform.getName();
                                 }
+                                mRechargeWay.setText(mSelectPayWayName);
                             }
                         }
                     }
@@ -174,17 +177,20 @@ public class RechargeActivity extends BaseActivity {
                     .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
                     .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
         } else {
+            if (mBankLimit != null && mBankLimit.getLimitSingle() < Double.parseDouble(money)) {
+                ToastUtil.curt(R.string.input_money_more_than_limit);
+                return;
+            }
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {
                             if (mUsablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
-//                                Launcher.with(getActivity(), AliPayActivity.class)
-//                                        .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())
-//                                        .putExtra(Launcher.EX_PAYLOAD_1, data.getThridOrderId())
-//                                        .execute();
-
+                                Launcher.with(getActivity(), AliPayActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())
+                                        .putExtra(Launcher.EX_PAYLOAD_1, data.getThridOrderId())
+                                        .execute();
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_VIEW);
                                 Uri content_url = Uri.parse(data.getCodeUrl());
@@ -235,9 +241,15 @@ public class RechargeActivity extends BaseActivity {
                         } else if (item.contains("银行") && data.getName().contains("银行")) {
                             Log.d(TAG, "银行 : " + data.toString());
                             Preference.get().setRechargeWay(data.getType());
-                            SpannableString payBank = StrUtil.mergeTextWithRatioColor(item, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
-                                    ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
-                            mRechargeWay.setText(payBank);
+                            if (mBankLimit != null) {
+                                SpannableString payBank = StrUtil.mergeTextWithRatioColor(item, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
+                                        ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
+                                mRechargeWay.setText(payBank);
+                            } else {
+                                SpannableString payBank = StrUtil.mergeTextWithRatioColor(item, "", 0.98f,
+                                        ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
+                                mRechargeWay.setText(payBank);
+                            }
                             mUsablePlatform = data;
                         }
                     }

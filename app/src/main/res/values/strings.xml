@@ -499,7 +499,7 @@
     <string name="add_safety_pass">添加安全密码</string>
     <string name="please_set_safety_pass">请设置安全密码</string>
     <string name="please_confirm_safety_pass">请再次确认安全密码</string>
-    <string name="twice_pass_is_different">两次输入不一致</string>
+    <string name="twice_pass_is_different">两次密码输入不一致</string>
 
 
     <!--权限-->
@@ -560,6 +560,7 @@
     <string name="with_draw_hint">工作日两小时到账,具体请看规则></string>
     <string name="with_draw_bank">到账银行卡%1$s</string>
     <string name="with_draw_money">提现金额</string>
+    <string name="predict_poundage">预计手续费</string>
     <string name="can_with_draw_money">当前可提现余额:  %1$s元</string>
     <string name="all_with_draw">全部提现</string>
     <string name="can_with_poundage">提现手续费:    %1$s元</string>
@@ -573,4 +574,7 @@
     <string name="REM_HINT">￥</string>
     <string name="yuan">￥%1$s</string>
     <string name="please_input_pass">请输入安全密码</string>
+    <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
+    <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
+    <string name="go_to_bind_card">去绑卡</string>
 </resources>

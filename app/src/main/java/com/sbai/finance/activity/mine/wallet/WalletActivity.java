@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.wallet;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
@@ -20,6 +21,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
@@ -155,6 +157,20 @@ public class WalletActivity extends BaseActivity {
         }
     }
 
+    private void showOpenBindCardDialog() {
+        SmartDialog.with(getActivity(), R.string.you_not_bind_bank_card)
+                .setPositive(R.string.go_to_bind_card, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(getActivity(), BindBankCardActivity.class)
+                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
+                    }
+                })
+                .show();
+    }
+
     private void openWithDrawPage() {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
@@ -170,9 +186,7 @@ public class WalletActivity extends BaseActivity {
                                         .putExtra(Launcher.EX_PAYLOAD, mUserFundInfoModel.getMoney())
                                         .execute();
                             } else {
-                                Launcher.with(getActivity(), BindBankCardActivity.class)
-                                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                        .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
+                                showOpenBindCardDialog();
                             }
                         }
                     }
