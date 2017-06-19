@@ -329,8 +329,8 @@ public class FutureBattleFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        unbinder.unbind();
     }
 
 }

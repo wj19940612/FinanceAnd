@@ -15,6 +15,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.utils.GlideCircleTransform;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by linrongfang on 2017/6/19.
@@ -65,7 +66,7 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public BattleFloatView(Context context, AttributeSet attrs) {
-        super(context, attrs, -1);
+        this(context, attrs, -1);
     }
 
     public BattleFloatView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -74,8 +75,9 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.battle_float_view, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.battle_float_view, null, false);
         addView(view);
+        ButterKnife.bind(this);
     }
 
     private void initViews() {
@@ -85,25 +87,24 @@ public class BattleFloatView extends RelativeLayout {
             resetMargin();
         } else {
             mVarietyName.setVisibility(GONE);
+            mMyPraiseButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnPraiseListener != null) {
+                        mOnPraiseListener.addMyPraiseCount();
+                    }
+                }
+            });
+
+            mUserPraiseButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnPraiseListener != null) {
+                        mOnPraiseListener.addUserPraiseCount();
+                    }
+                }
+            });
         }
-
-        mMyPraiseButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnPraiseListener != null) {
-                    mOnPraiseListener.addMyPraiseCount();
-                }
-            }
-        });
-
-        mUserPraiseButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnPraiseListener != null) {
-                    mOnPraiseListener.addUserPraiseCount();
-                }
-            }
-        });
     }
 
     private void resetMargin() {
@@ -178,14 +179,14 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(String.valueOf(myPraiseCount));
-            mUserPraise.setText(String.valueOf(fighterPraiseCount));
+            mMyPraiseButton.setText(String.valueOf(myPraiseCount));
+            mUserPraiseButton.setText(String.valueOf(fighterPraiseCount));
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
             mUserPerspective.setVisibility(VISIBLE);
-            mMyPraiseButton.setText(String.valueOf(myPraiseCount));
-            mUserPraiseButton.setText(String.valueOf(fighterPraiseCount));
+            mMyPraise.setText(String.valueOf(myPraiseCount));
+            mUserPraise.setText(String.valueOf(fighterPraiseCount));
         }
         return this;
     }
