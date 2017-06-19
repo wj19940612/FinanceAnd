@@ -1479,7 +1479,7 @@ public class Client {
      * @param bankcardId
      * @return
      */
-    public static API submitRechargeData(String platform, String money, int bankcardId) {
+    public static API submitRechargeData(String platform, String money, Integer bankcardId) {
         return new API(POST, "/user/userpayForDeposit/payDepositMoney.do", new ApiParams()
                 .put("platform", platform)
                 .put("money", money)
@@ -1496,7 +1496,7 @@ public class Client {
      * @return
      */
     public static API confirmBankPay(String merchantOrderId, String checkCode) {
-        return new API(POST, "user/userpayForDeposit/payCheckByQt.do", new ApiParams()
+        return new API("/user/userpayForDeposit/payCheckByQt.do", new ApiParams()
                 .put("merchantOrderId", merchantOrderId)
                 .put("checkCode", checkCode));
     }
@@ -1544,17 +1544,28 @@ public class Client {
      * /user/withdraw/withdrawByBankcard.do
      *
      * @param money
-     * @param BankCardId
+     * @param BankcardId
      * @param password
      * @return
      */
-    public static API withDraw(String money, int BankCardId, String password) {
+    public static API withDraw(String money, int BankcardId, String password) {
         return new API(POST, "/user/withdraw/withdrawByBankcard.do", new ApiParams()
                 .put("money", money)
-                .put("BankCardId", BankCardId)
+                .put("BankcardId", BankcardId)
                 .put("password", password));
     }
 
+    /**
+     * /user/bankCard/getPayRule.do
+     * POST
+     * 获取限额（wms）
+     *
+     * @param bankId
+     * @return
+     */
+    public static API getBankLimit(int bankId) {
+        return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
+    }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";

@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
@@ -56,7 +58,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     private int mMoney;
 
     private String mPassWord;
-    private int mWithDrawRuleRes [];
+    private int mWithDrawRuleRes[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,11 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
 
         requestWithDrawPoundage();
+
+        if (Preference.get().isFirstWithDraw()) {
+            showWithDrawRuleDialog();
+            Preference.get().setIsFirstWithDraw(false);
+        }
     }
 
     private void requestWithDrawPoundage() {
@@ -124,6 +131,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 InputSafetyPassDialogFragment.newInstance(mWithdrawMoney.getText().toString()).show(getSupportFragmentManager());
                 break;
             case R.id.connect_service:
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }
     }

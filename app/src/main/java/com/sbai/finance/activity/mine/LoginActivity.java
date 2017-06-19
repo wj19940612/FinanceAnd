@@ -102,15 +102,15 @@ public class LoginActivity extends BaseActivity {
         mAuthCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-              if(hasFocus){
-                  mPhoneNumberClear.setVisibility(View.INVISIBLE);
-              }
+                if (hasFocus) {
+                    mPhoneNumberClear.setVisibility(View.INVISIBLE);
+                }
             }
         });
         mPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!TextUtils.isEmpty(mPhoneNumber.getText().toString())) {
+                if (!TextUtils.isEmpty(mPhoneNumber.getText().toString()) && hasFocus) {
                     mPhoneNumberClear.setVisibility(View.VISIBLE);
                 }
             }

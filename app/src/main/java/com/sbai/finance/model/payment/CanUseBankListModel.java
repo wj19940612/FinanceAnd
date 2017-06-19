@@ -29,7 +29,17 @@ public class CanUseBankListModel {
     private int id;
     //0  不可用 1 可用
     private int status;
+    /**
+     * payRule : {"0-99":"qtwxscan","100-600":"qtwxscan"}
+     * limitSingle : 5000
+     * limitDay : 100000
+     */
 
+    private String payRule;
+    //单笔限额
+    private int limitSingle;
+    //单日限额
+    private int limitDay;
 
     public String getAppIcon() {
         return appIcon;
@@ -98,5 +108,29 @@ public class CanUseBankListModel {
                 ", id=" + id +
                 ", status=" + status +
                 '}';
+    }
+
+    public String getPayRule() {
+        return payRule;
+    }
+
+    public void setPayRule(String payRule) {
+        this.payRule = payRule;
+    }
+
+    public int getLimitSingle() {
+        return limitSingle;
+    }
+
+    public void setLimitSingle(int limitSingle) {
+        this.limitSingle = limitSingle;
+    }
+
+    public int getLimitDay() {
+        return limitDay;
+    }
+
+    public void setLimitDay(int limitDay) {
+        this.limitDay = limitDay;
     }
 }

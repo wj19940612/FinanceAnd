@@ -499,7 +499,7 @@
     <string name="add_safety_pass">添加安全密码</string>
     <string name="please_set_safety_pass">请设置安全密码</string>
     <string name="please_confirm_safety_pass">请再次确认安全密码</string>
-    <string name="twice_pass_is_different">两次密码输入不一致</string>
+    <string name="twice_pass_is_different">两次输入不一致</string>
 
 
     <!--权限-->
@@ -515,7 +515,7 @@
     <string name="bank_card_pay">%1$s(%2$d)</string>
     <string name="bank_card_recharge_limit">单笔限额￥%1$d元</string>
     <string name="recharge_count">充值金额</string>
-    <string name="recharge_hint">1元起充</string>
+    <string name="recharge_hint">5元起充</string>
     <string name="recharge_service">遇到任何问题，请联系客服></string>
     <string name="ali">支付宝</string>
     <string name="wei_xin">微信</string>
