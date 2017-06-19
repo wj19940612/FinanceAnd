@@ -4,14 +4,14 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@android:color/white">
+              android:background="@android:color/white"
+              android:paddingBottom="5dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="20dp">
-
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="32dp"

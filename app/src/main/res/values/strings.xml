@@ -343,11 +343,11 @@
     <!--mutual-->
     <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
     <string name="borrow_limit">借款金额</string>
-    <string name="borrow_amount">500~2000元</string>
-    <string name="borrow_interest_amount">1~200元</string>
+    <string name="borrow_amount">500~2000</string>
+    <string name="borrow_interest_amount">1~200</string>
     <string name="borrow_day_limit">借款期限</string>
     <string name="borrow_location">所在地址</string>
-    <string name="borrow_day_limit_hint">1~60天</string>
+    <string name="borrow_day_limit_hint">1~60</string>
     <string name="borrow_remark">备注</string>
     <string name="borrow_remark_hint">简单描述一下您的借款需求，有助快速达成借款</string>
     <string name="borrow_photo_tips">添加照片：最多可以上传4张</string>
@@ -577,4 +577,8 @@
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
+
+    <!--future versus-->
+    <string name="see_record">查看战绩</string>
+    <string name="versus_rule">决斗规则></string>
 </resources>
