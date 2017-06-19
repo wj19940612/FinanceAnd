@@ -113,7 +113,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     @Override
     protected void onResume() {
         super.onResume();
-        startScheduleJob(1000);
+        startScheduleJob(5*1000);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockData(data);
                         requestStockMarketData(data);
-                        startScheduleJob(1000);
+                        startScheduleJob(5*1000);
                     }
                 }).fireSync();
     }
