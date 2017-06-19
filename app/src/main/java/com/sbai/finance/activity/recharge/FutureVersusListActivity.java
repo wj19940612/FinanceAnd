@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -70,19 +72,22 @@ public class FutureVersusListActivity extends BaseActivity {
         mListView.addHeaderView(header);
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mListView.setAdapter(mVersusListAdapter);
+        FutureVersus futureVersus = new FutureVersus();
 
     }
 
 
-
     static class VersusListAdapter extends ArrayAdapter<FutureVersus> {
-        interface Callback{
+        interface Callback {
             void onUserClick(int userId);
         }
+
         private Callback mCallback;
-        public void setCallback(Callback callback){
+
+        public void setCallback(Callback callback) {
             mCallback = callback;
         }
+
         public VersusListAdapter(@NonNull Context context) {
             super(context, 0);
         }
@@ -102,14 +107,32 @@ public class FutureVersusListActivity extends BaseActivity {
             return convertView;
         }
 
-        static class ViewHolder {
-            @BindView(R.id.avatar)
-            ImageView mAvatar;
+        class ViewHolder {
+            @BindView(R.id.myAvatar)
+            ImageView mMyAvatar;
+            @BindView(R.id.myName)
+            TextView mMyName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
+            @BindView(R.id.progressBar)
+            ProgressBar mProgressBar;
+            @BindView(R.id.myProfit)
+            TextView mMyProfit;
+            @BindView(R.id.userProfit)
+            TextView mUserProfit;
+            @BindView(R.id.fighterDataArea)
+            RelativeLayout mFighterDataArea;
+            @BindView(R.id.depositAndTime)
+            TextView mDepositAndTime;
+            @BindView(R.id.userAvatar)
+            ImageView mUserAvatar;
+            @BindView(R.id.userName)
+            TextView mUserName;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(FutureVersus item,Context context,Callback callback){
+            private void bindDataWithView(FutureVersus item, Context context, Callback callback) {
 
             }
         }

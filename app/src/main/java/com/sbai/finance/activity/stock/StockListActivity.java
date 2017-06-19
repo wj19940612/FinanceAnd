@@ -422,7 +422,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                     mLastPrice.setText("--");
                     mRate.setSelected(true);
-                    mRate.setText("--.--%");
+                    mRate.setText("--");
                 }
             }
         }

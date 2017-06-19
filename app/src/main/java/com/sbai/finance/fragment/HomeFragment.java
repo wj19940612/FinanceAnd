@@ -144,8 +144,8 @@ public class HomeFragment extends BaseFragment {
         mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
             @Override
             public void onFutureClick() {
-             //   Launcher.with(getActivity(), FutureListActivity.class).execute();
-                Launcher.with(getActivity(), FutureVersusListActivity.class).execute();
+                Launcher.with(getActivity(), FutureListActivity.class).execute();
+//                Launcher.with(getActivity(), FutureVersusListActivity.class).execute();
             }
 
             @Override
