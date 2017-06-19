@@ -3,6 +3,8 @@ package com.sbai.finance;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.sbai.finance.model.payment.UsablePlatform;
+
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
 
@@ -50,6 +52,9 @@ public class Preference {
 
     private void apply(String key, long value) {
         getEditor().putLong(key, value).apply();
+    }
+    private void apply(String key, int value) {
+        getEditor().putInt(key, value).apply();
     }
 
     public void setForeground(boolean foreground) {
@@ -120,11 +125,11 @@ public class Preference {
         return mPrefs.getLong(Key.AUTHORIZATION_LOGIN_TIME, 0);
     }
 
-    public void setRechargeWay(String way) {
+    public void setRechargeWay(int way) {
         apply(Key.RECHARGE_WAY, way);
     }
 
-    public String getRechargeWay() {
-        return mPrefs.getString(Key.RECHARGE_WAY, "支付宝");
+    public int getRechargeWay() {
+        return mPrefs.getInt(Key.RECHARGE_WAY, UsablePlatform.TYPE_AIL_PAY);
     }
 }

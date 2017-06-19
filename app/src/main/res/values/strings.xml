@@ -98,8 +98,8 @@
     <string name="strategy_buy_sell">策略买卖(暂未开放)</string>
     <string name="firm_offer_open_account">实盘开户(暂未开放)</string>
     <string name="confirm_login">确认登录</string>
-    <string name="crude_oil_future">原油期货宝</string>
-    <string name="quick_trade_offer_by_company">快速交易由“上海幸福网络科技有限公司”提供</string>
+    <string name="crude_oil_future">期货投资宝</string>
+    <string name="quick_trade_offer_by_company">快速交易由“深圳达捷鑫科技有限公司”提供</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>
@@ -165,7 +165,7 @@
     <string name="fans">粉丝</string>
     <string name="my_publish">我的发表</string>
     <string name="economic_circle_news_list">经济圈消息列表</string>
-    <string name="her_publish">TA的发表</string>
+    <string name="his_publish">TA的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
@@ -183,7 +183,7 @@
     <string name="action_product">功能介绍</string>
     <string name="user_protocol">用户协议</string>
     <string name="check_update">检测更新</string>
-    <string name="company">浙江松柏信息技术有限公司 \nCopyright%1$d</string>
+    <string name="company">浙江松柏信息技术有限公司 \nCopyright@%1$d</string>
 
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
@@ -520,6 +520,8 @@
     <string name="ali">支付宝</string>
     <string name="wei_xin">微信</string>
     <string name="next">下一步</string>
+
+    <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
     <string name="card_holder_name_hint">持卡人真实姓名</string>
     <string name="card_holder_identity_card_hint">持卡人身份证号</string>
@@ -529,4 +531,46 @@
     <string name="bank">银行</string>
     <string name="bank_choose">请选择银行</string>
     <string name="phone_number_hint">请输入银行预留手机号码</string>
+    <string name="holder_card_state">持卡人说明</string>
+    <string name="holder_card_state_1">1.为了您的资金安全,只能绑定持卡人本人的银行卡。</string>
+    <string name="holder_card_state_2">2.未成年人禁止交易</string>
+
+    <!--确认充值-->
+    <string name="confirm_recharge">确认充值</string>
+    <string name="deal_money">交易金额: </string>
+    <string name="deal_time">交易时间:</string>
+    <string name="bank_card_">银行卡号:</string>
+    <string name="name_">姓名:</string>
+    <string name="identity_card_">身份证:</string>
+    <string name="phone_">手机号:</string>
+    <string name="auth_code_">验证码:</string>
+    <string name="please_input_auth_code">请输入短信验证码</string>
+    <string name="read_and_agreed">  我已阅读并同意</string>
+    <string name="recharge_service_protocol">《充值服务协议》</string>
+    <string name="unbind">解绑</string>
+    <string name="bank_card_name">%1$s\n</string>
+    <string name="deposit_card">储蓄卡</string>
+    <string name="is_give_up_bind_bank_card">是否放弃绑定银行卡?</string>
+    <string name="un_bind_bank_card_title">解绑银行卡</string>
+    <string name="un_bind_bank_card_hint">为了保障用户信息安全，如需解绑银行卡请点击联系客服</string>
+    <string name="un_bind_bank_card_dialog_confirm">联系客服</string>
+    <string name="text_number">%1$s(%2$s)</string>
+
+    <string name="with_draw">提现</string>
+    <string name="with_draw_hint">工作日两小时到账,具体请看规则></string>
+    <string name="with_draw_bank">到账银行卡%1$s</string>
+    <string name="with_draw_money">提现金额</string>
+    <string name="can_with_draw_money">当前可提现余额:  %1$s元</string>
+    <string name="all_with_draw">全部提现</string>
+    <string name="can_with_poundage">提现手续费:    %1$s元</string>
+    <string name="can_with_rule">提现规则></string>
+    <string name="can_with_rule_content_1">1、用户提现收手续费2元/笔;</string>
+    <string name="can_with_rule_content_2">2、手续费将从提现金额内直接扣除</string>
+    <string name="can_with_rule_content_3">3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
+    <string name="with_draw_details">提现详情</string>
+    <string name="with_draw_check_is_submit">提现审核已提交</string>
+    <string name="complete">完成</string>
+    <string name="REM_HINT">￥</string>
+    <string name="yuan">￥%1$s</string>
+    <string name="please_input_pass">请输入安全密码</string>
 </resources>

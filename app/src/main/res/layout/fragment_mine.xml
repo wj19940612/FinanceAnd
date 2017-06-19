@@ -80,7 +80,7 @@
             android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:textColor="@color/blackAssist"
-            tools:text="关注 \n1220"/>
+            tools:text="1220\n 关注"/>
 
         <View
             android:layout_width="1dp"
@@ -96,7 +96,7 @@
             android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:textColor="@color/blackAssist"
-            tools:text="粉丝 \n12200"/>
+            tools:text="12200\n 粉丝"/>
 
         <View
             android:layout_width="1dp"
@@ -113,7 +113,7 @@
             android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:textColor="@color/blackAssist"
-            tools:text="我的发表 \n1220"/>
+            tools:text="1220\n 我的发表"/>
     </LinearLayout>
 
     <com.sbai.finance.view.IconTextRow

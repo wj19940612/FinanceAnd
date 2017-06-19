@@ -23,6 +23,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.recharge.PayIntentionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.mutual.BorrowDetail;
@@ -33,6 +34,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
 
@@ -40,10 +42,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClickListener {
 
 	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1001;
 
+
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
@@ -74,63 +79,93 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 	private void initViews() {
 		if (LocalUser.getUser().isLogin()) {
 			if (mUserId == LocalUser.getUser().getUserInfo().getId()) {
-				if (mStatus==BorrowDetail.STATUS_WAIT_HELP||mStatus==BorrowDetail.STATUS_ACCEPTY){
-				  mPayIntention.setVisibility(View.VISIBLE);
+				if (mStatus == BorrowDetail.STATUS_WAIT_HELP || mStatus == BorrowDetail.STATUS_ACCEPTY) {
+					mPayIntention.setVisibility(View.VISIBLE);
 				}
 
 				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 						final GoodHeartPeople goodHeartPeople = (GoodHeartPeople) parent.getItemAtPosition(position);
-						mPayIntention.setEnabled(true);
-						mGoodHeartPeopleAdapter.setChecked(position);
-						mGoodHeartPeopleAdapter.notifyDataSetInvalidated();
+						if (mStatus == BorrowDetail.STATUS_WAIT_HELP || mStatus == BorrowDetail.STATUS_ACCEPTY) {
+							mPayIntention.setEnabled(true);
+							mGoodHeartPeopleAdapter.setChecked(position);
+							mGoodHeartPeopleAdapter.notifyDataSetInvalidated();
 
-						mPayIntention.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								SmartDialog.with(getActivity(),
-										getString(R.string.select_help, goodHeartPeople.getUserName()))
-										.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-											@Override
-											public void onClick(final Dialog dialog) {
-												Client.chooseGoodPeople(mDataId, mGoodHeartPeopleList.get(position).getUserId())
-														.setTag(TAG)
-														.setIndeterminate(GoodHeartPeopleActivity.this)
-														.setCallback(new Callback<Resp<JsonPrimitive>>() {
-															@Override
-															protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-																Launcher.with(getActivity(), PayIntentionActivity.class)
-																		.putExtra(Launcher.EX_PAYLOAD, mDataId)
-																		.execute();
-																dialog.dismiss();
-															}
-														}).fire();
-											}
-										})
-										.setMessageTextSize(16)
-										.setMessageTextColor(ContextCompat.getColor(GoodHeartPeopleActivity.this, R.color.blackAssist))
-										.setNegative(R.string.cancel)
-										.show();
+							mPayIntention.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									SmartDialog.with(getActivity(),
+											getString(R.string.select_help, goodHeartPeople.getUserName()))
+											.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+												@Override
+												public void onClick(final Dialog dialog) {
+													Client.chooseGoodPeople(mDataId, mGoodHeartPeopleList.get(position).getUserId())
+															.setTag(TAG)
+															.setIndeterminate(GoodHeartPeopleActivity.this)
+															.setCallback(new Callback<Resp<JsonPrimitive>>() {
+																@Override
+																protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+																	Launcher.with(getActivity(), PayIntentionActivity.class)
+																			.putExtra(Launcher.EX_PAYLOAD, mDataId)
+																			.execute();
+																	dialog.dismiss();
+																}
+															}).fire();
+												}
+											})
+											.setMessageTextSize(16)
+											.setMessageTextColor(ContextCompat.getColor(GoodHeartPeopleActivity.this, R.color.blackAssist))
+											.setNegative(R.string.cancel)
+											.show();
 
-							}
-						});
+								}
+							});
+						} else {
+							mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+								@Override
+								public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+									GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+									Launcher.with(GoodHeartPeopleActivity.this, UserDataActivity.class)
+											.putExtra(Launcher.USER_ID, item.getUserId())
+											.execute();
+								}
+							});
+						}
 					}
 				});
 			} else {
-				mListView.setOnItemClickListener(this);
+				//不是自己跳转至用户详情界面
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+						Launcher.with(GoodHeartPeopleActivity.this, UserDataActivity.class)
+								.putExtra(Launcher.USER_ID, item.getUserId())
+								.execute();
+					}
+				});
 			}
+		} else {
+			//未登入跳转至登陆界面
+			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Launcher.with(GoodHeartPeopleActivity.this, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
+				}
+			});
 		}
 
 		mGoodHeartPeopleAdapter = new GoodHeartPeopleAdapter(this);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mGoodHeartPeopleAdapter);
+		mTitleBar.setOnTitleBarClickListener(this);
 	}
 
 	private void initData(Intent intent) {
 		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
-		mStatus = intent.getIntExtra(Launcher.EX_PAYLOAD_1,-1);
+		mStatus = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 		status = mStatus;
 	}
 
@@ -152,15 +187,8 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
-		if (LocalUser.getUser().isLogin()) {
-			Launcher.with(this, UserDataActivity.class)
-					.putExtra(Launcher.USER_ID, item.getUserId())
-					.execute();
-		} else {
-			Launcher.with(this, LoginActivity.class).executeForResult(REQ_WANT_HELP_HIM_OR_YOU);
-		}
+	public void onClick(View v) {
+		mListView.smoothScrollToPosition(0);
 	}
 
 	static class GoodHeartPeopleAdapter extends ArrayAdapter<GoodHeartPeople> {
@@ -225,9 +253,9 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 
 				if (LocalUser.getUser().isLogin()) {
 					if (mUserId == LocalUser.getUser().getUserInfo().getId()
-							&&(status==BorrowDetail.STATUS_WAIT_HELP||status==BorrowDetail.STATUS_ACCEPTY)) {
+							&& (status == BorrowDetail.STATUS_WAIT_HELP || status == BorrowDetail.STATUS_ACCEPTY)) {
 						mCheckboxClick.setVisibility(View.VISIBLE);
-					}else {
+					} else {
 						mCheckboxClick.setVisibility(View.INVISIBLE);
 					}
 				} else {
@@ -288,6 +316,17 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 
 							}
 						});
+					}
+				});
+			} else {
+				//不是自己,跳转至用户详情界面
+				mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						GoodHeartPeople item = (GoodHeartPeople) parent.getItemAtPosition(position);
+						Launcher.with(GoodHeartPeopleActivity.this, UserDataActivity.class)
+								.putExtra(Launcher.USER_ID, item.getUserId())
+								.execute();
 					}
 				});
 			}
