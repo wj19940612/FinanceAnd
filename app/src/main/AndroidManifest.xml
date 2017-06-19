@@ -280,7 +280,10 @@
         <activity android:name=".activity.mine.wallet.WithDrawDetailsActivity">
         </activity>
 
-        <!--versus-->
+        <!-- 期货大战-->
+        <activity
+            android:name=".activity.future.FutureBattleActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.recharge.FutureVersusListActivity"
                   android:screenOrientation="portrait"/>
     </application>
