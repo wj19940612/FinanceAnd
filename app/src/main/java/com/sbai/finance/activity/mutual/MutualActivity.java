@@ -97,7 +97,6 @@ public class MutualActivity extends BaseActivity {
     @OnClick(R.id.publish)
     public void onClick(View view) {
         Launcher.with(getActivity(), BorrowActivity.class).execute();
-        finish();
     }
 
     static class MutualPagesAdapter extends FragmentPagerAdapter {

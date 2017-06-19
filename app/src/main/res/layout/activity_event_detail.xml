@@ -45,15 +45,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/split">
+        android:background="@color/background">
         <WebView
             android:id="@+id/webView"
+            android:background="@color/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/progress"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
-
         <ProgressBar
             android:id="@+id/progress"
             style="@android:style/Widget.ProgressBar.Horizontal"

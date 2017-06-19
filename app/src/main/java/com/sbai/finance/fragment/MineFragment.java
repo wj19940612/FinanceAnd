@@ -193,11 +193,11 @@ public class MineFragment extends BaseFragment {
         } else {
             mUserName.setText(R.string.login);
             int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n-", 1.3f, color);
+            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor("-", "\n" + getString(R.string.attention), color);
             mAttention.setText(attentionSpannableString);
-            SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n-", 1.3f, color);
+            SpannableString fansSpannableString = StrUtil.mergeTextWithColor("-", "\n" + getString(R.string.fans), color);
             mFans.setText(fansSpannableString);
-            SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n-", 1.3f, color);
+            SpannableString minePublishSpannableString = StrUtil.mergeTextWithColor("-", "\n" + getString(R.string.my_publish), color);
             mMinePublish.setText(minePublishSpannableString);
         }
     }
@@ -314,11 +314,11 @@ public class MineFragment extends BaseFragment {
         if (data == null)
             data = new AttentionAndFansNumberModel();
         int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.attention), "\n" + data.getAttention(), 1f, color);
+        SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(data.getAttention() + "", "\n" + getString(R.string.attention), color);
         mAttention.setText(attentionSpannableString);
-        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.fans), "\n" + data.getFollower(), 1f, color);
+        SpannableString fansSpannableString = StrUtil.mergeTextWithColor(data.getFollower() + "", "\n" + getString(R.string.fans), color);
         mFans.setText(fansSpannableString);
-        SpannableString minePublishSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.my_publish), "\n" + data.getViewpoint(), 1f, color);
+        SpannableString minePublishSpannableString = StrUtil.mergeTextWithColor(data.getViewpoint() + "", "\n" + getString(R.string.my_publish), color);
         mMinePublish.setText(minePublishSpannableString);
     }
 

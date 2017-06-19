@@ -6,111 +6,130 @@ package com.sbai.finance.model.payment;
 
 public class UsablePlatform {
 
-	/**
-	 * createTime : 1494402852000
-	 * id : 24
-	 * name : 钱通支付宝
-	 * payment : 1
-	 * platform : qtalipay
-	 * status : 1
-	 * transfer : 0
-	 * updateTime : 1494564420000
-	 */
+    public static final int TYPE_AIL_PAY = 1;
+    public static final int TYPE_WECHAT_PAY = 2;
+    public static final int TYPE_BANK_PAY = 3;
 
-	private long createTime;
-	private int id;
-	private String name;
-	private int payment;
-	private String platform;
-	private int status;
-	private int transfer;
-	private long updateTime;
-	private int type;
+    /**
+     * createTime : 1494402852000
+     * id : 24
+     * name : 钱通支付宝
+     * payment : 1
+     * platform : qtalipay
+     * status : 1
+     * transfer : 0
+     * updateTime : 1494564420000
+     */
 
-	public int getType() {
-		return type;
-	}
+//	data=[UsablePlatform{createTime=0, id=0, name='支付宝支付', payment=0, platform='qtalipay', status=1, transfer=0, updateTime=0, type=1},
+// UsablePlatform{createTime=0, id=0, name='微信支付', payment=0, platform='qtwxscan', status=1, transfer=0, updateTime=0, type=2},
+// UsablePlatform{createTime=0, id=0, name='银行卡支付', payment=0, platform='qtbankcardpay', status=1, transfer=0, updateTime=0, type=3}]}
 
-	public void setType(int type) {
-		this.type = type;
-	}
 
-	public long getCreateTime() {
-		return createTime;
-	}
+    private long createTime;
+    private int id;
+    private String name;
+    private int payment;
+    private String platform;
+    private int status;
+    private int transfer;
+    private long updateTime;
+    //1 支付宝
+    private int type;
 
-	public void setCreateTime(long createTime) {
-		this.createTime = createTime;
-	}
+    //目前是支付宝
+    public boolean isDeafultPay() {
+        return TYPE_AIL_PAY == getType();
+    }
 
-	public int getId() {
-		return id;
-	}
+    public boolean isBankPay() {
+        return getType() == TYPE_BANK_PAY;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setType(int type) {
+        this.type = type;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public long getCreateTime() {
+        return createTime;
+    }
 
-	public int getPayment() {
-		return payment;
-	}
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
 
-	public void setPayment(int payment) {
-		this.payment = payment;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getPlatform() {
-		return platform;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getStatus() {
-		return status;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+    public int getPayment() {
+        return payment;
+    }
 
-	public int getTransfer() {
-		return transfer;
-	}
+    public void setPayment(int payment) {
+        this.payment = payment;
+    }
 
-	public void setTransfer(int transfer) {
-		this.transfer = transfer;
-	}
+    public String getPlatform() {
+        return platform;
+    }
 
-	public long getUpdateTime() {
-		return updateTime;
-	}
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
 
-	public void setUpdateTime(long updateTime) {
-		this.updateTime = updateTime;
-	}
+    public int getStatus() {
+        return status;
+    }
 
-	@Override
-	public String toString() {
-		return "UsablePlatform{" +
-				"createTime=" + createTime +
-				", id=" + id +
-				", name='" + name + '\'' +
-				", payment=" + payment +
-				", platform='" + platform + '\'' +
-				", status=" + status +
-				", transfer=" + transfer +
-				", updateTime=" + updateTime +
-				", type=" + type +
-				'}';
-	}
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getTransfer() {
+        return transfer;
+    }
+
+    public void setTransfer(int transfer) {
+        this.transfer = transfer;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "UsablePlatform{" +
+                "createTime=" + createTime +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", payment=" + payment +
+                ", platform='" + platform + '\'' +
+                ", status=" + status +
+                ", transfer=" + transfer +
+                ", updateTime=" + updateTime +
+                ", type=" + type +
+                '}';
+    }
 }

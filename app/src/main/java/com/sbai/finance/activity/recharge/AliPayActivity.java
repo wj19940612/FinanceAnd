@@ -1,6 +1,7 @@
-package com.sbai.finance.activity.economiccircle;
+package com.sbai.finance.activity.recharge;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -71,11 +72,12 @@ public class AliPayActivity extends BaseActivity {
 						.setCallback(new Callback<Resp<JsonPrimitive>>() {
 							@Override
 							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								Launcher.with(AliPayActivity.this, BorrowDetailsActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, mDataId)
-										.putExtra(Launcher.EX_PAYLOAD_1,mDataId)
-										.execute();
-								finish();
+								    Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
+//									intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+								    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//								    intent.putExtra(Launcher.EX_PAYLOAD, mDataId);
+									startActivity(intent);
 							}
 						}).fire();
 				break;

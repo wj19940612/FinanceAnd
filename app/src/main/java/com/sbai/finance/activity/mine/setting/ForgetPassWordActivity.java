@@ -116,7 +116,7 @@ public class ForgetPassWordActivity extends BaseActivity {
     }
 
     private void getAuthCodeForPass() {
-        Client.sendMsgCodeForPassWord(LocalUser.getUser().getPhone())
+        Client.sendMsgCodeForPassWordOrBankCardPay(LocalUser.getUser().getPhone())
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override

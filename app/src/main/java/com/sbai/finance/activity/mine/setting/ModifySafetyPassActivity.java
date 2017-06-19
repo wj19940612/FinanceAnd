@@ -43,6 +43,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     private String mAuthCode;
     private boolean mIsForgetPass;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,15 +176,20 @@ public class ModifySafetyPassActivity extends BaseActivity {
                             R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
                             .show();
                     mSafetyPasswordNumber.clearSafetyNumber();
+
                 }
             } else if (mPasswordInputCount == 2) {
                 if (mNewPassWord.equalsIgnoreCase(passWord)) {
                     confirmNewPassword(mNewPassWord);
                 } else {
-                    SmartDialog.with(ModifySafetyPassActivity.this,
-                            R.string.twice_password_is_different, R.string.modify_fail)
-                            .show();
+//                    SmartDialog.with(ModifySafetyPassActivity.this,
+//                            R.string.twice_password_is_different, R.string.modify_fail)
+//                            .show();
                     mSafetyPasswordNumber.clearSafetyNumber();
+                    mPasswordHint.setVisibility(View.VISIBLE);
+                    mPasswordHint.setText(R.string.twice_pass_is_different);
+                    mSafetyPasswordHint.setText(R.string.please_input_new_password);
+                    mPasswordInputCount = 1;
                 }
             }
         }
