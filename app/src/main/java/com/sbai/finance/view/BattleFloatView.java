@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 
 import butterknife.BindView;
@@ -148,29 +149,71 @@ public class BattleFloatView extends RelativeLayout {
      * 显示对抗状态条
      *
      * @param myProfit      我的盈利状况
-     * @param fighterProfit 对抗者盈利状况 可以为null
+     * @param fighterProfit 对抗者盈利状况
+     * @param  isInviting 是否正在邀请中
      * @return
      */
-    public BattleFloatView setProgress(double myProfit, Double fighterProfit) {
-        // TODO: 2017/6/19 设置比例逻辑没写
+    public BattleFloatView setProgress(double myProfit, double fighterProfit,boolean isInviting) {
+        if (isInviting) {
+            mProgressBar.setProgress(0);
+            mProgressBar.setSecondaryProgress(0);
+        }else {
+            //正正
+            if ((myProfit > 0 && fighterProfit >= 0) || (myProfit >= 0 && fighterProfit > 0)) {
+                int progress = (int) (myProfit * 100 / (myProfit + fighterProfit));
+                mProgressBar.setProgress(progress);
+            }
+            //正负
+            if (myProfit >= 0 && fighterProfit < 0) {
+                mProgressBar.setProgress(100);
+            }
+            //负正
+            if (myProfit < 0 && fighterProfit >= 0) {
+                mProgressBar.setProgress(0);
+            }
+            //负负
+            if (myProfit < 0 && fighterProfit < 0) {
+                int progress = (int) (Math.abs(myProfit) * 100 / (Math.abs(myProfit) + Math.abs(fighterProfit)));
+                mProgressBar.setProgress(100 - progress);
+            }
+            //都为0
+            if (myProfit == 0 && fighterProfit == 0) {
+                mProgressBar.setProgress(50);
+            }
+
+            mMyProfit.setText(String.valueOf(FinanceUtil.accurateToFloat(myProfit)));
+            mUserProfit.setText(String.valueOf(FinanceUtil.accurateToFloat(fighterProfit)));
+
+        }
         return this;
     }
 
     /**
      * 显示对战信息
-     *
-     * @param coinType   对战类型 1现金 2元宝 3积分
-     * @param gameStatus 对战状态
-     * @param endtime    对战时长 1匹配中  2对战中  3结束
+     * @param reward     赏金
+     * @param coinType   对战类型  2元宝 3积分
+     * @param gameStatus 对战状态 1匹配中  2对战中  3结束
+     * @param endtime    对战时长
      * @return
      */
-    public BattleFloatView setDepositAndTime(int coinType, int gameStatus, String endtime) {
+    public BattleFloatView setDepositAndTime(int reward, int coinType, int gameStatus, String endtime) {
         // TODO: 2017/6/19 显示逻辑没写
+        StringBuilder builder = new StringBuilder();
+        builder.append(reward);
+        builder.append(coinType == 2 ? "元宝" : "积分");
+        builder.append("    ");
+        if (gameStatus == 1) {
+            builder.append(endtime);
+        }
+        builder.append(gameStatus == 2 ? "2对战中" : "结束");
+        mDepositAndTime.setText(builder.toString());
         return this;
     }
 
 
     public BattleFloatView setPraise(int myPraiseCount, int fighterPraiseCount) {
+        String myPraiseNumber = myPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(myPraiseCount);
+        String fighterPraiseNumber = fighterPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(fighterPraiseCount);
         if (mMode == Mode.GAMEHALL) {
             //如果是游戏大厅 不显示赞信息
             mMyPerspective.setVisibility(GONE);
@@ -179,14 +222,14 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraiseButton.setText(String.valueOf(myPraiseCount));
-            mUserPraiseButton.setText(String.valueOf(fighterPraiseCount));
+            mMyPraiseButton.setText(String.valueOf(myPraiseNumber));
+            mUserPraiseButton.setText(String.valueOf(fighterPraiseNumber));
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
             mUserPerspective.setVisibility(VISIBLE);
-            mMyPraise.setText(String.valueOf(myPraiseCount));
-            mUserPraise.setText(String.valueOf(fighterPraiseCount));
+            mMyPraise.setText(String.valueOf(myPraiseNumber));
+            mUserPraise.setText(String.valueOf(fighterPraiseNumber));
         }
         return this;
     }
