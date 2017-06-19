@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.wallet;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
@@ -20,6 +21,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
@@ -123,25 +125,7 @@ public class WalletActivity extends BaseActivity {
                                 if (!data) {
                                     Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).executeForResult(REQ_CODE_ADD_SAFETY_PASS);
                                 } else {
-                                    Client.requestUserBankCardInfo()
-                                            .setTag(TAG)
-                                            .setIndeterminate(WalletActivity.this)
-                                            .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
-                                                @Override
-                                                protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
-                                                    if (resp.isSuccess()) {
-                                                        if (resp.hasData()) {
-                                                            mUserBankCardInfoModel = resp.getData().get(0);
-                                                            Launcher.with(getActivity(), WithDrawActivity.class).putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel).execute();
-                                                        } else {
-                                                            Launcher.with(getActivity(), BindBankCardActivity.class)
-                                                                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                                                    .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
-                                                        }
-                                                    }
-                                                }
-                                            })
-                                            .fire();
+                                    openWithDrawPage();
                                 }
                             }
                         })
@@ -173,14 +157,58 @@ public class WalletActivity extends BaseActivity {
         }
     }
 
+    private void showOpenBindCardDialog() {
+        SmartDialog.with(getActivity(), R.string.you_not_bind_bank_card)
+                .setPositive(R.string.go_to_bind_card, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(getActivity(), BindBankCardActivity.class)
+                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
+                    }
+                })
+                .show();
+    }
+
+    private void openWithDrawPage() {
+        Client.requestUserBankCardInfo()
+                .setTag(TAG)
+                .setIndeterminate(WalletActivity.this)
+                .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
+                        if (resp.isSuccess()) {
+                            if (resp.hasData()) {
+                                mUserBankCardInfoModel = resp.getData().get(0);
+                                Launcher.with(getActivity(), WithDrawActivity.class)
+                                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                        .putExtra(Launcher.EX_PAYLOAD, mUserFundInfoModel.getMoney())
+                                        .execute();
+                            } else {
+                                showOpenBindCardDialog();
+                            }
+                        }
+                    }
+                })
+                .fire();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //提现绑定银行卡后回调
-        if (requestCode == REQ_CODE_ADD_SAFETY_PASS && resultCode == RESULT_OK) {
-            mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-            if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.hasBindBank()) {
-                Launcher.with(getActivity(), WithDrawActivity.class).putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel).execute();
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                //添加安全密码后回调
+                case REQ_CODE_ADD_SAFETY_PASS:
+                    openWithDrawPage();
+                    break;
+                case BindBankCardActivity.REQ_CODE_BIND_CARD:
+                    mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                    if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.hasBindBank()) {
+                        Launcher.with(getActivity(), WithDrawActivity.class).putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel).execute();
+                    }
+                    break;
             }
         }
     }

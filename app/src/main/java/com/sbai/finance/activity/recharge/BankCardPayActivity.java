@@ -8,19 +8,23 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
+import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -54,6 +58,10 @@ public class BankCardPayActivity extends BaseActivity {
     TextView mServiceProtocol;
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
+    @BindView(R.id.showLayout)
+    LinearLayout mShowLayout;
+    @BindView(R.id.hideLayout)
+    LinearLayout mHideLayout;
 
     private int mCounter;
     //获取验证是否开始
@@ -61,6 +69,8 @@ public class BankCardPayActivity extends BaseActivity {
     private PaymentPath mPaymentPath;
     private UserBankCardInfoModel mUserBankCardInfoModel;
     private String mMoney;
+    private KeyBoardHelper mKeyBoardHelper;
+    private int bottomHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +84,9 @@ public class BankCardPayActivity extends BaseActivity {
             }
         });
         mAuthCode.addTextChangedListener(mValidationWatcher);
+        setKeyboardHelper();
         mPaymentPath = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-        mMoney = getIntent().getStringExtra(Launcher.EX_PAYLOAD_1);
-        mDealMoney.setText(getString(R.string.RMB, mMoney));
         if (mUserBankCardInfoModel != null) {
             String cardNumber = mUserBankCardInfoModel.getCardNumber();
             mBankCard.setText(getString(R.string.text_number, mUserBankCardInfoModel.getIssuingBankName(), cardNumber.substring(cardNumber.length() - 4)));
@@ -87,9 +96,51 @@ public class BankCardPayActivity extends BaseActivity {
         }
         if (mPaymentPath != null) {
             mDealTime.setText(DateUtil.format(mPaymentPath.getTime(), DateUtil.DEFAULT_FORMAT));
+            mDealMoney.setText(getString(R.string.RMB, String.valueOf(mPaymentPath.getMoney())));
         }
     }
 
+
+    private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
+
+        @Override
+        public void OnKeyBoardPop(int keyboardHeight) {
+            if (bottomHeight < keyboardHeight) {
+                int offset = bottomHeight - keyboardHeight;
+                final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
+                        .getLayoutParams();
+                lp.topMargin = offset;
+                mShowLayout.setLayoutParams(lp);
+            }
+
+        }
+
+        @Override
+        public void OnKeyBoardClose(int oldKeyboardHeight) {
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mShowLayout
+                    .getLayoutParams();
+            if (lp.topMargin != 0) {
+                lp.topMargin = 0;
+                mShowLayout.setLayoutParams(lp);
+            }
+
+        }
+    };
+
+    /**
+     * 设置对键盘高度的监听
+     */
+    private void setKeyboardHelper() {
+        mKeyBoardHelper = new KeyBoardHelper(this);
+        mKeyBoardHelper.onCreate();
+        mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
+        mHideLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                bottomHeight = mHideLayout.getHeight();
+            }
+        });
+    }
 
     private String formatUserName(String userName) {
         int length = userName.length();
@@ -121,13 +172,14 @@ public class BankCardPayActivity extends BaseActivity {
     };
 
     private boolean checkSubmitEnable() {
-        return TextUtils.isEmpty(mAuthCode.getText().toString()) && mAgreeProtocol.isChecked() && !mFreezeObtainAuthCode;
+        return !TextUtils.isEmpty(mAuthCode.getText().toString()) && mAgreeProtocol.isChecked() && !mFreezeObtainAuthCode;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mAuthCode.removeTextChangedListener(mValidationWatcher);
+        mKeyBoardHelper.onDestroy();
     }
 
     @OnClick({R.id.getAuthCode, R.id.submitRechargeInfo, R.id.serviceProtocol})
@@ -146,7 +198,8 @@ public class BankCardPayActivity extends BaseActivity {
 
     private void recharge() {
         String authCode = mAuthCode.getText().toString().trim();
-        Client.confirmBankPay(mPaymentPath.getThridOrderId(), authCode)
+        Client.confirmBankPay(mPaymentPath.getMerchantOrderId(), authCode)
+                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -160,22 +213,21 @@ public class BankCardPayActivity extends BaseActivity {
 
     private void getBankPayAuthCode() {
         if (mUserBankCardInfoModel != null) {
-            Client.sendMsgCodeForPassWordOrBankCardPay(mUserBankCardInfoModel.getCardPhone())
-                    .setTag(TAG)
+            Client.submitRechargeData(mPaymentPath.getPlatform(), String.valueOf(mPaymentPath.getMoney()), mUserBankCardInfoModel.getId())
                     .setIndeterminate(this)
-                    .setCallback(new Callback<Resp<JsonObject>>() {
+                    .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
-                        protected void onRespSuccess(Resp<JsonObject> resp) {
-                            if (resp.isSuccess()) {
-                                mFreezeObtainAuthCode = true;
-                                startScheduleJob(1000);
-                                mCounter = 60;
-                                mGetAuthCode.setEnabled(false);
-                                mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
-                            }
+                        protected void onRespSuccessData(PaymentPath data) {
+                            mPaymentPath = data;
+                            mFreezeObtainAuthCode = true;
+                            startScheduleJob(1000);
+                            mCounter = 60;
+                            mGetAuthCode.setEnabled(false);
+                            mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
                         }
                     })
                     .fire();
+
         }
     }
 

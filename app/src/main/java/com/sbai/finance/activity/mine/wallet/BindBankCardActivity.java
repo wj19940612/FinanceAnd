@@ -105,7 +105,7 @@ public class BindBankCardActivity extends BaseActivity {
             mBankCardLayout.setVisibility(View.VISIBLE);
             SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.bank_card_name, mUserBankCardInfoModel.getIssuingBankName()), getString(R.string.deposit_card), 0.8f);
             mBindBankName.setText(spannableString);
-            mBindBankCard.setText(mUserBankCardInfoModel.getIssuingBankName().substring(mUserBankCardInfoModel.getIssuingBankName().length() - 4));
+            mBindBankCard.setText(mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4));
 
         } else {
             mAddBackLayout.setVisibility(View.VISIBLE);
@@ -251,22 +251,24 @@ public class BindBankCardActivity extends BaseActivity {
         mUserBankCardInfoModel.setIssuingBankName(bank);
         mUserBankCardInfoModel.setCardPhone(phoneNumber);
         mUserBankCardInfoModel.setIdCard(identityCard);
-//        mUserBankCardInfoModel.setBankId(mCanUseBankListModel.getId());
-
-        Log.d(TAG, "提交的银行卡信息: " + mUserBankCardInfoModel.toString() + "  name " + name + " bankCardNumber ");
-
         Client.bindBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mCanUseBankListModel.getId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<Object>>() {
+                .setCallback(new Callback<Resp<Integer>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
+                    protected void onRespSuccess(Resp<Integer> resp) {
                         Log.d(TAG, "onRespSuccess: " + resp.toString());
-                        Intent intent = new Intent();
-                        intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                        Log.d(TAG, "onRespSuccess:  " + resp.toString());
+                        if (resp.isSuccess()) {
+                            if (resp.hasData()) {
+                                mUserBankCardInfoModel.setBankId(resp.getData());
+                            }
+
+                            Intent intent = new Intent();
+                            intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                            Log.d(TAG, "onRespSuccess:  " + resp.toString());
+                        }
                     }
                 })
                 .fire();

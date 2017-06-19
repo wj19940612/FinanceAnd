@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.setting;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
@@ -54,6 +55,9 @@ public class ModifySafetyPassActivity extends BaseActivity {
         mAuthCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
         mIsForgetPass = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_3, false);
         mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH) {
+            mSafetyPasswordNumber.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         if (!mHasPassword) {
             mTitleBar.setTitle(R.string.add_safety_pass);
@@ -114,9 +118,9 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 mSafetyPasswordNumber.clearSafetyNumber();
             } else if (mPasswordInputCount == 1) {
                 if (!password.equalsIgnoreCase(mNewPassWord)) {
+                    mSafetyPasswordNumber.clearSafetyNumber();
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
-                    mSafetyPasswordNumber.clearSafetyNumber();
                 } else {
                     Client.submitSetPassword(password)
                             .setTag(TAG)
@@ -172,10 +176,14 @@ public class ModifySafetyPassActivity extends BaseActivity {
                     mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
                     mSafetyPasswordNumber.clearSafetyNumber();
                 } else {
-                    SmartDialog.with(ModifySafetyPassActivity.this,
-                            R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
-                            .show();
+//                    SmartDialog.with(ModifySafetyPassActivity.this,
+//                            R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
+//                            .show();
+                    mSafetyPasswordHint.setText(R.string.please_input_new_password);
+                    mPasswordInputCount = 1;
                     mSafetyPasswordNumber.clearSafetyNumber();
+                    mPasswordHint.setText(R.string.new_password_is_same_as_old_pass);
+                    mPasswordHint.setVisibility(View.VISIBLE);
 
                 }
             } else if (mPasswordInputCount == 2) {
@@ -211,7 +219,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                         }
                     }
                 })
-                .fireSync();
+                .fire();
     }
 
     private boolean isSameNewPasswordAndOldPass(String oldPassword, String newPassWord) {

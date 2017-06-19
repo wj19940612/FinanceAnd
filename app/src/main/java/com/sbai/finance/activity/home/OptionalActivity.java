@@ -388,7 +388,7 @@ public class OptionalActivity extends BaseActivity implements
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                         mLastPrice.setText("--");
                         mRate.setSelected(true);
-                        mRate.setText("--.--%");
+                        mRate.setText("--");
                     }
                 }
             }

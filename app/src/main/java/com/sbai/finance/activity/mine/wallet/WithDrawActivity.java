@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
@@ -56,7 +58,9 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     private int mMoney;
 
     private String mPassWord;
-    private int mWithDrawRuleRes [];
+    private int mWithDrawRuleRes[];
+    //手续费
+    private double mPoundage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,11 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
 
         requestWithDrawPoundage();
+
+        if (Preference.get().isFirstWithDraw()) {
+            showWithDrawRuleDialog();
+            Preference.get().setIsFirstWithDraw(false);
+        }
     }
 
     private void requestWithDrawPoundage() {
@@ -82,6 +91,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 .setCallback(new Callback2D<Resp<Double>, Double>() {
                     @Override
                     protected void onRespSuccessData(Double data) {
+                        mPoundage = data;
                         mCanWithPoundage.setText(getString(R.string.can_with_poundage, FinanceUtil.formatWithScale(data)));
                     }
                 })
@@ -124,6 +134,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 InputSafetyPassDialogFragment.newInstance(mWithdrawMoney.getText().toString()).show(getSupportFragmentManager());
                 break;
             case R.id.connect_service:
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }
     }
@@ -147,6 +158,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                                 Launcher.with(getActivity(), WithDrawDetailsActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel)
                                         .putExtra(Launcher.EX_PAY_END, mWithdrawMoney.getText().toString())
+                                        .putExtra(Launcher.EX_PAYLOAD_1, mPoundage)
                                         .execute();
                                 finish();
                             }

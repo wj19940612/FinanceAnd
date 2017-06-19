@@ -110,7 +110,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     @Override
     protected void onResume() {
         super.onResume();
-        startScheduleJob(1000);
+        startScheduleJob(5*1000);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockData(data);
                         requestStockMarketData(data);
-                        startScheduleJob(1000);
+                        startScheduleJob(5*1000);
                     }
                 }).fireSync();
     }
@@ -416,7 +416,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                     mLastPrice.setText("--");
                     mRate.setSelected(true);
-                    mRate.setText("--.--%");
+                    mRate.setText("--");
                 }
             }
         }
