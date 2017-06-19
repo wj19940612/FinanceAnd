@@ -87,6 +87,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         setCameraParams(mCamera, mScreenWidth, mScreenHeight);
         mCamera.startPreview();
+        Log.d("wangjie", "surfaceChanged: ");
     }
 
     @Override
@@ -94,7 +95,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         mCamera.stopPreview();//停止预览
         mCamera.release();//释放相机资源
         mCamera = null;
-//        mHolder.removeCallback(this);
+        mHolder.removeCallback(this);
         mHolder = null;
     }
 
@@ -175,6 +176,9 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         setCameraParams(mCamera, mScreenWidth, mScreenHeight);
         // 当调用camera.takePiture方法后，camera关闭了预览，这时需要调用startPreview()来重新开启预览
         mCamera.takePicture(null, null, mPictureCallback);
+//        mCamera.stopPreview();//停止预览
+//        mCamera.release();//释放相机资源
+
     }
 
     private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
@@ -201,6 +205,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
                         mOnImageListener.onImage(file.getAbsolutePath());
                     }
                 }
+                mCamera.stopPreview();//停止预览
             }
         }
     };
