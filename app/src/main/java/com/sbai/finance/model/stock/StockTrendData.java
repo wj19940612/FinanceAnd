@@ -1,40 +1,25 @@
 package com.sbai.finance.model.stock;
 
+import com.sbai.finance.utils.DateUtil;
+
 public class StockTrendData {
 
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     private String nowVolume;
-    private String closePrice;
+    private String closePrice; // 最新价
     private String time;
 
-    private String business_amount;
-    private String last_price;
-
-    // extra local value
-    private long businessVolume;
-
-
-    public String getNowVolume() {
-        return nowVolume;
-    }
-
-    public void setNowVolume(String nowVolume) {
-        this.nowVolume = nowVolume;
-    }
-
-    public String getClosePrice() {
-        return closePrice;
-    }
-
-    public void setClosePrice(String closePrice) {
-        this.closePrice = closePrice;
-    }
-
-    public long getNow_Volume(){
+    public long getNowVolume() {
         return Long.valueOf(nowVolume).longValue();
     }
 
-    public float getClose_Price(){
+    public float getClosePrice(){
         return Float.valueOf(closePrice).floatValue();
+    }
+
+    public String getRawClosePrice() {
+        return closePrice;
     }
 
     public String getTime() {
@@ -45,18 +30,12 @@ public class StockTrendData {
         this.time = time;
     }
 
-    public long getBusinessVolume() {
-        return businessVolume;
-    }
-
-    public void setBusinessVolume(long businessVolume) {
-        this.businessVolume = businessVolume;
-    }
-
-
-
     public boolean isSameData(StockTrendData unstableData) {
         return nowVolume.equals(unstableData.getNowVolume())
-                && closePrice.equals(unstableData.getClosePrice());
+                && closePrice.equals(unstableData.getRawClosePrice());
+    }
+
+    public String getHHmm() {
+        return DateUtil.format(time, DATE_FORMAT, "HH:mm");
     }
 }

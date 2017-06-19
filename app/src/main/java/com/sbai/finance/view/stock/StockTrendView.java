@@ -14,11 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.chart.ChartSettings;
+import com.sbai.chart.TrendView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -123,13 +125,27 @@ public class StockTrendView extends LinearLayout {
         //mTwinkleView.setSettings(settings);
     }
 
-    public ChartSettings getSettings() {
+    public Settings getSettings() {
         return mTrendView.getSettings();
     }
 
     public void setDataList(List<StockTrendData> dataList) {
+        filterInvalidData(dataList);
         mTrendView.setDataList(dataList);
         //mTwinkleView.setDataList(dataList);
+    }
+
+    private void filterInvalidData(List<StockTrendData> dataList) {
+        if (dataList != null) {
+            String[] openMarketTimes = getSettings().getOpenMarketTimes();
+            Iterator<StockTrendData> iterator = dataList.iterator();
+            while (iterator.hasNext()) {
+                StockTrendData data = iterator.next();
+                if (!TrendView.Util.isValidDate(data.getHHmm(), openMarketTimes)) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     public void setUnstableData(StockTrendData unstableData) {
@@ -197,6 +213,8 @@ public class StockTrendView extends LinearLayout {
 
         private String mOpenMarketTimes;
         private String mDisplayMarketTimes;
+        private boolean mCalculateXAxisFromOpenMarketTime;
+        private boolean mXAxisRefresh;
 
         public void setOpenMarketTimes(String openMarketTimes) {
             mOpenMarketTimes = openMarketTimes;
@@ -222,5 +240,29 @@ public class StockTrendView extends LinearLayout {
             return result;
         }
 
+        public void setCalculateXAxisFromOpenMarketTime(boolean value) {
+            mCalculateXAxisFromOpenMarketTime = value;
+            mXAxisRefresh = true;
+        }
+
+        @Override
+        public int getXAxis() {
+            if (mCalculateXAxisFromOpenMarketTime) {
+                if (mXAxisRefresh) {
+                    String[] openMarketTime = getOpenMarketTimes();
+                    int size = openMarketTime.length % 2 == 0 ?
+                            openMarketTime.length : openMarketTime.length - 1;
+                    int xAxis = 0;
+                    for (int i = 0; i < size; i += 2) {
+                        xAxis += TrendView.Util.getDiffMinutes(openMarketTime[i], openMarketTime[i + 1]);
+                    }
+                    setXAxis(xAxis - 1);
+                    mXAxisRefresh = false;
+
+                }
+                return super.getXAxis();
+            }
+            return super.getXAxis();
+        }
     }
 }

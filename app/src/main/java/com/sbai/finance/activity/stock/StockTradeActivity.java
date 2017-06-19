@@ -309,28 +309,9 @@ public abstract class StockTradeActivity extends BaseActivity {
         }
     }
 
-
-//    private void requestStockRTData() {
-//        Client.getStockRealtimeData(mVariety.getVarietyType())
-//                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
-//                    @Override
-//                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
-//                        if (!result.isEmpty()) {
-//                            mStockRTData = result.get(0);
-//                            updateStockTrendView();
-//                        }
-//                        updateMarketDataView();
-//                    }
-//                }).fireSync();
-//    }
-
-    /**
-     * 新实时接口替换
-     */
     private void requestStockRTData(){
         Client.getStockRealtimeData(mVariety.getVarietyType())
                 .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
-
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
                         if (result != null) {
@@ -426,9 +407,9 @@ public abstract class StockTradeActivity extends BaseActivity {
         settings.setNumberScale(2);
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
-        settings.setXAxis(240);
-//        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
-//        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setOpenMarketTimes("09:30;11:30;13:00;15:00");
+        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setCalculateXAxisFromOpenMarketTime(true);
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
@@ -443,32 +424,12 @@ public abstract class StockTradeActivity extends BaseActivity {
         mStockKlineView.setOnAchieveTheLastListener(null);
     }
 
-    /**
-     * 过时的分时接口
-     */
-//    private void requestStockTrendDataAndSet() {
-//        Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-//                .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
-//                    @Override
-//                    public void onDataMsg(List<StockTrendData> result, StockResp.Msg msg) {
-//                        if (!result.isEmpty()) {
-//                            result.remove(0); // 第一条数据为集合竞价的数据
-//                            mStockTrendView.setDataList(result);
-//                        }
-//                    }
-//                }).fireSync();
-//    }
-
-    /**
-     * 新分时接口
-     */
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockTrendData>>,List<StockTrendData>>() {
                     @Override
                     protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {
-                            result.remove(0); // 第一条数据为集合竞价的数据
                             mStockTrendView.setDataList(result);
                         }
                     }

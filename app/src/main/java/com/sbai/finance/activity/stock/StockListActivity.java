@@ -152,27 +152,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 }).fireSync();
     }
 
-//    private void requestStockMarketData(List<Variety> data) {
-//        if (data.isEmpty()) return;
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for (Variety variety : data) {
-//            stringBuilder.append(variety.getVarietyType()).append(",");
-//        }
-//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-//        Client.getStockMarketData(stringBuilder.toString())
-//                .setCallback(new StockCallback<StockResp, List<StockData>>() {
-//                    @Override
-//                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
-//                        mStockListAdapter.addStockData(result);
-//                    }
-//                }).fireSync();
-//    }
-
-
-    /**
-     * 新的批量股票接口
-     * @param data
-     */
     private void requestStockMarketData(List<Variety> data) {
         if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
@@ -189,27 +168,6 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 }).fireSync();
     }
 
-//    private void requestStockIndexMarketData(List<Variety> data) {
-//        if (data == null || data.isEmpty()) return;
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for (Variety variety : data) {
-//            stringBuilder.append(variety.getVarietyType()).append(",");
-//        }
-//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-//        Client.getStockMarketData(stringBuilder.toString())
-//                .setCallback(new StockCallback<StockResp, List<StockData>>() {
-//                    @Override
-//                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
-//                        updateStockIndexMarketData(result);
-//                    }
-//                }).fireSync();
-//    }
-
-
-    /**
-     * 新的批量股票接口
-     * @param data
-     */
     private void requestStockIndexMarketData(List<Variety> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();

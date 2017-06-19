@@ -32,12 +32,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-
+/**
+ * 涨跌幅榜页面
+ */
 public class PriceLimitRankingFragment extends BaseFragment {
 
     private static final String KEY_DIRECTION = "direction";
-    private static final String KEY_EXCHANGEID = "exchangeId";
-
+    private static final String KEY_EXCHANGE_ID = "exchangeId";
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -54,11 +55,11 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public PriceLimitRankingFragment() {
     }
 
-    public static PriceLimitRankingFragment newInstance(int sort_type, int stock_type) {
+    public static PriceLimitRankingFragment newInstance(int sortType, int stockType) {
         PriceLimitRankingFragment fragment = new PriceLimitRankingFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_DIRECTION, sort_type);
-        args.putInt(KEY_EXCHANGEID, stock_type);
+        args.putInt(KEY_DIRECTION, sortType);
+        args.putInt(KEY_EXCHANGE_ID, stockType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,7 +69,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mDirection = getArguments().getInt(KEY_DIRECTION);
-            mExchangeID = getArguments().getInt(KEY_EXCHANGEID);
+            mExchangeID = getArguments().getInt(KEY_EXCHANGE_ID);
         }
     }
 
@@ -90,31 +91,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
         requestStockSortList();
     }
 
-//    public void requestStockSortList() {
-//        Client.getStockSort(mDirection, mExchangeID)
-//                .setTag(TAG)
-//                .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
-//                    @Override
-//                    public void onDataMsg(ArrayList<StockData> result, StockResp.Msg msg) {
-//                        updateStockSort(result);
-//                        for (StockData data : result) {
-//                            Log.d(TAG, "onDataMsg: " + data.toString());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(VolleyError volleyError) {
-//                        super.onFailure(volleyError);
-//                        updateStockSort(null);
-//                    }
-//                })
-//                .fireSync();
-//    }
-
     public void requestStockSortList() {
-        Client.getStockSort(mDirection,mExchangeID)
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockData>>,List<StockData>>() {
+        Client.getStockSort(mDirection, mExchangeID).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
                     @Override
                     protected void onRespSuccessData(List<StockData> result) {
                         updateStockSort(result);
@@ -135,7 +114,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-//            mStockSortAdapter.clear();
             mStockSortAdapter.addAll(data);
         }
     }

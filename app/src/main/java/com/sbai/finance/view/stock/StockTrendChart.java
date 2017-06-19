@@ -14,13 +14,11 @@ import android.view.ViewGroup;
 
 import com.sbai.chart.ChartSettings;
 import com.sbai.chart.ChartView;
+import com.sbai.chart.TrendView;
 import com.sbai.finance.model.stock.StockTrendData;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class StockTrendChart extends ChartView {
@@ -131,8 +129,8 @@ public class StockTrendChart extends ChartView {
             redraw();
         } else if (mSettings != null && mUnstableData != null) { // When unstable data > top || < bottom, still redraw
             float[] baseLines = mSettings.getBaseLines();
-            if (mUnstableData.getClose_Price() > baseLines[0]
-                    || mUnstableData.getClose_Price() < baseLines[baseLines.length - 1]) {
+            if (mUnstableData.getClosePrice() > baseLines[0]
+                    || mUnstableData.getClosePrice() < baseLines[baseLines.length - 1]) {
                 redraw();
             }
         }
@@ -143,6 +141,11 @@ public class StockTrendChart extends ChartView {
         mSettings = (StockTrendView.Settings) settings;
         super.setSettings(settings);
         redraw();
+    }
+
+    @Override
+    public StockTrendView.Settings getSettings() {
+        return mSettings;
     }
 
     public void setVisibleList(SparseArray<StockTrendData> visibleList) {
@@ -177,21 +180,21 @@ public class StockTrendChart extends ChartView {
 
         if (mDataList != null) {
             for (StockTrendData stockTrendData : mDataList) {
-                if (max < stockTrendData.getClose_Price()) {
-                    max = stockTrendData.getClose_Price();
+                if (max < stockTrendData.getClosePrice()) {
+                    max = stockTrendData.getClosePrice();
                 }
-                if (min > stockTrendData.getClose_Price()) {
-                    min = stockTrendData.getClose_Price();
+                if (min > stockTrendData.getClosePrice()) {
+                    min = stockTrendData.getClosePrice();
                 }
             }
         }
 
         if (mUnstableData != null) {
-            if (max < mUnstableData.getClose_Price()) {
-                max = mUnstableData.getClose_Price();
+            if (max < mUnstableData.getClosePrice()) {
+                max = mUnstableData.getClosePrice();
             }
-            if (min > mUnstableData.getClose_Price()) {
-                min = mUnstableData.getClose_Price();
+            if (min > mUnstableData.getClosePrice()) {
+                min = mUnstableData.getClosePrice();
             }
         }
 
@@ -223,13 +226,10 @@ public class StockTrendChart extends ChartView {
     @Override
     protected void calculateIndexesBaseLines(long[] indexesBaseLines) {
         if (mDataList != null && mDataList.size() > 0) {
-            mDataList.get(0).setBusinessVolume(mDataList.get(0).getNow_Volume());
-            long maxVolume = mDataList.get(0).getBusinessVolume();
+            long maxVolume = mDataList.get(0).getNowVolume();
             for (int i = 1; i < mDataList.size(); i++) {
-                long volume = mDataList.get(i).getNow_Volume() - mDataList.get(i - 1).getNow_Volume();
-                mDataList.get(i).setBusinessVolume(volume);
-                if (maxVolume < mDataList.get(i).getBusinessVolume()) {
-                    maxVolume = mDataList.get(i).getBusinessVolume();
+                if (maxVolume < mDataList.get(i).getNowVolume()) {
+                    maxVolume = mDataList.get(i).getNowVolume();
                 }
             }
             long volumeRange = maxVolume / (indexesBaseLines.length - 1);
@@ -295,51 +295,35 @@ public class StockTrendChart extends ChartView {
     protected void drawRealTimeData(boolean indexesEnable,
                                     int left, int top, int width, int height,
                                     int left2, int top2, int width2, int height2, Canvas canvas) {
-        float firstChartX = 0;
         if (mDataList != null && mDataList.size() > 0) {
             int size = mDataList.size();
             Path path = getPath();
             float chartX = 0;
             float chartY = 0;
             for (int i = 0; i < size; i++) {
-                chartX = getChartX(i, mDataList.get(i));
-                chartY = getChartY(mDataList.get(i).getClose_Price());
+                chartX = getChartX(mDataList.get(i));
+                chartY = getChartY(mDataList.get(i).getClosePrice());
                 if (path.isEmpty()) {
-                    firstChartX = chartX;
                     path.moveTo(chartX, chartY);
                 } else {
                     path.lineTo(chartX, chartY);
                 }
             }
 
-//            if (mUnstableData != null && mDataList.size() > 0) {
-//                chartX = getChartX(mUnstableData);
-//                chartY = getChartY(mUnstableData.getLastPrice());
-//                path.lineTo(chartX, chartY);
-//            }
-
             setRealTimeLinePaint(sPaint);
             canvas.drawPath(path, sPaint);
-
-            // fill area
-//            path.lineTo(chartX, top + height);
-//            path.lineTo(firstChartX, top + height);
-//            path.close();
-//            setRealTimeFillPaint(sPaint);
-//            canvas.drawPath(path, sPaint);
-//            sPaint.setShader(null);
 
             if (indexesEnable) {
                 for (int i = 0; i < size; i++) {
                     ChartColor color = ChartColor.RED;
-                    chartX = getChartX(i);
-                    if (i > 0 && mDataList.get(i).getClose_Price() < mDataList.get(i - 1).getClose_Price()) {
+                    chartX = getChartX(mDataList.get(i));
+                    if (i > 0 && mDataList.get(i).getClosePrice() < mDataList.get(i - 1).getClosePrice()) {
                         color = ChartColor.GREEN;
                     }
                     setCandleBodyPaint(sPaint, color.get());
                     RectF rectf = getRectF();
                     rectf.left = chartX - mVolumeWidth / 2;
-                    rectf.top = getIndexesChartY(mDataList.get(i).getBusinessVolume());
+                    rectf.top = getIndexesChartY(mDataList.get(i).getNowVolume());
                     rectf.right = chartX + mVolumeWidth / 2;
                     rectf.bottom = getIndexesChartY(0);
                     canvas.drawRect(rectf, sPaint);
@@ -357,12 +341,12 @@ public class StockTrendChart extends ChartView {
             // last point connect to unstable point
             Path path = getPath();
             int unstableIndex = mDataList != null ? mDataList.size() : 0;
-            float chartX = getChartX(unstableIndex, mUnstableData);
-            float chartY = getChartY(mUnstableData.getClose_Price());
+            float chartX = getChartX(mUnstableData);
+            float chartY = getChartY(mUnstableData.getClosePrice());
 
             if (mDataList != null && mDataList.size() > 0) {
                 StockTrendData lastData = mDataList.get(mDataList.size() - 1);
-                path.moveTo(getChartX(mDataList.size() - 1, lastData), getChartY(lastData.getClose_Price()));
+                path.moveTo(getChartX(lastData), getChartY(lastData.getClosePrice()));
                 path.lineTo(chartX, chartY);
                 setRealTimeLinePaint(sPaint);
                 canvas.drawPath(path, sPaint);
@@ -377,7 +361,7 @@ public class StockTrendChart extends ChartView {
 
             // unstable price
             setUnstablePricePaint(sPaint);
-            String unstablePrice = formatNumber(mUnstableData.getClose_Price());
+            String unstablePrice = formatNumber(mUnstableData.getClosePrice());
             float priceWidth = sPaint.measureText(unstablePrice);
             float priceMargin = (mPriceAreaWidth - priceWidth) / 2;
             float priceX = left + width - priceMargin - priceWidth;
@@ -395,10 +379,43 @@ public class StockTrendChart extends ChartView {
         }
     }
 
-    private float getChartX(int index, StockTrendData data) {
-        updateFirstLastVisibleIndex(index);
-        mVisibleList.put(index, data);
-        return super.getChartX(index);
+    @Override
+    protected int getIndexOfXAxis(float chartX) {
+        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
+        chartX = chartX - getPaddingLeft();
+        return (int) (chartX * mSettings.getXAxis() / width);
+    }
+
+    private int getIndexFromDate(String hhmm) {
+        String[] timeLines = mSettings.getOpenMarketTimes();
+        int size = timeLines.length;
+        size = (size % 2 == 0 ? size : size - 1);
+
+        int index = 0;
+        for (int i = 0; i < size; i += 2) {
+            if (TrendView.Util.isBetweenTimesClose(timeLines[i], timeLines[i + 1], hhmm)) {
+                index = TrendView.Util.getDiffMinutes(timeLines[i], hhmm);
+                for (int j = 0; j < i; j += 2) {
+                    // the total points of this period
+                    index += TrendView.Util.getDiffMinutes(timeLines[j], timeLines[j + 1]);
+                }
+            }
+        }
+        return index;
+    }
+
+    protected float getChartX(StockTrendData data) {
+        int indexOfXAxis = getIndexFromDate(data.getHHmm());
+        updateFirstLastVisibleIndex(indexOfXAxis);
+        mVisibleList.put(indexOfXAxis, data);
+        return getChartX(indexOfXAxis);
+    }
+
+    @Override
+    protected float getChartX(int index) {
+        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
+        float chartX = getPaddingLeft() + index * width * 1.0f / mSettings.getXAxis();
+        return chartX;
     }
 
     @Override
@@ -437,8 +454,8 @@ public class StockTrendChart extends ChartView {
         if (hasThisTouchIndex(touchIndex)) {
             StockTrendData data = mVisibleList.get(touchIndex);
             float touchX = getChartX(touchIndex);
-            float touchY = getChartY(data.getClose_Price());
-            float touchY2 = getIndexesChartY(data.getBusinessVolume());
+            float touchY = getChartY(data.getClosePrice());
+            float touchY2 = getIndexesChartY(data.getNowVolume());
 
             // draw cross line: vertical line and horizontal line
             setRedTouchLinePaint(sPaint);
@@ -452,7 +469,7 @@ public class StockTrendChart extends ChartView {
             canvas.drawPath(path, sPaint);
 
             // draw date connect to vertical line
-            String date = getDate(touchIndex);
+            String date = data.getHHmm();
             setTouchLineTextPaint(sPaint);
             float dateWidth = sPaint.measureText(date);
             RectF redRect = getBigFontBgRectF(0, 0, dateWidth);
@@ -476,7 +493,7 @@ public class StockTrendChart extends ChartView {
             canvas.drawText(date, dateX, dateY, sPaint);
 
             // draw price connect to horizontal line
-            String price = formatNumber(data.getClose_Price());
+            String price = formatNumber(data.getClosePrice());
             setTouchLineTextPaint(sPaint);
             float priceWidth = sPaint.measureText(price);
             float priceMargin = (mPriceAreaWidth - priceWidth) / 2;
@@ -507,7 +524,7 @@ public class StockTrendChart extends ChartView {
                 canvas.drawPath(path, sPaint);
 
                 // draw volume connect to horizontal line
-                String volume = String.valueOf(data.getBusinessVolume());
+                String volume = String.valueOf(data.getNowVolume());
                 setTouchLineTextPaint(sPaint);
                 float volumeWidth = sPaint.measureText(volume);
                 redRect = getBigFontBgRectF(0, 0, volumeWidth);
@@ -528,59 +545,6 @@ public class StockTrendChart extends ChartView {
                 setTouchLineTextPaint(sPaint);
                 canvas.drawText(volume, volumeX, volumeY, sPaint);
             }
-        }
-    }
-
-    private String getDate(int index) {
-        int morningDataCount = getDiffMinutes(mTimeLine[0], mTimeLine[1]);
-        if (index >= morningDataCount) {
-            return getTimeFrom(mTimeLine[2], index - morningDataCount);
-        }
-        return getTimeFrom(mTimeLine[0], index);
-    }
-
-    /**
-     * get diff minutes bewteen endDate and startDate. endDate - startDate
-     *
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    public int getDiffMinutes(String startDate, String endDate) {
-        long diff = 0;
-        try {
-            SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
-            long start = parser.parse(startDate).getTime();
-            long end = parser.parse(endDate).getTime();
-
-            if (startDate.compareTo(endDate) <= 0) { // eg. 09:00 <= 09:10
-                diff = end - start;
-            } else { // eg. 21:00 ~ 01:00, we should change 01:00 to 25:00
-                diff = end + 24 * 60 * 60 * 1000 - start;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            return (int) (diff / (60 * 1000));
-        }
-    }
-
-    /**
-     *
-     * @param startDate
-     * @param count
-     * @return startData + count min
-     */
-    public String getTimeFrom(String startDate, int count) {
-        SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
-        long result = 0;
-        try {
-            long start = parser.parse(startDate).getTime();
-            result = start + count * 60 * 1000;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            return parser.format(new Date(result));
         }
     }
 
