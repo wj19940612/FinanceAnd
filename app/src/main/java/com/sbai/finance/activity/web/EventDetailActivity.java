@@ -131,7 +131,7 @@ public class EventDetailActivity extends BaseActivity {
             if (TextUtils.isEmpty(stockNewsInfoModel.getFrom())) {
                 mTimeAndSource.setText(DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
             } else {
-                mTimeAndSource.setText(stockNewsInfoModel.getFrom() + "  " + DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
+                mTimeAndSource.setText(DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
             }
             mPureHtml = stockNewsInfoModel.getContent();
         }

@@ -121,9 +121,9 @@ public class StockIndexActivity extends StockTradeActivity {
                 case 0:
                     return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 1:
-                    return PriceLimitRankingFragment.newInstance(1, mExchangeCode);
+                    return PriceLimitRankingFragment.newInstance(0, mExchangeCode);
                 case 2:
-                    return PriceLimitRankingFragment.newInstance(2, mExchangeCode);
+                    return PriceLimitRankingFragment.newInstance(1, mExchangeCode);
             }
             return null;
         }

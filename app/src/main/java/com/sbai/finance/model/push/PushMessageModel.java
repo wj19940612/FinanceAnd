@@ -5,6 +5,11 @@ package com.sbai.finance.model.push;
  */
 
 public class PushMessageModel {
+    public static final int CLASSIFY_SYS=0;
+    public static final int CLASSIFY_USER=1;
+    public static final int CLASSIFY_MUTURAL=2;
+
+    public static final int TYPE_EVENT=0;
 
     /**
      * classify : 14761

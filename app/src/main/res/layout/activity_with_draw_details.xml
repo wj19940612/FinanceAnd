@@ -76,6 +76,30 @@
             tools:text="￥20000"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/predict_poundage"
+            android:textColor="@color/unluckyText"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/poundage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackAssist"
+            android:textSize="15sp"
+            tools:text="￥20000"/>
+    </LinearLayout>
+
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/withdraw"
         android:layout_width="match_parent"

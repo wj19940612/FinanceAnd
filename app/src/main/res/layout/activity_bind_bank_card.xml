@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -227,14 +227,14 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/bankCardLayout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="@dimen/common_padding"
+        android:paddingTop="@dimen/common_padding"
         android:background="@drawable/bg_mine_wallet_card"
         android:paddingLeft="40dp"
-        android:paddingTop="@dimen/common_padding">
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/bindBankName"
@@ -259,18 +259,89 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="right"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="12dp"
-            android:paddingRight="50dp">
+            android:paddingBottom="12dp">
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/white_point"/>
 
             <TextView
                 android:id="@+id/bindBankCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="right"
+                android:layout_marginLeft="30dp"
+                android:maxLines="1"
                 android:textColor="@android:color/white"
+                android:textSize="14sp"
                 tools:text="0400"/>
         </LinearLayout>
     </RelativeLayout>

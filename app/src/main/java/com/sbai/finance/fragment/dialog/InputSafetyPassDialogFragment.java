@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.dialog;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -89,6 +90,10 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
             window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
         }
 
+        //api19 手机可能会出现分割线不出现问题
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH) {
+            mSafetyPasswordNumber.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
         mMoney.setText(getString(R.string.yuan, mRechargeMoney));
 

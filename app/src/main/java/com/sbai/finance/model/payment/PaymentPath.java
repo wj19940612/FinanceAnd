@@ -14,26 +14,23 @@ public class PaymentPath implements Parcelable{
      * thridOrderId : 1001418
      */
 
+
     private String codeUrl;
     private String thridOrderId;
     private String platform;
     private long time;
+    /**
+     * money : 1
+     * merchantOrderId : qt13020170619105657
+     */
 
-    public long getTime() {
-        return time;
-    }
+    /**
+     * {"money":1,"merchantOrderId":"qt13020170619105657","time":1497841020392,"platform":"qtbankcardpay"}
+     */
 
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
+    private int money;
+    //银行卡充值第三方id
+    private String merchantOrderId;
 
     public String getCodeUrl() {
         return codeUrl;
@@ -51,14 +48,36 @@ public class PaymentPath implements Parcelable{
         this.thridOrderId = thridOrderId;
     }
 
-    @Override
-    public String toString() {
-        return "PaymentPath{" +
-                "codeUrl='" + codeUrl + '\'' +
-                ", thridOrderId='" + thridOrderId + '\'' +
-                ", platform='" + platform + '\'' +
-                ", time=" + time +
-                '}';
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public String getMerchantOrderId() {
+        return merchantOrderId;
+    }
+
+    public void setMerchantOrderId(String merchantOrderId) {
+        this.merchantOrderId = merchantOrderId;
     }
 
     @Override
@@ -72,6 +91,8 @@ public class PaymentPath implements Parcelable{
         dest.writeString(this.thridOrderId);
         dest.writeString(this.platform);
         dest.writeLong(this.time);
+        dest.writeInt(this.money);
+        dest.writeString(this.merchantOrderId);
     }
 
     public PaymentPath() {
@@ -82,6 +103,8 @@ public class PaymentPath implements Parcelable{
         this.thridOrderId = in.readString();
         this.platform = in.readString();
         this.time = in.readLong();
+        this.money = in.readInt();
+        this.merchantOrderId = in.readString();
     }
 
     public static final Creator<PaymentPath> CREATOR = new Creator<PaymentPath>() {
@@ -95,4 +118,16 @@ public class PaymentPath implements Parcelable{
             return new PaymentPath[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "PaymentPath{" +
+                "codeUrl='" + codeUrl + '\'' +
+                ", thridOrderId='" + thridOrderId + '\'' +
+                ", platform='" + platform + '\'' +
+                ", time=" + time +
+                ", money=" + money +
+                ", merchantOrderId='" + merchantOrderId + '\'' +
+                '}';
+    }
 }

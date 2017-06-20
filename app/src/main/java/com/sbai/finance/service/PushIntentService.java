@@ -23,6 +23,7 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
@@ -125,9 +126,19 @@ public class PushIntentService extends GTIntentService {
 
     @NonNull
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
-        Intent messageIntent = new Intent(context, EventDetailActivity.class);
-        messageIntent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
-        return PendingIntent.getActivity(context, 0, messageIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent intent=null;
+        switch (data.getClassify()) {
+            case PushMessageModel.CLASSIFY_SYS:
+                if (data.getType()==PushMessageModel.TYPE_EVENT){
+                   intent = new Intent(context, EventDetailActivity.class);
+                }
+                break;
+            case PushMessageModel.CLASSIFY_MUTURAL:
+                intent = new Intent(context, BorrowDetailsActivity.class);
+                break;
+        }
+        intent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     private void setTagResult(SetTagCmdMessage setTagCmdMsg) {

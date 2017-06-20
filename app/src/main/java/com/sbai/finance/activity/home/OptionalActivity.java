@@ -26,8 +26,6 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -64,6 +62,7 @@ public class OptionalActivity extends BaseActivity implements
     private int mPage = 0;
     private int mPageSize = 200;
     private HashSet<String> mSet;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,12 +94,12 @@ public class OptionalActivity extends BaseActivity implements
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                 }
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)){
+                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
-                    }else{
+                    } else {
                         Launcher.with(getActivity(), StockDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                     }
                 }
             }
@@ -118,9 +117,10 @@ public class OptionalActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
     }
-    @OnClick({R.id.addOptional,R.id.titleBar})
-    public void onClick(View view){
-        switch (view.getId()){
+
+    @OnClick({R.id.addOptional, R.id.titleBar})
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.addOptional:
                 AddOptionalDialogFragment.newInstance().show(getSupportFragmentManager());
                 break;
@@ -151,8 +151,8 @@ public class OptionalActivity extends BaseActivity implements
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                              mSlideListAdapter.remove(variety);
-                              mSlideListAdapter.notifyDataSetChanged();
+                            mSlideListAdapter.remove(variety);
+                            mSlideListAdapter.notifyDataSetChanged();
                         } else {
                             ToastUtil.curt(resp.getMsg());
                             stopRefreshAnimation();
@@ -160,6 +160,12 @@ public class OptionalActivity extends BaseActivity implements
                     }
                 }).fire();
     }
+
+    /**
+     * 新批量请求股票行情接口
+     *
+     * @param data
+     */
     private void requestStockMarketData(List<Variety> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
@@ -168,15 +174,15 @@ public class OptionalActivity extends BaseActivity implements
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
-                .setCallback(new StockCallback<StockResp, List<StockData>>() {
+                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
                     @Override
-                    public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
-                        if (result!=null){
-                          mSlideListAdapter.addStockData(result);
-                        }
+                    protected void onRespSuccessData(List<StockData> result) {
+                        mSlideListAdapter.addStockData(result);
                     }
                 }).fireSync();
     }
+
+
     private void requestFutureMarketData(List<Variety> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
@@ -185,25 +191,25 @@ public class OptionalActivity extends BaseActivity implements
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getFutureMarketData(stringBuilder.toString()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<FutureData>>,List<FutureData>>() {
+                .setCallback(new Callback2D<Resp<List<FutureData>>, List<FutureData>>() {
                     @Override
                     protected void onRespSuccessData(List<FutureData> data) {
                         mSlideListAdapter.addFutureData(data);
                     }
                 })
-              .fireSync();
+                .fireSync();
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
         stopRefreshAnimation();
         mSlideListAdapter.clear();
-        for (Variety variety:data){
-            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
-                if (mSet.add(variety.getVarietyType())){
+        for (Variety variety : data) {
+            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
+                if (mSet.add(variety.getVarietyType())) {
                     mSlideListAdapter.add(variety);
                 }
-            }else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
-                if (mSet.add(variety.getContractsCode())){
+            } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
+                if (mSet.add(variety.getContractsCode())) {
                     mSlideListAdapter.add(variety);
                 }
             }
@@ -216,13 +222,14 @@ public class OptionalActivity extends BaseActivity implements
         mSlideListAdapter.notifyDataSetChanged();
         requestMarketData(data);
     }
+
     private void requestMarketData(ArrayList<Variety> data) {
         List<Variety> futures = new ArrayList<>();
         List<Variety> stocks = new ArrayList<>();
-        for (Variety variety:data){
-            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
-               stocks.add(variety);
-            }else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE) ){
+        for (Variety variety : data) {
+            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
+                stocks.add(variety);
+            } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                 futures.add(variety);
             }
         }
@@ -239,6 +246,7 @@ public class OptionalActivity extends BaseActivity implements
             mSwipeRefreshLayout.setLoading(false);
         }
     }
+
     @Override
     public void onRefresh() {
         reset();
@@ -261,22 +269,25 @@ public class OptionalActivity extends BaseActivity implements
         private OnDelClickListener mOnDelClickListener;
         private HashMap<String, FutureData> mFutureDataList;
         private HashMap<String, StockData> mStockDataList;
+
         interface OnDelClickListener {
             void onClick(int position);
         }
 
         public void addFutureData(List<FutureData> futureDataList) {
-            for (FutureData futureData:futureDataList){
-               mFutureDataList.put(futureData.getInstrumentId(), futureData);
+            for (FutureData futureData : futureDataList) {
+                mFutureDataList.put(futureData.getInstrumentId(), futureData);
             }
             notifyDataSetChanged();
         }
+
         public void addStockData(List<StockData> stockDataList) {
             for (StockData stockData : stockDataList) {
-                mStockDataList.put(stockData.getStock_code(), stockData);
+                mStockDataList.put(stockData.getInstrumentId(), stockData);
             }
             notifyDataSetChanged();
         }
+
         public SlideListAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
@@ -309,7 +320,7 @@ public class OptionalActivity extends BaseActivity implements
                     mOnDelClickListener.onClick(position);
                 }
             });
-            viewHolder.bindDataWithView(getItem(position), mFutureDataList,mStockDataList, mContext);
+            viewHolder.bindDataWithView(getItem(position), mFutureDataList, mStockDataList, mContext);
             return convertView;
         }
 
@@ -330,34 +341,34 @@ public class OptionalActivity extends BaseActivity implements
                 mDel = (TextView) menu.findViewById(R.id.del);
             }
 
-            private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap,HashMap<String, StockData> stockMap, Context context) {
-                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+            private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap, HashMap<String, StockData> stockMap, Context context) {
+                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
                     mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(context.getString(R.string.stock)+" "+item.getVarietyType());
-              //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
+                    mFutureCode.setText(context.getString(R.string.stock) + " " + item.getVarietyType());
+                    //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
                     StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
-                        mLastPrice.setText(stockData.getLast_price());
-                        String priceChange = stockData.getRise_pre();
+                        mLastPrice.setText(stockData.getLastPrice());
+                        String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
                         if (priceChange.startsWith("-")) {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                             mRate.setSelected(false);
-                            mRate.setText(priceChange + "%");
+                            mRate.setText(priceChange);
                         } else {
 
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                             mRate.setSelected(true);
-                            mRate.setText("+" + priceChange + "%");
+                            mRate.setText("+" + priceChange);
                         }
                     } else {
                         mLastPrice.setText("--");
                         mRate.setSelected(true);
                         mRate.setText("--");
                     }
-                }else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+                } else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(context.getString(R.string.future)+" "+item.getContractsCode());
-      //              mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
+                    mFutureCode.setText(context.getString(R.string.future) + " " + item.getContractsCode());
+                    //              mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
                     FutureData futureData = futureMap.get(item.getContractsCode());
                     if (futureData != null) {
                         double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
@@ -371,13 +382,13 @@ public class OptionalActivity extends BaseActivity implements
                         } else {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                             mRate.setSelected(false);
-                            mRate.setText( FinanceUtil.formatWithScale(priceChange) + "%");
+                            mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
                         }
                     } else {
                         mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                         mLastPrice.setText("--");
                         mRate.setSelected(true);
-                        mRate.setText("--.--%");
+                        mRate.setText("--");
                     }
                 }
             }

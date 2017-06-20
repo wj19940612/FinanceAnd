@@ -72,11 +72,12 @@
 
         <TextView
             android:id="@+id/negative"
-            android:layout_width="75dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white"
             android:clickable="true"
             android:gravity="center"
+            android:minWidth="75dp"
             android:padding="12dp"
             android:text="@string/cancel"
             android:textColor="@color/redPrimary"
@@ -85,10 +86,11 @@
 
         <TextView
             android:id="@+id/position"
-            android:layout_width="75dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white"
             android:gravity="center"
+            android:minWidth="75dp"
             android:padding="12dp"
             android:text="@string/ok"
             android:textColor="@color/redPrimary"

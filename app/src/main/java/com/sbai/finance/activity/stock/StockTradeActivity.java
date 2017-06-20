@@ -40,6 +40,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
@@ -308,14 +309,13 @@ public abstract class StockTradeActivity extends BaseActivity {
         }
     }
 
-
-    private void requestStockRTData() {
+    private void requestStockRTData(){
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override
-                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
-                        if (!result.isEmpty()) {
-                            mStockRTData = result.get(0);
+                    protected void onRespSuccessData(StockRTData result) {
+                        if (result != null) {
+                            mStockRTData = result;
                             updateStockTrendView();
                         }
                         updateMarketDataView();
@@ -326,8 +326,8 @@ public abstract class StockTradeActivity extends BaseActivity {
     private void updateStockTrendView() {
         ChartSettings settings = mStockTrendView.getSettings();
         if (settings != null && settings.getPreClosePrice() == 0) {
-            if (!TextUtils.isEmpty(mStockRTData.getPrev_price())) {
-                settings.setPreClosePrice(Float.valueOf(mStockRTData.getPrev_price()).floatValue());
+            if (!TextUtils.isEmpty(mStockRTData.getPreSetPrice())) {
+                settings.setPreClosePrice(Float.valueOf(mStockRTData.getPreSetPrice()).floatValue());
                 mStockTrendView.setSettings(settings);
             }
         }
@@ -336,9 +336,9 @@ public abstract class StockTradeActivity extends BaseActivity {
     private void updateMarketDataView() {
         int color = ContextCompat.getColor(getActivity(), R.color.redPrimary);
         if (mStockRTData != null) {
-            String risePrice = mStockRTData.getRise_price();
-            String risePercent = mStockRTData.getRise_pre();
-            String lastPrice = mStockRTData.getLast_price();
+            String risePrice = mStockRTData.getUpDropPrice();
+            String risePercent = FinanceUtil.formatToPercentage(mStockRTData.getUpDropSpeed());
+            String lastPrice = mStockRTData.getLastPrice();
             if (!TextUtils.isEmpty(risePrice)) {
                 if (risePrice.startsWith("-")) {
                     color = ContextCompat.getColor(getActivity(), R.color.greenAssist);
@@ -348,11 +348,11 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }
             }
             mLastPrice.setText(lastPrice);
-            mPriceChange.setText(risePrice + "     " + risePercent + "%");
-            mTodayOpen.setText(mStockRTData.getOpen_price());
-            mHighest.setText(mStockRTData.getHigh_price());
-            mLowest.setText(mStockRTData.getLow_price());
-            mPreClose.setText(mStockRTData.getPrev_price());
+            mPriceChange.setText(risePrice + "     " + risePercent);
+            mTodayOpen.setText(mStockRTData.getOpenPrice());
+            mHighest.setText(mStockRTData.getHighestPrice());
+            mLowest.setText(mStockRTData.getLowestPrice());
+            mPreClose.setText(mStockRTData.getPreSetPrice());
 
             mStockTrendView.setStockRTData(mStockRTData);
         }
@@ -407,9 +407,9 @@ public abstract class StockTradeActivity extends BaseActivity {
         settings.setNumberScale(2);
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
-        settings.setXAxis(240);
-//        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
-//        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setOpenMarketTimes("09:30;11:30;13:00;15:00");
+        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setCalculateXAxisFromOpenMarketTime(true);
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
@@ -426,11 +426,10 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new StockCallback<StockResp, List<StockTrendData>>() {
+                .setCallback(new Callback2D<Resp<List<StockTrendData>>,List<StockTrendData>>() {
                     @Override
-                    public void onDataMsg(List<StockTrendData> result, StockResp.Msg msg) {
+                    protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {
-                            result.remove(0); // 第一条数据为集合竞价的数据
                             mStockTrendView.setDataList(result);
                         }
                     }
