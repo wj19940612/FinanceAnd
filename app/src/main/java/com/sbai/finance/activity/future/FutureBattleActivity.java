@@ -72,12 +72,14 @@ public class FutureBattleActivity extends BaseActivity {
                 .add(R.id.futureArea, FutureBattleFragment.newInstance(mVariety))
                 .commit();
 
-        mBattleView.setMode(BattleFloatView.Mode.MINE)
+        mBattleView.setMode(BattleFloatView.Mode.HALL)
                 .setMyAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
                 .setMyName("松柏牌面哥")
                 .setUserAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
                 .setUserName("狗海天")
-                .setPraise(1000,1000);
+                .setDepositAndTime(2,1,3,"15分钟")
+                .setProgress(15.00,70.00,false)
+                .setPraise(100,999);
     }
 
 

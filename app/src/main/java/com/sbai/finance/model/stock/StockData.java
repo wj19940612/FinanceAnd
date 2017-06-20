@@ -1,108 +1,94 @@
 package com.sbai.finance.model.stock;
 
+import com.sbai.finance.utils.FinanceUtil;
+
+/**
+ * Created by linrongfang on 2017/6/16.
+ */
+
 public class StockData {
 
     /**
-     * code_name : 厦门钨业
-     * high_price : 21.54
-     * last_price : 21.36
-     * low_price : 20.97
-     * rise_pre : 2.10
-     * rise_price : 0.44
-     * stock_code : 600549
+     * name:唐朝科技
+     * instrumentId : 000004
+     * lastPrice : 1111.1
+     * tradeDay : 2017-06-05
+     * upDropPrice : 1.1
+     * upDropSpeed : 0.005
+     * upTime : 1496644067439
+     * upTimeFormat : 2017-06-05 12:00:00
      */
-    //名称
-    private String code_name;
-    //最高价
-    private String high_price;
-    //最新价
-    private String last_price;
-    //最低价
-    private String low_price;
-    //涨幅百分比
-    private String rise_pre;
-    //涨幅价格
-    private String rise_price;
-    //股票代码
-    private String stock_code;
-    //涨跌幅	 股票排行榜特有的字段
-    private String value1;
 
-    public String getCode_name() {
-        return code_name;
+    private String name;
+    private String instrumentId;
+    private String lastPrice;
+    private String tradeDay;
+    private String upDropPrice;
+    private double upDropSpeed;
+    private long upTime;
+    private String upTimeFormat;
+
+    public String getName() {
+        return name;
     }
 
-    public void setCode_name(String code_name) {
-        this.code_name = code_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getHigh_price() {
-        return high_price;
+    public String getInstrumentId() {
+        return instrumentId;
     }
 
-    public void setHigh_price(String high_price) {
-        this.high_price = high_price;
+    public void setInstrumentId(String instrumentId) {
+        this.instrumentId = instrumentId;
     }
 
-    public String getLast_price() {
-        return last_price;
+    public String getLastPrice() {
+        return FinanceUtil.accurateToString(lastPrice);
     }
 
-    public void setLast_price(String last_price) {
-        this.last_price = last_price;
+    public void setLastPrice(String lastPrice) {
+        this.lastPrice = lastPrice;
     }
 
-    public String getLow_price() {
-        return low_price;
+    public String getTradeDay() {
+        return tradeDay;
     }
 
-    public void setLow_price(String low_price) {
-        this.low_price = low_price;
+    public void setTradeDay(String tradeDay) {
+        this.tradeDay = tradeDay;
     }
 
-    public String getRise_pre() {
-        return rise_pre;
+    public String getUpDropPrice() {
+        return FinanceUtil.accurateToString(upDropPrice);
     }
 
-    public void setRise_pre(String rise_pre) {
-        this.rise_pre = rise_pre;
+    public void setUpDropPrice(String upDropPrice) {
+        this.upDropPrice = upDropPrice;
     }
 
-    public String getRise_price() {
-        return rise_price;
+    public double getUpDropSpeed() {
+        return upDropSpeed;
     }
 
-    public void setRise_price(String rise_price) {
-        this.rise_price = rise_price;
+    public void setUpDropSpeed(double upDropSpeed) {
+        this.upDropSpeed = upDropSpeed;
     }
 
-    public String getStock_code() {
-        return stock_code;
+    public long getUpTime() {
+        return upTime;
     }
 
-    public void setStock_code(String stock_code) {
-        this.stock_code = stock_code;
+    public void setUpTime(long upTime) {
+        this.upTime = upTime;
     }
 
-    public String getValue1() {
-        return value1;
+    public String getUpTimeFormat() {
+        return upTimeFormat;
     }
 
-    public void setValue1(String value1) {
-        this.value1 = value1;
-    }
-
-    @Override
-    public String toString() {
-        return "StockData{" +
-                "code_name='" + code_name + '\'' +
-                ", high_price='" + high_price + '\'' +
-                ", last_price='" + last_price + '\'' +
-                ", low_price='" + low_price + '\'' +
-                ", rise_pre='" + rise_pre + '\'' +
-                ", rise_price='" + rise_price + '\'' +
-                ", stock_code='" + stock_code + '\'' +
-                ", value1='" + value1 + '\'' +
-                '}';
+    public void setUpTimeFormat(String upTimeFormat) {
+        this.upTimeFormat = upTimeFormat;
     }
 }

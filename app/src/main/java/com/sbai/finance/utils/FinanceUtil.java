@@ -30,6 +30,16 @@ public class FinanceUtil {
     }
 
     /**
+     * 格式化 String 数据, 并使用‘银行家算法’精确（保留）到小数点后两位
+     * @param src
+     * @return
+     */
+    public static String accurateToString(String src) {
+        double value = Double.parseDouble(src);
+        return formatWithScale(value, DEFAULT_SCALE);
+    }
+
+    /**
      * 格式化 double 数据成百分数格式，并使用‘银行家算法’精确（保留）到小数点后两位
      *
      * @param value
@@ -399,4 +409,6 @@ public class FinanceUtil {
     public static String removeNeedlessZero(String number) {
         return number.replace(".00","");
     }
+
+
 }

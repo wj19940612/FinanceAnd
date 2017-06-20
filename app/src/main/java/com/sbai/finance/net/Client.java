@@ -689,9 +689,9 @@ public class Client {
      * @return
      */
     public static API getStockMarketData(String stockCodes) {
-        return new API("/stock/comb",
+        return new API(POST, "/stk/stk/list.do",
                 new ApiParams()
-                        .put("stock_code", stockCodes));
+                        .put("codes", stockCodes));
     }
 
     /**
@@ -713,9 +713,9 @@ public class Client {
      * @return
      */
     public static API getStockRealtimeData(String stockCode) {
-        return new API("/stock/realtime",
+        return new API("/stk/stk/real.do",
                 new ApiParams()
-                        .put("stock_code", stockCode));
+                        .put("code", stockCode));
     }
 
     /**
@@ -780,9 +780,9 @@ public class Client {
      * @return
      */
     public static API getStockTrendData(String stockCode) {
-        return new API("/stock/trend",
+        return new API("/stk/stk/trend.do",
                 new ApiParams()
-                        .put("stock_code", stockCode));
+                        .put("code", stockCode));
     }
 
     /**
@@ -790,14 +790,14 @@ public class Client {
      * 请求类型 get
      * 请求Url  /stock/sort
      *
-     * @param sort_type  排序类别    	1到4分别是 涨幅排名 跌幅排名 5分钟涨幅 5分钟跌幅
-     * @param stock_type 股票类别,参考市场查询返回值
+     * @param direction  排序类别  1降序 0升序
+     * @param exchangeId 市场代码
      * @return
      */
-    public static API getStockSort(int sort_type, int stock_type) {
-        return new API("/stock/sort", new ApiParams()
-                .put("sort_type", sort_type)
-                .put("stock_type", stock_type));
+    public static API getStockSort(int direction, int exchangeId) {
+        return new API("/stk/stk/sort.do", new ApiParams()
+                .put("direction", direction)
+                .put("exchangeId", exchangeId));
     }
 
     /**
