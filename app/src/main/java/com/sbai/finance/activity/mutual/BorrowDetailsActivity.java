@@ -140,7 +140,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borrow_details);
         ButterKnife.bind(this);
-        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD,-1);
         initView();
         calculateAvatarNum(this);
         requestBorrowMoneyDetails();
@@ -161,6 +161,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UserDataActivity.SHIELD);
+        intentFilter.addAction(ACTION_TOKEN_EXPIRED);
 //        intentFilter.addAction(Launcher.EX_PAY_END);
         mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
         setKeyboardHelper();
@@ -169,9 +170,13 @@ public class BorrowDetailsActivity extends BaseActivity {
         mMessageAdapter.setCallback(new MessageAdapter.Callback() {
             @Override
             public void onUserClick(int userId) {
-                Launcher.with(getActivity(), UserDataActivity.class)
-                        .putExtra(Launcher.USER_ID, userId)
-                        .executeForResult(REQ_CODE_USERDATA);
+                if (LocalUser.getUser().isLogin()){
+                    Launcher.with(getActivity(), UserDataActivity.class)
+                            .putExtra(Launcher.USER_ID, userId)
+                            .executeForResult(REQ_CODE_USERDATA);
+                }else{
+                    Launcher.with(getActivity(),LoginActivity.class).execute();
+                }
             }
         });
         mListView.setAdapter(mMessageAdapter);
@@ -353,6 +358,12 @@ public class BorrowDetailsActivity extends BaseActivity {
 //        } catch (UnsupportedEncodingException e) {
 //            e.printStackTrace();
 //        }
+        while (content.startsWith("\n")) {
+            content = content.substring(1, content.length());
+        }
+        while (content.endsWith("\n")) {
+            content = content.substring(0, content.length() - 1);
+        }
         if (content.length()>=100){
             content = content.substring(0,100);
         }
@@ -526,7 +537,7 @@ public class BorrowDetailsActivity extends BaseActivity {
             mIsAttention.setText("");
         }
 
-        mBorrowMoneyContent.setText(borrowDetail.getContent());
+        mBorrowMoneyContent.setText(borrowDetail.getContent().trim());
         mNeedAmount.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowDetail.getMoney())));
         mBorrowDeadline.setText(getActivity().getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowDetail.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowDetail.getInterest())));
@@ -639,6 +650,11 @@ public class BorrowDetailsActivity extends BaseActivity {
         if (LocalUser.getUser().isLogin()) {
              isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
              isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
+        }
+        if (!isSelfLoadIn){
+            mStatus.setVisibility(View.GONE);
+        }else{
+            mStatus.setVisibility(View.VISIBLE);
         }
         switch (borrowDetail.getStatus()){
             case BorrowDetail.STASTU_END_NO_HELP:
@@ -806,6 +822,9 @@ public class BorrowDetailsActivity extends BaseActivity {
                     requestMessageList();
                  }
             }
+            if (intent.getAction()==ACTION_TOKEN_EXPIRED){
+                updateBorrowDetails(mBorrowDetail);
+            }
 
         }
     }
@@ -844,7 +863,7 @@ public class BorrowDetailsActivity extends BaseActivity {
             }
             private void bindDataWithView(final BorrowMessage item, Context context, final Callback callback){
                 SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        ": "+item.getContent(),1.0f, ContextCompat.getColor(context, R.color.blackAssist));
+                        ": "+item.getContent().trim(),1.0f, ContextCompat.getColor(context, R.color.blackAssist));
                 attentionSpannableString.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {

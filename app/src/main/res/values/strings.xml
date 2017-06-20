@@ -582,4 +582,6 @@
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
+    <string name="wing">获胜</string>
+    <string name="failure">败北</string>
 </resources>
