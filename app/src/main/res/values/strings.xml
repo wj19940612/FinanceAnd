@@ -580,6 +580,7 @@
 
     <!--  聚宝盆  -->
     <string name="cornucopia">聚宝盆</string>
+    <string name="exchange_rule">兑换规则</string>
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>
