@@ -209,8 +209,11 @@ public class BattleFloatView extends RelativeLayout {
         builder.append("    ");
         if (gameStatus == 1) {
             builder.append(endTime);
+        }else if (gameStatus ==2){
+            builder.append("对战中");
+        }else {
+            builder.append("结束");
         }
-        builder.append(gameStatus == 2 ? "2对战中" : "结束");
         mDepositAndTime.setText(builder.toString());
         return this;
     }
@@ -227,8 +230,8 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(String.valueOf(myPraiseNumber));
-            mUserPraise.setText(String.valueOf(fighterPraiseNumber));
+            mMyPraise.setText(String.valueOf(myPraiseNumber)+ "赞");
+            mUserPraise.setText(String.valueOf(fighterPraiseNumber)+ "赞");
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);

@@ -127,6 +127,7 @@ public class FutureBattleFragment extends BaseFragment {
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
+        settings.setGameMode(true);
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
@@ -134,6 +135,7 @@ public class FutureBattleFragment extends BaseFragment {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        settings2.setGameMode(true);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
     }

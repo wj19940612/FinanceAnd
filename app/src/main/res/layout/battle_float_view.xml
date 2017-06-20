@@ -113,7 +113,7 @@
                     android:layout_marginRight="20dp">
 
                     <RelativeLayout
-                        android:id="@+id/userPerspective"
+                        android:id="@+id/myPerspective"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:visibility="visible">
@@ -140,7 +140,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/myPerspective"
+                        android:id="@+id/userPerspective"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 

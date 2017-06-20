@@ -254,6 +254,7 @@ public class TrendView extends FrameLayout {
         private String mDisplayMarketTimes;
         private boolean mCalculateXAxisFromOpenMarketTime;
         private boolean mXAxisRefresh;
+        private boolean mGameMode;
 
         public Settings() {
             super();
@@ -317,6 +318,14 @@ public class TrendView extends FrameLayout {
                 return super.getXAxis();
             }
             return super.getXAxis();
+        }
+
+        public boolean isGameMode() {
+            return mGameMode;
+        }
+
+        public void setGameMode(boolean gameMode) {
+            mGameMode = gameMode;
         }
     }
 }

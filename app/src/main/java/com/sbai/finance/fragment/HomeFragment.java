@@ -18,21 +18,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.future.FutureListActivity;
+import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
-import com.sbai.finance.activity.recharge.FutureVersusListActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
 import com.sbai.finance.activity.web.TopicDetailActivity;
+import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
-import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -144,8 +143,9 @@ public class HomeFragment extends BaseFragment {
         mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
             @Override
             public void onFutureClick() {
-                Launcher.with(getActivity(), FutureListActivity.class).execute();
+//                Launcher.with(getActivity(), FutureListActivity.class).execute();
 //                Launcher.with(getActivity(), FutureVersusListActivity.class).execute();
+                Launcher.with(getActivity(), FutureBattleActivity.class).execute();
             }
 
             @Override

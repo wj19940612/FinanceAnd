@@ -117,7 +117,7 @@
 
     <com.sbai.finance.view.slidingTab.HackTabLayout
         android:id="@+id/tabLayout"
-        style="@style/TradeFixedTab"
+        style="@style/BattleTab"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:background="@color/colorPrimaryDark"/>
@@ -128,11 +128,13 @@
 
         <com.sbai.chart.TrendView
             android:id="@+id/trendView"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <com.sbai.chart.KlineView
             android:id="@+id/klineView"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"/>
