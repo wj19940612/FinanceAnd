@@ -584,4 +584,8 @@
     <string name="versus_rule">决斗规则></string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
+    <string name="position_direction">持仓方向</string>
+    <string name="buy_price">买入价</string>
+    <string name="position_profit">持仓盈亏(元)</string>
+    <string name="no_position">暂无持仓</string>
 </resources>

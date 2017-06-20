@@ -148,7 +148,14 @@
             android:id="@+id/battleButtons"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <com.sbai.finance.view.BattleTradeView
+            android:id="@+id/battleTradeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="visible"/>
+
     </FrameLayout>
 
 </LinearLayout>

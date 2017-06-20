@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.BattleButtons;
+import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
 
@@ -69,10 +69,10 @@ public class FutureBattleFragment extends BaseFragment {
     @BindView(R.id.klineView)
     KlineView mKlineView;
 
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
     @BindView(R.id.battleButtons)
     BattleButtons mBattleButtons;
+    @BindView(R.id.battleTradeView)
+    BattleTradeView mBattleTradeView;
 
     Unbinder unbinder;
 
