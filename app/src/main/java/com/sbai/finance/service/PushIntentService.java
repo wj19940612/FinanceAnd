@@ -27,6 +27,7 @@ import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -127,17 +128,13 @@ public class PushIntentService extends GTIntentService {
     @NonNull
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
         Intent intent=null;
-        switch (data.getClassify()) {
-            case PushMessageModel.CLASSIFY_SYS:
-                if (data.getType()==PushMessageModel.TYPE_EVENT){
-                   intent = new Intent(context, EventDetailActivity.class);
-                }
-                break;
-            case PushMessageModel.CLASSIFY_MUTURAL:
-                intent = new Intent(context, BorrowDetailsActivity.class);
-                break;
+        if (data.getClassify()==PushMessageModel.CLASSIFY_SYS&&data.getType()==PushMessageModel.TYPE_EVENT){
+            intent = new Intent(context, EventDetailActivity.class);
+            intent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
+        }else if (data.getClassify()==PushMessageModel.CLASSIFY_USER){
+            intent = new Intent(context, BorrowDetailsActivity.class);
+            intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         }
-        intent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 

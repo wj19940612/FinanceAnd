@@ -140,7 +140,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borrow_details);
         ButterKnife.bind(this);
-        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD,-1);
         initView();
         calculateAvatarNum(this);
         requestBorrowMoneyDetails();
@@ -639,6 +639,11 @@ public class BorrowDetailsActivity extends BaseActivity {
         if (LocalUser.getUser().isLogin()) {
              isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
              isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
+        }
+        if (!isSelfLoadIn){
+            mStatus.setVisibility(View.GONE);
+        }else{
+            mStatus.setVisibility(View.VISIBLE);
         }
         switch (borrowDetail.getStatus()){
             case BorrowDetail.STASTU_END_NO_HELP:
