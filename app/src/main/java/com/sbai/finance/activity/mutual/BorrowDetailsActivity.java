@@ -161,6 +161,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UserDataActivity.SHIELD);
+        intentFilter.addAction(ACTION_TOKEN_EXPIRED);
 //        intentFilter.addAction(Launcher.EX_PAY_END);
         mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
         setKeyboardHelper();
@@ -810,6 +811,9 @@ public class BorrowDetailsActivity extends BaseActivity {
                 if (dataId>0){
                     requestMessageList();
                  }
+            }
+            if (intent.getAction()==ACTION_TOKEN_EXPIRED){
+                updateBorrowDetails(mBorrowDetail);
             }
 
         }
