@@ -123,11 +123,26 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_white"
         android:visibility="visible"
+        app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_wallet"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/wallet"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"/>
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/split"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/cornucopia"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:leftIcon="@drawable/ic_cornucopia_mine_cell_icon_jbp"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/cornucopia"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/news"

@@ -578,6 +578,9 @@
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
 
+    <!--  聚宝盆  -->
+    <string name="cornucopia">聚宝盆</string>
+
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>

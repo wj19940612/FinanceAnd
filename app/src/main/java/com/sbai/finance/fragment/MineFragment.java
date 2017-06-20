@@ -81,6 +81,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
+    @BindView(R.id.cornucopia)
+    IconTextRow mCornucopia;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -222,8 +224,9 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.headImageLayout, R.id.userHeadImage,
-            R.id.attention, R.id.fans, R.id.minePublish, R.id.news,
-            R.id.setting, R.id.aboutUs, R.id.wallet, R.id.feedBack})
+            R.id.attention, R.id.fans, R.id.minePublish,
+            R.id.cornucopia, R.id.wallet,
+            R.id.news, R.id.setting, R.id.aboutUs, R.id.feedBack})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
@@ -287,6 +290,13 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.feedBack:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.cornucopia:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 } else {
