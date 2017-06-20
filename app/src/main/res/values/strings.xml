@@ -145,6 +145,7 @@
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="market_trading">交易中</string>
+    <string name="stock_halt">停牌</string>
     <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
@@ -581,4 +582,6 @@
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
+    <string name="wing">获胜</string>
+    <string name="failure">败北</string>
 </resources>

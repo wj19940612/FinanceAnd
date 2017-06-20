@@ -140,7 +140,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borrow_details);
         ButterKnife.bind(this);
-        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mLoadId = getIntent().getIntExtra(Launcher.EX_PAYLOAD,-1);
         initView();
         calculateAvatarNum(this);
         requestBorrowMoneyDetails();
@@ -161,6 +161,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UserDataActivity.SHIELD);
+        intentFilter.addAction(ACTION_TOKEN_EXPIRED);
 //        intentFilter.addAction(Launcher.EX_PAY_END);
         mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
         setKeyboardHelper();
@@ -640,6 +641,11 @@ public class BorrowDetailsActivity extends BaseActivity {
              isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
              isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
         }
+        if (!isSelfLoadIn){
+            mStatus.setVisibility(View.GONE);
+        }else{
+            mStatus.setVisibility(View.VISIBLE);
+        }
         switch (borrowDetail.getStatus()){
             case BorrowDetail.STASTU_END_NO_HELP:
             case BorrowDetail.STATUS_END_CANCEL:
@@ -805,6 +811,9 @@ public class BorrowDetailsActivity extends BaseActivity {
                 if (dataId>0){
                     requestMessageList();
                  }
+            }
+            if (intent.getAction()==ACTION_TOKEN_EXPIRED){
+                updateBorrowDetails(mBorrowDetail);
             }
 
         }
