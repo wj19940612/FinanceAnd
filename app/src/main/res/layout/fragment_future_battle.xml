@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:barBackground="@color/colorPrimaryDark"
+        app:barBackground="@color/blackAssist"
         app:customView="@layout/tb_product_name"/>
 
     <LinearLayout
         android:id="@+id/marketArea"
         android:layout_width="match_parent"
-        android:layout_height="94dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_height="80dp"
+        android:background="@color/blackAssist"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -120,23 +120,23 @@
         style="@style/BattleTab"
         android:layout_width="match_parent"
         android:layout_height="34dp"
-        android:background="@color/colorPrimaryDark"/>
+        android:background="@color/blackAssist"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp">
+        android:layout_height="150dp">
 
         <com.sbai.chart.TrendView
             android:id="@+id/trendView"
-            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/blackAssist"/>
 
         <com.sbai.chart.KlineView
             android:id="@+id/klineView"
-            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/blackAssist"
             android:visibility="gone"/>
     </FrameLayout>
 
@@ -144,16 +144,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
         <com.sbai.finance.view.BattleButtons
             android:id="@+id/battleButtons"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </FrameLayout>
 
 </LinearLayout>
