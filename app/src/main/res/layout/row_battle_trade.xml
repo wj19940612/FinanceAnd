@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:padding="@dimen/common_padding">
+              android:orientation="horizontal">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="43dp">
 
         <View
             android:id="@+id/centerLine"
@@ -24,6 +23,8 @@
             android:layout_toLeftOf="@id/centerLine"
             android:background="@drawable/bg_battle_trade_text"
             android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="88.88买多建仓"
             android:textColor="@color/white"
             android:textSize="14sp"/>
@@ -47,6 +48,8 @@
             android:layout_toRightOf="@id/centerLine"
             android:background="@drawable/bg_battle_trade_text"
             android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
