@@ -55,7 +55,8 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     @BindView(R.id.connect_service)
     AppCompatTextView mConnectService;
     private UserBankCardInfoModel mUserBankCardInfoModel;
-    private int mMoney;
+
+    private double mMoney;
 
     private String mPassWord;
     private int mWithDrawRuleRes[];
@@ -70,7 +71,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         mWithDrawRuleRes = new int[]{R.string.can_with_rule_content_1, R.string.can_with_rule_content_2, R.string.can_with_rule_content_3};
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-        mMoney = getIntent().getIntExtra(Launcher.EX_PAYLOAD, 0);
+        mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
         String withDrawBankAndNumber = "      " + mUserBankCardInfoModel.getIssuingBankName() + "  (" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
         mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
         mWithdrawMoney.addTextChangedListener(mValidationWatcher);
