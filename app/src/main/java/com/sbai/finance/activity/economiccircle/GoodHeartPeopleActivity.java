@@ -23,6 +23,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.recharge.PayIntentionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.GoodHeartPeople;
 import com.sbai.finance.model.mutual.BorrowDetail;

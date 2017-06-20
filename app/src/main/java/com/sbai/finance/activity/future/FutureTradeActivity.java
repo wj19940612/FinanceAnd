@@ -247,11 +247,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
             @Override
             public void onTradeButtonClick() {
-                if (LocalUser.getUser().isLogin()) {
-                    TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+                TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
             }
         });
     }

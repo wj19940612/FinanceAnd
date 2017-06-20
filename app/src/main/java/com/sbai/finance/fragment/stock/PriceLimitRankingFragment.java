@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,7 @@ import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.net.stock.StockCallback;
-import com.sbai.finance.net.stock.StockResp;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
@@ -34,12 +32,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-
+/**
+ * 涨跌幅榜页面
+ */
 public class PriceLimitRankingFragment extends BaseFragment {
 
-    private static final String KEY_SORT_TYPE = "sort_type";
-    private static final String KEY_STOCK_TYPE = "stock_type";
-
+    private static final String KEY_DIRECTION = "direction";
+    private static final String KEY_EXCHANGE_ID = "exchangeId";
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -48,19 +47,19 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
     private Unbinder mBind;
 
-    private int mSortType;
-    private int mStockType;
+    private int mDirection;
+    private int mExchangeID;
     private StockSortAdapter mStockSortAdapter;
     private ArrayList<StockData> mStockDataArrayList;
 
     public PriceLimitRankingFragment() {
     }
 
-    public static PriceLimitRankingFragment newInstance(int sort_type, int stock_type) {
+    public static PriceLimitRankingFragment newInstance(int sortType, int stockType) {
         PriceLimitRankingFragment fragment = new PriceLimitRankingFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_SORT_TYPE, sort_type);
-        args.putInt(KEY_STOCK_TYPE, stock_type);
+        args.putInt(KEY_DIRECTION, sortType);
+        args.putInt(KEY_EXCHANGE_ID, stockType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +68,8 @@ public class PriceLimitRankingFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mSortType = getArguments().getInt(KEY_SORT_TYPE);
-            mStockType = getArguments().getInt(KEY_STOCK_TYPE);
+            mDirection = getArguments().getInt(KEY_DIRECTION);
+            mExchangeID = getArguments().getInt(KEY_EXCHANGE_ID);
         }
     }
 
@@ -93,15 +92,11 @@ public class PriceLimitRankingFragment extends BaseFragment {
     }
 
     public void requestStockSortList() {
-        Client.getStockSort(mSortType, mStockType)
-                .setTag(TAG)
-                .setCallback(new StockCallback<StockResp, ArrayList<StockData>>() {
+        Client.getStockSort(mDirection, mExchangeID).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
                     @Override
-                    public void onDataMsg(ArrayList<StockData> result, StockResp.Msg msg) {
+                    protected void onRespSuccessData(List<StockData> result) {
                         updateStockSort(result);
-                        for (StockData data : result) {
-                            Log.d(TAG, "onDataMsg: " + data.toString());
-                        }
                     }
 
                     @Override
@@ -109,8 +104,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
                         super.onFailure(volleyError);
                         updateStockSort(null);
                     }
-                })
-                .fireSync();
+                }).fireSync();
     }
 
     private void updateStockSort(List<StockData> data) {
@@ -120,7 +114,6 @@ public class PriceLimitRankingFragment extends BaseFragment {
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-//            mStockSortAdapter.clear();
             mStockSortAdapter.addAll(data);
         }
     }
@@ -217,25 +210,25 @@ public class PriceLimitRankingFragment extends BaseFragment {
 
             public void bindDataWithView(final StockData item, int position, final Context context) {
                 if (item == null) return;
-                mFutureName.setText(item.getCode_name());
-                mFutureCode.setText(item.getStock_code());
-                String priceLimit = item.getValue1();
+                mFutureName.setText(item.getName());
+                mFutureCode.setText(item.getInstrumentId());
+                String priceLimit = FinanceUtil.formatToPercentage(item.getUpDropSpeed());
                 if (!TextUtils.isEmpty(priceLimit)) {
                     if (priceLimit.startsWith("-")) {
                         mLastPrice.setSelected(false);
                         mRate.setSelected(false);
-                        mRate.setText(priceLimit + "%");
+                        mRate.setText(priceLimit);
                     } else {
                         mLastPrice.setSelected(true);
                         mRate.setSelected(true);
-                        mRate.setText("+" + priceLimit + "%");
+                        mRate.setText("+" + priceLimit);
                     }
                 }
-                mLastPrice.setText(item.getLast_price());
+                mLastPrice.setText(item.getLastPrice());
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Client.getStockInfo(item.getStock_code())
+                        Client.getStockInfo(item.getInstrumentId())
                                 .setCallback(new Callback2D<Resp<Variety>, Variety>() {
                                     @Override
                                     protected void onRespSuccessData(Variety data) {

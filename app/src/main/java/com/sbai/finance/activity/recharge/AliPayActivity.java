@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.economiccircle;
+package com.sbai.finance.activity.recharge;
 
 import android.content.Intent;
 import android.content.IntentFilter;

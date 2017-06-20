@@ -320,7 +320,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                 } else {
                     mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                     mLastPrice.setText("--");
-                    mRate.setText("--.--%");
+                    mRate.setText("--");
                     mRate.setSelected(true);
                 }
             }

@@ -3,316 +3,336 @@ package com.sbai.finance.model.stock;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.utils.FinanceUtil;
+
+/**
+ * Created by linrongfang on 2017/6/16.
+ */
+
 public class StockRTData implements Parcelable {
 
+    public static final String STATUS_HALT = "0";
+
     /**
-     * ask_price1 : 9.13
-     * ask_price2 : 9.14
-     * ask_price3 : 9.15
-     * ask_price4 : 9.16
-     * ask_price5 : 9.17
-     * ask_volume1 : 741573
-     * ask_volume2 : 458866
-     * ask_volume3 : 596709
-     * ask_volume4 : 399100
-     * ask_volume5 : 809260
-     * bid_price1 : 9.12
-     * bid_price2 : 9.11
-     * bid_price3 : 9.10
-     * bid_price4 : 9.09
-     * bid_price5 : 9.08
-     * bid_volume1 : 166140
-     * bid_volume2 : 163201
-     * bid_volume3 : 302327
-     * bid_volume4 : 872128
-     * bid_volume5 : 429800
-     * business_amount : 44843496
-     * business_balance : 407876704.00
-     * code_name : 平安银行
-     * high_price : 9.14
-     * last_price : 9.12
-     * low_price : 9.05
-     * open_price : 9.11
-     * prev_price : 9.11
-     * rise_pre : 0.11
-     * rise_price : 0.01
-     * status : 0
-     * stock_code : 000001
-     * stock_typename : 深证A股
+     * askPrice : 9.07
+     * askPrice2 : 9.08
+     * askPrice3 : 9.09
+     * askPrice4 : 9.1
+     * askPrice5 : 9.11
+     * askVolume : 801553
+     * askVolume2 : 830046
+     * askVolume3 : 733443
+     * askVolume4 : 608901
+     * askVolume5 : 352500
+     * bidPrice : 9.06
+     * bidPrice2 : 9.05
+     * bidPrice3 : 9.04
+     * bidPrice4 : 9.03
+     * bidPrice5 : 9.02
+     * bidVolume : 85800
+     * bidVolume2 : 981401
+     * bidVolume3 : 601400
+     * bidVolume4 : 746900
+     * bidVolume5 : 1021000
+     * downLimitPrice : 8.14
+     * exchangeId : 4609
+     * highestPrice : 9.08
+     * instrumentId : 000001
+     * lastPrice : 9.06
+     * lowestPrice : 9.03
+     * openPrice : 9.04
+     * preClsPrice : 9.04
+     * preSetPrice : 9.04
+     * settlePrice : 0
+     * status : 1
+     * tradeDay : 2017-06-16
+     * turnover : 6.183961493E7
+     * upDropPrice : 0.02
+     * upDropSpeed : 0.0022123894
+     * upLimitPrice : 9.94
+     * upTime : 1497579588000
+     * upTimeFormat : 2017-06-16 10:19:48
+     * volume : 6827570
      */
 
-    private String ask_price1;
-    private String ask_price2;
-    private String ask_price3;
-    private String ask_price4;
-    private String ask_price5;
-    private String ask_volume1;
-    private String ask_volume2;
-    private String ask_volume3;
-    private String ask_volume4;
-    private String ask_volume5;
-    private String bid_price1;
-    private String bid_price2;
-    private String bid_price3;
-    private String bid_price4;
-    private String bid_price5;
-    private String bid_volume1;
-    private String bid_volume2;
-    private String bid_volume3;
-    private String bid_volume4;
-    private String bid_volume5;
-    private String business_amount;
-    private String business_balance;
-    private String code_name;
-    private String high_price;
-    private String last_price;
-    private String low_price;
-    private String open_price;
-    private String prev_price;
-    private String rise_pre;
-    private String rise_price;
+    private String askPrice;
+    private String askPrice2;
+    private String askPrice3;
+    private String askPrice4;
+    private String askPrice5;
+    private String askVolume;
+    private String askVolume2;
+    private String askVolume3;
+    private String askVolume4;
+    private String askVolume5;
+    private String bidPrice;
+    private String bidPrice2;
+    private String bidPrice3;
+    private String bidPrice4;
+    private String bidPrice5;
+    private String bidVolume;
+    private String bidVolume2;
+    private String bidVolume3;
+    private String bidVolume4;
+    private String bidVolume5;
+    private String downLimitPrice;
+    private String exchangeId;
+    private String highestPrice;
+    private String instrumentId;
+    private String lastPrice;
+    private String lowestPrice;
+    private String openPrice;
+    private String preClsPrice;
+    private String preSetPrice;
+    private String settlePrice;
     private String status;
-    private String stock_code;
-    private String stock_typename;
+    private String tradeDay;
+    private String turnover;
+    private String upDropPrice;
+    private double upDropSpeed;
+    private String upLimitPrice;
+    private long upTime;
+    private String upTimeFormat;
+    private String volume;
 
-    public String getAsk_price1() {
-        return ask_price1;
+    public String getAskPrice() {
+        return FinanceUtil.accurateToString(askPrice);
     }
 
-    public void setAsk_price1(String ask_price1) {
-        this.ask_price1 = ask_price1;
+    public void setAskPrice(String askPrice) {
+        this.askPrice = askPrice;
     }
 
-    public String getAsk_price2() {
-        return ask_price2;
+    public String getAskPrice2() {
+        return FinanceUtil.accurateToString(askPrice2);
     }
 
-    public void setAsk_price2(String ask_price2) {
-        this.ask_price2 = ask_price2;
+    public void setAskPrice2(String askPrice2) {
+        this.askPrice2 = askPrice2;
     }
 
-    public String getAsk_price3() {
-        return ask_price3;
+    public String getAskPrice3() {
+        return FinanceUtil.accurateToString(askPrice3);
     }
 
-    public void setAsk_price3(String ask_price3) {
-        this.ask_price3 = ask_price3;
+    public void setAskPrice3(String askPrice3) {
+        this.askPrice3 = askPrice3;
     }
 
-    public String getAsk_price4() {
-        return ask_price4;
+    public String getAskPrice4() {
+        return FinanceUtil.accurateToString(askPrice4);
     }
 
-    public void setAsk_price4(String ask_price4) {
-        this.ask_price4 = ask_price4;
+    public void setAskPrice4(String askPrice4) {
+        this.askPrice4 = askPrice4;
     }
 
-    public String getAsk_price5() {
-        return ask_price5;
+    public String getAskPrice5() {
+        return FinanceUtil.accurateToString(askPrice5);
     }
 
-    public void setAsk_price5(String ask_price5) {
-        this.ask_price5 = ask_price5;
+    public void setAskPrice5(String askPrice5) {
+        this.askPrice5 = askPrice5;
     }
 
-    public String getAsk_volume1() {
-        return ask_volume1;
+    public String getAskVolume() {
+        return askVolume;
     }
 
-    public void setAsk_volume1(String ask_volume1) {
-        this.ask_volume1 = ask_volume1;
+    public void setAskVolume(String askVolume) {
+        this.askVolume = askVolume;
     }
 
-    public String getAsk_volume2() {
-        return ask_volume2;
+    public String getAskVolume2() {
+        return askVolume2;
     }
 
-    public void setAsk_volume2(String ask_volume2) {
-        this.ask_volume2 = ask_volume2;
+    public void setAskVolume2(String askVolume2) {
+        this.askVolume2 = askVolume2;
     }
 
-    public String getAsk_volume3() {
-        return ask_volume3;
+    public String getAskVolume3() {
+        return askVolume3;
     }
 
-    public void setAsk_volume3(String ask_volume3) {
-        this.ask_volume3 = ask_volume3;
+    public void setAskVolume3(String askVolume3) {
+        this.askVolume3 = askVolume3;
     }
 
-    public String getAsk_volume4() {
-        return ask_volume4;
+    public String getAskVolume4() {
+        return askVolume4;
     }
 
-    public void setAsk_volume4(String ask_volume4) {
-        this.ask_volume4 = ask_volume4;
+    public void setAskVolume4(String askVolume4) {
+        this.askVolume4 = askVolume4;
     }
 
-    public String getAsk_volume5() {
-        return ask_volume5;
+    public String getAskVolume5() {
+        return askVolume5;
     }
 
-    public void setAsk_volume5(String ask_volume5) {
-        this.ask_volume5 = ask_volume5;
+    public void setAskVolume5(String askVolume5) {
+        this.askVolume5 = askVolume5;
     }
 
-    public String getBid_price1() {
-        return bid_price1;
+    public String getBidPrice() {
+        return FinanceUtil.accurateToString(bidPrice);
     }
 
-    public void setBid_price1(String bid_price1) {
-        this.bid_price1 = bid_price1;
+    public void setBidPrice(String bidPrice) {
+        this.bidPrice = bidPrice;
     }
 
-    public String getBid_price2() {
-        return bid_price2;
+    public String getBidPrice2() {
+        return FinanceUtil.accurateToString(bidPrice2);
     }
 
-    public void setBid_price2(String bid_price2) {
-        this.bid_price2 = bid_price2;
+    public void setBidPrice2(String bidPrice2) {
+        this.bidPrice2 = bidPrice2;
     }
 
-    public String getBid_price3() {
-        return bid_price3;
+    public String getBidPrice3() {
+        return FinanceUtil.accurateToString(bidPrice3);
     }
 
-    public void setBid_price3(String bid_price3) {
-        this.bid_price3 = bid_price3;
+    public void setBidPrice3(String bidPrice3) {
+        this.bidPrice3 = bidPrice3;
     }
 
-    public String getBid_price4() {
-        return bid_price4;
+    public String getBidPrice4() {
+        return FinanceUtil.accurateToString(bidPrice4);
     }
 
-    public void setBid_price4(String bid_price4) {
-        this.bid_price4 = bid_price4;
+    public void setBidPrice4(String bidPrice4) {
+        this.bidPrice4 = bidPrice4;
     }
 
-    public String getBid_price5() {
-        return bid_price5;
+    public String getBidPrice5() {
+        return FinanceUtil.accurateToString(bidPrice5);
     }
 
-    public void setBid_price5(String bid_price5) {
-        this.bid_price5 = bid_price5;
+    public void setBidPrice5(String bidPrice5) {
+        this.bidPrice5 = bidPrice5;
     }
 
-    public String getBid_volume1() {
-        return bid_volume1;
+    public String getBidVolume() {
+        return bidVolume;
     }
 
-    public void setBid_volume1(String bid_volume1) {
-        this.bid_volume1 = bid_volume1;
+    public void setBidVolume(String bidVolume) {
+        this.bidVolume = bidVolume;
     }
 
-    public String getBid_volume2() {
-        return bid_volume2;
+    public String getBidVolume2() {
+        return bidVolume2;
     }
 
-    public void setBid_volume2(String bid_volume2) {
-        this.bid_volume2 = bid_volume2;
+    public void setBidVolume2(String bidVolume2) {
+        this.bidVolume2 = bidVolume2;
     }
 
-    public String getBid_volume3() {
-        return bid_volume3;
+    public String getBidVolume3() {
+        return bidVolume3;
     }
 
-    public void setBid_volume3(String bid_volume3) {
-        this.bid_volume3 = bid_volume3;
+    public void setBidVolume3(String bidVolume3) {
+        this.bidVolume3 = bidVolume3;
     }
 
-    public String getBid_volume4() {
-        return bid_volume4;
+    public String getBidVolume4() {
+        return bidVolume4;
     }
 
-    public void setBid_volume4(String bid_volume4) {
-        this.bid_volume4 = bid_volume4;
+    public void setBidVolume4(String bidVolume4) {
+        this.bidVolume4 = bidVolume4;
     }
 
-    public String getBid_volume5() {
-        return bid_volume5;
+    public String getBidVolume5() {
+        return bidVolume5;
     }
 
-    public void setBid_volume5(String bid_volume5) {
-        this.bid_volume5 = bid_volume5;
+    public void setBidVolume5(String bidVolume5) {
+        this.bidVolume5 = bidVolume5;
     }
 
-    public String getBusiness_amount() {
-        return business_amount;
+    public String getDownLimitPrice() {
+        return downLimitPrice;
     }
 
-    public void setBusiness_amount(String business_amount) {
-        this.business_amount = business_amount;
+    public void setDownLimitPrice(String downLimitPrice) {
+        this.downLimitPrice = downLimitPrice;
     }
 
-    public String getBusiness_balance() {
-        return business_balance;
+    public String getExchangeId() {
+        return exchangeId;
     }
 
-    public void setBusiness_balance(String business_balance) {
-        this.business_balance = business_balance;
+    public void setExchangeId(String exchangeId) {
+        this.exchangeId = exchangeId;
     }
 
-    public String getCode_name() {
-        return code_name;
+    public String getHighestPrice() {
+        return FinanceUtil.accurateToString(highestPrice);
     }
 
-    public void setCode_name(String code_name) {
-        this.code_name = code_name;
+    public void setHighestPrice(String highestPrice) {
+        this.highestPrice = highestPrice;
     }
 
-    public String getHigh_price() {
-        return high_price;
+    public String getInstrumentId() {
+        return instrumentId;
     }
 
-    public void setHigh_price(String high_price) {
-        this.high_price = high_price;
+    public void setInstrumentId(String instrumentId) {
+        this.instrumentId = instrumentId;
     }
 
-    public String getLast_price() {
-        return last_price;
+    public String getLastPrice() {
+        return FinanceUtil.accurateToString(lastPrice);
     }
 
-    public void setLast_price(String last_price) {
-        this.last_price = last_price;
+    public void setLastPrice(String lastPrice) {
+        this.lastPrice = lastPrice;
     }
 
-    public String getLow_price() {
-        return low_price;
+    public String getLowestPrice() {
+        return FinanceUtil.accurateToString(lowestPrice);
     }
 
-    public void setLow_price(String low_price) {
-        this.low_price = low_price;
+    public void setLowestPrice(String lowestPrice) {
+        this.lowestPrice = lowestPrice;
     }
 
-    public String getOpen_price() {
-        return open_price;
+    public String getOpenPrice() {
+        return FinanceUtil.accurateToString(openPrice);
     }
 
-    public void setOpen_price(String open_price) {
-        this.open_price = open_price;
+    public void setOpenPrice(String openPrice) {
+        this.openPrice = openPrice;
     }
 
-    public String getPrev_price() {
-        return prev_price;
+    public String getPreClsPrice() {
+        return preClsPrice;
     }
 
-    public void setPrev_price(String prev_price) {
-        this.prev_price = prev_price;
+    public void setPreClsPrice(String preClsPrice) {
+        this.preClsPrice = preClsPrice;
     }
 
-    public String getRise_pre() {
-        return rise_pre;
+    public String getPreSetPrice() {
+        return FinanceUtil.accurateToString(preSetPrice);
     }
 
-    public void setRise_pre(String rise_pre) {
-        this.rise_pre = rise_pre;
+    public void setPreSetPrice(String preSetPrice) {
+        this.preSetPrice = preSetPrice;
     }
 
-    public String getRise_price() {
-        return rise_price;
+    public String getSettlePrice() {
+        return settlePrice;
     }
 
-    public void setRise_price(String rise_price) {
-        this.rise_price = rise_price;
+    public void setSettlePrice(String settlePrice) {
+        this.settlePrice = settlePrice;
     }
 
     public String getStatus() {
@@ -323,20 +343,68 @@ public class StockRTData implements Parcelable {
         this.status = status;
     }
 
-    public String getStock_code() {
-        return stock_code;
+    public String getTradeDay() {
+        return tradeDay;
     }
 
-    public void setStock_code(String stock_code) {
-        this.stock_code = stock_code;
+    public void setTradeDay(String tradeDay) {
+        this.tradeDay = tradeDay;
     }
 
-    public String getStock_typename() {
-        return stock_typename;
+    public String getTurnover() {
+        return turnover;
     }
 
-    public void setStock_typename(String stock_typename) {
-        this.stock_typename = stock_typename;
+    public void setTurnover(String turnover) {
+        this.turnover = turnover;
+    }
+
+    public String getUpDropPrice() {
+        return FinanceUtil.accurateToString(upDropPrice);
+    }
+
+    public void setUpDropPrice(String upDropPrice) {
+        this.upDropPrice = upDropPrice;
+    }
+
+    public double getUpDropSpeed() {
+        return upDropSpeed;
+    }
+
+    public void setUpDropSpeed(double upDropSpeed) {
+        this.upDropSpeed = upDropSpeed;
+    }
+
+    public String getUpLimitPrice() {
+        return upLimitPrice;
+    }
+
+    public void setUpLimitPrice(String upLimitPrice) {
+        this.upLimitPrice = upLimitPrice;
+    }
+
+    public long getUpTime() {
+        return upTime;
+    }
+
+    public void setUpTime(long upTime) {
+        this.upTime = upTime;
+    }
+
+    public String getUpTimeFormat() {
+        return upTimeFormat;
+    }
+
+    public void setUpTimeFormat(String upTimeFormat) {
+        this.upTimeFormat = upTimeFormat;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public void setVolume(String volume) {
+        this.volume = volume;
     }
 
     @Override
@@ -346,81 +414,93 @@ public class StockRTData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.ask_price1);
-        dest.writeString(this.ask_price2);
-        dest.writeString(this.ask_price3);
-        dest.writeString(this.ask_price4);
-        dest.writeString(this.ask_price5);
-        dest.writeString(this.ask_volume1);
-        dest.writeString(this.ask_volume2);
-        dest.writeString(this.ask_volume3);
-        dest.writeString(this.ask_volume4);
-        dest.writeString(this.ask_volume5);
-        dest.writeString(this.bid_price1);
-        dest.writeString(this.bid_price2);
-        dest.writeString(this.bid_price3);
-        dest.writeString(this.bid_price4);
-        dest.writeString(this.bid_price5);
-        dest.writeString(this.bid_volume1);
-        dest.writeString(this.bid_volume2);
-        dest.writeString(this.bid_volume3);
-        dest.writeString(this.bid_volume4);
-        dest.writeString(this.bid_volume5);
-        dest.writeString(this.business_amount);
-        dest.writeString(this.business_balance);
-        dest.writeString(this.code_name);
-        dest.writeString(this.high_price);
-        dest.writeString(this.last_price);
-        dest.writeString(this.low_price);
-        dest.writeString(this.open_price);
-        dest.writeString(this.prev_price);
-        dest.writeString(this.rise_pre);
-        dest.writeString(this.rise_price);
+        dest.writeString(this.askPrice);
+        dest.writeString(this.askPrice2);
+        dest.writeString(this.askPrice3);
+        dest.writeString(this.askPrice4);
+        dest.writeString(this.askPrice5);
+        dest.writeString(this.askVolume);
+        dest.writeString(this.askVolume2);
+        dest.writeString(this.askVolume3);
+        dest.writeString(this.askVolume4);
+        dest.writeString(this.askVolume5);
+        dest.writeString(this.bidPrice);
+        dest.writeString(this.bidPrice2);
+        dest.writeString(this.bidPrice3);
+        dest.writeString(this.bidPrice4);
+        dest.writeString(this.bidPrice5);
+        dest.writeString(this.bidVolume);
+        dest.writeString(this.bidVolume2);
+        dest.writeString(this.bidVolume3);
+        dest.writeString(this.bidVolume4);
+        dest.writeString(this.bidVolume5);
+        dest.writeString(this.downLimitPrice);
+        dest.writeString(this.exchangeId);
+        dest.writeString(this.highestPrice);
+        dest.writeString(this.instrumentId);
+        dest.writeString(this.lastPrice);
+        dest.writeString(this.lowestPrice);
+        dest.writeString(this.openPrice);
+        dest.writeString(this.preClsPrice);
+        dest.writeString(this.preSetPrice);
+        dest.writeString(this.settlePrice);
         dest.writeString(this.status);
-        dest.writeString(this.stock_code);
-        dest.writeString(this.stock_typename);
+        dest.writeString(this.tradeDay);
+        dest.writeString(this.turnover);
+        dest.writeString(this.upDropPrice);
+        dest.writeDouble(this.upDropSpeed);
+        dest.writeString(this.upLimitPrice);
+        dest.writeLong(this.upTime);
+        dest.writeString(this.upTimeFormat);
+        dest.writeString(this.volume);
     }
 
     public StockRTData() {
     }
 
     protected StockRTData(Parcel in) {
-        this.ask_price1 = in.readString();
-        this.ask_price2 = in.readString();
-        this.ask_price3 = in.readString();
-        this.ask_price4 = in.readString();
-        this.ask_price5 = in.readString();
-        this.ask_volume1 = in.readString();
-        this.ask_volume2 = in.readString();
-        this.ask_volume3 = in.readString();
-        this.ask_volume4 = in.readString();
-        this.ask_volume5 = in.readString();
-        this.bid_price1 = in.readString();
-        this.bid_price2 = in.readString();
-        this.bid_price3 = in.readString();
-        this.bid_price4 = in.readString();
-        this.bid_price5 = in.readString();
-        this.bid_volume1 = in.readString();
-        this.bid_volume2 = in.readString();
-        this.bid_volume3 = in.readString();
-        this.bid_volume4 = in.readString();
-        this.bid_volume5 = in.readString();
-        this.business_amount = in.readString();
-        this.business_balance = in.readString();
-        this.code_name = in.readString();
-        this.high_price = in.readString();
-        this.last_price = in.readString();
-        this.low_price = in.readString();
-        this.open_price = in.readString();
-        this.prev_price = in.readString();
-        this.rise_pre = in.readString();
-        this.rise_price = in.readString();
+        this.askPrice = in.readString();
+        this.askPrice2 = in.readString();
+        this.askPrice3 = in.readString();
+        this.askPrice4 = in.readString();
+        this.askPrice5 = in.readString();
+        this.askVolume = in.readString();
+        this.askVolume2 = in.readString();
+        this.askVolume3 = in.readString();
+        this.askVolume4 = in.readString();
+        this.askVolume5 = in.readString();
+        this.bidPrice = in.readString();
+        this.bidPrice2 = in.readString();
+        this.bidPrice3 = in.readString();
+        this.bidPrice4 = in.readString();
+        this.bidPrice5 = in.readString();
+        this.bidVolume = in.readString();
+        this.bidVolume2 = in.readString();
+        this.bidVolume3 = in.readString();
+        this.bidVolume4 = in.readString();
+        this.bidVolume5 = in.readString();
+        this.downLimitPrice = in.readString();
+        this.exchangeId = in.readString();
+        this.highestPrice = in.readString();
+        this.instrumentId = in.readString();
+        this.lastPrice = in.readString();
+        this.lowestPrice = in.readString();
+        this.openPrice = in.readString();
+        this.preClsPrice = in.readString();
+        this.preSetPrice = in.readString();
+        this.settlePrice = in.readString();
         this.status = in.readString();
-        this.stock_code = in.readString();
-        this.stock_typename = in.readString();
+        this.tradeDay = in.readString();
+        this.turnover = in.readString();
+        this.upDropPrice = in.readString();
+        this.upDropSpeed = in.readDouble();
+        this.upLimitPrice = in.readString();
+        this.upTime = in.readLong();
+        this.upTimeFormat = in.readString();
+        this.volume = in.readString();
     }
 
-    public static final Creator<StockRTData> CREATOR = new Creator<StockRTData>() {
+    public static final Parcelable.Creator<StockRTData> CREATOR = new Parcelable.Creator<StockRTData>() {
         @Override
         public StockRTData createFromParcel(Parcel source) {
             return new StockRTData(source);

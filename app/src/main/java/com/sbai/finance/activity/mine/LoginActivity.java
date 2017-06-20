@@ -98,6 +98,24 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
+
+        mAuthCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mPhoneNumberClear.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        mPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!TextUtils.isEmpty(mPhoneNumber.getText().toString()) && hasFocus) {
+                    mPhoneNumberClear.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
@@ -105,7 +123,6 @@ public class LoginActivity extends BaseActivity {
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         }
         mHeightPixels = displayMetrics.heightPixels;
-        Log.d(TAG, "onCreate: " + mHeightPixels);
 
     }
 
@@ -166,8 +183,8 @@ public class LoginActivity extends BaseActivity {
 
             mPhoneNumberClear.setVisibility(checkClearPhoneNumButtonVisible() ? View.VISIBLE : View.INVISIBLE);
             if (s.toString().replaceAll(" ", "").length() == 11) {
-                mAuthCode.requestFocus();
                 mPhoneNumber.clearFocus();
+                mAuthCode.requestFocus();
                 mPhoneNumberClear.setVisibility(View.INVISIBLE);
             }
             formatPhoneNumber();

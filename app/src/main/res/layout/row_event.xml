@@ -6,15 +6,16 @@
               android:layout_height="wrap_content"
               android:orientation="vertical"
               android:paddingBottom="20dp"
-              android:paddingLeft="@dimen/common_padding"
-              android:paddingRight="@dimen/common_padding"
               android:paddingTop="20dp">
+
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
         android:textColor="@color/event_title_text"
         android:textSize="@dimen/list_title_size"
         android:textStyle="bold"
@@ -24,6 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
         android:paddingTop="10dp">
 
         <TextView
@@ -44,5 +47,4 @@
             android:textSize="@dimen/list_hint_size"
             tool:text="2017/03/26  12:37"/>
     </LinearLayout>
-
 </LinearLayout>

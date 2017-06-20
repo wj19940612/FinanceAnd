@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -59,7 +60,7 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
 
     private void init() {
         setOrientation(HORIZONTAL);
-        setGravity(mViewGravity);
+        setGravity(Gravity.CENTER_VERTICAL);
         mHeadLineTextView = new AppCompatTextView(getContext());
         mHeadLineTextView.setMinWidth((int) Display.dp2Px(mHeadLineMinWidth, getResources()));
         mHeadLineTextView.setMinHeight(50);
@@ -95,7 +96,7 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BottomTextViewLayout);
         mHeadLinePaddingRight = typedArray.getDimension(R.styleable.BottomTextViewLayout_headline_text_padding_right, 16);
         mHeadLineText = typedArray.getString(R.styleable.BottomTextViewLayout_headline_text);
-        mHeadLineTextColor = typedArray.getColor(R.styleable.BottomTextViewLayout_headline_text_color, ContextCompat.getColor(getContext(), R.color.secondaryText));
+        mHeadLineTextColor = typedArray.getColor(R.styleable.BottomTextViewLayout_headline_text_color, ContextCompat.getColor(getContext(), R.color.unluckyText));
         mHeadLineTextSize = typedArray.getDimension(R.styleable.BottomTextViewLayout_headline_text_size, 14);
         mHeadLineMinWidth = typedArray.getDimension(R.styleable.BottomTextViewLayout_headline_text_minWidth, 150f);
         mInfoText = typedArray.getString(R.styleable.BottomTextViewLayout_info_text);

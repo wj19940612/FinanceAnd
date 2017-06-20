@@ -392,13 +392,14 @@ public class Client {
                 .put("createTime", createTime));
     }
 
-	/**
-	 * 获取新消息数量
-	 * @return
-	 */
-	public static API getNewMessageCount() {
-		return new API(POST, "/msg/msg/count.do", null);
-	}
+    /**
+     * 获取新消息数量
+     *
+     * @return
+     */
+    public static API getNewMessageCount() {
+        return new API(POST, "/msg/msg/count.do", null);
+    }
 
     /**
      * 接口名称 标记已读
@@ -537,7 +538,7 @@ public class Client {
      * @return
      */
     public static API attentionOrRelieveAttentionUser(int followId, int status) {
-        return new API(POST, "/coterie/userInterest/follow.do", new ApiParams()
+        return new API("/coterie/userInterest/follow.do", new ApiParams()
                 .put("followId", followId)
                 .put("status", status));
     }
@@ -688,9 +689,9 @@ public class Client {
      * @return
      */
     public static API getStockMarketData(String stockCodes) {
-        return new API("/stock/comb",
+        return new API(POST, "/stk/stk/list.do",
                 new ApiParams()
-                        .put("stock_code", stockCodes));
+                        .put("codes", stockCodes));
     }
 
     /**
@@ -712,9 +713,9 @@ public class Client {
      * @return
      */
     public static API getStockRealtimeData(String stockCode) {
-        return new API("/stock/realtime",
+        return new API("/stk/stk/real.do",
                 new ApiParams()
-                        .put("stock_code", stockCode));
+                        .put("code", stockCode));
     }
 
     /**
@@ -779,9 +780,9 @@ public class Client {
      * @return
      */
     public static API getStockTrendData(String stockCode) {
-        return new API("/stock/trend",
+        return new API("/stk/stk/trend.do",
                 new ApiParams()
-                        .put("stock_code", stockCode));
+                        .put("code", stockCode));
     }
 
     /**
@@ -789,14 +790,14 @@ public class Client {
      * 请求类型 get
      * 请求Url  /stock/sort
      *
-     * @param sort_type  排序类别    	1到4分别是 涨幅排名 跌幅排名 5分钟涨幅 5分钟跌幅
-     * @param stock_type 股票类别,参考市场查询返回值
+     * @param direction  排序类别  1降序 0升序
+     * @param exchangeId 市场代码
      * @return
      */
-    public static API getStockSort(int sort_type, int stock_type) {
-        return new API("/stock/sort", new ApiParams()
-                .put("sort_type", sort_type)
-                .put("stock_type", stock_type));
+    public static API getStockSort(int direction, int exchangeId) {
+        return new API("/stk/stk/sort.do", new ApiParams()
+                .put("direction", direction)
+                .put("exchangeId", exchangeId));
     }
 
     /**
@@ -1091,8 +1092,7 @@ public class Client {
     //乐米协议
 
     /**
-     *
-     * @param id  2 借款协议  3 用户协议
+     * @param id 2 借款协议  3 用户协议
      * @return
      */
     public static API getArticleProtocol(int id) {
@@ -1117,7 +1117,7 @@ public class Client {
      * @return
      */
     public static API sendBorrowMessage(int loanId, String content) {
-        return new API(POST,"/coterie/help/loanNote/addNote.do",
+        return new API(POST, "/coterie/help/loanNote/addNote.do",
                 new ApiParams()
                         .put("loanId", loanId)
                         .put("content", content));
@@ -1418,12 +1418,12 @@ public class Client {
     /**
      * /user/userAccount/sendMsgCodeForPass.do
      * POST
-     * 忘记密码发送手机消息
+     * 忘记密码发送手机消息 银行卡充值发送验证码
      *
      * @param phone
      * @return
      */
-    public static API sendMsgCodeForPassWord(String phone) {
+    public static API sendMsgCodeForPassWordOrBankCardPay(String phone) {
         return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
     }
 
@@ -1457,13 +1457,114 @@ public class Client {
      */
     public static API bindBankCard(String realName, String idCard, String cardNumber,
                                    String cardPhone, String issuingBankName, int bankId) {
-        return new API("/user/bankCard/addBankCard.do", new ApiParams()
+        return new API(POST, "/user/bankCard/addBankCard.do", new ApiParams()
                 .put("realName", realName)
                 .put("idCard", idCard)
                 .put("cardNumber", cardNumber)
                 .put("cardPhone", cardPhone)
                 .put("issuingBankName", issuingBankName)
                 .put("bankId", bankId));
+    }
+
+
+    /**
+     * /user/userpayForDeposit/payDepositMoney.do
+     * POST
+     * 充值接口（nqc）
+     * <p>
+     * 提交至服务端充值信息
+     *
+     * @param platform
+     * @param money
+     * @param bankcardId
+     * @return
+     */
+    public static API submitRechargeData(String platform, String money, Integer bankcardId) {
+        return new API(POST, "/user/userpayForDeposit/payDepositMoney.do", new ApiParams()
+                .put("platform", platform)
+                .put("money", money)
+                .put("bankcardId", bankcardId));
+    }
+
+    /**
+     * user/userpayForDeposit/payCheckByQt.do
+     * POST
+     * 银行卡支付支付短信验证码确认（nqc）
+     *
+     * @param merchantOrderId 第三方订单id
+     * @param checkCode       确认码
+     * @return
+     */
+    public static API confirmBankPay(String merchantOrderId, String checkCode) {
+        return new API("/user/userpayForDeposit/payCheckByQt.do", new ApiParams()
+                .put("merchantOrderId", merchantOrderId)
+                .put("checkCode", checkCode));
+    }
+
+    /**
+     * /user/userAccount/userAccountInfo.do
+     * POST
+     * 个人资金信息（wms）
+     *
+     * @return
+     */
+    public static API requestUserFundInfo() {
+        return new API(POST, "/user/userAccount/userAccountInfo.do", null);
+    }
+
+    /**
+     * /user/bankCard/queryBankCard.do
+     * POST
+     * 用户银行卡信息
+     *
+     * @return
+     */
+    public static API requestUserBankCardInfo() {
+        return new API(POST, "/user/bankCard/queryBankCard.do", null);
+    }
+
+    /**
+     * /user/bankCard/getBank.do
+     * GET
+     * 查询可用的银行
+     *
+     * @return
+     */
+    public static API requestCanUseBankList() {
+        return new API("/user/bankCard/getBank.do", null);
+    }
+
+    //提现手续费
+    public static API requestWithDrawPoundage() {
+        return new API(POST, "/user/withdraw/getFee.do", null);
+    }
+
+    /**
+     * 提现
+     * /user/withdraw/withdrawByBankcard.do
+     *
+     * @param money
+     * @param BankcardId
+     * @param password
+     * @return
+     */
+    public static API withDraw(String money, int BankcardId, String password) {
+        return new API(POST, "/user/withdraw/withdrawByBankcard.do", new ApiParams()
+                .put("money", money)
+                .put("BankcardId", BankcardId)
+                .put("password", password));
+    }
+
+    /**
+     * /user/bankCard/getPayRule.do
+     * POST
+     * 获取限额（wms）
+     *
+     * @param bankId
+     * @return
+     */
+    public static API getBankLimit(int bankId) {
+        return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details

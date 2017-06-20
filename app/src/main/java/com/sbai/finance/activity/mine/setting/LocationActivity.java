@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.mine.setting;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -98,21 +96,21 @@ public class LocationActivity extends BaseActivity {
     }
 
     private void updateLocationInfo() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
-        if (Build.VERSION.SDK_INT >= 23) {
-            int check = ContextCompat.checkSelfPermission(this, permissions[0]);
-            if (check == PackageManager.PERMISSION_GRANTED) {
-                openGPSSettings();
-            } else {
-                requestPermissions(permissions, 1);
-            }
-        } else {
-            openGPSSettings();
-        }
+//        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int check = ContextCompat.checkSelfPermission(this, permissions[0]);
+//            if (check == PackageManager.PERMISSION_GRANTED) {
+//                openGPSSettings();
+//            } else {
+//                requestPermissions(permissions, 1);
+//            }
+//        } else {
+        openGPSSettings();
+//        }
     }
 
     private void requestLocation() {
-        GpsUtils gpsUtils = new GpsUtils();
+        GpsUtils gpsUtils = new GpsUtils(this);
         mAddress = gpsUtils.getAddress();
         if (mAddress != null) {
             String land = mAddress.getAdminArea() + "-" + mAddress.getLocality() + "-" + mAddress.getSubLocality();
@@ -147,9 +145,9 @@ public class LocationActivity extends BaseActivity {
         String[] split;
         if (!TextUtils.isEmpty(mLocation.getText()) && isSelectGpsLocation) {
             String location;
-            if (!TextUtils.isEmpty(mPublishLocation)){
-                location=mPublishLocation;
-            }else{
+            if (!TextUtils.isEmpty(mPublishLocation)) {
+                location = mPublishLocation;
+            } else {
                 location = mLocation.getText().toString();
             }
             split = location.split(" ");
@@ -210,9 +208,9 @@ public class LocationActivity extends BaseActivity {
     private void openGPSSettings() {
         LocationManager locationManager = (LocationManager) this
                 .getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)
+                || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             SmartDialog.with(getActivity(), getString(R.string.open_gps))
-                    .setMessageTextSize(15)
                     .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
