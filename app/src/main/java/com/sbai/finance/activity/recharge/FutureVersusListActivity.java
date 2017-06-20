@@ -74,6 +74,12 @@ public class FutureVersusListActivity extends BaseActivity {
 
             }
         });
+        mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         mListView.addHeaderView(header);
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mListView.setAdapter(mVersusListAdapter);

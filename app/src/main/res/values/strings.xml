@@ -90,7 +90,7 @@
     <string name="borrow_title">借款有道</string>
     <string name="borrow_mine">我的借款</string>
     <string name="borrow_detail">帮助他人，赚些小慧</string>
-    <string name="idea_title">观点大神</string>
+    <string name="opinion_master">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
     <string name="choose_trade_type">选择交易类型</string>
@@ -583,4 +583,10 @@
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
     <string name="versus_record">期货对战-战绩</string>
+    <string name="wing">获胜</string>
+    <string name="failure">败北</string>
+    <string name="position_direction">持仓方向</string>
+    <string name="buy_price">买入价</string>
+    <string name="position_profit">持仓盈亏(元)</string>
+    <string name="no_position">暂无持仓</string>
 </resources>

@@ -97,4 +97,5 @@
                 android:textSize="10sp"
                 tools:text="我的名字很长"/>
        </LinearLayout>
+
 </LinearLayout>
