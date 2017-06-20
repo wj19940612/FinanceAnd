@@ -62,8 +62,6 @@ import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 
 public abstract class StockTradeActivity extends BaseActivity {
 
-    protected int pagePosition;
-
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
 
     protected abstract PagerAdapter createSubPageAdapter();
@@ -183,7 +181,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void showDeleteOptionalDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional),getString(R.string.hint))
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional), getString(R.string.hint))
                 .setMessageTextSize(15)
                 .setPositive(R.string.yes, new SmartDialog.OnClickListener() {
                     @Override
@@ -245,8 +243,32 @@ public abstract class StockTradeActivity extends BaseActivity {
     protected void onPostResume() {
         super.onPostResume();
         requestStockTrendDataAndSet();
+        requestExchangeStatus();
 
         startScheduleJob(1 * 1000);
+    }
+
+    private void requestExchangeStatus() {
+        Client.getExchangeStatus(mVariety.getExchangeId()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Integer>, Integer>() {
+                    @Override
+                    protected void onRespSuccessData(Integer data) {
+                        int exchangeStatus = (data != null ? data.intValue() : mVariety.getExchangeStatus());
+                        mVariety.setExchangeStatus(exchangeStatus);
+                        updateExchangeStatusView();
+                    }
+                }).fireSync();
+    }
+
+    private void updateExchangeStatusView() {
+        int exchangeStatus = mVariety.getExchangeStatus();
+        View view = mTitleBar.getCustomView();
+        TextView exchangeStatusView = (TextView) view.findViewById(R.id.exchangeStatus);
+        if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
+            exchangeStatusView.setText(R.string.market_close);
+        } else {
+            exchangeStatusView.setText(R.string.market_trading);
+        }
     }
 
     @Override
@@ -261,7 +283,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         UMShareAPI.get(this).release();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -309,18 +330,29 @@ public abstract class StockTradeActivity extends BaseActivity {
         }
     }
 
-    private void requestStockRTData(){
+    private void requestStockRTData() {
         Client.getStockRealtimeData(mVariety.getVarietyType())
                 .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
-                        if (result != null) {
-                            mStockRTData = result;
-                            updateStockTrendView();
-                        }
+                        mStockRTData = result;
+                        updateStockTrendView();
                         updateMarketDataView();
+                        updateExchangeAndStockStatus();
                     }
                 }).fireSync();
+    }
+
+    private void updateExchangeAndStockStatus() {
+        if (mStockRTData != null) {
+            if (mStockRTData.getStatus().equals(StockRTData.STATUS_HALT)) {
+                View view = mTitleBar.getCustomView();
+                TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
+                exchangeStatus.setText(R.string.stock_halt);
+            } else {
+                requestExchangeStatus();
+            }
+        }
     }
 
     private void updateStockTrendView() {
@@ -366,9 +398,9 @@ public abstract class StockTradeActivity extends BaseActivity {
         TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
         productName.setText(mVariety.getVarietyName() + " (" + mVariety.getVarietyType() + ")");
         if (mVariety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-            exchangeStatus.setVisibility(View.GONE);
+            exchangeStatus.setText(R.string.market_trading);
         } else {
-            exchangeStatus.setVisibility(View.VISIBLE);
+            exchangeStatus.setText(R.string.market_close);
         }
 
         setUpTitleBar(mTitleBar);
@@ -426,7 +458,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockTrendData>>,List<StockTrendData>>() {
+                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>() {
                     @Override
                     protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {

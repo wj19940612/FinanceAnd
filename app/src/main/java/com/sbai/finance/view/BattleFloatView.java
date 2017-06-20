@@ -82,29 +82,33 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     private void initViews() {
-        if (mMode == Mode.GAMEHALL) {
+        if (mMode == Mode.HALL) {
             //游戏大厅显示标题
             mVarietyName.setVisibility(VISIBLE);
             resetMargin();
         } else {
+            //非游戏大厅不显示标题
             mVarietyName.setVisibility(GONE);
-            mMyPraiseButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnPraiseListener != null) {
-                        mOnPraiseListener.addMyPraiseCount();
+            //参观者可以点赞
+            if (mMode == Mode.VISITOR) {
+                mMyPraiseButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnPraiseListener != null) {
+                            mOnPraiseListener.addMyPraiseCount();
+                        }
                     }
-                }
-            });
+                });
 
-            mUserPraiseButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnPraiseListener != null) {
-                        mOnPraiseListener.addUserPraiseCount();
+                mUserPraiseButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnPraiseListener != null) {
+                            mOnPraiseListener.addUserPraiseCount();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -123,6 +127,7 @@ public class BattleFloatView extends RelativeLayout {
         Glide.with(getContext())
                 .load(url)
                 .bitmapTransform(new GlideCircleTransform(getContext()))
+                .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mMyAvatar);
         return this;
     }
@@ -136,6 +141,7 @@ public class BattleFloatView extends RelativeLayout {
         Glide.with(getContext())
                 .load(url)
                 .bitmapTransform(new GlideCircleTransform(getContext()))
+                .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mUserAvatar);
         return this;
     }
@@ -193,17 +199,16 @@ public class BattleFloatView extends RelativeLayout {
      * @param reward     赏金
      * @param coinType   对战类型  2元宝 3积分
      * @param gameStatus 对战状态 1匹配中  2对战中  3结束
-     * @param endtime    对战时长
+     * @param endTime    对战时长
      * @return
      */
-    public BattleFloatView setDepositAndTime(int reward, int coinType, int gameStatus, String endtime) {
-        // TODO: 2017/6/19 显示逻辑没写
+    public BattleFloatView setDepositAndTime(int reward, int coinType, int gameStatus, String endTime) {
         StringBuilder builder = new StringBuilder();
         builder.append(reward);
         builder.append(coinType == 2 ? "元宝" : "积分");
         builder.append("    ");
         if (gameStatus == 1) {
-            builder.append(endtime);
+            builder.append(endTime);
         }
         builder.append(gameStatus == 2 ? "2对战中" : "结束");
         mDepositAndTime.setText(builder.toString());
@@ -214,7 +219,7 @@ public class BattleFloatView extends RelativeLayout {
     public BattleFloatView setPraise(int myPraiseCount, int fighterPraiseCount) {
         String myPraiseNumber = myPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(myPraiseCount);
         String fighterPraiseNumber = fighterPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(fighterPraiseCount);
-        if (mMode == Mode.GAMEHALL) {
+        if (mMode == Mode.HALL) {
             //如果是游戏大厅 不显示赞信息
             mMyPerspective.setVisibility(GONE);
             mUserPerspective.setVisibility(GONE);
@@ -222,14 +227,14 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraiseButton.setText(String.valueOf(myPraiseNumber));
-            mUserPraiseButton.setText(String.valueOf(fighterPraiseNumber));
+            mMyPraise.setText(String.valueOf(myPraiseNumber));
+            mUserPraise.setText(String.valueOf(fighterPraiseNumber));
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
             mUserPerspective.setVisibility(VISIBLE);
-            mMyPraise.setText(String.valueOf(myPraiseNumber));
-            mUserPraise.setText(String.valueOf(fighterPraiseNumber));
+            mMyPraiseButton.setText(String.valueOf(myPraiseNumber));
+            mUserPraiseButton.setText(String.valueOf(fighterPraiseNumber));
         }
         return this;
     }
@@ -242,7 +247,7 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public enum Mode {
-        GAMEHALL,
+        HALL,
         VISITOR,
         MINE;
     }

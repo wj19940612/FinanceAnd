@@ -109,9 +109,7 @@ public class API extends RequestManager {
 
     private String createUrl() {
         String url = new StringBuilder(getHost()).append(mUri).toString();
-        // TODO: 2017/6/17  需要删除
-//        if (mMethod == Request.Method.GET && mApiParams != null) {
-        if ( mApiParams != null) {
+        if (mMethod == Request.Method.GET && mApiParams != null) {
             url = url + mApiParams.toString();
             mApiParams = null;
         }
