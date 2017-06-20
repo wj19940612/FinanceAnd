@@ -5,4 +5,13 @@ package com.sbai.finance.model.versus;
  */
 
 public class FutureVersus {
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }
