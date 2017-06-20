@@ -368,7 +368,7 @@ public class BorrowMineFragment extends BaseFragment implements
                 } else {
                     mIsAttention.setText("");
                 }
-                mBorrowMoneyContent.setText(item.getContent());
+                mBorrowMoneyContent.setText(item.getContent().trim());
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
                 mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
