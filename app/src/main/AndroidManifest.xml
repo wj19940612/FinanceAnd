@@ -295,6 +295,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.mine.cornucopia.CornucopiaActivity">
         </activity>
+        <activity android:name=".activity.mine.cornucopia.EarningsAndExpendDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

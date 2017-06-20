@@ -29,6 +29,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.wallet.WalletActivity;
 import com.sbai.finance.model.LocalUser;
@@ -298,7 +299,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.cornucopia:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                    Launcher.with(getActivity(), CornucopiaActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="60dp"
+              android:background="@android:color/white"
+              android:gravity="center_vertical"
+              android:paddingLeft="@dimen/common_padding"
+              android:paddingRight="@dimen/common_padding">
+
+    <TextView
+        android:id="@+id/product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_cell_vcoin_big"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/blackAssist"
+        android:textSize="13sp"
+        tools:text="10.00"/>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/oldPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:minWidth="60dp"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        android:visibility="gone"
+        tools:text="原价:￥150"/>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:background="@drawable/bg_cell_btn"
+        android:gravity="center"
+        android:textColor="@color/blackAssist"
+        android:textSize="13sp"
+        tools:text="5元宝"/>
+</LinearLayout>

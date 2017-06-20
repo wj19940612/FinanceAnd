@@ -131,7 +131,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 mWithdrawMoney.setText(FinanceUtil.formatWithScale(mMoney));
                 break;
             case R.id.withdraw:
-                InputSafetyPassDialogFragment.newInstance(mWithdrawMoney.getText().toString()).show(getSupportFragmentManager());
+                InputSafetyPassDialogFragment.newInstance(getString(R.string.yuan, mWithdrawMoney.getText().toString())).show(getSupportFragmentManager());
                 break;
             case R.id.connect_service:
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();

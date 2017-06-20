@@ -573,6 +573,7 @@
     <string name="complete">完成</string>
     <string name="REM_HINT">￥</string>
     <string name="yuan">￥%1$s</string>
+    <string name="yuan_number">￥%1$d</string>
     <string name="please_input_pass">请输入安全密码</string>
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
@@ -581,6 +582,15 @@
     <!--  聚宝盆  -->
     <string name="cornucopia">聚宝盆</string>
     <string name="exchange_rule">兑换规则</string>
+    <string name="exchange_coin">兑换元宝</string>
+    <string name="exchange_integrate">兑换积分</string>
+    <string name="coin_number">%1$d  元宝</string>
+    <string name="integrate_number">%1$s  积分</string>
+    <string name="check_details">查看明细></string>
+    <string name="old_price">原价: ￥%1$d</string>
+    <string name="buy">购买</string>
+    <string name="buy_confirm">购买确认</string>
+    <string name="confirm_use_coin_buy_integrate">确认使用%1$d元宝购买%2$s积分</string>
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>
