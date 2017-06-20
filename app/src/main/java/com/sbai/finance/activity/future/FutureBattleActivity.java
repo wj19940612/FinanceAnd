@@ -81,6 +81,4 @@ public class FutureBattleActivity extends BaseActivity {
                 .setProgress(15.00, 70.00, false)
                 .setPraise(100, 999);
     }
-
-
 }

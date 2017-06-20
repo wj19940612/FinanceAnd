@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureBattleActivity;
+import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.home.TopicActivity;
@@ -37,7 +36,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.MyGridView;
@@ -64,10 +62,6 @@ public class HomeFragment extends BaseFragment {
     MyGridView mTopicGv;
     @BindView(R.id.nestedScrollView)
     ScrollView mNestedScrollView;
-    @BindView(R.id.idea)
-    LinearLayout mIdea;
-    @BindView(R.id.ideaTitle)
-    TextView mIdeaTitle;
     @BindView(R.id.bigEvent)
     LinearLayout mBigEvent;
     @BindView(R.id.titleBar)
@@ -86,12 +80,10 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initView();
-//        addTopPaddingWithStatusBar(mTitleBar);
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNestedScrollView.smoothScrollTo(0,0);
+                mNestedScrollView.smoothScrollTo(0, 0);
             }
         });
         mTopicGridAdapter = new TopicGridAdapter(getContext());
@@ -102,18 +94,18 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Topic topic = (Topic) parent.getItemAtPosition(position);
                 if (topic != null) {
-                    if (topic.getContextType()==Topic.CONTEXT_TYPE_VARIETY){
-                    Launcher.with(getContext(), TopicActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, topic)
-                            .execute();
-                    }else if (topic.getContextType()==Topic.CONTEXT_TYPE_H5){
+                    if (topic.getContextType() == Topic.CONTEXT_TYPE_VARIETY) {
+                        Launcher.with(getContext(), TopicActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, topic)
+                                .execute();
+                    } else if (topic.getContextType() == Topic.CONTEXT_TYPE_H5) {
                         Launcher.with(getActivity(), HideTitleWebActivity.class)
                                 .putExtra(HideTitleWebActivity.EX_URL, topic.getContext())
                                 .putExtra(HideTitleWebActivity.EX_TITLE, topic.getTitle())
                                 .putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
 
-                    }else if (topic.getContextType()==Topic.CONTEXT_TYPE_TEXT){
+                    } else if (topic.getContextType() == Topic.CONTEXT_TYPE_TEXT) {
                         Launcher.with(getActivity(), TopicDetailActivity.class)
                                 .putExtra(TopicDetailActivity.TOPIC, topic)
                                 .putExtra(TopicDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
@@ -143,9 +135,7 @@ public class HomeFragment extends BaseFragment {
         mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
             @Override
             public void onFutureClick() {
-//                Launcher.with(getActivity(), FutureListActivity.class).execute();
-//                Launcher.with(getActivity(), FutureVersusListActivity.class).execute();
-                Launcher.with(getActivity(), FutureBattleActivity.class).execute();
+                Launcher.with(getActivity(), FutureListActivity.class).execute();
             }
 
             @Override
@@ -171,15 +161,6 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         });
-    }
-
-    private void initView() {
-//        SpannableString attentionSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.borrow_title),
-//                "\n" + getString(R.string.borrow_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
-//        mBorrowTitle.setText(attentionSpannableString);
-        SpannableString fansSpannableString = StrUtil.mergeTextWithRatioColor(getString(R.string.idea_title),
-                "\n" + getString(R.string.idea_detail), 0.733f, ContextCompat.getColor(getActivity(),R.color.assistSecondText));
-        mIdeaTitle.setText(fansSpannableString);
     }
 
     @Override
@@ -230,7 +211,7 @@ public class HomeFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
-                            updateEventInfo(resp.getData());
+                        updateEventInfo(resp.getData());
                     }
                 }).fire();
         //获取主题信息
@@ -259,14 +240,17 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({ R.id.idea, R.id.bigEvent})
+    @OnClick({R.id.opinionMaster, R.id.bigEvent, R.id.futureBattle})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bigEvent:
                 Launcher.with(getActivity(), EventActivity.class).execute();
                 break;
-            case R.id.idea:
+            case R.id.opinionMaster:
                 Launcher.with(getActivity(), OpinionActivity.class).execute();
+                break;
+            case R.id.futureBattle:
+                Launcher.with(getActivity(), FutureBattleActivity.class).execute();
                 break;
             default:
                 break;
