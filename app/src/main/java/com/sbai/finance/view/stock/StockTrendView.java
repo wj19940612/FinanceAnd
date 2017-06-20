@@ -163,29 +163,31 @@ public class StockTrendView extends LinearLayout {
     }
 
     public void setStockRTData(StockRTData stockRTData) {
-        mAskPrice1.setText(stockRTData.getAskPrice());
-        mAskPrice2.setText(stockRTData.getAskPrice2());
-        mAskPrice3.setText(stockRTData.getAskPrice3());
-        mAskPrice4.setText(stockRTData.getAskPrice4());
-        mAskPrice5.setText(stockRTData.getAskPrice5());
+        if (mFivePriceView.getVisibility() == VISIBLE) {
+            mAskPrice1.setText(stockRTData.getAskPrice());
+            mAskPrice2.setText(stockRTData.getAskPrice2());
+            mAskPrice3.setText(stockRTData.getAskPrice3());
+            mAskPrice4.setText(stockRTData.getAskPrice4());
+            mAskPrice5.setText(stockRTData.getAskPrice5());
 
-        mBidPrice1.setText(stockRTData.getBidPrice());
-        mBidPrice2.setText(stockRTData.getBidPrice2());
-        mBidPrice3.setText(stockRTData.getBidPrice3());
-        mBidPrice4.setText(stockRTData.getBidPrice4());
-        mBidPrice5.setText(stockRTData.getBidPrice5());
+            mBidPrice1.setText(stockRTData.getBidPrice());
+            mBidPrice2.setText(stockRTData.getBidPrice2());
+            mBidPrice3.setText(stockRTData.getBidPrice3());
+            mBidPrice4.setText(stockRTData.getBidPrice4());
+            mBidPrice5.setText(stockRTData.getBidPrice5());
 
-        mAskVolume1.setText(getFormattedVolume(stockRTData.getAskVolume()));
-        mAskVolume2.setText(getFormattedVolume(stockRTData.getAskVolume2()));
-        mAskVolume3.setText(getFormattedVolume(stockRTData.getAskVolume3()));
-        mAskVolume4.setText(getFormattedVolume(stockRTData.getAskVolume4()));
-        mAskVolume5.setText(getFormattedVolume(stockRTData.getAskVolume5()));
+            mAskVolume1.setText(getFormattedVolume(stockRTData.getAskVolume()));
+            mAskVolume2.setText(getFormattedVolume(stockRTData.getAskVolume2()));
+            mAskVolume3.setText(getFormattedVolume(stockRTData.getAskVolume3()));
+            mAskVolume4.setText(getFormattedVolume(stockRTData.getAskVolume4()));
+            mAskVolume5.setText(getFormattedVolume(stockRTData.getAskVolume5()));
 
-        mBidVolume1.setText(getFormattedVolume(stockRTData.getBidVolume()));
-        mBidVolume2.setText(getFormattedVolume(stockRTData.getBidVolume2()));
-        mBidVolume3.setText(getFormattedVolume(stockRTData.getBidVolume3()));
-        mBidVolume4.setText(getFormattedVolume(stockRTData.getBidVolume4()));
-        mBidVolume5.setText(getFormattedVolume(stockRTData.getBidVolume5()));
+            mBidVolume1.setText(getFormattedVolume(stockRTData.getBidVolume()));
+            mBidVolume2.setText(getFormattedVolume(stockRTData.getBidVolume2()));
+            mBidVolume3.setText(getFormattedVolume(stockRTData.getBidVolume3()));
+            mBidVolume4.setText(getFormattedVolume(stockRTData.getBidVolume4()));
+            mBidVolume5.setText(getFormattedVolume(stockRTData.getBidVolume5()));
+        }
     }
 
     private String getFormattedVolume(String ask_volume) {
