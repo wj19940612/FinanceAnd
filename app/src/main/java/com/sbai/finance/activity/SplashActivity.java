@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.igexin.sdk.PushManager;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.service.PushIntentService;
 import com.sbai.finance.service.PushService;
@@ -27,7 +28,9 @@ public class SplashActivity extends BaseActivity {
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), PushIntentService.class);
 
         mVersionName = (TextView) findViewById(R.id.versionName);
-        mVersionName.setText(AppInfo.getVersionName(this));
+        if (BuildConfig.DEBUG) {
+            mVersionName.setText(AppInfo.getVersionName(this));
+        }
 
         new Thread(new Runnable() {
             @Override
