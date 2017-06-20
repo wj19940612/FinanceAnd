@@ -148,9 +148,16 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		HistoryNewsModel item = (HistoryNewsModel) parent.getItemAtPosition(position);
 		if (item.getClassify() == 3) {
-			Launcher.with(this, OpinionDetailsActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-					.execute();
+			if (item.getType() == 3 || item.getType() == 4) {
+				Launcher.with(this, OpinionDetailsActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())
+						.putExtra(Launcher.EX_PAYLOAD, item.getViewpointId())
+						.execute();
+			} else {
+				Launcher.with(this, OpinionDetailsActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
+						.execute();
+			}
 		} else if (item.getClassify() == 2) {
 			Launcher.with(this, BorrowDetailsActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())

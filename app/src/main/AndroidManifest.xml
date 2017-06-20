@@ -85,12 +85,12 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.web.TopicDetailActivity"
-                  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"/>
         <!-- 互助 -->
         <activity
             android:name=".activity.mutual.BorrowActivity"
             android:screenOrientation="portrait"/>
-       <activity
+        <activity
             android:name=".activity.mutual.BorrowDetailsActivity"
             android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
@@ -234,10 +234,10 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
-
-        <activity android:name=".activity.mine.setting.ForgetPassWordActivity"
-                  android:windowSoftInputMode="adjustResize"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.setting.ForgetPassWordActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.mine.AreaTakePhoneActivity"
             android:screenOrientation="portrait"/>
@@ -247,7 +247,6 @@
         <activity
             android:name=".activity.mine.EconomicCircleNewsActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.mine.EconomicCircleNewMessageActivity"
             android:screenOrientation="portrait"/>
@@ -273,6 +272,10 @@
         <activity android:name=".activity.mine.wallet.RechargeActivity">
         </activity>
         <activity android:name=".activity.mine.wallet.BindBankCardActivity">
+        </activity>
+        <activity android:name=".activity.future.CreateFightActivity">
+        </activity>
+        <activity android:name=".activity.future.ChooseFuturesActivity">
         </activity>
     </application>
 

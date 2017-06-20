@@ -529,4 +529,17 @@
     <string name="bank">银行</string>
     <string name="bank_choose">请选择银行</string>
     <string name="phone_number_hint">请输入银行预留手机号码</string>
+
+    <!--对战-->
+    <string name="create_fight">创建对战</string>
+    <string name="choose_futures">选择期货</string>
+    <string name="pattern">模式</string>
+    <string name="integral_war">积分战</string>
+    <string name="ingot_war">元宝战</string>
+    <string name="bounty">赏金</string>
+    <string name="duration">时长</string>
+    <string name="five_minutes">5分钟</string>
+    <string name="ten_minutes">10分钟</string>
+    <string name="fifteen_minutes">15分钟</string>
+    <string name="twenty_minutes">20分钟</string>
 </resources>

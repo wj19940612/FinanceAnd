@@ -183,11 +183,11 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
 				}
 
 				if (checked == position) {
-					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_checked);
+					mCheckboxClick.setImageResource(R.drawable.ic_checkbox_checked);
 					mPlatform = item.getPlatform();
 					mType = item.getType();
 				} else {
-					mCheckboxClick.setBackgroundResource(R.drawable.ic_checkbox_unchecked);
+					mCheckboxClick.setImageResource(R.drawable.ic_checkbox_unchecked);
 				}
 			}
 		}
