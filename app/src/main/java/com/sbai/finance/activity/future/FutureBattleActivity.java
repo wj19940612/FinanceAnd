@@ -1,18 +1,21 @@
 package com.sbai.finance.activity.future;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 
 import java.util.List;
@@ -35,6 +38,7 @@ public class FutureBattleActivity extends BaseActivity {
 
     private FutureBattleFragment mFutureBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
+    private StartMatchDialogFragment mStartMatchDialogFragment;
 
     private Variety mVariety;
 
@@ -71,10 +75,12 @@ public class FutureBattleActivity extends BaseActivity {
     }
 
     private void initViews() {
+        mFutureBattleFragment = FutureBattleFragment.newInstance(mVariety);
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, FutureBattleFragment.newInstance(mVariety))
+                .add(R.id.futureArea, mFutureBattleFragment)
                 .commit();
+
 
         mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                 .setMyAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
@@ -94,5 +100,37 @@ public class FutureBattleActivity extends BaseActivity {
                     }
                 })
                 .setPraise(100, 999);
+
+        new Handler(){}.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFutureBattleFragment.setOnBattleButtonClickListener(new BattleButtons.OnViewClickListener() {
+                    @Override
+                    public void onInviteButtonClick() {
+
+                    }
+
+                    @Override
+                    public void onMatchButtonClick() {
+                        if (mStartMatchDialogFragment == null) {
+                            mStartMatchDialogFragment = StartMatchDialogFragment
+                                    .newInstance()
+                                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                                        @Override
+                                        public void onCancel() {
+                                            mStartMatchDialogFragment.dismiss();
+                                        }
+                                    });
+                        }
+                        mStartMatchDialogFragment.show(getSupportFragmentManager());
+                    }
+
+                    @Override
+                    public void onCancelButtonClick() {
+
+                    }
+                });
+            }
+        },100);
     }
 }
