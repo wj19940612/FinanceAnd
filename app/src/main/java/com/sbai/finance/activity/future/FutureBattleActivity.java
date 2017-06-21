@@ -15,6 +15,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 
@@ -54,7 +55,7 @@ public class FutureBattleActivity extends BaseActivity {
     }
 
     private void initData() {
-
+          mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
     public void requestVarietyList() {
@@ -83,10 +84,10 @@ public class FutureBattleActivity extends BaseActivity {
 
 
         mBattleView.setMode(BattleFloatView.Mode.VISITOR)
-                .setMyAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
-                .setMyName("松柏牌面哥")
-                .setUserAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
-                .setUserName("狗海天")
+                .setCreateAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
+                .setCreateName("松柏牌面哥")
+                .setAgainstAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
+                .setAgainstName("狗海天")
                 .setDeposit(200, 2)
                 .setDeadline(2, 1000)
                 .setProgress(30.00, 70.00, false)

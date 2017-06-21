@@ -27,14 +27,18 @@ import butterknife.ButterKnife;
 
 public class BattleFloatView extends RelativeLayout {
 
-    @BindView(R.id.myAvatar)
-    ImageView mMyAvatar;
-    @BindView(R.id.myName)
-    TextView mMyName;
-    @BindView(R.id.userAvatar)
-    ImageView mUserAvatar;
-    @BindView(R.id.userName)
-    TextView mUserName;
+    @BindView(R.id.createAvatar)
+    ImageView mCreateAvatar;
+    @BindView(R.id.createName)
+    TextView mCreateName;
+    @BindView(R.id.createKo)
+    ImageView mCreateKo;
+    @BindView(R.id.againstAvatar)
+    ImageView mAgainstAvatar;
+    @BindView(R.id.againstName)
+    TextView mAgainstName;
+    @BindView(R.id.againstKo)
+    ImageView mAgainstKo;
 
     @BindView(R.id.varietyName)
     TextView mVarietyName;
@@ -123,31 +127,31 @@ public class BattleFloatView extends RelativeLayout {
         mFighterDataArea.setLayoutParams(params);
     }
 
-    public BattleFloatView setMyName(String name) {
-        mMyName.setText(name);
+    public BattleFloatView setCreateName(String name) {
+        mCreateName.setText(name);
         return this;
     }
 
-    public BattleFloatView setMyAvatar(String url) {
+    public BattleFloatView setCreateAvatar(String url) {
         Glide.with(getContext())
                 .load(url)
                 .bitmapTransform(new GlideCircleTransform(getContext()))
                 .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mMyAvatar);
+                .into(mCreateAvatar);
         return this;
     }
 
-    public BattleFloatView setUserName(String userName) {
-        mUserName.setText(userName);
+    public BattleFloatView setAgainstName(String userName) {
+        mAgainstName.setText(userName);
         return this;
     }
 
-    public BattleFloatView setUserAvatar(String url) {
+    public BattleFloatView setAgainstAvatar(String url) {
         Glide.with(getContext())
                 .load(url)
                 .bitmapTransform(new GlideCircleTransform(getContext()))
                 .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mUserAvatar);
+                .into(mAgainstAvatar);
         return this;
     }
 
@@ -161,16 +165,16 @@ public class BattleFloatView extends RelativeLayout {
      *
      * @param myProfit      我的盈利状况
      * @param fighterProfit 对抗者盈利状况
-     * @param  isInviting 是否正在邀请中
+     * @param isInviting    是否正在邀请中
      * @return
      */
-    public BattleFloatView setProgress(double myProfit, double fighterProfit,boolean isInviting) {
+    public BattleFloatView setProgress(double myProfit, double fighterProfit, boolean isInviting) {
         String myFlag = "";
         String fighterFlag = "";
         if (isInviting) {
             mProgressBar.setProgress(0);
             mProgressBar.setSecondaryProgress(0);
-        }else {
+        } else {
             //正正
             if ((myProfit > 0 && fighterProfit >= 0) || (myProfit >= 0 && fighterProfit > 0)) {
                 int progress = (int) (myProfit * 100 / (myProfit + fighterProfit));
@@ -211,8 +215,9 @@ public class BattleFloatView extends RelativeLayout {
 
     /**
      * 显示对战信息
-     * @param reward     赏金
-     * @param coinType   对战类型  2元宝 3积分
+     *
+     * @param reward   赏金
+     * @param coinType 对战类型  2元宝 3积分
      * @return
      */
     public BattleFloatView setDeposit(int reward, int coinType) {
@@ -225,8 +230,9 @@ public class BattleFloatView extends RelativeLayout {
 
     /**
      * 更新对战时间
+     *
      * @param gameStatus 对战状态 1匹配中  2对战中  3结束
-     * @param endTime 对战剩余时长
+     * @param endTime    对战剩余时长
      * @return
      */
     public BattleFloatView setDeadline(int gameStatus, int endTime) {
@@ -250,8 +256,8 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(String.valueOf(myPraiseNumber)+ "赞");
-            mUserPraise.setText(String.valueOf(fighterPraiseNumber)+ "赞");
+            mMyPraise.setText(String.valueOf(myPraiseNumber) + "赞");
+            mUserPraise.setText(String.valueOf(fighterPraiseNumber) + "赞");
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
@@ -269,6 +275,20 @@ public class BattleFloatView extends RelativeLayout {
         }
         if (userLight) {
             mUserPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+        }
+        return this;
+    }
+
+    /**
+     * 设置此局游戏是否胜利
+     * @param success
+     * @return
+     */
+    public BattleFloatView setGameSuccess(boolean success) {
+        if (success) {
+            mAgainstKo.setVisibility(VISIBLE);
+        } else {
+            mCreateKo.setVisibility(VISIBLE);
         }
         return this;
     }
