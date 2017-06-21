@@ -591,6 +591,7 @@
     <string name="go_to_bind_card">去绑卡</string>
 
     <!--future versus-->
+    <string name="go_recharge">去充值</string>
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
     <string name="versus_record">期货对战-战绩</string>
@@ -601,5 +602,17 @@
     <string name="position_profit">持仓盈亏(元)</string>
     <string name="no_position">暂无持仓</string>
     <string name="versus_rule_title">决斗规则</string>
+    <string name="join_versus_failure_title">加入失败</string>
+    <string name="join_versus_failure_tip">余额不足，请充值或选择其他赏金较低的对战</string>
+    <string name="join_versus_title">确认加入对战？</string>
+    <string name="join_versus_tip">加入对战将暂时冻结2000积分作为对战奖金，胜利时返还，失败扣除</string>
+    <string name="continue_versus">继续匹配</string>
+    <string name="no_waiting">不等了</string>
+    <string name="cancel_matching">取消匹配</string>
+    <string name="cancel_tip">对手正在来的路上，是否要取消匹配？</string>
+    <string name="matching">匹配中</string>
+    <string name="matching_tip">正在进行匹配，请稍后</string>
+    <string name="match_versus_title">确认匹配对战？</string>
+    <string name="match_versus_tip">匹配对战将随机选择赏金在余额范围内的对局。</string>
     <string name="versus_rule_tip">1、对战中下注金额进行冻结\n2、按照最后盈利情况进行结算，胜者获得对方赌注百分之九十的奖励\n3、平局不扣赌注，对局时间结束时用户将被清仓后进行结算\n4、对战无操盘记录将自动判负</string>
 </resources>

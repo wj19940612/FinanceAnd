@@ -42,6 +42,7 @@ public class SmartDialog {
     private OnDismissListener mDismissListener;
 
     private boolean mIsDoubleButtons;
+    private boolean mHideNegativeButton;
 
     private String mMessageText;
     private String mTitleText;
@@ -210,7 +211,10 @@ public class SmartDialog {
         mIsDoubleButtons = true;
         return this;
     }
-
+    public SmartDialog setNegativeHide(){
+        mHideNegativeButton = true;
+        return this;
+    }
     public SmartDialog setCancelableOnTouchOutside(boolean cancelable) {
         mCancelableOnTouchOutside = cancelable;
         return this;
@@ -399,6 +403,9 @@ public class SmartDialog {
                 }
             }
         });
+        if (mHideNegativeButton){
+            mNegative.setVisibility(View.GONE);
+        }
 //        } else {
 //            mSingleButton.setVisibility(View.VISIBLE);
 //            mDoubleButtons.setVisibility(View.GONE);
