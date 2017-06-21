@@ -170,7 +170,7 @@ public class BattleTradeView extends LinearLayout {
     }
 
 
-    static class BattleTradeAdapter extends ArrayAdapter<VersusTrade> {
+    public static class BattleTradeAdapter extends ArrayAdapter<VersusTrade> {
         Context mContext;
 
         public BattleTradeAdapter(Context context) {

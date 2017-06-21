@@ -588,4 +588,5 @@
     <string name="buy_price">买入价</string>
     <string name="position_profit">持仓盈亏(元)</string>
     <string name="no_position">暂无持仓</string>
+    <string name="battle_detail">对战详情</string>
 </resources>

@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.FutureBattleFragment;
+import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -69,7 +69,7 @@ public class FutureBattleActivity extends BaseActivity {
     private void initViews() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, FutureBattleFragment.newInstance(mVariety))
+                .add(R.id.futureArea, FutureBattleDetailFragment.newInstance(111))
                 .commit();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
