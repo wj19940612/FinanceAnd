@@ -345,7 +345,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void updateExchangeAndStockStatus() {
         if (mStockRTData != null) {
-            if (mStockRTData.getStatus().equals(StockRTData.STATUS_HALT)) {
+            if (mStockRTData.getStatus().equals(StockRTData.STATUS_DELIST)) {
                 View view = mTitleBar.getCustomView();
                 TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
                 exchangeStatus.setText(R.string.stock_halt);

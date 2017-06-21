@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:state_selected="true">
-      <shape >
-          <corners android:radius="@dimen/common_radius"/>
-          <solid android:color="@color/redAssist"/>
-      </shape>
-  </item>
+    <item android:state_enabled="false">
+        <shape>
+            <corners android:radius="@dimen/common_radius"/>
+            <solid android:color="@color/unluckyText"/>
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <corners android:radius="@dimen/common_radius"/>
+            <solid android:color="@color/redAssist"/>
+        </shape>
+    </item>
     <item android:state_selected="false">
-        <shape >
+        <shape>
             <corners android:radius="@dimen/common_radius"/>
             <solid android:color="@color/greenAssist"/>
         </shape>

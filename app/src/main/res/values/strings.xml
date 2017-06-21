@@ -105,6 +105,7 @@
     <string name="ShangHaiStockExchange">上证指数</string>
     <string name="ShenzhenStockExchange">深证指数</string>
     <string name="GrowthEnterpriseMarket">创业板指</string>
+    <string name="delist">停牌</string>
 
 
     <!--help-->
