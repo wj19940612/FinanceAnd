@@ -40,12 +40,13 @@
                         android:id="@+id/createKo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_versus_ko"/>
+                        android:src="@drawable/ic_versus_ko"
+                        android:visibility="gone"/>
 
                 </FrameLayout>
 
                 <TextView
-                    android:id="@+id/myName"
+                    android:id="@+id/createName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -93,7 +94,7 @@
                         android:layout_alignParentTop="true"/>
 
                     <TextView
-                        android:id="@+id/myProfit"
+                        android:id="@+id/createProfit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
@@ -102,7 +103,7 @@
                         android:textSize="10sp"/>
 
                     <TextView
-                        android:id="@+id/userProfit"
+                        android:id="@+id/againstProfit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
@@ -142,12 +143,13 @@
                         android:id="@+id/againstKo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_versus_ko"/>
+                        android:src="@drawable/ic_versus_ko"
+                        android:visibility="gone"/>
 
                 </FrameLayout>
 
                 <TextView
-                    android:id="@+id/userName"
+                    android:id="@+id/againstName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
