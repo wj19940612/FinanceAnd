@@ -555,4 +555,31 @@ public class DateUtil {
     public static long dateToLong(Date date) {
         return date.getTime();
     }
+
+    //return xx:xx
+    public static String getCountdownTime(int total, int spend) {
+        String timeStr = null;
+        int last = total - spend;
+        int minute = 0;
+        int second = 0;
+        if (last <= 0) {
+            return "00:00";
+        } else {
+            minute = last / 60;
+            if (minute < 60) {
+                second = last % 60;
+                timeStr = unitFormat(minute) + ":" + unitFormat(second);
+            }
+        }
+        return timeStr;
+    }
+
+    public static String unitFormat(int i) {
+        String retStr = null;
+        if (i >= 0 && i < 10)
+            retStr = "0" + Integer.toString(i);
+        else
+            retStr = "" + i;
+        return retStr;
+    }
 }
