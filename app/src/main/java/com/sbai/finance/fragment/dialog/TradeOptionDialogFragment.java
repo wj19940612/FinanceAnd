@@ -96,7 +96,7 @@ public class TradeOptionDialogFragment extends DialogFragment {
         } else {
             Preference.get().setAuthorizationTime(SysTime.getSysTime().getSystemTimestamp());
             Launcher.with(getContext(), TradeWebActivity.class)
-                    .putExtra(WebActivity.EX_TITLE,getString(R.string.quick_trade))
+                    .putExtra(WebActivity.EX_TITLE, getString(R.string.quick_trade))
                     .execute();
         }
         dismiss();
