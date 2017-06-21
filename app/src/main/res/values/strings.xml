@@ -590,4 +590,9 @@
     <string name="position_profit">持仓盈亏(元)</string>
     <string name="no_position">暂无持仓</string>
     <string name="battle_detail">对战详情</string>
+    <string name="cancel_match">取消匹配</string>
+    <string name="matching">正在进行匹配，请稍后…</string>
+    <string name="title_matching">正在匹配</string>
+    <string name="title_match_success">匹配成功</string>
+    <string name="desc_match_success">已成功匹配对手\n%1$d秒后进入对战</string>
 </resources>
