@@ -73,7 +73,7 @@ public class FutureVersusListActivity extends BaseActivity {
         versusRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BindBankHintDialogFragment.newInstance()
+                BindBankHintDialogFragment.newInstance(R.string.versus_rule_title,R.string.versus_rule_tip).show(getSupportFragmentManager());
             }
         });
         mBack.setOnClickListener(new View.OnClickListener() {
