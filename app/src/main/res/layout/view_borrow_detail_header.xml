@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@android:color/white"
+              android:orientation="vertical"
               android:paddingBottom="5dp">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="20dp">
@@ -57,10 +58,10 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="8dp"
         android:lineSpacingExtra="8dp"
         android:textColor="#222222"
         android:textSize="14sp"
+        android:visibility="visible"
         tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
 
     <LinearLayout
@@ -287,9 +288,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
+            android:text="留言"
             android:textColor="#222222"
-            android:textSize="14sp"
-            android:text="留言"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/writeMessage"

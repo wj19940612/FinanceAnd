@@ -4,13 +4,16 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@android:color/transparent">
-    <TextView
+    <ImageView
+        android:id="@+id/versusBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_futures_versus_banner"/>
+        android:src="@drawable/ic_futures_versus_banner"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         android:orientation="horizontal">
         <View
             android:layout_width="0dp"

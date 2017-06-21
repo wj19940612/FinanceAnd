@@ -338,4 +338,33 @@ public class BorrowDetail implements Parcelable {
             return new BorrowDetail[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "BorrowDetail{" +
+                "auditActorId=" + auditActorId +
+                ", auditTime=" + auditTime +
+                ", confirmDays=" + confirmDays +
+                ", confirmTime=" + confirmTime +
+                ", content='" + content + '\'' +
+                ", createDate=" + createDate +
+                ", days=" + days +
+                ", endlineTime=" + endlineTime +
+                ", id=" + id +
+                ", intentionCount=" + intentionCount +
+                ", interest=" + interest +
+                ", isAttention=" + isAttention +
+                ", isIntention=" + isIntention +
+                ", location='" + location + '\'' +
+                ", modifyDate=" + modifyDate +
+                ", money=" + money +
+                ", portrait='" + portrait + '\'' +
+                ", selectedUserId=" + selectedUserId +
+                ", status=" + status +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", contentImg='" + contentImg + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                '}';
+    }
 }

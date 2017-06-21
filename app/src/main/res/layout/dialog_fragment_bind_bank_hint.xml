@@ -37,32 +37,12 @@
             android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/content1"
+            android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="5dp"
-            android:text="@string/holder_card_state_1"
+            android:text="@string/holder_card_content"
             android:textColor="@color/blackAssist"
             android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/content2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/holder_card_state_2"
-            android:textColor="@color/blackAssist"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/content3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:lineSpacingExtra="3dp"
-            android:textColor="@color/blackAssist"
-            android:textSize="12sp"
-            android:visibility="gone"
-            tools:text="@string/can_with_rule_content_3"/>
     </LinearLayout>
 </RelativeLayout>
