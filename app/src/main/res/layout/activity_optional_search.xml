@@ -26,6 +26,7 @@
             android:layout_marginTop="7dp"
             android:padding="5dp"
             android:drawablePadding="5dp"
+            android:maxLines="1"
             android:background="@drawable/bg_search_stock"
             android:drawableLeft="@drawable/ic_search"
             android:textColorHint="@color/unluckyText"
