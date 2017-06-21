@@ -64,25 +64,30 @@ public class ContentImgActivity extends BaseActivity implements ViewPager.OnPage
         mViewPager.setAdapter(mContentImgAdapter);
         mViewPager.setCurrentItem(currentItem);
         mViewPager.addOnPageChangeListener(this);
-        mPointGroup.getChildAt(previousPosition).setEnabled(true);
+        if (mPhotoList.size() > 1) {
+            mPointGroup.getChildAt(previousPosition).setEnabled(true);
+        }
     }
 
     private void initPointGroup() {
-        View view;
-        LinearLayout.LayoutParams params;
-        for (int i = 0; i < mPhotoList.size(); i++) {
+        int size =  mPhotoList.size();
+        if (size > 1) {
+            View view;
+            LinearLayout.LayoutParams params;
+            for (int i = 0; i < size; i++) {
 
-            // 每循环一次需要向LinearLayout中添加一个点的view对象
-            view = new View(this);
-            view.setBackgroundResource(R.drawable.bg_point);
-            params = new LinearLayout.LayoutParams(20, 20);
-            if(i != 0) {
-                // 当前不是第一个点, 需要设置左边距
-                params.leftMargin = 20;
+                // 每循环一次需要向LinearLayout中添加一个点的view对象
+                view = new View(this);
+                view.setBackgroundResource(R.drawable.bg_point);
+                params = new LinearLayout.LayoutParams(20, 20);
+                if(i != 0) {
+                    // 当前不是第一个点, 需要设置左边距
+                    params.leftMargin = 20;
+                }
+                view.setLayoutParams(params);
+                view.setEnabled(false);
+                mPointGroup.addView(view);
             }
-            view.setLayoutParams(params);
-            view.setEnabled(false);
-            mPointGroup.addView(view);
         }
     }
 
@@ -101,7 +106,9 @@ public class ContentImgActivity extends BaseActivity implements ViewPager.OnPage
             mViewPager.setCurrentItem(0);
             mPointGroup.removeAllViews();
             initPointGroup();
-            mPointGroup.getChildAt(0).setEnabled(true);
+            if (mPointGroup.getChildCount() > 1) {
+                mPointGroup.getChildAt(0).setEnabled(true);
+            }
         }
     }
 
