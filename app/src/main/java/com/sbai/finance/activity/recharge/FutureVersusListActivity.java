@@ -18,13 +18,17 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.versus.FutureVersus;
+import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FutureVersusListActivity extends BaseActivity {
     @BindView(R.id.back)
     TextView mBack;
+    @BindView(R.id.title)
+    LinearLayout mTitle;
     @BindView(R.id.avatar)
     ImageView mAvatar;
     @BindView(R.id.integral)
@@ -60,6 +64,7 @@ public class FutureVersusListActivity extends BaseActivity {
         seeVersusRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Launcher.with(getActivity(),FutureVersusRecordActivity.class).execute();
 
             }
         });
@@ -78,8 +83,36 @@ public class FutureVersusListActivity extends BaseActivity {
         mListView.addHeaderView(header);
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mListView.setAdapter(mVersusListAdapter);
-        FutureVersus futureVersus = new FutureVersus();
+        for (int i=0;i<10;i++){
+            FutureVersus futureVersus = new FutureVersus();
+            futureVersus.setUserName("测试");
+            mVersusListAdapter.add(futureVersus);
+        }
+        mVersusListAdapter.notifyDataSetChanged();
 
+    }
+    @OnClick({R.id.back,R.id.recharge,R.id.avatar,R.id.createVersus,R.id.matchVersus,R.id.currentVersus,R.id.title})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.back:
+                getActivity().onBackPressed();
+                break;
+            case R.id.title:
+                mListView.smoothScrollToPositionFromTop(0,0);
+                break;
+            case R.id.recharge:
+                break;
+            case R.id.avatar:
+                break;
+            case R.id.createVersus:
+                break;
+            case R.id.matchVersus:
+                break;
+            case R.id.currentVersus:
+                break;
+            default:
+                break;
+        }
     }
 
 
@@ -139,7 +172,7 @@ public class FutureVersusListActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(FutureVersus item, Context context, Callback callback) {
-
+                mUserName.setText(item.getUserName());
             }
         }
     }

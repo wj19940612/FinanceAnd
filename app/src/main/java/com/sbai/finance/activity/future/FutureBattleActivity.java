@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.net.Callback2D;
@@ -31,6 +32,9 @@ public class FutureBattleActivity extends BaseActivity {
     LinearLayout mFutureArea;
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
+
+    private FutureBattleFragment mFutureBattleFragment;
+    private FutureBattleDetailFragment mFutureBattleDetailFragment;
 
     private Variety mVariety;
 
@@ -72,15 +76,23 @@ public class FutureBattleActivity extends BaseActivity {
                 .add(R.id.futureArea, FutureBattleFragment.newInstance(mVariety))
                 .commit();
 
-        mBattleView.setMode(BattleFloatView.Mode.HALL)
+        mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                 .setMyAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
                 .setMyName("松柏牌面哥")
                 .setUserAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
                 .setUserName("狗海天")
-                .setDepositAndTime(2,1,3,"15分钟")
-                .setProgress(15.00,70.00,false)
-                .setPraise(100,999);
+                .setDeposit(200, 2)
+                .setDeadline(2, 1000)
+                .setProgress(30.00, 70.00, false)
+                .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
+                    @Override
+                    public void addMyPraiseCount() {
+                    }
+
+                    @Override
+                    public void addUserPraiseCount() {
+                    }
+                })
+                .setPraise(100, 999);
     }
-
-
 }

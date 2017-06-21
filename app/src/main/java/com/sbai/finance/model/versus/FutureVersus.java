@@ -31,6 +31,15 @@ public class FutureVersus {
     private long endTime;
     private long createTime;
     private long modifyTime;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public int getId() {
         return id;

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.versus.VersusTrade;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -29,10 +29,12 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.BattleButtons;
+import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -69,15 +71,16 @@ public class FutureBattleFragment extends BaseFragment {
     @BindView(R.id.klineView)
     KlineView mKlineView;
 
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
     @BindView(R.id.battleButtons)
     BattleButtons mBattleButtons;
+    @BindView(R.id.battleTradeView)
+    BattleTradeView mBattleTradeView;
 
     Unbinder unbinder;
 
     private Variety mVariety;
     private FutureData mFutureData;
+    private int mCount = 600;
 
     public static FutureBattleFragment newInstance(Variety variety) {
         FutureBattleFragment futureBattleFragment = new FutureBattleFragment();
@@ -108,6 +111,20 @@ public class FutureBattleFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initTabLayout();
         initChartViews();
+
+        initTestData();
+    }
+
+    private void initTestData() {
+        List<VersusTrade> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            VersusTrade item = new VersusTrade();
+            item.setInfo("88.88买多建仓");
+            item.setTime("12:44");
+            list.add(item);
+        }
+        mBattleTradeView.addTradeData(list);
+        mBattleTradeView.changeTradeState(BattleTradeView.STATE_TRADE);
     }
 
     private void initTabLayout() {
@@ -127,6 +144,7 @@ public class FutureBattleFragment extends BaseFragment {
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
+        settings.setGameMode(true);
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
@@ -134,6 +152,7 @@ public class FutureBattleFragment extends BaseFragment {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        settings2.setGameMode(true);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
     }
@@ -298,6 +317,43 @@ public class FutureBattleFragment extends BaseFragment {
     private void showKlineView() {
         mTrendView.setVisibility(View.GONE);
         mKlineView.setVisibility(View.VISIBLE);
+    }
+
+    public void setOnBattleButtonClickListener(BattleButtons.OnViewClickListener listener){
+        mBattleButtons.setOnViewClickListener(listener);
+    }
+
+    public void setOnBattleTradeViewClickListener(BattleTradeView.OnViewClickListener listener){
+        mBattleTradeView.setOnViewClickListener(listener);
+    }
+
+    public void setDeadline(int count){
+        //锁屏后重新进入时需要更新剩余存在时间
+        mCount = count;
+    }
+
+    public void updateDeadline(int count){
+        //更新房间存在倒计时
+        if (mBattleButtons.isShown()){
+            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount,count));
+        }
+    }
+
+    public void showBattleButtons() {
+        //显示邀请等三个按钮 只针对对战者
+        mBattleButtons.setVisibility(View.VISIBLE);
+        mBattleTradeView.setVisibility(View.GONE);
+    }
+
+    public void showBattleTradeView() {
+        //显示交易视图 区分游客和对战者 默认对战者
+        mBattleButtons.setVisibility(View.GONE);
+        mBattleTradeView.setVisibility(View.VISIBLE);
+    }
+
+    public void setBattleTradeState(int state) {
+        //切换交易视图显示模式
+        mBattleTradeView.changeTradeState(state);
     }
 
     @Override

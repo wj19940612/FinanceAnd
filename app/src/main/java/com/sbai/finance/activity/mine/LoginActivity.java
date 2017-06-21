@@ -319,7 +319,6 @@ public class LoginActivity extends BaseActivity {
                             mLoading.clearAnimation();
                         }
                     }
-
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);

@@ -296,8 +296,12 @@
         <activity
             android:name=".activity.future.FutureBattleActivity"
             android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.recharge.FutureVersusListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.recharge.FutureVersusRecordActivity"
             android:screenOrientation="portrait"/>
     </application>
 
