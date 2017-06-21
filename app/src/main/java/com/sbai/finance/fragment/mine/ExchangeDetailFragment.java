@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine;
+package com.sbai.finance.fragment.mine;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,58 +13,87 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.Detail;
+import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/6/21.
- * 明细界面
  */
-public class TheDetailActivity extends BaseActivity {
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
+
+public class ExchangeDetailFragment extends BaseFragment {
+
+    private static final String KEY_TYPE = "TYPE";
+    private static final String KEY_DIRECTION = "direction";
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(android.R.id.empty)
-    TextView mEmpty;
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.adsorb_text)
     TextView mAdsorbText;
     @BindView(R.id.dataLayout)
     FrameLayout mDataLayout;
+    @BindView(android.R.id.empty)
+    TextView mEmpty;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private int mPageSize = 10;
-    private int mPageNo = 0;
-    private ArrayList<Detail> mDetailArrayList;
-    private TheDetailAdapter mTheDetailAdapter;
+    private Unbinder mBind;
+
+    //元宝 或积分
+    private int mType;
+    //收入 支出
+    private int mDirection;
+
+    private int mPage = 0;
+    private ArrayList<ExchangeDetailModel> mExchangeDetailModelList;
+    private ExchangeDetailAdapter mExchangeDetailAdapter;
     private boolean mLoadMore = true;
 
+
+    public static ExchangeDetailFragment newInstance(int type, int direction) {
+        Bundle args = new Bundle();
+        ExchangeDetailFragment fragment = new ExchangeDetailFragment();
+        args.putInt(KEY_TYPE, type);
+        args.putInt(KEY_DIRECTION, direction);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        ButterKnife.bind(this);
+        if (getArguments() != null) {
+            mType = getArguments().getInt(KEY_TYPE);
+            mDirection = getArguments().getInt(KEY_DIRECTION);
+        }
+    }
 
-        mDetailArrayList = new ArrayList<>();
-        mTheDetailAdapter = new TheDetailAdapter(mDetailArrayList, this);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_detail, container, false);
+        mBind = ButterKnife.bind(this, view);
+        return view;
+    }
 
-        mRecyclerView.setAdapter(mTheDetailAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addOnScrollListener(new OnScrollListener() {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mExchangeDetailModelList = new ArrayList<>();
+        mExchangeDetailAdapter = new ExchangeDetailAdapter(mExchangeDetailModelList, getActivity());
+        mRecyclerView.setAdapter(mExchangeDetailAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -90,13 +118,13 @@ public class TheDetailActivity extends BaseActivity {
                     int transViewStatus = (int) transInfoView.getTag();
                     int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
 
-                    if (transViewStatus == TheDetailAdapter.HAS_STICKY_VIEW) {
+                    if (transViewStatus == ExchangeDetailAdapter.HAS_STICKY_VIEW) {
                         if (transInfoView.getTop() > 0) {
                             mAdsorbText.setTranslationY(dealtY);
                         } else {
                             mAdsorbText.setTranslationY(0);
                         }
-                    } else if (transViewStatus == TheDetailAdapter.NONE_STICKY_VIEW) {
+                    } else if (transViewStatus == ExchangeDetailAdapter.NONE_STICKY_VIEW) {
                         mAdsorbText.setTranslationY(0);
                     }
                 }
@@ -106,7 +134,7 @@ public class TheDetailActivity extends BaseActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPageNo = 0;
+                mPage = 0;
                 requestDetailList();
             }
         });
@@ -121,60 +149,66 @@ public class TheDetailActivity extends BaseActivity {
 
 
     private void requestDetailList() {
-        Client.getDetail(mPageNo, mPageSize)
+        Client.getExchangeDetailList(mDirection, mType, mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Detail>>, List<Detail>>() {
+                .setCallback(new Callback2D<Resp<List<ExchangeDetailModel>>, List<ExchangeDetailModel>>() {
                     @Override
-                    protected void onRespSuccessData(List<Detail> data) {
-                        updateDetailList(data);
+                    protected void onRespSuccessData(List<ExchangeDetailModel> data) {
+                        updateExchangeDetailList(data);
                     }
                 })
                 .fire();
     }
 
-    private void updateDetailList(List<Detail> detailList) {
-        if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
+    private void updateExchangeDetailList(List<ExchangeDetailModel> exchangeDetailList) {
+        if (exchangeDetailList == null || exchangeDetailList.isEmpty() && mExchangeDetailModelList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
             if (mSwipeRefreshLayout.isRefreshing()) {
-                mTheDetailAdapter.clear();
+                mExchangeDetailAdapter.clear();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-            mDetailArrayList.addAll(detailList);
-            if (detailList.size() < mPageSize) {
+            mExchangeDetailModelList.addAll(exchangeDetailList);
+            if (exchangeDetailList.size() < Client.DEFAULT_PAGE_SIZE) {
                 mLoadMore = false;
             } else {
                 mLoadMore = true;
-                mPageNo++;
+                mPage++;
             }
-            mTheDetailAdapter.notifyDataSetChanged();
+            mExchangeDetailAdapter.notifyDataSetChanged();
         }
     }
 
-    class TheDetailAdapter extends RecyclerView.Adapter<TheDetailAdapter.ViewHolder> {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBind.unbind();
+    }
+
+    class ExchangeDetailAdapter extends RecyclerView.Adapter<ExchangeDetailAdapter.ViewHolder> {
 
         public static final int HAS_STICKY_VIEW = 2;
         public static final int NONE_STICKY_VIEW = 3;
-        private ArrayList<Detail> mDetailArrayList;
+        private ArrayList<ExchangeDetailModel> mExchangeDetailArrayList;
         private Context mContext;
 
-        public TheDetailAdapter(ArrayList<Detail> detailArrayList, Context context) {
-            this.mDetailArrayList = detailArrayList;
+        public ExchangeDetailAdapter(ArrayList<ExchangeDetailModel> detailArrayList, Context context) {
+            this.mExchangeDetailArrayList = detailArrayList;
             this.mContext = context;
         }
 
-        public void addAll(ArrayList<Detail> detailArrayList) {
-            this.addAll(mDetailArrayList);
-            notifyItemRangeInserted(mDetailArrayList.size() - detailArrayList.size(), mDetailArrayList.size());
+        public void addAll(ArrayList<ExchangeDetailModel> detailArrayList) {
+            this.addAll(detailArrayList);
+            notifyItemRangeInserted(mExchangeDetailArrayList.size() - detailArrayList.size(), mExchangeDetailArrayList.size());
         }
 
         public void clear() {
-            mDetailArrayList.clear();
-            notifyItemRangeRemoved(0, mDetailArrayList.size());
+            mExchangeDetailArrayList.clear();
+            notifyItemRangeRemoved(0, mExchangeDetailArrayList.size());
         }
 
         @Override
@@ -185,26 +219,26 @@ public class TheDetailActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext);
+            holder.bindDataWithView(mExchangeDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext);
             if (isTheDifferentMonth(position)) {
                 holder.itemView.setTag(HAS_STICKY_VIEW);
             } else {
                 holder.itemView.setTag(NONE_STICKY_VIEW);
             }
-            holder.itemView.setContentDescription(DateUtil.getFormatMonth(mDetailArrayList.get(position).getCreateTime()));
+            holder.itemView.setContentDescription(DateUtil.getFormatMonth(mExchangeDetailArrayList.get(position).getCreateTime()));
         }
 
         @Override
         public int getItemCount() {
-            return mDetailArrayList != null ? mDetailArrayList.size() : 0;
+            return mExchangeDetailArrayList != null ? mExchangeDetailArrayList.size() : 0;
         }
 
         private boolean isTheDifferentMonth(int position) {
             if (position == 0) {
                 return true;
             }
-            Detail pre = mDetailArrayList.get(position - 1);
-            Detail next = mDetailArrayList.get(position);
+            ExchangeDetailModel pre = mExchangeDetailArrayList.get(position - 1);
+            ExchangeDetailModel next = mExchangeDetailArrayList.get(position);
             //判断两个时间在不在一个月内  不是就要显示标题
             long preTime = pre.getCreateTime();
             long nextTime = next.getCreateTime();
@@ -229,7 +263,7 @@ public class TheDetailActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(Detail detail, int position, boolean theDifferentMonth, Context context) {
+            public void bindDataWithView(ExchangeDetailModel detail, int position, boolean theDifferentMonth, Context context) {
                 if (theDifferentMonth) {
                     mAdsorbText.setVisibility(View.VISIBLE);
                     mAdsorbText.setText(DateUtil.getFormatMonth(detail.getCreateTime()));

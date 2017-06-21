@@ -11,10 +11,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="60dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
-        android:padding="@dimen/common_padding">
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
 
         <TextView
             android:id="@+id/time"
@@ -22,6 +23,7 @@
             android:layout_height="wrap_content"
             android:minWidth="40dp"
             android:textColor="@color/unluckyText"
+            android:lineSpacingExtra="3dp"
             android:textSize="15sp"
             tool:text="30日\n07:50"/>
 

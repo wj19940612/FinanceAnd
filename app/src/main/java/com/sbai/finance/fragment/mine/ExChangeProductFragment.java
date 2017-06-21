@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
-import com.sbai.finance.model.mine.ExchangeProductModel;
+import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 
@@ -76,45 +81,77 @@ public class ExChangeProductFragment extends BaseFragment {
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ExchangeProductModel item = (ExchangeProductModel) parent.getAdapter().getItem(position);
+            public void onItemClick(final AdapterView<?> parent, View view, int position, long id) {
+                final CornucopiaProductModel item = (CornucopiaProductModel) parent.getAdapter().getItem(position);
                 if (item != null) {
-                    if (item.getType() == 0) {
-                        InputSafetyPassDialogFragment.newInstance(getString(R.string.coin_number, item.getProduct()), getString(R.string.buy)).setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                            @Override
-                            public void onPassWord(String passWord) {
-                                ToastUtil.curt(passWord);
-                                // TODO: 2017/6/20 提交请求购买元宝
-                            }
-                        }).show(getChildFragmentManager());
-                    } else {
-                        SmartDialog.with(getActivity(), getString(R.string.confirm_use_coin_buy_integrate, item.getPrice(), String.valueOf(item.getProduct())), getString(R.string.buy_confirm))
+                    if (item.isVcoin()) {
+                        SmartDialog.with(getActivity(), getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
                                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                                     @Override
                                     public void onClick(Dialog dialog) {
                                         dialog.dismiss();
-                                        // TODO: 2017/6/20 购买积分
+
+                                        InputSafetyPassDialogFragment.newInstance(getString(R.string.coin_number, item.getFromRealMoney()), getString(R.string.buy)).setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                                            @Override
+                                            public void onPassWord(String passWord) {
+                                                exchange(item, passWord);
+                                            }
+                                        }).show(getChildFragmentManager());
+
+                                    }
+                                }).show();
+
+
+                    } else {
+                        SmartDialog.with(getActivity(), getString(R.string.confirm_use_coin_buy_integrate, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
+                                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(Dialog dialog) {
+                                        dialog.dismiss();
+                                        exchange(item, null);
                                     }
                                 }).show();
                     }
                 }
-
             }
         });
     }
 
+    private void exchange(CornucopiaProductModel item, String passWord) {
+        Client.exchange(item.getId(), passWord)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        Log.d(TAG, "onRespSuccess: " + resp.toString());
+                    }
+                })
+                .fire();
+    }
+
     //请求元宝 积分 数据
     private void requestVcoinOrIntegrateList() {
-        for (int i = 10; i < 100; i++) {
-            i += 10;
-            ExchangeProductModel exchangeProductModel = new ExchangeProductModel(mType, i, i);
-            mExchangeProductAdapter.add(exchangeProductModel);
-        }
+        Client.getExchangeProduct()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                    @Override
+                    protected void onRespSuccessData(Object data) {
+                        mExchangeProductAdapter.clear();
+                        stopRefreshAnimation();
+                        // TODO: 2017/6/21 添加数据
+//                        mExchangeProductAdapter.add(data);
+                    }
 
-        stopRefreshAnimation();
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
+
     }
 
     private void stopRefreshAnimation() {
@@ -137,7 +174,7 @@ public class ExChangeProductFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    static class ExchangeProductAdapter extends ArrayAdapter<ExchangeProductModel> {
+    static class ExchangeProductAdapter extends ArrayAdapter<CornucopiaProductModel> {
 
         private Context mContext;
 
@@ -173,21 +210,21 @@ public class ExChangeProductFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(Context context, ExchangeProductModel item, int position) {
-                if (item.getType() == 0) {
+            public void bindDataWithView(Context context, CornucopiaProductModel item, int position) {
+                if (item.isVcoin()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
-                    mProduct.setText(String.valueOf(item.getPrice()));
-                    mPrice.setText(context.getString(R.string.yuan_number, item.getPrice()));
-                    if (position > 3) {
+                    mProduct.setText(String.valueOf(item.getFromRealMoney()));
+                    mPrice.setText(context.getString(R.string.yuan_number, item.getToRealMoney()));
+                    if (item.getToMoney() != 0) {
                         mOldPrice.setVisibility(View.VISIBLE);
-                        mOldPrice.setText(context.getString(R.string.old_price, item.getPrice()));
+                        mOldPrice.setText(context.getString(R.string.old_price, item.getToMoney()));
                     } else {
                         mOldPrice.setVisibility(View.GONE);
                     }
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
-                    mProduct.setText(FinanceUtil.formatWithScale(item.getPrice()));
-                    mPrice.setText(context.getString(R.string.coin_number, item.getPrice()));
+                    mProduct.setText(FinanceUtil.formatWithScale(item.getFromRealMoney()));
+                    mPrice.setText(context.getString(R.string.coin_number, item.getToRealMoney()));
                 }
             }
         }

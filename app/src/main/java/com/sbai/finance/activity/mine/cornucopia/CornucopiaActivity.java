@@ -13,12 +13,14 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.ExChangeProductFragment;
+import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -86,8 +88,10 @@ public class CornucopiaActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.coin:
+                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_COIN).execute();
                 break;
             case R.id.integrate:
+                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INTEGRATE).execute();
                 break;
             case R.id.exchange_rule:
                 // TODO: 2017/6/20 兑换规则
@@ -108,9 +112,9 @@ public class CornucopiaActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ExChangeProductFragment.newInstance(0);
+                    return new ExChangeProductFragment();
                 case 1:
-                    return ExChangeProductFragment.newInstance(1);
+                    return new ExChangeProductFragment();
             }
             return null;
         }

@@ -1579,6 +1579,50 @@ public class Client {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
 
+    /**
+     * /user/userAccount/getExchangeConfig.do
+     * GET
+     * 获取快捷兑换接口（wms）
+     *
+     * @return
+     */
+    public static API getExchangeProduct() {
+        return new API("/user/userAccount/getExchangeConfig.do", null);
+    }
+
+    /**
+     * /user/userAccount/exchange.do
+     * GET
+     * 兑换接口（wms）
+     *
+     * @param exchangeId 兑换配置ID
+     * @param pass       密码
+     * @return
+     */
+    public static API exchange(int exchangeId, String pass) {
+        return new API("/user/userAccount/exchange.do", new ApiParams()
+                .put("exchangeId", exchangeId)
+                .put("pass", pass));
+    }
+
+    /**
+     * /user/userAccount/userCurrencyFlow.do
+     * GET
+     * 元宝积分明细（wms）
+     *
+     * @param inOrOut
+     * @param currencyType
+     * @param page
+     * @return
+     */
+    public static API getExchangeDetailList(int inOrOut, int currencyType, int page) {
+        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
+                .put("inOrOut", inOrOut)
+                .put("currencyType", currencyType)
+                .put("page", page)
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
+    }
+
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
