@@ -87,15 +87,15 @@ android {
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-            versionCode 20
-            versionName "0.2.3"
+            versionCode 23
+            versionName "0.2.6"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
 
             manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
+                    GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
+                    GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
+                    GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
                     UMENG_APP_KEY   : "591a6342677baa75060024bf",
                     UMENG_CHANNEL   : "OFFICIAL"
             ]

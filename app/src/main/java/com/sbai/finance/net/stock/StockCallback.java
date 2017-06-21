@@ -2,6 +2,7 @@ package com.sbai.finance.net.stock;
 
 import android.util.Log;
 
+import com.android.volley.NetworkError;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,7 +32,12 @@ public abstract class StockCallback<T, D> extends Callback<T> {
         if (t instanceof StockResp) {
             List<JsonObject> resultList = ((StockResp) t).getResult();
             if (!resultList.isEmpty()) {
-                onDataMsg(getData(resultList), getMsg(resultList));
+                StockResp.Msg msg = getMsg(resultList);
+                if (msg.getError_no().equals("3000")) {
+                    onDataMsg(getData(resultList), msg);
+                } else {
+                    onFailure(new NetworkError());
+                }
             } else {
                 onFailure(new NullResponseError("Server return result[]"));
             }

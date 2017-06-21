@@ -145,6 +145,7 @@
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="market_trading">交易中</string>
+    <string name="stock_halt">停牌</string>
     <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
@@ -531,9 +532,21 @@
     <string name="bank">银行</string>
     <string name="bank_choose">请选择银行</string>
     <string name="phone_number_hint">请输入银行预留手机号码</string>
+
+    <!--对战-->
+    <string name="create_fight">创建对战</string>
+    <string name="choose_futures">选择期货</string>
+    <string name="pattern">模式</string>
+    <string name="integral_war">积分战</string>
+    <string name="ingot_war">元宝战</string>
+    <string name="bounty">赏金</string>
+    <string name="duration">时长</string>
+    <string name="five_minutes">5分钟</string>
+    <string name="ten_minutes">10分钟</string>
+    <string name="fifteen_minutes">15分钟</string>
+    <string name="twenty_minutes">20分钟</string>
     <string name="holder_card_state">持卡人说明</string>
-    <string name="holder_card_state_1">1.为了您的资金安全,只能绑定持卡人本人的银行卡。</string>
-    <string name="holder_card_state_2">2.未成年人禁止交易</string>
+    <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
@@ -563,11 +576,10 @@
     <string name="predict_poundage">预计手续费</string>
     <string name="can_with_draw_money">当前可提现余额:  %1$s元</string>
     <string name="all_with_draw">全部提现</string>
-    <string name="can_with_poundage">提现手续费:    %1$s元</string>
-    <string name="can_with_rule">提现规则></string>
-    <string name="can_with_rule_content_1">1、用户提现收手续费2元/笔;</string>
-    <string name="can_with_rule_content_2">2、手续费将从提现金额内直接扣除</string>
-    <string name="can_with_rule_content_3">3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
+    <string name="can_with_poundage">提现手续费:    %1$s元/笔</string>
+    <string name="can_with_rule">提现规则</string>
+    <string name="can_with_rule_content">1、用户提现收手续费%1$s元/笔；\n2、手续费将从提现金额内直接扣除；
+    \n3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
     <string name="with_draw_details">提现详情</string>
     <string name="with_draw_check_is_submit">提现审核已提交</string>
     <string name="complete">完成</string>
@@ -595,4 +607,6 @@
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
+    <string name="wing">获胜</string>
+    <string name="failure">败北</string>
 </resources>

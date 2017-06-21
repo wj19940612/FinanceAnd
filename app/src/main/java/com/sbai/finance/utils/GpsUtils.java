@@ -1,6 +1,8 @@
 package com.sbai.finance.utils;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -8,12 +10,18 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.sbai.finance.App;
+import com.sbai.finance.R;
+import com.sbai.finance.view.SmartDialog;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.sbai.finance.activity.mine.setting.LocationActivity.GPS_REQUEST_CODE;
 
 /**
  * Created by ${wangJie} on 2017/6/2.
@@ -36,10 +44,13 @@ public class GpsUtils {
 
     private Geocoder geocoder;    //此对象能通过经纬度来获取相应的城市等信息
 
-    public GpsUtils() {
+    private AppCompatActivity mContext;
+
+    public GpsUtils(AppCompatActivity context) {
+        mContext = context;
         mLocationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
         // 判断GPS是否正常启动
-        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
             geocoder = new Geocoder(App.getAppContext());
             //用于获取Location对象，以及其他
             LocationManager locationManager;
@@ -59,24 +70,53 @@ public class GpsUtils {
             //通过最后一次的地理位置来获得Location对象
 //            Location location = locationManager.getLastKnownLocation(provider);
             Location location;
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location == null) {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            }
 
-            String queryed_name = updateWithNewLocation(location);
-            if ((queryed_name != null) && (0 != queryed_name.length())) {
-                cityName = queryed_name;
-            }
+            try {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location == null) {
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+
+                String queryed_name = updateWithNewLocation(location);
+                if ((queryed_name != null) && (0 != queryed_name.length())) {
+                    cityName = queryed_name;
+                }
 
         /*
          * 第二个参数表示更新的周期，单位为毫秒；第三个参数的含义表示最小距离间隔，单位是米
          * 设定每30秒进行一次自动定位
          */
-            locationManager.requestLocationUpdates(provider, 30000, 50,
-                    locationListener);
-            //   移除监听器
+                locationManager.requestLocationUpdates(provider, 30000, 50,
+                        locationListener);
+                //   移除监听器
 //            locationManager.removeUpdates(locationListener);
+            } catch (SecurityException e) {
+                Log.d(TAG, "GpsUtils: " + e.toString());
+            }
+//                SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
+//                        .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+//                            @Override
+//                            public void onClick(Dialog dialog) {
+//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                                mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
+//                                dialog.dismiss();
+//                            }
+//                        })
+//                        .setNegative(R.string.cancel)
+//                        .show();
+
+        } else {
+            SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
+                    .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegative(R.string.cancel)
+                    .show();
         }
     }
 
@@ -131,8 +171,8 @@ public class GpsUtils {
             Log.d(TAG, "updateWithNewLocation: " + lat + "  " + lng);
         } else {
             Log.d(TAG, "updateWithNewLocation: 无法获取地理信息");
-        }
 
+        }
         try {
             addList = geocoder.getFromLocation(lat, lng, 1);    //解析经纬度
             if (addList != null && addList.size() > 0) {

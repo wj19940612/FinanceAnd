@@ -12,6 +12,7 @@ import com.sbai.finance.activity.WebActivity;
 
 public class TradeWebActivity extends WebActivity {
 
+    private static final String TRADE_URL = "https://gf1.dajiexin.com";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +31,6 @@ public class TradeWebActivity extends WebActivity {
     }
 
     private void loadUrl() {
-        String url = "https://www.dajiexin.com/";
-        getWebView().loadUrl(url);
+        getWebView().loadUrl(TRADE_URL);
     }
 }

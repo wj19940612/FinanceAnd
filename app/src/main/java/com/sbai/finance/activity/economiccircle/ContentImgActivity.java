@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
@@ -24,21 +26,25 @@ import butterknife.OnClick;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-import static com.sbai.finance.R.id.del;
-import static com.sbai.finance.R.id.viewPager;
+import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_2;
 
-public class ContentImgActivity extends BaseActivity {
+public class ContentImgActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
     public static final String DEL_IMAGE = "del";
-    @BindView(viewPager)
+
+    @BindView(R.id.viewPager)
     HackyViewPager mViewPager;
-    @BindView(del)
+    @BindView(R.id.del)
     ImageView mDel;
+    @BindView(R.id.pointGroup)
+    LinearLayout mPointGroup;
+
     private ContentImgAdapter mContentImgAdapter;
     private LocalBroadcastManager mLocalBroadcastManager;
     private List<String> mPhotoList;
+    private int previousPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,9 @@ public class ContentImgActivity extends BaseActivity {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mPhotoList = Arrays.asList(getIntent().getStringArrayExtra(EX_PAYLOAD));
         mPhotoList = new ArrayList<>(mPhotoList);
+        initPointGroup();
         int currentItem = getIntent().getIntExtra(EX_PAYLOAD_1, 0);
+        previousPosition = currentItem;
         int del = getIntent().getIntExtra(EX_PAYLOAD_2, -1);
         if (del != -1) {
             mDel.setVisibility(View.VISIBLE);
@@ -56,7 +64,31 @@ public class ContentImgActivity extends BaseActivity {
         mContentImgAdapter = new ContentImgAdapter(this, mPhotoList);
         mViewPager.setAdapter(mContentImgAdapter);
         mViewPager.setCurrentItem(currentItem);
+        mViewPager.addOnPageChangeListener(this);
+        if (mPointGroup.getChildCount() > 1) {
+            mPointGroup.getChildAt(previousPosition).setEnabled(true);
+        }
+    }
 
+    private void initPointGroup() {
+        View view;
+        LinearLayout.LayoutParams params;
+        if (mPhotoList != null && mPhotoList.size() > 1) {
+            for (int i = 0; i < mPhotoList.size(); i++) {
+
+                // 每循环一次需要向LinearLayout中添加一个点的view对象
+                view = new View(this);
+                view.setBackgroundResource(R.drawable.bg_point);
+                params = new LinearLayout.LayoutParams(20, 20);
+                if (i != 0) {
+                    // 当前不是第一个点, 需要设置左边距
+                    params.leftMargin = 20;
+                }
+                view.setLayoutParams(params);
+                view.setEnabled(false);
+                mPointGroup.addView(view);
+            }
+        }
     }
 
     @OnClick(R.id.del)
@@ -72,7 +104,32 @@ public class ContentImgActivity extends BaseActivity {
             mPhotoList.remove(currentIndex);
             mContentImgAdapter.notifyDataSetChanged();
             mViewPager.setCurrentItem(0);
+            mPointGroup.removeAllViews();
+            initPointGroup();
+            if (mPointGroup.getChildCount() > 1) {
+                mPointGroup.getChildAt(0).setEnabled(true);
+            }
         }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        int newPosition = position;
+        // 把当前选中的点给切换了, 还有描述信息也切换
+        mPointGroup.getChildAt(previousPosition).setEnabled(false);
+        mPointGroup.getChildAt(newPosition).setEnabled(true);
+        // 把当前的索引赋值给前一个索引变量, 方便下一次再切换.
+        previousPosition = newPosition;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     private class ContentImgAdapter extends PagerAdapter {
@@ -110,7 +167,6 @@ public class ContentImgActivity extends BaseActivity {
             PhotoView imageView = new PhotoView(mContext);
             Glide.with(mContext).load(mList.get(position))
                     .thumbnail(0.1f)
-                    .error(R.drawable.ic_default_avatar)
                     .dontAnimate()
                     .into(imageView);
             container.addView(imageView);

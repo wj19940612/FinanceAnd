@@ -282,7 +282,7 @@ public class BindBankCardActivity extends BaseActivity {
             picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
             picker.setTopHeight(50);
             picker.setAnimationStyle(R.style.BottomDialogAnimation);
-            picker.setOffset(1);
+            picker.setOffset(2);
             if (mCanUseBankListModel != null) {
                 picker.setSelectedItem(mCanUseBankListModel.getName());
             }

@@ -535,6 +535,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mIsAttention.setText("");
 				}
 
+
 				mOpinionContent.setShowText(item.getContent());
 
 				if (item.getDirection() == 1) {
@@ -561,7 +562,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			}
 		}
 
-		static class BorrowMoneyViewHolder {
+		class BorrowMoneyViewHolder {
 
 			@BindView(R.id.hotArea)
 			RelativeLayout mHotArea;
@@ -618,7 +619,13 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mIsAttention.setText("");
 				}
 
-				mBorrowMoneyContent.setShowText(item.getContent());
+				if (TextUtils.isEmpty(item.getContent())) {
+					mBorrowMoneyContent.setVisibility(View.GONE);
+				} else {
+					mBorrowMoneyContent.setVisibility(View.VISIBLE);
+					mBorrowMoneyContent.setShowText(item.getContent().trim());
+				}
+
 				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
 				mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
 				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));

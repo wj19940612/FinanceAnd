@@ -218,13 +218,14 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 }
                 break;
             case R.id.takePhoneCancel:
-                this.dismiss();
+                this.dismissAllowingStateLoss();
                 break;
 
             case R.id.lookHDPicture:
                 Launcher.with(getActivity(), ContentImgActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, HDPictureUrl)
                         .execute();
+                this.dismiss();
                 break;
         }
     }

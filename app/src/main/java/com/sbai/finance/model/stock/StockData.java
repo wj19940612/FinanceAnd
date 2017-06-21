@@ -45,7 +45,7 @@ public class StockData {
     }
 
     public String getLastPrice() {
-        return FinanceUtil.accurateToString(lastPrice);
+        return FinanceUtil.formatWithScale(lastPrice);
     }
 
     public void setLastPrice(String lastPrice) {
@@ -61,7 +61,7 @@ public class StockData {
     }
 
     public String getUpDropPrice() {
-        return FinanceUtil.accurateToString(upDropPrice);
+        return FinanceUtil.formatWithScale(upDropPrice);
     }
 
     public void setUpDropPrice(String upDropPrice) {

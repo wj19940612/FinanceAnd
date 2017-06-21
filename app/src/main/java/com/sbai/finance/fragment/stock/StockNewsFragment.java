@@ -205,7 +205,7 @@ public class StockNewsFragment extends BaseFragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_event, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock_news, null);
             return new ViewHolder(view);
         }
 

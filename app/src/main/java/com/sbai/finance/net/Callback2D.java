@@ -26,8 +26,8 @@ public abstract class Callback2D<T, D> extends Callback<T> {
             if (data != null) {
                 onRespSuccessData(data);
             } else {
-                onFailure(new NullResponseError(NullResponseError.RESP_DATA_NULL,
-                        "Response's data is null"));
+                onFailure(null);
+                onToastErrorMessage("Fuck! Response's data is null.");
             }
         }
     }
