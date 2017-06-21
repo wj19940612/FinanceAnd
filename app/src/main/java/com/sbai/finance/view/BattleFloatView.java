@@ -1,6 +1,8 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 
@@ -43,8 +46,10 @@ public class BattleFloatView extends RelativeLayout {
     TextView mMyProfit;
     @BindView(R.id.userProfit)
     TextView mUserProfit;
-    @BindView(R.id.depositAndTime)
-    TextView mDepositAndTime;
+    @BindView(R.id.deposit)
+    TextView mDeposit;
+    @BindView(R.id.deadline)
+    TextView mDeadline;
 
     @BindView(R.id.myPraise)
     TextView mMyPraise;
@@ -160,6 +165,8 @@ public class BattleFloatView extends RelativeLayout {
      * @return
      */
     public BattleFloatView setProgress(double myProfit, double fighterProfit,boolean isInviting) {
+        String myFlag = "";
+        String fighterFlag = "";
         if (isInviting) {
             mProgressBar.setProgress(0);
             mProgressBar.setSecondaryProgress(0);
@@ -187,8 +194,16 @@ public class BattleFloatView extends RelativeLayout {
                 mProgressBar.setProgress(50);
             }
 
-            mMyProfit.setText(String.valueOf(FinanceUtil.accurateToFloat(myProfit)));
-            mUserProfit.setText(String.valueOf(FinanceUtil.accurateToFloat(fighterProfit)));
+            if (myProfit > 0) {
+                myFlag = "+";
+            }
+
+            if (fighterProfit > 0) {
+                fighterFlag = "+";
+            }
+
+            mMyProfit.setText(myFlag + FinanceUtil.formatWithScale(myProfit));
+            mUserProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
 
         }
         return this;
@@ -198,23 +213,28 @@ public class BattleFloatView extends RelativeLayout {
      * 显示对战信息
      * @param reward     赏金
      * @param coinType   对战类型  2元宝 3积分
-     * @param gameStatus 对战状态 1匹配中  2对战中  3结束
-     * @param endTime    对战时长
      * @return
      */
-    public BattleFloatView setDepositAndTime(int reward, int coinType, int gameStatus, String endTime) {
+    public BattleFloatView setDeposit(int reward, int coinType) {
         StringBuilder builder = new StringBuilder();
         builder.append(reward);
         builder.append(coinType == 2 ? "元宝" : "积分");
-        builder.append("    ");
-        if (gameStatus == 1) {
-            builder.append(endTime);
-        }else if (gameStatus ==2){
-            builder.append("对战中");
-        }else {
-            builder.append("结束");
+        mDeposit.setText(builder.toString());
+        return this;
+    }
+
+    /**
+     * 更新对战时间
+     * @param gameStatus 对战状态 1匹配中  2对战中  3结束
+     * @param endTime 对战剩余时长
+     * @return
+     */
+    public BattleFloatView setDeadline(int gameStatus, int endTime) {
+        if (gameStatus == 3) {
+            mDeadline.setText("已结束");
+        } else if (gameStatus == 2) {
+            mDeadline.setText("剩余" + DateUtil.getCountdownTime(endTime, 0));
         }
-        mDepositAndTime.setText(builder.toString());
         return this;
     }
 
@@ -242,6 +262,17 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
+    public BattleFloatView setPraiseLight(boolean myLight, boolean userLight) {
+        Drawable left = ContextCompat.getDrawable(getContext(), R.drawable.ic_battle_praise);
+        if (myLight) {
+            mMyPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+        }
+        if (userLight) {
+            mUserPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+        }
+        return this;
+    }
+
 
     public BattleFloatView setMode(Mode mode) {
         mMode = mode;
@@ -255,8 +286,9 @@ public class BattleFloatView extends RelativeLayout {
         MINE;
     }
 
-    public void setOnPraiseListener(OnPraiseListener listener) {
+    public BattleFloatView setOnPraiseListener(OnPraiseListener listener) {
         mOnPraiseListener = listener;
+        return this;
     }
 
     public interface OnPraiseListener {

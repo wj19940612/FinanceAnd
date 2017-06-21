@@ -319,8 +319,21 @@ public class FutureBattleFragment extends BaseFragment {
         mKlineView.setVisibility(View.VISIBLE);
     }
 
+    public void setOnBattleButtonClickListener(BattleButtons.OnViewClickListener listener){
+        mBattleButtons.setOnViewClickListener(listener);
+    }
+
+    public void setOnBattleTradeViewClickListener(BattleTradeView.OnViewClickListener listener){
+        mBattleTradeView.setOnViewClickListener(listener);
+    }
+
+    public void setDeadline(int count){
+        //锁屏后重新进入时需要更新剩余存在时间
+        mCount = count;
+    }
+
     public void updateDeadline(int count){
-        //更新房间倒计时
+        //更新房间存在倒计时
         if (mBattleButtons.isShown()){
             mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount,count));
         }
