@@ -38,129 +38,149 @@ import static com.sbai.finance.R.id.completePayment;
 
 public class WeChatPayActivity extends BaseActivity {
 
-	@BindView(R.id.imageView)
-	ImageView mImageView;
-	@BindView(completePayment)
-	TextView mCompletePayment;
+    @BindView(R.id.imageView)
+    ImageView mImageView;
+    @BindView(completePayment)
+    TextView mCompletePayment;
 
-	private String mPaymentPath;
-	private int mDataId;
-	private Bitmap mBitmap;
+    private String mPaymentPath;
+    private int mDataId;
+    private Bitmap mBitmap;
+    private String mThirdOrderId;
+    private boolean mIsFromRechargePage;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_we_chat_pay);
-		ButterKnife.bind(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_we_chat_pay);
+        ButterKnife.bind(this);
 
-		initData(getIntent());
+        initData(getIntent());
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				mBitmap = QRCodeUtil.createQRCode(mPaymentPath, (int) Display.dp2Px(200, getResources()));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mBitmap = QRCodeUtil.createQRCode(mPaymentPath, (int) Display.dp2Px(200, getResources()));
 
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mImageView.setImageBitmap(mBitmap);
-					}
-				});
-			}
-		}).start();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageView.setImageBitmap(mBitmap);
+                    }
+                });
+            }
+        }).start();
 
-		mImageView.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
+        mImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
 
-				final AlertDialog.Builder builder = new AlertDialog.Builder(WeChatPayActivity.this);
-				View view = View.inflate(WeChatPayActivity.this, R.layout.dialog_save_picture, null);
-				builder.setView(view);
-				final AlertDialog dialog = builder.create();
-				dialog.show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(WeChatPayActivity.this);
+                View view = View.inflate(WeChatPayActivity.this, R.layout.dialog_save_picture, null);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
 
-				TextView savePicture = (TextView) view.findViewById(R.id.save_picture);
-				savePicture.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mImageView.setDrawingCacheEnabled(true);
-						Bitmap imageBitmap = mImageView.getDrawingCache();
-						if (imageBitmap != null) {
-							new SaveImageTask().execute(imageBitmap);
-						}
-						dialog.dismiss();
-					}
-				});
+                TextView savePicture = (TextView) view.findViewById(R.id.save_picture);
+                savePicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mImageView.setDrawingCacheEnabled(true);
+                        Bitmap imageBitmap = mImageView.getDrawingCache();
+                        if (imageBitmap != null) {
+                            new SaveImageTask().execute(imageBitmap);
+                        }
+                        dialog.dismiss();
+                    }
+                });
 
 
-				return true;
-			}
-		});
-	}
+                return true;
+            }
+        });
+    }
 
-	private void initData(Intent intent) {
-		mPaymentPath = intent.getStringExtra(Launcher.EX_PAYLOAD);
-		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-	}
+    private void initData(Intent intent) {
+        mPaymentPath = intent.getStringExtra(Launcher.EX_PAYLOAD);
+        mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        //充值
+        mThirdOrderId = intent.getStringExtra(Launcher.EX_PAYLOAD_2);
+        mIsFromRechargePage = intent.getBooleanExtra(Launcher.EX_PAYLOAD_3, false);
+    }
 
-	private class SaveImageTask extends AsyncTask<Bitmap, Void, String> {
-		@Override
-		protected String doInBackground(Bitmap... params) {
-			String result = getResources().getString(R.string.save_picture_failed);
+    private class SaveImageTask extends AsyncTask<Bitmap, Void, String> {
+        @Override
+        protected String doInBackground(Bitmap... params) {
+            String result = getResources().getString(R.string.save_picture_failed);
 
-				String sdcard = Environment.getExternalStorageDirectory().toString();
+            String sdcard = Environment.getExternalStorageDirectory().toString();
 
-				File file = new File(sdcard + "/Download");
-				if (!file.exists()) {
-					file.mkdirs();
-				}
-			File imageFile = new File(file.getAbsolutePath(),new Date().getTime()+".jpg");
+            File file = new File(sdcard + "/Download");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            File imageFile = new File(file.getAbsolutePath(), new Date().getTime() + ".jpg");
 
-			try {
-				FileOutputStream outStream = new FileOutputStream(imageFile);
-				Bitmap image = params[0];
-				image.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-				outStream.flush();
-				outStream.close();
-				result = getResources().getString(R.string.save_picture_success,  file.getAbsolutePath());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            try {
+                FileOutputStream outStream = new FileOutputStream(imageFile);
+                Bitmap image = params[0];
+                image.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+                outStream.flush();
+                outStream.close();
+                result = getResources().getString(R.string.save_picture_success, file.getAbsolutePath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-			// 其次把文件插入到系统图库
-			try {
-				MediaStore.Images.Media.insertImage(getContentResolver(), imageFile.getAbsolutePath(), new Date().getTime()+".jpg", null);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(getContentResolver(), imageFile.getAbsolutePath(), new Date().getTime() + ".jpg", null);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
-			// 最后通知图库更新
-			sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" +  Environment.getExternalStorageDirectory())));
+            // 最后通知图库更新
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
-			return result;
-		}
+            return result;
+        }
 
-		@Override
-		protected void onPostExecute(String result) {
-			Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
 
-			mImageView.setDrawingCacheEnabled(false);
-		}
-	}
+            mImageView.setDrawingCacheEnabled(false);
+        }
+    }
 
-	@OnClick(completePayment)
-	public void onViewClicked() {
-		Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
-				.setCallback(new Callback<Resp<JsonPrimitive>>() {
-					@Override
-					protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-						Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
+    @OnClick(completePayment)
+    public void onViewClicked() {
+        if (mIsFromRechargePage) {
+            Client.queryConfirmPay(mThirdOrderId)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<Object>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            if (resp.isSuccess()) {
+                                finish();
+                            }
+                        }
+                    })
+                    .fire();
+        } else {
+            Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
+                    .setCallback(new Callback<Resp<JsonPrimitive>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                            Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
 //									intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //								    intent.putExtra(Launcher.EX_PAYLOAD, mDataId);
-						startActivity(intent);
-					}
-				}).fire();
-	}
+                            startActivity(intent);
+                        }
+                    }).fire();
+        }
+    }
 }
