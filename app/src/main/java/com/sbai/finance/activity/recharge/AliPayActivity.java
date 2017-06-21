@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.recharge;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -24,63 +23,101 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-
 public class AliPayActivity extends BaseActivity {
 
-	@BindView(R.id.imageView)
-	ImageView mImageView;
-	@BindView(R.id.ContinueToPay)
-	TextView mContinueToPay;
-	@BindView(R.id.completePayment)
-	TextView mCompletePayment;
+    @BindView(R.id.imageView)
+    ImageView mImageView;
+    @BindView(R.id.ContinueToPay)
+    TextView mContinueToPay;
+    @BindView(R.id.completePayment)
+    TextView mCompletePayment;
 
-	private String mPlatform;
-	private int mDataId;
+    private String mPlatform;
+    private int mDataId;
+    private String mThirdOrderId;
+    private String mMoney;
+    private boolean mIsFromRechargePage;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_ali_pay);
-		ButterKnife.bind(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_ali_pay);
+        ButterKnife.bind(this);
 
-		initData(getIntent());
-	}
+        initData(getIntent());
+    }
 
-	private void initData(Intent intent) {
-		mPlatform = intent.getStringExtra(Launcher.EX_PAYLOAD);
-		mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-	}
+    private void initData(Intent intent) {
+        mPlatform = intent.getStringExtra(Launcher.EX_PAYLOAD);
+        mDataId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        //充值
+        mThirdOrderId = intent.getStringExtra(Launcher.EX_PAYLOAD_2);
+        mMoney = intent.getStringExtra(Launcher.EX_PAYLOAD_3);
+        mIsFromRechargePage = intent.getBooleanExtra(Launcher.EX_PAY_END, false);
+    }
 
-	@OnClick({R.id.ContinueToPay, R.id.completePayment})
-	public void onViewClicked(View view) {
-		switch (view.getId()) {
-			case R.id.ContinueToPay:
-				Client.getPaymentPath(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
-						.setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
-							@Override
-							protected void onRespSuccessData(PaymentPath paymentPath) {
-								Intent intent = new Intent();
-								intent.setAction("android.intent.action.VIEW");
-								Uri content_url = Uri.parse(paymentPath.getCodeUrl());
-								intent.setData(content_url);
-								startActivity(intent);
-							}
-						}).fire();
-				break;
-			case R.id.completePayment:
-				Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
-						.setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								    Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
+    @OnClick({R.id.ContinueToPay, R.id.completePayment})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ContinueToPay:
+                if (mIsFromRechargePage) {
+                    Client.submitRechargeData(mPlatform, mMoney, null)
+                            .setIndeterminate(this)
+                            .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
+                                @Override
+                                protected void onRespSuccessData(PaymentPath data) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Intent.ACTION_VIEW);
+                                    Uri content_url = Uri.parse(data.getCodeUrl());
+                                    intent.setData(content_url);
+                                    startActivity(intent);
+                                }
+                            })
+                            .fire();
+                } else {
+                    Client.getPaymentPath(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
+                            .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
+                                @Override
+                                protected void onRespSuccessData(PaymentPath paymentPath) {
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    Uri content_url = Uri.parse(paymentPath.getCodeUrl());
+                                    intent.setData(content_url);
+                                    startActivity(intent);
+                                }
+                            }).fire();
+                }
+                break;
+            case R.id.completePayment:
+                if (mIsFromRechargePage) {
+                    Client.queryConfirmPay(mThirdOrderId)
+                            .setTag(TAG)
+                            .setIndeterminate(this)
+                            .setCallback(new Callback<Resp<Object>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<Object> resp) {
+                                    if (resp.isSuccess()) {
+                                        finish();
+                                    }
+                                }
+                            })
+                            .fire();
+                } else {
+                    Client.paymentQuery(mDataId).setTag(TAG).setIndeterminate(this)
+                            .setCallback(new Callback<Resp<JsonPrimitive>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                                    Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
 //									intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-								    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-								    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //								    intent.putExtra(Launcher.EX_PAYLOAD, mDataId);
-									startActivity(intent);
-							}
-						}).fire();
-				break;
-		}
-	}
+                                    startActivity(intent);
+                                }
+                            }).fire();
+                }
+
+                break;
+        }
+    }
 }

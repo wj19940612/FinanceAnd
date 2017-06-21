@@ -203,13 +203,14 @@ public class LocationActivity extends BaseActivity {
     /**
      * GPS设置
      *
+     *  || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+     *
      * @param
      */
     private void openGPSSettings() {
         LocationManager locationManager = (LocationManager) this
                 .getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)
-                || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
             SmartDialog.with(getActivity(), getString(R.string.open_gps))
                     .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
                         @Override

@@ -50,7 +50,7 @@ public class GpsUtils {
         mContext = context;
         mLocationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
         // 判断GPS是否正常启动
-        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
             geocoder = new Geocoder(App.getAppContext());
             //用于获取Location对象，以及其他
             LocationManager locationManager;
@@ -92,20 +92,18 @@ public class GpsUtils {
 //            locationManager.removeUpdates(locationListener);
             } catch (SecurityException e) {
                 Log.d(TAG, "GpsUtils: " + e.toString());
-            } finally {
-                SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
-                        .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegative(R.string.cancel)
-                        .show();
             }
-
+//                SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
+//                        .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+//                            @Override
+//                            public void onClick(Dialog dialog) {
+//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                                mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
+//                                dialog.dismiss();
+//                            }
+//                        })
+//                        .setNegative(R.string.cancel)
+//                        .show();
 
         } else {
             SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
@@ -173,8 +171,8 @@ public class GpsUtils {
             Log.d(TAG, "updateWithNewLocation: " + lat + "  " + lng);
         } else {
             Log.d(TAG, "updateWithNewLocation: 无法获取地理信息");
-        }
 
+        }
         try {
             addList = geocoder.getFromLocation(lat, lng, 1);    //解析经纬度
             if (addList != null && addList.size() > 0) {
