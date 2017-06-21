@@ -582,4 +582,13 @@ public class DateUtil {
             retStr = "" + i;
         return retStr;
     }
+
+    /**
+     * 15分钟
+     * @param seconds
+     * @return
+     */
+    public static String getMinutes(int seconds){
+        return seconds/60+"分钟";
+    }
 }

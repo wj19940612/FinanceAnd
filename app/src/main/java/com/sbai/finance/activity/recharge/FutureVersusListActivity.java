@@ -24,10 +24,18 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.versus.FutureVersus;
+import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -59,6 +67,7 @@ public class FutureVersusListActivity extends BaseActivity {
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
     private VersusListAdapter mVersusListAdapter;
+    private long mLocation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,24 +106,41 @@ public class FutureVersusListActivity extends BaseActivity {
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mVersusListAdapter.setCallback(new VersusListAdapter.Callback() {
             @Override
-            public void onClick(int userId) {
+            public void onClick(VersusGaming item,boolean isCreate) {
                 if (LocalUser.getUser().isLogin()){
-                 showJoinVersusDialog();
+                    if (isCreate){
+                        Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD,item.getLaunchUser()).execute();
+                    }else{
+                        if (item.getGameStatus()==VersusGaming.GAME_STATUS_MATCH){
+                            showJoinVersusDialog();
+                        }else{
+                            Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD,item.getAgainstUser()).execute();
+                        }
+                    }
                 }else{
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
         });
         mListView.setAdapter(mVersusListAdapter);
-        for (int i = 0; i < 10; i++) {
-            FutureVersus futureVersus = new FutureVersus();
-            futureVersus.setUserName("测试");
-            mVersusListAdapter.add(futureVersus);
-        }
         mVersusListAdapter.notifyDataSetChanged();
+        requestVersusData();
 
     }
-
+   private void requestVersusData(){
+      Client.getVersusGaming(mLocation).setTag(TAG)
+              .setCallback(new Callback2D<Resp<FutureVersus>,FutureVersus>() {
+                  @Override
+                  protected void onRespSuccessData(FutureVersus data) {
+                       updateVersusData(data);
+                  }
+              }).fireSync();
+   }
+   private void updateVersusData(FutureVersus futureVersus){
+       mVersusListAdapter.clear();
+       mVersusListAdapter.addAll(futureVersus.getList());
+       mVersusListAdapter.notifyDataSetChanged();
+   }
     @OnClick({R.id.back, R.id.recharge, R.id.avatar, R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.title})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -127,6 +153,11 @@ public class FutureVersusListActivity extends BaseActivity {
             case R.id.recharge:
                 break;
             case R.id.avatar:
+                if (LocalUser.getUser().isLogin()){
+                    Launcher.with(getActivity(), UserDataActivity.class).execute();
+                }else{
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.createVersus:
                 break;
@@ -205,9 +236,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setCancelableOnTouchOutside(false)
                 .setNegativeHide()
                 .show();
-
     }
     private void showCancelMatchDialog(){
         SmartDialog.with(getActivity(), getString(R.string.cancel_tip),getString(R.string.cancel_matching))
@@ -231,9 +262,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 .show();
 
     }
-    static class VersusListAdapter extends ArrayAdapter<FutureVersus> {
+    static class VersusListAdapter extends ArrayAdapter<VersusGaming> {
         interface Callback {
-            void onClick(int userId);
+            void onClick(VersusGaming item,boolean isCreate);
         }
 
         private Callback mCallback;
@@ -266,16 +297,16 @@ public class FutureVersusListActivity extends BaseActivity {
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
-            @BindView(R.id.myName)
-            TextView mMyName;
+            @BindView(R.id.createName)
+            TextView mCreateName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
             @BindView(R.id.progressBar)
             ProgressBar mProgressBar;
-            @BindView(R.id.myProfit)
-            TextView mMyProfit;
-            @BindView(R.id.userProfit)
-            TextView mUserProfit;
+            @BindView(R.id.createProfit)
+            TextView mCreateProfit;
+            @BindView(R.id.againstProfit)
+            TextView mAgainstProfit;
             @BindView(R.id.fighterDataArea)
             RelativeLayout mFighterDataArea;
             @BindView(R.id.depositAndTime)
@@ -284,26 +315,140 @@ public class FutureVersusListActivity extends BaseActivity {
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
-            @BindView(R.id.userName)
-            TextView mUserName;
+            @BindView(R.id.againstName)
+            TextView mAgainstName;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(FutureVersus item, Context context, final Callback callback) {
-                mUserName.setText(item.getUserName());
+            private void bindDataWithView(final VersusGaming item, Context context, final Callback callback) {
+                mVarietyName.setText(item.getVarietyName());
+                Glide.with(context).load(item.getLaunchUserPortrait())
+                        .load(item.getLaunchUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .transform(new GlideCircleTransform(context))
+                        .into(mCreateAvatar);
+                mCreateName.setText(item.getLaunchUserName());
+                mCreateProfit.setText(String.valueOf(item.getLaunchScore()));
                 mCreateAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onClick(11);
+                        callback.onClick(item,true);
                     }
                 });
+
+                mAgainstName.setText(item.getAgainstUserName());
                 mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onClick(11);
+                        callback.onClick(item,false);
                     }
                 });
+                mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
+                String reward="";
+                switch (item.getCoinType()){
+                    case VersusGaming.COIN_TYPE_BAO:
+                        reward=item.getReward()+context.getString(R.string.integral);
+                        break;
+                    case VersusGaming.COIN_TYPE_CASH:
+                        reward=item.getReward()+context.getString(R.string.cash);
+                        break;
+                    case VersusGaming.COIN_TYPE_INTEGRAL:
+                        reward=item.getReward()+context.getString(R.string.ingot);
+                        break;
+                }
+                switch (item.getGameStatus()){
+                    case VersusGaming.GAME_STATUS_MATCH:
+                        mDepositAndTime.setText(reward+" "+ DateUtil.getMinutes(item.getEndline()));
+                        mCreateKo.setVisibility(View.GONE);
+                        mAgainstKo.setVisibility(View.GONE);
+                        mAgainstAvatar.setBackground(ContextCompat.getDrawable(context,R.drawable.bg_join_versus));
+                        showScoreProgress(0,0,true);
+                        break;
+                    case VersusGaming.GAME_STATUS_START:
+                        mDepositAndTime.setText(reward+" "+ context.getString(R.string.versusing));
+                        mCreateKo.setVisibility(View.GONE);
+                        mAgainstKo.setVisibility(View.GONE);
+                        Glide.with(context).load(item.getLaunchUserPortrait())
+                                .load(item.getAgainstUserPortrait())
+                                .placeholder(R.drawable.ic_default_avatar_big)
+                                .transform(new GlideCircleTransform(context))
+                                .into(mAgainstAvatar);
+                        showScoreProgress(item.getLaunchScore(),item.getAgainstScore(),false);
+                        break;
+                    case VersusGaming.GAME_STATUS_END:
+                        mDepositAndTime.setText(reward+" "+ context.getString(R.string.versus_end));
+                        Glide.with(context).load(item.getLaunchUserPortrait())
+                                .load(item.getAgainstUserPortrait())
+                                .placeholder(R.drawable.ic_default_avatar_big)
+                                .transform(new GlideCircleTransform(context))
+                                .into(mAgainstAvatar);
+                        if (item.getWinResult()==VersusGaming.RESULT_AGAINST_WIN){
+                            mCreateKo.setVisibility(View.VISIBLE);
+                            mAgainstKo.setVisibility(View.GONE);
+                            mDepositAndTime.setText(reward+" "+ context.getString(R.string.versus_end));
+                        }else if (item.getWinResult()==VersusGaming.RESULT_CREATE_WIN){
+                            mCreateKo.setVisibility(View.GONE);
+                            mAgainstKo.setVisibility(View.VISIBLE);
+                            mDepositAndTime.setText(reward+" "+ context.getString(R.string.versus_end));
+                        }else{
+                            mCreateKo.setVisibility(View.GONE);
+                            mAgainstKo.setVisibility(View.GONE);
+                            mDepositAndTime.setText(reward+" "+ context.getString(R.string.tie));
+                        }
+                        showScoreProgress(item.getLaunchScore(),item.getAgainstScore(),false);
+                        break;
+
+                }
+            }
+            /**
+             * 显示对抗状态条
+             * @param createProfit      我的盈利状况
+             * @param fighterProfit 对抗者盈利状况
+             * @param  isInviting 是否正在邀请中
+             * @return
+             */
+            private void showScoreProgress(double createProfit, double fighterProfit,boolean isInviting){
+                String myFlag = "";
+                String fighterFlag = "";
+                if (isInviting) {
+                    mProgressBar.setProgress(0);
+                    mProgressBar.setSecondaryProgress(0);
+                }else {
+                    //正正
+                    if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
+                        int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
+                        mProgressBar.setProgress(progress);
+                    }
+                    //正负
+                    if (createProfit >= 0 && fighterProfit < 0) {
+                        mProgressBar.setProgress(100);
+                    }
+                    //负正
+                    if (createProfit < 0 && fighterProfit >= 0) {
+                        mProgressBar.setProgress(0);
+                    }
+                    //负负
+                    if (createProfit < 0 && fighterProfit < 0) {
+                        int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
+                        mProgressBar.setProgress(100 - progress);
+                    }
+                    //都为0
+                    if (createProfit == 0 && fighterProfit == 0) {
+                        mProgressBar.setProgress(50);
+                    }
+
+                    if (createProfit > 0) {
+                        myFlag = "+";
+                    }
+
+                    if (fighterProfit > 0) {
+                        fighterFlag = "+";
+                    }
+                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
+                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+
+                }
             }
         }
     }

@@ -1567,6 +1567,35 @@ public class Client {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
 
+    public static API getVersusGaming(long location){
+        return new API("/game/battle/selectBattleGaming.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 我的对战历史
+     * @param location
+     * @return
+     */
+    public static API getMyVersusRecord(long location){
+        return new API("/game/battle/myBattleGamed.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 加入对战
+     * @param battleId  对战ID
+     * @param userFrom  用户来源
+     * @return
+     */
+    public static API joinVersus(int battleId,String userFrom){
+        return new API(POST,"/game/battle/joinBattle.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("userFrom", userFrom));
+    }
+
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
