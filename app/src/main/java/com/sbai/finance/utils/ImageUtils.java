@@ -148,21 +148,25 @@ public class ImageUtils {
         return bitmapToBase64(compressScale(urlPath));
     }
 
+    public static String compressImageToBase64(String urlPath, boolean rotate) {
+        return bitmapToBase64(compressScale(urlPath, true));
+    }
+
     public static String compressImageToBase64(Bitmap bitmap) {
         return bitmapToBase64(compressScale(bitmap));
     }
 
-//    public static String compressImageToBase64(String urlPath, float ratio) {
+    //    public static String compressImageToBase64(String urlPath, float ratio) {
 //        return bitmapToBase64(decodeSampledBitmapFromResource(urlPath, ratio));
 //    }
     public static String compressImageToBase64(String urlPath, float ratio) {
         return bitmapToBase64(compressScale(urlPath, ratio));
     }
-    public static String imageToBase64(String urlPath){
+
+    public static String imageToBase64(String urlPath) {
 
         return bitmapToBase64(BitmapFactory.decodeFile(urlPath));
     }
-
 
 
     /**
@@ -270,7 +274,7 @@ public class ImageUtils {
         int h = newOpts.outHeight;
         // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
         float hh = ratio;// 这里设置高度为800f
-        float ww = ratio*0.8f;// 这里设置宽度为480f
+        float ww = ratio * 0.8f;// 这里设置宽度为480f
         // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
         int be = 1;// be=1表示不缩放
         if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
@@ -283,7 +287,35 @@ public class ImageUtils {
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        return reviewPicRotate(bitmap,srcPath);// 压缩好比例大小后再进行质量压缩
+        return reviewPicRotate(bitmap, srcPath);// 压缩好比例大小后再进行质量压缩
+    }
+
+    public static Bitmap compressScale(String srcPath, boolean rotate) {
+
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
+        newOpts.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);// 此时返回bm为空
+
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
+        float hh = 480f;// 这里设置高度为800f
+        float ww = 320f;// 这里设置宽度为480f
+        // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
+        int be = 1;// be=1表示不缩放
+        if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {// 如果高度高的话根据宽度固定大小缩放
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;// 设置缩放比例
+        // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        return reviewPicRotate(bitmap, srcPath);// 压缩好比例大小后再进行质量压缩
     }
 
     /**
@@ -335,30 +367,33 @@ public class ImageUtils {
 
         //return bitmap;
     }
+
     /**
      * 获取图片文件的信息，是否旋转了90度，如果是则反转
+     *
      * @param bitmap 需要旋转的图片
      * @param path   图片的路径
      */
-    public static Bitmap reviewPicRotate(Bitmap bitmap,String path){
+    public static Bitmap reviewPicRotate(Bitmap bitmap, String path) {
         int degree = getPicRotate(path);
-        if(degree!=0){
+        if (degree != 0) {
             Matrix m = new Matrix();
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
             m.setRotate(degree); // 旋转angle度
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,m, true);// 从新生成图片
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, m, true);// 从新生成图片
         }
         return bitmap;
     }
 
     /**
      * 读取图片文件旋转的角度
+     *
      * @param path 图片绝对路径
      * @return 图片旋转的角度
      */
     public static int getPicRotate(String path) {
-        int degree  = 0;
+        int degree = 0;
         try {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -378,6 +413,7 @@ public class ImageUtils {
         }
         return degree;
     }
+
     public static Bitmap decodeSampledBitmapFromResource(String urlPath, float ratio) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -386,12 +422,13 @@ public class ImageUtils {
         BitmapFactory.decodeFile(urlPath, options);
 
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, ratio*0.8f, ratio);
+        options.inSampleSize = calculateInSampleSize(options, ratio * 0.8f, ratio);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return compressImage(BitmapFactory.decodeFile(urlPath, options));
     }
+
     public static int calculateInSampleSize(
             BitmapFactory.Options options, float reqWidth, float reqHeight) {
         // Raw height and width of image

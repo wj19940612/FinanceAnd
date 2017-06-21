@@ -206,6 +206,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 } else {
                     ToastUtil.curt(getString(R.string.please_open_camera_permission));
                 }
+                this.dismiss();
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -216,6 +217,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 } else {
                     ToastUtil.curt(R.string.sd_is_not_useful);
                 }
+                this.dismiss();
                 break;
             case R.id.takePhoneCancel:
                 this.dismiss();
@@ -225,6 +227,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 Launcher.with(getActivity(), ContentImgActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, HDPictureUrl)
                         .execute();
+                this.dismiss();
                 break;
         }
     }

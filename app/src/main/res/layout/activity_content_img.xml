@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sbai.finance.activity.economiccircle.ContentImgActivity">
+
     <com.sbai.finance.view.HackyViewPager
-        android:background="@android:color/black"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@android:color/black"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/del"
             android:layout_width="wrap_content"
@@ -20,8 +23,17 @@
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/common_padding"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_delete"
             android:clickable="true"
+            android:src="@drawable/ic_delete"
             android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/pointGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"/>
     </RelativeLayout>
 </FrameLayout>

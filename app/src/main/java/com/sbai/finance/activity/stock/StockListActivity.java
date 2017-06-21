@@ -225,35 +225,38 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void updateStockIndexMarketData(List<StockData> data) {
         // 2.判断涨跌
-        int s2Color = ContextCompat.getColor(this, R.color.redPrimary);
-        int s3Color = ContextCompat.getColor(this, R.color.greenAssist);
+        int redColor = ContextCompat.getColor(this, R.color.redPrimary);
+        int greenColor = ContextCompat.getColor(this, R.color.greenAssist);
+        int greyColor = ContextCompat.getColor(this, R.color.unluckyText);
         int color;
         Variety variety;
         SpannableString spannableString;
         for (StockData stockData : data) {
             String rateChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
+            String ratePrice = stockData.getUpDropPrice();
             if (rateChange.startsWith("-")) {
-                color = s3Color;
+                color = greenColor;
             } else {
-                color = s2Color;
+                color = redColor;
                 rateChange = "+" + rateChange;
+                ratePrice = "+" + ratePrice;
             }
             variety = (Variety) mShangHai.getTag();
             if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLastPrice(), "\n" + stockData.getUpDropPrice() + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, greyColor);
                 mShangHai.setText(spannableString);
             }
             variety = (Variety) mShenZhen.getTag();
             if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLastPrice(), "\n" + stockData.getUpDropPrice() + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, greyColor);
                 mShenZhen.setText(spannableString);
             }
             variety = (Variety) mBoard.getTag();
             if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLastPrice(), "\n" + stockData.getUpDropPrice() + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, greyColor);
                 mBoard.setText(spannableString);
             }
         }
