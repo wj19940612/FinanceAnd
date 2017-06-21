@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.sbai.finance">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -16,6 +15,10 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!--定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:name=".App"
@@ -288,12 +291,14 @@
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL}"/>
 
+
         <!-- 期货大战-->
         <activity
             android:name=".activity.future.FutureBattleActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.recharge.FutureVersusListActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.recharge.FutureVersusListActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

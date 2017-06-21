@@ -225,7 +225,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void requestSendFeedbackImage(final String path) {
-        String content = ImageUtils.compressImageToBase64(path);
+        String content = ImageUtils.compressImageToBase64(path, true);
         int contentType = CONTENT_TYPE_PICTURE;
         requestSendFeedback(content, contentType);
     }

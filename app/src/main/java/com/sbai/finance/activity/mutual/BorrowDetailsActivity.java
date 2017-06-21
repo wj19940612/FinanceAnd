@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -36,7 +34,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.economiccircle.GoodHeartPeopleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -61,18 +58,16 @@ import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.android.volley.Request.Method.HEAD;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class BorrowDetailsActivity extends BaseActivity {
@@ -471,7 +466,10 @@ public class BorrowDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
+                                .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
                                 .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_1,mBorrowDetail.getStatus())
+                                .putExtra(Launcher.EX_PAYLOAD_2,mBorrowDetail.getSelectedUserId())
                                 .execute();
                     }
                 });
@@ -481,7 +479,10 @@ public class BorrowDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
+                                .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
                                 .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_1,mBorrowDetail.getStatus())
+                                .putExtra(Launcher.EX_PAYLOAD_2,mBorrowDetail.getSelectedUserId())
                                 .execute();
                     }
                 });
@@ -504,9 +505,10 @@ public class BorrowDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), GoodHeartPeopleActivity.class)
+                                .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
                                 .putExtra(Launcher.EX_PAYLOAD, mBorrowDetail.getId())
                                 .putExtra(Launcher.EX_PAYLOAD_1,mBorrowDetail.getStatus())
-                                .putExtra(Launcher.USER_ID, mBorrowDetail.getUserId())
+                                .putExtra(Launcher.EX_PAYLOAD_2,mBorrowDetail.getSelectedUserId())
                                 .execute();
                     }
                 });
@@ -537,7 +539,13 @@ public class BorrowDetailsActivity extends BaseActivity {
             mIsAttention.setText("");
         }
 
-        mBorrowMoneyContent.setText(borrowDetail.getContent().trim());
+        if (TextUtils.isEmpty(mBorrowDetail.getContent())) {
+            mBorrowMoneyContent.setVisibility(View.GONE);
+        } else {
+            mBorrowMoneyContent.setVisibility(View.VISIBLE);
+            mBorrowMoneyContent.setText(borrowDetail.getContent().trim());
+        }
+
         mNeedAmount.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowDetail.getMoney())));
         mBorrowDeadline.setText(getActivity().getString(R.string.day, FinanceUtil.formatWithScaleNoZero(borrowDetail.getDays())));
         mBorrowInterest.setText(getActivity().getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(borrowDetail.getInterest())));

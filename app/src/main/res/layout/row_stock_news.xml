@@ -5,14 +5,14 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:paddingBottom="20dp"
-              android:paddingTop="20dp">
+              android:paddingTop="8dp">
 
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
         android:maxLines="2"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
@@ -27,7 +27,7 @@
         android:orientation="horizontal"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
-        android:paddingTop="10dp">
+        android:paddingTop="4dp">
 
         <TextView
             android:id="@+id/eventSource"
@@ -43,8 +43,14 @@
             android:id="@+id/eventTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
             android:textColor="@color/assistText"
             android:textSize="@dimen/list_hint_size"
             tool:text="2017/03/26  12:37"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
 </LinearLayout>
