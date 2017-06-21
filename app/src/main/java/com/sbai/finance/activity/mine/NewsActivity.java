@@ -197,6 +197,12 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                         Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     }
                     break;
+                case HistoryNewsModel.WITH_DRAW_SUCCESS:
+                case HistoryNewsModel.WITH_DRAW_FAIL:
+                    if (!historyNewsModel.isLossEfficacy()) {
+                        Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                    }
+                    break;
             }
         }
     }

@@ -45,11 +45,15 @@ public class UserBankCardInfoModel implements Parcelable {
     private int userId;
     //银行卡号
     private String cardNumber;
-    // 银行卡绑定状态  0 绑定  1 解绑  2修改
+    // 银行卡绑定状态  0 未绑定  1 填写  2 已经绑定
     private Integer bindStatus;
 
-    public boolean hasBindBank() {
-        return getBindStatus() != null && getBindStatus() == 0;
+    public boolean isBindBank() {
+        return getBindStatus() != null && getBindStatus() == 2;
+    }
+
+    public boolean isNotConfirmBankInfo() {
+        return getBindStatus() == null || getBindStatus() == 0;
     }
 
     public int getIdStatus() {

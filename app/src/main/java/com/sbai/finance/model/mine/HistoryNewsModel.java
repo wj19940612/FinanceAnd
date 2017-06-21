@@ -44,6 +44,10 @@ public class HistoryNewsModel implements Parcelable {
     public static final int FORCAEST_highs_and_lows_fail = 25;
     public static final int FORCAEST_highs_and_lows_success = 26;
 
+    //27.提现审核成功 28。提现审核失败*
+    public static final int WITH_DRAW_SUCCESS = 27;
+    public static final int WITH_DRAW_FAIL = 28;
+
     //   30.意向金支付成功
     public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
     /**
@@ -217,7 +221,6 @@ public class HistoryNewsModel implements Parcelable {
         private double money;
         private double interest;
         private String source;
-
 
 
         public String getContent() {

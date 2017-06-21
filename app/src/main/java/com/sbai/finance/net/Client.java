@@ -1502,6 +1502,18 @@ public class Client {
     }
 
     /**
+     * user/userpayForDeposit/confirmPay.do
+     * POST
+     * 充值确认（nqc）
+     *
+     * @param merchantOrderId
+     * @return
+     */
+    public static API queryConfirmPay(String merchantOrderId) {
+        return new API("/user/userpayForDeposit/confirmPay.do", new ApiParams().put("merchantOrderId", merchantOrderId));
+    }
+
+    /**
      * /user/userAccount/userAccountInfo.do
      * POST
      * 个人资金信息（wms）
