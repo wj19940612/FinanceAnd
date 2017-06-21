@@ -85,11 +85,13 @@ public class RechargeActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<List<BankLimit>>, List<BankLimit>>() {
                         @Override
                         protected void onRespSuccessData(List<BankLimit> data) {
-                            mBankLimit = data.get(0);
-                            if (mUsablePlatform != null && mUsablePlatform.isBankPay()) {
-                                SpannableString payBank = StrUtil.mergeTextWithRatioColor(mBankPay, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
-                                        ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
-                                mRechargeWay.setText(payBank);
+                            if (data != null && !data.isEmpty()) {
+                                mBankLimit = data.get(0);
+                                if (mUsablePlatform != null && mUsablePlatform.isBankPay()) {
+                                    SpannableString payBank = StrUtil.mergeTextWithRatioColor(mBankPay, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
+                                            ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
+                                    mRechargeWay.setText(payBank);
+                                }
                             }
 
                         }
