@@ -105,7 +105,9 @@ public class ContentImgActivity extends BaseActivity implements ViewPager.OnPage
             mViewPager.setCurrentItem(0);
             mPointGroup.removeAllViews();
             initPointGroup();
-            mPointGroup.getChildAt(0).setEnabled(true);
+            if (mPointGroup.getChildCount() > 1) {
+                mPointGroup.getChildAt(0).setEnabled(true);
+            }
         }
     }
 
