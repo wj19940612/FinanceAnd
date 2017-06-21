@@ -1,3 +1,4 @@
+
 package com.sbai.finance.model;
 
 import java.io.Serializable;

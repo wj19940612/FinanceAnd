@@ -96,7 +96,7 @@ public class StockRTData implements Parcelable {
     private String volume;
 
     public String getAskPrice() {
-        return FinanceUtil.accurateToString(askPrice);
+        return FinanceUtil.formatWithScale(askPrice);
     }
 
     public void setAskPrice(String askPrice) {
@@ -104,7 +104,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice2() {
-        return FinanceUtil.accurateToString(askPrice2);
+        return FinanceUtil.formatWithScale(askPrice2);
     }
 
     public void setAskPrice2(String askPrice2) {
@@ -112,7 +112,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice3() {
-        return FinanceUtil.accurateToString(askPrice3);
+        return FinanceUtil.formatWithScale(askPrice3);
     }
 
     public void setAskPrice3(String askPrice3) {
@@ -120,7 +120,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice4() {
-        return FinanceUtil.accurateToString(askPrice4);
+        return FinanceUtil.formatWithScale(askPrice4);
     }
 
     public void setAskPrice4(String askPrice4) {
@@ -128,7 +128,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getAskPrice5() {
-        return FinanceUtil.accurateToString(askPrice5);
+        return FinanceUtil.formatWithScale(askPrice5);
     }
 
     public void setAskPrice5(String askPrice5) {
@@ -176,7 +176,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice() {
-        return FinanceUtil.accurateToString(bidPrice);
+        return FinanceUtil.formatWithScale(bidPrice);
     }
 
     public void setBidPrice(String bidPrice) {
@@ -184,7 +184,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice2() {
-        return FinanceUtil.accurateToString(bidPrice2);
+        return FinanceUtil.formatWithScale(bidPrice2);
     }
 
     public void setBidPrice2(String bidPrice2) {
@@ -192,7 +192,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice3() {
-        return FinanceUtil.accurateToString(bidPrice3);
+        return FinanceUtil.formatWithScale(bidPrice3);
     }
 
     public void setBidPrice3(String bidPrice3) {
@@ -200,7 +200,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice4() {
-        return FinanceUtil.accurateToString(bidPrice4);
+        return FinanceUtil.formatWithScale(bidPrice4);
     }
 
     public void setBidPrice4(String bidPrice4) {
@@ -208,7 +208,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice5() {
-        return FinanceUtil.accurateToString(bidPrice5);
+        return FinanceUtil.formatWithScale(bidPrice5);
     }
 
     public void setBidPrice5(String bidPrice5) {
@@ -272,7 +272,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getHighestPrice() {
-        return FinanceUtil.accurateToString(highestPrice);
+        return FinanceUtil.formatWithScale(highestPrice);
     }
 
     public void setHighestPrice(String highestPrice) {
@@ -288,7 +288,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getLastPrice() {
-        return FinanceUtil.accurateToString(lastPrice);
+        return FinanceUtil.formatWithScale(lastPrice);
     }
 
     public void setLastPrice(String lastPrice) {
@@ -296,7 +296,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getLowestPrice() {
-        return FinanceUtil.accurateToString(lowestPrice);
+        return FinanceUtil.formatWithScale(lowestPrice);
     }
 
     public void setLowestPrice(String lowestPrice) {
@@ -304,7 +304,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getOpenPrice() {
-        return FinanceUtil.accurateToString(openPrice);
+        return FinanceUtil.formatWithScale(openPrice);
     }
 
     public void setOpenPrice(String openPrice) {
@@ -320,7 +320,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getPreSetPrice() {
-        return FinanceUtil.accurateToString(preSetPrice);
+        return FinanceUtil.formatWithScale(preSetPrice);
     }
 
     public void setPreSetPrice(String preSetPrice) {
@@ -360,7 +360,7 @@ public class StockRTData implements Parcelable {
     }
 
     public String getUpDropPrice() {
-        return FinanceUtil.accurateToString(upDropPrice);
+        return FinanceUtil.formatWithScale(upDropPrice);
     }
 
     public void setUpDropPrice(String upDropPrice) {
@@ -511,4 +511,49 @@ public class StockRTData implements Parcelable {
             return new StockRTData[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "StockRTData{" +
+                "askPrice='" + askPrice + '\'' +
+                ", askPrice2='" + askPrice2 + '\'' +
+                ", askPrice3='" + askPrice3 + '\'' +
+                ", askPrice4='" + askPrice4 + '\'' +
+                ", askPrice5='" + askPrice5 + '\'' +
+                ", askVolume='" + askVolume + '\'' +
+                ", askVolume2='" + askVolume2 + '\'' +
+                ", askVolume3='" + askVolume3 + '\'' +
+                ", askVolume4='" + askVolume4 + '\'' +
+                ", askVolume5='" + askVolume5 + '\'' +
+                ", bidPrice='" + bidPrice + '\'' +
+                ", bidPrice2='" + bidPrice2 + '\'' +
+                ", bidPrice3='" + bidPrice3 + '\'' +
+                ", bidPrice4='" + bidPrice4 + '\'' +
+                ", bidPrice5='" + bidPrice5 + '\'' +
+                ", bidVolume='" + bidVolume + '\'' +
+                ", bidVolume2='" + bidVolume2 + '\'' +
+                ", bidVolume3='" + bidVolume3 + '\'' +
+                ", bidVolume4='" + bidVolume4 + '\'' +
+                ", bidVolume5='" + bidVolume5 + '\'' +
+                ", downLimitPrice='" + downLimitPrice + '\'' +
+                ", exchangeId='" + exchangeId + '\'' +
+                ", highestPrice='" + highestPrice + '\'' +
+                ", instrumentId='" + instrumentId + '\'' +
+                ", lastPrice='" + lastPrice + '\'' +
+                ", lowestPrice='" + lowestPrice + '\'' +
+                ", openPrice='" + openPrice + '\'' +
+                ", preClsPrice='" + preClsPrice + '\'' +
+                ", preSetPrice='" + preSetPrice + '\'' +
+                ", settlePrice='" + settlePrice + '\'' +
+                ", status='" + status + '\'' +
+                ", tradeDay='" + tradeDay + '\'' +
+                ", turnover='" + turnover + '\'' +
+                ", upDropPrice='" + upDropPrice + '\'' +
+                ", upDropSpeed=" + upDropSpeed +
+                ", upLimitPrice='" + upLimitPrice + '\'' +
+                ", upTime=" + upTime +
+                ", upTimeFormat='" + upTimeFormat + '\'' +
+                ", volume='" + volume + '\'' +
+                '}';
+    }
 }
