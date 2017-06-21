@@ -201,6 +201,15 @@ public class StockTrendChart extends ChartView {
         if (max == Float.MIN_VALUE || min == Float.MAX_VALUE) {
             max = preClosePrice * (1 + 0.1f);
             min = preClosePrice * (1 - 0.1f);
+        } else if (max == min) {
+            // limit up/down when market open
+            if (preClosePrice != 0) {
+                if (max > preClosePrice) {
+                    min = preClosePrice - Math.abs(preClosePrice - max);
+                } else {
+                    max = preClosePrice + Math.abs(preClosePrice - min);
+                }
+            }
         } else {
             if (preClosePrice != 0) {
                 if (Math.abs(preClosePrice - max) > Math.abs(preClosePrice - min)) {

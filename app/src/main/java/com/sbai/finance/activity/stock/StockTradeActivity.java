@@ -458,7 +458,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>() {
+                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>(false) {
                     @Override
                     protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {
