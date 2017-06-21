@@ -16,7 +16,9 @@
         app:titleText="@string/detail"
         app:titleTextColor="@color/blackAssist"/>
 
-    <com.sbai.finance.view.CustomSwipeRefreshLayout
+    <include layout="@layout/split_line_grey_light"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,12 +29,19 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ListView
-                android:id="@android:id/list"
+            <FrameLayout
+                android:id="@+id/dataLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
-                android:visibility="visible"/>
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"/>
+
+                <include layout="@layout/layout_adsorb"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@android:id/empty"
@@ -47,6 +56,6 @@
                 android:visibility="gone"/>
         </LinearLayout>
 
-    </com.sbai.finance.view.CustomSwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

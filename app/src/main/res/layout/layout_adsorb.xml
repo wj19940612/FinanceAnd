@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/adsorb_text"
+    android:layout_width="match_parent"
+    android:layout_height="32dp"
+    android:background="@color/split"
+    android:gravity="center_vertical"
+    android:paddingLeft="13dp"
+    android:textColor="@color/unluckyText"
+    android:textSize="13sp"
+    tool:text="2月"/>
