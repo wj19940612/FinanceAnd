@@ -3,7 +3,6 @@
 
     <!-- API -->
     <string name="http_lib_error_null">空数据异常</string>
-    <string name="http_lib_error_null_data">服务器空数据</string>
     <string name="http_lib_error_timeout">网络请求超时</string>
     <string name="http_lib_error_network">网络异常</string>
     <string name="http_lib_error_parse">数据解析异常</string>
