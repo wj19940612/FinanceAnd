@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,7 +34,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
-import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.TitleBar;
 
 import java.io.UnsupportedEncodingException;
@@ -50,7 +49,7 @@ import butterknife.OnClick;
  */
 
 public class SearchOptionalActivity extends BaseActivity {
-    public static final String TYPE_STOCK_ONLY="stock_only";
+    public static final String TYPE_STOCK_ONLY = "stock_only";
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.search)
@@ -68,17 +67,19 @@ public class SearchOptionalActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
     }
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             requestSearch(mSearch.getText().toString());
         }
     };
+
     private void initView() {
         if (type.equalsIgnoreCase(Variety.VAR_STOCK)) {
             mTitleBar.setTitle(getString(R.string.stock_optional));
             mSearch.setHint(getString(R.string.stock_optional_hint));
-        }else if (type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
+        } else if (type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
             mTitleBar.setTitle(getString(R.string.stock));
             mSearch.setHint(getString(R.string.stock_optional_hint));
         } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
@@ -89,7 +90,7 @@ public class SearchOptionalActivity extends BaseActivity {
         mSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     requestSearch(mSearch.getText().toString());
                 }
                 return true;
@@ -128,11 +129,11 @@ public class SearchOptionalActivity extends BaseActivity {
                     finish();
                 }
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)){
+                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                         finish();
-                    }else{
+                    } else {
                         Launcher.with(getActivity(), StockDetailActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                         finish();
@@ -141,15 +142,16 @@ public class SearchOptionalActivity extends BaseActivity {
             }
         });
     }
+
     private void requestSearch(String key) {
         try {
             key = URLEncoder.encode(key, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (type.equalsIgnoreCase(Variety.VAR_STOCK)||type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
+        if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
             Client.searchStock(key).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+                    .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
                             updateSearchData(data);
@@ -157,7 +159,7 @@ public class SearchOptionalActivity extends BaseActivity {
                     }).fire();
         } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
             Client.searchFuture(key).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<List<Variety>>,List<Variety>>() {
+                    .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
                             updateSearchData(data);
@@ -178,8 +180,9 @@ public class SearchOptionalActivity extends BaseActivity {
         super.onDestroy();
         mSearch.removeTextChangedListener(mValidationWatcher);
     }
+
     @OnClick(R.id.titleBar)
-    public void OnClick(View view){
+    public void OnClick(View view) {
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,13 +194,16 @@ public class SearchOptionalActivity extends BaseActivity {
 
     static class OptionalAdapter extends ArrayAdapter<Variety> {
         private OnClickListener mOnClickListener;
+
         public OptionalAdapter(@NonNull Context context) {
             super(context, 0);
         }
-        public  void setOnClickListener(OnClickListener onClickListener){
+
+        public void setOnClickListener(OnClickListener onClickListener) {
             mOnClickListener = onClickListener;
         }
-        interface OnClickListener{
+
+        interface OnClickListener {
             void onClick(Variety variety);
         }
 
@@ -212,7 +218,7 @@ public class SearchOptionalActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindingData(getItem(position),mOnClickListener);
+            viewHolder.bindingData(getItem(position), mOnClickListener);
             return convertView;
         }
 
@@ -225,20 +231,22 @@ public class SearchOptionalActivity extends BaseActivity {
             TextView mStatus;
             @BindView(R.id.addOptional)
             ImageView mAddOptional;
+
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-            private void bindingData(final Variety variety, final OnClickListener onClickListener){
+
+            private void bindingData(final Variety variety, final OnClickListener onClickListener) {
                 mFutureName.setText(variety.getVarietyName());
-                if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)){
+                if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     mFutureCode.setText(variety.getContractsCode());
-                }else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)){
+                } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
                     mFutureCode.setText(variety.getVarietyType());
                 }
-                if (variety.getCheckOptional()==Variety.OPTIONAL){
+                if (variety.getCheckOptional() == Variety.OPTIONAL) {
                     mAddOptional.setVisibility(View.GONE);
                     mStatus.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     mStatus.setVisibility(View.GONE);
                     mAddOptional.setVisibility(View.VISIBLE);
                 }

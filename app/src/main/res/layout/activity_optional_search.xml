@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/background">
+              android:background="@color/background"
+              android:orientation="vertical">
+
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
@@ -12,10 +13,12 @@
         app:backFeature="true"
         app:titleText="@string/stock_optional"
         app:titleTextColor="@color/blackAssist"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#c9c9ce">
+
         <EditText
             android:id="@+id/search"
             android:layout_width="match_parent"
@@ -24,14 +27,15 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="7dp"
-            android:padding="5dp"
-            android:drawablePadding="5dp"
             android:background="@drawable/bg_search_stock"
             android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="5dp"
+            android:hint="股票名称、代码"
+            android:padding="5dp"
             android:textColorHint="@color/unluckyText"
-            android:textSize="@dimen/list_title_size"
-            android:hint="股票名称、代码"/>
+            android:textSize="@dimen/list_title_size"/>
     </LinearLayout>
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
