@@ -589,4 +589,6 @@
     <string name="buy_price">买入价</string>
     <string name="position_profit">持仓盈亏(元)</string>
     <string name="no_position">暂无持仓</string>
+    <string name="versus_rule_title">决斗规则</string>
+    <string name="versus_rule_tip">1、对战中下注金额进行冻结\n2、按照最后盈利情况进行结算，胜者获得对方赌注百分之九十的奖励\n3、平局不扣赌注，对局时间结束时用户将被清仓后进行结算\n4、对战无操盘记录将自动判负</string>
 </resources>

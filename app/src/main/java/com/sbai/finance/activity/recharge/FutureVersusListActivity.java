@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
+import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment$$ViewBinder;
 import com.sbai.finance.model.versus.FutureVersus;
 import com.sbai.finance.utils.Launcher;
 
@@ -71,7 +73,7 @@ public class FutureVersusListActivity extends BaseActivity {
         versusRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                BindBankHintDialogFragment.newInstance()
             }
         });
         mBack.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +120,7 @@ public class FutureVersusListActivity extends BaseActivity {
 
     static class VersusListAdapter extends ArrayAdapter<FutureVersus> {
         interface Callback {
-            void onUserClick(int userId);
+            void onClick(int userId);
         }
 
         private Callback mCallback;
