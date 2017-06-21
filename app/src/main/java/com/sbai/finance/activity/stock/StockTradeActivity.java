@@ -332,7 +332,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockRTData() {
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
+                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>(false) {
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
                         mStockRTData = result;

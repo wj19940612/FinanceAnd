@@ -546,8 +546,7 @@
     <string name="fifteen_minutes">15分钟</string>
     <string name="twenty_minutes">20分钟</string>
     <string name="holder_card_state">持卡人说明</string>
-    <string name="holder_card_state_1">1.为了您的资金安全,只能绑定持卡人本人的银行卡。</string>
-    <string name="holder_card_state_2">2.未成年人禁止交易</string>
+    <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
@@ -579,9 +578,8 @@
     <string name="all_with_draw">全部提现</string>
     <string name="can_with_poundage">提现手续费:    %1$s元</string>
     <string name="can_with_rule">提现规则></string>
-    <string name="can_with_rule_content_1">1、用户提现收手续费2元/笔;</string>
-    <string name="can_with_rule_content_2">2、手续费将从提现金额内直接扣除</string>
-    <string name="can_with_rule_content_3">3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
+    <string name="can_with_rule_content">1、用户提现收手续费2元/笔;\n2、手续费将从提现金额内直接扣除
+    \n3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
     <string name="with_draw_details">提现详情</string>
     <string name="with_draw_check_is_submit">提现审核已提交</string>
     <string name="complete">完成</string>

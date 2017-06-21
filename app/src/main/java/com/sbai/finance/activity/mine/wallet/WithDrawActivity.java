@@ -59,7 +59,6 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     private double mMoney;
 
     private String mPassWord;
-    private int mWithDrawRuleRes[];
     //手续费
     private double mPoundage;
 
@@ -68,7 +67,6 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_draw);
         ButterKnife.bind(this);
-        mWithDrawRuleRes = new int[]{R.string.can_with_rule_content_1, R.string.can_with_rule_content_2, R.string.can_with_rule_content_3};
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
@@ -141,7 +139,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     }
 
     private void showWithDrawRuleDialog() {
-        BindBankHintDialogFragment.newInstance(R.string.can_with_rule, mWithDrawRuleRes).show(getSupportFragmentManager());
+        BindBankHintDialogFragment.newInstance(R.string.can_with_rule, R.string.can_with_rule_content).show(getSupportFragmentManager());
     }
 
     @Override
