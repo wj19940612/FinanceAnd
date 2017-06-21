@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/versus_record"
+        app:backFeature="true"/>
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/customSwipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="14dp"
         android:background="@drawable/ic_futures_versus_bg">
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:dividerHeight="14dp"
+            android:divider="@null"
             android:background="@android:color/transparent"/>
-        
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
+
 </LinearLayout>
