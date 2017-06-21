@@ -54,7 +54,7 @@
             tools:text="已提交"/>
     </RelativeLayout>
 
-    <TextView
+    <com.sbai.finance.view.CollapsedTextView
         android:id="@+id/borrowMoneyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

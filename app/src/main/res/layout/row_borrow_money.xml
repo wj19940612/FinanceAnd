@@ -59,10 +59,10 @@
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
         android:lineSpacingExtra="6dp"
+        android:maxLines="2"
         android:textColor="@color/blackAssist"
         android:textSize="14sp"
         android:visibility="visible"
-        app:trimLines="2"
         tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
 
     <RelativeLayout
