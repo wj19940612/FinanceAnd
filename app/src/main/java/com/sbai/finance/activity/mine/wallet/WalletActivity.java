@@ -205,7 +205,7 @@ public class WalletActivity extends BaseActivity {
                     break;
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
                     mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                    if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.hasBindBank()) {
+                    if (mUserBankCardInfoModel != null && !mUserBankCardInfoModel.isNotConfirmBankInfo()) {
                         Launcher.with(getActivity(), WithDrawActivity.class).putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel).execute();
                     }
                     break;

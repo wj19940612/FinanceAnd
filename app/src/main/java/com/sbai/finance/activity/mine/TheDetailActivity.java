@@ -20,6 +20,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -109,6 +110,12 @@ public class TheDetailActivity extends BaseActivity {
                 requestDetailList();
             }
         });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecyclerView.smoothScrollToPosition(0);
+            }
+        });
     }
 
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
@@ -134,10 +141,10 @@ public class TheDetailActivity extends BaseActivity {
 
     private void updateDetailList(List<Detail> detailList) {
         if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
-            mRecyclerView.setVisibility(View.GONE);
+            mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
         } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
+            mDataLayout.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
             if (mSwipeRefreshLayout.isRefreshing()) {
                 mTheDetailAdapter.clear();
@@ -235,7 +242,7 @@ public class TheDetailActivity extends BaseActivity {
                 } else {
                     mAdsorbText.setVisibility(View.GONE);
                 }
-                mTime.setText(DateUtil.format(detail.getCreateTime()));
+                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
                 mMoney.setText(context.getString(R.string.RMB, String.valueOf(detail.getMoney())));
             }
