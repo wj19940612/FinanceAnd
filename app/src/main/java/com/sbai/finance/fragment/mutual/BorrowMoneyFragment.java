@@ -284,7 +284,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 } else {
                     mIsAttention.setText("");
                 }
-                if (TextUtils.isEmpty(item.getContentImg())){
+                if (TextUtils.isEmpty(item.getContent())){
                     mBorrowMoneyContent.setVisibility(View.GONE);
                 }else{
                     mBorrowMoneyContent.setVisibility(View.VISIBLE);

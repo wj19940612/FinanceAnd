@@ -79,14 +79,14 @@ public class StockTrendChart extends ChartView {
         paint.setPathEffect(null);
     }
 
-    protected void setRedRectBgPaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+    protected void setRectBgPaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
     }
 
-    protected void setRedTouchLinePaint(Paint paint) {
-        paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
+    protected void setTouchLinePaint(Paint paint) {
+        paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
     }
@@ -458,7 +458,7 @@ public class StockTrendChart extends ChartView {
             float touchY2 = getIndexesChartY(data.getNowVolume());
 
             // draw cross line: vertical line and horizontal line
-            setRedTouchLinePaint(sPaint);
+            setTouchLinePaint(sPaint);
             Path path = getPath();
             path.moveTo(touchX, top);
             path.lineTo(touchX, top + height);
@@ -485,7 +485,7 @@ public class StockTrendChart extends ChartView {
             }
             redRect.right = redRect.left + rectWidth;
             redRect.bottom = redRect.top + rectHeight;
-            setRedRectBgPaint(sPaint);
+            setRectBgPaint(sPaint);
             canvas.drawRoundRect(redRect, 2, 2, sPaint);
             float dateX = redRect.left + (rectWidth - dateWidth) / 2;
             float dateY = top + height + rectHeight / 2 + mOffset4CenterBigText;
@@ -505,7 +505,7 @@ public class StockTrendChart extends ChartView {
                 redRect.top = top;
             }
             redRect.bottom = redRect.top + rectHeight;
-            setRedRectBgPaint(sPaint);
+            setRectBgPaint(sPaint);
             canvas.drawRoundRect(redRect, 2, 2, sPaint);
             float priceY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
             setTouchLineTextPaint(sPaint);
@@ -513,7 +513,7 @@ public class StockTrendChart extends ChartView {
 
             if (indexesEnable) {
                 // draw cross line: vertical line and horizontal line
-                setRedTouchLinePaint(sPaint);
+                setTouchLinePaint(sPaint);
                 path = getPath();
                 path.moveTo(touchX, top2);
                 path.lineTo(touchX, top2 + height2);
@@ -539,7 +539,7 @@ public class StockTrendChart extends ChartView {
                 }
                 redRect.bottom = redRect.top + rectHeight;
                 redRect.right = redRect.left + rectWidth;
-                setRedRectBgPaint(sPaint);
+                setRectBgPaint(sPaint);
                 canvas.drawRoundRect(redRect, 2, 2, sPaint);
                 float volumeY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
                 setTouchLineTextPaint(sPaint);
