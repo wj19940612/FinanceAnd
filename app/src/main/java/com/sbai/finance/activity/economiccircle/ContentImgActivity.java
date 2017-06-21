@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_2;
