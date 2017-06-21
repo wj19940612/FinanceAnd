@@ -62,7 +62,7 @@
             android:maxLines="3"
             android:paddingBottom="17dp"
             android:paddingTop="12dp"
-            android:text="@string/matching"
+            android:text="@string/desc_matching"
             android:textColor="@color/unluckyText"
             android:textSize="12sp"/>
 
