@@ -571,7 +571,7 @@
     <string name="text_number">%1$s(%2$s)</string>
 
     <string name="with_draw">提现</string>
-    <string name="with_draw_hint">工作日两小时到账,具体请看规则></string>
+    <string name="with_draw_hint">工作日两小时到账，具体请看    提现规则></string>
     <string name="with_draw_bank">到账银行卡%1$s</string>
     <string name="with_draw_money">提现金额</string>
     <string name="predict_poundage">预计手续费</string>
@@ -580,7 +580,7 @@
     <string name="can_with_poundage">提现手续费:    %1$s元/笔</string>
     <string name="can_with_rule">提现规则</string>
     <string name="can_with_rule_content">1、用户提现收手续费%1$s元/笔；\n2、手续费将从提现金额内直接扣除；
-    \n3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
+    \n3、工作日(09：00-17：00)内提现1-2个小时内到账，周末及节假日提现顺延至下一个工作日处理。</string>
     <string name="with_draw_details">提现详情</string>
     <string name="with_draw_check_is_submit">提现审核已提交</string>
     <string name="complete">完成</string>
