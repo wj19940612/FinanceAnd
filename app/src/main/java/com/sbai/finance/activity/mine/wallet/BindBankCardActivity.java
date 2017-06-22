@@ -253,9 +253,6 @@ public class BindBankCardActivity extends BaseActivity {
         String phoneNumber = getPhoneNumber();
 
         mUserBankCardInfoModel.setRealName(name);
-        if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-            mUserBankCardInfoModel.setBindStatus(1);
-        }
         mUserBankCardInfoModel.setCardNumber(bankCardNumber);
         mUserBankCardInfoModel.setIssuingBankName(bank);
         mUserBankCardInfoModel.setCardPhone(phoneNumber);
@@ -268,14 +265,18 @@ public class BindBankCardActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Integer> resp) {
                         Log.d(TAG, "onRespSuccess: " + resp.toString());
                         if (resp.isSuccess()) {
+                            if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                                mUserBankCardInfoModel.setBindStatus(1);
+                            }
                             if (resp.hasData()) {
                                 mUserBankCardInfoModel.setId(resp.getData());
                             }
+
                             Intent intent = new Intent();
                             intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
-                            Log.d(TAG, "onRespSuccess: " + mUserBankCardInfoModel.toString());
                             setResult(RESULT_OK, intent);
                             finish();
+
                             Log.d(TAG, "onRespSuccess:  " + resp.toString());
                         }
                     }

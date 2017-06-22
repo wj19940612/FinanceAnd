@@ -46,14 +46,14 @@ public class UserBankCardInfoModel implements Parcelable {
     //银行卡号
     private String cardNumber;
     // 银行卡绑定状态  0 未绑定  1 填写  2 已经绑定
-    private Integer bindStatus;
+    private int bindStatus;
 
     public boolean isBindBank() {
-        return getBindStatus() != null && getBindStatus() == 2;
+        return getBindStatus() == 2;
     }
 
     public boolean isNotConfirmBankInfo() {
-        return getBindStatus() == null || getBindStatus() == 0;
+        return getBindStatus() == 0;
     }
 
     public int getIdStatus() {
@@ -144,11 +144,11 @@ public class UserBankCardInfoModel implements Parcelable {
         this.cardNumber = cardNumber;
     }
 
-    public Integer getBindStatus() {
+    public int getBindStatus() {
         return bindStatus;
     }
 
-    public void setBindStatus(Integer bindStatus) {
+    public void setBindStatus(int bindStatus) {
         this.bindStatus = bindStatus;
     }
 

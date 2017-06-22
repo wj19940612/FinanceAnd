@@ -143,6 +143,9 @@ public class TheDetailActivity extends BaseActivity {
         if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
             mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         } else {
             mDataLayout.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
