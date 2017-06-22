@@ -65,6 +65,7 @@ public class TopicActivity extends BaseActivity {
 
 		initData();
 		initView();
+		requestTopicDetailInfo();
 	}
 
 	private void initData() {
@@ -108,7 +109,6 @@ public class TopicActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		requestTopicDetailInfo();
 	}
 
 	private void requestTopicDetailInfo() {

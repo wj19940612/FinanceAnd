@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,6 +48,7 @@ import butterknife.OnClick;
 
 public class OptionalActivity extends BaseActivity implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
+    public static final int OPTIONAL_CHANGEE=222;
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -69,6 +71,7 @@ public class OptionalActivity extends BaseActivity implements
         setContentView(R.layout.activity_optional);
         ButterKnife.bind(this);
         initView();
+        requestOptionalData();
     }
 
     private void initView() {
@@ -91,15 +94,15 @@ public class OptionalActivity extends BaseActivity implements
                 Variety variety = (Variety) parent.getItemAtPosition(position);
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     Launcher.with(getActivity(), FutureTradeActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                            .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGEE);
                 }
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
                     if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGEE);
                     } else {
                         Launcher.with(getActivity(), StockDetailActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGEE);
                     }
                 }
             }
@@ -109,8 +112,6 @@ public class OptionalActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        reset();
-        requestOptionalData();
     }
 
     @Override
@@ -262,6 +263,24 @@ public class OptionalActivity extends BaseActivity implements
     @Override
     public void onLoadMore() {
         requestOptionalData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==OPTIONAL_CHANGEE&&resultCode==RESULT_OK){
+             Variety variety = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+             boolean isOptionalChanged = data.getBooleanExtra(Launcher.EX_PAYLOAD_1,false);
+             if (variety!=null&&isOptionalChanged){
+                 for (int i=0;i<mSlideListAdapter.getCount();i++){
+                     if (variety.getVarietyId()==mSlideListAdapter.getItem(i).getVarietyId()){
+                         variety = mSlideListAdapter.getItem(i);
+                         requestDelOptionalData(variety);
+                         break;
+                     }
+                 }
+              }
+        }
     }
 
     public static class SlideListAdapter extends ArrayAdapter<Variety> {
