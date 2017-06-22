@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import butterknife.Unbinder;
 
 public class BindBankHintDialogFragment extends DialogFragment {
 
+    private static final String KEY_CONTENT_RES = "content_resId";
     private static final String KEY_content = "content";
     private static final String KEY_TITLE = "TITLE";
     @BindView(R.id.dialogDelete)
@@ -40,6 +42,7 @@ public class BindBankHintDialogFragment extends DialogFragment {
     private Unbinder mBind;
     private int mContentRes;
     private int mTitleResId;
+    private String mContentMsg;
 
     public BindBankHintDialogFragment() {
     }
@@ -47,7 +50,16 @@ public class BindBankHintDialogFragment extends DialogFragment {
     public static BindBankHintDialogFragment newInstance(int title, int content) {
         Bundle args = new Bundle();
         BindBankHintDialogFragment fragment = new BindBankHintDialogFragment();
-        args.putInt(KEY_content, content);
+        args.putInt(KEY_CONTENT_RES, content);
+        args.putInt(KEY_TITLE, title);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static BindBankHintDialogFragment newInstance(int title, String content) {
+        Bundle args = new Bundle();
+        BindBankHintDialogFragment fragment = new BindBankHintDialogFragment();
+        args.putString(KEY_content, content);
         args.putInt(KEY_TITLE, title);
         fragment.setArguments(args);
         return fragment;
@@ -58,8 +70,9 @@ public class BindBankHintDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
-            mContentRes = getArguments().getInt(KEY_content);
+            mContentRes = getArguments().getInt(KEY_CONTENT_RES);
             mTitleResId = getArguments().getInt(KEY_TITLE);
+            mContentMsg = getArguments().getString(KEY_content);
         }
     }
 
@@ -85,6 +98,8 @@ public class BindBankHintDialogFragment extends DialogFragment {
 
         if (mContentRes != 0) {
             mContent.setText(mContentRes);
+        } else if (!TextUtils.isEmpty(mContentMsg)) {
+            mContent.setText(mContentMsg);
         }
 
         if (mTitleResId != 0) {

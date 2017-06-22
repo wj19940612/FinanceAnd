@@ -27,6 +27,7 @@ public class StockData {
     private double upDropSpeed;
     private long upTime;
     private String upTimeFormat;
+    private String status;
 
     public String getName() {
         return name;
@@ -45,7 +46,7 @@ public class StockData {
     }
 
     public String getLastPrice() {
-        return FinanceUtil.accurateToString(lastPrice);
+        return FinanceUtil.formatWithScale(lastPrice);
     }
 
     public void setLastPrice(String lastPrice) {
@@ -61,7 +62,7 @@ public class StockData {
     }
 
     public String getUpDropPrice() {
-        return FinanceUtil.accurateToString(upDropPrice);
+        return FinanceUtil.formatWithScale(upDropPrice);
     }
 
     public void setUpDropPrice(String upDropPrice) {
@@ -90,5 +91,9 @@ public class StockData {
 
     public void setUpTimeFormat(String upTimeFormat) {
         this.upTimeFormat = upTimeFormat;
+    }
+
+    public boolean isDelist() {
+        return status.equals(StockRTData.STATUS_DELIST);
     }
 }

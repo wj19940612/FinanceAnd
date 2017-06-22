@@ -14,7 +14,6 @@ import com.google.gson.JsonSyntaxException;
 import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.NullResponseError;
@@ -37,10 +36,9 @@ public abstract class Callback<T> extends ApiCallback<T> {
         Log.d(RequestManager.TAG, getUrl() + " onSuccess: " + t.toString());
 
         if (t instanceof Resp) {
-            if (((Resp) t).isTokenExpired()) {
-                LocalUser.getUser().logout();
-                sendTokenExpiredBroadcast(((Resp) t).getMsg());
-                onFailure(null);
+            Resp resp = (Resp) t;
+            if (resp.isTokenExpired()) {
+                processTokenExpiredError(resp);
             } else {
                 onReceive(t);
             }
@@ -49,7 +47,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
                 try {
                     Resp resp = new Gson().fromJson((String) t, Resp.class);
                     if (resp.isTokenExpired()) {
-                        sendTokenExpiredBroadcast(resp.getMsg());
+                        processTokenExpiredError(resp);
                     }
                 } catch (JsonSyntaxException e) {
                     onReceive(t);
@@ -62,6 +60,11 @@ public abstract class Callback<T> extends ApiCallback<T> {
         }
     }
 
+    private void processTokenExpiredError(Resp resp) {
+        sendTokenExpiredBroadcast(resp.getMsg());
+        onFailure(null);
+    }
+
     private void sendTokenExpiredBroadcast(String msg) {
         Intent intent = new Intent(BaseActivity.ACTION_TOKEN_EXPIRED);
         intent.putExtra(BaseActivity.EX_TOKEN_EXPIRED_MESSAGE, msg);
@@ -71,14 +74,12 @@ public abstract class Callback<T> extends ApiCallback<T> {
     @Override
     public void onFailure(VolleyError volleyError) {
         if (volleyError == null) return;
+
         Log.d(RequestManager.TAG, getUrl() + " " + volleyError.toString());
 
         int toastResId = R.string.http_lib_error_network;
         if (volleyError instanceof NullResponseError) {
             toastResId = R.string.http_lib_error_null;
-            if (((NullResponseError) volleyError).isRespDataNull()) {
-                toastResId = R.string.http_lib_error_null_data;
-            }
         } else if (volleyError instanceof TimeoutError) {
             toastResId = R.string.http_lib_error_timeout;
         } else if (volleyError instanceof ParseError) {
@@ -101,7 +102,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
                 onRespSuccess(t);
             } else {
                 onFailure(null);
-                onErrorMessageShow(resp.getMsg());
+                onToastErrorMessage(resp.getMsg());
             }
         } else {
             onRespSuccess(t);
@@ -110,7 +111,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     protected abstract void onRespSuccess(T resp);
 
-    protected void onErrorMessageShow(String msg) {
+    protected void onToastErrorMessage(String msg) {
         if (mErrorToast) {
             ToastUtil.show(msg);
         }
