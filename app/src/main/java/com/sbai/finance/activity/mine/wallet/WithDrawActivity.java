@@ -17,7 +17,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.payment.WithPoundageModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -60,7 +62,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
     private String mPassWord;
     //手续费
-    private double mPoundage = 2;
+    private double mPoundage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +79,9 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
         requestWithDrawPoundage();
 
-        if (Preference.get().isFirstWithDraw()) {
+        if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
             showWithDrawRuleDialog();
-            Preference.get().setIsFirstWithDraw(false);
+            Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
         }
     }
 
@@ -87,11 +89,13 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         Client.requestWithDrawPoundage()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Double>, Double>() {
+                .setCallback(new Callback2D<Resp<WithPoundageModel>, WithPoundageModel>() {
                     @Override
-                    protected void onRespSuccessData(Double data) {
-                        mPoundage = data;
-                        mCanWithPoundage.setText(getString(R.string.can_with_poundage, FinanceUtil.formatWithScale(data)));
+                    protected void onRespSuccessData(WithPoundageModel data) {
+                        if (data != null) {
+                            mPoundage = data.getFee();
+                        }
+                        mCanWithPoundage.setText(getString(R.string.can_with_poundage, FinanceUtil.formatWithScale(mPoundage)));
                     }
                 })
                 .fire();

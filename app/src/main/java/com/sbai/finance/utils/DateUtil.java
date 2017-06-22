@@ -363,10 +363,10 @@ public class DateUtil {
     public static String getFeedbackFormatTime(long createTime) {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (isToday(createTime, systemTime)) {
-            return "今日";
+            return "今天";
         }
         if (isYesterday(createTime, systemTime)) {
-            return "昨日";
+            return "昨天";
         }
         if (isInThisYear(createTime)) {
             return DateUtil.format(createTime, FORMAT_NOT_HOUR);

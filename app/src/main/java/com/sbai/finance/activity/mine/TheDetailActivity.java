@@ -110,6 +110,12 @@ public class TheDetailActivity extends BaseActivity {
                 requestDetailList();
             }
         });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecyclerView.smoothScrollToPosition(0);
+            }
+        });
     }
 
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
@@ -135,10 +141,13 @@ public class TheDetailActivity extends BaseActivity {
 
     private void updateDetailList(List<Detail> detailList) {
         if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
-            mRecyclerView.setVisibility(View.GONE);
+            mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
+            mDataLayout.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
             if (mSwipeRefreshLayout.isRefreshing()) {
                 mTheDetailAdapter.clear();

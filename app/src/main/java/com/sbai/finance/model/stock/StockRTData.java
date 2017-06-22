@@ -11,7 +11,7 @@ import com.sbai.finance.utils.FinanceUtil;
 
 public class StockRTData implements Parcelable {
 
-    public static final String STATUS_HALT = "0";
+    public static final String STATUS_DELIST = "0";
 
     /**
      * askPrice : 9.07
