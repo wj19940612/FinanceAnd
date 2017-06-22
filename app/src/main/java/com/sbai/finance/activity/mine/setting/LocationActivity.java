@@ -2,21 +2,16 @@ package com.sbai.finance.activity.mine.setting;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,9 +24,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
-import com.sbai.finance.view.SmartDialog;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -84,9 +77,6 @@ public class LocationActivity extends BaseActivity {
         mIsFromModifyUserInfoPage = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
         isSelectGpsLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
         mPublishLocation = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
-
-        String location = Manifest.permission_group.LOCATION;
-        Log.d(TAG, "onCreate: " + location);
     }
 
     @OnClick({R.id.choiceLocation, R.id.location})
@@ -110,7 +100,6 @@ public class LocationActivity extends BaseActivity {
                 openGPSSettings();
             } else {
                 requestPermissions(permissions, 1);
-                ToastUtil.curt("请开启权限");
             }
         } else {
             openGPSSettings();
@@ -216,23 +205,25 @@ public class LocationActivity extends BaseActivity {
      * @param
      */
     private void openGPSSettings() {
-        LocationManager locationManager = (LocationManager) this
-                .getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-            SmartDialog.with(getActivity(), getString(R.string.open_gps))
-                    .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, GPS_REQUEST_CODE);
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegative(R.string.cancel)
-                    .show();
-        } else {
-            requestLocation();
-        }
+//        LocationManager locationManager = (LocationManager) this
+//                .getSystemService(Context.LOCATION_SERVICE);
+//        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+//            SmartDialog.with(getActivity(), getString(R.string.open_gps))
+//                    .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+//                        @Override
+//                        public void onClick(Dialog dialog) {
+//                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                            startActivityForResult(intent, GPS_REQUEST_CODE);
+//                            dialog.dismiss();
+//                        }
+//                    })
+//                    .setNegative(R.string.cancel)
+//                    .show();
+//        } else {
+//            requestLocation();
+//        }
+
+        requestLocation();
     }
 
     @Override

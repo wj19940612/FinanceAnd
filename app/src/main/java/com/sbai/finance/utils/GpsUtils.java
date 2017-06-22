@@ -50,7 +50,7 @@ public class GpsUtils {
         mContext = context;
         mLocationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
         // 判断GPS是否正常启动
-        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             geocoder = new Geocoder(App.getAppContext());
             //用于获取Location对象，以及其他
             LocationManager locationManager;
@@ -91,19 +91,10 @@ public class GpsUtils {
                 //   移除监听器
 //            locationManager.removeUpdates(locationListener);
             } catch (SecurityException e) {
+                Log.d(TAG, "GpsUtils:  SecurityException " + e.toString());
+            } catch (Exception e) {
                 Log.d(TAG, "GpsUtils: " + e.toString());
             }
-//                SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
-//                        .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
-//                            @Override
-//                            public void onClick(Dialog dialog) {
-//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                                mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
-//                                dialog.dismiss();
-//                            }
-//                        })
-//                        .setNegative(R.string.cancel)
-//                        .show();
 
         } else {
             SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
@@ -136,6 +127,8 @@ public class GpsUtils {
 
         public void onLocationChanged(Location location) {
 
+            Log.d(TAG, "onLocationChanged: ");
+
             tempCityName = updateWithNewLocation(location);
             if ((tempCityName != null) && (tempCityName.length() != 0)) {
                 cityName = tempCityName;
@@ -143,6 +136,7 @@ public class GpsUtils {
         }
 
         public void onProviderDisabled(String provider) {
+            Log.d(TAG, "onProviderDisabled: " + provider);
             tempCityName = updateWithNewLocation(mLocationManager.getLastKnownLocation(provider));
             if ((tempCityName != null) && (tempCityName.length() != 0)) {
                 cityName = tempCityName;
@@ -150,9 +144,11 @@ public class GpsUtils {
         }
 
         public void onProviderEnabled(String provider) {
+            Log.d(TAG, "onProviderEnabled: " + provider);
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.d(TAG, "onStatusChanged: " + provider + " status " + status);
         }
     };
 
