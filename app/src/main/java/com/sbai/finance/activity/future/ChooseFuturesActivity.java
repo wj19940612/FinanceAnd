@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.future;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.ChooseFuturesFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -32,19 +34,25 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
 
 	private FuturePagesAdapter mFuturePagesAdapter;
 	private int pagePosition;
+	private String mContractsCode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_futures);
+		initData(getIntent());
 		ButterKnife.bind(this);
 		initView();
+	}
+
+	private void initData(Intent intent) {
+		mContractsCode = intent.getStringExtra(Launcher.EX_PAYLOAD);
 	}
 
 	private void initView() {
 		mViewPager.setOffscreenPageLimit(1);
 		mViewPager.setCurrentItem(0, false);
-		mFuturePagesAdapter = new FuturePagesAdapter(getSupportFragmentManager(), getActivity());
+		mFuturePagesAdapter = new FuturePagesAdapter(getSupportFragmentManager(), getActivity(), mContractsCode);
 		mViewPager.setAdapter(mFuturePagesAdapter);
 		mViewPager.addOnPageChangeListener(this);
 
@@ -84,11 +92,13 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
 
 		private Context mContext;
 		private FragmentManager mFragmentManager;
+		private String mContractsCode;
 
-		private FuturePagesAdapter(FragmentManager fm, Context context) {
+		private FuturePagesAdapter(FragmentManager fm, Context context, String contractsCode) {
 			super(fm);
 			mContext = context;
 			mFragmentManager = fm;
+			mContractsCode = contractsCode;
 		}
 
 		@Override
@@ -106,9 +116,9 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return ChooseFuturesFragment.newInstance(Variety.FUTURE_FOREIGN);
+					return ChooseFuturesFragment.newInstance(Variety.FUTURE_FOREIGN, mContractsCode);
 				case 1:
-					return ChooseFuturesFragment.newInstance(Variety.FUTURE_CHINA);
+					return ChooseFuturesFragment.newInstance(Variety.FUTURE_CHINA, mContractsCode);
 			}
 			return null;
 		}

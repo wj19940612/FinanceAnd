@@ -42,7 +42,6 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_versus_ko"
                         android:visibility="gone"/>
-
                 </FrameLayout>
 
                 <TextView
@@ -53,8 +52,6 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="hehe"/>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -78,8 +75,8 @@
                     android:id="@+id/fighterDataArea"
                     android:layout_width="match_parent"
                     android:layout_height="14dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
                     android:layout_marginTop="23dp">
 
                     <ProgressBar
@@ -91,7 +88,9 @@
                         android:progress="50"
                         android:progressDrawable="@drawable/bg_battle_progress"
                         android:secondaryProgress="100"
-                        android:layout_alignParentTop="true"/>
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
                     <TextView
                         android:id="@+id/createProfit"
@@ -103,6 +102,7 @@
                         android:textSize="10sp"/>
 
                     <TextView
+                        tools:text="+100"
                         android:id="@+id/againstProfit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -130,6 +130,7 @@
                 android:layout_marginRight="24dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
+
                 <FrameLayout
                     android:layout_width="60dp"
                     android:layout_height="60dp">
@@ -143,9 +144,9 @@
                         android:id="@+id/againstKo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:src="@drawable/ic_versus_ko"/>
                         android:src="@drawable/ic_versus_ko"
                         android:visibility="gone"/>
-
                 </FrameLayout>
 
                 <TextView
@@ -156,11 +157,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="hah"/>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </RelativeLayout>
-
 </RelativeLayout>

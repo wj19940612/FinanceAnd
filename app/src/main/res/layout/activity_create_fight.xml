@@ -32,7 +32,7 @@
             android:drawableLeft="@drawable/ic_futures"
             android:drawablePadding="6dp"
             android:gravity="center"
-            android:text="@string/future"
+            android:text="@string/futures"
             android:textColor="@color/unluckyText"
             android:textSize="15sp"/>
 
@@ -43,9 +43,9 @@
             android:layout_marginLeft="20dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
+            android:text="@string/choose_futures"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:text="@string/choose_futures"/>
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -67,24 +67,24 @@
             android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/integralWar"
+            android:id="@+id/ingotWar"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="@string/integral_war"
+            android:text="@string/ingot_war"
             android:textColor="@android:color/white"
             android:textSize="14sp"/>
 
         <TextView
-            android:id="@+id/ingotWar"
+            android:id="@+id/integralWar"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="@string/ingot_war"
+            android:text="@string/integral_war"
             android:textColor="@android:color/white"
             android:textSize="14sp"/>
     </LinearLayout>
@@ -108,34 +108,38 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/bountyChoice1"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="100"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="100"/>
 
         <TextView
+            android:id="@+id/bountyChoice2"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="300"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="300"/>
 
         <TextView
+            android:id="@+id/bountyChoice3"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="600"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:visibility="invisible"
+            tools:text="600"/>
     </LinearLayout>
 
     <LinearLayout
@@ -157,46 +161,39 @@
             android:textSize="15sp"/>
 
         <TextView
+            android:id="@+id/durationChoice1"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="@string/five_minutes"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="@string/duration_choice1"/>
 
         <TextView
+            android:id="@+id/durationChoice2"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="@string/ten_minutes"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="@string/duration_choice1"/>
 
         <TextView
+            android:id="@+id/durationChoice3"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="14dp"
             android:background="@drawable/bg_fight_text"
             android:gravity="center"
-            android:text="@string/fifteen_minutes"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="@string/duration_choice1"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="70dp"
-        android:layout_height="32dp"
-        android:layout_marginLeft="94dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_fight_text"
-        android:gravity="center"
-        android:text="@string/twenty_minutes"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -208,13 +205,13 @@
             android:id="@+id/launch_fight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/xxx"
+            android:layout_above="@+id/hint"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="18dp"
-            android:src="@drawable/ic_launch_fight"/>
+            android:src="@drawable/btn_launch_fight"/>
 
         <TextView
-            android:id="@+id/xxx"
+            android:id="@+id/hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

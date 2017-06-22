@@ -60,7 +60,7 @@
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
 
     <!--Home-->
-    <string name="future">期货</string>
+    <string name="futures">期货</string>
     <string name="stock">股票</string>
     <string name="forex">外汇</string>
     <string name="help">互助借款</string>
@@ -548,10 +548,9 @@
     <string name="versus_end">已结束</string>
     <string name="tie">平局</string>
     <string name="duration">时长</string>
-    <string name="five_minutes">5分钟</string>
-    <string name="ten_minutes">10分钟</string>
-    <string name="fifteen_minutes">15分钟</string>
-    <string name="twenty_minutes">20分钟</string>
+    <string name="duration_choice1">%1$s分钟</string>
+    <string name="duration_choice2">%1$s分钟</string>
+    <string name="duration_choice3">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
 

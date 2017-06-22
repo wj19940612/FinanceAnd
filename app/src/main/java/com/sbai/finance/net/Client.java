@@ -1632,4 +1632,29 @@ public class Client {
     //股票分享地址
     public static final String STOCK_SHARE_URL = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
 
+
+    /**
+     * 获取期货对战品种列表
+     * @return
+     */
+    public static API getFutureBattleVarietyList() {
+        return new API("/game/battleconfig/selectBattleVariety.do");
+    }
+
+    /**
+     * 获取期货对战配置
+     * @return
+     */
+    public static API getFutureBattleConfig() {
+        return new API("/game/battleconfig/findBattleConfig.do");
+    }
+
+    public static API launchFight(int vartietyId, int coinType, double reward, int endtime) {
+        return new API(POST, "/game/battle/createBattle.do",
+                new ApiParams()
+                        .put("vartietyId", vartietyId)
+                        .put("coinType", coinType)
+                        .put("reward", reward)
+                        .put("endtime", endtime));
+    }
 }

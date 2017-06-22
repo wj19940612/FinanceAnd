@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.future.CreateFightActivity;
 import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -56,7 +57,6 @@ import java.util.HashSet;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 public class FutureVersusListActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener,SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -312,6 +312,11 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                 mListView.smoothScrollToPositionFromTop(0, 0);
                 break;
             case R.id.createVersus:
+                if (LocalUser.getUser().isLogin()){
+                    Launcher.with(getActivity(),CreateFightActivity.class).execute();
+                }else{
+                    Launcher.with(getActivity(),LoginActivity.class).execute();
+                }
                 break;
             case R.id.matchVersus:
                 showAskMatchDialog();
