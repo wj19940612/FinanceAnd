@@ -85,7 +85,7 @@ public class MineFragment extends BaseFragment {
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(BaseActivity.ACTION_TOKEN_EXPIRED)) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
                 updateUserImage();
                 updateUserStatus();
             }

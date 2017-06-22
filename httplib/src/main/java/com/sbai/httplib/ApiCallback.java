@@ -67,8 +67,8 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
-        onFailure(volleyError);
         onFinish();
+        onFailure(volleyError);
     }
 
     @Override

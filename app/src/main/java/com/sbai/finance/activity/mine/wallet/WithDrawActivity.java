@@ -60,7 +60,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
     private String mPassWord;
     //手续费
-    private double mPoundage;
+    private double mPoundage = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +111,8 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     };
 
     private boolean checkConfirmEnable() {
-        return !TextUtils.isEmpty(mWithdrawMoney.getText().toString());
+        String withDrawMoney = mWithdrawMoney.getText().toString();
+        return !TextUtils.isEmpty(withDrawMoney) && Double.parseDouble(withDrawMoney) >= 5;
     }
 
     @Override
@@ -139,7 +140,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     }
 
     private void showWithDrawRuleDialog() {
-        BindBankHintDialogFragment.newInstance(R.string.can_with_rule, R.string.can_with_rule_content).show(getSupportFragmentManager());
+        BindBankHintDialogFragment.newInstance(R.string.can_with_rule, getString(R.string.can_with_rule_content, FinanceUtil.formatWithScale(mPoundage))).show(getSupportFragmentManager());
     }
 
     @Override
