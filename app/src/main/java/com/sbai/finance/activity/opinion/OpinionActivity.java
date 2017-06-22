@@ -212,7 +212,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                 if (item.getAdeptType() != null) {
                     switch (item.getAdeptType()) {
                         case ViewPointMater.TYPE_FUTURE:
-                            mSkilledType.setText(context.getString(R.string.future));
+                            mSkilledType.setText(context.getString(R.string.futures));
                             break;
                         case ViewPointMater.TYPE_STOCK:
                             mSkilledType.setText(context.getString(R.string.stock));
@@ -224,7 +224,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                             break;
                     }
                 } else {
-                    mSkilledType.setText(context.getString(R.string.future));
+                    mSkilledType.setText(context.getString(R.string.futures));
                 }
                 String s = Math.round(item.getPassRat() * 100)+ "%";
                 mAccuracyRate.setText(s);

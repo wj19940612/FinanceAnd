@@ -15,7 +15,7 @@
             android:drawableTop="@drawable/fanli_content_icon_futures"
             android:textSize="14sp"
             android:textColor="@color/blackAssist"
-            android:text="@string/future"/>
+            android:text="@string/futures"/>
 
         <TextView
             android:id="@+id/stock"
