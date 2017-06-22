@@ -186,7 +186,7 @@ public class FutureVersusListActivity extends BaseActivity {
             case R.id.createVersus:
                 break;
             case R.id.matchVersus:
-                showAskMatchDialog();
+                //showAskMatchDialog();
                 break;
             case R.id.currentVersus:
                 break;
@@ -228,25 +228,7 @@ public class FutureVersusListActivity extends BaseActivity {
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(R.string.cancel)
                 .show();
-
-    }
-    private void showAskMatchDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.match_versus_tip),getString(R.string.match_versus_title))
-                .setMessageTextSize(15)
-                .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        showMatchingDialog();
-                    }
-                })
-                .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .setNegative(R.string.cancel)
-                .show();
-
-    }
+	}
     private void showMatchingDialog(){
         SmartDialog.with(getActivity(), getString(R.string.matching_tip),getString(R.string.matching))
                 .setMessageTextSize(15)
@@ -292,30 +274,30 @@ public class FutureVersusListActivity extends BaseActivity {
             void onClick(VersusGaming item,boolean isCreate);
         }
 
-        private Callback mCallback;
+		private Callback mCallback;
 
-        public void setCallback(Callback callback) {
-            mCallback = callback;
-        }
+		public void setCallback(Callback callback) {
+			mCallback = callback;
+		}
 
-        public VersusListAdapter(@NonNull Context context) {
-            super(context, 0);
-        }
+		public VersusListAdapter(@NonNull Context context) {
+			super(context, 0);
+		}
 
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus, parent, false);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.bindDataWithView(getItem(position), getContext(), mCallback);
-            return convertView;
-        }
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus, parent, false);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindDataWithView(getItem(position), getContext(), mCallback);
+			return convertView;
+		}
 
         static class ViewHolder {
             @BindView(R.id.createAvatar)

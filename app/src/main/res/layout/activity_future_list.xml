@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/future"
+        app:titleText="@string/futures"
         app:titleTextColor="@color/blackAssist"/>
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,23 +34,21 @@ import static android.app.Activity.RESULT_OK;
 
 public class ChooseFuturesFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
-
 	@BindView(android.R.id.list)
 	ListView mListView;
 	@BindView(android.R.id.empty)
 	TextView mEmpty;
+
 	private Unbinder unbinder;
-
 	private FutureListAdapter mFutureListAdapter;
-
 	private String mFutureType;
-	private int mPage = 0;
-	private HashSet<String> mSet;
+	private String mContractsCode;
 
-	public static ChooseFuturesFragment newInstance(String type) {
+	public static ChooseFuturesFragment newInstance(String type, String contractsCode) {
 		ChooseFuturesFragment fragment = new ChooseFuturesFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString("type", type);
+		bundle.putString("contractsCode", contractsCode);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
@@ -60,6 +58,7 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
 			mFutureType = getArguments().getString("type");
+			mContractsCode = getArguments().getString("contractsCode");
 		}
 	}
 
@@ -74,12 +73,11 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mSet = new HashSet<>();
-		mFutureListAdapter = new FutureListAdapter(getActivity());
+		mFutureListAdapter = new FutureListAdapter(getActivity(), mContractsCode);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mFutureListAdapter);
 		mListView.setOnItemClickListener(this);
-		requestVarietyList();
+		requestFutureBattleVarietyList();
 	}
 
 	@Override
@@ -90,7 +88,9 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 		mFutureListAdapter.notifyDataSetInvalidated();
 
 		Intent intent = new Intent();
-		intent.putExtra(Launcher.EX_PAYLOAD,item.getVarietyName());
+		intent.putExtra(Launcher.EX_PAYLOAD, item.getVarietyName());
+		intent.putExtra(Launcher.EX_PAYLOAD_1, item.getContractsCode());
+		intent.putExtra(Launcher.EX_PAYLOAD_2, item.getVarietyId());
 		getActivity().setResult(RESULT_OK, intent);
 		getActivity().finish();
 	}
@@ -105,20 +105,27 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 		unbinder.unbind();
 	}
 
-	public void requestVarietyList() {
-		Client.getVarietyList(Variety.VAR_FUTURE, mPage, mFutureType).setTag(TAG)
+	public void requestFutureBattleVarietyList() {
+		Client.getFutureBattleVarietyList().setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
 					@Override
 					protected void onRespSuccessData(List<Variety> varietyList) {
+
 						updateVarietyList(varietyList);
 					}
 
-				}).fire();
+				}).fireSync();
 	}
 
 	private void updateVarietyList(List<Variety> varietyList) {
 		mFutureListAdapter.clear();
-		mFutureListAdapter.addAll(varietyList);
+
+		for (Variety variety : varietyList) {
+			if (mFutureType.equalsIgnoreCase(variety.getSmallVarietyTypeCode())) {
+				mFutureListAdapter.add(variety);
+			}
+		}
+
 		mFutureListAdapter.notifyDataSetChanged();
 	}
 
@@ -126,11 +133,13 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 	static class FutureListAdapter extends ArrayAdapter<Variety> {
 
 		private Context mContext;
+		private String mContractsCode;
 		private int mChecked = -1;
 
-		private FutureListAdapter(Context context) {
+		private FutureListAdapter(Context context, String contractsCode) {
 			super(context, 0);
 			mContext = context;
+			mContractsCode = contractsCode;
 		}
 
 		private void setChecked(int checked) {
@@ -148,7 +157,7 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position), mChecked, position);
+			viewHolder.bindingData(mContext, getItem(position), mChecked, position, mContractsCode);
 			return convertView;
 		}
 
@@ -164,19 +173,23 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 				ButterKnife.bind(this, view);
 			}
 
-			public void bindingData(Context context, Variety item, int checked, int position) {
+			public void bindingData(Context context, Variety item, int checked, int position, String contractsCode) {
 
 				mFutureName.setText(item.getVarietyName());
-				if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-					mFutureCode.setText(item.getContractsCode());
-				} else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-					mFutureCode.setText(item.getVarietyType());
-				}
+				mFutureCode.setText(item.getContractsCode());
 
 				if (checked == position) {
 					mCheckboxClick.setVisibility(View.VISIBLE);
 				} else {
 					mCheckboxClick.setVisibility(View.GONE);
+				}
+
+				if (!TextUtils.isEmpty(item.getContractsCode())) {
+					if (item.getContractsCode().equalsIgnoreCase(contractsCode)) {
+						mCheckboxClick.setVisibility(View.VISIBLE);
+					} else {
+						mCheckboxClick.setVisibility(View.GONE);
+					}
 				}
 			}
 		}

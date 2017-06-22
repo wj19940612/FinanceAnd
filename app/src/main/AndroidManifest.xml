@@ -301,6 +301,10 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".activity.recharge.FutureVersusRecordActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".activity.future.CreateFightActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.future.ChooseFuturesActivity"
+                  android:screenOrientation="portrait"/>
 
     </application>
 
