@@ -8,9 +8,11 @@ import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleButtons;
@@ -21,6 +23,8 @@ import com.sbai.finance.view.SmartDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
 
 /**
@@ -73,6 +77,55 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .beginTransaction()
                 .add(R.id.futureArea, mFutureBattleFragment)
                 .commit();
+
+        //观战模式  刷新底部框 可以点赞
+        int userId = LocalUser.getUser().getUserInfo().getId();
+        if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
+            mBattleView.setMode(BattleFloatView.Mode.VISITOR)
+                    .initWithModel(mVersusGaming)
+                    .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
+                    .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
+                        @Override
+                        public void onCreateAvatarClick() {
+                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID,mVersusGaming.getLaunchUser())
+                                    .execute();
+                        }
+
+                        @Override
+                        public void onAgainstAvatarClick() {
+                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID,mVersusGaming.getAgainstUser())
+                                    .execute();
+                        }
+                    })
+                    .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
+                        @Override
+                        public void addCreatePraiseCount() {
+                            // TODO: 2017/6/22 给创建者点赞
+                        }
+
+                        @Override
+                        public void addAgainstPraiseCount() {
+                            // TODO: 2017/6/22 给对抗者点赞
+                        }
+                    });
+
+        } else {
+            //初始化
+            mBattleView.setMode(BattleFloatView.Mode.MINE)
+                    .initWithModel(mVersusGaming);
+
+            //分两种状态  1.发起匹配  2.对战中
+            int gameStatus = mVersusGaming.getGameStatus();
+            if (gameStatus == GAME_STATUS_MATCH) {
+                mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
+            } else if (gameStatus == GAME_STATUS_START) {
+                mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
+            }
+        }
+
+        // TODO: 2017/6/22 开始长连接
     }
 
     public void showFutureBattleDetail() {
@@ -85,14 +138,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .commit();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
-                .setCreateAvatar(mVersusGaming.getLaunchUserPortrait())
-                .setCreateName(mVersusGaming.getLaunchUserName())
-                .setAgainstAvatar(mVersusGaming.getAgainstUserPortrait())
-                .setAgainstName(mVersusGaming.getAgainstUserName())
-                .setDeposit(mVersusGaming.getReward(), mVersusGaming.getCoinType())
+                .initWithModel(mVersusGaming)
                 .setDeadline(mVersusGaming.getGameStatus(), 0)
                 .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
-                .setPraise(mVersusGaming.getLaunchPraise(), mVersusGaming.getAgainstPraise())
                 .setWinResult(mVersusGaming.getWinResult());
     }
 

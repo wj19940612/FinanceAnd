@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
@@ -70,6 +71,7 @@ public class BattleFloatView extends RelativeLayout {
 
     private Mode mMode;
     private OnPraiseListener mOnPraiseListener;
+    private onAvatarClickListener mOnAvatarClickListener;
 
     public BattleFloatView(Context context) {
         this(context, null);
@@ -104,7 +106,7 @@ public class BattleFloatView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnPraiseListener != null) {
-                            mOnPraiseListener.addMyPraiseCount();
+                            mOnPraiseListener.addCreatePraiseCount();
                         }
                     }
                 });
@@ -113,7 +115,25 @@ public class BattleFloatView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnPraiseListener != null) {
-                            mOnPraiseListener.addUserPraiseCount();
+                            mOnPraiseListener.addAgainstPraiseCount();
+                        }
+                    }
+                });
+
+                mCreateAvatar.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnAvatarClickListener != null) {
+                            mOnAvatarClickListener.onCreateAvatarClick();
+                        }
+                    }
+                });
+
+                mAgainstAvatar.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnAvatarClickListener != null) {
+                            mOnAvatarClickListener.onAgainstAvatarClick();
                         }
                     }
                 });
@@ -125,6 +145,17 @@ public class BattleFloatView extends RelativeLayout {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mFighterDataArea.getLayoutParams();
         params.topMargin = dp2px(getContext(), 10);
         mFighterDataArea.setLayoutParams(params);
+    }
+
+    public BattleFloatView initWithModel(VersusGaming model) {
+        this.setCreateAvatar(model.getLaunchUserPortrait())
+                .setCreateName(model.getLaunchUserName())
+                .setAgainstAvatar(model.getAgainstUserPortrait())
+                .setAgainstName(model.getAgainstUserName())
+                .setDeposit(model.getReward(), model.getCoinType())
+                .setPraise(model.getLaunchPraise(), model.getAgainstPraise())
+                .setDeadline(model.getGameStatus(), (int) (model.getEndTime()/1000));
+        return this;
     }
 
     public BattleFloatView setCreateName(String name) {
@@ -240,6 +271,8 @@ public class BattleFloatView extends RelativeLayout {
             mDeadline.setText("已结束");
         } else if (gameStatus == 2) {
             mDeadline.setText("剩余" + DateUtil.getCountdownTime(endTime, 0));
+        }else if (gameStatus == 1){
+            mDeadline.setText(DateUtil.getCountdownTime(endTime, 0));
         }
         return this;
     }
@@ -312,10 +345,20 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public interface OnPraiseListener {
-        void addMyPraiseCount();
+    public BattleFloatView setOnAvatarClickListener(onAvatarClickListener listener) {
+        mOnAvatarClickListener = listener;
+        return this;
+    }
 
-        void addUserPraiseCount();
+    public interface OnPraiseListener {
+        void addCreatePraiseCount();
+
+        void addAgainstPraiseCount();
+    }
+
+    public interface onAvatarClickListener{
+        void onCreateAvatarClick();
+        void onAgainstAvatarClick();
     }
 
     public int dp2px(Context context, float dp) {
