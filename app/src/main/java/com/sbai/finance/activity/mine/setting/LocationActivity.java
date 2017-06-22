@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.setting;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.GpsUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 
@@ -80,6 +84,9 @@ public class LocationActivity extends BaseActivity {
         mIsFromModifyUserInfoPage = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
         isSelectGpsLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
         mPublishLocation = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+
+        String location = Manifest.permission_group.LOCATION;
+        Log.d(TAG, "onCreate: " + location);
     }
 
     @OnClick({R.id.choiceLocation, R.id.location})
@@ -96,17 +103,18 @@ public class LocationActivity extends BaseActivity {
     }
 
     private void updateLocationInfo() {
-//        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            int check = ContextCompat.checkSelfPermission(this, permissions[0]);
-//            if (check == PackageManager.PERMISSION_GRANTED) {
-//                openGPSSettings();
-//            } else {
-//                requestPermissions(permissions, 1);
-//            }
-//        } else {
-        openGPSSettings();
-//        }
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int check = ContextCompat.checkSelfPermission(this, permissions[0]);
+            if (check == PackageManager.PERMISSION_GRANTED) {
+                openGPSSettings();
+            } else {
+                requestPermissions(permissions, 1);
+                ToastUtil.curt("请开启权限");
+            }
+        } else {
+            openGPSSettings();
+        }
     }
 
     private void requestLocation() {
@@ -202,8 +210,8 @@ public class LocationActivity extends BaseActivity {
 
     /**
      * GPS设置
-     *
-     *  || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+     * <p>
+     * || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
      *
      * @param
      */
