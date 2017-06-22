@@ -67,7 +67,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     public void showFutureBattle() {
         if (mFutureBattleFragment == null) {
-            mFutureBattleFragment = FutureBattleFragment.newInstance(null);
+            mFutureBattleFragment = FutureBattleFragment.newInstance(mVersusGaming);
         }
         getSupportFragmentManager()
                 .beginTransaction()
@@ -102,7 +102,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void showInviteDialog() {
-        // TODO: 2017/6/22 分享 
+        // TODO: 2017/6/22 分享
     }
 
     @Override
