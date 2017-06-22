@@ -47,6 +47,7 @@ import butterknife.Unbinder;
 
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
+import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
 /**
  * Created by linrongfang on 2017/6/19.
@@ -143,6 +144,8 @@ public class FutureBattleFragment extends BaseFragment {
                 showBattleButtons();
             } else if (mVersusGaming.getGameStatus() == GAME_STATUS_START) {
                 showBattleTradeView();
+                setBattleTradeState(STATE_TRADE);
+
             }
         }
     }
@@ -157,7 +160,7 @@ public class FutureBattleFragment extends BaseFragment {
             list.add(item);
         }
         mBattleTradeView.addTradeData(list);
-        mBattleTradeView.changeTradeState(BattleTradeView.STATE_TRADE);
+        mBattleTradeView.changeTradeState(STATE_TRADE);
     }
 
     private void initTabLayout() {
