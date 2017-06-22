@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.future.CreateFightActivity;
 import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -187,7 +186,7 @@ public class FutureVersusListActivity extends BaseActivity {
             case R.id.createVersus:
                 break;
             case R.id.matchVersus:
-               // showAskMatchDialog();
+                //showAskMatchDialog();
                 break;
             case R.id.currentVersus:
                 break;
