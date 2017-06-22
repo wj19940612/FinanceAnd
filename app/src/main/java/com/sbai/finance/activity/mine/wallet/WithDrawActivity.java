@@ -17,6 +17,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -77,9 +78,9 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
         requestWithDrawPoundage();
 
-        if (Preference.get().isFirstWithDraw()) {
+        if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
             showWithDrawRuleDialog();
-            Preference.get().setIsFirstWithDraw(false);
+            Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
         }
     }
 

@@ -110,7 +110,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private PredictionDialogFragment mPredictionFragment;
     protected Variety mVariety;
-
+    private boolean isOptionalChanged;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,6 +206,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(false);
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
+                            isOptionalChanged = true;
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -223,6 +224,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
+                            isOptionalChanged = false;
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -282,6 +284,12 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onDestroy();
         UMShareAPI.get(this).release();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult();
+        super.onBackPressed();
     }
 
     @Override
@@ -459,6 +467,12 @@ public abstract class StockTradeActivity extends BaseActivity {
                         }
                     }
                 }).fireSync();
+    }
+    private void setResult(){
+        Intent intent = new Intent();
+        intent.putExtra(Launcher.EX_PAYLOAD,mVariety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1,isOptionalChanged);
+        setResult(RESULT_OK, intent);
     }
 
     private void initSlidingTab() {

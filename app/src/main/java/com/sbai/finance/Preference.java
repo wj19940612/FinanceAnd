@@ -135,11 +135,11 @@ public class Preference {
         return mPrefs.getInt(Key.RECHARGE_WAY, UsablePlatform.TYPE_AIL_PAY);
     }
 
-    public boolean isFirstWithDraw() {
-        return mPrefs.getBoolean(Key.IS_FIRST_WITH_DRAW, true);
+    public boolean isFirstWithDraw(String key) {
+        return mPrefs.getBoolean(key, true);
     }
 
-    public void setIsFirstWithDraw(boolean isFirstWithDraw) {
-        apply(Key.IS_FIRST_WITH_DRAW, isFirstWithDraw);
+    public void setIsFirstWithDraw(String key, boolean isFirstWithDraw) {
+        apply(key, isFirstWithDraw);
     }
 }

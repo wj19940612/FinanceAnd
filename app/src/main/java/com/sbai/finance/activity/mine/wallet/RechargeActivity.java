@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -53,6 +54,8 @@ public class RechargeActivity extends BaseActivity {
     AppCompatButton mRecharge;
     @BindView(R.id.connect_service)
     AppCompatTextView mConnectService;
+    @BindView(R.id.rechargeLL)
+    LinearLayout mRechargeLL;
 
     private String[] mPayData;
     private List<UsablePlatform> mUsablePlatformList;
@@ -145,7 +148,7 @@ public class RechargeActivity extends BaseActivity {
         return !TextUtils.isEmpty(count) && Double.parseDouble(count) >= 5;
     }
 
-    @OnClick({R.id.rechargeWay, R.id.rechargeCount, R.id.recharge, R.id.connect_service})
+    @OnClick({R.id.rechargeWay, R.id.rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rechargeWay:
@@ -162,6 +165,13 @@ public class RechargeActivity extends BaseActivity {
                 break;
             case R.id.connect_service:
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                break;
+            case R.id.rechargeLL:
+                if (mPayData != null && mPayData.length > 0) {
+                    showRechargePicker();
+                } else {
+                    requestUsablePlatformList();
+                }
                 break;
         }
     }
