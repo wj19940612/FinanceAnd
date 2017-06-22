@@ -1,5 +1,6 @@
 package com.sbai.finance.net;
 
+import com.sbai.httplib.BuildConfig;
 import com.sbai.httplib.NullResponseError;
 
 /**
@@ -27,7 +28,9 @@ public abstract class Callback2D<T, D> extends Callback<T> {
                 onRespSuccessData(data);
             } else {
                 onFailure(null);
-                onToastErrorMessage("Fuck! Response's data is null.");
+                if (BuildConfig.DEBUG) {
+                    onToastErrorMessage("Fuck! Response's data is null.");
+                }
             }
         }
     }
