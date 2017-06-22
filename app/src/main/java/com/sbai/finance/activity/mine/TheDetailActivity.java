@@ -48,7 +48,7 @@ public class TheDetailActivity extends BaseActivity {
     @BindView(R.id.dataLayout)
     FrameLayout mDataLayout;
 
-    private int mPageSize = 10;
+    private int mPageSize = 20;
     private int mPageNo = 0;
     private ArrayList<Detail> mDetailArrayList;
     private TheDetailAdapter mTheDetailAdapter;

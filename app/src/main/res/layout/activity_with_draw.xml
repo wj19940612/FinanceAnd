@@ -136,7 +136,7 @@
         android:layout_marginRight="@dimen/common_padding"
         android:background="@drawable/btn_red_rounded"
         android:enabled="false"
-        android:text="@string/complete"
+        android:text="@string/with_draw"
         android:textColor="@android:color/white"/>
 
     <android.support.v7.widget.AppCompatTextView
