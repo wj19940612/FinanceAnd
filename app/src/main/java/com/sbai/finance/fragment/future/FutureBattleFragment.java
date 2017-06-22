@@ -83,6 +83,8 @@ public class FutureBattleFragment extends BaseFragment {
     private FutureData mFutureData;
     private int mCount = 600;
 
+    private String mPageType;
+
     public static FutureBattleFragment newInstance(Variety variety) {
         FutureBattleFragment futureBattleFragment = new FutureBattleFragment();
         Bundle bundle = new Bundle();
@@ -385,6 +387,11 @@ public class FutureBattleFragment extends BaseFragment {
     public void setBattleTradeState(int state) {
         //切换交易视图显示模式
         mBattleTradeView.changeTradeState(state);
+    }
+
+    public void setTradeData(int direction, double buyPrice, double profit){
+        //实时刷新房主的
+        mBattleTradeView.setTradeData(direction,buyPrice,profit);
     }
 
     @Override
