@@ -19,6 +19,7 @@ import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.model.payment.WithPoundageModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -72,8 +73,9 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
-        String withDrawBankAndNumber = "      " + mUserBankCardInfoModel.getIssuingBankName() + "  (" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
-        mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
+        if (mUserBankCardInfoModel != null) {
+            updateBankInfo(mUserBankCardInfoModel);
+        }
         mWithdrawMoney.addTextChangedListener(mValidationWatcher);
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
 
@@ -83,6 +85,45 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
             showWithDrawRuleDialog();
             Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
         }
+        //从消息界面进入
+        if (mUserBankCardInfoModel == null) {
+            requestUserBankInfo();
+            requestFundInfo();
+        }
+    }
+
+    private void requestFundInfo() {
+        Client.requestUserFundInfo()
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfoModel data) {
+                        mMoney = data.getMoney();
+                        mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
+                    }
+                })
+                .fireSync();
+    }
+
+    private void requestUserBankInfo() {
+        Client.requestUserBankCardInfo()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserBankCardInfoModel>, UserBankCardInfoModel>() {
+                    @Override
+                    protected void onRespSuccessData(UserBankCardInfoModel data) {
+                        mUserBankCardInfoModel = data;
+                        updateBankInfo(data);
+                    }
+                })
+                .fire();
+    }
+
+
+    private void updateBankInfo(UserBankCardInfoModel userBankCardInfoModel) {
+        String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
+        mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
     }
 
     private void requestWithDrawPoundage() {

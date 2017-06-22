@@ -48,6 +48,18 @@ public class UserBankCardInfoModel implements Parcelable {
     // 银行卡绑定状态  0 未绑定  1 填写  2 已经绑定
     private int bindStatus;
 
+    //是否绑定过银行卡  0 没有 1有
+    private String hasBindBankCard;
+
+
+    public String getHasBindBankCard() {
+        return hasBindBankCard;
+    }
+
+    public void setHasBindBankCard(String hasBindBankCard) {
+        this.hasBindBankCard = hasBindBankCard;
+    }
+
     public boolean isBindBank() {
         return getBindStatus() == 2;
     }
@@ -153,6 +165,9 @@ public class UserBankCardInfoModel implements Parcelable {
     }
 
 
+    public UserBankCardInfoModel() {
+    }
+
     @Override
     public String toString() {
         return "UserBankCardInfoModel{" +
@@ -168,6 +183,7 @@ public class UserBankCardInfoModel implements Parcelable {
                 ", userId=" + userId +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", bindStatus=" + bindStatus +
+                ", hasBindBankCard='" + hasBindBankCard + '\'' +
                 '}';
     }
 
@@ -189,10 +205,8 @@ public class UserBankCardInfoModel implements Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.userId);
         dest.writeString(this.cardNumber);
-        dest.writeValue(this.bindStatus);
-    }
-
-    public UserBankCardInfoModel() {
+        dest.writeInt(this.bindStatus);
+        dest.writeString(this.hasBindBankCard);
     }
 
     protected UserBankCardInfoModel(Parcel in) {
@@ -207,7 +221,8 @@ public class UserBankCardInfoModel implements Parcelable {
         this.id = in.readInt();
         this.userId = in.readInt();
         this.cardNumber = in.readString();
-        this.bindStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.bindStatus = in.readInt();
+        this.hasBindBankCard = in.readString();
     }
 
     public static final Creator<UserBankCardInfoModel> CREATOR = new Creator<UserBankCardInfoModel>() {
