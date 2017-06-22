@@ -73,6 +73,8 @@ public class VersusGaming implements Parcelable {
     private double launchScore;
     private double againstScore;
     private int pageType;
+    private int againstPraise;
+    private int launchPraise;
 
     public int getPageType() {
         return pageType;
@@ -266,6 +268,22 @@ public class VersusGaming implements Parcelable {
         this.winResult = winResult;
     }
 
+    public int getAgainstPraise() {
+        return againstPraise;
+    }
+
+    public void setAgainstPraise(int againstPraise) {
+        this.againstPraise = againstPraise;
+    }
+
+    public int getLaunchPraise() {
+        return launchPraise;
+    }
+
+    public void setLaunchPraise(int launchPraise) {
+        this.launchPraise = launchPraise;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -297,6 +315,8 @@ public class VersusGaming implements Parcelable {
         dest.writeDouble(this.launchScore);
         dest.writeDouble(this.againstScore);
         dest.writeInt(this.pageType);
+        dest.writeInt(this.againstPraise);
+        dest.writeInt(this.launchPraise);
     }
 
     public VersusGaming() {
@@ -327,6 +347,8 @@ public class VersusGaming implements Parcelable {
         this.launchScore = in.readDouble();
         this.againstScore = in.readDouble();
         this.pageType = in.readInt();
+        this.againstPraise = in.readInt();
+        this.launchPraise = in.readInt();
     }
 
     public static final Parcelable.Creator<VersusGaming> CREATOR = new Parcelable.Creator<VersusGaming>() {

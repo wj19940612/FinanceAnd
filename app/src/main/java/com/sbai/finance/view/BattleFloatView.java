@@ -231,7 +231,7 @@ public class BattleFloatView extends RelativeLayout {
     /**
      * 更新对战时间
      *
-     * @param gameStatus 对战状态 1匹配中  2对战中  3结束
+     * @param gameStatus 对战状态 0 取消 1发起  2对战中  3结束
      * @param endTime    对战剩余时长
      * @return
      */
@@ -280,14 +280,15 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     /**
+     * 设置输赢
      * 设置此局游戏是否胜利
-     * @param success
+     * @param result 0 平手  1发起者赢  2对抗者赢
      * @return
      */
-    public BattleFloatView setGameSuccess(boolean success) {
-        if (success) {
+    public BattleFloatView setWinResult(int result) {
+        if (result == 1) {
             mAgainstKo.setVisibility(VISIBLE);
-        } else {
+        } else if (result == 2) {
             mCreateKo.setVisibility(VISIBLE);
         }
         return this;

@@ -28,7 +28,7 @@ import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
  */
 
 public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,
-        BattleTradeView.OnViewClickListener{
+        BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -57,7 +57,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
 
-
     private void initViews() {
         if (mVersusGaming.getPageType() == PAGE_RECORD) {
             showFutureBattleDetail();
@@ -84,6 +83,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .beginTransaction()
                 .add(R.id.futureArea, mFutureBattleFragment)
                 .commit();
+
         mBattleView.setMode(BattleFloatView.Mode.MINE)
                 .setCreateAvatar(mVersusGaming.getLaunchUserPortrait())
                 .setCreateName(mVersusGaming.getLaunchUserName())
@@ -92,12 +92,17 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setDeposit(mVersusGaming.getReward(), mVersusGaming.getCoinType())
                 .setDeadline(mVersusGaming.getGameStatus(), 0)
                 .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
-                .setPraise(1, 2);
+                .setPraise(mVersusGaming.getLaunchPraise(), mVersusGaming.getAgainstPraise())
+                .setWinResult(mVersusGaming.getWinResult());
     }
 
     @Override
     public void onInviteButtonClick() {
+         showInviteDialog();
+    }
 
+    private void showInviteDialog() {
+        // TODO: 2017/6/22 分享 
     }
 
     @Override
@@ -105,6 +110,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         showMatchDialog();
         // TODO: 2017/6/22 房主开始匹配
     }
+
     //开始匹配弹窗
     private void showMatchDialog() {
         if (mStartMatchDialogFragment == null) {
@@ -172,8 +178,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         showCancelBattleDialog();
     }
 
-    private void showCancelBattleDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip),getString(R.string.cancel_battle))
+    private void showCancelBattleDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip), getString(R.string.cancel_battle))
                 .setMessageTextSize(15)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
