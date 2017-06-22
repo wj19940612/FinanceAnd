@@ -144,7 +144,6 @@ public class Netty {
             }
         });
     }
-
     private void doConnect() {
         ChannelFuture channelFuture = mBootstrap.connect(mInetSocketAddress);
         channelFuture.addListener(new ChannelFutureListener() {

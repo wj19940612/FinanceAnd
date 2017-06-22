@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
@@ -27,14 +28,18 @@ import butterknife.ButterKnife;
 
 public class BattleFloatView extends RelativeLayout {
 
-    @BindView(R.id.myAvatar)
-    ImageView mMyAvatar;
-    @BindView(R.id.myName)
-    TextView mMyName;
-    @BindView(R.id.userAvatar)
-    ImageView mUserAvatar;
-    @BindView(R.id.userName)
-    TextView mUserName;
+    @BindView(R.id.createAvatar)
+    ImageView mCreateAvatar;
+    @BindView(R.id.createName)
+    TextView mCreateName;
+    @BindView(R.id.createKo)
+    ImageView mCreateKo;
+    @BindView(R.id.againstAvatar)
+    ImageView mAgainstAvatar;
+    @BindView(R.id.againstName)
+    TextView mAgainstName;
+    @BindView(R.id.againstKo)
+    ImageView mAgainstKo;
 
     @BindView(R.id.varietyName)
     TextView mVarietyName;
@@ -66,6 +71,7 @@ public class BattleFloatView extends RelativeLayout {
 
     private Mode mMode;
     private OnPraiseListener mOnPraiseListener;
+    private onAvatarClickListener mOnAvatarClickListener;
 
     public BattleFloatView(Context context) {
         this(context, null);
@@ -100,7 +106,7 @@ public class BattleFloatView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnPraiseListener != null) {
-                            mOnPraiseListener.addMyPraiseCount();
+                            mOnPraiseListener.addCreatePraiseCount();
                         }
                     }
                 });
@@ -109,7 +115,25 @@ public class BattleFloatView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnPraiseListener != null) {
-                            mOnPraiseListener.addUserPraiseCount();
+                            mOnPraiseListener.addAgainstPraiseCount();
+                        }
+                    }
+                });
+
+                mCreateAvatar.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnAvatarClickListener != null) {
+                            mOnAvatarClickListener.onCreateAvatarClick();
+                        }
+                    }
+                });
+
+                mAgainstAvatar.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnAvatarClickListener != null) {
+                            mOnAvatarClickListener.onAgainstAvatarClick();
                         }
                     }
                 });
@@ -123,31 +147,42 @@ public class BattleFloatView extends RelativeLayout {
         mFighterDataArea.setLayoutParams(params);
     }
 
-    public BattleFloatView setMyName(String name) {
-        mMyName.setText(name);
+    public BattleFloatView initWithModel(VersusGaming model) {
+        this.setCreateAvatar(model.getLaunchUserPortrait())
+                .setCreateName(model.getLaunchUserName())
+                .setAgainstAvatar(model.getAgainstUserPortrait())
+                .setAgainstName(model.getAgainstUserName())
+                .setDeposit(model.getReward(), model.getCoinType())
+                .setPraise(model.getLaunchPraise(), model.getAgainstPraise())
+                .setDeadline(model.getGameStatus(), (int) (model.getEndTime()/1000));
         return this;
     }
 
-    public BattleFloatView setMyAvatar(String url) {
+    public BattleFloatView setCreateName(String name) {
+        mCreateName.setText(name);
+        return this;
+    }
+
+    public BattleFloatView setCreateAvatar(String url) {
         Glide.with(getContext())
                 .load(url)
                 .bitmapTransform(new GlideCircleTransform(getContext()))
                 .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mMyAvatar);
+                .into(mCreateAvatar);
         return this;
     }
 
-    public BattleFloatView setUserName(String userName) {
-        mUserName.setText(userName);
+    public BattleFloatView setAgainstName(String userName) {
+        mAgainstName.setText(userName);
         return this;
     }
 
-    public BattleFloatView setUserAvatar(String url) {
+    public BattleFloatView setAgainstAvatar(String url) {
         Glide.with(getContext())
                 .load(url)
                 .bitmapTransform(new GlideCircleTransform(getContext()))
                 .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mUserAvatar);
+                .into(mAgainstAvatar);
         return this;
     }
 
@@ -161,16 +196,16 @@ public class BattleFloatView extends RelativeLayout {
      *
      * @param myProfit      我的盈利状况
      * @param fighterProfit 对抗者盈利状况
-     * @param  isInviting 是否正在邀请中
+     * @param isInviting    是否正在邀请中
      * @return
      */
-    public BattleFloatView setProgress(double myProfit, double fighterProfit,boolean isInviting) {
+    public BattleFloatView setProgress(double myProfit, double fighterProfit, boolean isInviting) {
         String myFlag = "";
         String fighterFlag = "";
         if (isInviting) {
             mProgressBar.setProgress(0);
             mProgressBar.setSecondaryProgress(0);
-        }else {
+        } else {
             //正正
             if ((myProfit > 0 && fighterProfit >= 0) || (myProfit >= 0 && fighterProfit > 0)) {
                 int progress = (int) (myProfit * 100 / (myProfit + fighterProfit));
@@ -211,8 +246,9 @@ public class BattleFloatView extends RelativeLayout {
 
     /**
      * 显示对战信息
-     * @param reward     赏金
-     * @param coinType   对战类型  2元宝 3积分
+     *
+     * @param reward   赏金
+     * @param coinType 对战类型  2元宝 3积分
      * @return
      */
     public BattleFloatView setDeposit(int reward, int coinType) {
@@ -225,8 +261,9 @@ public class BattleFloatView extends RelativeLayout {
 
     /**
      * 更新对战时间
-     * @param gameStatus 对战状态 1匹配中  2对战中  3结束
-     * @param endTime 对战剩余时长
+     *
+     * @param gameStatus 对战状态 0 取消 1发起  2对战中  3结束
+     * @param endTime    对战剩余时长
      * @return
      */
     public BattleFloatView setDeadline(int gameStatus, int endTime) {
@@ -234,6 +271,8 @@ public class BattleFloatView extends RelativeLayout {
             mDeadline.setText("已结束");
         } else if (gameStatus == 2) {
             mDeadline.setText("剩余" + DateUtil.getCountdownTime(endTime, 0));
+        }else if (gameStatus == 1){
+            mDeadline.setText(DateUtil.getCountdownTime(endTime, 0));
         }
         return this;
     }
@@ -250,8 +289,8 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(String.valueOf(myPraiseNumber)+ "赞");
-            mUserPraise.setText(String.valueOf(fighterPraiseNumber)+ "赞");
+            mMyPraise.setText(String.valueOf(myPraiseNumber) + "赞");
+            mUserPraise.setText(String.valueOf(fighterPraiseNumber) + "赞");
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
@@ -269,6 +308,21 @@ public class BattleFloatView extends RelativeLayout {
         }
         if (userLight) {
             mUserPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+        }
+        return this;
+    }
+
+    /**
+     * 设置输赢
+     * 设置此局游戏是否胜利
+     * @param result 0 平手  1发起者赢  2对抗者赢
+     * @return
+     */
+    public BattleFloatView setWinResult(int result) {
+        if (result == 1) {
+            mAgainstKo.setVisibility(VISIBLE);
+        } else if (result == 2) {
+            mCreateKo.setVisibility(VISIBLE);
         }
         return this;
     }
@@ -291,10 +345,20 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public interface OnPraiseListener {
-        void addMyPraiseCount();
+    public BattleFloatView setOnAvatarClickListener(onAvatarClickListener listener) {
+        mOnAvatarClickListener = listener;
+        return this;
+    }
 
-        void addUserPraiseCount();
+    public interface OnPraiseListener {
+        void addCreatePraiseCount();
+
+        void addAgainstPraiseCount();
+    }
+
+    public interface onAvatarClickListener{
+        void onCreateAvatarClick();
+        void onAgainstAvatarClick();
     }
 
     public int dp2px(Context context, float dp) {

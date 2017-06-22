@@ -100,7 +100,7 @@ public class BindBankCardActivity extends BaseActivity {
     }
 
     private void updateBankCardInfo() {
-        if (mUserBankCardInfoModel.hasBindBank()) {
+        if (mUserBankCardInfoModel.isBindBank()) {
             mAddBackLayout.setVisibility(View.GONE);
             mBankCardLayout.setVisibility(View.VISIBLE);
             SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.bank_card_name, mUserBankCardInfoModel.getIssuingBankName()), getString(R.string.deposit_card), 0.8f);
@@ -110,6 +110,12 @@ public class BindBankCardActivity extends BaseActivity {
         } else {
             mAddBackLayout.setVisibility(View.VISIBLE);
             mBankCardLayout.setVisibility(View.GONE);
+            mName.setText(mUserBankCardInfoModel.getRealName());
+            mIdentityCard.setText(mUserBankCardInfoModel.getIdCard());
+            mBankCardNumber.setText(mUserBankCardInfoModel.getCardNumber());
+            mBank.setText(mUserBankCardInfoModel.getIssuingBankName());
+            mPhoneNumber.setText(mUserBankCardInfoModel.getCardPhone());
+
         }
     }
 
@@ -202,7 +208,7 @@ public class BindBankCardActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mUserBankCardInfoModel.hasBindBank()) {
+        if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
             showGiveUpBindBankDialog();
         } else {
             super.onBackPressed();
@@ -246,7 +252,9 @@ public class BindBankCardActivity extends BaseActivity {
         String phoneNumber = getPhoneNumber();
 
         mUserBankCardInfoModel.setRealName(name);
-        mUserBankCardInfoModel.setBindStatus(0);
+        if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+            mUserBankCardInfoModel.setBindStatus(1);
+        }
         mUserBankCardInfoModel.setCardNumber(bankCardNumber);
         mUserBankCardInfoModel.setIssuingBankName(bank);
         mUserBankCardInfoModel.setCardPhone(phoneNumber);
@@ -262,9 +270,9 @@ public class BindBankCardActivity extends BaseActivity {
                             if (resp.hasData()) {
                                 mUserBankCardInfoModel.setBankId(resp.getData());
                             }
-
                             Intent intent = new Intent();
                             intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
+                            Log.d(TAG, "onRespSuccess: " + mUserBankCardInfoModel.toString());
                             setResult(RESULT_OK, intent);
                             finish();
                             Log.d(TAG, "onRespSuccess:  " + resp.toString());
@@ -283,8 +291,8 @@ public class BindBankCardActivity extends BaseActivity {
             picker.setTopHeight(50);
             picker.setAnimationStyle(R.style.BottomDialogAnimation);
             picker.setOffset(2);
-            if (mCanUseBankListModel != null) {
-                picker.setSelectedItem(mCanUseBankListModel.getName());
+            if (mUserBankCardInfoModel != null) {
+                picker.setSelectedItem(mUserBankCardInfoModel.getIssuingBankName());
             }
             picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
             WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线

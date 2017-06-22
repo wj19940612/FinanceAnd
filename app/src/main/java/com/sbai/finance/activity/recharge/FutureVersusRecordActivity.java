@@ -1,31 +1,49 @@
 package com.sbai.finance.activity.recharge;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.versus.VersusRecord;
+import com.sbai.finance.activity.future.FutureBattleActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.versus.FutureVersus;
+import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FutureVersusRecordActivity extends BaseActivity {
+public class FutureVersusRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener,SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.customSwipeRefreshLayout)
     CustomSwipeRefreshLayout mCustomSwipeRefreshLayout;
     private VersusRecordListAdapter mVersusRecordListAdapter;
+    private long mLocation;
+    private HashSet<Integer> mSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,26 +51,78 @@ public class FutureVersusRecordActivity extends BaseActivity {
         setContentView(R.layout.activity_future_versus_record);
         ButterKnife.bind(this);
         initView();
-        updateRecord();
+        requestVersusData();
     }
+    private void initView() {
+        mSet = new HashSet<>();
+        mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
+        mVersusRecordListAdapter.setCallback(new VersusRecordListAdapter.Callback() {
+            @Override
+            public void onClick(int userId) {
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD,userId).execute();
+            }
+        });
+        mListView.setAdapter(mVersusRecordListAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Launcher.with(getActivity(), FutureBattleActivity.class).execute();
+            }
+        });
+    }
+    private void requestVersusData(){
+        Client.getMyVersusRecord(mLocation).setTag(TAG)
+                .setCallback(new Callback2D<Resp<FutureVersus>,FutureVersus>() {
+                    @Override
+                    protected void onRespSuccessData(FutureVersus data) {
+                        updateVersusData(data);
+                    }
+                }).fireSync();
+    }
+    private void updateVersusData(FutureVersus futureVersus){
+        stopRefreshAnimation();
+        if (mSet.isEmpty()){
+            mVersusRecordListAdapter.clear();
+        }
+        for (VersusGaming versusGaming:futureVersus.getList()){
+            if (mSet.add(versusGaming.getId())){
+                mVersusRecordListAdapter.add(versusGaming);
+            }
+        }
+        if (!futureVersus.hasMore()){
+            mCustomSwipeRefreshLayout.setLoadMoreEnable(false);
+        }else{
 
-    private void updateRecord() {
-        VersusRecord vr= new VersusRecord();
-        vr.setUserId(100);
-        vr.setUserName("抽象工作室抽象工");
-        vr.setVarietyName("美黄金");
-        mVersusRecordListAdapter.add(vr);
-        mVersusRecordListAdapter.add(vr);
+        }
+        mVersusRecordListAdapter.addAll(futureVersus.getList());
         mVersusRecordListAdapter.notifyDataSetChanged();
     }
 
-    private void initView() {
-        mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
-        mListView.setAdapter(mVersusRecordListAdapter);
+    @Override
+    public void onLoadMore() {
+        requestVersusData();
     }
 
+    @Override
+    public void onRefresh() {
+        reset();
+        requestVersusData();
+    }
 
-    static class VersusRecordListAdapter extends ArrayAdapter<VersusRecord> {
+    private void reset() {
+        mSet.clear();
+        mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+    private void stopRefreshAnimation() {
+        if (mCustomSwipeRefreshLayout.isRefreshing()) {
+            mCustomSwipeRefreshLayout.setRefreshing(false);
+        }
+        if (mCustomSwipeRefreshLayout.isLoading()) {
+            mCustomSwipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    static class VersusRecordListAdapter extends ArrayAdapter<VersusGaming> {
         interface Callback {
             void onClick(int userId);
         }
@@ -101,10 +171,66 @@ public class FutureVersusRecordActivity extends BaseActivity {
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(VersusRecord item,Context context,Callback callback){
-                mVersusVarietyAndProfit.setText(item.getVarietyName()+"  200元宝");
-                mMyName.setText(item.getUserName());
-                mAgainstName.setText(item.getUserName());
+            private void bindDataWithView(final VersusGaming item, Context context, final Callback callback){
+                mMyAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.onClick(item.getLaunchUser());
+                    }
+                });
+                mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.onClick(item.getAgainstUser());
+                    }
+                });
+                Glide.with(context).load(item.getLaunchUserPortrait())
+                        .load(item.getLaunchUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .transform(new GlideCircleTransform(context))
+                        .into(mMyAvatar);
+                Glide.with(context).load(item.getLaunchUserPortrait())
+                        .load(item.getAgainstUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .transform(new GlideCircleTransform(context))
+                        .into(mMyAvatar);
+                mMyName.setText(item.getLaunchUserName());
+                mAgainstName.setText(item.getAgainstUserName());
+                String reward="";
+                if (item.getWinResult()==VersusGaming.RESULT_TIE){
+                    item.setReward(0);
+                }
+                switch (item.getCoinType()){
+                    case VersusGaming.COIN_TYPE_BAO:
+                        reward=item.getReward()+context.getString(R.string.integral);
+                        break;
+                    case VersusGaming.COIN_TYPE_CASH:
+                        reward=item.getReward()+context.getString(R.string.cash);
+                        break;
+                    case VersusGaming.COIN_TYPE_INTEGRAL:
+                        reward=item.getReward()+context.getString(R.string.ingot);
+                        break;
+                }
+                if (item.getWinResult()==VersusGaming.RESULT_CREATE_WIN){
+                    mVersusResultImg.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_versus_victory));
+                    mVersusResult.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
+                    mVersusResult.setText(context.getString(R.string.wing));
+                    mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
+                    mVersusVarietyAndProfit.setText(item.getVarietyName()+" +"+reward);
+
+                }else if (item.getWinResult()==VersusGaming.RESULT_AGAINST_WIN){
+                    mVersusResultImg.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_versus_failure));
+                    mVersusResult.setTextColor(ContextCompat.getColor(context,R.color.white));
+                    mVersusResult.setText(context.getString(R.string.wing));
+                    mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context,R.color.white));
+                    mVersusVarietyAndProfit.setText(item.getVarietyName()+" -"+reward);
+                }else{
+                    mVersusResultImg.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_versus_failure));
+                    mVersusResult.setTextColor(ContextCompat.getColor(context,R.color.white));
+                    mVersusResult.setText(context.getString(R.string.tie));
+                    mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context,R.color.white));
+                    mVersusVarietyAndProfit.setText(item.getVarietyName()+" "+reward);
+                }
             }
         }
     }

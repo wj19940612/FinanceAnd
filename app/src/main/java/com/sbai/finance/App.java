@@ -22,10 +22,13 @@ public class App extends Application {
         sContext = this;
         API.init(sContext.getCacheDir());
         CookieManger.getInstance().init(sContext.getFilesDir());
+
+        if (!BuildConfig.isProd) {
+            handleUncaughtException();
+        }
+        
         if (BuildConfig.DEBUG) {
-            if (!BuildConfig.isProd) {
-                handleUncaughtException();
-            }
+            handleUncaughtException();
             Config.DEBUG = true;
         }
         //友盟

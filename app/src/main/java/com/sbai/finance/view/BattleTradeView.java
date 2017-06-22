@@ -131,7 +131,7 @@ public class BattleTradeView extends LinearLayout {
     }
 
     public void setVisitor(boolean isVisitor) {
-        //参观
+        //参观模式
         if (isVisitor) {
             updateViewHeight();
         }
@@ -210,7 +210,7 @@ public class BattleTradeView extends LinearLayout {
 
             private void bindDataWithView(VersusTrade item, int position, Context context) {
                 if (position % 2 == 0) {
-                    //判断条件以后会改成是否左方
+                    //判断条件以后会改成是否房主
                     mMyInfo.setVisibility(VISIBLE);
                     mMyInfoTime.setVisibility(VISIBLE);
                     mUserInfo.setVisibility(GONE);

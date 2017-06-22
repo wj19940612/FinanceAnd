@@ -105,6 +105,7 @@
     <string name="ShangHaiStockExchange">上证指数</string>
     <string name="ShenzhenStockExchange">深证指数</string>
     <string name="GrowthEnterpriseMarket">创业板指</string>
+    <string name="delist">停牌</string>
 
 
     <!--help-->
@@ -539,7 +540,13 @@
     <string name="pattern">模式</string>
     <string name="integral_war">积分战</string>
     <string name="ingot_war">元宝战</string>
+    <string name="integral">积分</string>
+    <string name="ingot">元宝</string>
+    <string name="cash">现金</string>
     <string name="bounty">赏金</string>
+    <string name="versusing">对战中</string>
+    <string name="versus_end">已结束</string>
+    <string name="tie">平局</string>
     <string name="duration">时长</string>
     <string name="duration_choice1">%1$s分钟</string>
     <string name="duration_choice2">%1$s分钟</string>
@@ -575,9 +582,9 @@
     <string name="predict_poundage">预计手续费</string>
     <string name="can_with_draw_money">当前可提现余额:  %1$s元</string>
     <string name="all_with_draw">全部提现</string>
-    <string name="can_with_poundage">提现手续费:    %1$s元</string>
-    <string name="can_with_rule">提现规则></string>
-    <string name="can_with_rule_content">1、用户提现收手续费2元/笔;\n2、手续费将从提现金额内直接扣除
+    <string name="can_with_poundage">提现手续费:    %1$s元/笔</string>
+    <string name="can_with_rule">提现规则</string>
+    <string name="can_with_rule_content">1、用户提现收手续费%1$s元/笔；\n2、手续费将从提现金额内直接扣除；
     \n3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
     <string name="with_draw_details">提现详情</string>
     <string name="with_draw_check_is_submit">提现审核已提交</string>
@@ -615,4 +622,16 @@
     <string name="match_versus_tip">匹配对战将随机选择赏金在余额范围内的对局。</string>
     <string name="versus_rule_tip">1、对战中下注金额进行冻结\n2、按照最后盈利情况进行结算，胜者获得对方赌注百分之九十的奖励\n3、平局不扣赌注，对局时间结束时用户将被清仓后进行结算\n4、对战无操盘记录将自动判负</string>
     <string name="battle_detail">对战详情</string>
+    <string name="cancel_match">取消匹配</string>
+    <string name="desc_matching">正在进行匹配，请稍后…</string>
+    <string name="title_matching">正在匹配</string>
+    <string name="title_match_success">匹配成功</string>
+    <string name="desc_match_success">已成功匹配对手\n%1$d秒后进入对战</string>
+    <string name="cancel_battle">取消对战</string>
+    <string name="cancel_battle_tip">是否要取消对战？</string>
+    <string name="continue_to_battle">继续对战</string>
+    <string name="match_failed">匹配失败</string>
+    <string name="match_overtime">匹配超时，请重新匹配或稍后重试</string>
+    <string name="later_try_again">稍后重试</string>
+    <string name="rematch">重新匹配</string>
 </resources>

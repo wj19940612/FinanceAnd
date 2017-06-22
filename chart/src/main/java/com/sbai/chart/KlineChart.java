@@ -30,6 +30,7 @@ public class KlineChart extends ChartView {
     public static final String DATE_FORMAT_DAY_MIN = "HH:mm";
 
     private static final String BASE_LINE = "baseLine";
+    private static final String TOUCH_LINE = "touchLine";
 
     private List<KlineViewData> mDataList;
     private SparseArray<KlineViewData> mVisibleList;
@@ -179,6 +180,7 @@ public class KlineChart extends ChartView {
         paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
+        checkGameMode(paint, TOUCH_LINE);
     }
 
     protected void setRedRectBgPaint(Paint paint) {
@@ -198,6 +200,10 @@ public class KlineChart extends ChartView {
 
         if (tag.equals(BASE_LINE)) {
             paint.setColor(Color.parseColor(GAME_BASELINE));
+        }
+
+        if (tag.equals(TOUCH_LINE)) {
+            paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
         }
     }
 

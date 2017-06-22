@@ -85,11 +85,13 @@ public class RechargeActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<List<BankLimit>>, List<BankLimit>>() {
                         @Override
                         protected void onRespSuccessData(List<BankLimit> data) {
-                            mBankLimit = data.get(0);
-                            if (mUsablePlatform != null && mUsablePlatform.isBankPay()) {
-                                SpannableString payBank = StrUtil.mergeTextWithRatioColor(mBankPay, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
-                                        ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
-                                mRechargeWay.setText(payBank);
+                            if (data != null && !data.isEmpty()) {
+                                mBankLimit = data.get(0);
+                                if (mUsablePlatform != null && mUsablePlatform.isBankPay()) {
+                                    SpannableString payBank = StrUtil.mergeTextWithRatioColor(mBankPay, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
+                                            ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
+                                    mRechargeWay.setText(payBank);
+                                }
                             }
 
                         }
@@ -186,10 +188,13 @@ public class RechargeActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {
+                            Log.d(TAG, "onRespSuccessData: " + data.toString());
                             if (mUsablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
                                 Launcher.with(getActivity(), AliPayActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())
-                                        .putExtra(Launcher.EX_PAYLOAD_1, data.getThridOrderId())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
+                                        .putExtra(Launcher.EX_PAYLOAD_3, money)
+                                        .putExtra(Launcher.EX_PAY_END, true)
                                         .execute();
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_VIEW);
@@ -199,8 +204,8 @@ public class RechargeActivity extends BaseActivity {
                             } else if (mUsablePlatform.getType() == UsablePlatform.TYPE_WECHAT_PAY) {
                                 Launcher.with(getActivity(), WeChatPayActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, data.getCodeUrl())
-                                        .putExtra(Launcher.EX_PAYLOAD_1, data.getThridOrderId())
-                                        .putExtra(Launcher.EX_PAYLOAD_2, data.getPlatform())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
+                                        .putExtra(Launcher.EX_PAYLOAD_3, true)
                                         .execute();
                             } else if (mUsablePlatform.getType() == UsablePlatform.TYPE_BANK_PAY) {
                                 Launcher.with(getActivity(), BankCardPayActivity.class)
@@ -208,6 +213,7 @@ public class RechargeActivity extends BaseActivity {
                                         .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
                                         .execute();
                             }
+                            finish();
                         }
                     })
                     .fire();
@@ -221,7 +227,7 @@ public class RechargeActivity extends BaseActivity {
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
-        picker.setOffset(1);
+        picker.setOffset(2);
         picker.setSelectedItem(mSelectPayWayName);
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
         WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线

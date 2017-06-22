@@ -16,9 +16,12 @@ import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.model.versus.VersusTrade;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -41,6 +44,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
 
 /**
  * Created by linrongfang on 2017/6/19.
@@ -78,14 +84,16 @@ public class FutureBattleFragment extends BaseFragment {
 
     Unbinder unbinder;
 
+    private VersusGaming mVersusGaming;
     private Variety mVariety;
     private FutureData mFutureData;
     private int mCount = 600;
 
-    public static FutureBattleFragment newInstance(Variety variety) {
+
+    public static FutureBattleFragment newInstance(VersusGaming versusGaming) {
         FutureBattleFragment futureBattleFragment = new FutureBattleFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("variety", variety);
+        bundle.putParcelable("versusGaming", versusGaming);
         futureBattleFragment.setArguments(bundle);
         return futureBattleFragment;
     }
@@ -94,7 +102,7 @@ public class FutureBattleFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mVariety = (Variety) getArguments().get("variety");
+            mVersusGaming = (VersusGaming) getArguments().get("versusGaming");
         }
     }
 
@@ -109,11 +117,36 @@ public class FutureBattleFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initTabLayout();
-        initChartViews();
 
-        initTestData();
+        initBattleArea();
+
+        initTabLayout();
+
+        initBattleViews();
+
+        requestVarietyData();
+
+//        initTestData();
     }
+
+    private void initBattleArea() {
+        //判断是否是观战 观战条件 房主id!=本地id && 对抗者id!=本地id
+        //观战情况下 对战区域只显示对战数据
+        int userId = LocalUser.getUser().getUserInfo().getId();
+        if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
+            showBattleTradeView();
+            setVisitorMode();
+        } else {
+            //判断状态是否在对抗中
+            //未开始显示邀请 匹配  取消  视图
+            if (mVersusGaming.getGameStatus() == GAME_STATUS_MATCH) {
+                showBattleButtons();
+            } else if (mVersusGaming.getGameStatus() == GAME_STATUS_START) {
+                showBattleTradeView();
+            }
+        }
+    }
+
 
     private void initTestData() {
         List<VersusTrade> list = new ArrayList<>();
@@ -155,6 +188,53 @@ public class FutureBattleFragment extends BaseFragment {
         settings2.setGameMode(true);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
+    }
+
+    private void initBattleViews() {
+        mBattleButtons.setOnViewClickListener(new BattleButtons.OnViewClickListener() {
+            @Override
+            public void onInviteButtonClick() {
+                ((FutureBattleActivity)getActivity()).onInviteButtonClick();
+            }
+
+            @Override
+            public void onMatchButtonClick() {
+                ((FutureBattleActivity)getActivity()).onMatchButtonClick();
+            }
+
+            @Override
+            public void onCancelButtonClick() {
+                ((FutureBattleActivity)getActivity()).onCancelButtonClick();
+            }
+        });
+        mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
+            @Override
+            public void onLongPurchaseButtonClick() {
+                ((FutureBattleActivity)getActivity()).onLongPurchaseButtonClick();
+            }
+
+            @Override
+            public void onShortPurchaseButtonClick() {
+                ((FutureBattleActivity)getActivity()).onShortPurchaseButtonClick();
+            }
+
+            @Override
+            public void onClosePositionButtonClick() {
+                ((FutureBattleActivity)getActivity()).onClosePositionButtonClick();
+            }
+        });
+    }
+
+    private void requestVarietyData() {
+        Client.getVarietyDetails(mVersusGaming.getVarietyId()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                    @Override
+                    protected void onRespSuccessData(Variety variety) {
+                        mVariety = variety;
+                        initChartViews();
+                        startRefresh();
+                    }
+                }).fire();
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -319,12 +399,8 @@ public class FutureBattleFragment extends BaseFragment {
         mKlineView.setVisibility(View.VISIBLE);
     }
 
-    public void setOnBattleButtonClickListener(BattleButtons.OnViewClickListener listener){
-        mBattleButtons.setOnViewClickListener(listener);
-    }
-
-    public void setOnBattleTradeViewClickListener(BattleTradeView.OnViewClickListener listener){
-        mBattleTradeView.setOnViewClickListener(listener);
+    private void setVisitorMode() {
+        mBattleTradeView.setVisitor(true);
     }
 
     public void setDeadline(int count){
@@ -356,23 +432,40 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.changeTradeState(state);
     }
 
+    public void setTradeData(int direction, double buyPrice, double profit){
+        //实时刷新房主的
+        mBattleTradeView.setTradeData(direction,buyPrice,profit);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
-        stopScheduleJob();
-        Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
-        Netty.get().removeHandler(mNettyHandler);
+        stopRefresh();
+    }
+
+    private void stopRefresh() {
+        if (mVariety != null) {
+            stopScheduleJob();
+            Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
+            Netty.get().removeHandler(mNettyHandler);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(1000);
-        Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
-        Netty.get().addHandler(mNettyHandler);
+        startRefresh();
+    }
 
-        requestExchangeStatus();
-        requestTrendDataAndSet();
+    private void startRefresh() {
+        if (mVariety != null) {
+            startScheduleJob(1000);
+            Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
+            Netty.get().addHandler(mNettyHandler);
+
+            requestExchangeStatus();
+            requestTrendDataAndSet();
+        }
     }
 
     @Override

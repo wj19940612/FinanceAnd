@@ -1502,6 +1502,18 @@ public class Client {
     }
 
     /**
+     * user/userpayForDeposit/confirmPay.do
+     * POST
+     * 充值确认（nqc）
+     *
+     * @param merchantOrderId
+     * @return
+     */
+    public static API queryConfirmPay(String merchantOrderId) {
+        return new API("/user/userpayForDeposit/confirmPay.do", new ApiParams().put("merchantOrderId", merchantOrderId));
+    }
+
+    /**
      * /user/userAccount/userAccountInfo.do
      * POST
      * 个人资金信息（wms）
@@ -1565,6 +1577,35 @@ public class Client {
      */
     public static API getBankLimit(int bankId) {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
+    }
+
+    public static API getVersusGaming(long location){
+        return new API("/game/battle/selectBattleGaming.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 我的对战历史
+     * @param location
+     * @return
+     */
+    public static API getMyVersusRecord(long location){
+        return new API("/game/battle/myBattleGamed.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 加入对战
+     * @param battleId  对战ID
+     * @param userFrom  用户来源
+     * @return
+     */
+    public static API joinVersus(int battleId,String userFrom){
+        return new API(POST,"/game/battle/joinBattle.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("userFrom", userFrom));
     }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details

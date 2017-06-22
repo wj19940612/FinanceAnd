@@ -34,19 +34,19 @@
                     android:id="@+id/longPurchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_battle_long_purchase"/>
+                    android:background="@drawable/btn_battle_long_purchase"/>
 
                 <Button
                     android:id="@+id/shortPurchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_battle_short_purchase"/>
+                    android:background="@drawable/btn_battle_short_purchase"/>
 
                 <Button
                     android:id="@+id/closePosition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_battle_close_position"
+                    android:background="@drawable/btn_battle_close_position"
                     android:visibility="gone"/>
 
             </LinearLayout>

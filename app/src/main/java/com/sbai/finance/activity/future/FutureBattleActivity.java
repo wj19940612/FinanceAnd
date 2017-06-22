@@ -1,32 +1,38 @@
 package com.sbai.finance.activity.future;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
-import com.sbai.finance.model.Variety;
-import com.sbai.finance.net.Callback2D;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
-
-import java.util.List;
+import com.sbai.finance.view.BattleTradeView;
+import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.Variety.FUTURE_FOREIGN;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
+import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
 
 /**
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity {
+public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,
+        BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -35,8 +41,9 @@ public class FutureBattleActivity extends BaseActivity {
 
     private FutureBattleFragment mFutureBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
+    private StartMatchDialogFragment mStartMatchDialogFragment;
 
-    private Variety mVariety;
+    private VersusGaming mVersusGaming;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,53 +53,214 @@ public class FutureBattleActivity extends BaseActivity {
 
         initData();
 
-        requestVarietyList();
+        initViews();
     }
 
     private void initData() {
-
+        mVersusGaming = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
-    public void requestVarietyList() {
-        Client.getVarietyList(Variety.VAR_FUTURE, 0, FUTURE_FOREIGN).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Variety> data) {
-                        mVariety = data.get(0);
-                        initViews();
-                    }
-
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                    }
-
-                }).fireSync();
-    }
 
     private void initViews() {
+        if (mVersusGaming.getPageType() == PAGE_RECORD) {
+            showFutureBattleDetail();
+        } else {
+            showFutureBattle();
+        }
+    }
+
+    public void showFutureBattle() {
+        if (mFutureBattleFragment == null) {
+            mFutureBattleFragment = FutureBattleFragment.newInstance(mVersusGaming);
+        }
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, FutureBattleFragment.newInstance(mVariety))
+                .add(R.id.futureArea, mFutureBattleFragment)
                 .commit();
 
-        mBattleView.setMode(BattleFloatView.Mode.VISITOR)
-                .setMyAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
-                .setMyName("松柏牌面哥")
-                .setUserAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
-                .setUserName("狗海天")
-                .setDeposit(200, 2)
-                .setDeadline(2, 1000)
-                .setProgress(30.00, 70.00, false)
-                .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
-                    @Override
-                    public void addMyPraiseCount() {
-                    }
+        //观战模式  刷新底部框 可以点赞
+        int userId = LocalUser.getUser().getUserInfo().getId();
+        if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
+            mBattleView.setMode(BattleFloatView.Mode.VISITOR)
+                    .initWithModel(mVersusGaming)
+                    .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
+                    .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
+                        @Override
+                        public void onCreateAvatarClick() {
+                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID,mVersusGaming.getLaunchUser())
+                                    .execute();
+                        }
 
+                        @Override
+                        public void onAgainstAvatarClick() {
+                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID,mVersusGaming.getAgainstUser())
+                                    .execute();
+                        }
+                    })
+                    .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
+                        @Override
+                        public void addCreatePraiseCount() {
+                            // TODO: 2017/6/22 给创建者点赞
+                        }
+
+                        @Override
+                        public void addAgainstPraiseCount() {
+                            // TODO: 2017/6/22 给对抗者点赞
+                        }
+                    });
+
+        } else {
+            //初始化
+            mBattleView.setMode(BattleFloatView.Mode.MINE)
+                    .initWithModel(mVersusGaming);
+
+            //分两种状态  1.发起匹配  2.对战中
+            int gameStatus = mVersusGaming.getGameStatus();
+            if (gameStatus == GAME_STATUS_MATCH) {
+                mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
+            } else if (gameStatus == GAME_STATUS_START) {
+                mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
+            }
+        }
+
+        // TODO: 2017/6/22 开始长连接
+    }
+
+    public void showFutureBattleDetail() {
+        if (mFutureBattleDetailFragment == null) {
+            mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mVersusGaming.getId());
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.futureArea, mFutureBattleFragment)
+                .commit();
+
+        mBattleView.setMode(BattleFloatView.Mode.MINE)
+                .initWithModel(mVersusGaming)
+                .setDeadline(mVersusGaming.getGameStatus(), 0)
+                .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
+                .setWinResult(mVersusGaming.getWinResult());
+    }
+
+    @Override
+    public void onInviteButtonClick() {
+         showInviteDialog();
+    }
+
+    private void showInviteDialog() {
+        // TODO: 2017/6/22 分享
+    }
+
+    @Override
+    public void onMatchButtonClick() {
+        showMatchDialog();
+        // TODO: 2017/6/22 房主开始匹配
+    }
+
+    //开始匹配弹窗
+    private void showMatchDialog() {
+        if (mStartMatchDialogFragment == null) {
+            mStartMatchDialogFragment = StartMatchDialogFragment
+                    .newInstance()
+                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            showCancelMatchDialog();
+                        }
+                    });
+        }
+        mStartMatchDialogFragment.show(getSupportFragmentManager());
+    }
+
+    //取消匹配弹窗
+    private void showCancelMatchDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
+                .setMessageTextSize(15)
+                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
                     @Override
-                    public void addUserPraiseCount() {
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        mStartMatchDialogFragment.dismiss();
                     }
                 })
-                .setPraise(100, 999);
+                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .show();
+
+    }
+
+    //超时弹窗
+    private void showOvertimeMatchDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
+                .setMessageTextSize(15)
+                .setPositive(R.string.later_try_again, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.rematch, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .show();
+
+    }
+
+    @Override
+    public void onCancelButtonClick() {
+        showCancelBattleDialog();
+    }
+
+    private void showCancelBattleDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip), getString(R.string.cancel_battle))
+                .setMessageTextSize(15)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        // TODO: 2017/6/22 退出房间 退出失败弹提示
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .show();
+
+    }
+
+    @Override
+    public void onLongPurchaseButtonClick() {
+
+    }
+
+    @Override
+    public void onShortPurchaseButtonClick() {
+
+    }
+
+    @Override
+    public void onClosePositionButtonClick() {
+
     }
 }

@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#c9c9ce">
+
         <EditText
             android:id="@+id/search"
             android:layout_width="match_parent"
@@ -27,13 +28,13 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="7dp"
-            android:drawablePadding="5dp"
-            android:padding="5dp"
             android:background="@drawable/bg_search_stock"
             android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="5dp"
+            android:hint="@string/stock_optional_hint"
+            android:padding="5dp"
             android:textColorHint="@color/unluckyText"
-            android:textSize="@dimen/list_title_size"
-            android:hint="@string/stock_optional_hint"/>
+            android:textSize="@dimen/list_title_size"/>
     </LinearLayout>
 
     <LinearLayout
@@ -84,6 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
@@ -98,6 +100,7 @@
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/list_title_size"
                 android:visibility="gone"/>
+
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"

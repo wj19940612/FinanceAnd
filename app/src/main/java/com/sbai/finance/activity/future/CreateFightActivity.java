@@ -186,7 +186,7 @@ public class CreateFightActivity extends BaseActivity {
 				mEndTime = Integer.parseInt(mDurationChoice3.getText().toString().trim());
 				break;
 			case R.id.launch_fight:
-			
+
 				break;
 		}
 	}

@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_2;
@@ -64,23 +65,22 @@ public class ContentImgActivity extends BaseActivity implements ViewPager.OnPage
         mViewPager.setAdapter(mContentImgAdapter);
         mViewPager.setCurrentItem(currentItem);
         mViewPager.addOnPageChangeListener(this);
-        if (mPhotoList.size() > 1) {
+        if (mPointGroup.getChildCount() > 1) {
             mPointGroup.getChildAt(previousPosition).setEnabled(true);
         }
     }
 
     private void initPointGroup() {
-        int size =  mPhotoList.size();
-        if (size > 1) {
-            View view;
-            LinearLayout.LayoutParams params;
-            for (int i = 0; i < size; i++) {
+        View view;
+        LinearLayout.LayoutParams params;
+        if (mPhotoList != null && mPhotoList.size() > 1) {
+            for (int i = 0; i < mPhotoList.size(); i++) {
 
                 // 每循环一次需要向LinearLayout中添加一个点的view对象
                 view = new View(this);
                 view.setBackgroundResource(R.drawable.bg_point);
                 params = new LinearLayout.LayoutParams(20, 20);
-                if(i != 0) {
+                if (i != 0) {
                     // 当前不是第一个点, 需要设置左边距
                     params.leftMargin = 20;
                 }
