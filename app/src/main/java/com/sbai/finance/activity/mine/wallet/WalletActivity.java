@@ -110,7 +110,6 @@ public class WalletActivity extends BaseActivity {
                                             .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
                                             .putExtra(Launcher.EX_PAYLOAD, money)
                                             .execute();
-
                                 }
                             }
                         })

@@ -149,8 +149,13 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
             if (confirmEnable != mWithdraw.isEnabled()) {
                 mWithdraw.setEnabled(confirmEnable);
             }
-            if (!TextUtils.isEmpty(s.toString())) {
-                mWithdrawMoney.setSelection(s.toString().length());
+            String moneyCount = s.toString();
+            if (!TextUtils.isEmpty(moneyCount)) {
+//                if (moneyCount.contains(".")) {
+//                    moneyCount = moneyCount.substring(0, moneyCount.indexOf(".") + 2);
+//                }
+                mWithdrawMoney.setText(moneyCount);
+                mWithdrawMoney.setSelection(moneyCount.length());
             }
         }
     };

@@ -41,6 +41,7 @@ import butterknife.OnClick;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.widget.WheelView;
 
+import static com.sbai.finance.R.id.rechargeCount;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 
 
@@ -48,7 +49,7 @@ public class RechargeActivity extends BaseActivity {
 
     @BindView(R.id.rechargeWay)
     AppCompatTextView mRechargeWay;
-    @BindView(R.id.rechargeCount)
+    @BindView(rechargeCount)
     AppCompatEditText mRechargeCount;
     @BindView(R.id.recharge)
     AppCompatButton mRecharge;
@@ -140,6 +141,17 @@ public class RechargeActivity extends BaseActivity {
             if (mRecharge.isEnabled() != rechargeBtnEnable) {
                 mRecharge.setEnabled(rechargeBtnEnable);
             }
+//            String rechargeCounts = s.toString();
+//            if (!TextUtils.isEmpty(rechargeCounts)) {
+//                if (rechargeCounts.contains(".") && rechargeCounts.indexOf(".") + 3 == rechargeCounts.length()) {
+//                    if (rechargeCounts.contains(".")) {
+////                    rechargeCounts = rechargeCounts.substring(0, rechargeCounts.indexOf(".") + 1);
+//                        Log.d(TAG, ".  " + rechargeCounts.indexOf(".") + "  " + rechargeCounts.length());
+//                        Log.d(TAG, " " + rechargeCounts.substring(0,rechargeCounts.indexOf(".") + 2));
+//                    }
+////                mRechargeCount.setText(rechargeCounts);
+//                }
+//            }
         }
     };
 
@@ -148,7 +160,7 @@ public class RechargeActivity extends BaseActivity {
         return !TextUtils.isEmpty(count) && Double.parseDouble(count) >= 5;
     }
 
-    @OnClick({R.id.rechargeWay, R.id.rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})
+    @OnClick({R.id.rechargeWay, rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rechargeWay:
@@ -158,7 +170,7 @@ public class RechargeActivity extends BaseActivity {
                     requestUsablePlatformList();
                 }
                 break;
-            case R.id.rechargeCount:
+            case rechargeCount:
                 break;
             case R.id.recharge:
                 submitRechargeData();
