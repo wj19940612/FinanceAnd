@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/ic_futures_versus_bg">
-    <include layout="@layout/tb_future_versus_list"/>
+              android:layout_height="match_parent">
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customView="@layout/tb_future_versus_list"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:backFeature="true"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_above="@+id/bottom"
-            android:background="@android:color/transparent"/>
+            android:background="#2d283a"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,14 +44,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:background="@drawable/bg_create_versus"/>
+                    android:background="@drawable/btn_create_versus"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/currentVersus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:background="@drawable/bg_current_versus"
+                android:background="@drawable/btn_current_versus"
                 android:visibility="gone"/>
         </RelativeLayout>
     </RelativeLayout>

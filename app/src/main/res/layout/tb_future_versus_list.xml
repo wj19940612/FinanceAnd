@@ -7,19 +7,19 @@
               android:paddingRight="@dimen/common_padding"
               android:paddingLeft="@dimen/common_padding"
               android:background="#222">
-    <TextView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/common_padding"
-        android:background="@drawable/ic_tb_back_white"
-        android:layout_gravity="center"/>
+    <!--<TextView-->
+        <!--android:id="@+id/back"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="@dimen/common_padding"-->
+        <!--android:background="@drawable/ic_tb_back_white"-->
+        <!--android:layout_gravity="center"/>-->
     <LinearLayout
-        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
+        android:layout_marginLeft="42dp"
         android:background="@drawable/bg_future_versus_list">
         <ImageView
             android:id="@+id/avatar"

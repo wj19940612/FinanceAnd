@@ -1,10 +1,13 @@
 package com.sbai.finance.model.versus;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Administrator on 2017-06-21.
  */
 
-public class VersusGaming {
+public class VersusGaming implements Parcelable {
     //0现金 1元宝 2积分
     public static final int COIN_TYPE_CASH=1;
     public static final int COIN_TYPE_BAO=2;
@@ -19,6 +22,9 @@ public class VersusGaming {
     public static final int RESULT_TIE=0;
     public static final int RESULT_CREATE_WIN=1;
     public static final int RESULT_AGAINST_WIN=2;
+
+    public static final int PAGE_RECORD=0;
+    public static final int PAGE_VERSUS=1;
     /**
      * againstFrom : 经济圈
      * againstUser : 286
@@ -66,6 +72,15 @@ public class VersusGaming {
     private int winResult;
     private double launchScore;
     private double againstScore;
+    private int pageType;
+
+    public int getPageType() {
+        return pageType;
+    }
+
+    public void setPageType(int pageType) {
+        this.pageType = pageType;
+    }
 
     public double getLaunchScore() {
         return launchScore;
@@ -250,4 +265,79 @@ public class VersusGaming {
     public void setWinResult(int winResult) {
         this.winResult = winResult;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.againstFrom);
+        dest.writeInt(this.againstUser);
+        dest.writeString(this.againstUserName);
+        dest.writeString(this.againstUserPortrait);
+        dest.writeString(this.batchCode);
+        dest.writeInt(this.coinType);
+        dest.writeLong(this.createTime);
+        dest.writeLong(this.endTime);
+        dest.writeInt(this.endline);
+        dest.writeInt(this.gameStatus);
+        dest.writeInt(this.id);
+        dest.writeInt(this.launchUser);
+        dest.writeString(this.launchUserName);
+        dest.writeString(this.launchUserPortrait);
+        dest.writeLong(this.modifyTime);
+        dest.writeInt(this.reward);
+        dest.writeLong(this.startTime);
+        dest.writeInt(this.varietyId);
+        dest.writeString(this.varietyName);
+        dest.writeString(this.varietyType);
+        dest.writeInt(this.winResult);
+        dest.writeDouble(this.launchScore);
+        dest.writeDouble(this.againstScore);
+        dest.writeInt(this.pageType);
+    }
+
+    public VersusGaming() {
+    }
+
+    protected VersusGaming(Parcel in) {
+        this.againstFrom = in.readString();
+        this.againstUser = in.readInt();
+        this.againstUserName = in.readString();
+        this.againstUserPortrait = in.readString();
+        this.batchCode = in.readString();
+        this.coinType = in.readInt();
+        this.createTime = in.readLong();
+        this.endTime = in.readLong();
+        this.endline = in.readInt();
+        this.gameStatus = in.readInt();
+        this.id = in.readInt();
+        this.launchUser = in.readInt();
+        this.launchUserName = in.readString();
+        this.launchUserPortrait = in.readString();
+        this.modifyTime = in.readLong();
+        this.reward = in.readInt();
+        this.startTime = in.readLong();
+        this.varietyId = in.readInt();
+        this.varietyName = in.readString();
+        this.varietyType = in.readString();
+        this.winResult = in.readInt();
+        this.launchScore = in.readDouble();
+        this.againstScore = in.readDouble();
+        this.pageType = in.readInt();
+    }
+
+    public static final Parcelable.Creator<VersusGaming> CREATOR = new Parcelable.Creator<VersusGaming>() {
+        @Override
+        public VersusGaming createFromParcel(Parcel source) {
+            return new VersusGaming(source);
+        }
+
+        @Override
+        public VersusGaming[] newArray(int size) {
+            return new VersusGaming[size];
+        }
+    };
 }

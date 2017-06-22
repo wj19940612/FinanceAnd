@@ -21,6 +21,8 @@ import com.sbai.finance.view.SmartDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
+
 /**
  * Created by linrongfang on 2017/6/19.
  */
@@ -38,7 +40,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private StartMatchDialogFragment mStartMatchDialogFragment;
 
     private VersusGaming mVersusGaming;
-    private String mPageType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,31 +54,16 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void initData() {
         mVersusGaming = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
-        mPageType = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
     }
 
 
 
     private void initViews() {
-
-        mBattleView.setMode(BattleFloatView.Mode.VISITOR)
-                .setCreateAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
-                .setCreateName("松柏牌面哥")
-                .setAgainstAvatar("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=3112858211,2849902352&fm=58")
-                .setAgainstName("狗海天")
-                .setDeposit(200, 2)
-                .setDeadline(2, 1000)
-                .setProgress(30.00, 70.00, false)
-                .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
-                    @Override
-                    public void addMyPraiseCount() {
-                    }
-
-                    @Override
-                    public void addUserPraiseCount() {
-                    }
-                })
-                .setPraise(100, 999);
+        if (mVersusGaming.getPageType() == PAGE_RECORD) {
+            showFutureBattleDetail();
+        } else {
+            showFutureBattle();
+        }
     }
 
     public void showFutureBattle() {
@@ -98,6 +84,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .beginTransaction()
                 .add(R.id.futureArea, mFutureBattleFragment)
                 .commit();
+        mBattleView.setMode(BattleFloatView.Mode.MINE)
+                .setCreateAvatar(mVersusGaming.getLaunchUserPortrait())
+                .setCreateName(mVersusGaming.getLaunchUserName())
+                .setAgainstAvatar(mVersusGaming.getAgainstUserPortrait())
+                .setAgainstName(mVersusGaming.getAgainstUserName())
+                .setDeposit(mVersusGaming.getReward(), mVersusGaming.getCoinType())
+                .setDeadline(mVersusGaming.getGameStatus(), 0)
+                .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
+                .setPraise(1, 2);
     }
 
     @Override
