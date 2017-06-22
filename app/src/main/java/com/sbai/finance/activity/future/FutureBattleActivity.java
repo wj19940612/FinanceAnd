@@ -115,7 +115,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     public void onMatchButtonClick() {
         showMatchDialog();
-        // TODO: 2017/6/22 开始匹配 
+        // TODO: 2017/6/22 房主开始匹配
     }
 
     private void showMatchDialog() {
@@ -173,7 +173,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        // TODO: 2017/6/22 退出房间
+                        // TODO: 2017/6/22 退出房间 退出失败弹提示
                     }
                 })
                 .setTitleMaxLines(1)
