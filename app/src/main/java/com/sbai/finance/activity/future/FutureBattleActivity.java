@@ -1,7 +1,9 @@
 package com.sbai.finance.activity.future;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
@@ -18,6 +20,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
+import com.sbai.finance.view.SmartDialog;
 
 import java.util.List;
 
@@ -30,7 +33,8 @@ import static com.sbai.finance.model.Variety.FUTURE_FOREIGN;
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,BattleTradeView.OnViewClickListener{
+public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,
+        BattleTradeView.OnViewClickListener{
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -110,11 +114,72 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onMatchButtonClick() {
+        showMatchDialog();
+        // TODO: 2017/6/22 开始匹配 
+    }
+
+    private void showMatchDialog() {
+        if (mStartMatchDialogFragment == null) {
+            mStartMatchDialogFragment = StartMatchDialogFragment
+                    .newInstance()
+                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            showCancelMatchDialog();
+                        }
+                    });
+        }
+        mStartMatchDialogFragment.show(getSupportFragmentManager());
+    }
+
+    private void showCancelMatchDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
+                .setMessageTextSize(15)
+                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        mStartMatchDialogFragment.dismiss();
+                    }
+                })
+                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .show();
 
     }
 
     @Override
     public void onCancelButtonClick() {
+        showCancelBattleDialog();
+    }
+
+    private void showCancelBattleDialog(){
+        SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip),getString(R.string.cancel_battle))
+                .setMessageTextSize(15)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        // TODO: 2017/6/22 退出房间
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .show();
 
     }
 

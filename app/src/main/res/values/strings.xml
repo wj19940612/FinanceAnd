@@ -627,4 +627,7 @@
     <string name="title_matching">正在匹配</string>
     <string name="title_match_success">匹配成功</string>
     <string name="desc_match_success">已成功匹配对手\n%1$d秒后进入对战</string>
+    <string name="cancel_battle">取消对战</string>
+    <string name="cancel_battle_tip">是否要取消对战？</string>
+    <string name="continue_to_battle">继续对战</string>
 </resources>

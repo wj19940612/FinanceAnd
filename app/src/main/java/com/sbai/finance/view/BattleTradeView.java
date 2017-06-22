@@ -131,7 +131,7 @@ public class BattleTradeView extends LinearLayout {
     }
 
     public void setVisitor(boolean isVisitor) {
-        //参观
+        //参观模式
         if (isVisitor) {
             updateViewHeight();
         }
