@@ -269,7 +269,7 @@ public class BindBankCardActivity extends BaseActivity {
                         Log.d(TAG, "onRespSuccess: " + resp.toString());
                         if (resp.isSuccess()) {
                             if (resp.hasData()) {
-                                mUserBankCardInfoModel.setBankId(resp.getData());
+                                mUserBankCardInfoModel.setId(resp.getData());
                             }
                             Intent intent = new Intent();
                             intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
@@ -292,7 +292,7 @@ public class BindBankCardActivity extends BaseActivity {
             picker.setTopHeight(50);
             picker.setAnimationStyle(R.style.BottomDialogAnimation);
             picker.setOffset(2);
-            if (mCanUseBankListModel != null) {
+            if (mCanUseBankListModel != null && mCanUseBankListModel.getName() != null) {
                 picker.setSelectedItem(mCanUseBankListModel.getName());
             }
             picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
