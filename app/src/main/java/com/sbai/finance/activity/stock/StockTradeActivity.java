@@ -338,21 +338,9 @@ public abstract class StockTradeActivity extends BaseActivity {
                         mStockRTData = result;
                         updateStockTrendView();
                         updateMarketDataView();
-                        updateExchangeAndStockStatus();
+                        requestExchangeStatus();
                     }
                 }).fireSync();
-    }
-
-    private void updateExchangeAndStockStatus() {
-        if (mStockRTData != null) {
-            if (mStockRTData.getStatus().equals(StockRTData.STATUS_DELIST)) {
-                View view = mTitleBar.getCustomView();
-                TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
-                exchangeStatus.setText(R.string.stock_halt);
-            } else {
-                requestExchangeStatus();
-            }
-        }
     }
 
     private void updateStockTrendView() {
@@ -380,7 +368,12 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }
             }
             mLastPrice.setText(lastPrice);
-            mPriceChange.setText(risePrice + "     " + risePercent);
+            if (mStockRTData.getStatus().equals(StockRTData.STATUS_DELIST)) {
+                color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
+                mPriceChange.setText(R.string.delist);
+            } else {
+                mPriceChange.setText(risePrice + "     " + risePercent);
+            }
             mTodayOpen.setText(mStockRTData.getOpenPrice());
             mHighest.setText(mStockRTData.getHighestPrice());
             mLowest.setText(mStockRTData.getLowestPrice());
