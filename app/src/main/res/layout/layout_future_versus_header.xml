@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@android:color/transparent">
+              android:background="@android:color/transparent"
+              android:layout_marginBottom="5dp">
     <ImageView
         android:id="@+id/versusBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:src="@drawable/ic_futures_versus_banner"/>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:orientation="horizontal">
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/seeVersusRecord"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="19dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:background="@drawable/bg_see_versus_record"
-            android:textSize="10sp"
-            android:textColor="@android:color/white"
-            android:text="@string/see_record"/>
-        <TextView
-            android:id="@+id/versusRule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/unluckyText"
-            android:textSize="@dimen/sp_12"
-            android:text="@string/versus_rule"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-    </LinearLayout>
-</LinearLayout>
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/seeVersusRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="19dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/bg_see_versus_record"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                android:text="@string/see_record"/>
+            <TextView
+                android:id="@+id/versusRule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/unluckyText"
+                android:textSize="@dimen/sp_12"
+                android:text="@string/versus_rule"/>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

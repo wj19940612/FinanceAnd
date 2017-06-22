@@ -9,7 +9,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,12 +24,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureBattleActivity;
-import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.versus.FutureVersus;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback2D;
@@ -38,24 +39,15 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FutureVersusListActivity extends BaseActivity {
-    @BindView(R.id.back)
-    TextView mBack;
-    @BindView(R.id.title)
-    LinearLayout mTitle;
-    @BindView(R.id.avatar)
-    ImageView mAvatar;
-    @BindView(R.id.integral)
-    TextView mIntegral;
-    @BindView(R.id.wining)
-    TextView mWining;
-    @BindView(R.id.recharge)
-    TextView mRecharge;
+    @BindView(R.id.titleBar)
+    TitleBar mTitle;
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.matchVersus)
@@ -66,6 +58,10 @@ public class FutureVersusListActivity extends BaseActivity {
     LinearLayout mCreateAndMatchArea;
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
+    private ImageView mAvatar;
+    private TextView  mIntegral;
+    private TextView  mWining;
+    private TextView  mRecharge;
     private VersusListAdapter mVersusListAdapter;
     private long mLocation;
 
@@ -76,9 +72,8 @@ public class FutureVersusListActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
     }
-
     private void initView() {
-        LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
@@ -96,12 +91,43 @@ public class FutureVersusListActivity extends BaseActivity {
                 BindBankHintDialogFragment.newInstance(R.string.versus_rule_title, R.string.versus_rule_tip).show(getSupportFragmentManager());
             }
         });
-        mBack.setOnClickListener(new View.OnClickListener() {
+        View customView = mTitle.getCustomView();
+        mAvatar = (ImageView) customView.findViewById(R.id.avatar);
+        mIntegral = (TextView) customView.findViewById(R.id.integral);
+        mWining = (TextView) customView.findViewById(R.id.wining);
+        mRecharge = (TextView) customView.findViewById(R.id.recharge);
+        if (LocalUser.getUser().isLogin()){
+            Glide.with(getActivity())
+                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .transform(new GlideCircleTransform(getActivity()))
+                    .into(mAvatar);
+        }else{
+            mAvatar.setBackground(ContextCompat.getDrawable(getActivity(),R.drawable.ic_default_avatar));
+        }
+        mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                if (LocalUser.getUser().isLogin()){
+                    Launcher.with(getActivity(), UserDataActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD,LocalUser.getUser().getUserInfo().getId())
+                            .execute();
+                }else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
+        mRecharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()){
+                    Launcher.with(getActivity(), RechargeActivity.class).execute();
+                }else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+
         mListView.addHeaderView(header);
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mVersusListAdapter.setCallback(new VersusListAdapter.Callback() {
@@ -123,6 +149,16 @@ public class FutureVersusListActivity extends BaseActivity {
             }
         });
         mListView.setAdapter(mVersusListAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                VersusGaming item = mVersusListAdapter.getItem(position);
+                if (item!=null){
+                    item.setPageType(VersusGaming.PAGE_VERSUS);
+                    Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
+                }
+            }
+        });
         mVersusListAdapter.notifyDataSetChanged();
         requestVersusData();
 
@@ -141,23 +177,11 @@ public class FutureVersusListActivity extends BaseActivity {
        mVersusListAdapter.addAll(futureVersus.getList());
        mVersusListAdapter.notifyDataSetChanged();
    }
-    @OnClick({R.id.back, R.id.recharge, R.id.avatar, R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.title})
+    @OnClick({ R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back:
-                getActivity().onBackPressed();
-                break;
-            case R.id.title:
+            case R.id.titleBar:
                 mListView.smoothScrollToPositionFromTop(0, 0);
-                break;
-            case R.id.recharge:
-                break;
-            case R.id.avatar:
-                if (LocalUser.getUser().isLogin()){
-                    Launcher.with(getActivity(), UserDataActivity.class).execute();
-                }else{
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
                 break;
             case R.id.createVersus:
                 break;
@@ -196,7 +220,7 @@ public class FutureVersusListActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        // TODO: 2017-06-21  进行余额查询，余额充足进入对战，余额不足弹窗提示充值
+                        Launcher.with(getActivity(), RechargeActivity.class).execute();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -259,6 +283,7 @@ public class FutureVersusListActivity extends BaseActivity {
                 .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setCancelableOnTouchOutside(false)
                 .show();
 
     }
@@ -362,7 +387,7 @@ public class FutureVersusListActivity extends BaseActivity {
                         mDepositAndTime.setText(reward+" "+ DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
-                        mAgainstAvatar.setBackground(ContextCompat.getDrawable(context,R.drawable.bg_join_versus));
+                        mAgainstAvatar.setBackground(ContextCompat.getDrawable(context,R.drawable.btn_join_versus));
                         showScoreProgress(0,0,true);
                         break;
                     case VersusGaming.GAME_STATUS_START:

@@ -15,21 +15,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_battle_invite"/>
+            android:background="@drawable/btn_battle_invite"/>
 
         <Button
             android:id="@+id/match"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_battle_matching"/>
+            android:background="@drawable/btn_battle_matching"/>
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_battle_cancel"/>
+            android:background="@drawable/btn_battle_cancel"/>
 
 
         <TextView
