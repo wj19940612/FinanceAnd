@@ -16,6 +16,7 @@ import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
@@ -109,8 +110,11 @@ public class FutureBattleFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         initTabLayout();
         initChartViews();
+
+        initBattleViews();
 
         initTestData();
     }
@@ -155,6 +159,41 @@ public class FutureBattleFragment extends BaseFragment {
         settings2.setGameMode(true);
         mKlineView.setSettings(settings2);
         mKlineView.setOnAchieveTheLastListener(null);
+    }
+
+    private void initBattleViews() {
+        mBattleButtons.setOnViewClickListener(new BattleButtons.OnViewClickListener() {
+            @Override
+            public void onInviteButtonClick() {
+                ((FutureBattleActivity)getActivity()).onInviteButtonClick();
+            }
+
+            @Override
+            public void onMatchButtonClick() {
+                ((FutureBattleActivity)getActivity()).onMatchButtonClick();
+            }
+
+            @Override
+            public void onCancelButtonClick() {
+                ((FutureBattleActivity)getActivity()).onCancelButtonClick();
+            }
+        });
+        mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
+            @Override
+            public void onLongPurchaseButtonClick() {
+                ((FutureBattleActivity)getActivity()).onLongPurchaseButtonClick();
+            }
+
+            @Override
+            public void onShortPurchaseButtonClick() {
+                ((FutureBattleActivity)getActivity()).onShortPurchaseButtonClick();
+            }
+
+            @Override
+            public void onClosePositionButtonClick() {
+                ((FutureBattleActivity)getActivity()).onClosePositionButtonClick();
+            }
+        });
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -317,14 +356,6 @@ public class FutureBattleFragment extends BaseFragment {
     private void showKlineView() {
         mTrendView.setVisibility(View.GONE);
         mKlineView.setVisibility(View.VISIBLE);
-    }
-
-    public void setOnBattleButtonClickListener(BattleButtons.OnViewClickListener listener){
-        mBattleButtons.setOnViewClickListener(listener);
-    }
-
-    public void setOnBattleTradeViewClickListener(BattleTradeView.OnViewClickListener listener){
-        mBattleTradeView.setOnViewClickListener(listener);
     }
 
     public void setDeadline(int count){

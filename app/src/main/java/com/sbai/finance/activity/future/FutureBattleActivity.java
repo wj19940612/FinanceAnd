@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.future;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 
@@ -18,6 +17,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
+import com.sbai.finance.view.BattleTradeView;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import static com.sbai.finance.model.Variety.FUTURE_FOREIGN;
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity {
+public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,BattleTradeView.OnViewClickListener{
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -101,37 +101,35 @@ public class FutureBattleActivity extends BaseActivity {
                     }
                 })
                 .setPraise(100, 999);
+    }
 
-        new Handler(){}.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFutureBattleFragment.setOnBattleButtonClickListener(new BattleButtons.OnViewClickListener() {
-                    @Override
-                    public void onInviteButtonClick() {
+    @Override
+    public void onInviteButtonClick() {
 
-                    }
+    }
 
-                    @Override
-                    public void onMatchButtonClick() {
-                        if (mStartMatchDialogFragment == null) {
-                            mStartMatchDialogFragment = StartMatchDialogFragment
-                                    .newInstance()
-                                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
-                                        @Override
-                                        public void onCancel() {
-                                            mStartMatchDialogFragment.dismiss();
-                                        }
-                                    });
-                        }
-                        mStartMatchDialogFragment.show(getSupportFragmentManager());
-                    }
+    @Override
+    public void onMatchButtonClick() {
 
-                    @Override
-                    public void onCancelButtonClick() {
+    }
 
-                    }
-                });
-            }
-        },100);
+    @Override
+    public void onCancelButtonClick() {
+
+    }
+
+    @Override
+    public void onLongPurchaseButtonClick() {
+
+    }
+
+    @Override
+    public void onShortPurchaseButtonClick() {
+
+    }
+
+    @Override
+    public void onClosePositionButtonClick() {
+
     }
 }
