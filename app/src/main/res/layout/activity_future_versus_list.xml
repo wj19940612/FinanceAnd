@@ -11,48 +11,55 @@
         app:customView="@layout/tb_future_versus_list"
         app:backIcon="@drawable/ic_tb_back_white"
         app:backFeature="true"/>
-    <RelativeLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_above="@+id/bottom"
-            android:background="#2d283a"/>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="12dp"
-            android:background="@android:color/transparent">
-            <LinearLayout
-                android:id="@+id/createAndMatchArea"
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_above="@+id/bottom"
+                android:background="#2d283a"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_centerInParent="true">
-                <TextView
-                    android:id="@+id/matchVersus"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="12dp"
+                android:background="@android:color/transparent">
+                <LinearLayout
+                    android:id="@+id/createAndMatchArea"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:background="@drawable/bg_match_versus"/>
+                    android:orientation="horizontal"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/matchVersus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:background="@drawable/bg_match_versus"/>
+                    <TextView
+                        android:id="@+id/createVersus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:background="@drawable/btn_create_versus"/>
+                </LinearLayout>
                 <TextView
-                    android:id="@+id/createVersus"
+                    android:id="@+id/currentVersus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:clickable="true"
-                    android:background="@drawable/btn_create_versus"/>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/currentVersus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:background="@drawable/btn_current_versus"
-                android:visibility="gone"/>
+                    android:background="@drawable/btn_current_versus"
+                    android:visibility="gone"/>
+            </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

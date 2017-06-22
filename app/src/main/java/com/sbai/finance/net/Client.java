@@ -1608,6 +1608,21 @@ public class Client {
                 .put("userFrom", userFrom));
     }
 
+    /**
+     * 用户当前对战
+     * @return
+     */
+    public static API getMyCurrentVersus(){
+        return new API("/game/battle/userBattle.do");
+    }
+    /**
+     * 应战者快速匹配
+     */
+    public static API quickMatchForAgainst(int type,String refuseIds){
+        return new API(POST,"/game/battle/quickSearchForAgainst.do ", new ApiParams()
+                .put("type", type)
+                .put("refuseIds", refuseIds));
+    }
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址

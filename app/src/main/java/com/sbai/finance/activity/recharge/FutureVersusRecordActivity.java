@@ -56,6 +56,9 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
     private void initView() {
         mSet = new HashSet<>();
         mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
+        mCustomSwipeRefreshLayout.setOnRefreshListener(this);
+        mCustomSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mCustomSwipeRefreshLayout.setAdapter(mListView,mVersusRecordListAdapter);
         mVersusRecordListAdapter.setCallback(new VersusRecordListAdapter.Callback() {
             @Override
             public void onClick(int userId) {
@@ -66,7 +69,13 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Launcher.with(getActivity(), FutureBattleActivity.class).execute();
+                if (!mVersusRecordListAdapter.isEmpty()){
+                    VersusGaming item = mVersusRecordListAdapter.getItem(position);
+                    if (item!=null){
+                        item.setPageType(VersusGaming.PAGE_RECORD);
+                        Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
+                    }
+                }
             }
         });
     }
@@ -91,8 +100,8 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
         }
         if (!futureVersus.hasMore()){
             mCustomSwipeRefreshLayout.setLoadMoreEnable(false);
-        }else{
-
+        }else if (futureVersus.getList().size()>0){
+            mLocation = futureVersus.getList().get(futureVersus.getList().size()-1).getCreateTime();
         }
         mVersusRecordListAdapter.addAll(futureVersus.getList());
         mVersusRecordListAdapter.notifyDataSetChanged();
@@ -111,6 +120,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
 
     private void reset() {
         mSet.clear();
+        mLocation=0;
         mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
     }
     private void stopRefreshAnimation() {
