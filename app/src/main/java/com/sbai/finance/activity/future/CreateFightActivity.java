@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.future.FutureBattleConfig;
+import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -18,9 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.bountyChoice1;
-import static com.umeng.analytics.pro.x.l;
-
+import static com.sbai.finance.model.versus.VersusGaming.PAGE_VERSUS;
 
 public class CreateFightActivity extends BaseActivity {
 
@@ -31,7 +30,7 @@ public class CreateFightActivity extends BaseActivity {
 	TextView mIngotWar;
 	@BindView(R.id.integralWar)
 	TextView mIntegralWar;
-	@BindView(bountyChoice1)
+	@BindView(R.id.bountyChoice1)
 	TextView mBountyChoice1;
 	@BindView(R.id.bountyChoice2)
 	TextView mBountyChoice2;
@@ -108,7 +107,7 @@ public class CreateFightActivity extends BaseActivity {
 	}
 
 	@OnClick({R.id.chooseFutures, R.id.ingotWar, R.id.integralWar
-			, bountyChoice1, R.id.bountyChoice2, R.id.bountyChoice3
+			, R.id.bountyChoice1, R.id.bountyChoice2, R.id.bountyChoice3
 			, R.id.durationChoice1, R.id.durationChoice2, R.id.durationChoice3
 			, R.id.launch_fight})
 	public void onViewClicked(View view) {
@@ -143,7 +142,7 @@ public class CreateFightActivity extends BaseActivity {
 				whetherLaunchFight();
 				mCoinType = 3;
 				break;
-			case bountyChoice1:
+			case R.id.bountyChoice1:
 				mBountyChoice1.setSelected(true);
 				mBountyChoice2.setSelected(false);
 				mBountyChoice3.setSelected(false);
@@ -169,24 +168,35 @@ public class CreateFightActivity extends BaseActivity {
 				mDurationChoice2.setSelected(false);
 				mDurationChoice3.setSelected(false);
 				whetherLaunchFight();
-				mEndTime = Integer.parseInt(mDurationChoice1.getText().toString().trim());
+				int length = mDurationChoice1.getText().toString().trim().length();
+				mEndTime = Integer.parseInt(mDurationChoice1.getText().toString().trim().substring(0, length - 2));
 				break;
 			case R.id.durationChoice2:
 				mDurationChoice1.setSelected(false);
 				mDurationChoice2.setSelected(true);
 				mDurationChoice3.setSelected(false);
 				whetherLaunchFight();
-				mEndTime = Integer.parseInt(mDurationChoice2.getText().toString().trim());
+				length = mDurationChoice2.getText().toString().trim().length();
+				mEndTime = Integer.parseInt(mDurationChoice2.getText().toString().trim().substring(0, length - 2));
 				break;
 			case R.id.durationChoice3:
 				mDurationChoice1.setSelected(false);
 				mDurationChoice2.setSelected(false);
 				mDurationChoice3.setSelected(true);
-				whetherLaunchFight();
-				mEndTime = Integer.parseInt(mDurationChoice3.getText().toString().trim());
+				length = mDurationChoice3.getText().toString().trim().length();
+				mEndTime = Integer.parseInt(mDurationChoice3.getText().toString().trim().substring(0, length - 2));
 				break;
 			case R.id.launch_fight:
-
+				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
+						.setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
+							@Override
+							protected void onRespSuccessData(VersusGaming versusGaming) {
+								versusGaming.setPageType(PAGE_VERSUS);
+								Launcher.with(getActivity(), FutureBattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, versusGaming)
+										.execute();
+							}
+						}).fire();
 				break;
 		}
 	}
