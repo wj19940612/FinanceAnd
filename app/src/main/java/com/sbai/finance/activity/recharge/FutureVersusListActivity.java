@@ -1,11 +1,16 @@
 package com.sbai.finance.activity.recharge;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +28,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.future.CreateFightActivity;
 import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.model.versus.FutureVersus;
 import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -38,15 +46,23 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.websocket.WMessage;
+import com.sbai.finance.websocket.WSocketClient;
+
+import java.net.URI;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FutureVersusListActivity extends BaseActivity {
-
+public class FutureVersusListActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener,SwipeRefreshLayout.OnRefreshListener {
+    @BindView(R.id.swipeRefreshLayout)
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
     TitleBar mTitle;
     @BindView(R.id.listView)
@@ -65,7 +81,13 @@ public class FutureVersusListActivity extends BaseActivity {
     private TextView mWining;
     private TextView mRecharge;
     private VersusListAdapter mVersusListAdapter;
-    private long mLocation;
+    private Long mLocation;
+    private VersusBroadcastReceiver mVersusBroadcastReceiver;
+    private LocalBroadcastManager mLocalBroadcastManager;
+    private HashSet<Integer> mSet;
+    private VersusGaming mMyCurrentGame;
+
+    private WSocketClient mSocketClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,10 +95,32 @@ public class FutureVersusListActivity extends BaseActivity {
         setContentView(R.layout.activity_future_versus_list);
         ButterKnife.bind(this);
         initView();
+
+        mSocketClient = new WSocketClient();
+        mSocketClient.connect();
+        startScheduleJob(5 * 1000);
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        if (mSocketClient.isOpen()) {
+            mSocketClient.send(new WMessage(1000, null));
+        }
+        if (count == 20) {
+            mSocketClient.close();
+        }
     }
 
     private void initView() {
-        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, null);
+
+        mSet = new HashSet<>();
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        mVersusBroadcastReceiver = new VersusBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
+        mLocalBroadcastManager.registerReceiver(mVersusBroadcastReceiver,intentFilter);
+
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
@@ -99,21 +143,12 @@ public class FutureVersusListActivity extends BaseActivity {
         mIntegral = (TextView) customView.findViewById(R.id.integral);
         mWining = (TextView) customView.findViewById(R.id.wining);
         mRecharge = (TextView) customView.findViewById(R.id.recharge);
-        if (LocalUser.getUser().isLogin()) {
-            Glide.with(getActivity())
-                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .transform(new GlideCircleTransform(getActivity()))
-                    .into(mAvatar);
-        } else {
-            mAvatar.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_default_avatar));
-        }
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getId())
+                            .putExtra(Launcher.USER_ID,LocalUser.getUser().getUserInfo().getId())
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -133,17 +168,20 @@ public class FutureVersusListActivity extends BaseActivity {
 
         mListView.addHeaderView(header);
         mVersusListAdapter = new VersusListAdapter(getActivity());
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setAdapter(mListView,mVersusListAdapter);
         mVersusListAdapter.setCallback(new VersusListAdapter.Callback() {
             @Override
-            public void onClick(VersusGaming item, boolean isCreate) {
-                if (LocalUser.getUser().isLogin()) {
-                    if (isCreate) {
-                        Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getLaunchUser()).execute();
-                    } else {
-                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_MATCH) {
-                            showJoinVersusDialog();
-                        } else {
-                            Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getAgainstUser()).execute();
+            public void onClick(VersusGaming item,boolean isCreate) {
+                if (LocalUser.getUser().isLogin()){
+                    if (isCreate){
+                        Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,item.getLaunchUser()).execute();
+                    }else{
+                        if (item.getGameStatus()==VersusGaming.GAME_STATUS_MATCH){
+                            showJoinVersusDialog(item);
+                        }else{
+                            Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.USER_ID,item.getAgainstUser()).execute();
                         }
                     }
                 } else {
@@ -155,62 +193,183 @@ public class FutureVersusListActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                VersusGaming item = mVersusListAdapter.getItem(position);
-                if (item != null) {
-                    item.setPageType(VersusGaming.PAGE_VERSUS);
-                    Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                if (!mVersusListAdapter.isEmpty()&&(position>0)){
+                    VersusGaming item = mVersusListAdapter.getItem(position-1);
+                    if (item!=null){
+                        item.setPageType(VersusGaming.PAGE_VERSUS);
+                        Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
+                    }
                 }
             }
         });
-        mVersusListAdapter.notifyDataSetChanged();
+        if (LocalUser.getUser().isLogin()){
+            requestUserFindInfo();
+            requestMyCurrentVersus();
+        }else{
+            mCurrentVersus.setVisibility(View.GONE);
+            mCreateAndMatchArea.setVisibility(View.VISIBLE);
+
+            mIntegral.setText("0");
+            mWining.setText("0");
+        }
+        updateAvatar();
         requestVersusData();
-
     }
 
-    private void requestVersusData() {
-        Client.getVersusGaming(mLocation).setTag(TAG)
-                .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+   private void requestVersusData(){
+      Client.getVersusGaming(mLocation).setTag(TAG)
+              .setCallback(new Callback2D<Resp<FutureVersus>,FutureVersus>() {
+                  @Override
+                  protected void onRespSuccessData(FutureVersus data) {
+                       updateVersusData(data);
+                  }
+              }).fireSync();
+   }
+    private void requestUserFindInfo() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
                     @Override
-                    protected void onRespSuccessData(FutureVersus data) {
-                        updateVersusData(data);
+                    protected void onRespSuccessData(UserFundInfoModel data) {
+                        updateUserFund(data);
                     }
-                }).fireSync();
+                })
+                .fireSync();
+    }
+   private void requestMyCurrentVersus(){
+       Client.getMyCurrentVersus().setTag(TAG)
+               .setCallback(new Callback<Resp<VersusGaming>>() {
+                   @Override
+                   protected void onRespSuccess(Resp<VersusGaming> resp) {
+                       mMyCurrentGame = resp.getData();
+                       updateMyVersus(resp.getData());
+                   }
+               }).fire();
+   }
+   private void requestJoinVersus(final VersusGaming data){
+       Client.joinVersus(data.getId(),"大厅").setTag(TAG)
+               .setCallback(new Callback<Resp<VersusGaming>>() {
+                   @Override
+                   protected void onRespSuccess(Resp<VersusGaming> resp) {
+                       if (resp.isSuccess()){
+                           data.setPageType(VersusGaming.PAGE_VERSUS);
+                           Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,data).execute();
+                       }else {
+                          showJoinVersusFailureDialog();
+                       }
+                   }
+               }).fireSync();
+   }
+   private void requestMatchVersus(final int type){
+       Client.quickMatchForAgainst(type,"").setTag(TAG)
+               .setCallback(new Callback<Resp<Object>>() {
+                   @Override
+                   protected void onRespSuccess(Resp<Object> resp) {
+                       if (resp.isSuccess()){
+                           updateMatchVersus(type);
+                       }else{
+                           ToastUtil.curt(resp.getMsg());
+                       }
+                   }
+               }).fireSync();
+   }
+
+    private void updateMatchVersus(int type) {
+        switch (type){
+            case VersusGaming.MATCH_CANCEL:
+
+                break;
+            case VersusGaming.MATCH_CONTINUE:
+                break;
+            case VersusGaming.MATCH_START:
+                break;
+        }
     }
 
-    private void updateVersusData(FutureVersus futureVersus) {
-        mVersusListAdapter.clear();
-        mVersusListAdapter.addAll(futureVersus.getList());
+    private void updateMyVersus(VersusGaming data) {
+        if (null == data){
+            mCreateAndMatchArea.setVisibility(View.VISIBLE);
+            mCurrentVersus.setVisibility(View.GONE);
+        }else{
+            mCreateAndMatchArea.setVisibility(View.GONE);
+            mCurrentVersus.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updateUserFund(UserFundInfoModel data) {
+        mIntegral.setText(String.valueOf(data.getCredit()));
+        mWining.setText(data.getYuanbao()+"个");
+    }
+    private void updateAvatar(){
+        if (LocalUser.getUser().isLogin()){
+            Glide.with(getActivity())
+                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .transform(new GlideCircleTransform(getActivity()))
+                    .into(mAvatar);
+        }else{
+            mAvatar.setBackground(ContextCompat.getDrawable(getActivity(),R.drawable.ic_default_avatar));
+        }
+    }
+    private void updateVersusData(FutureVersus futureVersus){
+        stopRefreshAnimation();
+        if (mSet.isEmpty()){
+            mVersusListAdapter.clear();
+        }
+        for (VersusGaming versusGaming:futureVersus.getList()){
+            if (mSet.add(versusGaming.getId())){
+                mVersusListAdapter.add(versusGaming);
+            }
+        }
+        if (!futureVersus.hasMore()){
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        }else if (futureVersus.getList().size()>0){
+           mLocation = futureVersus.getList().get(futureVersus.getList().size()-1).getCreateTime();
+        }
         mVersusListAdapter.notifyDataSetChanged();
-    }
+   }
 
-    @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
+    @OnClick({ R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.titleBar:
                 mListView.smoothScrollToPositionFromTop(0, 0);
                 break;
             case R.id.createVersus:
+                if (LocalUser.getUser().isLogin()){
+                    Launcher.with(getActivity(),CreateFightActivity.class).execute();
+                }else{
+                    Launcher.with(getActivity(),LoginActivity.class).execute();
+                }
                 break;
             case R.id.matchVersus:
                 showAskMatchDialog();
                 break;
             case R.id.currentVersus:
+                if (mMyCurrentGame!=null){
+                    mMyCurrentGame.setPageType(VersusGaming.PAGE_VERSUS);
+                    Launcher.with(getActivity(),FutureBattleActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD,mMyCurrentGame)
+                            .execute();
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private void showJoinVersusDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip), getString(R.string.join_versus_title))
+    private void showJoinVersusDialog(final VersusGaming item){
+        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip),getString(R.string.join_versus_title))
                 .setMessageTextSize(15)
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        requestJoinVersus(item);
                         // TODO: 2017-06-21  进行余额查询，余额充足进入对战，余额不足弹窗提示充值
-                        Launcher.with(getActivity(), FutureBattleActivity.class).execute();
-                        // showJoinVersusFailureDialog();
+
+//                        Launcher.with(getActivity(), FutureBattleActivity.class).execute();
+                       // showJoinVersusFailureDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -246,6 +405,7 @@ public class FutureVersusListActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        requestMatchVersus(VersusGaming.MATCH_START);
                         showMatchingDialog();
                     }
                 })
@@ -282,6 +442,7 @@ public class FutureVersusListActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        requestMatchVersus(VersusGaming.MATCH_CANCEL);
                     }
                 })
                 .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
@@ -297,6 +458,47 @@ public class FutureVersusListActivity extends BaseActivity {
                 .setCancelableOnTouchOutside(false)
                 .show();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocalBroadcastManager.unregisterReceiver(mVersusBroadcastReceiver);
+    }
+
+    @Override
+    public void onLoadMore() {
+        requestVersusData();
+    }
+
+    @Override
+    public void onRefresh() {
+        reset();
+        requestVersusData();
+    }
+
+    private void reset() {
+        mSet.clear();
+        mLocation=null;
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    class VersusBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction()==LoginActivity.LOGIN_SUCCESS_ACTION){
+                requestUserFindInfo();
+                updateAvatar();
+            }
+        }
     }
 
     static class VersusListAdapter extends ArrayAdapter<VersusGaming> {
@@ -485,8 +687,13 @@ public class FutureVersusListActivity extends BaseActivity {
                     if (fighterProfit > 0) {
                         fighterFlag = "+";
                     }
-                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+                    if (createProfit == 0 && fighterProfit == 0&&isInviting) {
+                        mCreateProfit.setText("");
+                        mAgainstProfit.setText("");
+                    }else{
+                        mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
+                        mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+                    }
 
                 }
             }

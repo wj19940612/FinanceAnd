@@ -25,6 +25,10 @@ public class VersusGaming implements Parcelable {
 
     public static final int PAGE_RECORD=0;
     public static final int PAGE_VERSUS=1;
+   //1开始快速匹配  0取消匹配 1 继续匹配
+    public static final int MATCH_START=1;
+    public static final int MATCH_CANCEL=0;
+    public static final int MATCH_CONTINUE=2;
     /**
      * againstFrom : 经济圈
      * againstUser : 286

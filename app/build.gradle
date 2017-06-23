@@ -80,8 +80,7 @@ android {
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
-            buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
-//            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+            buildConfigField('String', 'HOST', '\"var.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
         }
 
@@ -89,7 +88,7 @@ android {
             applicationId "com.sbai.finance.alpha"
             versionCode 25
             versionName "0.2.8"
-            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+            buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
 
             manifestPlaceholders = [
@@ -104,7 +103,7 @@ android {
         prod {
             versionCode 20
             versionName "1.0.0"
-            buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
+            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
             buildConfigField('boolean', 'isProd', 'true')
 
             manifestPlaceholders = [

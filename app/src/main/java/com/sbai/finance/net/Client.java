@@ -1579,7 +1579,7 @@ public class Client {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
 
-    public static API getVersusGaming(long location){
+    public static API getVersusGaming(Long location){
         return new API("/game/battle/selectBattleGaming.do", new ApiParams()
                 .put("location", location)
                 .put("pageSize", 15));
@@ -1608,6 +1608,21 @@ public class Client {
                 .put("userFrom", userFrom));
     }
 
+    /**
+     * 用户当前对战
+     * @return
+     */
+    public static API getMyCurrentVersus(){
+        return new API("/game/battle/userBattle.do");
+    }
+    /**
+     * 应战者快速匹配
+     */
+    public static API quickMatchForAgainst(int type,String refuseIds){
+        return new API(POST,"/game/battle/quickSearchForAgainst.do ", new ApiParams()
+                .put("type", type)
+                .put("refuseIds", refuseIds));
+    }
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
@@ -1617,4 +1632,41 @@ public class Client {
     //股票分享地址
     public static final String STOCK_SHARE_URL = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
 
+
+    /**
+     * 获取期货对战品种列表
+     * @return
+     */
+    public static API getFutureBattleVarietyList() {
+        return new API("/game/battleconfig/selectBattleVariety.do");
+    }
+
+    /**
+     * 获取期货对战配置
+     * @return
+     */
+    public static API getFutureBattleConfig() {
+        return new API("/game/battleconfig/findBattleConfig.do");
+    }
+
+    public static API launchFight(int vartietyId, int coinType, double reward, int endtime) {
+        return new API(POST, "/game/battle/createBattle.do",
+                new ApiParams()
+                        .put("vartietyId", vartietyId)
+                        .put("coinType", coinType)
+                        .put("reward", reward)
+                        .put("endtime", endtime));
+    }
+
+    /**
+     * 对战-游戏点赞
+     * @param battleId
+     * @param praiseId
+     * @return
+     */
+    public static API addBattlePraise(int battleId, int praiseId) {
+        return new API(POST, "/game/battle/userPraise.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("praiseId", praiseId));
+    }
 }

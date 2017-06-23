@@ -14,11 +14,14 @@ import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.websocket.WSocketClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,8 +34,8 @@ import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,
-        BattleTradeView.OnViewClickListener {
+public class FutureBattleActivity extends BaseActivity implements
+        BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -44,6 +47,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private StartMatchDialogFragment mStartMatchDialogFragment;
 
     private VersusGaming mVersusGaming;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,12 +106,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
                         @Override
                         public void addCreatePraiseCount() {
-                            // TODO: 2017/6/22 给创建者点赞
+                            requestAddBattlePraise(mVersusGaming.getLaunchUser());
                         }
 
                         @Override
                         public void addAgainstPraiseCount() {
-                            // TODO: 2017/6/22 给对抗者点赞
+                            requestAddBattlePraise(mVersusGaming.getAgainstUser());
                         }
                     });
 
@@ -134,7 +138,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleFragment)
+                .add(R.id.futureArea, mFutureBattleDetailFragment)
                 .commit();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
@@ -142,6 +146,21 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setDeadline(mVersusGaming.getGameStatus(), 0)
                 .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
                 .setWinResult(mVersusGaming.getWinResult());
+    }
+
+    private void requestAddBattlePraise(final int userId) {
+        Client.addBattlePraise(mVersusGaming.getId(), userId)
+                .setTag(TAG)
+                .setCallback(new Callback<VersusGaming>() {
+                    @Override
+                    protected void onRespSuccess(VersusGaming resp) {
+                        updatePraiseView(resp);
+                    }
+                }).fireSync();
+    }
+
+    private void updatePraiseView(VersusGaming resp) {
+        mBattleView.setPraise(resp.getLaunchPraise(), resp.getAgainstPraise());
     }
 
     @Override

@@ -2,26 +2,23 @@ package com.sbai.finance.websocket;
 
 import android.util.Log;
 
-import org.java_websocket.drafts.Draft;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-import java.util.Map;
+import java.net.URISyntaxException;
 
-public class WebSocketClient extends org.java_websocket.client.WebSocketClient {
+public class WSocketClient extends WebSocketClient {
 
     private static final String TAG = "WebSocket";
 
-    public WebSocketClient(URI serverUri) {
-        super(serverUri);
+    public WSocketClient() {
+        super(createURI());
     }
 
-    public WebSocketClient(URI serverUri, Draft protocolDraft) {
-        super(serverUri, protocolDraft);
-    }
-
-    public WebSocketClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders, int connectTimeout) {
-        super(serverUri, protocolDraft, httpHeaders, connectTimeout);
+    public void send(WMessage message) {
+        send(message.toJsonString());
     }
 
     @Override
@@ -37,10 +34,23 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         Log.d(TAG, "onClose: code: " + code + ", reason: " + reason + ", remote: " + remote);
+        if (code != CloseFrame.NORMAL) { // callback from close()
+            connect();
+        }
     }
 
     @Override
     public void onError(Exception ex) {
         Log.d(TAG, "onError: " + ex.getMessage());
+    }
+
+    public static URI createURI() {
+        try {
+            return new URI("ws://192.168.1.7/game/ws.do");
+//            return new URI("ws://" + API.getDomain() + "/game/ws.do");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
