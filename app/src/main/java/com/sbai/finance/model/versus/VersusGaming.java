@@ -33,6 +33,11 @@ public class VersusGaming implements Parcelable {
     // 1房主快速匹配  2应战者快速匹配
     public static final int CREATE_FAST_MATCH=1;
     public static final int AGAGINST_FAST_MATCH=2;
+
+    public static final String SOURCE_COTERIE="coterie";
+    public static final String SOURCE_HALL="hall";
+    public static final String SOURCE_WEIBO="weibo";
+    public static final String SOURCE_FRIEND="friend";
     /**
      * againstFrom : 经济圈
      * againstUser : 286
