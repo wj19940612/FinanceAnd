@@ -127,19 +127,19 @@ public class Preference {
         return mPrefs.getLong(Key.AUTHORIZATION_LOGIN_TIME, 0);
     }
 
-    public void setRechargeWay(int way) {
-        apply(Key.RECHARGE_WAY, way);
+    public void setRechargeWay(String key, int way) {
+        apply(key + Key.RECHARGE_WAY, way);
     }
 
-    public int getRechargeWay() {
-        return mPrefs.getInt(Key.RECHARGE_WAY, UsablePlatform.TYPE_AIL_PAY);
+    public int getRechargeWay(String key) {
+        return mPrefs.getInt(key + Key.RECHARGE_WAY, UsablePlatform.TYPE_AIL_PAY);
     }
 
     public boolean isFirstWithDraw(String key) {
-        return mPrefs.getBoolean(key, true);
+        return mPrefs.getBoolean(key + Key.IS_FIRST_WITH_DRAW, true);
     }
 
     public void setIsFirstWithDraw(String key, boolean isFirstWithDraw) {
-        apply(key, isFirstWithDraw);
+        apply(key + Key.IS_FIRST_WITH_DRAW, isFirstWithDraw);
     }
 }

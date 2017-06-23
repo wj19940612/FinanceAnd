@@ -425,6 +425,7 @@
     <string name="cancel_confirm">是否要取消借款?</string>
     <string name="repay_confirm">是否确认对方已还款?</string>
     <string name="open_gps">请在设置中开启[乐米金融] 定位服务，以便发布借款</string>
+    <string name="open_gps_permission">请在设置中开启[乐米金融] 定位服务权限</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
@@ -592,7 +593,8 @@
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
     <string name="with_draw_limit">最低提现金额5元</string>
-
+    <string name="earnings_yuan">+%1$s元</string>
+    <string name="minus_yuan">-%1$s元</string>
     <!--  聚宝盆  -->
     <string name="cornucopia">聚宝盆</string>
     <string name="exchange_rule">兑换规则</string>
@@ -610,7 +612,6 @@
     <string name="confirm_use_money_buy_coin">确认使用%1$d元购买%2$s元宝</string>
     <string name="earnings">收入</string>
     <string name="extend">支出</string>
-
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>

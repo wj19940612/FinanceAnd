@@ -20,6 +20,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
@@ -247,7 +248,12 @@ public class TheDetailActivity extends BaseActivity {
                 }
                 mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
-                mMoney.setText(context.getString(R.string.RMB, String.valueOf(detail.getMoney())));
+
+                if (detail.getType() < 0) {
+                    mMoney.setText(context.getString(R.string.minus_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                } else {
+                    mMoney.setText(context.getString(R.string.earnings_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                }
             }
         }
     }
