@@ -110,9 +110,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private Variety mVariety;
     private Prediction mPrediction;
     private FutureData mFutureData;
-
+    private boolean isOptionalChanged;
     private int mPagePosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,7 +203,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void requestTrendDataAndSet() {
         Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
+                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>(false) {
                     @Override
                     protected void onRespSuccessData(List<TrendViewData> data) {
                         mTrendView.setDataList(data);
@@ -330,6 +329,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
+                            isOptionalChanged = false;
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -362,6 +362,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                         if (resp.isSuccess()) {
                                             mTradeFloatButtons.setHasAddInOption(false);
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
+                                            isOptionalChanged = true;
                                         } else {
                                             ToastUtil.curt(resp.getMsg());
                                         }
@@ -377,7 +378,18 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .setNegative(R.string.no)
                 .show();
     }
+    private void setResult(){
+        Intent intent = new Intent();
+        intent.putExtra(Launcher.EX_PAYLOAD,mVariety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1,isOptionalChanged);
+        setResult(RESULT_OK, intent);
+    }
 
+    @Override
+    public void onBackPressed() {
+        setResult();
+        super.onBackPressed();
+    }
 
     private ViewpointFragment getViewpointFragment() {
         Fragment fragment = mSubPageAdapter.getFragment(0);

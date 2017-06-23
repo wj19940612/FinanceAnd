@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.sbai.finance.Preference;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
@@ -29,8 +30,6 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
-
-import static com.sbai.finance.R.id.listView;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
@@ -51,6 +50,8 @@ public class BaseActivity extends AppCompatActivity implements
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            LocalUser.getUser().logout();
+
 //            String expiredMessage = intent.getStringExtra(EX_TOKEN_EXPIRED_MESSAGE);
 //            SmartDialog.single(getActivity(), expiredMessage)
 //                    .setCancelableOnTouchOutside(false)

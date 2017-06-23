@@ -110,7 +110,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private PredictionDialogFragment mPredictionFragment;
     protected Variety mVariety;
-
+    private boolean isOptionalChanged;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,6 +206,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(false);
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
+                            isOptionalChanged = true;
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -223,6 +224,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
+                            isOptionalChanged = false;
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -285,6 +287,12 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        setResult();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
@@ -332,27 +340,15 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockRTData() {
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
+                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>(false) {
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
                         mStockRTData = result;
                         updateStockTrendView();
                         updateMarketDataView();
-                        updateExchangeAndStockStatus();
+                        requestExchangeStatus();
                     }
                 }).fireSync();
-    }
-
-    private void updateExchangeAndStockStatus() {
-        if (mStockRTData != null) {
-            if (mStockRTData.getStatus().equals(StockRTData.STATUS_HALT)) {
-                View view = mTitleBar.getCustomView();
-                TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
-                exchangeStatus.setText(R.string.stock_halt);
-            } else {
-                requestExchangeStatus();
-            }
-        }
     }
 
     private void updateStockTrendView() {
@@ -380,7 +376,12 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }
             }
             mLastPrice.setText(lastPrice);
-            mPriceChange.setText(risePrice + "     " + risePercent);
+            if (mStockRTData.getStatus().equals(StockRTData.STATUS_DELIST)) {
+                color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
+                mPriceChange.setText(R.string.delist);
+            } else {
+                mPriceChange.setText(risePrice + "     " + risePercent);
+            }
             mTodayOpen.setText(mStockRTData.getOpenPrice());
             mHighest.setText(mStockRTData.getHighestPrice());
             mLowest.setText(mStockRTData.getLowestPrice());
@@ -458,7 +459,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>() {
+                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>(false) {
                     @Override
                     protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {
@@ -466,6 +467,12 @@ public abstract class StockTradeActivity extends BaseActivity {
                         }
                     }
                 }).fireSync();
+    }
+    private void setResult(){
+        Intent intent = new Intent();
+        intent.putExtra(Launcher.EX_PAYLOAD,mVariety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1,isOptionalChanged);
+        setResult(RESULT_OK, intent);
     }
 
     private void initSlidingTab() {

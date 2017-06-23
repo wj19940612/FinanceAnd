@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.wallet.WithDrawActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
@@ -197,6 +198,17 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                         Launcher.with(getActivity(), TheDetailActivity.class).execute();
                     }
                     break;
+                case HistoryNewsModel.WITH_DRAW_SUCCESS:
+                    if (!historyNewsModel.isLossEfficacy()) {
+                        Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                    }
+                    break;
+                case HistoryNewsModel.WITH_DRAW_FAIL:
+                    if (!historyNewsModel.isLossEfficacy()) {
+                        Launcher.with(getActivity(), WithDrawActivity.class).execute();
+                    }
+                    break;
+
             }
         }
     }

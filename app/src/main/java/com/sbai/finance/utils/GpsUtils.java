@@ -50,7 +50,7 @@ public class GpsUtils {
         mContext = context;
         mLocationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
         // 判断GPS是否正常启动
-        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             geocoder = new Geocoder(App.getAppContext());
             //用于获取Location对象，以及其他
             LocationManager locationManager;
@@ -91,21 +91,13 @@ public class GpsUtils {
                 //   移除监听器
 //            locationManager.removeUpdates(locationListener);
             } catch (SecurityException e) {
-                Log.d(TAG, "GpsUtils: " + e.toString());
-            } finally {
-                SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
-                        .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegative(R.string.cancel)
-                        .show();
-            }
+                Log.d(TAG, "GpsUtils:  SecurityException " + e.toString());
+                //sm-j3109 定位权限没有开启 会抛出异常
+                showGpsPermission();
 
+            } catch (Exception e) {
+                Log.d(TAG, "GpsUtils: " + e.toString());
+            }
 
         } else {
             SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
@@ -138,6 +130,8 @@ public class GpsUtils {
 
         public void onLocationChanged(Location location) {
 
+            Log.d(TAG, "onLocationChanged: ");
+
             tempCityName = updateWithNewLocation(location);
             if ((tempCityName != null) && (tempCityName.length() != 0)) {
                 cityName = tempCityName;
@@ -145,6 +139,7 @@ public class GpsUtils {
         }
 
         public void onProviderDisabled(String provider) {
+            Log.d(TAG, "onProviderDisabled: " + provider);
             tempCityName = updateWithNewLocation(mLocationManager.getLastKnownLocation(provider));
             if ((tempCityName != null) && (tempCityName.length() != 0)) {
                 cityName = tempCityName;
@@ -152,9 +147,11 @@ public class GpsUtils {
         }
 
         public void onProviderEnabled(String provider) {
+            Log.d(TAG, "onProviderEnabled: " + provider);
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.d(TAG, "onStatusChanged: " + provider + " status " + status);
         }
     };
 
@@ -171,47 +168,66 @@ public class GpsUtils {
             lat = location.getLatitude();
             lng = location.getLongitude();
             Log.d(TAG, "updateWithNewLocation: " + lat + "  " + lng);
-        } else {
-            Log.d(TAG, "updateWithNewLocation: 无法获取地理信息");
-        }
+            if (lat == 0.0 && lng == 0.0) {
+                showGpsPermission();
+            }
+            try {
+                addList = geocoder.getFromLocation(lat, lng, 1);    //解析经纬度
+                if (addList != null && addList.size() > 0) {
+                    String province = "";
+                    String city = "";
+                    String country = "";
+                    for (int i = 0; i < addList.size(); i++) {
+                        Address add = addList.get(i);
+                        mAddress = add;
+                        mcityName += add.getLocality();
+                        province = add.getAdminArea();
+                        country = add.getSubLocality();
+                        city = add.getLocality();
 
-        try {
-            addList = geocoder.getFromLocation(lat, lng, 1);    //解析经纬度
-            if (addList != null && addList.size() > 0) {
-                String province = "";
-                String city = "";
-                String country = "";
-                for (int i = 0; i < addList.size(); i++) {
-                    Address add = addList.get(i);
-                    mAddress = add;
-                    mcityName += add.getLocality();
-                    province = add.getAdminArea();
-                    country = add.getSubLocality();
-                    city = add.getLocality();
-
-                    Log.d(TAG, "updateWithNewLocation:   getCountryName" + add.getCountryName());
-                    Log.d(TAG, "updateWithNewLocation:   具体地址  getFeatureName" + add.getFeatureName());
-                    Log.d(TAG, "updateWithNewLocation:   getPhone" + add.getPhone());
-                    Log.d(TAG, "updateWithNewLocation:   省份 getAdminArea  " + add.getAdminArea());
-                    Log.d(TAG, "updateWithNewLocation:   getCountryCode  " + add.getCountryCode());
-                    Log.d(TAG, "updateWithNewLocation:   区  getSubLocality  " + add.getSubLocality());
-                    Log.d(TAG, "updateWithNewLocation:     getSubAdminArea  " + add.getSubAdminArea());
-                    Log.d(TAG, "updateWithNewLocation:     getLocality  " + add.getLocality());
-                }
-                Log.d(TAG, "具体地址 : " + province + " " + city + " " + country);
+                        Log.d(TAG, "updateWithNewLocation:   getCountryName" + add.getCountryName());
+                        Log.d(TAG, "updateWithNewLocation:   具体地址  getFeatureName" + add.getFeatureName());
+                        Log.d(TAG, "updateWithNewLocation:   getPhone" + add.getPhone());
+                        Log.d(TAG, "updateWithNewLocation:   省份 getAdminArea  " + add.getAdminArea());
+                        Log.d(TAG, "updateWithNewLocation:   getCountryCode  " + add.getCountryCode());
+                        Log.d(TAG, "updateWithNewLocation:   区  getSubLocality  " + add.getSubLocality());
+                        Log.d(TAG, "updateWithNewLocation:     getSubAdminArea  " + add.getSubAdminArea());
+                        Log.d(TAG, "updateWithNewLocation:     getLocality  " + add.getLocality());
+                    }
+                    Log.d(TAG, "具体地址 : " + province + " " + city + " " + country);
 //                UserInfo userInfo = LocalUser.getUser().getUserInfo();
 //                userInfo.setLand(province + "-" + city + "-" + country);
 //                LocalUser.getUser().setUserInfo(userInfo);
+                }
+
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                Log.d(TAG, " e: " + e.getMessage());
             }
 
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            Log.d(TAG, " e: " + e.getMessage());
-        }
-        if (mcityName.length() != 0) {
-            return mcityName.substring(0, (mcityName.length() - 1));
+            if (mcityName.length() != 0) {
+                return mcityName.substring(0, (mcityName.length() - 1));
+            } else {
+                return mcityName;
+            }
         } else {
-            return mcityName;
+            Log.d(TAG, "updateWithNewLocation: 无法获取地理信息");
+            showGpsPermission();
         }
+        return "";
+    }
+
+    private void showGpsPermission() {
+        SmartDialog.with(mContext, mContext.getString(R.string.open_gps_permission))
+                .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                        mContext.startActivityForResult(intent, GPS_REQUEST_CODE);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.cancel)
+                .show();
     }
 }

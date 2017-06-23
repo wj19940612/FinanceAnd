@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -19,7 +21,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -28,25 +30,30 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by linrongfang on 2017/5/8.
- */
 
-public class TheDetailActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+/**
+ * Created by ${wangJie} on 2017/6/21.
+ * 明细界面
+ */
+public class TheDetailActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
-    @BindView(android.R.id.list)
-    ListView mListView;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
     TextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
-    CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private DetailAdapter mDetailAdapter;
-    private List<Detail> mDetailList;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.adsorb_text)
+    TextView mAdsorbText;
+    @BindView(R.id.dataLayout)
+    FrameLayout mDataLayout;
 
     private int mPageSize = 20;
     private int mPageNo = 0;
+    private ArrayList<Detail> mDetailArrayList;
+    private TheDetailAdapter mTheDetailAdapter;
+    private boolean mLoadMore = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,19 +61,71 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-        initViews();
+        mDetailArrayList = new ArrayList<>();
+        mTheDetailAdapter = new TheDetailAdapter(mDetailArrayList, this);
+
+        mRecyclerView.setAdapter(mTheDetailAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isSlideToBottom(mRecyclerView) && mLoadMore) {
+                    requestDetailList();
+                }
+                View stickyInfoView = recyclerView.findChildViewUnder(
+                        mAdsorbText.getMeasuredWidth() / 2, 5);
+
+                if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
+                    mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
+                }
+
+                View transInfoView = recyclerView.findChildViewUnder(
+                        mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
+                if (transInfoView != null && transInfoView.getTag() != null) {
+                    int transViewStatus = (int) transInfoView.getTag();
+                    int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
+
+                    if (transViewStatus == TheDetailAdapter.HAS_STICKY_VIEW) {
+                        if (transInfoView.getTop() > 0) {
+                            mAdsorbText.setTranslationY(dealtY);
+                        } else {
+                            mAdsorbText.setTranslationY(0);
+                        }
+                    } else if (transViewStatus == TheDetailAdapter.NONE_STICKY_VIEW) {
+                        mAdsorbText.setTranslationY(0);
+                    }
+                }
+            }
+        });
         requestDetailList();
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPageNo = 0;
+                requestDetailList();
+            }
+        });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecyclerView.smoothScrollToPosition(0);
+            }
+        });
     }
 
-    private void initViews() {
-        mDetailList = new ArrayList<>();
-        mDetailAdapter = new DetailAdapter(this, mDetailList);
-        mListView.setAdapter(mDetailAdapter);
-        mListView.setEmptyView(mEmpty);
-        mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setAdapter(mListView, mDetailAdapter);
+    protected boolean isSlideToBottom(RecyclerView recyclerView) {
+        if (recyclerView == null) return false;
+        if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
+            return true;
+        return false;
     }
+
 
     private void requestDetailList() {
         Client.getDetail(mPageNo, mPageSize)
@@ -82,106 +141,80 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
     }
 
     private void updateDetailList(List<Detail> detailList) {
-        if (detailList == null) {
-            return;
-        }
-        stopRefreshAnimation();
-        mDetailAdapter.addAll(detailList);
-        if (detailList.size() < mPageSize) {
-            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
+            mDataLayout.setVisibility(View.GONE);
+            mEmpty.setVisibility(View.VISIBLE);
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         } else {
-            mPageNo++;
-        }
-        mDetailAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRefresh() {
-        reset();
-        requestDetailList();
-    }
-
-    @Override
-    public void onLoadMore() {
-        requestDetailList();
-    }
-
-    private void stopRefreshAnimation() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-        if (mSwipeRefreshLayout.isLoading()) {
-            mSwipeRefreshLayout.setLoading(false);
+            mDataLayout.setVisibility(View.VISIBLE);
+            mEmpty.setVisibility(View.GONE);
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mTheDetailAdapter.clear();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+            mDetailArrayList.addAll(detailList);
+            if (detailList.size() < mPageSize) {
+                mLoadMore = false;
+            } else {
+                mLoadMore = true;
+                mPageNo++;
+            }
+            mTheDetailAdapter.notifyDataSetChanged();
         }
     }
 
-    private void reset() {
-        mPageNo = 0;
-        mDetailAdapter.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
-    }
+    class TheDetailAdapter extends RecyclerView.Adapter<TheDetailAdapter.ViewHolder> {
 
-
-    static class DetailAdapter extends BaseAdapter {
+        public static final int HAS_STICKY_VIEW = 2;
+        public static final int NONE_STICKY_VIEW = 3;
+        private ArrayList<Detail> mDetailArrayList;
         private Context mContext;
-        private List<Detail> mList;
 
-        public DetailAdapter(Context context, List<Detail> list) {
-            mContext = context;
-            mList = list;
+        public TheDetailAdapter(ArrayList<Detail> detailArrayList, Context context) {
+            this.mDetailArrayList = detailArrayList;
+            this.mContext = context;
         }
 
-        public void addAll(List<Detail> detailList) {
-            mList.addAll(detailList);
-            notifyDataSetChanged();
+        public void addAll(ArrayList<Detail> detailArrayList) {
+            this.addAll(mDetailArrayList);
+            notifyItemRangeInserted(mDetailArrayList.size() - detailArrayList.size(), mDetailArrayList.size());
         }
 
         public void clear() {
-            mList.clear();
-            notifyDataSetChanged();
+            mDetailArrayList.clear();
+            notifyItemRangeRemoved(0, mDetailArrayList.size());
         }
 
         @Override
-        public int getCount() {
-            return mList.size();
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_detail, null);
+            return new ViewHolder(view);
         }
 
         @Override
-        public Object getItem(int position) {
-            return mList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_detail, null, false);
-                holder = new ViewHolder(convertView);
-                convertView.setTag(holder);
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext);
+            if (isTheDifferentMonth(position)) {
+                holder.itemView.setTag(HAS_STICKY_VIEW);
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                holder.itemView.setTag(NONE_STICKY_VIEW);
             }
-            boolean needTitle = needTitle(position);
-            holder.bindDataWithView((Detail) getItem(position), needTitle);
-            return convertView;
+            holder.itemView.setContentDescription(DateUtil.getFormatMonth(mDetailArrayList.get(position).getCreateTime()));
         }
 
-        private boolean needTitle(int position) {
+        @Override
+        public int getItemCount() {
+            return mDetailArrayList != null ? mDetailArrayList.size() : 0;
+        }
+
+        private boolean isTheDifferentMonth(int position) {
             if (position == 0) {
                 return true;
             }
-
-            if (position < 0) {
-                return false;
-            }
-
-            Detail pre = mList.get(position - 1);
-            Detail next = mList.get(position);
+            Detail pre = mDetailArrayList.get(position - 1);
+            Detail next = mDetailArrayList.get(position);
             //判断两个时间在不在一个月内  不是就要显示标题
             long preTime = pre.getCreateTime();
             long nextTime = next.getCreateTime();
@@ -191,37 +224,36 @@ public class TheDetailActivity extends BaseActivity implements CustomSwipeRefres
             return true;
         }
 
-        static class ViewHolder {
-            @BindView(R.id.head)
-            TextView mHead;
-            @BindView(R.id.paymentContent)
-            TextView mPaymentContent;
-            @BindView(R.id.paymentTime)
-            TextView mPaymentTime;
-            @BindView(R.id.paymentType)
-            TextView mPaymentType;
-            @BindView(R.id.paymentNum)
-            TextView mPaymentNum;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.adsorb_text)
+            TextView mAdsorbText;
+            @BindView(R.id.time)
+            TextView mTime;
+            @BindView(R.id.payWay)
+            TextView mPayWay;
+            @BindView(R.id.money)
+            TextView mMoney;
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
             }
 
-            private void bindDataWithView(Detail detail, boolean needTitle) {
-
-                if (needTitle) {
-                    mHead.setVisibility(View.VISIBLE);
-                    mHead.setText(DateUtil.getFormatMonth(detail.getCreateTime()));
+            public void bindDataWithView(Detail detail, int position, boolean theDifferentMonth, Context context) {
+                if (theDifferentMonth) {
+                    mAdsorbText.setVisibility(View.VISIBLE);
+                    mAdsorbText.setText(DateUtil.getFormatMonth(detail.getCreateTime()));
                 } else {
-                    mHead.setVisibility(View.GONE);
+                    mAdsorbText.setVisibility(View.GONE);
                 }
+                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
+                mPayWay.setText(detail.getRemark());
 
-                mPaymentTime.setText(DateUtil.getDetailFormatTime(detail.getCreateTime()));
-
-                mPaymentContent.setText(detail.getRemark());
-                mPaymentType.setText(detail.getPlatformName());
-                mPaymentNum.setText(FinanceUtil.formatWithScale(detail.getMoney()) + "元");
-
+                if (detail.getType() < 0) {
+                    mMoney.setText(context.getString(R.string.minus_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                } else {
+                    mMoney.setText(context.getString(R.string.earnings_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                }
             }
         }
     }

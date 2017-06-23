@@ -535,6 +535,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mIsAttention.setText("");
 				}
 
+
 				mOpinionContent.setShowText(item.getContent());
 
 				if (item.getDirection() == 1) {
@@ -561,7 +562,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			}
 		}
 
-		static class BorrowMoneyViewHolder {
+		class BorrowMoneyViewHolder {
 
 			@BindView(R.id.hotArea)
 			RelativeLayout mHotArea;

@@ -2,12 +2,12 @@ package com.sbai.finance.activity.mine;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -28,7 +28,7 @@ import butterknife.OnClick;
 public class ModifyUserNameActivity extends BaseActivity {
 
     @BindView(R.id.userNameInput)
-    AppCompatEditText mUserName;
+    EditText mUserName;
     @BindView(R.id.submitUserName)
     AppCompatButton mSubmitUserName;
     @BindView(R.id.clear)

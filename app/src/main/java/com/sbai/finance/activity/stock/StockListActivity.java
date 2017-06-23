@@ -66,6 +66,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     private StockListAdapter mStockListAdapter;
     private List<Variety> mStockIndexData;
     private HashSet<String> mSet;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +111,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     @Override
     protected void onResume() {
         super.onResume();
-        startScheduleJob(5*1000);
+        startScheduleJob(5 * 1000);
     }
 
     @Override
@@ -147,7 +148,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     protected void onRespSuccessData(List<Variety> data) {
                         updateStockData(data);
                         requestStockMarketData(data);
-                        startScheduleJob(5*1000);
+                        startScheduleJob(5 * 1000);
                     }
                 }).fireSync();
     }
@@ -196,8 +197,9 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void updateStockIndexData(List<Variety> data) {
-        switch (data.size()){
-            case 0: return;
+        switch (data.size()) {
+            case 0:
+                return;
             case 1:
                 mShangHai.setTag(data.get(0));
                 mShangHai.setText(initStockIndex(data.get(0).getVarietyName()));
@@ -242,19 +244,19 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 ratePrice = "+" + ratePrice;
             }
             variety = (Variety) mShangHai.getTag();
-            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
+            if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
                         "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, greyColor);
                 mShangHai.setText(spannableString);
             }
             variety = (Variety) mShenZhen.getTag();
-            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
+            if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
                         "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, greyColor);
                 mShenZhen.setText(spannableString);
             }
             variety = (Variety) mBoard.getTag();
-            if (variety!=null&&variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())){
+            if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
                         "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, greyColor);
                 mBoard.setText(spannableString);
@@ -264,10 +266,10 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
 
     private void updateStockData(List<Variety> data) {
         stopRefreshAnimation();
-        if (mSet.isEmpty()){
+        if (mSet.isEmpty()) {
             mStockListAdapter.clear();
         }
-        for (Variety variety:data){
+        for (Variety variety : data) {
             if (mSet.add(variety.getVarietyType())) {
                 mStockListAdapter.add(variety);
             }
@@ -280,11 +282,11 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
         mStockListAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({ R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board,R.id.titleBar})
+    @OnClick({R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search:
-                Launcher.with(getActivity(),SearchOptionalActivity.class).putExtra("type",SearchOptionalActivity.TYPE_STOCK_ONLY ).execute();
+                Launcher.with(getActivity(), SearchOptionalActivity.class).putExtra("type", SearchOptionalActivity.TYPE_STOCK_ONLY).execute();
                 break;
             case R.id.shangHai:
                 launcherIndexActivity((Variety) mShangHai.getTag());
@@ -307,10 +309,10 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
     }
 
     private void launcherIndexActivity(Variety variety) {
-        if (variety != null&&variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
-                  Launcher.with(getActivity(), StockIndexActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, variety).execute();
-            }
+        if (variety != null && variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+            Launcher.with(getActivity(), StockIndexActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+        }
     }
 
     @Override
@@ -405,17 +407,24 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                 StockData stockData = map.get(item.getVarietyType());
                 if (stockData != null) {
                     mLastPrice.setText(stockData.getLastPrice());
-                    String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
-                    if (priceChange.startsWith("-")) {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.greenAssist));
-                        mRate.setSelected(false);
-                        mRate.setText(priceChange);
+                    if (stockData.isDelist()) {
+                        mRate.setEnabled(false);
+                        mRate.setText(R.string.delist);
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
                     } else {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context,R.color.redPrimary));
-                        mRate.setSelected(true);
-                        mRate.setText("+" + priceChange);
+                        mRate.setEnabled(true);
+                        String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
+                        if (priceChange.startsWith("-")) {
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                            mRate.setSelected(false);
+                            mRate.setText(priceChange);
+                        } else {
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setSelected(true);
+                            mRate.setText("+" + priceChange);
+                        }
                     }
-                }else{
+                } else {
                     mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                     mLastPrice.setText("--");
                     mRate.setSelected(true);

@@ -51,6 +51,8 @@ public class WalletActivity extends BaseActivity {
 
     private UserFundInfoModel mUserFundInfoModel;
 
+    private double money;
+
     private UserBankCardInfoModel mUserBankCardInfoModel;
 
     @Override
@@ -59,7 +61,15 @@ public class WalletActivity extends BaseActivity {
         setContentView(R.layout.activity_wallet);
         ButterKnife.bind(this);
         updateUserFund(0);
+
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getActivity(), WithDrawActivity.class).execute();
+            }
+        });
     }
+
 
     @Override
     protected void onResume() {
@@ -81,6 +91,7 @@ public class WalletActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(UserFundInfoModel data) {
                         mUserFundInfoModel = data;
+                        money = data.getMoney();
                         updateUserFund(data.getMoney());
                     }
                 })
@@ -103,13 +114,10 @@ public class WalletActivity extends BaseActivity {
                                     if (resp.hasData()) {
                                         mUserBankCardInfoModel = resp.getData().get(0);
                                     }
-                                    if (mUserFundInfoModel != null) {
-                                        Launcher.with(getActivity(), RechargeActivity.class)
-                                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                                .putExtra(Launcher.EX_PAYLOAD, mUserFundInfoModel.getMoney())
-                                                .execute();
-                                    }
-
+                                    Launcher.with(getActivity(), RechargeActivity.class)
+                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                            .putExtra(Launcher.EX_PAYLOAD, money)
+                                            .execute();
                                 }
                             }
                         })
@@ -175,18 +183,20 @@ public class WalletActivity extends BaseActivity {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
                 .setIndeterminate(WalletActivity.this)
-                .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
+                .setCallback(new Callback2D<Resp<List<UserBankCardInfoModel>>, List<UserBankCardInfoModel>>() {
                     @Override
-                    protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
-                        if (resp.isSuccess()) {
-                            if (resp.hasData()) {
-                                mUserBankCardInfoModel = resp.getData().get(0);
-                                Launcher.with(getActivity(), WithDrawActivity.class)
-                                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                        .putExtra(Launcher.EX_PAYLOAD, mUserFundInfoModel.getMoney())
-                                        .execute();
-                            } else {
-                                showOpenBindCardDialog();
+                    protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
+                        if (data != null && !data.isEmpty()) {
+                            mUserBankCardInfoModel = data.get(0);
+                            if (mUserBankCardInfoModel != null) {
+                                if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                                    showOpenBindCardDialog();
+                                } else {
+                                    Launcher.with(getActivity(), WithDrawActivity.class)
+                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                            .putExtra(Launcher.EX_PAYLOAD, money)
+                                            .execute();
+                                }
                             }
                         }
                     }
@@ -205,8 +215,11 @@ public class WalletActivity extends BaseActivity {
                     break;
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
                     mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                    if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.hasBindBank()) {
-                        Launcher.with(getActivity(), WithDrawActivity.class).putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel).execute();
+                    if (mUserBankCardInfoModel != null && !mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                        Launcher.with(getActivity(), WithDrawActivity.class)
+                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                .putExtra(Launcher.EX_PAYLOAD, money)
+                                .execute();
                     }
                     break;
             }

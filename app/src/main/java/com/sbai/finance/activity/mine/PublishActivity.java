@@ -31,6 +31,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CollapsedTextView;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -233,7 +234,6 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
 
         }
 
-
         static class ViewHolder {
             @BindView(R.id.avatar)
             ImageView mAvatar;
@@ -244,14 +244,13 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             @BindView(R.id.publishTime)
             TextView mPublishTime;
             @BindView(R.id.opinionContent)
-            TextView mOpinionContent;
+            CollapsedTextView mOpinionContent;
             @BindView(R.id.bigVarietyName)
             TextView mBigVarietyName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
             @BindView(R.id.label)
             ImageView mLabel;
-
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -264,7 +263,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mAvatar);
                 mVarietyName.setText(item.getVarietyName());
-                mOpinionContent.setText(item.getContent());
+                mOpinionContent.setShowText(item.getContent());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mBigVarietyName.setText(context.getString(R.string.big_variety_name, item.getBigVarietyTypeName()));
                 if (!isHimSelf) {

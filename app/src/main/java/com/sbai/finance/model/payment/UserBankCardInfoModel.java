@@ -45,11 +45,27 @@ public class UserBankCardInfoModel implements Parcelable {
     private int userId;
     //银行卡号
     private String cardNumber;
-    // 银行卡绑定状态  0 绑定  1 解绑  2修改
-    private Integer bindStatus;
+    // 银行卡绑定状态  0 未绑定  1 填写  2 已经绑定
+    private int bindStatus;
 
-    public boolean hasBindBank() {
-        return getBindStatus() != null && getBindStatus() == 0;
+    //是否绑定过银行卡  0 没有 1有
+    private String hasBindBankCard;
+
+
+    public String getHasBindBankCard() {
+        return hasBindBankCard;
+    }
+
+    public void setHasBindBankCard(String hasBindBankCard) {
+        this.hasBindBankCard = hasBindBankCard;
+    }
+
+    public boolean isBindBank() {
+        return getBindStatus() == 2;
+    }
+
+    public boolean isNotConfirmBankInfo() {
+        return getBindStatus() == 0;
     }
 
     public int getIdStatus() {
@@ -140,14 +156,17 @@ public class UserBankCardInfoModel implements Parcelable {
         this.cardNumber = cardNumber;
     }
 
-    public Integer getBindStatus() {
+    public int getBindStatus() {
         return bindStatus;
     }
 
-    public void setBindStatus(Integer bindStatus) {
+    public void setBindStatus(int bindStatus) {
         this.bindStatus = bindStatus;
     }
 
+
+    public UserBankCardInfoModel() {
+    }
 
     @Override
     public String toString() {
@@ -164,6 +183,7 @@ public class UserBankCardInfoModel implements Parcelable {
                 ", userId=" + userId +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", bindStatus=" + bindStatus +
+                ", hasBindBankCard='" + hasBindBankCard + '\'' +
                 '}';
     }
 
@@ -185,10 +205,8 @@ public class UserBankCardInfoModel implements Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.userId);
         dest.writeString(this.cardNumber);
-        dest.writeValue(this.bindStatus);
-    }
-
-    public UserBankCardInfoModel() {
+        dest.writeInt(this.bindStatus);
+        dest.writeString(this.hasBindBankCard);
     }
 
     protected UserBankCardInfoModel(Parcel in) {
@@ -203,7 +221,8 @@ public class UserBankCardInfoModel implements Parcelable {
         this.id = in.readInt();
         this.userId = in.readInt();
         this.cardNumber = in.readString();
-        this.bindStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.bindStatus = in.readInt();
+        this.hasBindBankCard = in.readString();
     }
 
     public static final Creator<UserBankCardInfoModel> CREATOR = new Creator<UserBankCardInfoModel>() {

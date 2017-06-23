@@ -1,5 +1,7 @@
 package com.sbai.finance.utils;
 
+import android.text.TextUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -24,19 +26,21 @@ public class FinanceUtil {
         return bigDecimal.setScale(2, RoundingMode.HALF_EVEN).floatValue();
     }
 
-    public static float accurateToFloat(double value,int scale) {
-        BigDecimal bigDecimal = BigDecimal.valueOf(value);
-        return bigDecimal.setScale(scale, RoundingMode.HALF_EVEN).floatValue();
-    }
-
     /**
      * 格式化 String 数据, 并使用‘银行家算法’精确（保留）到小数点后两位
-     * @param src
+     * @param value
      * @return
      */
-    public static String accurateToString(String src) {
-        double value = Double.parseDouble(src);
-        return formatWithScale(value, DEFAULT_SCALE);
+    public static String formatWithScale(String value) {
+        double v = 0;
+        if (!TextUtils.isEmpty(value)) {
+            try {
+                v = Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return formatWithScale(v, DEFAULT_SCALE);
     }
 
     /**
