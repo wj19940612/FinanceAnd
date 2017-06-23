@@ -11,8 +11,9 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.versus.TradeRecord;
 import com.sbai.finance.model.versus.VersusGaming;
-import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 
@@ -78,10 +79,10 @@ public class FutureBattleDetailFragment extends BaseFragment {
         Client.getOrderHistory(mVersusGaming.getId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<List<TradeRecord>>() {
+                .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
                     @Override
-                    protected void onRespSuccess(List<TradeRecord> resp) {
-                        updateTradeHistory(resp);
+                    protected void onRespSuccessData(List<TradeRecord> data) {
+                        updateTradeHistory(data);
                     }
                 })
                 .fire();
