@@ -46,6 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FutureVersusListActivity extends BaseActivity {
+
     @BindView(R.id.titleBar)
     TitleBar mTitle;
     @BindView(R.id.listView)
@@ -58,10 +59,11 @@ public class FutureVersusListActivity extends BaseActivity {
     LinearLayout mCreateAndMatchArea;
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
+
     private ImageView mAvatar;
-    private TextView  mIntegral;
-    private TextView  mWining;
-    private TextView  mRecharge;
+    private TextView mIntegral;
+    private TextView mWining;
+    private TextView mRecharge;
     private VersusListAdapter mVersusListAdapter;
     private long mLocation;
 
@@ -72,8 +74,9 @@ public class FutureVersusListActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
     }
+
     private void initView() {
-        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, null);
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
@@ -96,23 +99,23 @@ public class FutureVersusListActivity extends BaseActivity {
         mIntegral = (TextView) customView.findViewById(R.id.integral);
         mWining = (TextView) customView.findViewById(R.id.wining);
         mRecharge = (TextView) customView.findViewById(R.id.recharge);
-        if (LocalUser.getUser().isLogin()){
+        if (LocalUser.getUser().isLogin()) {
             Glide.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
                     .transform(new GlideCircleTransform(getActivity()))
                     .into(mAvatar);
-        }else{
-            mAvatar.setBackground(ContextCompat.getDrawable(getActivity(),R.drawable.ic_default_avatar));
+        } else {
+            mAvatar.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_default_avatar));
         }
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()){
+                if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD,LocalUser.getUser().getUserInfo().getId())
+                            .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getId())
                             .execute();
-                }else {
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
@@ -120,9 +123,9 @@ public class FutureVersusListActivity extends BaseActivity {
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()){
+                if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), RechargeActivity.class).execute();
-                }else {
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
@@ -132,18 +135,18 @@ public class FutureVersusListActivity extends BaseActivity {
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mVersusListAdapter.setCallback(new VersusListAdapter.Callback() {
             @Override
-            public void onClick(VersusGaming item,boolean isCreate) {
-                if (LocalUser.getUser().isLogin()){
-                    if (isCreate){
-                        Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD,item.getLaunchUser()).execute();
-                    }else{
-                        if (item.getGameStatus()==VersusGaming.GAME_STATUS_MATCH){
+            public void onClick(VersusGaming item, boolean isCreate) {
+                if (LocalUser.getUser().isLogin()) {
+                    if (isCreate) {
+                        Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getLaunchUser()).execute();
+                    } else {
+                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_MATCH) {
                             showJoinVersusDialog();
-                        }else{
-                            Launcher.with(getActivity(),UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD,item.getAgainstUser()).execute();
+                        } else {
+                            Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD, item.getAgainstUser()).execute();
                         }
                     }
-                }else{
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
@@ -153,9 +156,9 @@ public class FutureVersusListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 VersusGaming item = mVersusListAdapter.getItem(position);
-                if (item!=null){
+                if (item != null) {
                     item.setPageType(VersusGaming.PAGE_VERSUS);
-                    Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
+                    Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                 }
             }
         });
@@ -163,21 +166,24 @@ public class FutureVersusListActivity extends BaseActivity {
         requestVersusData();
 
     }
-   private void requestVersusData(){
-      Client.getVersusGaming(mLocation).setTag(TAG)
-              .setCallback(new Callback2D<Resp<FutureVersus>,FutureVersus>() {
-                  @Override
-                  protected void onRespSuccessData(FutureVersus data) {
-                       updateVersusData(data);
-                  }
-              }).fireSync();
-   }
-   private void updateVersusData(FutureVersus futureVersus){
-       mVersusListAdapter.clear();
-       mVersusListAdapter.addAll(futureVersus.getList());
-       mVersusListAdapter.notifyDataSetChanged();
-   }
-    @OnClick({ R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
+
+    private void requestVersusData() {
+        Client.getVersusGaming(mLocation).setTag(TAG)
+                .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                    @Override
+                    protected void onRespSuccessData(FutureVersus data) {
+                        updateVersusData(data);
+                    }
+                }).fireSync();
+    }
+
+    private void updateVersusData(FutureVersus futureVersus) {
+        mVersusListAdapter.clear();
+        mVersusListAdapter.addAll(futureVersus.getList());
+        mVersusListAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.titleBar:
@@ -194,8 +200,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 break;
         }
     }
-    private void showJoinVersusDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip),getString(R.string.join_versus_title))
+
+    private void showJoinVersusDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip), getString(R.string.join_versus_title))
                 .setMessageTextSize(15)
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
@@ -203,7 +210,7 @@ public class FutureVersusListActivity extends BaseActivity {
                         dialog.dismiss();
                         // TODO: 2017-06-21  进行余额查询，余额充足进入对战，余额不足弹窗提示充值
                         Launcher.with(getActivity(), FutureBattleActivity.class).execute();
-                       // showJoinVersusFailureDialog();
+                        // showJoinVersusFailureDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -213,8 +220,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 .show();
 
     }
-    private void showJoinVersusFailureDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_failure_tip),getString(R.string.join_versus_failure_title))
+
+    private void showJoinVersusFailureDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.join_versus_failure_tip), getString(R.string.join_versus_failure_title))
                 .setMessageTextSize(15)
                 .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                     @Override
@@ -230,8 +238,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 .show();
 
     }
-    private void showAskMatchDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.match_versus_tip),getString(R.string.match_versus_title))
+
+    private void showAskMatchDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.match_versus_tip), getString(R.string.match_versus_title))
                 .setMessageTextSize(15)
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
@@ -247,8 +256,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 .show();
 
     }
-    private void showMatchingDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.matching_tip),getString(R.string.matching))
+
+    private void showMatchingDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.matching_tip), getString(R.string.matching))
                 .setMessageTextSize(15)
                 .setPositive(R.string.cancel_matching, new SmartDialog.OnClickListener() {
                     @Override
@@ -264,8 +274,9 @@ public class FutureVersusListActivity extends BaseActivity {
                 .setNegativeHide()
                 .show();
     }
-    private void showCancelMatchDialog(){
-        SmartDialog.with(getActivity(), getString(R.string.cancel_tip),getString(R.string.cancel_matching))
+
+    private void showCancelMatchDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
                 .setMessageTextSize(15)
                 .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
                     @Override
@@ -287,9 +298,10 @@ public class FutureVersusListActivity extends BaseActivity {
                 .show();
 
     }
+
     static class VersusListAdapter extends ArrayAdapter<VersusGaming> {
         interface Callback {
-            void onClick(VersusGaming item,boolean isCreate);
+            void onClick(VersusGaming item, boolean isCreate);
         }
 
         private Callback mCallback;
@@ -346,6 +358,7 @@ public class FutureVersusListActivity extends BaseActivity {
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
+
             private void bindDataWithView(final VersusGaming item, Context context, final Callback callback) {
                 mVarietyName.setText(item.getVarietyName());
                 Glide.with(context).load(item.getLaunchUserPortrait())
@@ -358,7 +371,7 @@ public class FutureVersusListActivity extends BaseActivity {
                 mCreateAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onClick(item,true);
+                        callback.onClick(item, true);
                     }
                 });
 
@@ -366,32 +379,32 @@ public class FutureVersusListActivity extends BaseActivity {
                 mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onClick(item,false);
+                        callback.onClick(item, false);
                     }
                 });
                 mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
-                String reward="";
-                switch (item.getCoinType()){
+                String reward = "";
+                switch (item.getCoinType()) {
                     case VersusGaming.COIN_TYPE_BAO:
-                        reward=item.getReward()+context.getString(R.string.integral);
+                        reward = item.getReward() + context.getString(R.string.integral);
                         break;
                     case VersusGaming.COIN_TYPE_CASH:
-                        reward=item.getReward()+context.getString(R.string.cash);
+                        reward = item.getReward() + context.getString(R.string.cash);
                         break;
                     case VersusGaming.COIN_TYPE_INTEGRAL:
-                        reward=item.getReward()+context.getString(R.string.ingot);
+                        reward = item.getReward() + context.getString(R.string.ingot);
                         break;
                 }
-                switch (item.getGameStatus()){
+                switch (item.getGameStatus()) {
                     case VersusGaming.GAME_STATUS_MATCH:
-                        mDepositAndTime.setText(reward+" "+ DateUtil.getMinutes(item.getEndline()));
+                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
-                        mAgainstAvatar.setBackground(ContextCompat.getDrawable(context,R.drawable.btn_join_versus));
-                        showScoreProgress(0,0,true);
+                        mAgainstAvatar.setBackground(ContextCompat.getDrawable(context, R.drawable.btn_join_versus));
+                        showScoreProgress(0, 0, true);
                         break;
                     case VersusGaming.GAME_STATUS_START:
-                        mDepositAndTime.setText(reward+" "+ context.getString(R.string.versusing));
+                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         Glide.with(context).load(item.getLaunchUserPortrait())
@@ -399,47 +412,49 @@ public class FutureVersusListActivity extends BaseActivity {
                                 .placeholder(R.drawable.ic_default_avatar_big)
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
-                        showScoreProgress(item.getLaunchScore(),item.getAgainstScore(),false);
+                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case VersusGaming.GAME_STATUS_END:
-                        mDepositAndTime.setText(reward+" "+ context.getString(R.string.versus_end));
+                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
                         Glide.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
-                        if (item.getWinResult()==VersusGaming.RESULT_AGAINST_WIN){
+                        if (item.getWinResult() == VersusGaming.RESULT_AGAINST_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                            mDepositAndTime.setText(reward+" "+ context.getString(R.string.versus_end));
-                        }else if (item.getWinResult()==VersusGaming.RESULT_CREATE_WIN){
+                            mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
+                        } else if (item.getWinResult() == VersusGaming.RESULT_CREATE_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
-                            mDepositAndTime.setText(reward+" "+ context.getString(R.string.versus_end));
-                        }else{
+                            mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
+                        } else {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
-                            mDepositAndTime.setText(reward+" "+ context.getString(R.string.tie));
+                            mDepositAndTime.setText(reward + " " + context.getString(R.string.tie));
                         }
-                        showScoreProgress(item.getLaunchScore(),item.getAgainstScore(),false);
+                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
 
                 }
             }
+
             /**
              * 显示对抗状态条
-             * @param createProfit      我的盈利状况
+             *
+             * @param createProfit  我的盈利状况
              * @param fighterProfit 对抗者盈利状况
-             * @param  isInviting 是否正在邀请中
+             * @param isInviting    是否正在邀请中
              * @return
              */
-            private void showScoreProgress(double createProfit, double fighterProfit,boolean isInviting){
+            private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
                 String myFlag = "";
                 String fighterFlag = "";
                 if (isInviting) {
                     mProgressBar.setProgress(0);
                     mProgressBar.setSecondaryProgress(0);
-                }else {
+                } else {
                     //正正
                     if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
                         int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));

@@ -10,8 +10,6 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="75dp"
         android:layout_height="match_parent">
-
-
     </LinearLayout>
 
     <com.sbai.finance.view.BattleFloatView
