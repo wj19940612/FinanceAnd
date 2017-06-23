@@ -191,6 +191,7 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 
 				if (item.getClassify() == 3) {
 					mContent.setVisibility(View.VISIBLE);
+					mBorrowMoneyImg.setVisibility(View.GONE);
 					if (item.getData() != null) {
 						mContent.setText(item.getData().getContent());
 					}
