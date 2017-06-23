@@ -1590,7 +1590,7 @@ public class Client {
      * @param location
      * @return
      */
-    public static API getMyVersusRecord(long location){
+    public static API getMyVersusRecord(Long location){
         return new API("/game/battle/myBattleGamed.do", new ApiParams()
                 .put("location", location)
                 .put("pageSize", 15));
@@ -1619,9 +1619,21 @@ public class Client {
      * 应战者快速匹配
      */
     public static API quickMatchForAgainst(int type,String refuseIds){
-        return new API(POST,"/game/battle/quickSearchForAgainst.do ", new ApiParams()
+        return new API(POST,"/game/battle/quickSearchForAgainst.do", new ApiParams()
                 .put("type", type)
                 .put("refuseIds", refuseIds));
+    }
+
+    /**
+     * 快速匹配结果查询
+     * @param type  1 查询房主 2查询应战者
+     * @param battleId
+     * @return
+     */
+    public static API getQuickMatchResult(int type,Integer battleId){
+        return new API(POST,"/game/battle/quickSearchForResult.do", new ApiParams()
+                .put("type", type)
+                .put("battleId", battleId));
     }
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
@@ -1668,5 +1680,14 @@ public class Client {
         return new API(POST, "/game/battle/userPraise.do", new ApiParams()
                 .put("battleId", battleId)
                 .put("praiseId", praiseId));
+    }
+    /**
+     * 游戏大厅列表实时数据
+     * @param battleIds
+     * @return
+     */
+    public static API getBattleGamingData(String battleIds) {
+        return new API("/game/battle/selectBattleGamingData.do", new ApiParams()
+                .put("battleIds", battleIds));
     }
 }
