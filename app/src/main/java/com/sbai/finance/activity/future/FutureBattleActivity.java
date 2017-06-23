@@ -152,13 +152,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback<VersusGaming>() {
                     @Override
                     protected void onRespSuccess(VersusGaming resp) {
-                        updatePraiseView(resp);
+                        updatePraiseView(resp,userId);
                     }
                 }).fireSync();
     }
 
-    private void updatePraiseView(VersusGaming resp) {
-        mBattleView.setPraise(resp.getLaunchPraise(), resp.getAgainstPraise());
+    private void updatePraiseView(VersusGaming resp, int userId) {
+        boolean isLeft = userId == mVersusGaming.getLaunchUser();
+        mBattleView.setPraiseLight(isLeft);
+        mBattleView.setPraise(resp.getLaunchPraise(), resp.getLaunchPraise());
     }
 
     @Override
@@ -184,6 +186,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
                         @Override
                         public void onCancel() {
+                            mStartMatchDialogFragment.dismiss();
                             showCancelMatchDialog();
                         }
                     });
@@ -199,13 +202,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        mStartMatchDialogFragment.dismiss();
                     }
                 })
                 .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)

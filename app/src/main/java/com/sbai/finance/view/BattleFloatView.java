@@ -301,13 +301,12 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setPraiseLight(boolean myLight, boolean userLight) {
+    public BattleFloatView setPraiseLight(boolean isLeft) {
         Drawable left = ContextCompat.getDrawable(getContext(), R.drawable.ic_battle_praise);
-        if (myLight) {
-            mMyPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
-        }
-        if (userLight) {
-            mUserPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+        if (isLeft) {
+            mMyPraiseButton.setSelected(true);
+        } else {
+            mUserPraiseButton.setSelected(true);
         }
         return this;
     }

@@ -183,8 +183,9 @@
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_battle_praise"
-                            android:drawableLeft="@drawable/ic_like"
+                            android:drawableLeft="@drawable/bg_battle_praise_text"
                             android:drawablePadding="5dp"
+                            android:clickable="true"
                             android:gravity="center"
                             android:textColor="@color/white"
                             android:textSize="10sp"/>
@@ -197,8 +198,9 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_battle_praise"
-                            android:drawableLeft="@drawable/ic_like"
+                            android:drawableLeft="@drawable/bg_battle_praise_text"
                             android:drawablePadding="5dp"
+                            android:clickable="true"
                             android:gravity="center"
                             android:textColor="@color/white"
                             android:textSize="10sp"/>
