@@ -35,7 +35,6 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.model.versus.FutureVersus;
 import com.sbai.finance.model.versus.VersusGaming;
@@ -59,7 +58,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FutureVersusListActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class FutureVersusListActivity extends BaseActivity implements
+        CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
@@ -74,6 +75,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     LinearLayout mCreateAndMatchArea;
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
+
     private ImageView mAvatar;
     private TextView mIntegral;
     private TextView mWining;
@@ -190,7 +192,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!mVersusListAdapter.isEmpty() && (position > 0)) {
-                    if (LocalUser.getUser().isLogin()){
+                    if (LocalUser.getUser().isLogin()) {
                         VersusGaming item = mVersusListAdapter.getItem(position - 1);
                         if (item != null) {
                             if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
@@ -200,8 +202,8 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                             }
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                         }
-                    }else{
-                        Launcher.with(getActivity(),LoginActivity.class).execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
                 }
             }
@@ -318,10 +320,10 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     private void requestVisibleVersusData() {
         if (mListView != null && mVersusListAdapter != null) {
             StringBuilder stringBuilder = new StringBuilder();
-            int first = mListView.getFirstVisiblePosition()-1;
+            int first = mListView.getFirstVisiblePosition() - 1;
             int last = mListView.getLastVisiblePosition();
             for (int i = first; i < last; i++) {
-                if (i>=0){
+                if (i >= 0) {
                     VersusGaming item = mVersusListAdapter.getItem(i);
                     if (item != null) {
                         stringBuilder.append(item.getId()).append(",");
@@ -462,6 +464,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
 
     private void showJoinVersusDialog(final VersusGaming item) {
         SmartDialog.with(getActivity(), getString(R.string.join_versus_tip), getString(R.string.join_versus_title))
+
                 .setMessageTextSize(15)
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
@@ -469,6 +472,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                         dialog.dismiss();
                         requestJoinVersus(item);
                         // TODO: 2017-06-21  进行余额查询，余额充足进入对战，余额不足弹窗提示充值
+
 //                        Launcher.with(getActivity(), FutureBattleActivity.class).execute();
                         // showJoinVersusFailureDialog();
                     }

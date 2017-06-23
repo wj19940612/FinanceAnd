@@ -21,6 +21,7 @@ import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.websocket.WSocketClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +34,8 @@ import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,
-        BattleTradeView.OnViewClickListener {
+public class FutureBattleActivity extends BaseActivity implements
+        BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -46,6 +47,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private StartMatchDialogFragment mStartMatchDialogFragment;
 
     private VersusGaming mVersusGaming;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
