@@ -81,6 +81,7 @@
             android:hint="@string/identity_card_number"
             android:maxLength="18"
             android:maxLines="1"
+            android:inputType="text"
             android:textColor="@color/credit_approve_user_info_color"
             android:textColorHint="@color/unluckyText"
             android:textSize="15sp"/>
