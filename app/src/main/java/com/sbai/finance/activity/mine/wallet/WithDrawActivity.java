@@ -27,6 +27,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import java.util.List;
@@ -74,6 +75,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         ButterKnife.bind(this);
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
+        updateBankInfo(mUserBankCardInfoModel);
         mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
         //从消息界面进入
         if (mUserBankCardInfoModel == null) {
@@ -152,24 +154,33 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            formatWithDrawMoney();
             boolean confirmEnable = checkConfirmEnable();
             if (confirmEnable != mWithdraw.isEnabled()) {
                 mWithdraw.setEnabled(confirmEnable);
             }
-            String moneyCount = s.toString();
-            if (!TextUtils.isEmpty(moneyCount)) {
-////                if (moneyCount.contains(".")) {
-////                    moneyCount = moneyCount.substring(0, moneyCount.indexOf(".") + 2);
-////                }
-//                mWithdrawMoney.setText(moneyCount);
-                mWithdrawMoney.setSelection(moneyCount.length());
-            }
         }
     };
 
+    private void formatWithDrawMoney() {
+        String withDrawMoney = mWithdrawMoney.getText().toString().trim();
+        String formatMoney = StrFormatter.getFormatMoney(withDrawMoney);
+        if (!formatMoney.equalsIgnoreCase(withDrawMoney)) {
+            mWithdrawMoney.setText(formatMoney);
+            mWithdrawMoney.setSelection(formatMoney.length());
+        } else {
+            mWithdrawMoney.setSelection(withDrawMoney.length());
+        }
+    }
+
     private boolean checkConfirmEnable() {
         String withDrawMoney = mWithdrawMoney.getText().toString();
-        return !TextUtils.isEmpty(withDrawMoney) && Double.parseDouble(withDrawMoney) >= 5;
+        if (withDrawMoney.startsWith(".")) {
+            return false;
+        }
+        return !TextUtils.isEmpty(withDrawMoney)
+                && Double.parseDouble(withDrawMoney) >= 5
+                && Double.parseDouble(withDrawMoney) <= mMoney;
     }
 
     @Override

@@ -29,6 +29,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -137,27 +138,30 @@ public class RechargeActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            formatRechargeCount();
             boolean rechargeBtnEnable = checkRechargeBtnEnable();
             if (mRecharge.isEnabled() != rechargeBtnEnable) {
                 mRecharge.setEnabled(rechargeBtnEnable);
             }
-//            String rechargeCounts = s.toString();
-//            if (!TextUtils.isEmpty(rechargeCounts)) {
-//                if (rechargeCounts.contains(".") && rechargeCounts.indexOf(".") + 3 == rechargeCounts.length()) {
-//                    if (rechargeCounts.contains(".")) {
-////                    rechargeCounts = rechargeCounts.substring(0, rechargeCounts.indexOf(".") + 1);
-//                        Log.d(TAG, ".  " + rechargeCounts.indexOf(".") + "  " + rechargeCounts.length());
-//                        Log.d(TAG, " " + rechargeCounts.substring(0,rechargeCounts.indexOf(".") + 2));
-//                    }
-////                mRechargeCount.setText(rechargeCounts);
-//                }
-//            }
         }
     };
 
+    private void formatRechargeCount() {
+        String oldMoney = mRechargeCount.getText().toString().trim();
+        String formatRechargeMoney = StrFormatter.getFormatMoney(oldMoney);
+        if (!oldMoney.equalsIgnoreCase(formatRechargeMoney)) {
+            mRechargeCount.setText(formatRechargeMoney);
+            mRechargeCount.setSelection(formatRechargeMoney.length());
+        }
+    }
+
     private boolean checkRechargeBtnEnable() {
         String count = mRechargeCount.getText().toString();
-        return !TextUtils.isEmpty(count) && Double.parseDouble(count) >= 5;
+        if (count.startsWith(".")) return false;
+        if (mBankLimit == null) return false;
+        return !TextUtils.isEmpty(count)
+                && Double.parseDouble(count) >= 5
+                && mBankLimit.getLimitSingle() >= Double.parseDouble(count);
     }
 
     @OnClick({R.id.rechargeWay, rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})

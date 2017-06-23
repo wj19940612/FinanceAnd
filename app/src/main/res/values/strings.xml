@@ -590,6 +590,7 @@
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
+    <string name="with_draw_limit">最低提现金额5元</string>
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>
