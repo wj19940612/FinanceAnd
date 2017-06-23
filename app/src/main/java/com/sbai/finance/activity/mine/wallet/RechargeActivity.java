@@ -78,7 +78,7 @@ public class RechargeActivity extends BaseActivity {
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         requestUsablePlatformList();
-        if (mUserBankCardInfoModel != null) {
+        if (mUserBankCardInfoModel != null && !TextUtils.isEmpty(mUserBankCardInfoModel.getCardNumber())) {
             mBankPay = mUserBankCardInfoModel.getIssuingBankName() + "(" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
         }
 
@@ -117,7 +117,7 @@ public class RechargeActivity extends BaseActivity {
                         requestBankLimit();
                         for (int i = 0; i < usablePlatformList.size(); i++) {
                             UsablePlatform usablePlatform = usablePlatformList.get(i);
-                            if (usablePlatform.isBankPay() && mUserBankCardInfoModel != null) {
+                            if (usablePlatform.isBankPay() && mUserBankCardInfoModel != null&&!TextUtils.isEmpty(mBankPay)) {
                                 mPayData[i] = mBankPay;
                             } else {
                                 mPayData[i] = usablePlatform.getName();
@@ -262,7 +262,9 @@ public class RechargeActivity extends BaseActivity {
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setOffset(2);
-        picker.setSelectedItem(mSelectPayWayName);
+        if (!TextUtils.isEmpty(mSelectPayWayName)) {
+            picker.setSelectedItem(mSelectPayWayName);
+        }
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
         WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
         lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));

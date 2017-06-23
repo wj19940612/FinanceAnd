@@ -1,14 +1,10 @@
 package com.sbai.finance.activity.mine.setting;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -66,7 +62,7 @@ public class LocationActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateLocationInfo();
+        requestLocation();
     }
 
     @Override
@@ -87,24 +83,11 @@ public class LocationActivity extends BaseActivity {
                 break;
             case R.id.location:
                 isClosePage = true;
-                updateLocationInfo();
+                requestLocation();
                 break;
         }
     }
 
-    private void updateLocationInfo() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int check = ContextCompat.checkSelfPermission(this, permissions[0]);
-            if (check == PackageManager.PERMISSION_GRANTED) {
-                openGPSSettings();
-            } else {
-                requestPermissions(permissions, 1);
-            }
-        } else {
-            openGPSSettings();
-        }
-    }
 
     private void requestLocation() {
         GpsUtils gpsUtils = new GpsUtils(this);
@@ -204,27 +187,7 @@ public class LocationActivity extends BaseActivity {
      *
      * @param
      */
-    private void openGPSSettings() {
-//        LocationManager locationManager = (LocationManager) this
-//                .getSystemService(Context.LOCATION_SERVICE);
-//        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-//            SmartDialog.with(getActivity(), getString(R.string.open_gps))
-//                    .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
-//                        @Override
-//                        public void onClick(Dialog dialog) {
-//                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                            startActivityForResult(intent, GPS_REQUEST_CODE);
-//                            dialog.dismiss();
-//                        }
-//                    })
-//                    .setNegative(R.string.cancel)
-//                    .show();
-//        } else {
-//            requestLocation();
-//        }
 
-        requestLocation();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -234,13 +197,13 @@ public class LocationActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            requestLocation();
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            requestLocation();
+//        }
+//    }
 
 
     private class AddressInitTask extends AsyncTask<String, Void, ArrayList<Province>> {
