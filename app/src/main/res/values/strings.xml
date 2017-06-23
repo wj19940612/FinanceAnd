@@ -523,6 +523,7 @@
     <string name="ali">支付宝</string>
     <string name="wei_xin">微信</string>
     <string name="next">下一步</string>
+    <string name="money_from">%1$s(%2$s)</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -592,9 +593,9 @@
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
     <string name="with_draw_limit">最低提现金额5元</string>
-
     <string name="earnings_yuan">+%1$s元</string>
     <string name="minus_yuan">-%1$s元</string>
+
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>
