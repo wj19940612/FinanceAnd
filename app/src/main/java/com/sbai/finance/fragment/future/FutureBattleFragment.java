@@ -22,7 +22,6 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.versus.VersusGaming;
-import com.sbai.finance.model.versus.VersusTrade;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -37,7 +36,6 @@ import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -126,8 +124,6 @@ public class FutureBattleFragment extends BaseFragment {
         initBattleViews();
 
         requestVarietyData();
-
-//        initTestData();
     }
 
     private void initBattleArea() {
@@ -150,18 +146,6 @@ public class FutureBattleFragment extends BaseFragment {
         }
     }
 
-
-    private void initTestData() {
-        List<VersusTrade> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            VersusTrade item = new VersusTrade();
-            item.setInfo("88.88买多建仓");
-            item.setTime("12:44");
-            list.add(item);
-        }
-        mBattleTradeView.addTradeData(list);
-        mBattleTradeView.changeTradeState(STATE_TRADE);
-    }
 
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
@@ -235,6 +219,7 @@ public class FutureBattleFragment extends BaseFragment {
                     protected void onRespSuccessData(Variety variety) {
                         mVariety = variety;
                         initChartViews();
+                        showTrendView();
                         startRefresh();
                     }
                 }).fire();
