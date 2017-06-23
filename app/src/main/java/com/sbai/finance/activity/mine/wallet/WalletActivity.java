@@ -61,7 +61,15 @@ public class WalletActivity extends BaseActivity {
         setContentView(R.layout.activity_wallet);
         ButterKnife.bind(this);
         updateUserFund(0);
+
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getActivity(), WithDrawActivity.class).execute();
+            }
+        });
     }
+
 
     @Override
     protected void onResume() {
@@ -175,33 +183,21 @@ public class WalletActivity extends BaseActivity {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
                 .setIndeterminate(WalletActivity.this)
-//                .setCallback(new Callback<Resp<UserBankCardInfoModel>>() {
-//                    @Override
-//                    protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
-//                        if (resp.isSuccess()) {
-//                            if (resp.hasData()) {
-//                                mUserBankCardInfoModel = resp.getData().get(0);
-//                                Launcher.with(getActivity(), WithDrawActivity.class)
-//                                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-//                                        .putExtra(Launcher.EX_PAYLOAD, mUserFundInfoModel.getMoney())
-//                                        .execute();
-//                            } else {
-//                                showOpenBindCardDialog();
-//                            }
-//                        }
-//                    }
-//                })
-                .setCallback(new Callback2D<Resp<UserBankCardInfoModel>, UserBankCardInfoModel>() {
+                .setCallback(new Callback2D<Resp<List<UserBankCardInfoModel>>, List<UserBankCardInfoModel>>() {
                     @Override
-                    protected void onRespSuccessData(UserBankCardInfoModel data) {
-                        mUserBankCardInfoModel = data;
-                        if (data.isNotConfirmBankInfo()) {
-                            showOpenBindCardDialog();
-                        } else {
-                            Launcher.with(getActivity(), WithDrawActivity.class)
-                                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                    .putExtra(Launcher.EX_PAYLOAD, money)
-                                    .execute();
+                    protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
+                        if (data != null && !data.isEmpty()) {
+                            mUserBankCardInfoModel = data.get(0);
+                            if (mUserBankCardInfoModel != null) {
+                                if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                                    showOpenBindCardDialog();
+                                } else {
+                                    Launcher.with(getActivity(), WithDrawActivity.class)
+                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                            .putExtra(Launcher.EX_PAYLOAD, money)
+                                            .execute();
+                                }
+                            }
                         }
                     }
                 })

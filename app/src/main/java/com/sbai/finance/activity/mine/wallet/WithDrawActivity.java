@@ -29,6 +29,8 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -73,9 +75,12 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
-        if (mUserBankCardInfoModel != null) {
-            updateBankInfo(mUserBankCardInfoModel);
+        //从消息界面进入
+        if (mUserBankCardInfoModel == null) {
+            requestUserBankInfo();
+            requestFundInfo();
         }
+
         mWithdrawMoney.addTextChangedListener(mValidationWatcher);
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
 
@@ -84,11 +89,6 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
             showWithDrawRuleDialog();
             Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
-        }
-        //从消息界面进入
-        if (mUserBankCardInfoModel == null) {
-            requestUserBankInfo();
-            requestFundInfo();
         }
     }
 
@@ -110,20 +110,27 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<UserBankCardInfoModel>, UserBankCardInfoModel>() {
+                .setCallback(new Callback2D<Resp<List<UserBankCardInfoModel>>, List<UserBankCardInfoModel>>() {
                     @Override
-                    protected void onRespSuccessData(UserBankCardInfoModel data) {
-                        mUserBankCardInfoModel = data;
-                        updateBankInfo(data);
+                    protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
+                        if (data != null && !data.isEmpty()) {
+                            mUserBankCardInfoModel = data.get(0);
+                            if (mUserBankCardInfoModel != null) {
+                                updateBankInfo(mUserBankCardInfoModel);
+                            }
+                        }
                     }
+
                 })
                 .fire();
     }
 
 
     private void updateBankInfo(UserBankCardInfoModel userBankCardInfoModel) {
-        String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
-        mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
+        if (userBankCardInfoModel != null) {
+            String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
+            mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
+        }
     }
 
     private void requestWithDrawPoundage() {
@@ -151,10 +158,10 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
             }
             String moneyCount = s.toString();
             if (!TextUtils.isEmpty(moneyCount)) {
-//                if (moneyCount.contains(".")) {
-//                    moneyCount = moneyCount.substring(0, moneyCount.indexOf(".") + 2);
-//                }
-                mWithdrawMoney.setText(moneyCount);
+////                if (moneyCount.contains(".")) {
+////                    moneyCount = moneyCount.substring(0, moneyCount.indexOf(".") + 2);
+////                }
+//                mWithdrawMoney.setText(moneyCount);
                 mWithdrawMoney.setSelection(moneyCount.length());
             }
         }
@@ -196,7 +203,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     @Override
     public void onPassWord(String passWord) {
         mPassWord = passWord;
-        if (!TextUtils.isEmpty(passWord)) {
+        if (!TextUtils.isEmpty(passWord) && mUserBankCardInfoModel != null) {
             Client.withDraw(mWithdrawMoney.getText().toString(), mUserBankCardInfoModel.getId(), passWord)
                     .setTag(TAG)
                     .setIndeterminate(this)

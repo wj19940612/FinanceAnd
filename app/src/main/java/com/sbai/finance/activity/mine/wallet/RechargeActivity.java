@@ -205,6 +205,7 @@ public class RechargeActivity extends BaseActivity {
                 ToastUtil.curt(R.string.input_money_more_than_limit);
                 return;
             }
+
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
