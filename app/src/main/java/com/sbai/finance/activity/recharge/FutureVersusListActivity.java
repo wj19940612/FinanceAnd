@@ -265,11 +265,11 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
 
     private void updateMyVersus(VersusGaming data) {
         if (null == data){
-            mCreateAndMatchArea.setVisibility(View.GONE);
-            mCurrentVersus.setVisibility(View.VISIBLE);
-        }else{
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
             mCurrentVersus.setVisibility(View.GONE);
+        }else{
+            mCreateAndMatchArea.setVisibility(View.GONE);
+            mCurrentVersus.setVisibility(View.VISIBLE);
         }
     }
 
