@@ -2,14 +2,15 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@drawable/ic_futures_versus_bg"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/futureArea"
-        android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginBottom="75dp"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
 
 
     </LinearLayout>

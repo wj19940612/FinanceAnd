@@ -1682,7 +1682,6 @@ public class Client {
                 .put("praiseId", praiseId));
     }
 
-
     /**
      * 房主快速匹配
      * @param type 1 开始快速匹配 0 取消匹配 2 继续匹配
@@ -1711,7 +1710,7 @@ public class Client {
      * @return
      */
     public static API getOrderHistory(int battleId) {
-        return new API("/game/battleOrder/optLog.do", new ApiParams()
+        return new API("/game/battleorder/optLog.do", new ApiParams()
                 .put("battleId", battleId));
     }
 
@@ -1722,7 +1721,7 @@ public class Client {
      * @return
      */
     public static API createOrder(int battleId,int direction) {
-        return new API(POST,"/game/battleOrder/createOrder.do", new ApiParams()
+        return new API(POST,"/game/battleorder/createOrder.do", new ApiParams()
                 .put("direction",direction)
                 .put("battleId", battleId));
     }
@@ -1734,7 +1733,7 @@ public class Client {
      * @return
      */
     public static API closePosition(int battleId, int orderId) {
-        return new API(POST, "/game/battleOrder/unwind.do", new ApiParams()
+        return new API(POST, "/game/battleorder/unwind.do", new ApiParams()
                 .put("battleId", battleId)
                 .put("orderId", orderId));
     }
