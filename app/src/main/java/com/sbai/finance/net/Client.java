@@ -1669,4 +1669,76 @@ public class Client {
                 .put("battleId", battleId)
                 .put("praiseId", praiseId));
     }
+
+    /**
+     * 房主快速匹配
+     * @param type 1 开始快速匹配 0 取消匹配 2 继续匹配
+     * @param battleId
+     * @return
+     */
+    public static API quickSearchForLaunch(int type, int battleId) {
+        return new API(POST, "/game/battle/quickSearchForLaunch.do", new ApiParams()
+                .put("type", type)
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 取消对战
+     * @param battleId
+     * @return
+     */
+    public static API cancelBattle(int battleId) {
+        return new API(POST, "/game/battle/cancelBattle.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 下单记录
+     * @param battleId
+     * @return
+     */
+    public static API getOrderHistory(int battleId) {
+        return new API("/game/battleOrder/optLog.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 创建订单
+     * @param battleId
+     * @param direction 方向 0跌 1涨
+     * @return
+     */
+    public static API createOrder(int battleId,int direction) {
+        return new API(POST,"/game/battleOrder/createOrder.do", new ApiParams()
+                .put("direction",direction)
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 平仓
+     * @param battleId
+     * @param orderId
+     * @return
+     */
+    public static API closePosition(int battleId, int orderId) {
+        return new API(POST, "/game/battleOrder/unwind.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("orderId", orderId));
+    }
+
+
+    /**
+     * 根据ID查询对战信息
+     * @param battleId
+     * @param batchCode
+     * @return
+     */
+    public static API getBattleInfo(int battleId, String batchCode) {
+        return new API("/game/battle/findBattle.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("batchCode", batchCode));
+    }
+
+
+
 }

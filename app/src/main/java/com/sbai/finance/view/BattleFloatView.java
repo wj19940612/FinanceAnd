@@ -154,7 +154,7 @@ public class BattleFloatView extends RelativeLayout {
                 .setAgainstName(model.getAgainstUserName())
                 .setDeposit(model.getReward(), model.getCoinType())
                 .setPraise(model.getLaunchPraise(), model.getAgainstPraise())
-                .setDeadline(model.getGameStatus(), (int) (model.getEndTime()/1000));
+                .setDeadline(model.getGameStatus(), (int) (model.getEndline()/1000));
         return this;
     }
 

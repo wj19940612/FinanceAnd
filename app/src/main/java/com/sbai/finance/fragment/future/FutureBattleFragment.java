@@ -21,7 +21,9 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.versus.TradeRecord;
 import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -133,6 +135,7 @@ public class FutureBattleFragment extends BaseFragment {
         if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
             showBattleTradeView();
             setVisitorMode();
+            requestOrderHistory();
         } else {
             //判断状态是否在对抗中
             //未开始显示邀请 匹配  取消  视图
@@ -224,6 +227,24 @@ public class FutureBattleFragment extends BaseFragment {
                     }
                 }).fire();
     }
+
+    private void requestOrderHistory(){
+        Client.getOrderHistory(mVersusGaming.getId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<List<TradeRecord>>() {
+                    @Override
+                    protected void onRespSuccess(List<TradeRecord> resp) {
+                        updateTradeHistory(resp);
+                    }
+                })
+                .fire();
+    }
+
+    private void updateTradeHistory(List<TradeRecord> resp) {
+        mBattleTradeView.addTradeData(resp, mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
+    }
+
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override

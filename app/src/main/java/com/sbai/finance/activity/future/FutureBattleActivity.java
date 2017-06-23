@@ -132,7 +132,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     public void showFutureBattleDetail() {
         if (mFutureBattleDetailFragment == null) {
-            mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mVersusGaming.getId());
+            mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mVersusGaming);
         }
         getSupportFragmentManager()
                 .beginTransaction()
@@ -218,6 +218,25 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     }
 
+    private void requestQuickSearchForLaunch(int type){
+        Client.quickSearchForLaunch(type,mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(null)
+                .fire();
+    }
+
+    private void requestCancelBattle(){
+        Client.cancelBattle(mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(new Callback<VersusGaming>() {
+                    @Override
+                    protected void onRespSuccess(VersusGaming resp) {
+
+                    }
+                })
+                .fire();
+    }
+
     //超时弹窗
     private void showOvertimeMatchDialog() {
         SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
@@ -271,16 +290,32 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onLongPurchaseButtonClick() {
-
+        requestCreateOrder(1);
     }
 
     @Override
     public void onShortPurchaseButtonClick() {
+        requestCreateOrder(0);
+    }
 
+    private void requestCreateOrder(int direction) {
+        Client.createOrder(mVersusGaming.getId(), direction)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(null)
+                .fire();
     }
 
     @Override
     public void onClosePositionButtonClick() {
-
+          requestClosePosition(0);
     }
+
+    private void requestClosePosition(int orderId){
+       Client.closePosition(mVersusGaming.getId(),orderId)
+               .setTag(TAG)
+               .setCallback(null)
+               .fire();
+    }
+
 }

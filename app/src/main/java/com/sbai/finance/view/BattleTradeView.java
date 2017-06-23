@@ -16,13 +16,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.versus.VersusTrade;
+import com.sbai.finance.model.versus.TradeRecord;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_CLOSE_POSITION;
+import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_POSITION;
+import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHOET_CLOSE_POSITION;
+import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHORT_POSITION;
 
 /**
  * Created by linrongfang on 2017/6/20.
@@ -125,9 +132,11 @@ public class BattleTradeView extends LinearLayout {
         });
     }
 
-    public void addTradeData(List<VersusTrade> list) {
+    public void addTradeData(List<TradeRecord> list, int creatorId, int againstId) {
+        mBattleTradeAdapter.setUserId(creatorId, againstId);
         mBattleTradeAdapter.addAll(list);
         mBattleTradeAdapter.notifyDataSetChanged();
+        mListView.setSelection(View.FOCUS_DOWN);
     }
 
     public void setVisitor(boolean isVisitor) {
@@ -170,12 +179,19 @@ public class BattleTradeView extends LinearLayout {
     }
 
 
-    public static class BattleTradeAdapter extends ArrayAdapter<VersusTrade> {
-        Context mContext;
+    public static class BattleTradeAdapter extends ArrayAdapter<TradeRecord> {
+        private int mCreatorId;
+        private int mAgainstId;
+        private Context mContext;
 
         public BattleTradeAdapter(Context context) {
             super(context, 0);
             mContext = context;
+        }
+
+        public void setUserId(int creatorId, int againstId) {
+            mCreatorId = creatorId;
+            mAgainstId = againstId;
         }
 
         @Override
@@ -188,8 +204,12 @@ public class BattleTradeView extends LinearLayout {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), position, mContext);
+            viewHolder.bindDataWithView(getItem(position), isLeft(getItem(position)), mContext);
             return convertView;
+        }
+
+        private boolean isLeft(TradeRecord record) {
+            return record.getUserId() == mCreatorId;
         }
 
         static class ViewHolder {
@@ -208,16 +228,37 @@ public class BattleTradeView extends LinearLayout {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(VersusTrade item, int position, Context context) {
-                if (position % 2 == 0) {
-                    //判断条件以后会改成是否房主
+            private void bindDataWithView(TradeRecord item, boolean isLeft, Context context) {
+
+                StringBuilder info = new StringBuilder();
+                info.append(FinanceUtil.formatWithScale(item.getOptPrice()));
+                String time = DateUtil.format(item.getOptTime(),"HH:mm:ss");
+
+                switch (item.getOptStatus()) {
+                    case STATUS_TAKE_MORE_POSITION:
+                        info.append(context.getString(R.string.take_more_position));
+                        break;
+                    case STATUS_TAKE_SHORT_POSITION:
+                        info.append(context.getString(R.string.take_short_position));
+                        break;
+                    case STATUS_TAKE_MORE_CLOSE_POSITION:
+                        info.append(context.getString(R.string.take_more_close_position));
+                        break;
+                    case STATUS_TAKE_SHOET_CLOSE_POSITION:
+                        info.append(context.getString(R.string.take_short_close_position));
+                        break;
+                }
+
+
+                if (isLeft) {
+                    //left为房主
                     mMyInfo.setVisibility(VISIBLE);
                     mMyInfoTime.setVisibility(VISIBLE);
                     mUserInfo.setVisibility(GONE);
                     mUserInfoTime.setVisibility(GONE);
 
-                    mMyInfo.setText(item.getInfo());
-                    mMyInfoTime.setText(item.getTime());
+                    mMyInfo.setText(info.toString());
+                    mMyInfoTime.setText(time);
                     mPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_battle_trade_mine));
                 } else {
                     mMyInfo.setVisibility(GONE);
@@ -225,8 +266,8 @@ public class BattleTradeView extends LinearLayout {
                     mUserInfo.setVisibility(VISIBLE);
                     mUserInfoTime.setVisibility(VISIBLE);
 
-                    mUserInfo.setText(item.getInfo());
-                    mUserInfoTime.setText(item.getTime());
+                    mUserInfo.setText(info.toString());
+                    mUserInfoTime.setText(time);
                     mPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_battle_trade_user));
                 }
             }

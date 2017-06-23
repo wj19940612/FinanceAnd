@@ -1,0 +1,86 @@
+package com.sbai.finance.model.versus;
+
+/**
+ * Created by linrongfang on 2017/6/23.
+ */
+
+public class TradeRecord {
+
+    public static final int STATUS_TAKE_MORE_POSITION = 1;
+    public static final int STATUS_TAKE_SHORT_POSITION = 2;
+    public static final int STATUS_TAKE_MORE_CLOSE_POSITION = 3;
+    public static final int STATUS_TAKE_SHOET_CLOSE_POSITION = 4;
+
+    private int handsNum;
+    private double optPrice;
+    private int optStatus;
+    private long optTime;
+    private int userId;
+    private String contractsCode;
+    private String varietyName;
+    private String varietyType;
+
+    public String getContractsCode() {
+        return contractsCode;
+    }
+
+    public void setContractsCode(String contractsCode) {
+        this.contractsCode = contractsCode;
+    }
+
+    public int getHandsNum() {
+        return handsNum;
+    }
+
+    public void setHandsNum(int handsNum) {
+        this.handsNum = handsNum;
+    }
+
+    public double getOptPrice() {
+        return optPrice;
+    }
+
+    public void setOptPrice(double optPrice) {
+        this.optPrice = optPrice;
+    }
+
+    public int getOptStatus() {
+        return optStatus;
+    }
+
+    public void setOptStatus(int optStatus) {
+        this.optStatus = optStatus;
+    }
+
+    public long getOptTime() {
+        return optTime;
+    }
+
+    public void setOptTime(long optTime) {
+        this.optTime = optTime;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getVarietyName() {
+        return varietyName;
+    }
+
+    public void setVarietyName(String varietyName) {
+        this.varietyName = varietyName;
+    }
+
+    public String getVarietyType() {
+        return varietyType;
+    }
+
+    public void setVarietyType(String varietyType) {
+        this.varietyType = varietyType;
+    }
+}
