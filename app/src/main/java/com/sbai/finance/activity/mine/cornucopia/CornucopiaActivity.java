@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class CornucopiaActivity extends BaseActivity {
+public class CornucopiaActivity extends BaseActivity implements ExChangeProductFragment.OnUserFundChangeListener{
 
     @BindView(R.id.coin)
     TextView mCoin;
@@ -98,6 +98,11 @@ public class CornucopiaActivity extends BaseActivity {
                 // TODO: 2017/6/20 兑换规则
                 break;
         }
+    }
+
+    @Override
+    public void onUserFundChange() {
+
     }
 
     class ExchangeProductAdapter extends FragmentPagerAdapter {

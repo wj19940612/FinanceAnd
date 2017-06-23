@@ -56,6 +56,23 @@ public class ExChangeProductFragment extends BaseFragment {
     private ExchangeProductAdapter mExchangeProductAdapter;
 
 
+    public interface OnUserFundChangeListener {
+        void onUserFundChange();
+    }
+
+    private OnUserFundChangeListener mOnUserFundChangeListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnUserFundChangeListener) {
+            mOnUserFundChangeListener = (OnUserFundChangeListener) context;
+        } else {
+            throw new IllegalStateException(context.toString() + "" +
+                    " must implements ExChangeProductFragment.OnUserFundChangeListener");
+        }
+    }
+
     public static ExChangeProductFragment newInstance(int type) {
         Bundle args = new Bundle();
         args.putInt(KEY_TYPE, type);
@@ -136,6 +153,9 @@ public class ExChangeProductFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         Log.d(TAG, "onRespSuccess: " + resp.toString());
+                        if (mOnUserFundChangeListener != null) {
+                            mOnUserFundChangeListener.onUserFundChange();
+                        }
                     }
                 })
                 .fire();
