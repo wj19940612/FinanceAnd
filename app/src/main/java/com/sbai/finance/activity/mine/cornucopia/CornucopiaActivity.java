@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.ExChangeProductFragment;
+import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
@@ -112,9 +113,9 @@ public class CornucopiaActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ExChangeProductFragment();
+                    return ExChangeProductFragment.newInstance(CornucopiaProductModel.TYPE_VCOIN);
                 case 1:
-                    return new ExChangeProductFragment();
+                    return ExChangeProductFragment.newInstance(CornucopiaProductModel.TYPE_INTEGRATION);
             }
             return null;
         }

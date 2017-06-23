@@ -7,6 +7,10 @@ package com.sbai.finance.model.mine.cornucopia;
 
 public class CornucopiaProductModel {
 
+    //元宝
+    public static final int TYPE_VCOIN = 0;
+    //积分
+    public static final int TYPE_INTEGRATION = 1;
 
     /**
      * discount : 90
@@ -39,6 +43,10 @@ public class CornucopiaProductModel {
     private int toRealMoney;
     //货币类型  1元宝 3 积分
     private int toType;
+
+    public boolean isNotDiscount() {
+        return getDiscount() == 100;
+    }
 
     public boolean isVcoin() {
         return getToType() == 1;

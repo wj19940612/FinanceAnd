@@ -603,7 +603,7 @@
     <string name="coin_number">%1$d  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
     <string name="check_details">查看明细></string>
-    <string name="old_price">原价: ￥%1$d</string>
+    <string name="old_price">原价: ￥%1$s</string>
     <string name="buy">购买</string>
     <string name="buy_confirm">购买确认</string>
     <string name="confirm_use_coin_buy_integrate">确认使用%1$d元宝购买%2$s积分</string>

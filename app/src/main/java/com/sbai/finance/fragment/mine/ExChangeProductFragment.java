@@ -29,6 +29,9 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -59,6 +62,14 @@ public class ExChangeProductFragment extends BaseFragment {
         ExChangeProductFragment fragment = new ExChangeProductFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mType = getArguments().getInt(KEY_TYPE);
+        }
     }
 
     @Override
@@ -135,13 +146,25 @@ public class ExChangeProductFragment extends BaseFragment {
         Client.getExchangeProduct()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                .setCallback(new Callback2D<Resp<List<CornucopiaProductModel>>, List<CornucopiaProductModel>>() {
                     @Override
-                    protected void onRespSuccessData(Object data) {
+                    protected void onRespSuccessData(List<CornucopiaProductModel> data) {
                         mExchangeProductAdapter.clear();
+                        ListIterator<CornucopiaProductModel> cornucopiaProductModelListIterator = data.listIterator();
+                        while (cornucopiaProductModelListIterator.hasNext()) {
+                            CornucopiaProductModel productModel = cornucopiaProductModelListIterator.next();
+                            if (mType == CornucopiaProductModel.TYPE_VCOIN) {
+                                if (!productModel.isVcoin()) {
+                                    cornucopiaProductModelListIterator.remove();
+                                }
+                            } else if (mType == CornucopiaProductModel.TYPE_INTEGRATION) {
+                                if (productModel.isVcoin()) {
+                                    cornucopiaProductModelListIterator.remove();
+                                }
+                            }
+                        }
+                        mExchangeProductAdapter.addAll(data);
                         stopRefreshAnimation();
-                        // TODO: 2017/6/21 添加数据
-//                        mExchangeProductAdapter.add(data);
                     }
 
                     @Override
@@ -150,7 +173,7 @@ public class ExChangeProductFragment extends BaseFragment {
                         stopRefreshAnimation();
                     }
                 })
-                .fire();
+                .fireSync();
 
     }
 
@@ -213,18 +236,18 @@ public class ExChangeProductFragment extends BaseFragment {
             public void bindDataWithView(Context context, CornucopiaProductModel item, int position) {
                 if (item.isVcoin()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
-                    mProduct.setText(String.valueOf(item.getFromRealMoney()));
-                    mPrice.setText(context.getString(R.string.yuan_number, item.getToRealMoney()));
-                    if (item.getToMoney() != 0) {
+                    mProduct.setText(String.valueOf(item.getToRealMoney()));
+                    mPrice.setText(context.getString(R.string.yuan, FinanceUtil.formatWithScale(item.getFromRealMoney())));
+                    if (!item.isNotDiscount()) {
                         mOldPrice.setVisibility(View.VISIBLE);
-                        mOldPrice.setText(context.getString(R.string.old_price, item.getToMoney()));
+                        mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
                     } else {
                         mOldPrice.setVisibility(View.GONE);
                     }
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
-                    mProduct.setText(FinanceUtil.formatWithScale(item.getFromRealMoney()));
-                    mPrice.setText(context.getString(R.string.coin_number, item.getToRealMoney()));
+                    mProduct.setText(FinanceUtil.formatWithScale(item.getToRealMoney()));
+                    mPrice.setText(context.getString(R.string.coin_number, item.getFromRealMoney()));
                 }
             }
         }
