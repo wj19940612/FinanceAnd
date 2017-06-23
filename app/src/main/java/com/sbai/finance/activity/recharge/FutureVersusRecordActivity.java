@@ -42,7 +42,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
     @BindView(R.id.customSwipeRefreshLayout)
     CustomSwipeRefreshLayout mCustomSwipeRefreshLayout;
     private VersusRecordListAdapter mVersusRecordListAdapter;
-    private long mLocation;
+    private Long mLocation;
     private HashSet<Integer> mSet;
 
     @Override
@@ -120,7 +120,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
 
     private void reset() {
         mSet.clear();
-        mLocation=0;
+        mLocation=null;
         mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
     }
     private void stopRefreshAnimation() {

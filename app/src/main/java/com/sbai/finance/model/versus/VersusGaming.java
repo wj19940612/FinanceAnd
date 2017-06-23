@@ -29,6 +29,10 @@ public class VersusGaming implements Parcelable {
     public static final int MATCH_START=1;
     public static final int MATCH_CANCEL=0;
     public static final int MATCH_CONTINUE=2;
+
+    // 1房主快速匹配  2应战者快速匹配
+    public static final int CREATE_FAST_MATCH=1;
+    public static final int AGAGINST_FAST_MATCH=2;
     /**
      * againstFrom : 经济圈
      * againstUser : 286

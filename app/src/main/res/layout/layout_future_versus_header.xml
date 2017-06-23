@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@android:color/transparent"
-              android:layout_marginBottom="5dp">
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="5dp"
+             android:background="@android:color/transparent"
+             android:orientation="vertical">
+
     <ImageView
         android:id="@+id/versusBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
         android:src="@drawable/ic_futures_versus_banner"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/seeVersusRecord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="19dp"
+                android:background="@drawable/bg_see_versus_record"
+                android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:background="@drawable/bg_see_versus_record"
-                android:textSize="10sp"
+                android:text="@string/see_record"
                 android:textColor="@android:color/white"
-                android:text="@string/see_record"/>
+                android:textSize="10sp"/>
+
             <TextView
                 android:id="@+id/versusRule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/versus_rule"
                 android:textColor="@color/unluckyText"
-                android:textSize="@dimen/sp_12"
-                android:text="@string/versus_rule"/>
+                android:textSize="@dimen/sp_12"/>
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

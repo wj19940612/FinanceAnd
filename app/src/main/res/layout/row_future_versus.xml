@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="94dp"
-                xmlns:tools="http://schemas.android.com/tools">
+                android:layout_height="94dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,20 +24,22 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
-                android:paddingLeft="9dp"
-                android:paddingRight="9dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp">
 
                 <FrameLayout
                     android:layout_width="60dp"
                     android:layout_height="60dp">
+
                     <ImageView
                         android:id="@+id/createAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:src="@drawable/btn_join_versus"/>
+
                     <ImageView
                         android:id="@+id/createKo"
                         android:layout_width="match_parent"
@@ -84,13 +86,13 @@
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:max="100"
                         android:progress="50"
                         android:progressDrawable="@drawable/bg_battle_progress"
-                        android:secondaryProgress="100"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"/>
+                        android:secondaryProgress="100"/>
 
                     <TextView
                         android:id="@+id/createProfit"
@@ -102,7 +104,6 @@
                         android:textSize="10sp"/>
 
                     <TextView
-                        tools:text="+100"
                         android:id="@+id/againstProfit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -110,7 +111,8 @@
                         android:gravity="center_vertical"
                         android:paddingRight="5dp"
                         android:textColor="@color/white"
-                        android:textSize="10sp"/>
+                        android:textSize="10sp"
+                        tools:text="+100"/>
 
                 </RelativeLayout>
 
@@ -128,27 +130,29 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
-                android:paddingLeft="9dp"
-                android:paddingRight="9dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp">
 
                 <FrameLayout
                     android:layout_width="60dp"
                     android:layout_height="60dp">
+
                     <ImageView
                         android:id="@+id/againstAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:src="@drawable/btn_join_versus"/>
+
                     <ImageView
                         android:id="@+id/againstKo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_versus_ko"/>
-                        android:src="@drawable/ic_versus_ko"
-                        android:visibility="gone"/>
+                    android:src="@drawable/ic_versus_ko"
+                    android:visibility="gone"/>
                 </FrameLayout>
 
                 <TextView

@@ -638,4 +638,10 @@
     <string name="take_short_position">卖空建仓</string>
     <string name="take_more_close_position">买多平仓</string>
     <string name="take_short_close_position">卖空平仓</string>
+    <string name="join_self_versus_tip">不能加入自己创建的房间</string>
+    <string name="versus_variety_name">对战品种 : </string>
+    <string name="versus_time">对战时长 : </string>
+    <string name="versus_reward">对战赏金 : </string>
+    <string name="versus_tip">（加入对战后，赏金将会暂时冻结，对战胜利后返还，失败扣除)</string>
+    <string name="join_versus">加入对战</string>
 </resources>
