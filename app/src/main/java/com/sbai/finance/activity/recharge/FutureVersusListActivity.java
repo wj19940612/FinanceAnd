@@ -77,7 +77,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     private TextView  mWining;
     private TextView  mRecharge;
     private VersusListAdapter mVersusListAdapter;
-    private long mLocation;
+    private Long mLocation;
     private VersusBroadcastReceiver mVersusBroadcastReceiver;
     private LocalBroadcastManager mLocalBroadcastManager;
     private HashSet<Integer> mSet;
@@ -170,8 +170,8 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!mVersusListAdapter.isEmpty()){
-                    VersusGaming item = mVersusListAdapter.getItem(position);
+                if (!mVersusListAdapter.isEmpty()&&(position>0)){
+                    VersusGaming item = mVersusListAdapter.getItem(position-1);
                     if (item!=null){
                         item.setPageType(VersusGaming.PAGE_VERSUS);
                         Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
@@ -449,7 +449,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
 
     private void reset() {
         mSet.clear();
-        mLocation=0;
+        mLocation=null;
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
     private void stopRefreshAnimation() {
@@ -653,8 +653,13 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                     if (fighterProfit > 0) {
                         fighterFlag = "+";
                     }
-                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+                    if (createProfit == 0 && fighterProfit == 0&&isInviting) {
+                        mCreateProfit.setText("");
+                        mAgainstProfit.setText("");
+                    }else{
+                        mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
+                        mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+                    }
 
                 }
             }

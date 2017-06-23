@@ -21,9 +21,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="24dp"
+                android:layout_weight="7"
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -57,7 +59,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="10"
                 android:orientation="vertical">
 
                 <TextView
@@ -75,9 +77,7 @@
                     android:id="@+id/fighterDataArea"
                     android:layout_width="match_parent"
                     android:layout_height="14dp"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginTop="23dp">
+                    android:layout_marginTop="10dp">
 
                     <ProgressBar
                         android:id="@+id/progressBar"
@@ -119,15 +119,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:gravity="center"
+                    android:gravity="bottom|center"
                     android:textColor="#9c9c9c"
                     android:textSize="10sp"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="24dp"
+                android:layout_weight="7"
+                android:paddingLeft="9dp"
+                android:paddingRight="9dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
