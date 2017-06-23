@@ -412,7 +412,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     public void setDeadline(int count){
-        //锁屏后重新进入时需要更新剩余存在时间
+        //锁屏后重新进入时需要更新房间剩余存在时间
         mCount = count;
     }
 
@@ -443,6 +443,11 @@ public class FutureBattleFragment extends BaseFragment {
     public void setTradeData(int direction, double buyPrice, double profit){
         //实时刷新房主的
         mBattleTradeView.setTradeData(direction,buyPrice,profit);
+    }
+
+    public void addOrderList(List<TradeRecord> list) {
+        //刷新下单列表
+        mBattleTradeView.addTradeData(list,mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
     }
 
     @Override

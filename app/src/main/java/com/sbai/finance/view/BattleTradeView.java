@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.model.versus.TradeRecord.DIRECTION_DOWN;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_CLOSE_POSITION;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_POSITION;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHOET_CLOSE_POSITION;
@@ -135,7 +136,6 @@ public class BattleTradeView extends LinearLayout {
     public void addTradeData(List<TradeRecord> list, int creatorId, int againstId) {
         mBattleTradeAdapter.setUserId(creatorId, againstId);
         mBattleTradeAdapter.addAll(list);
-        mBattleTradeAdapter.notifyDataSetChanged();
         mListView.setSelection(View.FOCUS_DOWN);
     }
 
@@ -171,7 +171,22 @@ public class BattleTradeView extends LinearLayout {
     }
 
     public void setTradeData(int direction, double buyPrice, double profit) {
-      //设置方向  买入价格 盈利
+        //设置方向  买入价格 盈利
+        if (direction == DIRECTION_DOWN) {
+            mDirection.setText(getContext().getString(R.string.take_more));
+        } else {
+            mDirection.setText(getContext().getString(R.string.take_short));
+        }
+
+        mBuyPrice.setText(FinanceUtil.formatWithScale(buyPrice));
+
+        if (profit >= 0) {
+            mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+            mProfit.setText("+" + FinanceUtil.formatWithScale(profit));
+        } else {
+            mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
+            mProfit.setText(FinanceUtil.formatWithScale(profit));
+        }
     }
 
     public void setOnViewClickListener(OnViewClickListener onViewClickListener) {

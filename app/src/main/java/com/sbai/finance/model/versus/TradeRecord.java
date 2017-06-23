@@ -6,6 +6,9 @@ package com.sbai.finance.model.versus;
 
 public class TradeRecord {
 
+    public static final int DIRECTION_UP = 1;
+    public static final int DIRECTION_DOWN = 0;
+
     public static final int STATUS_TAKE_MORE_POSITION = 1;
     public static final int STATUS_TAKE_SHORT_POSITION = 2;
     public static final int STATUS_TAKE_MORE_CLOSE_POSITION = 3;
