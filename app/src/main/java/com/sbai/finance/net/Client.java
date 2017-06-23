@@ -1657,4 +1657,16 @@ public class Client {
                         .put("reward", reward)
                         .put("endtime", endtime));
     }
+
+    /**
+     * 对战-游戏点赞
+     * @param battleId
+     * @param praiseId
+     * @return
+     */
+    public static API addBattlePraise(int battleId, int praiseId) {
+        return new API(POST, "/game/battle/userPraise.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("praiseId", praiseId));
+    }
 }
