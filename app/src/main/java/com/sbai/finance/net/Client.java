@@ -1525,14 +1525,14 @@ public class Client {
     }
 
     /**
-     * /user/bankCard/queryBankCard.do
-     * POST
-     * 用户银行卡信息
+     * /user/bankCard/hasBindBankCard.do
+     * GET
+     * 是否绑定过银行卡（wms）
      *
      * @return
      */
     public static API requestUserBankCardInfo() {
-        return new API(POST, "/user/bankCard/queryBankCard.do", null);
+        return new API("/user/bankCard/hasBindBankCard.do", null);
     }
 
     /**

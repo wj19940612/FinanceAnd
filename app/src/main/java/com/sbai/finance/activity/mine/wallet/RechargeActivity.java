@@ -29,6 +29,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -41,6 +42,7 @@ import butterknife.OnClick;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.widget.WheelView;
 
+import static com.sbai.finance.R.id.rechargeCount;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 
 
@@ -48,7 +50,7 @@ public class RechargeActivity extends BaseActivity {
 
     @BindView(R.id.rechargeWay)
     AppCompatTextView mRechargeWay;
-    @BindView(R.id.rechargeCount)
+    @BindView(rechargeCount)
     AppCompatEditText mRechargeCount;
     @BindView(R.id.recharge)
     AppCompatButton mRecharge;
@@ -136,6 +138,7 @@ public class RechargeActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            formatRechargeCount();
             boolean rechargeBtnEnable = checkRechargeBtnEnable();
             if (mRecharge.isEnabled() != rechargeBtnEnable) {
                 mRecharge.setEnabled(rechargeBtnEnable);
@@ -143,12 +146,25 @@ public class RechargeActivity extends BaseActivity {
         }
     };
 
-    private boolean checkRechargeBtnEnable() {
-        String count = mRechargeCount.getText().toString();
-        return !TextUtils.isEmpty(count) && Double.parseDouble(count) >= 5;
+    private void formatRechargeCount() {
+        String oldMoney = mRechargeCount.getText().toString().trim();
+        String formatRechargeMoney = StrFormatter.getFormatMoney(oldMoney);
+        if (!oldMoney.equalsIgnoreCase(formatRechargeMoney)) {
+            mRechargeCount.setText(formatRechargeMoney);
+            mRechargeCount.setSelection(formatRechargeMoney.length());
+        }
     }
 
-    @OnClick({R.id.rechargeWay, R.id.rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})
+    private boolean checkRechargeBtnEnable() {
+        String count = mRechargeCount.getText().toString();
+        if (count.startsWith(".")) return false;
+        if (mBankLimit == null) return false;
+        return !TextUtils.isEmpty(count)
+                && Double.parseDouble(count) >= 5
+                && mBankLimit.getLimitSingle() >= Double.parseDouble(count);
+    }
+
+    @OnClick({R.id.rechargeWay, rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rechargeWay:
@@ -158,7 +174,7 @@ public class RechargeActivity extends BaseActivity {
                     requestUsablePlatformList();
                 }
                 break;
-            case R.id.rechargeCount:
+            case rechargeCount:
                 break;
             case R.id.recharge:
                 submitRechargeData();
@@ -193,6 +209,7 @@ public class RechargeActivity extends BaseActivity {
                 ToastUtil.curt(R.string.input_money_more_than_limit);
                 return;
             }
+
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
