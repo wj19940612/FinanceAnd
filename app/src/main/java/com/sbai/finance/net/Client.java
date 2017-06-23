@@ -1579,7 +1579,7 @@ public class Client {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
 
-    public static API getVersusGaming(long location){
+    public static API getVersusGaming(Long location){
         return new API("/game/battle/selectBattleGaming.do", new ApiParams()
                 .put("location", location)
                 .put("pageSize", 15));
