@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,8 +248,12 @@ public class TheDetailActivity extends BaseActivity {
                     mAdsorbText.setVisibility(View.GONE);
                 }
                 mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
-                mPayWay.setText(detail.getRemark());
 
+                if (!TextUtils.isEmpty(detail.getPlatformName())) {
+                    mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));
+                } else {
+                    mPayWay.setText(detail.getRemark());
+                }
                 if (detail.getType() < 0) {
                     mMoney.setText(context.getString(R.string.minus_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
                 } else {

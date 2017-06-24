@@ -523,6 +523,7 @@
     <string name="ali">支付宝</string>
     <string name="wei_xin">微信</string>
     <string name="next">下一步</string>
+    <string name="money_from">%1$s(%2$s)</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -612,6 +613,7 @@
     <string name="confirm_use_money_buy_coin">确认使用%1$d元购买%2$s元宝</string>
     <string name="earnings">收入</string>
     <string name="extend">支出</string>
+
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>
