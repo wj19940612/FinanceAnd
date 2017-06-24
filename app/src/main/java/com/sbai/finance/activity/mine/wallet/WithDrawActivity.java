@@ -129,7 +129,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
 
     private void updateBankInfo(UserBankCardInfoModel userBankCardInfoModel) {
-        if (userBankCardInfoModel != null) {
+        if (userBankCardInfoModel != null && !TextUtils.isEmpty(userBankCardInfoModel.getCardNumber())) {
             String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
             mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
         }
