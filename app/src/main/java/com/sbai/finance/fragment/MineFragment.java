@@ -166,6 +166,7 @@ public class MineFragment extends BaseFragment {
     private void requestNoReadFeedbackNumber() {
         Client.getNoReadFeedbackNumber()
                 .setTag(TAG)
+                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {

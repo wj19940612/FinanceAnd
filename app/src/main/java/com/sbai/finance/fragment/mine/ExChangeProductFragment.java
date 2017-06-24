@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
@@ -121,19 +122,34 @@ public class ExChangeProductFragment extends BaseFragment {
     private void showExchangePassDialog(final CornucopiaProductModel item) {
         if (item != null) {
             if (item.isVcoin()) {
-                SmartDialog.with(getActivity(), getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
+                SmartDialog.with(getActivity(),
+                        getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
                         .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                InputSafetyPassDialogFragment.newInstance(
-                                        getString(R.string.coin_number, item.getFromRealMoney()), getString(R.string.buy))
-                                        .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                                    @Override
-                                    public void onPassWord(String passWord) {
-                                        exchange(item, passWord);
-                                    }
-                                }).show(getChildFragmentManager());
+
+                                Client.getUserHasPassWord()
+                                        .setTag(TAG)
+                                        .setIndeterminate(ExChangeProductFragment.this)
+                                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                                            @Override
+                                            protected void onRespSuccessData(Boolean data) {
+                                                if (!data) {
+                                                    Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
+                                                } else {
+                                                    InputSafetyPassDialogFragment.newInstance(
+                                                            getString(R.string.coin_number, item.getFromRealMoney()), getString(R.string.buy))
+                                                            .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                                                                @Override
+                                                                public void onPassWord(String passWord) {
+                                                                    exchange(item, passWord);
+                                                                }
+                                                            }).show(getChildFragmentManager());
+                                                }
+                                            }
+                                        })
+                                        .fire();
 
                             }
                         }).show();
@@ -148,11 +164,11 @@ public class ExChangeProductFragment extends BaseFragment {
                                 InputSafetyPassDialogFragment.newInstance(
                                         getString(R.string.integrate_number, String.valueOf(item.getFromRealMoney())), getString(R.string.buy))
                                         .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                                    @Override
-                                    public void onPassWord(String passWord) {
-                                        exchange(item, passWord);
-                                    }
-                                }).show(getChildFragmentManager());
+                                            @Override
+                                            public void onPassWord(String passWord) {
+                                                exchange(item, passWord);
+                                            }
+                                        }).show(getChildFragmentManager());
 
                             }
                         }).show();
@@ -164,7 +180,7 @@ public class ExChangeProductFragment extends BaseFragment {
         Client.exchange(item.getId(), passWord)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<Object>>() {
+                .setCallback(new Callback<Resp<Object>>(false) {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
@@ -172,8 +188,16 @@ public class ExChangeProductFragment extends BaseFragment {
                                 mOnUserFundChangeListener.onUserFundChange();
                             }
                             ToastUtil.curt(resp.getMsg());
-                        } else if (resp.getCode() == 2201) {
-                            showExchangeFailDialog(resp, item);
+                        }
+                    }
+
+                    @Override
+                    protected void onReceive(Resp<Object> objectResp) {
+                        super.onReceive(objectResp);
+                        if (objectResp.getCode() == 2201) {
+                            showExchangeFailDialog(objectResp, item);
+                        } else {
+                            ToastUtil.curt(objectResp.getMsg());
                         }
                     }
                 })
