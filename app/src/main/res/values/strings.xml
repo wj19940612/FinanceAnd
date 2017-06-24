@@ -617,7 +617,7 @@
     <string name="extend">支出</string>
     <string name="go_recharge">去充值</string>
     <string name="exchange_fail">兑换失败</string>
-
+    <string name="coin_is_not_enough">元宝不足</string>
 
     <!--future versus-->
     <string name="see_record">查看战绩</string>

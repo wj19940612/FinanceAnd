@@ -78,10 +78,8 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         updateBankInfo(mUserBankCardInfoModel);
         mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
         //从消息界面进入
-        if (mUserBankCardInfoModel == null) {
-            requestUserBankInfo();
-            requestFundInfo();
-        }
+        requestUserBankInfo();
+        requestFundInfo();
 
         mWithdrawMoney.addTextChangedListener(mValidationWatcher);
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));

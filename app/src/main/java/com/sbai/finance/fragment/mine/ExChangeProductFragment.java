@@ -121,58 +121,39 @@ public class ExChangeProductFragment extends BaseFragment {
 
     private void showExchangePassDialog(final CornucopiaProductModel item) {
         if (item != null) {
-            if (item.isVcoin()) {
-                SmartDialog.with(getActivity(),
-                        getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
-                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-
-                                Client.getUserHasPassWord()
-                                        .setTag(TAG)
-                                        .setIndeterminate(ExChangeProductFragment.this)
-                                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                                            @Override
-                                            protected void onRespSuccessData(Boolean data) {
-                                                if (!data) {
-                                                    Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
-                                                } else {
-                                                    InputSafetyPassDialogFragment.newInstance(
-                                                            getString(R.string.coin_number, item.getFromRealMoney()), getString(R.string.buy))
-                                                            .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                                                                @Override
-                                                                public void onPassWord(String passWord) {
-                                                                    exchange(item, passWord);
-                                                                }
-                                                            }).show(getChildFragmentManager());
-                                                }
+            String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())) :
+                    getString(R.string.confirm_use_coin_buy_integrate, item.getFromRealMoney(), String.valueOf(item.getToRealMoney()));
+            SmartDialog.with(getActivity(), msg, getString(R.string.buy_confirm))
+                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            Client.getUserHasPassWord()
+                                    .setTag(TAG)
+                                    .setIndeterminate(ExChangeProductFragment.this)
+                                    .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                                        @Override
+                                        protected void onRespSuccessData(Boolean data) {
+                                            if (!data) {
+                                                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
+                                            } else {
+                                                String content = item.isVcoin() ? getString(R.string.coin_number, item.getFromRealMoney()) :
+                                                        getString(R.string.integrate_number, String.valueOf(item.getFromRealMoney()));
+                                                InputSafetyPassDialogFragment.newInstance(content, getString(R.string.buy))
+                                                        .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                                                            @Override
+                                                            public void onPassWord(String passWord) {
+                                                                exchange(item, passWord);
+                                                            }
+                                                        }).show(getChildFragmentManager());
                                             }
-                                        })
-                                        .fire();
+                                        }
+                                    })
+                                    .fire();
 
-                            }
-                        }).show();
+                        }
+                    }).show();
 
-
-            } else {
-                SmartDialog.with(getActivity(), getString(R.string.confirm_use_coin_buy_integrate, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
-                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-                                InputSafetyPassDialogFragment.newInstance(
-                                        getString(R.string.integrate_number, String.valueOf(item.getFromRealMoney())), getString(R.string.buy))
-                                        .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                                            @Override
-                                            public void onPassWord(String passWord) {
-                                                exchange(item, passWord);
-                                            }
-                                        }).show(getChildFragmentManager());
-
-                            }
-                        }).show();
-            }
         }
     }
 
@@ -215,7 +196,7 @@ public class ExChangeProductFragment extends BaseFragment {
                         }
                     }).show();
         } else {
-            SmartDialog.with(getActivity(), getString(R.string.exchange_fail))
+            SmartDialog.with(getActivity(), getString(R.string.coin_is_not_enough), getString(R.string.exchange_fail))
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {

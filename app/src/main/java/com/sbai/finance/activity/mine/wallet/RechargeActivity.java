@@ -77,7 +77,7 @@ public class RechargeActivity extends BaseActivity {
         mRechargeCount.addTextChangedListener(mValidationWatcher);
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-//        requestUsablePlatformList();
+        requestUsablePlatformList();
         formatBankPay();
 
         if (mUserBankCardInfoModel == null) {

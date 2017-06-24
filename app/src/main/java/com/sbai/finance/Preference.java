@@ -22,6 +22,7 @@ public class Preference {
         String AUTHORIZATION_LOGIN_TIME = "authorization_login_time";
         String RECHARGE_WAY = "recharge_way";
         String IS_FIRST_WITH_DRAW = "is_first_with_draw";
+        String USER_HAS_SafePass = "user_has_safe_pass";
     }
 
     private static Preference sInstance;
@@ -141,5 +142,13 @@ public class Preference {
 
     public void setIsFirstWithDraw(String key, boolean isFirstWithDraw) {
         apply(key + Key.IS_FIRST_WITH_DRAW, isFirstWithDraw);
+    }
+
+    public boolean hasUserSetSafePass(String key) {
+        return mPrefs.getBoolean(key + Key.USER_HAS_SafePass, false);
+    }
+
+    public void setUserSetSafePass(String key, boolean userHasSetPass) {
+        apply(key + Key.USER_HAS_SafePass, userHasSetPass);
     }
 }
