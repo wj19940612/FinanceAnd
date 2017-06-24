@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
@@ -81,7 +82,7 @@ public class ExchangeDetailFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_exchange_detail, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -157,16 +158,23 @@ public class ExchangeDetailFragment extends BaseFragment {
                     protected void onRespSuccessData(List<ExchangeDetailModel> data) {
                         updateExchangeDetailList(data);
                     }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        stopRefreshAnimation();
+                    }
                 })
                 .fire();
     }
 
     private void updateExchangeDetailList(List<ExchangeDetailModel> exchangeDetailList) {
         if (exchangeDetailList == null || exchangeDetailList.isEmpty() && mExchangeDetailModelList.isEmpty()) {
-            mRecyclerView.setVisibility(View.GONE);
+            mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
+            stopRefreshAnimation();
         } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
+            mDataLayout.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
             if (mSwipeRefreshLayout.isRefreshing()) {
                 mExchangeDetailAdapter.clear();
@@ -180,6 +188,12 @@ public class ExchangeDetailFragment extends BaseFragment {
                 mPage++;
             }
             mExchangeDetailAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -272,7 +286,19 @@ public class ExchangeDetailFragment extends BaseFragment {
                 }
                 mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
-                mMoney.setText(context.getString(R.string.RMB, String.valueOf(detail.getMoney())));
+                if (detail.isVcoin()) {
+                    if (detail.getMoney() < 0) {
+                        mMoney.setText(context.getString(R.string.coin_number, detail.getMoney()));
+                    } else {
+                        mMoney.setText(context.getString(R.string.add_coin, detail.getMoney()));
+                    }
+                } else {
+                    if (detail.getMoney() < 0) {
+                        mMoney.setText(context.getString(R.string.integrate_number, String.valueOf(detail.getMoney())));
+                    } else {
+                        mMoney.setText(context.getString(R.string.add_integrate_number, detail.getMoney()));
+                    }
+                }
             }
         }
     }

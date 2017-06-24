@@ -162,10 +162,11 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                     mPasswordInputCount++;
                                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
                                     mSafetyPasswordNumber.clearSafetyNumber();
-                                } else {
-                                    // TODO: 2017/6/24 安全密码错误。需要清空数据
-                                    ToastMassage(resp);
+                                } else if (resp.getCode() == 500) {
+                                    mSafetyPasswordNumber.clearSafetyNumber();
                                 }
+                                ToastMassage(resp);
+
                             }
                         })
                         .fire();

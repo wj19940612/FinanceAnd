@@ -1,47 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v4.widget.SwipeRefreshLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.AttentionActivity">
 
-    <LinearLayout
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/detail"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <include layout="@layout/split_line_grey_light"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/split">
 
-        <FrameLayout
-            android:id="@+id/dataLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"/>
-
-            <include layout="@layout/layout_adsorb"/>
-        </FrameLayout>
-
-        <TextView
-            android:id="@android:id/empty"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/img_no_message"
-            android:gravity="center_horizontal"
-            android:paddingTop="150dp"
-            android:text="@string/you_dont_have_trade"
-            android:visibility="gone"/>
-    </LinearLayout>
+            android:orientation="vertical">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+            <FrameLayout
+                android:id="@+id/dataLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"/>
+
+                <include layout="@layout/layout_adsorb"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/img_no_message"
+                android:gravity="center_horizontal"
+                android:paddingTop="150dp"
+                android:text="@string/you_dont_have_trade"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>
 

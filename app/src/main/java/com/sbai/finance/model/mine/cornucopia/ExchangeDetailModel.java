@@ -42,6 +42,10 @@ public class ExchangeDetailModel {
     //流水类型
     private int flowType;
 
+    public boolean isVcoin() {
+        return getCurrencyType() == TYPE_COIN;
+    }
+
     public int getCurrencyType() {
         return currencyType;
     }
@@ -112,5 +116,20 @@ public class ExchangeDetailModel {
 
     public void setFlowType(int flowType) {
         this.flowType = flowType;
+    }
+
+    @Override
+    public String toString() {
+        return "ExchangeDetailModel{" +
+                "currencyType=" + currencyType +
+                ", money=" + money +
+                ", createTime=" + createTime +
+                ", remark='" + remark + '\'' +
+                ", id=" + id +
+                ", typeDetail=" + typeDetail +
+                ", userId=" + userId +
+                ", moneyLeft=" + moneyLeft +
+                ", flowType=" + flowType +
+                '}';
     }
 }

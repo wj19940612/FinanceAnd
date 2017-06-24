@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
 import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
@@ -26,6 +26,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 
@@ -111,54 +113,93 @@ public class ExChangeProductFragment extends BaseFragment {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, int position, long id) {
                 final CornucopiaProductModel item = (CornucopiaProductModel) parent.getAdapter().getItem(position);
-                if (item != null) {
-                    if (item.isVcoin()) {
-                        SmartDialog.with(getActivity(), getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
-                                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                                    @Override
-                                    public void onClick(Dialog dialog) {
-                                        dialog.dismiss();
-
-                                        InputSafetyPassDialogFragment.newInstance(getString(R.string.coin_number, item.getFromRealMoney()), getString(R.string.buy)).setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                                            @Override
-                                            public void onPassWord(String passWord) {
-                                                exchange(item, passWord);
-                                            }
-                                        }).show(getChildFragmentManager());
-
-                                    }
-                                }).show();
-
-
-                    } else {
-                        SmartDialog.with(getActivity(), getString(R.string.confirm_use_coin_buy_integrate, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
-                                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                                    @Override
-                                    public void onClick(Dialog dialog) {
-                                        dialog.dismiss();
-                                        exchange(item, null);
-                                    }
-                                }).show();
-                    }
-                }
+                showExchangePassDialog(item);
             }
         });
     }
 
-    private void exchange(CornucopiaProductModel item, String passWord) {
+    private void showExchangePassDialog(final CornucopiaProductModel item) {
+        if (item != null) {
+            if (item.isVcoin()) {
+                SmartDialog.with(getActivity(), getString(R.string.confirm_use_money_buy_coin, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                InputSafetyPassDialogFragment.newInstance(
+                                        getString(R.string.coin_number, item.getFromRealMoney()), getString(R.string.buy))
+                                        .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                                    @Override
+                                    public void onPassWord(String passWord) {
+                                        exchange(item, passWord);
+                                    }
+                                }).show(getChildFragmentManager());
+
+                            }
+                        }).show();
+
+
+            } else {
+                SmartDialog.with(getActivity(), getString(R.string.confirm_use_coin_buy_integrate, item.getFromRealMoney(), String.valueOf(item.getToRealMoney())), getString(R.string.buy_confirm))
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                InputSafetyPassDialogFragment.newInstance(
+                                        getString(R.string.integrate_number, String.valueOf(item.getFromRealMoney())), getString(R.string.buy))
+                                        .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                                    @Override
+                                    public void onPassWord(String passWord) {
+                                        exchange(item, passWord);
+                                    }
+                                }).show(getChildFragmentManager());
+
+                            }
+                        }).show();
+            }
+        }
+    }
+
+    private void exchange(final CornucopiaProductModel item, String passWord) {
         Client.exchange(item.getId(), passWord)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        Log.d(TAG, "onRespSuccess: " + resp.toString());
-                        if (mOnUserFundChangeListener != null) {
-                            mOnUserFundChangeListener.onUserFundChange();
+                        if (resp.isSuccess()) {
+                            if (mOnUserFundChangeListener != null) {
+                                mOnUserFundChangeListener.onUserFundChange();
+                            }
+                            ToastUtil.curt(resp.getMsg());
+                        } else if (resp.getCode() == 2201) {
+                            showExchangeFailDialog(resp, item);
                         }
                     }
                 })
                 .fire();
+    }
+
+    private void showExchangeFailDialog(Resp<Object> resp, CornucopiaProductModel item) {
+        if (item.isVcoin()) {
+            SmartDialog.with(getActivity(), resp.getMsg())
+                    .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            Launcher.with(getActivity(), RechargeActivity.class).execute();
+                        }
+                    }).show();
+        } else {
+            SmartDialog.with(getActivity(), getString(R.string.exchange_fail))
+                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
     }
 
     //请求元宝 积分 数据

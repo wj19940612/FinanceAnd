@@ -66,6 +66,7 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
         InputSafetyPassDialogFragment fragment = new InputSafetyPassDialogFragment();
         args.putString(KEY_MONEY, money);
+        args.putString(KEY_HINT,hint);
         fragment.setArguments(args);
         return fragment;
     }

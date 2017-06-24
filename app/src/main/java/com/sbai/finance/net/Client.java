@@ -1592,17 +1592,17 @@ public class Client {
 
     /**
      * /user/userAccount/exchange.do
-     * GET
+     * POST
      * 兑换接口（wms）
      *
      * @param exchangeId 兑换配置ID
-     * @param pass       密码
+     * @param password       密码
      * @return
      */
-    public static API exchange(int exchangeId, String pass) {
-        return new API("/user/userAccount/exchange.do", new ApiParams()
+    public static API exchange(int exchangeId, String password) {
+        return new API(POST, "/user/userAccount/exchange.do", new ApiParams()
                 .put("exchangeId", exchangeId)
-                .put("pass", pass));
+                .put("password", password));
     }
 
     /**
