@@ -297,7 +297,14 @@ public class BattleListActivity extends BaseActivity implements
                 }).fireFree();
     }
 
-    private void requestMatchVersus(final int type, String refuseIds) {
+    private void requestMatchVersus(final int type, String refuseId) {
+        String refuseIds = "";
+        if (refuseId.isEmpty()) {
+            mRefusedIds.delete(0, mRefusedIds.length());
+        } else {
+            mRefusedIds.append(refuseId).append(",");
+            refuseIds = mRefusedIds.substring(0, mRefusedIds.length() - 1);
+        }
         Client.quickMatchForAgainst(type, refuseIds).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -383,11 +390,12 @@ public class BattleListActivity extends BaseActivity implements
     private void updateMatchVersus(int type) {
         switch (type) {
             case VersusGaming.MATCH_CANCEL:
-
                 break;
             case VersusGaming.MATCH_CONTINUE:
+                showMatchDialog();
                 break;
             case VersusGaming.MATCH_START:
+                showMatchDialog();
                 break;
         }
     }
@@ -522,8 +530,6 @@ public class BattleListActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         requestMatchVersus(VersusGaming.MATCH_START, "");
-//                        showMatchingDialog();
-                        showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -551,6 +557,7 @@ public class BattleListActivity extends BaseActivity implements
                 .setNegativeHide()
                 .show();
     }
+
     //开始匹配弹窗
     private void showMatchDialog() {
         if (mStartMatchDialogFragment == null) {
@@ -581,7 +588,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                   //     showMatchingDialog();
+                        //     showMatchingDialog();
                         showMatchDialog();
                     }
                 })
@@ -617,6 +624,9 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        //传入拒绝的id
+//                        showMatchingDialog();
+                        showMatchDialog();
                         requestMatchVersus(VersusGaming.MATCH_CANCEL, String.valueOf(data.getId()));
                     }
                 })
