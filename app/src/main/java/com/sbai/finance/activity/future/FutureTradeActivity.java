@@ -166,7 +166,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         mVariety.setExchangeStatus(exchangeStatus);
                         updateExchangeStatusView();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void initData() {
@@ -209,7 +209,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     protected void onRespSuccessData(List<TrendViewData> data) {
                         mTrendView.setDataList(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void initSlidingTab() {

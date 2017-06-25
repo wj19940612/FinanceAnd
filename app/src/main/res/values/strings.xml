@@ -553,6 +553,8 @@
     <string name="duration_choice3">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
+    <string name="battle_status_pending">等待中...</string>
+    <string name="battle_status_fighting">对战中...</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>

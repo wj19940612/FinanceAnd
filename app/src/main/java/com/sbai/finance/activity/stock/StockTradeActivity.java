@@ -168,7 +168,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                                 mTradeFloatButtons.setHasAddInOption(hasAddInOption);
                             }
                         }
-                    }).fireSync();
+                    }).fireFree();
         }
     }
 
@@ -210,7 +210,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestAddOptional() {
@@ -257,7 +257,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         mVariety.setExchangeStatus(exchangeStatus);
                         updateExchangeStatusView();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateExchangeStatusView() {
@@ -340,7 +340,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         updateMarketDataView();
                         updateExchangeAndStockStatus();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateExchangeAndStockStatus() {
@@ -465,7 +465,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             mStockTrendView.setDataList(result);
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void initSlidingTab() {

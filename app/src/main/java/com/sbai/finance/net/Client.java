@@ -1612,9 +1612,10 @@ public class Client {
      * 用户当前对战
      * @return
      */
-    public static API getMyCurrentVersus(){
+    public static API getCurrentBattle(){
         return new API("/game/battle/userBattle.do");
     }
+
     /**
      * 应战者快速匹配
      */

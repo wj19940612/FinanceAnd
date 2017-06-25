@@ -59,13 +59,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FutureVersusListActivity extends BaseActivity implements
+public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
-    TitleBar mTitle;
+    TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.matchVersus)
@@ -88,12 +88,14 @@ public class FutureVersusListActivity extends BaseActivity implements
     private HashSet<Integer> mSet;
     private VersusGaming mMyCurrentGame;
     private StartMatchDialogFragment mStartMatchDialogFragment;
+    private StringBuilder mRefusedIds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_versus_list);
+        setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+
         initListHeader();
         initCustomView();
         initView();
@@ -102,7 +104,7 @@ public class FutureVersusListActivity extends BaseActivity implements
     }
 
     private void initCustomView() {
-        View customView = mTitle.getCustomView();
+        View customView = mTitleBar.getCustomView();
         mAvatar = (ImageView) customView.findViewById(R.id.avatar);
         mIntegral = (TextView) customView.findViewById(R.id.integral);
         mWining = (TextView) customView.findViewById(R.id.wining);
@@ -133,7 +135,7 @@ public class FutureVersusListActivity extends BaseActivity implements
     }
 
     private void initListHeader() {
-        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, null);
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
@@ -159,6 +161,7 @@ public class FutureVersusListActivity extends BaseActivity implements
 
     private void initView() {
         mSet = new HashSet<>();
+        mRefusedIds = new StringBuilder();
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         mVersusBroadcastReceiver = new VersusBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -175,7 +178,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                     if (isCreate) {
                         Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, item.getLaunchUser()).execute();
                     } else {
-                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_MATCH) {
+                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
                             if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
                                 //如果是自己创建的房间 进入到详情页
                                 item.setPageType(VersusGaming.PAGE_VERSUS);
@@ -220,9 +223,10 @@ public class FutureVersusListActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        scrollToTop(mTitleBar, mListView);
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
-            requestMyCurrentVersus();
+            requestCurrentBattle();
         } else {
             mCurrentVersus.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
@@ -251,7 +255,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestUserFindInfo() {
@@ -263,11 +267,11 @@ public class FutureVersusListActivity extends BaseActivity implements
                         updateUserFund(data);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
-    private void requestMyCurrentVersus() {
-        Client.getMyCurrentVersus().setTag(TAG)
+    private void requestCurrentBattle() {
+        Client.getCurrentBattle().setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
                     @Override
                     protected void onRespSuccess(Resp<VersusGaming> resp) {
@@ -285,12 +289,12 @@ public class FutureVersusListActivity extends BaseActivity implements
                         if (resp.isSuccess()) {
                             data.setPageType(VersusGaming.PAGE_VERSUS);
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
-                            requestMyCurrentVersus();
+                            requestCurrentBattle();
                         } else {
                             showJoinVersusFailureDialog();
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestMatchVersus(final int type, String refuseIds) {
@@ -304,7 +308,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestMatchResult() {
@@ -318,7 +322,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestVisibleVersusData() {
@@ -442,9 +446,6 @@ public class FutureVersusListActivity extends BaseActivity implements
     @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.titleBar:
-                mListView.smoothScrollToPositionFromTop(0, 0);
-                break;
             case R.id.createVersus:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
@@ -521,7 +522,8 @@ public class FutureVersusListActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         requestMatchVersus(VersusGaming.MATCH_START, "");
-                        showMatchingDialog();
+//                        showMatchingDialog();
+                        showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -579,7 +581,8 @@ public class FutureVersusListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        showMatchingDialog();
+                   //     showMatchingDialog();
+                        showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -669,7 +672,7 @@ public class FutureVersusListActivity extends BaseActivity implements
             if (intent.getAction() == LoginActivity.LOGIN_SUCCESS_ACTION) {
                 updateAvatar();
                 requestUserFindInfo();
-                requestMyCurrentVersus();
+                requestCurrentBattle();
             }
         }
     }
@@ -771,14 +774,14 @@ public class FutureVersusListActivity extends BaseActivity implements
                         break;
                 }
                 switch (item.getGameStatus()) {
-                    case VersusGaming.GAME_STATUS_MATCH:
+                    case VersusGaming.GAME_STATUS_CREATED:
                         mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         showScoreProgress(0, 0, true);
                         break;
-                    case VersusGaming.GAME_STATUS_START:
+                    case VersusGaming.GAME_STATUS_STARTED:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);

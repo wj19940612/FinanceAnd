@@ -80,7 +80,7 @@ public class EventActivity extends BaseActivity  implements AbsListView.OnScroll
 							protected void onRespSuccessData(EventModel data) {
 								//统计点击次数
 							}
-						}).fireSync();
+						}).fireFree();
 				Launcher.with(getActivity(), EventDetailActivity.class)
 							.putExtra(EventDetailActivity.EX_EVENT, dataBean)
 							.putExtra(EventDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())

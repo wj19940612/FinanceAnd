@@ -21,13 +21,12 @@ import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.websocket.WSocketClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
 
 /**
@@ -122,9 +121,9 @@ public class FutureBattleActivity extends BaseActivity implements
 
             //分两种状态  1.发起匹配  2.对战中
             int gameStatus = mVersusGaming.getGameStatus();
-            if (gameStatus == GAME_STATUS_MATCH) {
+            if (gameStatus == GAME_STATUS_CREATED) {
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
-            } else if (gameStatus == GAME_STATUS_START) {
+            } else if (gameStatus == GAME_STATUS_STARTED) {
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
             }
         }
@@ -156,7 +155,7 @@ public class FutureBattleActivity extends BaseActivity implements
                     protected void onRespSuccess(VersusGaming resp) {
                         updatePraiseView(resp,userId);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updatePraiseView(VersusGaming resp, int userId) {

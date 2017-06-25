@@ -246,7 +246,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         super.onFailure(volleyError);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     //刷新列表

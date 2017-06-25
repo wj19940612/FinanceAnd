@@ -76,7 +76,7 @@ public class SocketAddress implements Parcelable {
                             callback.onFailure();
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     public interface Callback {

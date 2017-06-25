@@ -110,7 +110,7 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                         super.onFailure(volleyError);
                         stopRefreshAnimation();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateOpinionInfo(List<ViewPointMater> data) {

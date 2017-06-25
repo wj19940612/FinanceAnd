@@ -71,8 +71,9 @@
                     android:textSize="10sp"
                     tool:text="雄安燃情资本市场 概念股连续疯长"/>
             </LinearLayout>
+
             <com.sbai.finance.view.IconTextRow
-                android:id="@+id/futureBattle"
+                android:id="@+id/battle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_pressable"
@@ -86,8 +87,8 @@
                 app:rowTextSize="15sp"
                 app:rowTextSpaceExtra="4dp"
                 app:rowVerticalPadding="12dp"
-                app:subText="对战进行中..."
                 app:subTextSize="12sp"/>
+
             <com.sbai.finance.view.IconTextRow
                 android:id="@+id/opinionMaster"
                 android:layout_width="match_parent"

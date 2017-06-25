@@ -94,7 +94,7 @@ public class IntroduceFragment extends BaseFragment {
                     protected void onRespSuccessData(FutureIntroduce data) {
                         updateFutureIntroduce(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateFutureIntroduce(FutureIntroduce data) {
