@@ -116,7 +116,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             mUserIdentityCardInfo = data;
                         }
                     })
-                    .fireSync();
+                    .fireFree();
         } else {
             Client.getUserCreditApproveStatus()
                     .setTag(TAG)
@@ -133,7 +133,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             mUserIdentityCardInfo = data;
                         }
                     })
-                    .fireSync();
+                    .fireFree();
         }
     }
 

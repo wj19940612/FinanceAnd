@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.recharge;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -86,7 +84,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
     private void updateVersusData(FutureVersus futureVersus){
         stopRefreshAnimation();

@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
@@ -19,10 +18,8 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -52,7 +49,6 @@ import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
-import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.GrapeGridView;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
@@ -284,7 +280,7 @@ public class BorrowActivity extends BaseActivity {
                                     super.onFailure(volleyError);
                                     mPublish.setEnabled(true);
                                 }
-                            }).fireSync();
+                            }).fireFree();
                 } else {
                     requestPublishBorrow(content, picture, mBorrowTimeLimit.getText().toString(),
                             mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),

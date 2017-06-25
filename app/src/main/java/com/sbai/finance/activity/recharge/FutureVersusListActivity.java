@@ -168,7 +168,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                     if (isCreate) {
                         Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, item.getLaunchUser()).execute();
                     } else {
-                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_MATCH) {
+                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
                             if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
                                 //如果是自己创建的房间 进入到详情页
                                 item.setPageType(VersusGaming.PAGE_VERSUS);
@@ -210,7 +210,7 @@ public class FutureVersusListActivity extends BaseActivity implements
         });
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
-            requestMyCurrentVersus();
+            requestCurrentBattle();
         } else {
             mCurrentVersus.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
@@ -247,7 +247,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestUserFindInfo() {
@@ -259,11 +259,11 @@ public class FutureVersusListActivity extends BaseActivity implements
                         updateUserFund(data);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
-    private void requestMyCurrentVersus() {
-        Client.getMyCurrentVersus().setTag(TAG)
+    private void requestCurrentBattle() {
+        Client.getCurrentBattle().setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
                     @Override
                     protected void onRespSuccess(Resp<VersusGaming> resp) {
@@ -281,12 +281,12 @@ public class FutureVersusListActivity extends BaseActivity implements
                         if (resp.isSuccess()) {
                             data.setPageType(VersusGaming.PAGE_VERSUS);
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
-                            requestMyCurrentVersus();
+                            requestCurrentBattle();
                         } else {
                             showJoinVersusFailureDialog();
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestMatchVersus(final int type, String refuseIds) {
@@ -300,7 +300,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestMatchResult() {
@@ -314,7 +314,7 @@ public class FutureVersusListActivity extends BaseActivity implements
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestVisibleVersusData() {
@@ -644,7 +644,7 @@ public class FutureVersusListActivity extends BaseActivity implements
             if (intent.getAction() == LoginActivity.LOGIN_SUCCESS_ACTION) {
                 updateAvatar();
                 requestUserFindInfo();
-                requestMyCurrentVersus();
+                requestCurrentBattle();
             }
         }
     }
@@ -746,14 +746,14 @@ public class FutureVersusListActivity extends BaseActivity implements
                         break;
                 }
                 switch (item.getGameStatus()) {
-                    case VersusGaming.GAME_STATUS_MATCH:
+                    case VersusGaming.GAME_STATUS_CREATED:
                         mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         showScoreProgress(0, 0, true);
                         break;
-                    case VersusGaming.GAME_STATUS_START:
+                    case VersusGaming.GAME_STATUS_STARTED:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);

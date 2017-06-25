@@ -111,7 +111,7 @@ public class SearchOptionalActivity extends BaseActivity {
                                         ToastUtil.curt(resp.getMsg());
                                     }
                                 }
-                            }).fireSync();
+                            }).fireFree();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

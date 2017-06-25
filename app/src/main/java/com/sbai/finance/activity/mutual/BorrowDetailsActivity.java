@@ -372,7 +372,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                             ToastUtil.show(resp.getMsg());
                         }
                      }
-                 }).fireSync();
+                 }).fireFree();
     }
     private void requestCancelBorrow(final Integer id) {
         Client.cancelBorrowIn(id).setTag(TAG)
@@ -407,7 +407,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
     private void requestPhone(String phone){
         if (!TextUtils.isEmpty(phone)){

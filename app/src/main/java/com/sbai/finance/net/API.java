@@ -104,7 +104,7 @@ public class API extends RequestManager {
         }
     }
 
-    public void fireSync() {
+    public void fireFree() {
         String url = createUrl();
 
         createThenEnqueue(url);

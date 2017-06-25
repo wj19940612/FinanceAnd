@@ -84,7 +84,7 @@ public class WalletActivity extends BaseActivity {
                         updateUserFund(data.getMoney());
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     @OnClick({R.id.balance, R.id.recharge, R.id.withdraw, R.id.market_detail, R.id.bankCard})

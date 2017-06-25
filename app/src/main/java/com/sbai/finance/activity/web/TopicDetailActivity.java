@@ -17,7 +17,6 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,15 +24,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.EventModel;
 import com.sbai.finance.model.Topic;
 import com.sbai.finance.model.TopicDetailModel;
-import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;
 
@@ -123,7 +119,7 @@ public class TopicDetailActivity extends BaseActivity {
                             mPureHtml =data.getSubjectModel().getContext();
                             loadPage();
                         }
-                    }).fireSync();
+                    }).fireFree();
         }
     }
 

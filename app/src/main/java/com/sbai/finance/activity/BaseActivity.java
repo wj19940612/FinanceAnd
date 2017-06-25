@@ -28,6 +28,7 @@ import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.websocket.WSocketClient;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -46,6 +47,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     private TimerHandler mTimerHandler;
     private RequestProgress mRequestProgress;
+    private WSocketClient mSocketClient;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
