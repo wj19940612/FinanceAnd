@@ -386,7 +386,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                             mWriteMessage.setVisibility(View.GONE);
                             mBorrowStatus.setVisibility(View.GONE);
                             mBorrowDetail.setStatus(BorrowMine.STATUS_END_CANCEL);
-                            sendStatusChangeBroadCast(BorrowDetail.STATUS_END_CANCEL,id);
+                            sendStatusChangeBroadCast();
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -403,7 +403,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                             mStatus.setTextColor(ContextCompat.getColor(getActivity(),R.color.luckyText));
                             mBorrowStatus.setVisibility(View.GONE);
                             mBorrowDetail.setStatus(BorrowMine.STATUS_END_REPAY);
-                            sendStatusChangeBroadCast(BorrowDetail.STATUS_END_REPAY,id);
+                            sendStatusChangeBroadCast();
                         }else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -519,6 +519,7 @@ public class BorrowDetailsActivity extends BaseActivity {
     private void updateBorrowDetails(BorrowDetail borrowDetail) {
         if (null == borrowDetail) return;
         mBorrowDetail = borrowDetail;
+        sendStatusChangeBroadCast();
         Glide.with(getActivity()).load(borrowDetail.getPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getActivity()))
@@ -628,7 +629,8 @@ public class BorrowDetailsActivity extends BaseActivity {
                                                     if (resp.isSuccess()) {
                                                         requestBorrowMoneyDetails();
                                                         requestGoodHeartPeopleList();
-                                                        sendStatusChangeBroadCast(BorrowDetail.STATUS_GIVE_HELP,mLoadId);
+                                                        mBorrowDetail.setStatus(BorrowDetail.STATUS_GIVE_HELP);
+                                                        sendStatusChangeBroadCast();
                                                     }
                                                 }
 
@@ -805,11 +807,11 @@ public class BorrowDetailsActivity extends BaseActivity {
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
-    private void sendStatusChangeBroadCast(int status,int id){
+    private void sendStatusChangeBroadCast(){
         Intent intent = new Intent();
         intent.setAction(STATUS_CHANAGE);
-        intent.putExtra(DATA_STATUS,status);
-        intent.putExtra(DATA_ID,id);
+        intent.putExtra(DATA_STATUS,mBorrowDetail.getStatus());
+        intent.putExtra(DATA_ID,mBorrowDetail.getId());
         mLocalBroadcastManager.sendBroadcastSync(intent);
     }
 

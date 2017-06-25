@@ -21,7 +21,6 @@
             app:backIcon="@drawable/ic_tb_back_white"
             app:backFeature="true"
             app:titleText="妖股推荐"/>
-
         <TextView
             android:id="@+id/topicTitle"
             android:layout_width="match_parent"
