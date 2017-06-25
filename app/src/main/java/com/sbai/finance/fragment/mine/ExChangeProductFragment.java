@@ -187,7 +187,7 @@ public class ExChangeProductFragment extends BaseFragment {
 
     private void showExchangeFailDialog(Resp<Object> resp, CornucopiaProductModel item) {
         if (item.isVcoin()) {
-            SmartDialog.with(getActivity(), resp.getMsg())
+            SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough))
                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {

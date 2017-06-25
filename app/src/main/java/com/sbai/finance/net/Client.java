@@ -1092,7 +1092,7 @@ public class Client {
     //乐米协议
 
     /**
-     * @param id 2 借款协议  3 用户协议
+     * @param id 2 借款协议  3 用户协议  4 兑换规则
      * @return
      */
     public static API getArticleProtocol(int id) {

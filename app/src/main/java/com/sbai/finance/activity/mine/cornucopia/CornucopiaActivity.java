@@ -11,11 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.mine.ExChangeProductFragment;
 import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -25,6 +28,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,9 +101,33 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                 Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INTEGRATE).execute();
                 break;
             case R.id.exchange_rule:
-                // TODO: 2017/6/20 兑换规则
+                openExchangeRulePage();
                 break;
         }
+    }
+
+    private void openExchangeRulePage() {
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_EXCHANGE).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, data.getTitle())
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.protocol))
+                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+                }).fire();
     }
 
     @Override
