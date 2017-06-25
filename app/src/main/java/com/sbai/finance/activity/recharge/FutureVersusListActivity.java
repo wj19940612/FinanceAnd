@@ -34,6 +34,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
+import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.model.versus.FutureVersus;
@@ -86,6 +87,7 @@ public class FutureVersusListActivity extends BaseActivity implements
     private LocalBroadcastManager mLocalBroadcastManager;
     private HashSet<Integer> mSet;
     private VersusGaming mMyCurrentGame;
+    private StartMatchDialogFragment mStartMatchDialogFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +97,8 @@ public class FutureVersusListActivity extends BaseActivity implements
         initListHeader();
         initCustomView();
         initView();
+        updateAvatar();
+        requestVersusData();
     }
 
     private void initCustomView() {
@@ -133,7 +137,10 @@ public class FutureVersusListActivity extends BaseActivity implements
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
-        Glide.with(getActivity()).load(R.drawable.versus_banner).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(versusBanner);
+        Glide.with(getActivity())
+                .load(R.drawable.versus_banner)
+                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(versusBanner);
         seeVersusRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,23 +215,20 @@ public class FutureVersusListActivity extends BaseActivity implements
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
             requestMyCurrentVersus();
         } else {
             mCurrentVersus.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-
             mIntegral.setText("0.00");
             mWining.setText("0");
         }
-        updateAvatar();
-        requestVersusData();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         startScheduleJob(5 * 1000);
     }
 
@@ -399,6 +403,12 @@ public class FutureVersusListActivity extends BaseActivity implements
         mWining.setText(data.getYuanbao() + "个");
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+    }
+
     private void updateAvatar() {
         if (LocalUser.getUser().isLogin()) {
             Glide.with(getActivity())
@@ -538,6 +548,21 @@ public class FutureVersusListActivity extends BaseActivity implements
                 .setCancelableOnTouchOutside(false)
                 .setNegativeHide()
                 .show();
+    }
+    //开始匹配弹窗
+    private void showMatchDialog() {
+        if (mStartMatchDialogFragment == null) {
+            mStartMatchDialogFragment = StartMatchDialogFragment
+                    .newInstance()
+                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            mStartMatchDialogFragment.dismiss();
+                            showCancelMatchDialog();
+                        }
+                    });
+        }
+        mStartMatchDialogFragment.show(getSupportFragmentManager());
     }
 
     private void showCancelMatchDialog() {
