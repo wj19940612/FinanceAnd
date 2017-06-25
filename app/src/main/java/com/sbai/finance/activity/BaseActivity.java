@@ -17,7 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ListView;
+import android.widget.AbsListView;
+import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
@@ -27,7 +28,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.websocket.WSocketClient;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
@@ -113,26 +113,27 @@ public class BaseActivity extends AppCompatActivity implements
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
-    protected void scrollToTop(TitleBar titleBar, final ListView listView) {
-        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listView.smoothScrollToPosition(0);
-            }
-        });
+    private void scrollToTop(View view) {
+        if (view instanceof AbsListView) {
+            ((AbsListView) view).smoothScrollToPositionFromTop(0, 0);
+        } else if (view instanceof RecyclerView) {
+            ((RecyclerView) view).smoothScrollToPosition(0);
+        } else if (view instanceof ScrollView) {
+            ((ScrollView) view).smoothScrollTo(0, 0);
+        }
     }
 
-    protected void scrollToTop(TitleBar titleBar, final RecyclerView recyclerView) {
-        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+    protected void scrollToTop(View anchor, final View view) {
+        anchor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.smoothScrollToPosition(0);
+                scrollToTop(view);
             }
         });
     }
 
     protected void translucentStatusBar() {
-//        make full transparent statusBar
+        //make full transparent statusBar
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
         }

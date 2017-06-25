@@ -58,13 +58,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FutureVersusListActivity extends BaseActivity implements
+public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
-    TitleBar mTitle;
+    TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.matchVersus)
@@ -90,15 +90,16 @@ public class FutureVersusListActivity extends BaseActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_versus_list);
+        setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+
         initListHeader();
         initCustomView();
         initView();
     }
 
     private void initCustomView() {
-        View customView = mTitle.getCustomView();
+        View customView = mTitleBar.getCustomView();
         mAvatar = (ImageView) customView.findViewById(R.id.avatar);
         mIntegral = (TextView) customView.findViewById(R.id.integral);
         mWining = (TextView) customView.findViewById(R.id.wining);
@@ -129,7 +130,7 @@ public class FutureVersusListActivity extends BaseActivity implements
     }
 
     private void initListHeader() {
-        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, null);
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
@@ -208,6 +209,8 @@ public class FutureVersusListActivity extends BaseActivity implements
                 }
             }
         });
+        scrollToTop(mTitleBar, mListView);
+
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
             requestCurrentBattle();
@@ -432,9 +435,6 @@ public class FutureVersusListActivity extends BaseActivity implements
     @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.titleBar:
-                mListView.smoothScrollToPositionFromTop(0, 0);
-                break;
             case R.id.createVersus:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
