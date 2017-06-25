@@ -244,7 +244,7 @@ public class BorrowMineFragment extends BaseFragment implements
                 }
                 for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
                     BorrowMine item = mBorrowMoneyAdapter.getItem(i);
-                    if (item.getId()==dataId&&(dataStatus==BorrowDetail.STATUS_END_CANCEL||dataStatus==BorrowDetail.STATUS_END_REPAY)){
+                    if (item.getId()==dataId){
                         item.setStatus(dataStatus);
                         mBorrowMoneyAdapter.notifyDataSetChanged();
                         break;
