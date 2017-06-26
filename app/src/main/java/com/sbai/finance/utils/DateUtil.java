@@ -17,6 +17,7 @@ public class DateUtil {
     public static final String FORMAT_YEAR = "yyyy年MM月dd日 HH:mm:ss";
     public static final String FORMAT_NOT_SECOND = "MM月dd日 HH:mm";
     public static final String FORMAT_NOT_HOUR = "MM月dd日 ";
+    public static final String FORMAT_ONLEY_DATE = "dd日 ";
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
@@ -342,12 +343,15 @@ public class DateUtil {
     public static String getDetailFormatTime(long createTime) {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (isToday(createTime, systemTime)) {
-            return "今日" + DateUtil.format(createTime, "HH:mm");
+            return "今日" ;
         }
         if (isYesterday(createTime, systemTime)) {
-            return "昨日" + DateUtil.format(createTime, "HH:mm");
+            return "昨日" ;
         }
-        return DateUtil.format(createTime, "dd日HH:mm");
+        if (isInThisYear(createTime)) {
+            return DateUtil.format(createTime, FORMAT_ONLEY_DATE);
+        }
+        return DateUtil.format(createTime, FORMAT_YEAR_MONTH_DAY);
     }
 
     /**
@@ -424,17 +428,19 @@ public class DateUtil {
 
     /**
      * 比较两个时间相差的天数
+     *
      * @param timestamp
      * @return
      */
-    public static int compareDateDifference(long timestamp){
+    public static int compareDateDifference(long timestamp) {
         long systemTime = System.currentTimeMillis();
-        if (timestamp>=systemTime){
+        if (timestamp >= systemTime) {
             return 0;
         }
-        long days =(systemTime - timestamp)/(1000*60*60*24);
+        long days = (systemTime - timestamp) / (1000 * 60 * 60 * 24);
         return (int) days;
     }
+
     public static String getTodayStartTime(long timestamp) {
         return format(timestamp, "yyyy-MM-dd") + " 00:00:00";
     }
@@ -456,7 +462,7 @@ public class DateUtil {
         long minutes = (timestamp - systemTime) / (1000 * 60);
         long hours = minutes / 60;
         long minute = minutes % 60;
-        if (hours  >=  24 ){
+        if (hours >= 24) {
             return "24:00";
         }
         if (hours < 10) {
@@ -521,7 +527,7 @@ public class DateUtil {
         int i = Calendar.getInstance().get(Calendar.MONTH);
         String year = format(date, "yyyy");
         String month = format(date, "yyyy MM");
-        month = month.substring(month.length() - 2,month.length());
+        month = month.substring(month.length() - 2, month.length());
         if (!TextUtils.isEmpty(month) && month.startsWith("0")) {
             month = month.substring(0, month.length());
         }

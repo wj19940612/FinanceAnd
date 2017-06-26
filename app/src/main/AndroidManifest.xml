@@ -178,7 +178,7 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <!-- 明细 -->
         <activity
-            android:name=".activity.mine.TheDetailActivity"
+            android:name=".activity.mine.FundDetailActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 选择相册图片 -->

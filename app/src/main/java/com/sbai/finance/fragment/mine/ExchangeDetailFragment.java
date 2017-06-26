@@ -293,7 +293,7 @@ public class ExchangeDetailFragment extends BaseFragment {
                 } else {
                     mAdsorbText.setVisibility(View.GONE);
                 }
-                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
+                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getDetailFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
                 if (detail.isVcoin()) {
                     if (detail.getMoney() < 0) {

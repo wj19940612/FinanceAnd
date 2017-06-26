@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by ${wangJie} on 2017/6/21.
  * 明细界面
  */
-public class TheDetailActivity extends BaseActivity {
+public class FundDetailActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
@@ -76,32 +76,7 @@ public class TheDetailActivity extends BaseActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (isSlideToBottom(mRecyclerView) && mLoadMore) {
-                    requestDetailList();
-                }
-                View stickyInfoView = recyclerView.findChildViewUnder(
-                        mAdsorbText.getMeasuredWidth() / 2, 5);
-
-                if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
-                    mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
-                }
-
-                View transInfoView = recyclerView.findChildViewUnder(
-                        mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
-                if (transInfoView != null && transInfoView.getTag() != null) {
-                    int transViewStatus = (int) transInfoView.getTag();
-                    int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
-
-                    if (transViewStatus == TheDetailAdapter.HAS_STICKY_VIEW) {
-                        if (transInfoView.getTop() > 0) {
-                            mAdsorbText.setTranslationY(dealtY);
-                        } else {
-                            mAdsorbText.setTranslationY(0);
-                        }
-                    } else if (transViewStatus == TheDetailAdapter.NONE_STICKY_VIEW) {
-                        mAdsorbText.setTranslationY(0);
-                    }
-                }
+                handleRecycleViewScroll(recyclerView);
             }
         });
         requestDetailList();
@@ -118,6 +93,35 @@ public class TheDetailActivity extends BaseActivity {
                 mRecyclerView.smoothScrollToPosition(0);
             }
         });
+    }
+
+    private void handleRecycleViewScroll(RecyclerView recyclerView) {
+        if (isSlideToBottom(mRecyclerView) && mLoadMore) {
+            requestDetailList();
+        }
+        View stickyInfoView = recyclerView.findChildViewUnder(
+                mAdsorbText.getMeasuredWidth() / 2, 5);
+
+        if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
+            mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
+        }
+
+        View transInfoView = recyclerView.findChildViewUnder(
+                mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
+        if (transInfoView != null && transInfoView.getTag() != null) {
+            int transViewStatus = (int) transInfoView.getTag();
+            int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
+
+            if (transViewStatus == TheDetailAdapter.HAS_STICKY_VIEW) {
+                if (transInfoView.getTop() > 0) {
+                    mAdsorbText.setTranslationY(dealtY);
+                } else {
+                    mAdsorbText.setTranslationY(0);
+                }
+            } else if (transViewStatus == TheDetailAdapter.NONE_STICKY_VIEW) {
+                mAdsorbText.setTranslationY(0);
+            }
+        }
     }
 
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
@@ -247,7 +251,7 @@ public class TheDetailActivity extends BaseActivity {
                 } else {
                     mAdsorbText.setVisibility(View.GONE);
                 }
-                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
+                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getDetailFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
 
                 if (!TextUtils.isEmpty(detail.getPlatformName())) {
                     mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));

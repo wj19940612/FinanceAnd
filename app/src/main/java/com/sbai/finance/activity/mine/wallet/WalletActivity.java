@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.TheDetailActivity;
+import com.sbai.finance.activity.mine.FundDetailActivity;
 import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.model.payment.UserFundInfoModel;
@@ -141,7 +141,7 @@ public class WalletActivity extends BaseActivity {
 
                 break;
             case R.id.market_detail:
-                Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                Launcher.with(getActivity(), FundDetailActivity.class).execute();
                 break;
             case R.id.bankCard:
                 Client.requestUserBankCardInfo()
