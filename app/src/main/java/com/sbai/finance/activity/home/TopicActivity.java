@@ -154,7 +154,7 @@ public class TopicActivity extends BaseActivity {
 //							mTopicListAdapter.addStockData(result);
 //						}
 //					}
-//				}).fireSync();
+//				}).fireFree();
 //	}
 
 	/**
@@ -177,7 +177,7 @@ public class TopicActivity extends BaseActivity {
 							mTopicListAdapter.addStockData(result);
 						}
 					}
-				}).fireSync();
+				}).fireFree();
 	}
 
 	private void requestFutureMarketData(List<Variety> data) {
@@ -194,7 +194,7 @@ public class TopicActivity extends BaseActivity {
 						mTopicListAdapter.addFutureData(data);
 					}
 				})
-				.fireSync();
+				.fireFree();
 	}
 	private void updateListViewVisibleItem(FutureData data) {
 		if (mListView != null && mTopicListAdapter != null) {

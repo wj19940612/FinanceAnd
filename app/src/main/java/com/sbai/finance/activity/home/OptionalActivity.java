@@ -142,7 +142,7 @@ public class OptionalActivity extends BaseActivity implements
                     protected void onRespSuccessData(List<Variety> data) {
                         updateOptionInfo((ArrayList<Variety>) data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestDelOptionalData(final Variety variety) {
@@ -179,7 +179,7 @@ public class OptionalActivity extends BaseActivity implements
                     protected void onRespSuccessData(List<StockData> result) {
                         mSlideListAdapter.addStockData(result);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
 
@@ -197,7 +197,7 @@ public class OptionalActivity extends BaseActivity implements
                         mSlideListAdapter.addFutureData(data);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {

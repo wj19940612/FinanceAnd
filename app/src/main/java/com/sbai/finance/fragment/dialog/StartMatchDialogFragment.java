@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 
 import butterknife.BindView;
@@ -92,6 +93,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     private void init() {
         Glide.with(getContext())
                 .load(R.drawable.ic_future_svs_looking_for)
+                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)//添加缓存
                 .into(mMatchLoading);
 
         mCancel.setOnClickListener(new View.OnClickListener() {

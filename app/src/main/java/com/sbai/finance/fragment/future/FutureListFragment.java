@@ -210,7 +210,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         stopRefreshAnimation();
                     }
 
-                }).fireSync();
+                }).fireFree();
     }
 
     private void stopRefreshAnimation() {

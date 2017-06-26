@@ -1,8 +1,16 @@
 package com.sbai.finance.activity.future;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,10 +23,15 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.R.id.ingotWar;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_VERSUS;
 
 public class CreateFightActivity extends BaseActivity {
@@ -26,25 +39,16 @@ public class CreateFightActivity extends BaseActivity {
 	public static final int REQ_CODE_CHOOSE_FUTURES = 1001;
 	@BindView(R.id.chooseFutures)
 	TextView mChooseFutures;
-	@BindView(R.id.ingotWar)
+	@BindView(ingotWar)
 	TextView mIngotWar;
 	@BindView(R.id.integralWar)
 	TextView mIntegralWar;
-	@BindView(R.id.bountyChoice1)
-	TextView mBountyChoice1;
-	@BindView(R.id.bountyChoice2)
-	TextView mBountyChoice2;
-	@BindView(R.id.bountyChoice3)
-	TextView mBountyChoice3;
-	@BindView(R.id.durationChoice1)
-	TextView mDurationChoice1;
-	@BindView(R.id.durationChoice2)
-	TextView mDurationChoice2;
-	@BindView(R.id.durationChoice3)
-	TextView mDurationChoice3;
+	@BindView(R.id.bountyGridView)
+	GridView mBountyGridView;
+	@BindView(R.id.durationGridView)
+	GridView mDurationGridView;
 	@BindView(R.id.launch_fight)
 	ImageView mLaunchFight;
-
 
 	private String mContractsCode = null;
 	private int mVarietyId;
@@ -55,13 +59,68 @@ public class CreateFightActivity extends BaseActivity {
 	private String[] mIngotArray;
 	private String[] mIntegralArray;
 	private String[] mDurationArray;
+	private List<String> mIngotList;//元宝赏金
+	private List<String> mIntegralList;//积分赏金
+	private List<String> mDurationList;//时长
+	private BountyAdapter mBountyAdapter;
+	private DurationAdapter mDurationAdapter;
+	private boolean mBountySelected = false;
+	private boolean mDurationSelected = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_fight);
 		ButterKnife.bind(this);
-		requestFutureBattleConfig();
+		mIngotArray = /*futureBattleConfig.getGold().split(",");*/new String[]{"100", "200"};
+		mIntegralArray = /*futureBattleConfig.getIntegral().split(",");*/new String[]{"100", "200", "300"};
+		mDurationArray = /*futureBattleConfig.getTime().split(",");*/new String[]{"10", "20", "30"};
+		mIngotList = Arrays.asList(mIngotArray);
+		mIntegralList = Arrays.asList(mIntegralArray);
+		mDurationList = Arrays.asList(mDurationArray);
+		mIngotList = new ArrayList<>(mIngotList);
+		mIntegralList = new ArrayList<>(mIntegralList);
+		mDurationList = new ArrayList<>(mDurationList);
+		mBountyAdapter = new BountyAdapter(this, mIngotList);
+		mDurationAdapter = new DurationAdapter(this, mDurationList);
+		mBountyGridView.setAdapter(mBountyAdapter);
+		mDurationGridView.setAdapter(mDurationAdapter);
+		mBountyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String item = (String) parent.getItemAtPosition(position);
+				if (mIntegralWar.isSelected()) {
+					mBountyAdapter.clear();
+					mBountyAdapter.addAll(mIntegralList);
+					mBountyAdapter.setChecked(position);
+					mBountyAdapter.notifyDataSetChanged();
+				} else {
+					mBountyAdapter.clear();
+					mBountyAdapter.addAll(mIngotList);
+					mBountyAdapter.setChecked(position);
+					mBountyAdapter.notifyDataSetChanged();
+				}
+				mBountySelected = true;
+				whetherLaunchFight();
+				mReward = Double.parseDouble(item);
+			}
+		});
+		mDurationGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String item = (String) parent.getItemAtPosition(position);
+				mDurationAdapter.clear();
+				mDurationAdapter.addAll(mDurationList);
+				mDurationAdapter.setChecked(position);
+				mDurationAdapter.notifyDataSetChanged();
+				mDurationSelected = true;
+				whetherLaunchFight();
+				mEndTime = Integer.parseInt(item);
+			}
+		});
+
+		//requestFutureBattleConfig();
+		updateFutureBattleConfig();
 	}
 
 	private void requestFutureBattleConfig() {
@@ -69,25 +128,32 @@ public class CreateFightActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<FutureBattleConfig>, FutureBattleConfig>() {
 					@Override
 					protected void onRespSuccessData(FutureBattleConfig futureBattleConfig) {
-						updateFutureBattleConfig(futureBattleConfig);
+						//updateFutureBattleConfig(futureBattleConfig);
 					}
 				}).fire();
 	}
 
-	private void updateFutureBattleConfig(FutureBattleConfig futureBattleConfig) {
-		mIngotArray = futureBattleConfig.getGold().split(",");
-		mIntegralArray = futureBattleConfig.getIntegral().split(",");
-		mDurationArray = futureBattleConfig.getTime().split(",");
+	private void updateFutureBattleConfig() {
 
-		mBountyChoice1.setText(mIngotArray[0]);
-		mBountyChoice2.setText(mIngotArray[1]);
-		mBountyChoice3.setVisibility(View.INVISIBLE);
-
-		mDurationChoice1.setText(getString(R.string.duration_choice1, mDurationArray[0]));
-		mDurationChoice2.setText(getString(R.string.duration_choice1, mDurationArray[1]));
-		mDurationChoice3.setText(getString(R.string.duration_choice1, mDurationArray[2]));
-
+		updateIngotConfig();
+		updateDurationConfig();
 		mLaunchFight.setEnabled(false);
+	}
+
+	private void updateIngotConfig() {
+		mBountyAdapter.clear();
+		mBountyAdapter.addAll(mIngotList);
+	}
+
+	private void updateIntegralConfig() {
+		mBountyAdapter.clear();
+		mBountyAdapter.addAll(mIntegralList);
+	}
+
+
+	private void updateDurationConfig() {
+		mDurationAdapter.clear();
+		mDurationAdapter.addAll(mDurationList);
 	}
 
 
@@ -106,85 +172,157 @@ public class CreateFightActivity extends BaseActivity {
 		}
 	}
 
-	@OnClick({R.id.chooseFutures, R.id.ingotWar, R.id.integralWar
-			, R.id.bountyChoice1, R.id.bountyChoice2, R.id.bountyChoice3
-			, R.id.durationChoice1, R.id.durationChoice2, R.id.durationChoice3
-			, R.id.launch_fight})
+	static class BountyAdapter extends ArrayAdapter<String> {
+		private Context mContext;
+		private List<String> mBountyAList;
+		private int mChecked = -1;
+
+		private BountyAdapter(Context context, List<String> ingotList) {
+			super(context, 0);
+			this.mContext = context;
+			this.mBountyAList = ingotList;
+		}
+
+		public void setChecked(int checked) {
+			this.mChecked = checked;
+		}
+
+		public void setIntegralList(List<String> integralList) {
+			this.mBountyAList = integralList;
+		}
+
+		public void setIngotList(List<String> ingotList) {
+			this.mBountyAList = ingotList;
+		}
+
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.row_create_fight, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindingData(mBountyAList, position, mChecked);
+			return convertView;
+		}
+
+		static class ViewHolder {
+			@BindView(R.id.choice)
+			TextView mChoice;
+
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			public void bindingData(List<String> bountyAList, int position, int checked) {
+				mChoice.setText(bountyAList.get(position));
+				mChoice.setSelected(false);
+				if (checked == position) {
+					mChoice.setSelected(true);
+				} else {
+					mChoice.setEnabled(false);
+				}
+			}
+		}
+	}
+
+	static class DurationAdapter extends ArrayAdapter<String> {
+		private Context mContext;
+		private List<String> mDurationList;
+		private int mChecked = -1;
+
+		private DurationAdapter(Context context, List<String> durationList) {
+			super(context, 0);
+			this.mContext = context;
+			this.mDurationList = durationList;
+		}
+
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.row_create_fight, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			viewHolder.bindingData(mContext, mDurationList, position, mChecked);
+			return convertView;
+		}
+
+		public void setChecked(int checked) {
+			this.mChecked = checked;
+		}
+
+		static class ViewHolder {
+			@BindView(R.id.choice)
+			TextView mChoice;
+
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			public void bindingData(Context context, List<String> durationList, int position, int checked) {
+				mChoice.setText(context.getString(R.string.duration_choice1, durationList.get(position)));
+				mChoice.setSelected(false);
+				if (checked == position) {
+					mChoice.setSelected(true);
+				} else {
+					mChoice.setEnabled(false);
+				}
+			}
+		}
+	}
+
+	private void whetherLaunchFight() {
+		if (mChooseFutures.isSelected()
+				&& (mIngotWar.isSelected() || mIntegralWar.isSelected())
+				&& (mBountySelected)
+				&& (mDurationSelected)) {
+			mLaunchFight.setEnabled(true);
+		} else {
+			mLaunchFight.setEnabled(false);
+		}
+	}
+
+	@OnClick({R.id.chooseFutures, ingotWar, R.id.integralWar, R.id.launch_fight})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.chooseFutures:
 				Launcher.with(getActivity(), ChooseFuturesActivity.class)
 						.putExtra(Launcher.EX_PAYLOAD, mContractsCode)
 						.executeForResult(REQ_CODE_CHOOSE_FUTURES);
+				whetherLaunchFight();
 				break;
-			case R.id.ingotWar:
+			case ingotWar:
+				if (!mIngotWar.isSelected()) {
+					mBountyAdapter.setChecked(-1);
+					mBountySelected = false;
+				}
 				mIngotWar.setSelected(true);
 				mIntegralWar.setSelected(false);
-				mBountyChoice1.setSelected(false);
-				mBountyChoice2.setSelected(false);
-				mBountyChoice3.setSelected(false);
-				mBountyChoice3.setVisibility(View.INVISIBLE);
-				mBountyChoice1.setText(mIngotArray[0]);
-				mBountyChoice2.setText(mIngotArray[1]);
+				mBountyAdapter.setIngotList(mIngotList);
+				updateIngotConfig();
 				whetherLaunchFight();
 				mCoinType = 2;
 				break;
 			case R.id.integralWar:
-				mIngotWar.setSelected(false);
+				if (!mIntegralWar.isSelected()) {
+					mBountyAdapter.setChecked(-1);
+					mBountySelected = false;
+				}
 				mIntegralWar.setSelected(true);
-				mBountyChoice1.setSelected(false);
-				mBountyChoice2.setSelected(false);
-				mBountyChoice3.setSelected(false);
-				mBountyChoice3.setVisibility(View.VISIBLE);
-				mBountyChoice1.setText(mIntegralArray[0]);
-				mBountyChoice2.setText(mIntegralArray[1]);
-				mBountyChoice3.setText(mIntegralArray[2]);
+				mIngotWar.setSelected(false);
+				mBountyAdapter.setIntegralList(mIntegralList);
+				updateIntegralConfig();
 				whetherLaunchFight();
 				mCoinType = 3;
-				break;
-			case R.id.bountyChoice1:
-				mBountyChoice1.setSelected(true);
-				mBountyChoice2.setSelected(false);
-				mBountyChoice3.setSelected(false);
-				whetherLaunchFight();
-				mReward = Double.parseDouble(mBountyChoice1.getText().toString().trim());
-				break;
-			case R.id.bountyChoice2:
-				mBountyChoice1.setSelected(false);
-				mBountyChoice2.setSelected(true);
-				mBountyChoice3.setSelected(false);
-				whetherLaunchFight();
-				mReward = Double.parseDouble(mBountyChoice2.getText().toString().trim());
-				break;
-			case R.id.bountyChoice3:
-				mBountyChoice1.setSelected(false);
-				mBountyChoice2.setSelected(false);
-				mBountyChoice3.setSelected(true);
-				whetherLaunchFight();
-				mReward = Double.parseDouble(mBountyChoice3.getText().toString().trim());
-				break;
-			case R.id.durationChoice1:
-				mDurationChoice1.setSelected(true);
-				mDurationChoice2.setSelected(false);
-				mDurationChoice3.setSelected(false);
-				whetherLaunchFight();
-				int length = mDurationChoice1.getText().toString().trim().length();
-				mEndTime = Integer.parseInt(mDurationChoice1.getText().toString().trim().substring(0, length - 2));
-				break;
-			case R.id.durationChoice2:
-				mDurationChoice1.setSelected(false);
-				mDurationChoice2.setSelected(true);
-				mDurationChoice3.setSelected(false);
-				whetherLaunchFight();
-				length = mDurationChoice2.getText().toString().trim().length();
-				mEndTime = Integer.parseInt(mDurationChoice2.getText().toString().trim().substring(0, length - 2));
-				break;
-			case R.id.durationChoice3:
-				mDurationChoice1.setSelected(false);
-				mDurationChoice2.setSelected(false);
-				mDurationChoice3.setSelected(true);
-				length = mDurationChoice3.getText().toString().trim().length();
-				mEndTime = Integer.parseInt(mDurationChoice3.getText().toString().trim().substring(0, length - 2));
 				break;
 			case R.id.launch_fight:
 				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
@@ -198,17 +336,6 @@ public class CreateFightActivity extends BaseActivity {
 							}
 						}).fire();
 				break;
-		}
-	}
-
-	private void whetherLaunchFight() {
-		if (mChooseFutures.isSelected()
-				&& (mIngotWar.isSelected() || mIntegralWar.isSelected())
-				&& (mBountyChoice1.isSelected() || mBountyChoice2.isSelected() || mBountyChoice3.isSelected())
-				&& (mDurationChoice1.isSelected() || mDurationChoice2.isSelected() || mDurationChoice3.isSelected())) {
-			mLaunchFight.setEnabled(true);
-		} else {
-			mLaunchFight.setEnabled(false);
 		}
 	}
 }

@@ -25,17 +25,18 @@ import com.sbai.finance.view.SmartDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
+
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
 
 /**
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener,
-        BattleTradeView.OnViewClickListener {
+public class FutureBattleActivity extends BaseActivity implements
+        BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -47,6 +48,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private StartMatchDialogFragment mStartMatchDialogFragment;
 
     private VersusGaming mVersusGaming;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,9 +128,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
             //分两种状态  1.发起匹配  2.对战中
             int gameStatus = mVersusGaming.getGameStatus();
-            if (gameStatus == GAME_STATUS_MATCH) {
+            if (gameStatus == GAME_STATUS_CREATED) {
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
-            } else if (gameStatus == GAME_STATUS_START) {
+            } else if (gameStatus == GAME_STATUS_STARTED) {
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
                 startScheduleJob(1000);
             }
@@ -177,7 +179,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     protected void onRespSuccess(VersusGaming resp) {
                         updatePraiseView(resp,userId);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updatePraiseView(VersusGaming resp, int userId) {

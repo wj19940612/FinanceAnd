@@ -44,8 +44,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_MATCH;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_START;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
 /**
@@ -138,9 +138,9 @@ public class FutureBattleFragment extends BaseFragment {
         } else {
             //判断状态是否在对抗中
             //未开始显示邀请 匹配  取消  视图
-            if (mVersusGaming.getGameStatus() == GAME_STATUS_MATCH) {
+            if (mVersusGaming.getGameStatus() == GAME_STATUS_CREATED) {
                 showBattleButtons();
-            } else if (mVersusGaming.getGameStatus() == GAME_STATUS_START) {
+            } else if (mVersusGaming.getGameStatus() == GAME_STATUS_STARTED) {
                 showBattleTradeView();
                 setBattleTradeState(STATE_TRADE);
 
@@ -284,7 +284,7 @@ public class FutureBattleFragment extends BaseFragment {
                     protected void onRespSuccessData(List<TrendViewData> data) {
                         mTrendView.setDataList(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestKlineDataAndSet(final String type) {
@@ -370,7 +370,7 @@ public class FutureBattleFragment extends BaseFragment {
                         mVariety.setExchangeStatus(exchangeStatus);
                         updateExchangeStatusView();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateExchangeStatusView() {

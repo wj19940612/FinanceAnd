@@ -80,11 +80,14 @@ public class API extends RequestManager {
         return this;
     }
 
-    public static void setHost(String host) {
-        mHost = host;
+    public static String getHost() {
+        if (TextUtils.isEmpty(mHost)) {
+            mHost = HOST;
+        }
+        return "http://" + mHost;
     }
 
-    public static String getHost() {
+    public static String getDomain() {
         if (TextUtils.isEmpty(mHost)) {
             mHost = HOST;
         }
@@ -101,7 +104,7 @@ public class API extends RequestManager {
         }
     }
 
-    public void fireSync() {
+    public void fireFree() {
         String url = createUrl();
 
         createThenEnqueue(url);

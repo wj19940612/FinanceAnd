@@ -114,7 +114,7 @@ public class ChooseFuturesFragment extends BaseFragment implements AdapterView.O
 						updateVarietyList(varietyList);
 					}
 
-				}).fireSync();
+				}).fireFree();
 	}
 
 	private void updateVarietyList(List<Variety> varietyList) {

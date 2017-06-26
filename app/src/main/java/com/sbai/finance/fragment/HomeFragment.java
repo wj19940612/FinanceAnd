@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
@@ -24,7 +23,7 @@ import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
-import com.sbai.finance.activity.recharge.FutureVersusListActivity;
+import com.sbai.finance.activity.recharge.BattleListActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
@@ -32,6 +31,7 @@ import com.sbai.finance.activity.web.TopicDetailActivity;
 import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
+import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -39,6 +39,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeHeader;
+import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
@@ -67,6 +68,9 @@ public class HomeFragment extends BaseFragment {
     LinearLayout mBigEvent;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
+    @BindView(R.id.battle)
+    IconTextRow mBattle;
+
     private Unbinder unbinder;
     private TopicGridAdapter mTopicGridAdapter;
 
@@ -168,9 +172,28 @@ public class HomeFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         startScheduleJob(1 * 1000);
-        updateHomeInfo();
+        requestHomeInfo();
+        requestCurrentBattle();
     }
 
+    private void requestCurrentBattle() {
+        if (!LocalUser.getUser().isLogin()) return;
+        Client.getCurrentBattle().setTag(TAG)
+                .setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
+                    @Override
+                    protected void onRespSuccessData(VersusGaming data) {
+                        updateBattleView(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateBattleView(VersusGaming battle) {
+        if (battle.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
+            mBattle.setSubText(R.string.battle_status_pending);
+        } else if (battle.getGameStatus() == VersusGaming.GAME_STATUS_STARTED) {
+            mBattle.setSubText(R.string.battle_status_fighting);
+        }
+    }
 
     @Override
     public void onTimeUp(int count) {
@@ -179,7 +202,6 @@ public class HomeFragment extends BaseFragment {
             int counter = mHomeBanner.getInnerCounter();
             mHomeBanner.setInnerCounter(++counter);
         }
-
     }
 
     @Override
@@ -197,7 +219,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private void updateHomeInfo() {
+    private void requestHomeInfo() {
         //获取banner数据
         Client.getBannerData().setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
@@ -241,7 +263,7 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.opinionMaster, R.id.bigEvent, R.id.futureBattle})
+    @OnClick({R.id.opinionMaster, R.id.bigEvent, R.id.battle})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bigEvent:
@@ -250,9 +272,9 @@ public class HomeFragment extends BaseFragment {
             case R.id.opinionMaster:
                 Launcher.with(getActivity(), OpinionActivity.class).execute();
                 break;
-            case R.id.futureBattle:
-               // Launcher.with(getActivity(), FutureBattleActivity.class).execute();
-                Launcher.with(getActivity(), FutureVersusListActivity.class).execute();
+            case R.id.battle:
+                // Launcher.with(getActivity(), FutureBattleActivity.class).execute();
+                Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
             default:
                 break;

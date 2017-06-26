@@ -104,7 +104,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
                         super.onFailure(volleyError);
                         updateStockSort(null);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateStockSort(List<StockData> data) {

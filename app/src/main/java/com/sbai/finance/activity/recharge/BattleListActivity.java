@@ -34,8 +34,8 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
+import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.model.versus.FutureVersus;
 import com.sbai.finance.model.versus.VersusGaming;
@@ -53,16 +53,19 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FutureVersusListActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class BattleListActivity extends BaseActivity implements
+        CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
-    TitleBar mTitle;
+    TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.matchVersus)
@@ -73,6 +76,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     LinearLayout mCreateAndMatchArea;
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
+
     private ImageView mAvatar;
     private TextView mIntegral;
     private TextView mWining;
@@ -83,19 +87,24 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     private LocalBroadcastManager mLocalBroadcastManager;
     private HashSet<Integer> mSet;
     private VersusGaming mMyCurrentGame;
+    private StartMatchDialogFragment mStartMatchDialogFragment;
+    private StringBuilder mRefusedIds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_versus_list);
+        setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+
         initListHeader();
         initCustomView();
         initView();
+        updateAvatar();
+        requestVersusData();
     }
 
     private void initCustomView() {
-        View customView = mTitle.getCustomView();
+        View customView = mTitleBar.getCustomView();
         mAvatar = (ImageView) customView.findViewById(R.id.avatar);
         mIntegral = (TextView) customView.findViewById(R.id.integral);
         mWining = (TextView) customView.findViewById(R.id.wining);
@@ -126,11 +135,14 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     }
 
     private void initListHeader() {
-        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, mListView, false);
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, null);
         ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
         TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
         TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
-        Glide.with(getActivity()).load(R.drawable.versus_banner).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(versusBanner);
+        Glide.with(getActivity())
+                .load(R.drawable.versus_banner)
+                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(versusBanner);
         seeVersusRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +161,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
 
     private void initView() {
         mSet = new HashSet<>();
+        mRefusedIds = new StringBuilder();
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         mVersusBroadcastReceiver = new VersusBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -165,7 +178,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                     if (isCreate) {
                         Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, item.getLaunchUser()).execute();
                     } else {
-                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_MATCH) {
+                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
                             if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
                                 //如果是自己创建的房间 进入到详情页
                                 item.setPageType(VersusGaming.PAGE_VERSUS);
@@ -189,30 +202,50 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!mVersusListAdapter.isEmpty() && (position > 0)) {
-                    VersusGaming item = mVersusListAdapter.getItem(position - 1);
-                    if (item != null) {
-                        if (item.getGameStatus()==VersusGaming.GAME_STATUS_END){
-                            item.setPageType(VersusGaming.PAGE_RECORD);
-                        }else{
-                            item.setPageType(VersusGaming.PAGE_VERSUS);
+                    if (LocalUser.getUser().isLogin()) {
+                        VersusGaming item = mVersusListAdapter.getItem(position - 1);
+                        if (item != null) {
+                            if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
+                                item.setPageType(VersusGaming.PAGE_RECORD);
+                            } else {
+                                item.setPageType(VersusGaming.PAGE_VERSUS);
+                            }
+                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                         }
-                        Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        scrollToTop(mTitleBar, mListView);
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
-            requestMyCurrentVersus();
+            requestCurrentBattle();
         } else {
             mCurrentVersus.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-
-            mIntegral.setText("0");
+            mIntegral.setText("0.00");
             mWining.setText("0");
         }
-        updateAvatar();
-        requestVersusData();
+        startScheduleJob(5 * 1000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestVisibleVersusData();
     }
 
     private void requestVersusData() {
@@ -222,7 +255,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestUserFindInfo() {
@@ -234,11 +267,11 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                         updateUserFund(data);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
-    private void requestMyCurrentVersus() {
-        Client.getMyCurrentVersus().setTag(TAG)
+    private void requestCurrentBattle() {
+        Client.getCurrentBattle().setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
                     @Override
                     protected void onRespSuccess(Resp<VersusGaming> resp) {
@@ -249,23 +282,23 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     }
 
     private void requestJoinVersus(final VersusGaming data) {
-        Client.joinVersus(data.getId(), "大厅").setTag(TAG)
+        Client.joinVersus(data.getId(), VersusGaming.SOURCE_HALL).setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
                     @Override
                     protected void onRespSuccess(Resp<VersusGaming> resp) {
                         if (resp.isSuccess()) {
                             data.setPageType(VersusGaming.PAGE_VERSUS);
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
-                            requestMyCurrentVersus();
+                            requestCurrentBattle();
                         } else {
                             showJoinVersusFailureDialog();
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
-    private void requestMatchVersus(final int type,String refuseIds) {
-        Client.quickMatchForAgainst(type,refuseIds).setTag(TAG)
+    private void requestMatchVersus(final int type, String refuseIds) {
+        Client.quickMatchForAgainst(type, refuseIds).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -275,25 +308,74 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
-    private void requestMatchResult(){
-        Client.getQuickMatchResult(VersusGaming.AGAGINST_FAST_MATCH,null).setTag(TAG)
+    private void requestMatchResult() {
+        Client.getQuickMatchResult(VersusGaming.AGAGINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
                     @Override
                     protected void onRespSuccess(Resp<VersusGaming> resp) {
-                       if (resp.isSuccess()){
-                           updateMatchResult(resp.getData());
-                       }else{
-                           ToastUtil.curt(resp.getMsg());
-                       }
+                        if (resp.isSuccess()) {
+                            updateMatchResult(resp.getData());
+                        } else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
                     }
-                }).fireSync();
+                }).fireFree();
+    }
+
+    private void requestVisibleVersusData() {
+        if (mListView != null && mVersusListAdapter != null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            int first = mListView.getFirstVisiblePosition() - 1;
+            int last = mListView.getLastVisiblePosition();
+            for (int i = first; i < last; i++) {
+                if (i >= 0) {
+                    VersusGaming item = mVersusListAdapter.getItem(i);
+                    if (item != null) {
+                        stringBuilder.append(item.getId()).append(",");
+                    }
+                }
+            }
+            if (stringBuilder.length() > 0) {
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                requestVisibleVersusData(stringBuilder.toString());
+            }
+        }
+    }
+
+    private void requestVisibleVersusData(String battleIds) {
+        Client.getBattleGamingData(battleIds).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<VersusGaming>>, List<VersusGaming>>() {
+                    @Override
+                    protected void onRespSuccessData(List<VersusGaming> data) {
+                        updateVisibleVersusData(data);
+                    }
+                }).fire();
+    }
+
+    private void updateVisibleVersusData(List<VersusGaming> data) {
+        if (data.isEmpty() || mVersusListAdapter == null) return;
+        for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
+            VersusGaming item = mVersusListAdapter.getItem(i);
+            for (VersusGaming versusGaming : data) {
+                if (item.getId() == versusGaming.getId()) {
+                    item.setGameStatus(versusGaming.getGameStatus());
+                    item.setLaunchPraise(versusGaming.getLaunchPraise());
+                    item.setLaunchScore(versusGaming.getLaunchScore());
+                    item.setAgainstPraise(versusGaming.getAgainstPraise());
+                    item.setAgainstScore(versusGaming.getAgainstScore());
+                    data.remove(versusGaming);
+                    break;
+                }
+            }
+        }
+        mVersusListAdapter.notifyDataSetChanged();
     }
 
     private void updateMatchResult(VersusGaming data) {
-        if (data != null){
+        if (data != null) {
             showMatchSuccessDialog(data);
         }
     }
@@ -323,6 +405,12 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     private void updateUserFund(UserFundInfoModel data) {
         mIntegral.setText(String.valueOf(data.getCredit()));
         mWining.setText(data.getYuanbao() + "个");
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
     }
 
     private void updateAvatar() {
@@ -358,9 +446,6 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
     @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.titleBar:
-                mListView.smoothScrollToPositionFromTop(0, 0);
-                break;
             case R.id.createVersus:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
@@ -390,6 +475,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
 
     private void showJoinVersusDialog(final VersusGaming item) {
         SmartDialog.with(getActivity(), getString(R.string.join_versus_tip), getString(R.string.join_versus_title))
+
                 .setMessageTextSize(15)
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
@@ -397,6 +483,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                         dialog.dismiss();
                         requestJoinVersus(item);
                         // TODO: 2017-06-21  进行余额查询，余额充足进入对战，余额不足弹窗提示充值
+
 //                        Launcher.with(getActivity(), FutureBattleActivity.class).execute();
                         // showJoinVersusFailureDialog();
                     }
@@ -434,8 +521,9 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestMatchVersus(VersusGaming.MATCH_START,"");
-                        showMatchingDialog();
+                        requestMatchVersus(VersusGaming.MATCH_START, "");
+//                        showMatchingDialog();
+                        showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -463,6 +551,21 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                 .setNegativeHide()
                 .show();
     }
+    //开始匹配弹窗
+    private void showMatchDialog() {
+        if (mStartMatchDialogFragment == null) {
+            mStartMatchDialogFragment = StartMatchDialogFragment
+                    .newInstance()
+                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            mStartMatchDialogFragment.dismiss();
+                            showCancelMatchDialog();
+                        }
+                    });
+        }
+        mStartMatchDialogFragment.show(getSupportFragmentManager());
+    }
 
     private void showCancelMatchDialog() {
         SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
@@ -471,14 +574,15 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestMatchVersus(VersusGaming.MATCH_CANCEL,"");
+                        requestMatchVersus(VersusGaming.MATCH_CANCEL, "");
                     }
                 })
                 .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        showMatchingDialog();
+                   //     showMatchingDialog();
+                        showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -488,7 +592,8 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                 .show();
 
     }
-    private void showMatchSuccessDialog(final VersusGaming data){
+
+    private void showMatchSuccessDialog(final VersusGaming data) {
         String reward = "";
         switch (data.getCoinType()) {
             case VersusGaming.COIN_TYPE_BAO:
@@ -503,16 +608,16 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
         }
         StringBuilder sb = new StringBuilder();
         sb.append(getString(R.string.versus_variety_name)).append(data.getVarietyName()).append("\n")
-          .append(getString(R.string.versus_time)).append(DateUtil.getMinutes(data.getEndline())).append("\n")
-          .append(getString(R.string.versus_reward)).append(reward).append("\n")
-          .append(getString(R.string.versus_tip));
-        SmartDialog.with(getActivity(),sb.toString(), getString(R.string.title_match_success))
+                .append(getString(R.string.versus_time)).append(DateUtil.getMinutes(data.getEndline())).append("\n")
+                .append(getString(R.string.versus_reward)).append(reward).append("\n")
+                .append(getString(R.string.versus_tip));
+        SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
                 .setMessageTextSize(15)
                 .setPositive(R.string.continue_versus, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestMatchVersus(VersusGaming.MATCH_CANCEL,String.valueOf(data.getId()));
+                        requestMatchVersus(VersusGaming.MATCH_CANCEL, String.valueOf(data.getId()));
                     }
                 })
                 .setNegative(R.string.join_versus, new SmartDialog.OnClickListener() {
@@ -567,7 +672,7 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
             if (intent.getAction() == LoginActivity.LOGIN_SUCCESS_ACTION) {
                 updateAvatar();
                 requestUserFindInfo();
-                requestMyCurrentVersus();
+                requestCurrentBattle();
             }
         }
     }
@@ -669,14 +774,14 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                         break;
                 }
                 switch (item.getGameStatus()) {
-                    case VersusGaming.GAME_STATUS_MATCH:
+                    case VersusGaming.GAME_STATUS_CREATED:
                         mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         showScoreProgress(0, 0, true);
                         break;
-                    case VersusGaming.GAME_STATUS_START:
+                    case VersusGaming.GAME_STATUS_STARTED:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -727,6 +832,8 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                 if (isInviting) {
                     mProgressBar.setProgress(0);
                     mProgressBar.setSecondaryProgress(0);
+                    mCreateProfit.setText(null);
+                    mAgainstProfit.setText(null);
                 } else {
                     //正正
                     if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
@@ -758,14 +865,8 @@ public class FutureVersusListActivity extends BaseActivity implements CustomSwip
                     if (fighterProfit > 0) {
                         fighterFlag = "+";
                     }
-                    if (createProfit == 0 && fighterProfit == 0 && isInviting) {
-                        mCreateProfit.setText(null);
-                        mAgainstProfit.setText(null);
-                    } else {
-                        mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-                        mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
-                    }
-
+                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
+                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
                 }
             }
         }
