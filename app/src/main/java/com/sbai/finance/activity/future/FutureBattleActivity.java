@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
 
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -174,7 +175,12 @@ public class FutureBattleActivity extends BaseActivity implements
     private void requestSubscribeBattle(){
         Client.requestSubscribeBattle(mVersusGaming.getId())
                 .setTag(TAG)
-                .setCallback(null)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+
+                    }
+                })
                 .fire();
     }
 
@@ -182,7 +188,12 @@ public class FutureBattleActivity extends BaseActivity implements
         if (mVersusGaming.getGameStatus() == GAME_STATUS_OBESERVE) {
             Client.requestUnsubscribeBattle(mVersusGaming.getId())
                     .setTag(TAG)
-                    .setCallback(null)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+
+                        }
+                    })
                     .fire();
         }
     }
