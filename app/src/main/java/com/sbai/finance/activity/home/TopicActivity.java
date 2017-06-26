@@ -147,7 +147,7 @@ public class TopicActivity extends BaseActivity {
 //		}
 //		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 //		Client.getStockMarketData(stringBuilder.toString())
-//				.setCallback(new StockCallback<StockResp, List<StockData>>() {
+//				.setClient(new StockCallback<StockResp, List<StockData>>() {
 //					@Override
 //					public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
 //						if (result!=null){

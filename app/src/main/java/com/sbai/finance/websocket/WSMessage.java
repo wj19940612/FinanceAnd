@@ -3,10 +3,11 @@ package com.sbai.finance.websocket;
 import com.google.gson.Gson;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.websocket.callback.WSCallback;
 
 import java.util.UUID;
 
-public class WMessage<T> {
+public class WSMessage<T> extends WSRequest {
 
     /**
      * code : 1000
@@ -20,10 +21,17 @@ public class WMessage<T> {
     private long timestamp;
     private T content;
 
-    public WMessage(int code, T content) {
+    public WSMessage(int code, T content, WSCallback wsCallback) {
+        super(wsCallback, false);
         this.code = code;
         this.timestamp = SysTime.getSysTime().getSystemTimestamp();
         this.uuid = createUUID();
+        this.content = content;
+    }
+
+    public WSMessage(int code, T content) {
+        super(false);
+        this.code = code;
         this.content = content;
     }
 
@@ -65,7 +73,17 @@ public class WMessage<T> {
         this.content = content;
     }
 
-    public String toJsonString() {
+    public String toJson() {
         return new Gson().toJson(this);
+    }
+
+    @Override
+    public String toString() {
+        return "WSMessage{" +
+                "code=" + code +
+                ", uuid='" + uuid + '\'' +
+                ", timestamp=" + timestamp +
+                ", content=" + content +
+                '}';
     }
 }

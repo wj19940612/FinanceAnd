@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,12 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.ApiCallback;
-
+import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WSMessage;
+import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.callback.OnPushReceiveListener;
+import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.websocket.cmd.QuickMatch;
 import java.util.HashSet;
 import java.util.List;
 
@@ -103,6 +109,18 @@ public class BattleListActivity extends BaseActivity implements
         initView();
         updateAvatar();
         requestVersusData();
+
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+            @Override
+            public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
+                Log.d(TAG, "onPushReceive: " + versusGamingWSPush);
+                ToastUtil.curt(versusGamingWSPush.toString());
+                if (mStartMatchDialogFragment!=null){
+                    mStartMatchDialogFragment.dismiss();
+                }
+                // TODO: 26/06/2017 sample
+            }
+        });
     }
 
     private void initCustomView() {
@@ -316,7 +334,30 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }).fireFree();
     }
-
+    private void requestMatchVersusOfSocket(String refuseId) {
+        String refuseIds = "";
+        if (refuseId.isEmpty()) {
+            mRefusedIds.delete(0, mRefusedIds.length());
+        } else {
+            mRefusedIds.append(refuseId).append(",");
+            refuseIds = mRefusedIds.substring(0, mRefusedIds.length() - 1);
+        }
+        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH, refuseIds), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showMatchDialog();
+                    }
+                });
+            }
+            @Override
+            public void onError(int code) {
+                ToastUtil.curt(code);
+            }
+        });
+    }
     private void requestMatchResult() {
         Client.getQuickMatchResult(VersusGaming.AGAGINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
@@ -524,7 +565,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestMatchVersus(VersusGaming.MATCH_START, "");
+                        requestMatchVersusOfSocket("");
                     }
                 })
                 .setTitleMaxLines(1)
@@ -534,7 +575,6 @@ public class BattleListActivity extends BaseActivity implements
                 .show();
 
     }
-
     private void showMatchingDialog() {
         SmartDialog.with(getActivity(), getString(R.string.matching_tip), getString(R.string.matching))
                 .setMessageTextSize(15)

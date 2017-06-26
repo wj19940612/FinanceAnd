@@ -120,25 +120,25 @@ public class BattleFloatView extends RelativeLayout {
                         }
                     }
                 });
-
-                mCreateAvatar.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnAvatarClickListener != null) {
-                            mOnAvatarClickListener.onCreateAvatarClick();
-                        }
-                    }
-                });
-
-                mAgainstAvatar.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnAvatarClickListener != null) {
-                            mOnAvatarClickListener.onAgainstAvatarClick();
-                        }
-                    }
-                });
             }
+
+            mCreateAvatar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnAvatarClickListener != null) {
+                        mOnAvatarClickListener.onCreateAvatarClick();
+                    }
+                }
+            });
+
+            mAgainstAvatar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnAvatarClickListener != null) {
+                        mOnAvatarClickListener.onAgainstAvatarClick();
+                    }
+                }
+            });
         }
     }
 

@@ -80,6 +80,7 @@ android {
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
+//            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"var.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
         }
