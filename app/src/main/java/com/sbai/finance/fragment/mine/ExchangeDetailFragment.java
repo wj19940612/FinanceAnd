@@ -297,9 +297,9 @@ public class ExchangeDetailFragment extends BaseFragment {
                 mPayWay.setText(detail.getRemark());
                 if (detail.isVcoin()) {
                     if (detail.getMoney() < 0) {
-                        mMoney.setText(context.getString(R.string.coin_number, String.valueOf(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
                     } else {
-                        mMoney.setText(context.getString(R.string.add_coin, String.valueOf(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.add_coin, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
                     }
                 } else {
                     if (detail.getMoney() < 0) {
