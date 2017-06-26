@@ -804,6 +804,8 @@ public class BorrowDetailsActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
         intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
+        intent.putExtra(Launcher.EX_PAYLOAD_3,mBorrowDetail.getId());
+        intent.putExtra(Launcher.EX_PAYLOAD_4,mBorrowDetail.getStatus());
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
