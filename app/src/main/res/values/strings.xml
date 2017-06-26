@@ -600,7 +600,7 @@
     <!--  聚宝盆  -->
     <string name="cornucopia">聚宝盆</string>
     <string name="exchange_rule">兑换规则</string>
-    <string name="exchange_coin">兑换元宝</string>
+    <string name="exchange_coin">购买元宝</string>
     <string name="coin_detail">元宝明细</string>
     <string name="integrate_detail">积分明细</string>
     <string name="exchange_integrate">兑换积分</string>
@@ -610,10 +610,12 @@
     <string name="add_integrate_number">+%1$s  积分</string>
     <string name="check_details">查看明细></string>
     <string name="old_price">原价: ￥%1$s</string>
-    <string name="buy">兑换</string>
-    <string name="buy_confirm">确认兑换</string>
+    <string name="exchange">兑换</string>
+    <string name="buy">购买</string>
+    <string name="exchange_confirm">确认兑换</string>
+    <string name="buy_confirm">确认购买</string>
     <string name="confirm_use_coin_buy_integrate">确认使用%1$s元宝兑换%2$s积分?</string>
-    <string name="confirm_use_money_buy_coin">确认使用%1$s元兑换%2$s元宝?</string>
+    <string name="confirm_use_money_buy_coin">确认使用%1$s元购买%2$s元宝?</string>
     <string name="earnings">收入</string>
     <string name="extend">支出</string>
     <string name="go_recharge">去充值</string>

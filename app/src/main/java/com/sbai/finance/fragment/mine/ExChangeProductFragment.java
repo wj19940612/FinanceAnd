@@ -127,7 +127,8 @@ public class ExChangeProductFragment extends BaseFragment {
         if (item != null) {
             String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, FinanceUtil.formatWithScale(item.getFromRealMoney()), FinanceUtil.formatWithScaleNoZero(item.getToRealMoney())) :
                     getString(R.string.confirm_use_coin_buy_integrate, FinanceUtil.formatWithScaleNoZero(item.getFromRealMoney()), FinanceUtil.formatWithScale(item.getToRealMoney()));
-            SmartDialog.with(getActivity(), msg, getString(R.string.buy_confirm))
+            String title = item.isVcoin() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
+            SmartDialog.with(getActivity(), msg, title)
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
@@ -156,7 +157,8 @@ public class ExChangeProductFragment extends BaseFragment {
     private void showInputSafetyPassDialog(final CornucopiaProductModel item) {
         String content = item.isVcoin() ? getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(item.getToRealMoney())) :
                 getString(R.string.integrate_number, FinanceUtil.formatWithScale(item.getToRealMoney()));
-        InputSafetyPassDialogFragment.newInstance(content, getString(R.string.buy))
+        String hintText = item.isVcoin() ? getString(R.string.buy) : getString(R.string.exchange);
+        InputSafetyPassDialogFragment.newInstance(content, hintText)
                 .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
                     @Override
                     public void onPassWord(String passWord) {
@@ -184,7 +186,7 @@ public class ExChangeProductFragment extends BaseFragment {
                     protected void onReceive(Resp<Object> objectResp) {
                         super.onReceive(objectResp);
                         if (objectResp.getCode() == 2201) {
-                            showExchangeFailDialog(objectResp, item);
+                            showExchangeFailDialog(item);
                         } else {
                             ToastUtil.curt(objectResp.getMsg());
                         }
@@ -193,7 +195,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 .fire();
     }
 
-    private void showExchangeFailDialog(Resp<Object> resp, CornucopiaProductModel item) {
+    private void showExchangeFailDialog(CornucopiaProductModel item) {
         if (item.isVcoin()) {
             SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough))
                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {

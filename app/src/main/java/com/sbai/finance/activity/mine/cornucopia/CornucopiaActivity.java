@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -54,6 +53,8 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private int mSelectPosition;
 
+    private UserFundInfoModel mUserFundInfoModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,11 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         initView();
 
         updateCoinAndIntegrateNumber(null);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         requestUserFindInfo();
     }
 
@@ -116,7 +122,7 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                 .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
                     @Override
                     protected void onRespSuccessData(UserFundInfoModel data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        mUserFundInfoModel = data;
                         updateCoinAndIntegrateNumber(data);
                     }
 
