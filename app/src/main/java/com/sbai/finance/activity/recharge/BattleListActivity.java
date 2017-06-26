@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,12 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WSMessage;
+import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.callback.OnPushReceiveListener;
+import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.websocket.cmd.QuickMatch;
 
 import java.util.HashSet;
 import java.util.List;
@@ -101,6 +108,14 @@ public class BattleListActivity extends BaseActivity implements
         initView();
         updateAvatar();
         requestVersusData();
+
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+            @Override
+            public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
+                Log.d(TAG, "onPushReceive: " + versusGamingWSPush);
+                // TODO: 26/06/2017 sample
+            }
+        });
     }
 
     private void initCustomView() {
@@ -521,8 +536,22 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestMatchVersus(VersusGaming.MATCH_START, "");
-//                        showMatchingDialog();
+
+                        // TODO: 26/06/2017 sample 
+                        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH, ""), new WSCallback<WSMessage<Resp>>() {
+                            @Override
+                            public void onResponse(WSMessage<Resp> respWSMessage) {
+
+                            }
+
+                            @Override
+                            public void onError(int code) {
+
+                            }
+
+                        });
+                        //requestMatchVersus(VersusGaming.MATCH_START, "");
+                        //showMatchingDialog();
                         showMatchDialog();
                     }
                 })
@@ -551,6 +580,7 @@ public class BattleListActivity extends BaseActivity implements
                 .setNegativeHide()
                 .show();
     }
+
     //开始匹配弹窗
     private void showMatchDialog() {
         if (mStartMatchDialogFragment == null) {

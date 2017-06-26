@@ -273,7 +273,6 @@ public class HomeFragment extends BaseFragment {
                 Launcher.with(getActivity(), OpinionActivity.class).execute();
                 break;
             case R.id.battle:
-                // Launcher.with(getActivity(), FutureBattleActivity.class).execute();
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
             default:

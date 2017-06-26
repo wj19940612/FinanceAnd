@@ -13,6 +13,7 @@ import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
+import com.sbai.finance.websocket.WSClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +38,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     protected void onDestroy() {
         Netty.get().shutdown();
+        WSClient.get().close();
         super.onDestroy();
     }
 
