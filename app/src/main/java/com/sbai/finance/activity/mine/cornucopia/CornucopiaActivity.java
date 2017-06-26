@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,6 +26,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.httplib.CookieManger;
 
@@ -47,8 +47,13 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
     SlidingTabLayout mTabLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private ExchangeProductAdapter mExchangeProductAdapter;
 
+    private int mSelectPosition;
+
+    private UserFundInfoModel mUserFundInfoModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,18 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         setContentView(R.layout.activity_cornucopia);
         ButterKnife.bind(this);
 
+        initView();
+
+        updateCoinAndIntegrateNumber(null);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        requestUserFindInfo();
+    }
+
+    private void initView() {
         mExchangeProductAdapter = new ExchangeProductAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mExchangeProductAdapter);
         mTabLayout.setDistributeEvenly(true);
@@ -63,14 +80,36 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mTabLayout.setViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        updateCoinAndIntegrateNumber(null);
-        requestUserFindInfo();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mSelectPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = mExchangeProductAdapter.getFragment(mSelectPosition);
+                if (fragment != null && fragment instanceof ExChangeProductFragment) {
+                    ((ExChangeProductFragment) (fragment)).scrollToTop();
+                }
+            }
+        });
     }
 
     private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
         if (userFundInfoModel != null) {
-            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScale(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
             mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }
@@ -83,8 +122,12 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                 .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
                     @Override
                     protected void onRespSuccessData(UserFundInfoModel data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        mUserFundInfoModel = data;
                         updateCoinAndIntegrateNumber(data);
+                        ExChangeProductFragment exChangeProductFragment = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(0);
+                        ExChangeProductFragment exChangeProductFragment2 = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(1);
+                        exChangeProductFragment.setUserFundInfo(data);
+                        exChangeProductFragment2.setUserFundInfo(data);
                     }
 
                 })
@@ -138,10 +181,12 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
     class ExchangeProductAdapter extends FragmentPagerAdapter {
 
         private Context mContext;
+        private FragmentManager mFragmentManager;
 
         public ExchangeProductAdapter(FragmentManager fm, Context context) {
             super(fm);
             mContext = context;
+            mFragmentManager = fm;
         }
 
         @Override
@@ -169,6 +214,10 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                     return mContext.getString(R.string.exchange_integrate);
             }
             return super.getPageTitle(position);
+        }
+
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
         }
     }
 }

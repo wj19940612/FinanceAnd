@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -30,6 +31,7 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
     ViewPager mViewPager;
 
     private int mType;
+    private int mSelectPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,28 +40,59 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mType = getIntent().getIntExtra(Launcher.EX_PAY_END, 0);
+        initView();
+    }
+
+    private void initView() {
         if (mType == ExchangeDetailModel.TYPE_COIN) {
             mTitleBar.setTitle(R.string.coin_detail);
         } else {
             mTitleBar.setTitle(R.string.integrate_detail);
         }
 
-        ExchangeDetailAdapter exchangeDetailAdapter = new ExchangeDetailAdapter(getSupportFragmentManager(), getActivity());
+        final ExchangeDetailAdapter exchangeDetailAdapter = new ExchangeDetailAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(exchangeDetailAdapter);
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mTabLayout.setViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mSelectPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = exchangeDetailAdapter.getFragment(mSelectPosition);
+                if (fragment != null) {
+                    ((ExchangeDetailFragment) (fragment)).scrollToTop();
+                }
+            }
+        });
     }
 
     class ExchangeDetailAdapter extends FragmentPagerAdapter {
 
         private Context mContext;
+        private FragmentManager mFragmentManager;
 
         public ExchangeDetailAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.mContext = context;
+            mFragmentManager = fm;
         }
 
         @Override
@@ -87,6 +120,10 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
                     return mContext.getString(R.string.extend);
             }
             return super.getPageTitle(position);
+        }
+
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
         }
     }
 }

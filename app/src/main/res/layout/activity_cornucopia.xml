@@ -10,6 +10,7 @@
     tools:context="com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

@@ -17,7 +17,7 @@ public class UserFundInfoModel {
     //现金
     private double money;
     //元宝
-    private double yuanbao;
+    private int yuanbao;
     //积分
     private double credit;
     private int userId;
@@ -30,11 +30,11 @@ public class UserFundInfoModel {
         this.money = money;
     }
 
-    public double getYuanbao() {
+    public int getYuanbao() {
         return yuanbao;
     }
 
-    public void setYuanbao(double yuanbao) {
+    public void setYuanbao(int yuanbao) {
         this.yuanbao = yuanbao;
     }
 

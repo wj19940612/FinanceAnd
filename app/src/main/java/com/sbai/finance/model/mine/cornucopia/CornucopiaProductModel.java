@@ -27,9 +27,9 @@ public class CornucopiaProductModel {
     //折扣比例 100 ， 70为7折
     private int discount;
     //兑换来源金额
-    private int fromMoney;
+    private double fromMoney;
     //真实的兑换来源金额
-    private int fromRealMoney;
+    private double fromRealMoney;
     //货币类型  0 现金 1元宝
     private int fromType;
     //兑换配置Id
@@ -38,14 +38,14 @@ public class CornucopiaProductModel {
     //状态  0 不可用 1可用
     private int status;
     //要兑换的金额
-    private int toMoney;
+    private double toMoney;
     //要兑换的真实金额
-    private int toRealMoney;
+    private double toRealMoney;
     //货币类型  1元宝 3 积分
     private int toType;
 
-    public boolean isNotDiscount() {
-        return getDiscount() == 100;
+    public boolean isDiscount() {
+        return getFromMoney() != getFromRealMoney();
     }
 
     public boolean isVcoin() {
@@ -60,19 +60,19 @@ public class CornucopiaProductModel {
         this.discount = discount;
     }
 
-    public int getFromMoney() {
+    public double getFromMoney() {
         return fromMoney;
     }
 
-    public void setFromMoney(int fromMoney) {
+    public void setFromMoney(double fromMoney) {
         this.fromMoney = fromMoney;
     }
 
-    public int getFromRealMoney() {
+    public double getFromRealMoney() {
         return fromRealMoney;
     }
 
-    public void setFromRealMoney(int fromRealMoney) {
+    public void setFromRealMoney(double fromRealMoney) {
         this.fromRealMoney = fromRealMoney;
     }
 
@@ -108,7 +108,7 @@ public class CornucopiaProductModel {
         this.status = status;
     }
 
-    public int getToMoney() {
+    public double getToMoney() {
         return toMoney;
     }
 
@@ -116,7 +116,7 @@ public class CornucopiaProductModel {
         this.toMoney = toMoney;
     }
 
-    public int getToRealMoney() {
+    public double getToRealMoney() {
         return toRealMoney;
     }
 

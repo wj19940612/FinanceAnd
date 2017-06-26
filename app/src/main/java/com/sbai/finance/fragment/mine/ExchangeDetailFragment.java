@@ -20,6 +20,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
@@ -103,32 +104,7 @@ public class ExchangeDetailFragment extends BaseFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (isSlideToBottom(mRecyclerView) && mLoadMore) {
-                    requestDetailList();
-                }
-                View stickyInfoView = recyclerView.findChildViewUnder(
-                        mAdsorbText.getMeasuredWidth() / 2, 5);
-
-                if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
-                    mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
-                }
-
-                View transInfoView = recyclerView.findChildViewUnder(
-                        mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
-                if (transInfoView != null && transInfoView.getTag() != null) {
-                    int transViewStatus = (int) transInfoView.getTag();
-                    int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
-
-                    if (transViewStatus == ExchangeDetailAdapter.HAS_STICKY_VIEW) {
-                        if (transInfoView.getTop() > 0) {
-                            mAdsorbText.setTranslationY(dealtY);
-                        } else {
-                            mAdsorbText.setTranslationY(0);
-                        }
-                    } else if (transViewStatus == ExchangeDetailAdapter.NONE_STICKY_VIEW) {
-                        mAdsorbText.setTranslationY(0);
-                    }
-                }
+                handleRecycleScroll(recyclerView);
             }
         });
         requestDetailList();
@@ -141,6 +117,36 @@ public class ExchangeDetailFragment extends BaseFragment {
         });
     }
 
+    //RecycleView 滑动的时候 根据tag 显示对应的吸顶文字
+    private void handleRecycleScroll(RecyclerView recyclerView) {
+        if (isSlideToBottom(mRecyclerView) && mLoadMore) {
+            requestDetailList();
+        }
+        View stickyInfoView = recyclerView.findChildViewUnder(
+                mAdsorbText.getMeasuredWidth() / 2, 5);
+
+        if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
+            mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
+        }
+
+        View transInfoView = recyclerView.findChildViewUnder(
+                mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
+        if (transInfoView != null && transInfoView.getTag() != null) {
+            int transViewStatus = (int) transInfoView.getTag();
+            int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
+
+            if (transViewStatus == ExchangeDetailAdapter.HAS_STICKY_VIEW) {
+                if (transInfoView.getTop() > 0) {
+                    mAdsorbText.setTranslationY(dealtY);
+                } else {
+                    mAdsorbText.setTranslationY(0);
+                }
+            } else if (transViewStatus == ExchangeDetailAdapter.NONE_STICKY_VIEW) {
+                mAdsorbText.setTranslationY(0);
+            }
+        }
+    }
+
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
         if (recyclerView == null) return false;
         if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
@@ -148,6 +154,9 @@ public class ExchangeDetailFragment extends BaseFragment {
         return false;
     }
 
+    public void scrollToTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
 
     private void requestDetailList() {
         Client.getExchangeDetailList(mDirection, mType, mPage)
@@ -284,19 +293,19 @@ public class ExchangeDetailFragment extends BaseFragment {
                 } else {
                     mAdsorbText.setVisibility(View.GONE);
                 }
-                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
+                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getDetailFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
                 if (detail.isVcoin()) {
                     if (detail.getMoney() < 0) {
-                        mMoney.setText(context.getString(R.string.coin_number, detail.getMoney()));
+                        mMoney.setText(context.getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
                     } else {
-                        mMoney.setText(context.getString(R.string.add_coin, detail.getMoney()));
+                        mMoney.setText(context.getString(R.string.add_coin, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
                     }
                 } else {
                     if (detail.getMoney() < 0) {
-                        mMoney.setText(context.getString(R.string.integrate_number, String.valueOf(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
                     } else {
-                        mMoney.setText(context.getString(R.string.add_integrate_number, detail.getMoney()));
+                        mMoney.setText(context.getString(R.string.add_integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
                     }
                 }
             }

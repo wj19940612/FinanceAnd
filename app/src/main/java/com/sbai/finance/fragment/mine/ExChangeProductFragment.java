@@ -22,6 +22,7 @@ import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
 import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
+import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -57,7 +58,7 @@ public class ExChangeProductFragment extends BaseFragment {
     private Unbinder mBind;
     private int mType;
     private ExchangeProductAdapter mExchangeProductAdapter;
-
+    private UserFundInfoModel mUserFundInfoModel;
 
     public interface OnUserFundChangeListener {
         void onUserFundChange();
@@ -114,47 +115,66 @@ public class ExChangeProductFragment extends BaseFragment {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, int position, long id) {
                 final CornucopiaProductModel item = (CornucopiaProductModel) parent.getAdapter().getItem(position);
-                showExchangePassDialog(item);
+                if (item == null) return;
+                if (mUserFundInfoModel != null) {
+                    if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney() : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
+                        showExchangePassDialog(item);
+                    } else {
+                        showExchangeFailDialog(item);
+                    }
+                } else {
+                    showExchangePassDialog(item);
+                }
             }
         });
     }
 
+    public void scrollToTop() {
+        mListView.smoothScrollToPosition(0);
+    }
+
     private void showExchangePassDialog(final CornucopiaProductModel item) {
-        if (item != null) {
-            String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, String.valueOf(item.getFromRealMoney()), String.valueOf(item.getToRealMoney())) :
-                    getString(R.string.confirm_use_coin_buy_integrate, String.valueOf(item.getFromRealMoney()), String.valueOf(item.getToRealMoney()));
-            SmartDialog.with(getActivity(), msg, getString(R.string.buy_confirm))
-                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            Client.getUserHasPassWord()
-                                    .setTag(TAG)
-                                    .setIndeterminate(ExChangeProductFragment.this)
-                                    .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                                        @Override
-                                        protected void onRespSuccessData(Boolean data) {
-                                            if (!data) {
-                                                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
-                                            } else {
-                                                String content = item.isVcoin() ? getString(R.string.coin_number, String.valueOf(item.getFromRealMoney())) :
-                                                        getString(R.string.integrate_number, String.valueOf(item.getFromRealMoney()));
-                                                InputSafetyPassDialogFragment.newInstance(content, getString(R.string.buy))
-                                                        .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
-                                                            @Override
-                                                            public void onPassWord(String passWord) {
-                                                                exchange(item, passWord);
-                                                            }
-                                                        }).show(getChildFragmentManager());
-                                            }
+        String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, FinanceUtil.formatWithScale(item.getFromRealMoney()), FinanceUtil.formatWithScaleNoZero(item.getToRealMoney())) :
+                getString(R.string.confirm_use_coin_buy_integrate, FinanceUtil.formatWithScaleNoZero(item.getFromRealMoney()), FinanceUtil.formatWithScale(item.getToRealMoney()));
+        String title = item.isVcoin() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
+        SmartDialog.with(getActivity(), msg, title)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Client.getUserHasPassWord()
+                                .setTag(TAG)
+                                .setIndeterminate(ExChangeProductFragment.this)
+                                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                                    @Override
+                                    protected void onRespSuccessData(Boolean data) {
+                                        if (!data) {
+                                            Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
+                                        } else {
+                                            showInputSafetyPassDialog(item);
                                         }
-                                    })
-                                    .fire();
+                                    }
+                                })
+                                .fire();
+                    }
+                }).show();
+    }
 
-                        }
-                    }).show();
+    private void showInputSafetyPassDialog(final CornucopiaProductModel item) {
+        String content = item.isVcoin() ? getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(item.getToRealMoney())) :
+                getString(R.string.integrate_number, FinanceUtil.formatWithScale(item.getToRealMoney()));
+        String hintText = item.isVcoin() ? getString(R.string.buy) : getString(R.string.exchange);
+        InputSafetyPassDialogFragment.newInstance(content, hintText)
+                .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                    @Override
+                    public void onPassWord(String passWord) {
+                        exchange(item, passWord);
+                    }
+                }).show(getChildFragmentManager());
+    }
 
-        }
+    public void setUserFundInfo(UserFundInfoModel userFundInfo) {
+        mUserFundInfoModel = userFundInfo;
     }
 
     private void exchange(final CornucopiaProductModel item, String passWord) {
@@ -176,7 +196,7 @@ public class ExChangeProductFragment extends BaseFragment {
                     protected void onReceive(Resp<Object> objectResp) {
                         super.onReceive(objectResp);
                         if (objectResp.getCode() == 2201) {
-                            showExchangeFailDialog(objectResp, item);
+                            showExchangeFailDialog(item);
                         } else {
                             ToastUtil.curt(objectResp.getMsg());
                         }
@@ -185,7 +205,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 .fire();
     }
 
-    private void showExchangeFailDialog(Resp<Object> resp, CornucopiaProductModel item) {
+    private void showExchangeFailDialog(CornucopiaProductModel item) {
         if (item.isVcoin()) {
             SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough))
                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
@@ -302,18 +322,18 @@ public class ExChangeProductFragment extends BaseFragment {
             public void bindDataWithView(Context context, CornucopiaProductModel item, int position) {
                 if (item.isVcoin()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
-                    mProduct.setText(String.valueOf(item.getToRealMoney()));
+                    mProduct.setText(FinanceUtil.formatWithScaleNoZero(item.getToRealMoney()));
                     mPrice.setText(context.getString(R.string.yuan, FinanceUtil.formatWithScale(item.getFromRealMoney())));
-                    if (!item.isNotDiscount()) {
-                        mOldPrice.setVisibility(View.VISIBLE);
-                        mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
-                    } else {
-                        mOldPrice.setVisibility(View.GONE);
-                    }
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
                     mProduct.setText(FinanceUtil.formatWithScale(item.getToRealMoney()));
-                    mPrice.setText(context.getString(R.string.coin_number, String.valueOf(item.getFromRealMoney())));
+                    mPrice.setText(context.getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(item.getFromRealMoney())));
+                }
+                if (item.isDiscount()) {
+                    mOldPrice.setVisibility(View.VISIBLE);
+                    mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
+                } else {
+                    mOldPrice.setVisibility(View.GONE);
                 }
             }
         }

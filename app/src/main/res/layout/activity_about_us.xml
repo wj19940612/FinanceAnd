@@ -64,6 +64,7 @@
         app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
+        android:visibility="gone"
         android:id="@+id/checkUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

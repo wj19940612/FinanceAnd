@@ -11,7 +11,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +29,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -250,12 +250,6 @@ public class BindBankCardActivity extends BaseActivity {
         String bank = getBank();
         String identityCard = getIdentityCard();
         String phoneNumber = getPhoneNumber();
-
-        mUserBank.setRealName(name);
-        mUserBank.setCardNumber(bankCardNumber);
-        mUserBank.setIssuingBankName(bank);
-        mUserBank.setCardPhone(phoneNumber);
-        mUserBank.setIdCard(identityCard);
         if (mUserBankCardInfoModel != null) {
             if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
                 Client.bindBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mCanUseBankListModel.getId())
@@ -264,20 +258,15 @@ public class BindBankCardActivity extends BaseActivity {
                         .setCallback(new Callback<Resp<Integer>>() {
                             @Override
                             protected void onRespSuccess(Resp<Integer> resp) {
-                                Log.d(TAG, "onRespSuccess: " + resp.toString());
                                 if (resp.isSuccess()) {
-                                    if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-                                        mUserBankCardInfoModel.setBindStatus(1);
-                                    }
-                                    if (resp.hasData()) {
-                                        mUserBank.setId(resp.getData());
-                                    }
-
+                                    mUserBankCardInfoModel.setBindStatus(1);
                                     Intent intent = new Intent();
                                     intent.putExtra(Launcher.EX_PAYLOAD, mUserBank);
                                     setResult(RESULT_OK, intent);
                                     finish();
 
+                                } else {
+                                    ToastUtil.curt(resp.getMsg());
                                 }
                             }
                         })
@@ -290,9 +279,7 @@ public class BindBankCardActivity extends BaseActivity {
                             @Override
                             protected void onRespSuccess(Resp<Integer> resp) {
                                 if (resp.isSuccess()) {
-                                    if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-                                        mUserBankCardInfoModel.setBindStatus(1);
-                                    }
+                                    mUserBankCardInfoModel.setBindStatus(1);
                                     if (resp.hasData()) {
                                         mUserBankCardInfoModel.setId(resp.getData());
                                     }
@@ -301,8 +288,8 @@ public class BindBankCardActivity extends BaseActivity {
                                     intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
                                     setResult(RESULT_OK, intent);
                                     finish();
-
-                                    Log.d(TAG, "onRespSuccess:  " + resp.toString());
+                                } else {
+                                    ToastUtil.curt(resp.getMsg());
                                 }
                             }
                         })
