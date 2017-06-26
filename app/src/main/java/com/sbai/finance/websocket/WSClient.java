@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.sbai.finance.net.API;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.httplib.CookieManger;
@@ -176,8 +177,7 @@ public class WSClient implements WSAbsClient {
 
     public static URI createURI() {
         try {
-            return new URI("ws://192.168.1.7/game/ws.do");
-//            return new URI("ws://" + API.getDomain() + "/game/ws.do");
+            return new URI("ws://" + API.getDomain() + "/game/ws.do");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

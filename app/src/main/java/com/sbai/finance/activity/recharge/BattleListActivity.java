@@ -113,8 +113,6 @@ public class BattleListActivity extends BaseActivity implements
         WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
             @Override
             public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
-                Log.d(TAG, "onPushReceive: " + versusGamingWSPush);
-                ToastUtil.curt(versusGamingWSPush.toString());
                 if (mStartMatchDialogFragment!=null){
                     mStartMatchDialogFragment.dismiss();
                 }
@@ -353,8 +351,13 @@ public class BattleListActivity extends BaseActivity implements
                 });
             }
             @Override
-            public void onError(int code) {
-                ToastUtil.curt(code);
+            public void onError(final int code) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.curt(String.valueOf(code));
+                    }
+                });
             }
         });
     }
