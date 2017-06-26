@@ -53,6 +53,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.websocket.PushCode;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.finance.websocket.WSClient;
 import com.sbai.finance.websocket.WSMessage;
@@ -112,10 +113,26 @@ public class BattleListActivity extends BaseActivity implements
 
         WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
             @Override
-            public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
-                if (mStartMatchDialogFragment!=null){
-                    mStartMatchDialogFragment.dismiss();
-                }
+            public void onPushReceive(final WSPush<VersusGaming> versusGamingWSPush) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mStartMatchDialogFragment!=null){
+                            mStartMatchDialogFragment.dismiss();
+                        }
+                        switch (versusGamingWSPush.getContent().getType()){
+                            case PushCode.QUICK_MATCH_TIMEOUT:
+                                showMatchTimeoutDialog();
+                            break;
+                            case PushCode.QUICK_MATCH_FAILURE:
+                                showMatchTimeoutDialog();
+                                break;
+                            case PushCode.QUICK_MATCH_SUCCESS:
+                                showMatchSuccessDialog((VersusGaming) versusGamingWSPush.getContent().getData());
+                                break;
+                        }
+                    }
+                });
                 // TODO: 26/06/2017 sample
             }
         });
@@ -219,10 +236,13 @@ public class BattleListActivity extends BaseActivity implements
                         if (item != null) {
                             if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
                                 item.setPageType(VersusGaming.PAGE_RECORD);
-                            } else {
+                            } else if (item.getGameStatus()==VersusGaming.GAME_STATUS_CREATED
+                                    &&LocalUser.getUser().getUserInfo().getId()!=item.getLaunchUser()){
+                                showJoinVersusDialog(item);
+                            }else{
                                 item.setPageType(VersusGaming.PAGE_VERSUS);
+                                Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                             }
-                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                         }
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -637,8 +657,30 @@ public class BattleListActivity extends BaseActivity implements
                 .show();
 
     }
-
+    private void showMatchTimeoutDialog(){
+        SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
+                .setMessageTextSize(15)
+                .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestMatchVersusOfSocket("");
+                    }
+                })
+                .setNegative(R.string.later_try_again, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitleMaxLines(1)
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setCancelableOnTouchOutside(false)
+                .show();
+    }
     private void showMatchSuccessDialog(final VersusGaming data) {
+        if (data == null) return;
         String reward = "";
         switch (data.getCoinType()) {
             case VersusGaming.COIN_TYPE_BAO:
