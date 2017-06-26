@@ -804,8 +804,10 @@ public class BorrowDetailsActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.putExtra(Launcher.EX_PAYLOAD_1, mWhetherAttentionShieldOrNot);
         intent.putExtra(Launcher.EX_PAYLOAD_2, mAttentionAndFansNumberModel);
-        intent.putExtra(Launcher.EX_PAYLOAD_3,mBorrowDetail.getId());
-        intent.putExtra(Launcher.EX_PAYLOAD_4,mBorrowDetail.getStatus());
+        if (mBorrowDetail!=null){
+            intent.putExtra(Launcher.EX_PAYLOAD_4,mBorrowDetail.getStatus());
+            intent.putExtra(Launcher.EX_PAYLOAD_3,mBorrowDetail.getId());
+        }
         setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
@@ -813,7 +815,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setAction(STATUS_CHANAGE);
         intent.putExtra(DATA_STATUS,mBorrowDetail.getStatus());
-        intent.putExtra(DATA_ID,mBorrowDetail.getId());
+        intent.putExtra(DATA_ID,mLoadId);
         mLocalBroadcastManager.sendBroadcastSync(intent);
     }
 
