@@ -70,7 +70,7 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
         if (userFundInfoModel != null) {
-            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScale(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number,userFundInfoModel.getYuanbao()), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
             mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }

@@ -121,8 +121,8 @@ public class ExChangeProductFragment extends BaseFragment {
 
     private void showExchangePassDialog(final CornucopiaProductModel item) {
         if (item != null) {
-            String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, String.valueOf(item.getFromRealMoney()), String.valueOf(item.getToRealMoney())) :
-                    getString(R.string.confirm_use_coin_buy_integrate, String.valueOf(item.getFromRealMoney()), String.valueOf(item.getToRealMoney()));
+            String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, String.valueOf(item.getFromRealMoney()), item.getToRealMoney()) :
+                    getString(R.string.confirm_use_coin_buy_integrate, item.getFromRealMoney(), String.valueOf(item.getToRealMoney()));
             SmartDialog.with(getActivity(), msg, getString(R.string.buy_confirm))
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
@@ -137,7 +137,7 @@ public class ExChangeProductFragment extends BaseFragment {
                                             if (!data) {
                                                 Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
                                             } else {
-                                                String content = item.isVcoin() ? getString(R.string.coin_number, String.valueOf(item.getFromRealMoney())) :
+                                                String content = item.isVcoin() ? getString(R.string.coin_number, item.getFromRealMoney()) :
                                                         getString(R.string.integrate_number, String.valueOf(item.getFromRealMoney()));
                                                 InputSafetyPassDialogFragment.newInstance(content, getString(R.string.buy))
                                                         .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
@@ -313,7 +313,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
                     mProduct.setText(FinanceUtil.formatWithScale(item.getToRealMoney()));
-                    mPrice.setText(context.getString(R.string.coin_number, String.valueOf(item.getFromRealMoney())));
+                    mPrice.setText(context.getString(R.string.coin_number, item.getFromRealMoney()));
                 }
             }
         }
