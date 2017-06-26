@@ -13,11 +13,13 @@ public class VersusGaming implements Parcelable {
     public static final int COIN_TYPE_BAO = 2;
     public static final int COIN_TYPE_INTEGRAL = 3;
 
-    // 0取消 1发起 2对战开始 3对战结束
+    // 0取消 1发起 2对战开始 3对战结束 4观战
     public static final int GAME_STATUS_CANCELED = 0;
     public static final int GAME_STATUS_CREATED = 1;
     public static final int GAME_STATUS_STARTED = 2;
     public static final int GAME_STATUS_END = 3;
+    public static final int GAME_STATUS_OBESERVE = 4;
+
     //0平手 1发起者赢 2应战者赢
     public static final int RESULT_TIE = 0;
     public static final int RESULT_CREATE_WIN = 1;
@@ -34,10 +36,12 @@ public class VersusGaming implements Parcelable {
     public static final int CREATE_FAST_MATCH = 1;
     public static final int AGAGINST_FAST_MATCH = 2;
 
+
     public static final String SOURCE_COTERIE = "coterie";
     public static final String SOURCE_HALL = "hall";
     public static final String SOURCE_WEIBO = "weibo";
     public static final String SOURCE_FRIEND = "friend";
+
     /**
      * againstFrom : 经济圈
      * againstUser : 286

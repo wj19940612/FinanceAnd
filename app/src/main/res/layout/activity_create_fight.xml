@@ -2,14 +2,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_futures_fight"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
-        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -91,14 +89,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_marginLeft="16dp"
             android:drawableLeft="@drawable/ic_bounty"
             android:drawablePadding="6dp"
@@ -107,51 +104,25 @@
             android:textColor="@color/unluckyText"
             android:textSize="15sp"/>
 
-        <TextView
-            android:id="@+id/bountyChoice1"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
+        <GridView
+            android:id="@+id/bountyGridView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/bg_fight_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tools:text="100"/>
-
-        <TextView
-            android:id="@+id/bountyChoice2"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="14dp"
-            android:background="@drawable/bg_fight_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tools:text="300"/>
-
-        <TextView
-            android:id="@+id/bountyChoice3"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="14dp"
-            android:background="@drawable/bg_fight_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:visibility="invisible"
-            tools:text="600"/>
+            android:horizontalSpacing="14dp"
+            android:numColumns="3"
+            android:verticalSpacing="20dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_marginLeft="16dp"
             android:drawableLeft="@drawable/ic_duration"
             android:drawablePadding="6dp"
@@ -160,40 +131,15 @@
             android:textColor="@color/unluckyText"
             android:textSize="15sp"/>
 
-        <TextView
-            android:id="@+id/durationChoice1"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
+        <GridView
+            android:id="@+id/durationGridView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/bg_fight_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tools:text="@string/duration_choice1"/>
-
-        <TextView
-            android:id="@+id/durationChoice2"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="14dp"
-            android:background="@drawable/bg_fight_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tools:text="@string/duration_choice1"/>
-
-        <TextView
-            android:id="@+id/durationChoice3"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="14dp"
-            android:background="@drawable/bg_fight_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            tools:text="@string/duration_choice1"/>
+            android:horizontalSpacing="14dp"
+            android:numColumns="3"
+            android:verticalSpacing="20dp"/>
     </LinearLayout>
-
 
     <RelativeLayout
         android:layout_width="match_parent"

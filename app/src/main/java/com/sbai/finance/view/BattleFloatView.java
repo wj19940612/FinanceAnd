@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,7 +174,11 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public BattleFloatView setAgainstName(String userName) {
-        mAgainstName.setText(userName);
+        if (TextUtils.isEmpty(userName)){
+            mAgainstName.setText(getContext().getString(R.string.wait_to_join));
+        }else {
+            mAgainstName.setText(userName);
+        }
         return this;
     }
 

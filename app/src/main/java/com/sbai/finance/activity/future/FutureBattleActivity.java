@@ -25,6 +25,8 @@ import com.sbai.finance.view.SmartDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
@@ -84,6 +86,8 @@ public class FutureBattleActivity extends BaseActivity implements
         //观战模式  刷新底部框 可以点赞
         int userId = LocalUser.getUser().getUserInfo().getId();
         if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
+            mVersusGaming.setGameStatus(GAME_STATUS_OBESERVE);
+
             mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                     .initWithModel(mVersusGaming)
                     .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
@@ -114,6 +118,9 @@ public class FutureBattleActivity extends BaseActivity implements
                         }
                     });
 
+            startScheduleJob(1000);
+            requestSubscribeBattle();
+
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
@@ -125,6 +132,7 @@ public class FutureBattleActivity extends BaseActivity implements
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
             } else if (gameStatus == GAME_STATUS_STARTED) {
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
+                startScheduleJob(1000);
             }
         }
 
@@ -145,6 +153,22 @@ public class FutureBattleActivity extends BaseActivity implements
                 .setDeadline(mVersusGaming.getGameStatus(), 0)
                 .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
                 .setWinResult(mVersusGaming.getWinResult());
+    }
+
+    private void requestSubscribeBattle(){
+        Client.requestSubscribeBattle(mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(null)
+                .fire();
+    }
+
+    private void requestUnSubscribeBattle() {
+        if (mVersusGaming.getGameStatus() == GAME_STATUS_OBESERVE) {
+            Client.requestUnsubscribeBattle(mVersusGaming.getId())
+                    .setTag(TAG)
+                    .setCallback(null)
+                    .fire();
+        }
     }
 
     private void requestAddBattlePraise(final int userId) {
@@ -319,4 +343,20 @@ public class FutureBattleActivity extends BaseActivity implements
                .fire();
     }
 
+    @Override
+    public void onTimeUp(int count) {
+        //观战 底部栏每秒刷 fragment 20s刷一次
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        requestUnSubscribeBattle();
+    }
 }
