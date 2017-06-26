@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
@@ -51,6 +52,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.ApiCallback;
 
 import java.util.HashSet;
 import java.util.List;
@@ -173,11 +175,8 @@ public class BattleListActivity extends BaseActivity implements
         mSwipeRefreshLayout.setAdapter(mListView, mVersusListAdapter);
         mVersusListAdapter.setCallback(new VersusListAdapter.Callback() {
             @Override
-            public void onClick(VersusGaming item, boolean isCreate) {
+            public void onClick(VersusGaming item) {
                 if (LocalUser.getUser().isLogin()) {
-                    if (isCreate) {
-                        Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, item.getLaunchUser()).execute();
-                    } else {
                         if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
                             if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
                                 //如果是自己创建的房间 进入到详情页
@@ -188,10 +187,7 @@ public class BattleListActivity extends BaseActivity implements
                             } else {
                                 showJoinVersusDialog(item);
                             }
-                        } else {
-                            Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, item.getAgainstUser()).execute();
                         }
-                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -283,16 +279,19 @@ public class BattleListActivity extends BaseActivity implements
 
     private void requestJoinVersus(final VersusGaming data) {
         Client.joinVersus(data.getId(), VersusGaming.SOURCE_HALL).setTag(TAG)
-                .setCallback(new Callback<Resp<VersusGaming>>() {
+                .setCallback(new ApiCallback<Resp>() {
                     @Override
-                    protected void onRespSuccess(Resp<VersusGaming> resp) {
-                        if (resp.isSuccess()) {
+                    public void onSuccess(Resp resp) {
+                        if (resp.isSuccess()){
                             data.setPageType(VersusGaming.PAGE_VERSUS);
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
-                            requestCurrentBattle();
-                        } else {
-                            showJoinVersusFailureDialog();
+                        }else{
+                            showJoinVersusFailureDialog(resp.getMsg());
                         }
+                    }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+
                     }
                 }).fireFree();
     }
@@ -490,10 +489,6 @@ public class BattleListActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         requestJoinVersus(item);
-                        // TODO: 2017-06-21  进行余额查询，余额充足进入对战，余额不足弹窗提示充值
-
-//                        Launcher.with(getActivity(), FutureBattleActivity.class).execute();
-                        // showJoinVersusFailureDialog();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -504,7 +499,7 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinVersusFailureDialog() {
+    private void showJoinVersusFailureDialog(String msg) {
         SmartDialog.with(getActivity(), getString(R.string.join_versus_failure_tip), getString(R.string.join_versus_failure_title))
                 .setMessageTextSize(15)
                 .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
@@ -689,7 +684,7 @@ public class BattleListActivity extends BaseActivity implements
 
     static class VersusListAdapter extends ArrayAdapter<VersusGaming> {
         interface Callback {
-            void onClick(VersusGaming item, boolean isCreate);
+            void onClick(VersusGaming item);
         }
 
         private Callback mCallback;
@@ -756,31 +751,24 @@ public class BattleListActivity extends BaseActivity implements
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
                 mCreateProfit.setText(String.valueOf(item.getLaunchScore()));
-                mCreateAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onClick(item, true);
-                    }
-                });
-
                 mAgainstName.setText(item.getAgainstUserName());
                 mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onClick(item, false);
+                        callback.onClick(item);
                     }
                 });
                 mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case VersusGaming.COIN_TYPE_BAO:
-                        reward = item.getReward() + context.getString(R.string.integral);
+                        reward = item.getReward() + context.getString(R.string.ingot);
                         break;
                     case VersusGaming.COIN_TYPE_CASH:
                         reward = item.getReward() + context.getString(R.string.cash);
                         break;
                     case VersusGaming.COIN_TYPE_INTEGRAL:
-                        reward = item.getReward() + context.getString(R.string.ingot);
+                        reward = item.getReward() + context.getString(R.string.integral);
                         break;
                 }
                 switch (item.getGameStatus()) {
@@ -789,6 +777,8 @@ public class BattleListActivity extends BaseActivity implements
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                        mAgainstAvatar.setClickable(true);
+                        mAgainstName.setText(context.getString(R.string.join_versus));
                         showScoreProgress(0, 0, true);
                         break;
                     case VersusGaming.GAME_STATUS_STARTED:
@@ -800,6 +790,7 @@ public class BattleListActivity extends BaseActivity implements
                                 .placeholder(R.drawable.ic_default_avatar_big)
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
+                        mAgainstAvatar.setClickable(false);
                         showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case VersusGaming.GAME_STATUS_END:
@@ -809,6 +800,7 @@ public class BattleListActivity extends BaseActivity implements
                                 .placeholder(R.drawable.ic_default_avatar_big)
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
+                        mAgainstAvatar.setClickable(false);
                         if (item.getWinResult() == VersusGaming.RESULT_AGAINST_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
