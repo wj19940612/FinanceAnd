@@ -227,7 +227,7 @@ public class FutureBattleFragment extends BaseFragment {
                 }).fire();
     }
 
-    private void requestOrderHistory(){
+    public void requestOrderHistory(){
         Client.getOrderHistory(mVersusGaming.getId())
                 .setTag(TAG)
                 .setIndeterminate(this)
