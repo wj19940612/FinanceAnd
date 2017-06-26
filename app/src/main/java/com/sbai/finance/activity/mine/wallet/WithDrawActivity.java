@@ -85,11 +85,6 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
 
         requestWithDrawPoundage();
-
-        if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
-            showWithDrawRuleDialog();
-            Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
-        }
     }
 
     private void requestFundInfo() {
@@ -144,6 +139,10 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                             mPoundage = data.getFee();
                         }
                         mCanWithPoundage.setText(getString(R.string.can_with_poundage, FinanceUtil.formatWithScale(mPoundage)));
+                        if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
+                            showWithDrawRuleDialog();
+                            Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
+                        }
                     }
                 })
                 .fire();
