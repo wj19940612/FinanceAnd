@@ -553,6 +553,8 @@
     <string name="duration_choice3">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
+    <string name="battle_status_pending">等待中...</string>
+    <string name="battle_status_fighting">对战中...</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
@@ -634,4 +636,16 @@
     <string name="match_overtime">匹配超时，请重新匹配或稍后重试</string>
     <string name="later_try_again">稍后重试</string>
     <string name="rematch">重新匹配</string>
+    <string name="take_more">买多</string>
+    <string name="take_short">卖空</string>
+    <string name="take_more_position">买多建仓</string>
+    <string name="take_short_position">卖空建仓</string>
+    <string name="take_more_close_position">买多平仓</string>
+    <string name="take_short_close_position">卖空平仓</string>
+    <string name="join_self_versus_tip">不能加入自己创建的房间</string>
+    <string name="versus_variety_name">对战品种 : </string>
+    <string name="versus_time">对战时长 : </string>
+    <string name="versus_reward">对战赏金 : </string>
+    <string name="versus_tip">（加入对战后，赏金将会暂时冻结，对战胜利后返还，失败扣除)</string>
+    <string name="join_versus">加入对战</string>
 </resources>

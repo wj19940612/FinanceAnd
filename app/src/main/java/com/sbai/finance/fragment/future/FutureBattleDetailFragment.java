@@ -9,11 +9,14 @@ import android.widget.ListView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.versus.VersusTrade;
+import com.sbai.finance.model.versus.TradeRecord;
+import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,12 +37,12 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
 
-    int battleID;
+    private VersusGaming mVersusGaming;
 
-    public static FutureBattleDetailFragment newInstance(int battleID) {
+    public static FutureBattleDetailFragment newInstance(VersusGaming versusGaming) {
         FutureBattleDetailFragment detailFragment = new FutureBattleDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("battleID", battleID);
+        bundle.putParcelable("versusGaming", versusGaming);
         detailFragment.setArguments(bundle);
         return detailFragment;
     }
@@ -47,6 +50,9 @@ public class FutureBattleDetailFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mVersusGaming = (VersusGaming) getArguments().get("versusGaming");
+        }
     }
 
     @Nullable
@@ -65,26 +71,27 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     private void initViews() {
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
-        mListview.setVerticalScrollBarEnabled(false);
-        mListview.setDivider(null);
         mListview.setAdapter(mBattleTradeAdapter);
-        mListview.setBackgroundResource(R.drawable.ic_futures_versus_bg);
-        requestBattleDetail();
+        requestOrderHistory();
     }
 
-    private void requestBattleDetail() {
-        fillTestData();
+    private void requestOrderHistory() {
+        Client.getOrderHistory(mVersusGaming.getId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TradeRecord> data) {
+                        updateTradeHistory(data);
+                    }
+                })
+                .fire();
     }
 
-    private void fillTestData() {
-        List<VersusTrade> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            VersusTrade item = new VersusTrade();
-            item.setInfo("88.88买多建仓");
-            item.setTime("12:44");
-            list.add(item);
-        }
-        mBattleTradeAdapter.addAll(list);
+    private void updateTradeHistory(List<TradeRecord> resp) {
+        mBattleTradeAdapter.setUserId(mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
+        mBattleTradeAdapter.addAll(resp);
+        mListview.setSelection(View.FOCUS_DOWN);
     }
 
     @Override

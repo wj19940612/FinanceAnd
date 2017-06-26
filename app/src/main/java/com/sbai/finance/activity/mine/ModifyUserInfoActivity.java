@@ -157,7 +157,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                             }
                         }
                     })
-                    .fireSync();
+                    .fireFree();
         }
     }
 

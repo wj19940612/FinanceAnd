@@ -18,10 +18,8 @@
         android:layout_width="match_parent"
         android:paddingTop="@dimen/dp_10"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
         android:paddingBottom="30dp"
         android:divider="@null"
-        android:background="@drawable/ic_futures_versus_bg"
         android:scrollbars="none"/>
 
 

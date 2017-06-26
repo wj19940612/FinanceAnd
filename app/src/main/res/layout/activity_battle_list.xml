@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:customView="@layout/tb_future_versus_list"/>
+
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bottom"
+                android:layout_centerInParent="true"
+                android:background="#2d283a"
+                android:divider="@null"
+                android:dividerHeight="14dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="12dp"
+                android:background="@android:color/transparent">
+
+                <LinearLayout
+                    android:id="@+id/createAndMatchArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/matchVersus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_match_versus"
+                        android:clickable="true"/>
+
+                    <TextView
+                        android:id="@+id/createVersus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_create_versus"
+                        android:clickable="true"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/currentVersus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/btn_current_versus"
+                    android:clickable="true"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
+</LinearLayout>

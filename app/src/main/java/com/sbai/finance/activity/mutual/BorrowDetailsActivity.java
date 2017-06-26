@@ -67,7 +67,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.android.volley.Request.Method.HEAD;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class BorrowDetailsActivity extends BaseActivity {
@@ -178,7 +177,7 @@ public class BorrowDetailsActivity extends BaseActivity {
     }
 
     private void initHeaderView() {
-        mheader = (LinearLayout)getLayoutInflater().inflate( R.layout.view_borrow_detail_header, mListView,false);
+        mheader = (LinearLayout)getLayoutInflater().inflate( R.layout.view_borrow_detail_header, null);
         mAvatar = (ImageView) mheader.findViewById(R.id.avatar);
         mUserName = (TextView) mheader.findViewById(R.id.userName);
         mIsAttention=(TextView) mheader.findViewById(R.id.isAttention);
@@ -373,7 +372,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                             ToastUtil.show(resp.getMsg());
                         }
                      }
-                 }).fireSync();
+                 }).fireFree();
     }
     private void requestCancelBorrow(final Integer id) {
         Client.cancelBorrowIn(id).setTag(TAG)
@@ -408,7 +407,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                             ToastUtil.curt(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
     private void requestPhone(String phone){
         if (!TextUtils.isEmpty(phone)){

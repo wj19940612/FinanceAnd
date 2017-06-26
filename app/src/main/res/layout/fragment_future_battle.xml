@@ -124,19 +124,19 @@
 
     <FrameLayout
         android:layout_width="match_parent"
+        android:background="@color/blackAssist"
         android:layout_height="150dp">
 
         <com.sbai.chart.TrendView
             android:id="@+id/trendView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blackAssist"/>
+            android:visibility="gone"
+            android:layout_height="match_parent"/>
 
         <com.sbai.chart.KlineView
             android:id="@+id/klineView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/blackAssist"
             android:visibility="gone"/>
     </FrameLayout>
 

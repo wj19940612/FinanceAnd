@@ -178,7 +178,7 @@ public class PublishOpinionActivity extends BaseActivity {
 //
 //                        }
 //                    }
-//                }).fireSync();
+//                }).fireFree();
 //    }
 
     /**
@@ -207,7 +207,7 @@ public class PublishOpinionActivity extends BaseActivity {
 
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void submitViewpoint(String content, String calcuId, String lastPriceStr, String risePriceStr, String risePercentStr) {

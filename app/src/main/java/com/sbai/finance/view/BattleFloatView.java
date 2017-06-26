@@ -154,7 +154,7 @@ public class BattleFloatView extends RelativeLayout {
                 .setAgainstName(model.getAgainstUserName())
                 .setDeposit(model.getReward(), model.getCoinType())
                 .setPraise(model.getLaunchPraise(), model.getAgainstPraise())
-                .setDeadline(model.getGameStatus(), (int) (model.getEndTime()/1000));
+                .setDeadline(model.getGameStatus(), (int) (model.getEndline()/1000));
         return this;
     }
 
@@ -301,13 +301,12 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setPraiseLight(boolean myLight, boolean userLight) {
+    public BattleFloatView setPraiseLight(boolean isLeft) {
         Drawable left = ContextCompat.getDrawable(getContext(), R.drawable.ic_battle_praise);
-        if (myLight) {
-            mMyPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
-        }
-        if (userLight) {
-            mUserPraiseButton.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
+        if (isLeft) {
+            mMyPraiseButton.setSelected(true);
+        } else {
+            mUserPraiseButton.setSelected(true);
         }
         return this;
     }

@@ -20,9 +20,9 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="24dp"
+                android:layout_weight="7"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -59,7 +59,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="10"
                 android:orientation="vertical">
 
                 <TextView
@@ -76,8 +76,6 @@
                     android:id="@+id/fighterDataArea"
                     android:layout_width="match_parent"
                     android:layout_height="14dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginTop="23dp">
 
                     <ProgressBar
@@ -140,9 +138,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp">
+                    android:layout_height="match_parent">
 
                     <RelativeLayout
                         android:id="@+id/myPerspective"
@@ -183,7 +179,8 @@
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_battle_praise"
-                            android:drawableLeft="@drawable/ic_like"
+                            android:clickable="true"
+                            android:drawableLeft="@drawable/bg_battle_praise_text"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:textColor="@color/white"
@@ -197,7 +194,8 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/bg_battle_praise"
-                            android:drawableLeft="@drawable/ic_like"
+                            android:clickable="true"
+                            android:drawableLeft="@drawable/bg_battle_praise_text"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:textColor="@color/white"
@@ -210,9 +208,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="24dp"
+                android:layout_weight="7"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
