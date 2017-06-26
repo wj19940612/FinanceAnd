@@ -312,12 +312,12 @@ public class ExChangeProductFragment extends BaseFragment {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
                     mProduct.setText(String.valueOf(item.getToRealMoney()));
                     mPrice.setText(context.getString(R.string.yuan, FinanceUtil.formatWithScale(item.getFromRealMoney())));
-//                    if (item.isDiscount()) {
+                    if (item.isDiscount()) {
                     mOldPrice.setVisibility(View.VISIBLE);
                     mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
-//                    } else {
-//                        mOldPrice.setVisibility(View.GONE);
-//                    }
+                    } else {
+                        mOldPrice.setVisibility(View.GONE);
+                    }
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
                     mProduct.setText(FinanceUtil.formatWithScale(item.getToRealMoney()));

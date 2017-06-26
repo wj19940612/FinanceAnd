@@ -26,6 +26,7 @@ import com.sbai.finance.model.payment.BankLimit;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -44,7 +45,6 @@ import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.widget.WheelView;
 
 import static com.sbai.finance.R.id.rechargeCount;
-import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 
 
 public class RechargeActivity extends BaseActivity {
@@ -344,13 +344,28 @@ public class RechargeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
-                    mUserBankCardInfoModel = data.getParcelableExtra(EX_PAYLOAD);
-                    submitRechargeData();
+                    Client.requestUserBankCardInfo()
+                            .setTag(TAG)
+                            .setIndeterminate(this)
+                            .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
+                                    if (resp.isSuccess()) {
+                                        if (resp.hasData()) {
+                                            mUserBankCardInfoModel = resp.getData().get(0);
+                                            submitRechargeData();
+                                        }
+                                    } else {
+                                        ToastUtil.curt(resp.getMsg());
+                                    }
+                                }
+                            })
+                            .fire();
                     break;
                 default:
                     break;
