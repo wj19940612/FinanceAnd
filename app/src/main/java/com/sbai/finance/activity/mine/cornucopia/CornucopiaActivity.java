@@ -124,6 +124,10 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                     protected void onRespSuccessData(UserFundInfoModel data) {
                         mUserFundInfoModel = data;
                         updateCoinAndIntegrateNumber(data);
+                        ExChangeProductFragment exChangeProductFragment = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(0);
+                        ExChangeProductFragment exChangeProductFragment2 = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(1);
+                        exChangeProductFragment.setUserFundInfo(data);
+                        exChangeProductFragment2.setUserFundInfo(data);
                     }
 
                 })

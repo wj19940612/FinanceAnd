@@ -17,8 +17,9 @@ public class DateUtil {
     public static final String FORMAT_YEAR = "yyyy年MM月dd日 HH:mm:ss";
     public static final String FORMAT_NOT_SECOND = "MM月dd日 HH:mm";
     public static final String FORMAT_NOT_HOUR = "MM月dd日 ";
-    public static final String FORMAT_ONLEY_DATE = "dd日 ";
+    public static final String FORMAT_ONLY_DATE = "dd日 ";
     public static final String FORMAT_YEAR_MONTH_DAY = "yyyy年MM月dd日";
+    public static final String FORMAT_YEAR_MONTH = "yyyy年MM月";
     public static final String FORMAT_SPECIAL = "yyyy-MM-dd HH:mm:ss";
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
@@ -349,9 +350,9 @@ public class DateUtil {
             return "昨日" ;
         }
         if (isInThisYear(createTime)) {
-            return DateUtil.format(createTime, FORMAT_ONLEY_DATE);
+            return DateUtil.format(createTime, FORMAT_ONLY_DATE);
         }
-        return DateUtil.format(createTime, FORMAT_YEAR_MONTH_DAY);
+        return DateUtil.format(createTime, FORMAT_YEAR_MONTH);
     }
 
     /**
