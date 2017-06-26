@@ -16,7 +16,9 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
@@ -26,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
 
@@ -84,6 +87,8 @@ public class FutureBattleActivity extends BaseActivity implements
         //观战模式  刷新底部框 可以点赞
         int userId = LocalUser.getUser().getUserInfo().getId();
         if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
+            mVersusGaming.setGameStatus(GAME_STATUS_OBESERVE);
+
             mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                     .initWithModel(mVersusGaming)
                     .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
@@ -114,6 +119,9 @@ public class FutureBattleActivity extends BaseActivity implements
                         }
                     });
 
+            startScheduleJob(1000);
+            requestSubscribeBattle();
+
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
@@ -125,6 +133,7 @@ public class FutureBattleActivity extends BaseActivity implements
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
             } else if (gameStatus == GAME_STATUS_STARTED) {
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
+                startScheduleJob(1000);
             }
         }
 
@@ -144,24 +153,65 @@ public class FutureBattleActivity extends BaseActivity implements
                 .initWithModel(mVersusGaming)
                 .setDeadline(mVersusGaming.getGameStatus(), 0)
                 .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
-                .setWinResult(mVersusGaming.getWinResult());
+                .setWinResult(mVersusGaming.getWinResult())
+                .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
+                    @Override
+                    public void onCreateAvatarClick() {
+                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID,mVersusGaming.getLaunchUser())
+                                .execute();
+                    }
+
+                    @Override
+                    public void onAgainstAvatarClick() {
+                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID,mVersusGaming.getAgainstUser())
+                                .execute();
+                    }
+                });
+    }
+
+    private void requestSubscribeBattle(){
+        Client.requestSubscribeBattle(mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(null)
+                .fire();
+    }
+
+    private void requestUnSubscribeBattle() {
+        if (mVersusGaming.getGameStatus() == GAME_STATUS_OBESERVE) {
+            Client.requestUnsubscribeBattle(mVersusGaming.getId())
+                    .setTag(TAG)
+                    .setCallback(null)
+                    .fire();
+        }
     }
 
     private void requestAddBattlePraise(final int userId) {
         Client.addBattlePraise(mVersusGaming.getId(), userId)
                 .setTag(TAG)
-                .setCallback(new Callback<VersusGaming>() {
+                .setCallback(new Callback<Resp<Integer>>() {
                     @Override
-                    protected void onRespSuccess(VersusGaming resp) {
-                        updatePraiseView(resp,userId);
+                    protected void onRespSuccess(Resp<Integer> resp) {
+                        if (resp.isSuccess()){
+                            int data = resp.getData();
+                            updatePraiseView(data,userId);
+                        }else {
+                            ToastUtil.curt(resp.getMsg());
+                        }
                     }
                 }).fireFree();
     }
 
-    private void updatePraiseView(VersusGaming resp, int userId) {
+    private void updatePraiseView(int count, int userId) {
         boolean isLeft = userId == mVersusGaming.getLaunchUser();
+        if (isLeft){
+            mVersusGaming.setLaunchPraise(count);
+        }else {
+            mVersusGaming.setAgainstPraise(count);
+        }
         mBattleView.setPraiseLight(isLeft);
-        mBattleView.setPraise(resp.getLaunchPraise(), resp.getLaunchPraise());
+        mBattleView.setPraise(mVersusGaming.getLaunchPraise(), mVersusGaming.getAgainstPraise());
     }
 
     @Override
@@ -319,4 +369,20 @@ public class FutureBattleActivity extends BaseActivity implements
                .fire();
     }
 
+    @Override
+    public void onTimeUp(int count) {
+        //观战 底部栏每秒刷 交易内容与点赞20s刷一次
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        requestUnSubscribeBattle();
+    }
 }

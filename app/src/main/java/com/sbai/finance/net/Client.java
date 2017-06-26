@@ -1763,4 +1763,25 @@ public class Client {
         return new API("/game/battle/selectBattleGamingData.do", new ApiParams()
                 .put("battleIds", battleIds));
     }
+
+    /**
+     * 订阅对战
+     * @param battleId
+     * @return
+     */
+    public static API requestSubscribeBattle(int battleId) {
+        return new API("/game/battle/subscribeBattle.do", new ApiParams()
+                .put("battleIds", battleId));
+    }
+
+    /**
+     * 取消订阅对战
+     * @param battleId
+     * @return
+     */
+    public static API requestUnsubscribeBattle(int battleId) {
+        return new API("/game/battle/unsubscribeBattle.do", new ApiParams()
+                .put("battleIds", battleId));
+    }
+
 }

@@ -648,4 +648,5 @@
     <string name="versus_reward">对战赏金 : </string>
     <string name="versus_tip">（加入对战后，赏金将会暂时冻结，对战胜利后返还，失败扣除)</string>
     <string name="join_versus">加入对战</string>
+    <string name="wait_to_join">等待加入</string>
 </resources>
