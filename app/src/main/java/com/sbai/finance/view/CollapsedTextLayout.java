@@ -3,7 +3,6 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,8 @@ public class CollapsedTextLayout extends RelativeLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_collapsed, null);
         mContentTextView = (AppCompatTextView) view.findViewById(R.id.content);
         mHintTextView = (AppCompatTextView) view.findViewById(R.id.hint);
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42, getResources().getDisplayMetrics());
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        mHintTextView.setVisibility(GONE);
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         addView(view, layoutParams);
     }
 

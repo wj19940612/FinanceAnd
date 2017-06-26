@@ -6,6 +6,7 @@
              android:background="@android:color/white">
 
     <android.support.v7.widget.AppCompatTextView
+        android:background="@android:color/white"
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,11 +18,12 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/hint"
-        android:layout_gravity="bottom|right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="3dp"
         android:background="@android:color/white"
-        android:text="...全文"
+        android:text="@string/full_text"
         android:textColor="@color/unluckyText"
         android:textSize="14sp"/>
 

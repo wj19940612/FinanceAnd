@@ -52,6 +52,7 @@
     </RelativeLayout>
 
     <com.sbai.finance.view.CollapsedTextLayout
+        android:background="@drawable/bg_white"
         android:id="@+id/opinionContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
