@@ -441,7 +441,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     public void setTradeData(int direction, double buyPrice, double profit){
-        //实时刷新房主的
+        //实时刷新房主的持仓数据
         mBattleTradeView.setTradeData(direction,buyPrice,profit);
     }
 

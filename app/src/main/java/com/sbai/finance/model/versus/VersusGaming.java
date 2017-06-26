@@ -9,30 +9,31 @@ import android.os.Parcelable;
 
 public class VersusGaming implements Parcelable {
     //0现金 1元宝 2积分
-    public static final int COIN_TYPE_CASH=1;
-    public static final int COIN_TYPE_BAO=2;
-    public static final int COIN_TYPE_INTEGRAL=3;
+    public static final int COIN_TYPE_CASH = 1;
+    public static final int COIN_TYPE_BAO = 2;
+    public static final int COIN_TYPE_INTEGRAL = 3;
 
-    // 0取消 1发起 2对战开始 3对战结束
-    public static final int GAME_STATUS_CANCEL=0;
-    public static final int GAME_STATUS_MATCH=1;
-    public static final int GAME_STATUS_START=2;
-    public static final int GAME_STATUS_END=3;
+    // 0取消 1发起 2对战开始 3对战结束  4观战
+    public static final int GAME_STATUS_CANCEL = 0;
+    public static final int GAME_STATUS_MATCH = 1;
+    public static final int GAME_STATUS_START = 2;
+    public static final int GAME_STATUS_END = 3;
+    public static final int GAME_STATUS_OBESERVE = 4;
     //0平手 1发起者赢 2应战者赢
-    public static final int RESULT_TIE=0;
-    public static final int RESULT_CREATE_WIN=1;
-    public static final int RESULT_AGAINST_WIN=2;
+    public static final int RESULT_TIE = 0;
+    public static final int RESULT_CREATE_WIN = 1;
+    public static final int RESULT_AGAINST_WIN = 2;
 
-    public static final int PAGE_RECORD=0;
-    public static final int PAGE_VERSUS=1;
-   //1开始快速匹配  0取消匹配 1 继续匹配
-    public static final int MATCH_START=1;
-    public static final int MATCH_CANCEL=0;
-    public static final int MATCH_CONTINUE=2;
+    public static final int PAGE_RECORD = 0;
+    public static final int PAGE_VERSUS = 1;
+    //1开始快速匹配  0取消匹配 1 继续匹配
+    public static final int MATCH_START = 1;
+    public static final int MATCH_CANCEL = 0;
+    public static final int MATCH_CONTINUE = 2;
 
     // 1房主快速匹配  2应战者快速匹配
-    public static final int CREATE_FAST_MATCH=1;
-    public static final int AGAGINST_FAST_MATCH=2;
+    public static final int CREATE_FAST_MATCH = 1;
+    public static final int AGAGINST_FAST_MATCH = 2;
     /**
      * againstFrom : 经济圈
      * againstUser : 286
