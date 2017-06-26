@@ -1466,6 +1466,31 @@ public class Client {
                 .put("bankId", bankId));
     }
 
+    /**
+     * /user/bankCard/updateBankCard.do
+     * POST
+     * 修改银行卡（wms）
+     *
+     * @param realName
+     * @param idCard
+     * @param cardNumber
+     * @param cardPhone
+     * @param issuingBankName
+     * @param bankId
+     * @return
+     */
+    public static API updateBankCard(String realName, String idCard, String cardNumber,
+                                     String cardPhone, String issuingBankName, int bankId, int id) {
+        return new API(POST, "/user/bankCard/updateBankCard.do", new ApiParams()
+                .put("realName", realName)
+                .put("idCard", idCard)
+                .put("cardNumber", cardNumber)
+                .put("cardPhone", cardPhone)
+                .put("issuingBankName", issuingBankName)
+                .put("bankId", bankId)
+                .put("id", id));
+    }
+
 
     /**
      * /user/userpayForDeposit/payDepositMoney.do
@@ -1596,7 +1621,7 @@ public class Client {
      * 兑换接口（wms）
      *
      * @param exchangeId 兑换配置ID
-     * @param password       密码
+     * @param password   密码
      * @return
      */
     public static API exchange(int exchangeId, String password) {

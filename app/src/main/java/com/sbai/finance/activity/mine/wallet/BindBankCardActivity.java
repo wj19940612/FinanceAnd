@@ -80,17 +80,15 @@ public class BindBankCardActivity extends BaseActivity {
     private UserBankCardInfoModel mUserBankCardInfoModel;
     private CanUseBankListModel mCanUseBankListModel;
 
+    private UserBankCardInfoModel mUserBank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bind_bank_card);
         ButterKnife.bind(this);
-
+        mUserBank = new UserBankCardInfoModel();
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-        if (mUserBankCardInfoModel == null) {
-            mUserBankCardInfoModel = new UserBankCardInfoModel();
-        }
         updateBankCardInfo();
         mBankCardNumber.addTextChangedListener(mBankCardValidationWatcher);
         mName.addTextChangedListener(mValidationWatcher);
@@ -100,6 +98,7 @@ public class BindBankCardActivity extends BaseActivity {
     }
 
     private void updateBankCardInfo() {
+        if (mUserBankCardInfoModel == null) return;
         if (mUserBankCardInfoModel.isBindBank()) {
             mAddBackLayout.setVisibility(View.GONE);
             mBankCardLayout.setVisibility(View.VISIBLE);
@@ -209,7 +208,7 @@ public class BindBankCardActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+        if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.isNotConfirmBankInfo()) {
             showGiveUpBindBankDialog();
         } else {
             super.onBackPressed();
@@ -252,36 +251,65 @@ public class BindBankCardActivity extends BaseActivity {
         String identityCard = getIdentityCard();
         String phoneNumber = getPhoneNumber();
 
-        mUserBankCardInfoModel.setRealName(name);
-        mUserBankCardInfoModel.setCardNumber(bankCardNumber);
-        mUserBankCardInfoModel.setIssuingBankName(bank);
-        mUserBankCardInfoModel.setCardPhone(phoneNumber);
-        mUserBankCardInfoModel.setIdCard(identityCard);
-        Client.bindBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mCanUseBankListModel.getId())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<Integer>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Integer> resp) {
-                        Log.d(TAG, "onRespSuccess: " + resp.toString());
-                        if (resp.isSuccess()) {
-                            if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-                                mUserBankCardInfoModel.setBindStatus(1);
-                            }
-                            if (resp.hasData()) {
-                                mUserBankCardInfoModel.setId(resp.getData());
-                            }
+        mUserBank.setRealName(name);
+        mUserBank.setCardNumber(bankCardNumber);
+        mUserBank.setIssuingBankName(bank);
+        mUserBank.setCardPhone(phoneNumber);
+        mUserBank.setIdCard(identityCard);
+        if (mUserBankCardInfoModel != null) {
+            if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                Client.bindBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mCanUseBankListModel.getId())
+                        .setTag(TAG)
+                        .setIndeterminate(this)
+                        .setCallback(new Callback<Resp<Integer>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Integer> resp) {
+                                Log.d(TAG, "onRespSuccess: " + resp.toString());
+                                if (resp.isSuccess()) {
+                                    if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                                        mUserBankCardInfoModel.setBindStatus(1);
+                                    }
+                                    if (resp.hasData()) {
+                                        mUserBank.setId(resp.getData());
+                                    }
 
-                            Intent intent = new Intent();
-                            intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
-                            setResult(RESULT_OK, intent);
-                            finish();
+                                    Intent intent = new Intent();
+                                    intent.putExtra(Launcher.EX_PAYLOAD, mUserBank);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
 
-                            Log.d(TAG, "onRespSuccess:  " + resp.toString());
-                        }
-                    }
-                })
-                .fire();
+                                }
+                            }
+                        })
+                        .fire();
+            } else {
+                Client.updateBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mUserBankCardInfoModel.getBankId(), mUserBankCardInfoModel.getId())
+                        .setTag(TAG)
+                        .setIndeterminate(this)
+                        .setCallback(new Callback<Resp<Integer>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Integer> resp) {
+                                if (resp.isSuccess()) {
+                                    if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                                        mUserBankCardInfoModel.setBindStatus(1);
+                                    }
+                                    if (resp.hasData()) {
+                                        mUserBankCardInfoModel.setId(resp.getData());
+                                    }
+
+                                    Intent intent = new Intent();
+                                    intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+
+                                    Log.d(TAG, "onRespSuccess:  " + resp.toString());
+                                }
+                            }
+                        })
+                        .fire();
+            }
+        }
+
     }
 
     private void requestCanUseBankList() {
