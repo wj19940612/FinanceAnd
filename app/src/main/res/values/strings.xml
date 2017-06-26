@@ -492,6 +492,7 @@
     <string name="share_failed">分享失败</string>
     <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
+    <string name="share_desc">乐米金融，金融小白的第一战!</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
