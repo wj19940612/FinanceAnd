@@ -44,8 +44,8 @@ public class CornucopiaProductModel {
     //货币类型  1元宝 3 积分
     private int toType;
 
-    public boolean isNotDiscount() {
-        return getDiscount() == 100;
+    public boolean isDiscount() {
+        return getFromMoney() != getFromRealMoney();
     }
 
     public boolean isVcoin() {

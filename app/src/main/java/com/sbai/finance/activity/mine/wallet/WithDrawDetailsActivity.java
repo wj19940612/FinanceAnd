@@ -3,6 +3,7 @@ package com.sbai.finance.activity.mine.wallet;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -35,9 +36,11 @@ public class WithDrawDetailsActivity extends AppCompatActivity {
         String money = getIntent().getStringExtra(Launcher.EX_PAY_END);
         double mPredict_poundage = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD_1, 0);
 
-        String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
-        mBankCardAndName.setText(withDrawBankAndNumber);
-        mWithDrawMoney.setText(getString(R.string.yuan, money));
+        if (userBankCardInfoModel != null && !TextUtils.isEmpty(userBankCardInfoModel.getCardNumber())) {
+            String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
+            mBankCardAndName.setText(withDrawBankAndNumber);
+        }
+        mWithDrawMoney.setText(getString(R.string.yuan, FinanceUtil.formatWithScale(money)));
         mPoundage.setText(getString(R.string.yuan, FinanceUtil.formatWithScale(mPredict_poundage)));
     }
 
