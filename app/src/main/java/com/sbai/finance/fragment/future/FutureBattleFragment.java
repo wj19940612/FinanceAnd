@@ -92,7 +92,9 @@ public class FutureBattleFragment extends BaseFragment {
     private Variety mVariety;
     private FutureData mFutureData;
     private TradeOrder mCurrentOrder;
+
     private int mCount = 600;
+    private int mGameStatus;
 
 
     public static FutureBattleFragment newInstance(VersusGaming versusGaming) {
@@ -144,7 +146,9 @@ public class FutureBattleFragment extends BaseFragment {
             //判断状态是否在对抗中
             //未开始显示邀请 匹配  取消  视图
             if (mVersusGaming.getGameStatus() == GAME_STATUS_CREATED) {
+                mGameStatus = GAME_STATUS_CREATED;
                 showBattleButtons();
+                updateRoomExistsTime();
             } else if (mVersusGaming.getGameStatus() == GAME_STATUS_STARTED) {
                 showBattleTradeView();
                 requestOrderHistory();
@@ -482,15 +486,13 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.setVisitor(true);
     }
 
-    public void setDeadline(int count){
-        //锁屏后重新进入时需要更新房间剩余存在时间
-        mCount = count;
-    }
-
-    public void updateDeadline(int count){
+    public void updateRoomExistsTime(){
         //更新房间存在倒计时
-        if (mBattleButtons.isShown()){
-            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount,count));
+        long currentTime = System.currentTimeMillis();
+        long createTime = mVersusGaming.getCreateTime();
+        int diff = (int) (currentTime - createTime);
+        if (mBattleButtons.isShown()) {
+            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));
         }
     }
 
@@ -511,17 +513,7 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.changeTradeState(state);
     }
 
-    public void setTradeData(int direction, double buyPrice, double profit){
-        //实时刷新房主的持仓数据
-        mBattleTradeView.setTradeData(direction,buyPrice,profit);
-    }
-
-    public void addOrderList(List<TradeRecord> list) {
-        //刷新下单列表
-        mBattleTradeView.addTradeData(list,mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
-    }
-
-    private void refreshTradeView(){
+    public void refreshTradeView(){
         //每次点击交易或平仓后 刷新数据
         requestOrderHistory();
         requestCurrentOrder();
@@ -562,6 +554,9 @@ public class FutureBattleFragment extends BaseFragment {
     public void onTimeUp(int count) {
         if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
             requestTrendDataAndSet();
+        }
+        if (mGameStatus == GAME_STATUS_CREATED) {
+            updateRoomExistsTime();
         }
     }
 
