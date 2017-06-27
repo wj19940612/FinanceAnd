@@ -537,11 +537,11 @@ public class BattleListActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
 
-                        // TODO: 26/06/2017 sample 
+                        // TODO: 26/06/2017 sample
                         WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH, ""), new WSCallback<WSMessage<Resp>>() {
                             @Override
                             public void onResponse(WSMessage<Resp> respWSMessage) {
-
+                                showMatchingDialog();
                             }
 
                             @Override
@@ -552,7 +552,7 @@ public class BattleListActivity extends BaseActivity implements
                         });
                         //requestMatchVersus(VersusGaming.MATCH_START, "");
                         //showMatchingDialog();
-                        showMatchDialog();
+                        //showMatchDialog();
                     }
                 })
                 .setTitleMaxLines(1)
