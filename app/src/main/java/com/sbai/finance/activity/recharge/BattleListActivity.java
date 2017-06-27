@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -264,7 +265,6 @@ public class BattleListActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
-        requestMatchVersus(VersusGaming.MATCH_CANCEL, "");
     }
 
     @Override
@@ -312,8 +312,9 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onSuccess(Resp resp) {
                         if (resp.isSuccess()){
-                            data.setPageType(VersusGaming.PAGE_VERSUS);
-                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
+                            VersusGaming versusGaming = (VersusGaming) resp.getData();
+                            versusGaming.setPageType(VersusGaming.PAGE_VERSUS);
+                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, versusGaming).execute();
                         }else{
                             showJoinVersusFailureDialog(resp.getMsg());
                         }
@@ -426,7 +427,7 @@ public class BattleListActivity extends BaseActivity implements
         for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
             VersusGaming item = mVersusListAdapter.getItem(i);
             for (VersusGaming versusGaming : data) {
-                if (item.getId() == versusGaming.getId()) {
+                if (item.getId() == versusGaming.getId()&&item.getGameStatus()==VersusGaming.GAME_STATUS_STARTED) {
                     item.setGameStatus(versusGaming.getGameStatus());
                     item.setLaunchPraise(versusGaming.getLaunchPraise());
                     item.setLaunchScore(versusGaming.getLaunchScore());
@@ -696,9 +697,9 @@ public class BattleListActivity extends BaseActivity implements
                 break;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(getString(R.string.versus_variety_name)).append(data.getVarietyName()).append("\n")
-                .append(getString(R.string.versus_time)).append(DateUtil.getMinutes(data.getEndline())).append("\n")
-                .append(getString(R.string.versus_reward)).append(reward).append("\n")
+        sb.append(getString(R.string.versus_variety_name)).append(" ").append(data.getVarietyName()).append("\n")
+                .append(getString(R.string.versus_time)).append(" ").append(DateUtil.getMinutes(data.getEndline())).append("\n")
+                .append(getString(R.string.versus_reward)).append(" ").append(reward).append("\n")
                 .append(getString(R.string.versus_tip));
         SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
                 .setMessageTextSize(15)
@@ -945,7 +946,7 @@ public class BattleListActivity extends BaseActivity implements
                     if (createProfit == 0 && fighterProfit == 0) {
                         mProgressBar.setProgress(50);
                     }
-
+                    mProgressBar.setSecondaryProgress(100);
                     if (createProfit > 0) {
                         myFlag = "+";
                     }
