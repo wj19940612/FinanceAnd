@@ -39,8 +39,9 @@
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
-    <item name="tag_opinion" type="id">1</item>
-    <item name="tag_borrow_money" type="id">2</item>
+    <item name="tag_opinion" type="id">0</item>
+    <item name="tag_borrow_money" type="id">1</item>
+    <item name="tag_futures_battle" type="id">2</item>
     <string name="amount">借%1$s元</string>
     <string name="limit">期限%1$s天</string>
     <string name="interest">利息%1$s元</string>
@@ -546,11 +547,10 @@
     <string name="bounty">赏金</string>
     <string name="versusing">对战中</string>
     <string name="versus_end">已结束</string>
+    <string name="versus_cancel">已取消</string>
     <string name="tie">平局</string>
     <string name="duration">时长</string>
-    <string name="duration_choice1">%1$s分钟</string>
-    <string name="duration_choice2">%1$s分钟</string>
-    <string name="duration_choice3">%1$s分钟</string>
+    <string name="minute">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
     <string name="battle_status_pending">等待中...</string>
@@ -649,4 +649,7 @@
     <string name="versus_tip">（加入对战后，赏金将会暂时冻结，对战胜利后返还，失败扣除)</string>
     <string name="join_versus">加入对战</string>
     <string name="wait_to_join">等待加入</string>
+    <string name="wait_overtime">等待超时</string>
+    <string name="wait_to_overtime">等待时间过长，房间已超时</string>
+    <string name="recreate_room">重新创建</string>
 </resources>

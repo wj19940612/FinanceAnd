@@ -1771,7 +1771,7 @@ public class Client {
      */
     public static API requestSubscribeBattle(int battleId) {
         return new API("/game/battle/subscribeBattle.do", new ApiParams()
-                .put("battleIds", battleId));
+                .put("battleId", battleId));
     }
 
     /**
@@ -1781,7 +1781,17 @@ public class Client {
      */
     public static API requestUnsubscribeBattle(int battleId) {
         return new API("/game/battle/unsubscribeBattle.do", new ApiParams()
-                .put("battleIds", battleId));
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 查询房间交易中的订单
+     * @param battleId
+     * @return
+     */
+    public static API requestCurrentOrder(int battleId){
+        return new API("/game/battleorder/orders.do", new ApiParams()
+                .put("battleId", battleId));
     }
 
 }

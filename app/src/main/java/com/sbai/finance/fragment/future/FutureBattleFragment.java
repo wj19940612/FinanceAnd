@@ -21,8 +21,11 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.versus.TradeOrder;
+import com.sbai.finance.model.versus.TradeOrderClosePosition;
 import com.sbai.finance.model.versus.TradeRecord;
 import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -46,6 +49,7 @@ import butterknife.Unbinder;
 
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
+import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
 /**
@@ -87,7 +91,10 @@ public class FutureBattleFragment extends BaseFragment {
     private VersusGaming mVersusGaming;
     private Variety mVariety;
     private FutureData mFutureData;
+    private TradeOrder mCurrentOrder;
+
     private int mCount = 600;
+    private int mGameStatus;
 
 
     public static FutureBattleFragment newInstance(VersusGaming versusGaming) {
@@ -139,11 +146,13 @@ public class FutureBattleFragment extends BaseFragment {
             //判断状态是否在对抗中
             //未开始显示邀请 匹配  取消  视图
             if (mVersusGaming.getGameStatus() == GAME_STATUS_CREATED) {
+                mGameStatus = GAME_STATUS_CREATED;
                 showBattleButtons();
+                updateRoomExistsTime();
             } else if (mVersusGaming.getGameStatus() == GAME_STATUS_STARTED) {
                 showBattleTradeView();
-                setBattleTradeState(STATE_TRADE);
-
+                requestOrderHistory();
+                requestCurrentOrder();
             }
         }
     }
@@ -199,19 +208,44 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
             @Override
             public void onLongPurchaseButtonClick() {
-                ((FutureBattleActivity)getActivity()).onLongPurchaseButtonClick();
+                requestCreateOrder(1);
             }
 
             @Override
             public void onShortPurchaseButtonClick() {
-                ((FutureBattleActivity)getActivity()).onShortPurchaseButtonClick();
+                requestCreateOrder(0);
             }
 
             @Override
             public void onClosePositionButtonClick() {
-                ((FutureBattleActivity)getActivity()).onClosePositionButtonClick();
+                requestClosePosition(mCurrentOrder.getId());
             }
         });
+    }
+
+    private void requestCreateOrder(int direction) {
+        Client.createOrder(mVersusGaming.getId(), direction)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<TradeOrder>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TradeOrder> resp) {
+                        refreshTradeView();
+                    }
+                })
+                .fire();
+    }
+
+    private void requestClosePosition(int orderId) {
+        Client.closePosition(mVersusGaming.getId(), orderId)
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                        refreshTradeView();
+                    }
+                })
+                .fire();
     }
 
     private void requestVarietyData() {
@@ -240,10 +274,37 @@ public class FutureBattleFragment extends BaseFragment {
                 .fire();
     }
 
+    private void requestCurrentOrder() {
+        Client.requestCurrentOrder(mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TradeOrder>>,List<TradeOrder>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TradeOrder> data) {
+                        updateCurrentOrder(data);
+                    }
+                })
+                .fire();
+    }
+
     private void updateTradeHistory(List<TradeRecord> resp) {
         mBattleTradeView.addTradeData(resp, mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
     }
 
+    private void updateCurrentOrder(List<TradeOrder> data) {
+        TradeOrder order = null;
+        for (TradeOrder tradeOrder : data) {
+            if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                order = tradeOrder;
+            }
+        }
+        if (order != null) {
+            mCurrentOrder = order;
+            setBattleTradeState(STATE_CLOSE_POSITION);
+            mBattleTradeView.setTradeData(order.getDirection(), order.getOrderPrice(), 0);
+        } else {
+            setBattleTradeState(STATE_TRADE);
+        }
+    }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
@@ -312,6 +373,7 @@ public class FutureBattleFragment extends BaseFragment {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
+                updateTradeProfit(mFutureData);
 
                 int exchangeStatus = mVariety.getExchangeStatus();
                 if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
@@ -358,6 +420,19 @@ public class FutureBattleFragment extends BaseFragment {
         mHighest.setText(FinanceUtil.formatWithScale(data.getHighestPrice(), mVariety.getPriceScale()));
         mLowest.setText(FinanceUtil.formatWithScale(data.getLowestPrice(), mVariety.getPriceScale()));
         mPreClose.setText(FinanceUtil.formatWithScale(data.getPreClsPrice(), mVariety.getPriceScale()));
+    }
+
+    private void updateTradeProfit(FutureData futureData) {
+        if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
+            //持仓盈亏 = 差价
+            double profit = 0;
+            if (mCurrentOrder.getDirection() == 1) {
+                profit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
+            } else {
+                profit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), profit);
+        }
     }
 
     private void requestExchangeStatus() {
@@ -411,15 +486,13 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.setVisitor(true);
     }
 
-    public void setDeadline(int count){
-        //锁屏后重新进入时需要更新房间剩余存在时间
-        mCount = count;
-    }
-
-    public void updateDeadline(int count){
+    public void updateRoomExistsTime(){
         //更新房间存在倒计时
-        if (mBattleButtons.isShown()){
-            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount,count));
+        long currentTime = System.currentTimeMillis();
+        long createTime = mVersusGaming.getCreateTime();
+        int diff = (int) (currentTime - createTime);
+        if (mBattleButtons.isShown()) {
+            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));
         }
     }
 
@@ -440,14 +513,10 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.changeTradeState(state);
     }
 
-    public void setTradeData(int direction, double buyPrice, double profit){
-        //实时刷新房主的持仓数据
-        mBattleTradeView.setTradeData(direction,buyPrice,profit);
-    }
-
-    public void addOrderList(List<TradeRecord> list) {
-        //刷新下单列表
-        mBattleTradeView.addTradeData(list,mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
+    public void refreshTradeView(){
+        //每次点击交易或平仓后 刷新数据
+        requestOrderHistory();
+        requestCurrentOrder();
     }
 
     @Override
@@ -485,6 +554,9 @@ public class FutureBattleFragment extends BaseFragment {
     public void onTimeUp(int count) {
         if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
             requestTrendDataAndSet();
+        }
+        if (mGameStatus == GAME_STATUS_CREATED) {
+            updateRoomExistsTime();
         }
     }
 

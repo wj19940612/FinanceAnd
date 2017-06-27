@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.versus.TradeRecord.DIRECTION_DOWN;
+import static com.sbai.finance.model.versus.TradeRecord.DIRECTION_UP;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_CLOSE_POSITION;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_POSITION;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHOET_CLOSE_POSITION;
@@ -58,6 +58,8 @@ public class BattleTradeView extends LinearLayout {
 
     @BindView(R.id.tradeDataArea)
     LinearLayout mTradeDataArea;
+    @BindView(R.id.closePositionData)
+    LinearLayout mClosePositionDataArea;
     @BindView(R.id.direction)
     TextView mDirection;
     @BindView(R.id.buyPrice)
@@ -70,6 +72,8 @@ public class BattleTradeView extends LinearLayout {
     private BattleTradeAdapter mBattleTradeAdapter;
 
     private OnViewClickListener mOnViewClickListener;
+
+    private int mState;
 
     public interface OnViewClickListener {
         void onLongPurchaseButtonClick();
@@ -155,13 +159,21 @@ public class BattleTradeView extends LinearLayout {
         mListView.setLayoutParams(params);
     }
 
+    public int getTradeState() {
+        return mState;
+    }
+
     public void changeTradeState(int state) {
+        mState = state;
         if (state == STATE_CLOSE_POSITION) {
+            //持仓中  只能卖
             mLongPurchase.setVisibility(GONE);
             mShortPurchase.setVisibility(GONE);
             mClosePosition.setVisibility(VISIBLE);
-            mNoPosition.setVisibility(GONE);
+            mTradeDataArea.removeAllViews();
+            mTradeDataArea.addView(mClosePositionDataArea);
         } else if (state == STATE_TRADE) {
+            //未持仓 可以买
             mLongPurchase.setVisibility(VISIBLE);
             mShortPurchase.setVisibility(VISIBLE);
             mClosePosition.setVisibility(GONE);
@@ -173,7 +185,7 @@ public class BattleTradeView extends LinearLayout {
 
     public void setTradeData(int direction, double buyPrice, double profit) {
         //设置方向  买入价格 盈利
-        if (direction == DIRECTION_DOWN) {
+        if (direction == DIRECTION_UP) {
             mDirection.setText(getContext().getString(R.string.take_more));
         } else {
             mDirection.setText(getContext().getString(R.string.take_short));
@@ -248,7 +260,7 @@ public class BattleTradeView extends LinearLayout {
 
                 StringBuilder info = new StringBuilder();
                 info.append(FinanceUtil.formatWithScale(item.getOptPrice()));
-                String time = DateUtil.format(item.getOptTime(),"HH:mm:ss");
+                String time = DateUtil.format(item.getOptTime(), "HH:mm:ss");
 
                 switch (item.getOptStatus()) {
                     case STATUS_TAKE_MORE_POSITION:
