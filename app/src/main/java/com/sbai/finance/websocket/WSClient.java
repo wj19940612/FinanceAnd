@@ -1,9 +1,11 @@
 package com.sbai.finance.websocket;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.sbai.finance.App;
 import com.sbai.finance.net.API;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
@@ -29,6 +31,7 @@ public class WSClient implements WSAbsClient {
     private Queue<WSMessage> mExecutedList;
     private boolean isRegistered;
     private OnPushReceiveListener mOnPushReceiveListener;
+    private Handler mHandler;
 
     public static WSClient get() {
         if (sInstance == null) {
@@ -41,6 +44,7 @@ public class WSClient implements WSAbsClient {
         mWSClient = new InnerWSClient(createURI());
         isRegistered = false;
         mWSClient.setClient(this);
+        mHandler = new Handler(App.getAppContext().getMainLooper());
 
         mPendingList = new LinkedList<>();
         mExecutedList = new LinkedList<>();
@@ -131,8 +135,13 @@ public class WSClient implements WSAbsClient {
 
         if (resp.getCode() == SocketCode.CODE_RESP_PUSH) {
             if (mOnPushReceiveListener != null) {
-                Object o = new Gson().fromJson(message, mOnPushReceiveListener.getGenericType());
-                mOnPushReceiveListener.onPushReceive(o);
+                final Object o = new Gson().fromJson(message, mOnPushReceiveListener.getGenericType());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mOnPushReceiveListener.onPushReceive(o);
+                    }
+                });
             }
             return;
         }
@@ -146,14 +155,26 @@ public class WSClient implements WSAbsClient {
         }
 
         if (resp.getCode() == SocketCode.CODE_RESP_CMD_SUCCESS) {
-            WSCallback callback = request.getCallback();
+            final WSCallback callback = request.getCallback();
             if (callback != null) {
-                callback.onResponse(new Gson().fromJson(message, callback.getGenericType()));
+                final Object o = new Gson().fromJson(message, callback.getGenericType());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onResponse(o);
+                    }
+                });
             }
         } else {
-            WSCallback callback = request.getCallback();
+            final WSCallback callback = request.getCallback();
             if (callback != null) {
-                callback.onError(resp.getCode());
+                final int errorCode = resp.getCode();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onError(errorCode);
+                    }
+                });
             }
             if (request.isRetry()) {
                 mPendingList.offer(request);

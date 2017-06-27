@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.LinearLayout;
 
+import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
@@ -13,8 +15,10 @@ import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
@@ -23,6 +27,14 @@ import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WSMessage;
+import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.callback.OnPushReceiveListener;
+import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +43,7 @@ import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
+import static com.sbai.finance.utils.TimerHandler.WATCH_REFRESH_TIME;
 
 /**
  * Created by linrongfang on 2017/6/19.
@@ -49,6 +62,7 @@ public class FutureBattleActivity extends BaseActivity implements
     private StartMatchDialogFragment mStartMatchDialogFragment;
 
     private VersusGaming mVersusGaming;
+    private int mGameStatus;
 
 
     @Override
@@ -87,8 +101,7 @@ public class FutureBattleActivity extends BaseActivity implements
         //观战模式  刷新底部框 可以点赞
         int userId = LocalUser.getUser().getUserInfo().getId();
         if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
-            mVersusGaming.setGameStatus(GAME_STATUS_OBESERVE);
-
+            mGameStatus = GAME_STATUS_OBESERVE;
             mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                     .initWithModel(mVersusGaming)
                     .setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false)
@@ -137,7 +150,13 @@ public class FutureBattleActivity extends BaseActivity implements
             }
         }
 
-        // TODO: 2017/6/22 开始长连接
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+            @Override
+            public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
+                Log.d(TAG, "onPushReceive: " + versusGamingWSPush);
+                // TODO: 26/06/2017 sample
+            }
+        });
     }
 
     public void showFutureBattleDetail() {
@@ -174,7 +193,12 @@ public class FutureBattleActivity extends BaseActivity implements
     private void requestSubscribeBattle(){
         Client.requestSubscribeBattle(mVersusGaming.getId())
                 .setTag(TAG)
-                .setCallback(null)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+
+                    }
+                })
                 .fire();
     }
 
@@ -182,7 +206,12 @@ public class FutureBattleActivity extends BaseActivity implements
         if (mVersusGaming.getGameStatus() == GAME_STATUS_OBESERVE) {
             Client.requestUnsubscribeBattle(mVersusGaming.getId())
                     .setTag(TAG)
-                    .setCallback(null)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+
+                        }
+                    })
                     .fire();
         }
     }
@@ -226,7 +255,7 @@ public class FutureBattleActivity extends BaseActivity implements
     @Override
     public void onMatchButtonClick() {
         showMatchDialog();
-        // TODO: 2017/6/22 房主开始匹配
+        requestQuickSearchForLaunch(QuickMatchLauncher.TYPE_QUICK_MATCH);
     }
 
     //开始匹配弹窗
@@ -253,6 +282,7 @@ public class FutureBattleActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        requestQuickSearchForLaunch(QuickMatchLauncher.TYPE_CANCEL);
                     }
                 })
                 .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
@@ -269,11 +299,19 @@ public class FutureBattleActivity extends BaseActivity implements
 
     }
 
-    private void requestQuickSearchForLaunch(int type){
-        Client.quickSearchForLaunch(type,mVersusGaming.getId())
-                .setTag(TAG)
-                .setCallback(null)
-                .fire();
+    private void requestQuickSearchForLaunch(int type) {
+        WSClient.get().send(new QuickMatchLauncher(type, mVersusGaming.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+
+            }
+
+            @Override
+            public void onError(int code) {
+
+            }
+
+        });
     }
 
     private void requestCancelBattle(){
@@ -372,6 +410,39 @@ public class FutureBattleActivity extends BaseActivity implements
     @Override
     public void onTimeUp(int count) {
         //观战 底部栏每秒刷 交易内容与点赞20s刷一次
+        if (mGameStatus == GAME_STATUS_OBESERVE) {
+            if (count % WATCH_REFRESH_TIME == 0) {
+                requestBattleData();
+                mFutureBattleFragment.requestOrderHistory();
+            }
+            int temp = (int) (mVersusGaming.getEndTime() - SysTime.getSysTime().getSystemTimestamp())/1000;
+            int endTime = temp - count;
+            mBattleView.setDeadline(mVersusGaming.getGameStatus(), endTime);
+        }
+    }
+
+    private void requestBattleData() {
+        Client.getBattleGamingData(String.valueOf(mVersusGaming.getId())).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<VersusGaming>>, List<VersusGaming>>() {
+                    @Override
+                    protected void onRespSuccessData(List<VersusGaming> data) {
+                        updateBattleData(data);
+                    }
+                }).fire();
+    }
+
+    private void updateBattleData(List<VersusGaming> data) {
+        if (data.isEmpty()) return;
+
+        VersusGaming item = data.get(0);
+        mVersusGaming.setLaunchScore(item.getLaunchScore());
+        mVersusGaming.setAgainstScore(item.getAgainstScore());
+        mVersusGaming.setLaunchPraise(item.getLaunchPraise());
+        mVersusGaming.setAgainstPraise(item.getAgainstPraise());
+        mVersusGaming.setGameStatus(item.getGameStatus());
+
+        mBattleView.setPraise(mVersusGaming.getLaunchPraise(),mVersusGaming.getAgainstPraise())
+                .setProgress(mVersusGaming.getLaunchScore(),mVersusGaming.getAgainstScore(),false);
 
     }
 

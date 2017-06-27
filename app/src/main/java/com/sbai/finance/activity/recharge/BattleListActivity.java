@@ -114,26 +114,17 @@ public class BattleListActivity extends BaseActivity implements
         WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
             @Override
             public void onPushReceive(final WSPush<VersusGaming> versusGamingWSPush) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mStartMatchDialogFragment!=null){
-                            mStartMatchDialogFragment.dismiss();
-                        }
-                        switch (versusGamingWSPush.getContent().getType()){
-                            case PushCode.QUICK_MATCH_TIMEOUT:
-                                showMatchTimeoutDialog();
-                            break;
-                            case PushCode.QUICK_MATCH_FAILURE:
-                                showMatchTimeoutDialog();
-                                break;
-                            case PushCode.QUICK_MATCH_SUCCESS:
-                                showMatchSuccessDialog((VersusGaming) versusGamingWSPush.getContent().getData());
-                                break;
-                        }
-                    }
-                });
-                // TODO: 26/06/2017 sample
+                switch (versusGamingWSPush.getContent().getType()){
+                    case PushCode.QUICK_MATCH_TIMEOUT:
+                        showMatchTimeoutDialog();
+                        break;
+                    case PushCode.QUICK_MATCH_FAILURE:
+                        showMatchTimeoutDialog();
+                        break;
+                    case PushCode.QUICK_MATCH_SUCCESS:
+                        showMatchSuccessDialog((VersusGaming) versusGamingWSPush.getContent().getData());
+                        break;
+                }
             }
         });
     }
@@ -236,6 +227,7 @@ public class BattleListActivity extends BaseActivity implements
                         if (item != null) {
                             if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
                                 item.setPageType(VersusGaming.PAGE_RECORD);
+                                Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                             } else if (item.getGameStatus()==VersusGaming.GAME_STATUS_CREATED
                                     &&LocalUser.getUser().getUserInfo().getId()!=item.getLaunchUser()){
                                 showJoinVersusDialog(item);
@@ -272,6 +264,7 @@ public class BattleListActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
+        requestMatchVersus(VersusGaming.MATCH_CANCEL, "");
     }
 
     @Override
@@ -363,21 +356,24 @@ public class BattleListActivity extends BaseActivity implements
         WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH, refuseIds), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showMatchDialog();
-                    }
-                });
+                showMatchDialog();
             }
             @Override
             public void onError(final int code) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtil.curt(String.valueOf(code));
-                    }
-                });
+                ToastUtil.curt(String.valueOf(code));
+            }
+        });
+    }
+    private void requestCancelMatchOfSocket() {
+
+        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL, ""), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+
+            }
+            @Override
+            public void onError(final int code) {
+                ToastUtil.curt(String.valueOf(code));
             }
         });
     }
@@ -492,7 +488,7 @@ public class BattleListActivity extends BaseActivity implements
                     .transform(new GlideCircleTransform(getActivity()))
                     .into(mAvatar);
         } else {
-            mAvatar.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_default_avatar));
+            mAvatar.setImageResource(R.drawable.ic_default_avatar);
         }
     }
 
@@ -589,6 +585,7 @@ public class BattleListActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         requestMatchVersusOfSocket("");
+
                     }
                 })
                 .setTitleMaxLines(1)
@@ -646,7 +643,6 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        //     showMatchingDialog();
                         showMatchDialog();
                     }
                 })
@@ -658,6 +654,9 @@ public class BattleListActivity extends BaseActivity implements
 
     }
     private void showMatchTimeoutDialog(){
+        if (mStartMatchDialogFragment!=null){
+            mStartMatchDialogFragment.dismiss();
+        }
         SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
                 .setMessageTextSize(15)
                 .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
@@ -680,6 +679,9 @@ public class BattleListActivity extends BaseActivity implements
                 .show();
     }
     private void showMatchSuccessDialog(final VersusGaming data) {
+        if (mStartMatchDialogFragment!=null){
+            mStartMatchDialogFragment.dismiss();
+        }
         if (data == null) return;
         String reward = "";
         switch (data.getCoinType()) {
@@ -700,14 +702,13 @@ public class BattleListActivity extends BaseActivity implements
                 .append(getString(R.string.versus_tip));
         SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
                 .setMessageTextSize(15)
+                .setMessageMaxLines(10)
                 .setPositive(R.string.continue_versus, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         //传入拒绝的id
-//                        showMatchingDialog();
-                        showMatchDialog();
-                        requestMatchVersus(VersusGaming.MATCH_CANCEL, String.valueOf(data.getId()));
+                        requestMatchVersusOfSocket(String.valueOf(data.getId()));
                     }
                 })
                 .setNegative(R.string.join_versus, new SmartDialog.OnClickListener() {

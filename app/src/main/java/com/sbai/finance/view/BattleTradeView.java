@@ -135,6 +135,7 @@ public class BattleTradeView extends LinearLayout {
 
     public void addTradeData(List<TradeRecord> list, int creatorId, int againstId) {
         mBattleTradeAdapter.setUserId(creatorId, againstId);
+        mBattleTradeAdapter.clear();
         mBattleTradeAdapter.addAll(list);
         mListView.setSelection(View.FOCUS_DOWN);
     }
