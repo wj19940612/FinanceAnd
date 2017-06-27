@@ -622,9 +622,12 @@
     <string name="extend">支出</string>
     <string name="go_recharge">去充值</string>
     <string name="exchange_fail">兑换失败</string>
-    <string name="coin_is_not_enough">元宝不足</string>
+    <string name="buy_fail">购买失败</string>
+    <string name="coin_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
     <string name="money_is_not_enough">现金余额不足，请充值或降低兑换数量</string>
+    <string name="is_not_set_safety_pass">未设置安全密码</string>
     <string name="full_text">...全文</string>
+    <string name="go_to_set">去设置</string>
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>

@@ -149,13 +149,24 @@ public class ExChangeProductFragment extends BaseFragment {
                                     @Override
                                     protected void onRespSuccessData(Boolean data) {
                                         if (!data) {
-                                            Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).execute();
+                                            showAddSafetyPassDialog();
                                         } else {
                                             showInputSafetyPassDialog(item);
                                         }
                                     }
                                 })
                                 .fire();
+                    }
+                }).show();
+    }
+
+    private void showAddSafetyPassDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.is_not_set_safety_pass))
+                .setPositive(R.string.go_to_set, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
                     }
                 }).show();
     }
@@ -207,7 +218,7 @@ public class ExChangeProductFragment extends BaseFragment {
 
     private void showExchangeFailDialog(CornucopiaProductModel item) {
         if (item.isVcoin()) {
-            SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough))
+            SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough), getString(R.string.buy_fail))
                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
