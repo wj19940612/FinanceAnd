@@ -34,6 +34,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
@@ -242,7 +243,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick({R.id.deletePage, R.id.phoneNumberClear, R.id.getAuthCode,
-            R.id.login, R.id.finance_protocol})
+            R.id.login, R.id.finance_protocol, R.id.showLayout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deletePage:
@@ -262,6 +263,9 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.finance_protocol:
                 openUserProtocolPage();
+                break;
+            case R.id.showLayout:
+                KeyBoardUtils.closeKeyboard(this, mShowLayout);
                 break;
             default:
                 break;

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -219,6 +220,8 @@ public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClic
 			TextView mUserName;
 			@BindView(R.id.location)
 			TextView mLocation;
+			@BindView(R.id.hotArea)
+			RelativeLayout mHotArea;
 			@BindView(R.id.checkboxClick)
 			ImageView mCheckboxClick;
 
@@ -235,6 +238,20 @@ public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClic
 						.into(mAvatar);
 
 				mUserName.setText(item.getUserName());
+
+				mHotArea.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LocalUser.getUser().isLogin()) {
+							Launcher.with(context, UserDataActivity.class)
+									.putExtra(Launcher.USER_ID, item.getUserId())
+									.execute();
+						} else {
+							Launcher.with(context, LoginActivity.class).executeForResult(REQ_CODE_LOGIN);
+						}
+					}
+				});
+
 
 				if (TextUtils.isEmpty(item.getLocation())) {
 					mLocation.setText(R.string.no_location_information);

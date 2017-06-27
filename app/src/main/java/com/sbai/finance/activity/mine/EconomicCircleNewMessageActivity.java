@@ -228,6 +228,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 
 				if (item.getClassify() == 3) {
 					mContent.setVisibility(View.VISIBLE);
+					mBorrowMoneyImg.setVisibility(View.GONE);
 					if (item.getData() != null) {
 						mContent.setText(item.getData().getContent());
 					}
