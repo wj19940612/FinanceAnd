@@ -304,6 +304,7 @@ public class FutureBattleFragment extends BaseFragment {
         } else {
             setBattleTradeState(STATE_TRADE);
         }
+        mGameStatus = GAME_STATUS_STARTED;
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -424,7 +425,7 @@ public class FutureBattleFragment extends BaseFragment {
 
     private void updateTradeProfit(FutureData futureData) {
         if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
-            //持仓盈亏 = 差价
+
             double profit = 0;
             if (mCurrentOrder.getDirection() == 1) {
                 profit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
@@ -490,7 +491,7 @@ public class FutureBattleFragment extends BaseFragment {
         //更新房间存在倒计时
         long currentTime = System.currentTimeMillis();
         long createTime = mVersusGaming.getCreateTime();
-        int diff = (int) (currentTime - createTime);
+        int diff = DateUtil.getDiffSeconds(currentTime,createTime);
         if (mBattleButtons.isShown()) {
             mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));
         }
