@@ -24,7 +24,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
-import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.websocket.WSClient;
 import com.sbai.finance.websocket.WSMessage;
@@ -56,8 +55,7 @@ import static com.sbai.finance.websocket.PushCode.ROOM_CREATE_TIMEOUT;
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements
-        BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
+public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -451,35 +449,6 @@ public class FutureBattleActivity extends BaseActivity implements
 
     }
 
-    @Override
-    public void onLongPurchaseButtonClick() {
-        requestCreateOrder(1);
-    }
-
-    @Override
-    public void onShortPurchaseButtonClick() {
-        requestCreateOrder(0);
-    }
-
-    private void requestCreateOrder(int direction) {
-        Client.createOrder(mVersusGaming.getId(), direction)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(null)
-                .fire();
-    }
-
-    @Override
-    public void onClosePositionButtonClick() {
-        requestClosePosition(0);
-    }
-
-    private void requestClosePosition(int orderId) {
-        Client.closePosition(mVersusGaming.getId(), orderId)
-                .setTag(TAG)
-                .setCallback(null)
-                .fire();
-    }
 
     @Override
     public void onTimeUp(int count) {

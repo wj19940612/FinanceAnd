@@ -58,6 +58,8 @@ public class BattleTradeView extends LinearLayout {
 
     @BindView(R.id.tradeDataArea)
     LinearLayout mTradeDataArea;
+    @BindView(R.id.closePositionData)
+    LinearLayout mClosePositionDataArea;
     @BindView(R.id.direction)
     TextView mDirection;
     @BindView(R.id.buyPrice)
@@ -164,11 +166,14 @@ public class BattleTradeView extends LinearLayout {
     public void changeTradeState(int state) {
         mState = state;
         if (state == STATE_CLOSE_POSITION) {
+            //持仓中  只能卖
             mLongPurchase.setVisibility(GONE);
             mShortPurchase.setVisibility(GONE);
             mClosePosition.setVisibility(VISIBLE);
-            mNoPosition.setVisibility(GONE);
+            mTradeDataArea.removeAllViews();
+            mTradeDataArea.addView(mClosePositionDataArea);
         } else if (state == STATE_TRADE) {
+            //未持仓 可以买
             mLongPurchase.setVisibility(VISIBLE);
             mShortPurchase.setVisibility(VISIBLE);
             mClosePosition.setVisibility(GONE);
@@ -255,7 +260,7 @@ public class BattleTradeView extends LinearLayout {
 
                 StringBuilder info = new StringBuilder();
                 info.append(FinanceUtil.formatWithScale(item.getOptPrice()));
-                String time = DateUtil.format(item.getOptTime(),"HH:mm:ss");
+                String time = DateUtil.format(item.getOptTime(), "HH:mm:ss");
 
                 switch (item.getOptStatus()) {
                     case STATUS_TAKE_MORE_POSITION:

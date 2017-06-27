@@ -22,8 +22,10 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.versus.TradeOrder;
+import com.sbai.finance.model.versus.TradeOrderClosePosition;
 import com.sbai.finance.model.versus.TradeRecord;
 import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -202,19 +204,44 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
             @Override
             public void onLongPurchaseButtonClick() {
-                ((FutureBattleActivity)getActivity()).onLongPurchaseButtonClick();
+                requestCreateOrder(1);
             }
 
             @Override
             public void onShortPurchaseButtonClick() {
-                ((FutureBattleActivity)getActivity()).onShortPurchaseButtonClick();
+                requestCreateOrder(0);
             }
 
             @Override
             public void onClosePositionButtonClick() {
-                ((FutureBattleActivity)getActivity()).onClosePositionButtonClick();
+                requestClosePosition(mCurrentOrder.getId());
             }
         });
+    }
+
+    private void requestCreateOrder(int direction) {
+        Client.createOrder(mVersusGaming.getId(), direction)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<TradeOrder>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TradeOrder> resp) {
+                        refreshTradeView();
+                    }
+                })
+                .fire();
+    }
+
+    private void requestClosePosition(int orderId) {
+        Client.closePosition(mVersusGaming.getId(), orderId)
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                        refreshTradeView();
+                    }
+                })
+                .fire();
     }
 
     private void requestVarietyData() {
@@ -492,6 +519,12 @@ public class FutureBattleFragment extends BaseFragment {
     public void addOrderList(List<TradeRecord> list) {
         //刷新下单列表
         mBattleTradeView.addTradeData(list,mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
+    }
+
+    private void refreshTradeView(){
+        //每次点击交易或平仓后 刷新数据
+        requestOrderHistory();
+        requestCurrentOrder();
     }
 
     @Override
