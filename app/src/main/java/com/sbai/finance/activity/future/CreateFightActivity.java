@@ -72,19 +72,9 @@ public class CreateFightActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_fight);
 		ButterKnife.bind(this);
-		mIngotArray = /*futureBattleConfig.getGold().split(",");*/new String[]{"100", "200"};
-		mIntegralArray = /*futureBattleConfig.getIntegral().split(",");*/new String[]{"100", "200", "300"};
-		mDurationArray = /*futureBattleConfig.getTime().split(",");*/new String[]{"10", "20", "30"};
-		mIngotList = Arrays.asList(mIngotArray);
-		mIntegralList = Arrays.asList(mIntegralArray);
-		mDurationList = Arrays.asList(mDurationArray);
-		mIngotList = new ArrayList<>(mIngotList);
-		mIntegralList = new ArrayList<>(mIntegralList);
-		mDurationList = new ArrayList<>(mDurationList);
-		mBountyAdapter = new BountyAdapter(this, mIngotList);
-		mDurationAdapter = new DurationAdapter(this, mDurationList);
-		mBountyGridView.setAdapter(mBountyAdapter);
-		mDurationGridView.setAdapter(mDurationAdapter);
+
+		requestFutureBattleConfig();
+
 		mBountyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -118,9 +108,6 @@ public class CreateFightActivity extends BaseActivity {
 				mEndTime = Integer.parseInt(item);
 			}
 		});
-
-		//requestFutureBattleConfig();
-		updateFutureBattleConfig();
 	}
 
 	private void requestFutureBattleConfig() {
@@ -128,12 +115,29 @@ public class CreateFightActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<FutureBattleConfig>, FutureBattleConfig>() {
 					@Override
 					protected void onRespSuccessData(FutureBattleConfig futureBattleConfig) {
-						//updateFutureBattleConfig(futureBattleConfig);
+						updateFutureBattleConfig(futureBattleConfig);
 					}
 				}).fire();
 	}
 
-	private void updateFutureBattleConfig() {
+	private void updateFutureBattleConfig(FutureBattleConfig futureBattleConfig) {
+
+		mIngotArray = futureBattleConfig.getGold().split(",");
+		mIntegralArray = futureBattleConfig.getIntegral().split(",");
+		mDurationArray = futureBattleConfig.getTime().split(",");
+
+		mIngotList = Arrays.asList(mIngotArray);
+		mIntegralList = Arrays.asList(mIntegralArray);
+		mDurationList = Arrays.asList(mDurationArray);
+
+		mIngotList = new ArrayList<>(mIngotList);
+		mIntegralList = new ArrayList<>(mIntegralList);
+		mDurationList = new ArrayList<>(mDurationList);
+
+		mBountyAdapter = new BountyAdapter(this, mIngotList);
+		mDurationAdapter = new DurationAdapter(this, mDurationList);
+		mBountyGridView.setAdapter(mBountyAdapter);
+		mDurationGridView.setAdapter(mDurationAdapter);
 
 		updateIngotConfig();
 		updateDurationConfig();
@@ -155,7 +159,6 @@ public class CreateFightActivity extends BaseActivity {
 		mDurationAdapter.clear();
 		mDurationAdapter.addAll(mDurationList);
 	}
-
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -187,11 +190,11 @@ public class CreateFightActivity extends BaseActivity {
 			this.mChecked = checked;
 		}
 
-		public void setIntegralList(List<String> integralList) {
+		private void setIntegralList(List<String> integralList) {
 			this.mBountyAList = integralList;
 		}
 
-		public void setIngotList(List<String> ingotList) {
+		private void setIngotList(List<String> ingotList) {
 			this.mBountyAList = ingotList;
 		}
 
@@ -269,7 +272,7 @@ public class CreateFightActivity extends BaseActivity {
 			}
 
 			public void bindingData(Context context, List<String> durationList, int position, int checked) {
-				mChoice.setText(context.getString(R.string.duration_choice1, durationList.get(position)));
+				mChoice.setText(context.getString(R.string.minute, durationList.get(position)));
 				mChoice.setSelected(false);
 				if (checked == position) {
 					mChoice.setSelected(true);
