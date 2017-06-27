@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -111,22 +110,23 @@ public class ExChangeProductFragment extends BaseFragment {
             }
         });
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mExchangeProductAdapter.setOnExchangeListener(new ExchangeProductAdapter.OnExchangeListener() {
             @Override
-            public void onItemClick(final AdapterView<?> parent, View view, int position, long id) {
-                final CornucopiaProductModel item = (CornucopiaProductModel) parent.getAdapter().getItem(position);
-                if (item == null) return;
-                if (mUserFundInfoModel != null) {
-                    if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney() : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
-                        showExchangePassDialog(item);
+            public void exchange(CornucopiaProductModel item) {
+                if (item != null) {
+                    if (mUserFundInfoModel != null) {
+                        if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney() : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
+                            showExchangePassDialog(item);
+                        } else {
+                            showExchangeFailDialog(item);
+                        }
                     } else {
-                        showExchangeFailDialog(item);
+                        showExchangePassDialog(item);
                     }
-                } else {
-                    showExchangePassDialog(item);
                 }
             }
         });
+
     }
 
     public void scrollToTop() {
@@ -189,7 +189,7 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     private void exchange(final CornucopiaProductModel item, String passWord) {
-        Client.exchange(item.getId(), passWord)
+        Client.exchange(item.getId(), passWord, item.getFromRealMoney(), item.getToRealMoney())
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>(false) {
@@ -206,9 +206,10 @@ public class ExChangeProductFragment extends BaseFragment {
                     @Override
                     protected void onReceive(Resp<Object> objectResp) {
                         super.onReceive(objectResp);
-                        if (objectResp.getCode() == 2201) {
+                        if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
                             showExchangeFailDialog(item);
-                            // TODO: 2017/6/27 后台没有该配置 刷新页面
+                        } else if (objectResp.isExchangeProductHasChange()) {
+                            showExchangeProductIsChangeDialog(item);
                         } else {
                             ToastUtil.curt(objectResp.getMsg());
                         }
@@ -225,6 +226,8 @@ public class ExChangeProductFragment extends BaseFragment {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        mExchangeProductAdapter.clear();
+                        requestVcoinOrIntegrateList();
                     }
                 })
                 .setNegativeVisable(View.GONE)
@@ -312,6 +315,15 @@ public class ExChangeProductFragment extends BaseFragment {
     static class ExchangeProductAdapter extends ArrayAdapter<CornucopiaProductModel> {
 
         private Context mContext;
+        private OnExchangeListener mOnExchangeListener;
+
+        public interface OnExchangeListener {
+            void exchange(CornucopiaProductModel cornucopiaProductModel);
+        }
+
+        public void setOnExchangeListener(OnExchangeListener onExchangeListener) {
+            mOnExchangeListener = onExchangeListener;
+        }
 
         public ExchangeProductAdapter(@NonNull Context context) {
             super(context, 0);
@@ -329,7 +341,7 @@ public class ExChangeProductFragment extends BaseFragment {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(mContext, getItem(position), position);
+            viewHolder.bindDataWithView(mContext, getItem(position), position, mOnExchangeListener);
             return convertView;
         }
 
@@ -345,7 +357,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(Context context, CornucopiaProductModel item, int position) {
+            public void bindDataWithView(Context context, final CornucopiaProductModel item, int position, final OnExchangeListener onExchangeListener) {
                 if (item.isVcoin()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
                     mProduct.setText(FinanceUtil.formatWithScaleNoZero(item.getToRealMoney()));
@@ -361,6 +373,14 @@ public class ExChangeProductFragment extends BaseFragment {
                 } else {
                     mOldPrice.setVisibility(View.GONE);
                 }
+                mPrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onExchangeListener != null) {
+                            onExchangeListener.exchange(item);
+                        }
+                    }
+                });
             }
         }
     }

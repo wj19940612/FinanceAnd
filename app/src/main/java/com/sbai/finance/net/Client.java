@@ -1620,14 +1620,18 @@ public class Client {
      * POST
      * 兑换接口（wms）
      *
-     * @param exchangeId 兑换配置ID
-     * @param password   密码
+     * @param exchangeId    兑换配置ID
+     * @param password      密码
+     * @param toMoney
+     * @param fromRealMoney 兑换来源金额
      * @return
      */
-    public static API exchange(int exchangeId, String password) {
+    public static API exchange(int exchangeId, String password, double fromRealMoney, double toMoney) {
         return new API(POST, "/user/userAccount/exchange.do", new ApiParams()
                 .put("exchangeId", exchangeId)
-                .put("password", password));
+                .put("password", password)
+                .put("fromRealMoney", fromRealMoney)
+                .put("toMoney", toMoney));
     }
 
     /**
