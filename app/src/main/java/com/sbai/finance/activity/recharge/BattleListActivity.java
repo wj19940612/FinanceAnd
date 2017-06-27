@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -312,9 +313,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onSuccess(Resp resp) {
                         if (resp.isSuccess()){
-                            VersusGaming versusGaming = (VersusGaming) resp.getData();
-                            versusGaming.setPageType(VersusGaming.PAGE_VERSUS);
-                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, versusGaming).execute();
+                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
                         }else{
                             showJoinVersusFailureDialog(resp.getMsg(),resp.getCode());
                         }
@@ -747,6 +746,8 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        data.setPageType(VersusGaming.PAGE_VERSUS);
+                        data.setGameStatus(VersusGaming.GAME_STATUS_STARTED);
                         requestJoinVersus(data);
                     }
                 })

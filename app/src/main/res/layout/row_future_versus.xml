@@ -38,7 +38,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="false"
-                        android:src="@drawable/btn_join_versus"/>
+                        tools:src="@drawable/btn_join_versus"/>
 
                     <ImageView
                         android:id="@+id/createKo"
@@ -146,15 +146,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="true"
-                        android:src="@drawable/btn_join_versus"/>
+                        tools:src="@drawable/btn_join_versus"/>
 
                     <ImageView
                         android:id="@+id/againstKo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_versus_ko"/>
-                    android:src="@drawable/ic_versus_ko"
-                    android:visibility="gone"/>
+                        android:src="@drawable/ic_versus_ko"
+                        android:visibility="gone"/>
                 </FrameLayout>
 
                 <TextView
