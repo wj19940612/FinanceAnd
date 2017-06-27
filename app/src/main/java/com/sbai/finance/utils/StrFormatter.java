@@ -86,4 +86,16 @@ public class StrFormatter {
     public static String getFormatText(String text) {
         return text.replace("//", "\n");
     }
+
+    /**
+     * 5.15454
+     *
+     * @return 5.12  小数点后两位
+     */
+    public static String getFormatMoney(String money) {
+        if (money.contains(".") && money.indexOf(".") + 4 == money.length()) {
+            return money.substring(0, money.indexOf(".") + 3);
+        }
+        return money;
+    }
 }

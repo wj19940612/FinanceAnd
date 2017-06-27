@@ -426,6 +426,7 @@
     <string name="cancel_confirm">是否要取消借款?</string>
     <string name="repay_confirm">是否确认对方已还款?</string>
     <string name="open_gps">请在设置中开启[乐米金融] 定位服务，以便发布借款</string>
+    <string name="open_gps_permission">请在设置中开启[乐米金融] 定位服务权限</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
@@ -578,7 +579,7 @@
     <string name="text_number">%1$s(%2$s)</string>
 
     <string name="with_draw">提现</string>
-    <string name="with_draw_hint">工作日两小时到账,具体请看规则></string>
+    <string name="with_draw_hint">工作日两小时到账，具体请看    提现规则></string>
     <string name="with_draw_bank">到账银行卡%1$s</string>
     <string name="with_draw_money">提现金额</string>
     <string name="predict_poundage">预计手续费</string>
@@ -587,7 +588,7 @@
     <string name="can_with_poundage">提现手续费:    %1$s元/笔</string>
     <string name="can_with_rule">提现规则</string>
     <string name="can_with_rule_content">1、用户提现收手续费%1$s元/笔；\n2、手续费将从提现金额内直接扣除；
-    \n3、工作日(09:00-17:00)内提现1-2个小时内到账,周末及节假日提现顺延至下一个工作日处理。</string>
+    \n3、工作日(09：00-17：00)内提现1-2个小时内到账，周末及节假日提现顺延至下一个工作日处理。</string>
     <string name="with_draw_details">提现详情</string>
     <string name="with_draw_check_is_submit">提现审核已提交</string>
     <string name="complete">完成</string>
@@ -597,12 +598,17 @@
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
+    <string name="with_draw_limit">最低提现金额5元</string>
+
+    <string name="earnings_yuan">+%1$s元</string>
+    <string name="minus_yuan">-%1$s元</string>
 
     <!--future versus-->
     <string name="go_recharge">去充值</string>
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
     <string name="versus_record">期货对战-战绩</string>
+    <string name="go_versus">前往对战</string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
     <string name="position_direction">持仓方向</string>
@@ -613,7 +619,8 @@
     <string name="join_versus_failure_title">加入失败</string>
     <string name="join_versus_failure_tip">余额不足，请充值或选择其他赏金较低的对战</string>
     <string name="join_versus_title">确认加入对战？</string>
-    <string name="join_versus_tip">加入对战将暂时冻结2000积分作为对战奖金，胜利时返还，失败扣除</string>
+    <string name="join_versus_tip">加入对战将暂时冻结%1$s作为对战奖金，胜利时返还，失败扣除</string>
+    <string name="exit_versus">已存在进行中的对战，对战结束后可加入新的对战</string>
     <string name="continue_versus">继续匹配</string>
     <string name="no_waiting">不等了</string>
     <string name="cancel_matching">取消匹配</string>
@@ -646,7 +653,7 @@
     <string name="versus_variety_name">对战品种 : </string>
     <string name="versus_time">对战时长 : </string>
     <string name="versus_reward">对战赏金 : </string>
-    <string name="versus_tip">（加入对战后，赏金将会暂时冻结，对战胜利后返还，失败扣除)</string>
+    <string name="versus_tip">(加入对战后,赏金将会暂时冻结,对战胜利后返还,失败扣除)</string>
     <string name="join_versus">加入对战</string>
     <string name="wait_to_join">等待加入</string>
     <string name="wait_overtime">等待超时</string>
