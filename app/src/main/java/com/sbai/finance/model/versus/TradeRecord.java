@@ -22,6 +22,15 @@ public class TradeRecord {
     private String contractsCode;
     private String varietyName;
     private String varietyType;
+    private int marketPoint;
+
+    public int getMarketPoint() {
+        return marketPoint;
+    }
+
+    public void setMarketPoint(int marketPoint) {
+        this.marketPoint = marketPoint;
+    }
 
     public String getContractsCode() {
         return contractsCode;

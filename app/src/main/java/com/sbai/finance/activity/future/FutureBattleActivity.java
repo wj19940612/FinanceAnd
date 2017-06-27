@@ -165,10 +165,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void initPushReceiveListener() {
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<Object>>() {
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
 
             @Override
-            public void onPushReceive(WSPush<Object> objectWSPush) {
+            public void onPushReceive(WSPush<VersusGaming> objectWSPush) {
                 switch (objectWSPush.getContent().getType()) {
                     case BATTLE_JOINED:
                         //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
@@ -221,7 +221,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
     }
 
-    private void startGame(WSPush<Object> objectWSPush) {
+    private void startGame(WSPush<VersusGaming> objectWSPush) {
         mVersusGaming = (VersusGaming) objectWSPush.getContent().getData();
         mBattleView.initWithModel(mVersusGaming);
         mFutureBattleFragment.showBattleTradeView();
