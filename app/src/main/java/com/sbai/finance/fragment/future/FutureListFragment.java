@@ -149,15 +149,14 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                             && data.getInstrumentId().equalsIgnoreCase(variety.getContractsCode())) {
                         View childView = mListView.getChildAt(i - mListView.getFirstVisiblePosition());
                         if (childView != null) {
-                            TextView lastPrice = ButterKnife.findById(childView, R.id.lastPrice);
-                            TextView rate = ButterKnife.findById(childView, R.id.rate);
+                            TextView lastPrice = (TextView) childView.findViewById(R.id.lastPrice);
+                            TextView rate = (TextView) childView.findViewById(R.id.rate);
                             double priceChange = FinanceUtil.subtraction(data.getLastPrice(), data.getPreSetPrice())
                                     .divide(new BigDecimal(data.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
                                     .multiply(new BigDecimal(100)).doubleValue();
                             lastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), variety.getPriceScale()));
                             if (priceChange >= 0) {
                                 lastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                              //  rate.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                                 rate.setSelected(true);
                                 rate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
                             } else {
