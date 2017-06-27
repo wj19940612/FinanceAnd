@@ -146,13 +146,14 @@ public class WSClient implements WSAbsClient {
             return;
         }
 
-        WSMessage request = getRequest(resp);
-        if (request == null) return;
-
         if (resp.getCode() == SocketCode.CODE_RESP_HEART) {
             Log.d(TAG, "SOCKET HEART: " + resp);
+            sendHeart();
             return;
         }
+
+        WSMessage request = getRequest(resp);
+        if (request == null) return;
 
         if (resp.getCode() == SocketCode.CODE_RESP_CMD_SUCCESS) {
             final WSCallback callback = request.getCallback();
@@ -180,6 +181,12 @@ public class WSClient implements WSAbsClient {
                 mPendingList.offer(request);
                 executePendingList();
             }
+        }
+    }
+
+    private void sendHeart() {
+        if (mWSClient.isOpen()) {
+            mWSClient.send(new WSMessage(SocketCode.CODE_HEART, null).toJson());
         }
     }
 
@@ -219,7 +226,7 @@ public class WSClient implements WSAbsClient {
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
-            Log.d(TAG, "onOpen: " + handshakedata);
+            Log.d(TAG, "onOpen: ");
             if (client != null) {
                 client.onOpen();
             }
@@ -227,7 +234,7 @@ public class WSClient implements WSAbsClient {
 
         @Override
         public void onMessage(String message) {
-            Log.d(TAG, "onMessage: " + message);
+            Log.d(TAG, "onMessage: unprocessed message: " + message);
             if (client != null) {
                 client.onMessage(message);
             }
