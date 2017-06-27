@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.google.gson.JsonObject;
@@ -21,6 +20,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.BattleButtons;
@@ -44,6 +44,9 @@ import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
 import static com.sbai.finance.utils.TimerHandler.WATCH_REFRESH_TIME;
+import static com.sbai.finance.websocket.PushCode.BATTLE_CANCEL;
+import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
+import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 
 /**
  * Created by linrongfang on 2017/6/19.
@@ -150,11 +153,23 @@ public class FutureBattleActivity extends BaseActivity implements
             }
         }
 
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+        initPushReceiveListener();
+    }
+
+    private void initPushReceiveListener() {
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<Object>>() {
+
             @Override
-            public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
-                Log.d(TAG, "onPushReceive: " + versusGamingWSPush);
-                // TODO: 26/06/2017 sample
+            public void onPushReceive(WSPush<Object> objectWSPush) {
+                switch (objectWSPush.getContent().getType()){
+                    case BATTLE_JOINED:
+                        break;
+                    case BATTLE_OVER:
+                        break;
+                    case BATTLE_CANCEL:
+                        break;
+
+                }
             }
         });
     }
@@ -415,9 +430,9 @@ public class FutureBattleActivity extends BaseActivity implements
                 requestBattleData();
                 mFutureBattleFragment.requestOrderHistory();
             }
-            int temp = (int) (mVersusGaming.getEndTime() - SysTime.getSysTime().getSystemTimestamp())/1000;
-            int endTime = temp - count;
-            mBattleView.setDeadline(mVersusGaming.getGameStatus(), endTime);
+            int diffTime = DateUtil.getDiffSeconds(mVersusGaming.getEndTime(), SysTime.getSysTime().getSystemTimestamp());
+            diffTime -= count;
+            mBattleView.setDeadline(mVersusGaming.getGameStatus(), diffTime);
         }
     }
 
@@ -454,6 +469,7 @@ public class FutureBattleActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopScheduleJob();
         requestUnSubscribeBattle();
     }
 }
