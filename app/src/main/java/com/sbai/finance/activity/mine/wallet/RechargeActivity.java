@@ -149,7 +149,7 @@ public class RechargeActivity extends BaseActivity {
                             } else {
                                 mPayData[i] = usablePlatform.getName();
                             }
-                            if (usablePlatform.getType() == Preference.get().getRechargeWay(LocalUser.getUser().getPhone())) {
+                            if (usablePlatform.getPlatform().equalsIgnoreCase(Preference.get().getRechargeWay(LocalUser.getUser().getPhone()))) {
                                 mUsablePlatform = usablePlatform;
                                 if (mUsablePlatform.isBankPay()
                                         && mUserBankCardInfoModel != null
@@ -319,11 +319,11 @@ public class RechargeActivity extends BaseActivity {
                     mSelectPayWayName = item;
                     for (UsablePlatform data : mUsablePlatformList) {
                         if (data.getName().equalsIgnoreCase(item)) {
-                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getType());
+                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getPlatform());
                             mUsablePlatform = data;
                             break;
                         } else if (item.contains("银行") && data.getName().contains("银行")) {
-                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getType());
+                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getPlatform());
                             if (mBankLimit != null) {
                                 SpannableString payBank = StrUtil.mergeTextWithRatioColor(item, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
                                         ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
