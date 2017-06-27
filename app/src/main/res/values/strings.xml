@@ -572,6 +572,8 @@
     <string name="un_bind_bank_card_hint">为了保障用户信息安全，如需解绑银行卡请点击联系客服</string>
     <string name="un_bind_bank_card_dialog_confirm">联系客服</string>
     <string name="text_number">%1$s(%2$s)</string>
+    <string name="bind_bank_success_hint">银行卡信息已填写，交易后绑定</string>
+
 
     <string name="with_draw">提现</string>
     <string name="with_draw_hint">工作日两小时到账，具体请看    提现规则></string>

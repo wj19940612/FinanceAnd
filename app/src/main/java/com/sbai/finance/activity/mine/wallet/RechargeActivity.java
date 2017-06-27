@@ -356,6 +356,8 @@ public class RechargeActivity extends BaseActivity {
                                 @Override
                                 protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
                                     if (resp.isSuccess()) {
+                                        formatBankPay();
+                                        requestUsablePlatformList();
                                         if (resp.hasData()) {
                                             mUserBankCardInfoModel = resp.getData().get(0);
                                             submitRechargeData();

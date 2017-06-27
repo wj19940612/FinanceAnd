@@ -89,12 +89,12 @@ public class BindBankCardActivity extends BaseActivity {
         ButterKnife.bind(this);
         mUserBank = new UserBankCardInfoModel();
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-        updateBankCardInfo();
         mBankCardNumber.addTextChangedListener(mBankCardValidationWatcher);
         mName.addTextChangedListener(mValidationWatcher);
         mIdentityCard.addTextChangedListener(mValidationWatcher);
         mPhoneNumber.addTextChangedListener(mValidationWatcher);
         mBank.addTextChangedListener(mValidationWatcher);
+        updateBankCardInfo();
     }
 
     private void updateBankCardInfo() {
@@ -261,6 +261,7 @@ public class BindBankCardActivity extends BaseActivity {
                                 if (resp.isSuccess()) {
                                     mUserBankCardInfoModel.setBindStatus(1);
                                     Intent intent = new Intent();
+                                    intent.putExtra(Launcher.EX_PAY_END, true);
                                     intent.putExtra(Launcher.EX_PAYLOAD, mUserBank);
                                     setResult(RESULT_OK, intent);
                                     finish();
