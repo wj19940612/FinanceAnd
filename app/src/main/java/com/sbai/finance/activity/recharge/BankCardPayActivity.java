@@ -19,14 +19,17 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.payment.PaymentPath;
+import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -70,11 +73,12 @@ public class BankCardPayActivity extends BaseActivity {
     private int mCounter;
     //获取验证是否开始
     private boolean mFreezeObtainAuthCode;
-    private PaymentPath mPaymentPath;
     private UserBankCardInfoModel mUserBankCardInfoModel;
     private String mMoney;
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
+    private UsablePlatform mUsablePlatform;
+    private PaymentPath mPaymentPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +93,11 @@ public class BankCardPayActivity extends BaseActivity {
         });
         mAuthCode.addTextChangedListener(mValidationWatcher);
         setKeyboardHelper();
-        mPaymentPath = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        mMoney = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
+        mUsablePlatform = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
+
+
         if (mUserBankCardInfoModel != null) {
             String cardNumber = mUserBankCardInfoModel.getCardNumber();
             mBankCard.setText(getString(R.string.text_number, mUserBankCardInfoModel.getIssuingBankName(), cardNumber.substring(cardNumber.length() - 4)));
@@ -98,10 +105,9 @@ public class BankCardPayActivity extends BaseActivity {
             mIdentityCard.setText(formatIdentityCard(mUserBankCardInfoModel.getIdCard()));
             mPhone.setText(mUserBankCardInfoModel.getCardPhone());
         }
-        if (mPaymentPath != null) {
-            mDealTime.setText(DateUtil.format(mPaymentPath.getTime(), DateUtil.DEFAULT_FORMAT));
-            mDealMoney.setText(getString(R.string.RMB, String.valueOf(mPaymentPath.getMoney())));
-        }
+
+        mDealTime.setText(DateUtil.format(SysTime.getSysTime().getSystemTimestamp(), DateUtil.DEFAULT_FORMAT));
+        mDealMoney.setText(getString(R.string.RMB, FinanceUtil.formatWithScale(mMoney)));
     }
 
 
@@ -176,7 +182,7 @@ public class BankCardPayActivity extends BaseActivity {
     };
 
     private boolean checkSubmitEnable() {
-        return !TextUtils.isEmpty(mAuthCode.getText().toString()) && mAgreeProtocol.isChecked() && !mFreezeObtainAuthCode;
+        return !TextUtils.isEmpty(mAuthCode.getText().toString()) && mAgreeProtocol.isChecked();
     }
 
     @Override
@@ -228,22 +234,24 @@ public class BankCardPayActivity extends BaseActivity {
 
     private void recharge() {
         String authCode = mAuthCode.getText().toString().trim();
-        Client.confirmBankPay(mPaymentPath.getMerchantOrderId(), authCode)
-                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        Log.d(TAG, "onRespSuccess: " + resp.toString());
-                        ToastUtil.curt(resp.toString());
-                    }
-                })
-                .fire();
+        if (mPaymentPath != null) {
+            Client.confirmBankPay(mPaymentPath.getMerchantOrderId(), authCode)
+                    .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setIndeterminate(this)
+                    .setCallback(new Callback<Resp<Object>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            Log.d(TAG, "onRespSuccess: " + resp.toString());
+                            ToastUtil.curt(resp.toString());
+                        }
+                    })
+                    .fire();
+        }
     }
 
     private void getBankPayAuthCode() {
         if (mUserBankCardInfoModel != null) {
-            Client.submitRechargeData(mPaymentPath.getPlatform(), String.valueOf(mPaymentPath.getMoney()), mUserBankCardInfoModel.getId())
+            Client.submitRechargeData(mUsablePlatform.getPlatform(), mMoney, mUserBankCardInfoModel.getId())
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override

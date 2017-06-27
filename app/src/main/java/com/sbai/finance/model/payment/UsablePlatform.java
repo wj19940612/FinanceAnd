@@ -1,10 +1,13 @@
 package com.sbai.finance.model.payment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by lixiaokuan0819 on 2017/5/16.
  */
 
-public class UsablePlatform {
+public class UsablePlatform implements Parcelable{
 
     public static final int TYPE_AIL_PAY = 1;
     public static final int TYPE_WECHAT_PAY = 2;
@@ -134,4 +137,49 @@ public class UsablePlatform {
                 ", type=" + type +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.createTime);
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeInt(this.payment);
+        dest.writeString(this.platform);
+        dest.writeInt(this.status);
+        dest.writeInt(this.transfer);
+        dest.writeLong(this.updateTime);
+        dest.writeInt(this.type);
+    }
+
+    public UsablePlatform() {
+    }
+
+    protected UsablePlatform(Parcel in) {
+        this.createTime = in.readLong();
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.payment = in.readInt();
+        this.platform = in.readString();
+        this.status = in.readInt();
+        this.transfer = in.readInt();
+        this.updateTime = in.readLong();
+        this.type = in.readInt();
+    }
+
+    public static final Creator<UsablePlatform> CREATOR = new Creator<UsablePlatform>() {
+        @Override
+        public UsablePlatform createFromParcel(Parcel source) {
+            return new UsablePlatform(source);
+        }
+
+        @Override
+        public UsablePlatform[] newArray(int size) {
+            return new UsablePlatform[size];
+        }
+    };
 }

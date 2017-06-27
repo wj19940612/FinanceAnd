@@ -258,40 +258,48 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void confirmRecharge(final String money, Integer bankId) {
-        Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
-                    @Override
-                    protected void onRespSuccessData(PaymentPath data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
-                        if (mUsablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
-                            Launcher.with(getActivity(), AliPayActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())
-                                    .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
-                                    .putExtra(Launcher.EX_PAYLOAD_3, money)
-                                    .putExtra(Launcher.EX_PAY_END, true)
-                                    .execute();
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            Uri content_url = Uri.parse(data.getCodeUrl());
-                            intent.setData(content_url);
-                            startActivity(intent);
-                        } else if (mUsablePlatform.getType() == UsablePlatform.TYPE_WECHAT_PAY) {
-                            Launcher.with(getActivity(), WeChatPayActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, data.getCodeUrl())
-                                    .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
-                                    .putExtra(Launcher.EX_PAYLOAD_3, true)
-                                    .execute();
-                        } else if (mUsablePlatform.getType() == UsablePlatform.TYPE_BANK_PAY) {
-                            Launcher.with(getActivity(), BankCardPayActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, data)
-                                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                    .execute();
+        if (mUsablePlatform.isBankPay()) {
+            Launcher.with(getActivity(), BankCardPayActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, money)
+                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                    .putExtra(Launcher.EX_PAYLOAD_1,mUsablePlatform)
+                    .execute();
+        } else {
+            Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
+                        @Override
+                        protected void onRespSuccessData(PaymentPath data) {
+                            Log.d(TAG, "onRespSuccessData: " + data.toString());
+                            if (mUsablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
+                                Launcher.with(getActivity(), AliPayActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
+                                        .putExtra(Launcher.EX_PAYLOAD_3, money)
+                                        .putExtra(Launcher.EX_PAY_END, true)
+                                        .execute();
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_VIEW);
+                                Uri content_url = Uri.parse(data.getCodeUrl());
+                                intent.setData(content_url);
+                                startActivity(intent);
+                            } else if (mUsablePlatform.getType() == UsablePlatform.TYPE_WECHAT_PAY) {
+                                Launcher.with(getActivity(), WeChatPayActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, data.getCodeUrl())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
+                                        .putExtra(Launcher.EX_PAYLOAD_3, true)
+                                        .execute();
+                            } else if (mUsablePlatform.getType() == UsablePlatform.TYPE_BANK_PAY) {
+                                Launcher.with(getActivity(), BankCardPayActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, data)
+                                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                        .execute();
+                            }
+                            finish();
                         }
-                        finish();
-                    }
-                })
-                .fire();
+                    })
+                    .fire();
+        }
     }
 
     private void showRechargePicker() {

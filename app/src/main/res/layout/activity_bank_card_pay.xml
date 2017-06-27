@@ -188,13 +188,15 @@
                 android:text="@string/auth_code_"/>
 
             <android.support.v7.widget.AppCompatEditText
-                android:inputType="number"
                 android:id="@+id/authCode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="18dp"
                 android:layout_weight="1"
-                android:background="@null"/>
+                android:background="@null"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:inputType="number"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/getAuthCode"

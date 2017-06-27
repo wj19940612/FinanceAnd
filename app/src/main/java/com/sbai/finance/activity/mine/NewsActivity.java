@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +53,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     TitleBar mTitleBar;
     private HashSet<Integer> mSet;
     private SystemNewsAdapter mSystemNewsAdapter;
+    private List<HistoryNewsModel> mHistoryNewsModels;
 
     private int mPage = 0;
     private int mSize = 15;
@@ -91,15 +91,16 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void requestSystemNewsList() {
-
-        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize, null, null)
+        Long createTime = null;
+        if (mHistoryNewsModels != null && !mHistoryNewsModels.isEmpty()) {
+            createTime = mHistoryNewsModels.get(mHistoryNewsModels.size()-1).getCreateTime();
+        }
+        Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize, null, createTime)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<HistoryNewsModel>>, List<HistoryNewsModel>>() {
                     @Override
                     protected void onRespSuccessData(List<HistoryNewsModel> data) {
-                        for (HistoryNewsModel i : data) {
-                            Log.d(TAG, "系统消息: " + i.toString());
-                        }
+                        mHistoryNewsModels = data;
                         updateSystemNewsData(data);
                     }
 
