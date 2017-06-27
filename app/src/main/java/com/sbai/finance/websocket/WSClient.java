@@ -29,9 +29,15 @@ public class WSClient implements WSAbsClient {
     private InnerWSClient mWSClient;
     private Queue<WSMessage> mPendingList;
     private Queue<WSMessage> mExecutedList;
-    private boolean isRegistered;
+    private Status mStatus;
     private OnPushReceiveListener mOnPushReceiveListener;
     private Handler mHandler;
+
+    enum Status {
+        UNREGISTERED,
+        REGISTERING,
+        REGISTERED
+    }
 
     public static WSClient get() {
         if (sInstance == null) {
@@ -42,7 +48,7 @@ public class WSClient implements WSAbsClient {
 
     private WSClient() {
         mWSClient = new InnerWSClient(createURI());
-        isRegistered = false;
+        mStatus = Status.UNREGISTERED;
         mWSClient.setClient(this);
         mHandler = new Handler(App.getAppContext().getMainLooper());
 
@@ -55,6 +61,7 @@ public class WSClient implements WSAbsClient {
         String tokens = CookieManger.getInstance().getCookies();
         WSMessage message = new WSMessage(SocketCode.CODE_REGISTER, new WSRegisterInfo(tokens));
         mWSClient.send(message.toJson()); // do not add executed list
+        mStatus = Status.REGISTERING;
     }
 
     public void send(WSCmd WSCmd, WSCallback callback) {
@@ -67,12 +74,26 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void send(WSMessage message) {
-        if (mWSClient.isOpen() && isRegistered) {
+        if (mWSClient.isOpen() && mStatus == Status.REGISTERED) {
             Log.d(TAG, "execute: " + message.toJson());
             mWSClient.send(message.toJson());
             mExecutedList.offer(message);
         } else {
             mPendingList.offer(message);
+
+            if (mWSClient.isConnecting()) {
+                return;
+            }
+
+            if (mWSClient.isOpen() && mStatus == Status.REGISTERING) {
+                return;
+            }
+
+            if (mWSClient.isOpen() && mStatus == Status.UNREGISTERED) {
+                register();
+                return;
+            }
+
             mWSClient.connect();
         }
     }
@@ -95,14 +116,14 @@ public class WSClient implements WSAbsClient {
     public void onClose() {
         mWSClient = new InnerWSClient(createURI());
         mWSClient.setClient(this);
-        isRegistered = false;
+        mStatus = Status.UNREGISTERED;
     }
 
     @Override
     public void onError() {
         mWSClient = new InnerWSClient(createURI());
         mWSClient.setClient(this);
-        isRegistered = false;
+        mStatus = Status.UNREGISTERED;
     }
 
     @Override
@@ -122,13 +143,14 @@ public class WSClient implements WSAbsClient {
         if (resp == null) return;
 
         if (resp.getCode() == SocketCode.CODE_RESP_REGISTER_SUCCESS) {
-            Log.d(TAG, "onMessage: register success");
-            isRegistered = true;
+            Log.d(TAG, "Register success");
+            mStatus = Status.REGISTERED;
             executePendingList();
             return;
         }
 
         if (resp.getCode() == SocketCode.CODE_RESP_REGISTER_FAILURE) {
+            mStatus = Status.UNREGISTERED;
             // TODO: 26/06/2017 是否需要重新注册
             return;
         }
