@@ -37,7 +37,7 @@
                         android:id="@+id/createAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:clickable="true"
+                        android:clickable="false"
                         android:src="@drawable/btn_join_versus"/>
 
                     <ImageView
@@ -54,6 +54,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textSize="12sp"
                     tools:text="hehe"/>
             </LinearLayout>
@@ -160,6 +162,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="hah"/>

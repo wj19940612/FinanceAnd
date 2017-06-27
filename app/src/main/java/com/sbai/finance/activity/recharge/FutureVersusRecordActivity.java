@@ -20,6 +20,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.versus.FutureVersus;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback2D;
@@ -28,6 +29,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.HashSet;
 
@@ -35,8 +37,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FutureVersusRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener,SwipeRefreshLayout.OnRefreshListener {
+    @BindView(R.id.title)
+    TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
+    @BindView(R.id.empty)
+    TextView mEmpty;
     @BindView(R.id.customSwipeRefreshLayout)
     CustomSwipeRefreshLayout mCustomSwipeRefreshLayout;
     private VersusRecordListAdapter mVersusRecordListAdapter;
@@ -51,6 +57,13 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
         initView();
         requestVersusData();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        scrollToTop(mTitleBar, mListView);
+    }
+
     private void initView() {
         mSet = new HashSet<>();
         mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
@@ -60,9 +73,10 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
         mVersusRecordListAdapter.setCallback(new VersusRecordListAdapter.Callback() {
             @Override
             public void onClick(int userId) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.EX_PAYLOAD,userId).execute();
+                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
             }
         });
+        mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mVersusRecordListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -180,43 +194,70 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                 ButterKnife.bind(this, view);
             }
             private void bindDataWithView(final VersusGaming item, Context context, final Callback callback){
-                mMyAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onClick(item.getLaunchUser());
-                    }
-                });
-                mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onClick(item.getAgainstUser());
-                    }
-                });
-                Glide.with(context).load(item.getLaunchUserPortrait())
-                        .load(item.getLaunchUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
-                        .into(mMyAvatar);
-                Glide.with(context).load(item.getLaunchUserPortrait())
-                        .load(item.getAgainstUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
-                        .into(mMyAvatar);
-                mMyName.setText(item.getLaunchUserName());
-                mAgainstName.setText(item.getAgainstUserName());
+                if (item.getLaunchUser()== LocalUser.getUser().getUserInfo().getId()){
+                    mMyAvatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onClick(item.getLaunchUser());
+                        }
+                    });
+                    mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onClick(item.getAgainstUser());
+                        }
+                    });
+                    Glide.with(context)
+                            .load(item.getLaunchUserPortrait())
+                            .placeholder(R.drawable.ic_default_avatar)
+                            .transform(new GlideCircleTransform(context))
+                            .into(mMyAvatar);
+                    Glide.with(context)
+                            .load(item.getAgainstUserPortrait())
+                            .placeholder(R.drawable.ic_default_avatar)
+                            .transform(new GlideCircleTransform(context))
+                            .into(mAgainstAvatar);
+                    mMyName.setText(item.getLaunchUserName());
+                    mAgainstName.setText(item.getAgainstUserName());
+                }else {
+                    mMyAvatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onClick(item.getAgainstUser());
+                        }
+                    });
+                    mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onClick(item.getLaunchUser());
+                        }
+                    });
+                    Glide.with(context)
+                            .load(item.getAgainstUserPortrait())
+                            .placeholder(R.drawable.ic_default_avatar)
+                            .transform(new GlideCircleTransform(context))
+                            .into(mMyAvatar);
+                    Glide.with(context)
+                            .load(item.getLaunchUserPortrait())
+                            .placeholder(R.drawable.ic_default_avatar)
+                            .transform(new GlideCircleTransform(context))
+                            .into(mAgainstAvatar);
+                    mMyName.setText(item.getAgainstUserName());
+                    mAgainstName.setText(item.getLaunchUserName());
+                }
                 String reward="";
                 if (item.getWinResult()==VersusGaming.RESULT_TIE){
                     item.setReward(0);
                 }
                 switch (item.getCoinType()){
                     case VersusGaming.COIN_TYPE_BAO:
-                        reward=item.getReward()+context.getString(R.string.integral);
+                        reward=item.getReward()+context.getString(R.string.ingot);
                         break;
                     case VersusGaming.COIN_TYPE_CASH:
                         reward=item.getReward()+context.getString(R.string.cash);
                         break;
                     case VersusGaming.COIN_TYPE_INTEGRAL:
-                        reward=item.getReward()+context.getString(R.string.ingot);
+                        reward=item.getReward()+context.getString(R.string.integral);
                         break;
                 }
                 if (item.getWinResult()==VersusGaming.RESULT_CREATE_WIN){
@@ -224,20 +265,20 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                     mVersusResult.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
                     mVersusResult.setText(context.getString(R.string.wing));
                     mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context,R.color.redAssist));
-                    mVersusVarietyAndProfit.setText(item.getVarietyName()+" +"+reward);
+                    mVersusVarietyAndProfit.setText(item.getVarietyName()+"  +"+reward);
 
                 }else if (item.getWinResult()==VersusGaming.RESULT_AGAINST_WIN){
                     mVersusResultImg.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_versus_failure));
                     mVersusResult.setTextColor(ContextCompat.getColor(context,R.color.white));
                     mVersusResult.setText(context.getString(R.string.wing));
                     mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context,R.color.white));
-                    mVersusVarietyAndProfit.setText(item.getVarietyName()+" -"+reward);
+                    mVersusVarietyAndProfit.setText(item.getVarietyName()+"  -"+reward);
                 }else{
                     mVersusResultImg.setBackground(ContextCompat.getDrawable(context,R.drawable.ic_versus_failure));
                     mVersusResult.setTextColor(ContextCompat.getColor(context,R.color.white));
                     mVersusResult.setText(context.getString(R.string.tie));
                     mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context,R.color.white));
-                    mVersusVarietyAndProfit.setText(item.getVarietyName()+" "+reward);
+                    mVersusVarietyAndProfit.setText(item.getVarietyName()+"  "+reward);
                 }
             }
         }
