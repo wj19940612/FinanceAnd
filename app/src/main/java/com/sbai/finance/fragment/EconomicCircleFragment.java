@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -55,8 +57,9 @@ import static android.app.Activity.RESULT_OK;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
-	private static final int TYPE_BORROW_MONEY = 1;
 	private static final int TYPE_OPINION = 0;
+	private static final int TYPE_BORROW_MONEY = 1;
+	private static final int TYPE_FUTURES_BATTLE = 2;
 
 	private List<EconomicCircle> mEconomicCircleList;
 	private EconomicCircleAdapter mEconomicCircleAdapter;
@@ -196,6 +199,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
+			} else if (item.getType() == 3) {
 
 			} else {
 				Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
@@ -431,15 +435,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 		@Override
 		public int getViewTypeCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public int getItemViewType(int position) {
 			if (mEconomicCircleList.get(position).getType() == 2) {
 				return TYPE_OPINION;
+			} else if (mEconomicCircleList.get(position).getType() == 1) {
+				return TYPE_BORROW_MONEY;
+			} else {
+				return TYPE_FUTURES_BATTLE;
 			}
-			return TYPE_BORROW_MONEY;
 		}
 
 		@NonNull
@@ -447,6 +454,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		public View getView(int position, View convertView, ViewGroup parent) {
 			OpinionViewHolder opinionViewHolder = null;
 			BorrowMoneyViewHolder borrowMoneyViewHolder = null;
+			FuturesBattleViewHolder futuresBattleViewHolder = null;
 			int type = getItemViewType(position);
 			if (convertView == null) {
 				switch (type) {
@@ -461,6 +469,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
 						convertView.setTag(R.id.tag_borrow_money, borrowMoneyViewHolder);
 						break;
+
+					case TYPE_FUTURES_BATTLE:
+						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_futures_battle, null);
+						futuresBattleViewHolder = new FuturesBattleViewHolder(convertView);
+						convertView.setTag(R.id.tag_futures_battle, futuresBattleViewHolder);
+						break;
 				}
 			} else {
 				switch (type) {
@@ -469,6 +483,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 					case TYPE_BORROW_MONEY:
 						borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag(R.id.tag_borrow_money);
+						break;
+					case TYPE_FUTURES_BATTLE:
+						futuresBattleViewHolder = (FuturesBattleViewHolder) convertView.getTag(R.id.tag_futures_battle);
 						break;
 				}
 			}
@@ -479,6 +496,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					break;
 				case TYPE_BORROW_MONEY:
 					borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
+					break;
+				case TYPE_FUTURES_BATTLE:
+					futuresBattleViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
 					break;
 			}
 
@@ -652,6 +672,190 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				} else {
 					mBorrowingImg.setVisibility(View.GONE);
 					mCircleMoreIcon.setVisibility(View.GONE);
+				}
+			}
+		}
+
+		static class FuturesBattleViewHolder {
+			@BindView(R.id.avatar)
+			ImageView mAvatar;
+			@BindView(R.id.userName)
+			TextView mUserName;
+			@BindView(R.id.isAttention)
+			TextView mIsAttention;
+			@BindView(R.id.hotArea)
+			RelativeLayout mHotArea;
+			@BindView(R.id.content)
+			CollapsedTextView mContent;
+			@BindView(R.id.varietyName)
+			TextView mVarietyName;
+			@BindView(R.id.progressBar)
+			ProgressBar mProgressBar;
+			@BindView(R.id.versus)
+			ImageView mVersus;
+			@BindView(R.id.bounty)
+			TextView mBounty;
+			@BindView(R.id.status)
+			TextView mStatus;
+			@BindView(R.id.againstUserAvatar)
+			ImageView mAgainstUserAvatar;
+			@BindView(R.id.againstUserName)
+			TextView mAgainstUserName;
+			@BindView(R.id.publishTime)
+			TextView mPublishTime;
+			@BindView(R.id.location)
+			TextView mLocation;
+			@BindView(R.id.createProfit)
+			TextView mCreateProfit;
+			@BindView(R.id.againstProfit)
+			TextView mAgainstProfit;
+
+			FuturesBattleViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			public void bindingData(Context context, final EconomicCircle item, final Callback callback, int position) {
+				if (item == null) return;
+
+				Glide.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mAvatar);
+
+				mHotArea.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.HotAreaClick(item);
+						}
+					}
+				});
+
+				mUserName.setText(item.getUserName());
+
+				if (item.getIsAttention() == 2) {
+					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
+				}
+
+				mVarietyName.setText(item.getVarietyName());
+				mContent.setShowText(item.getContent().trim());
+
+				String reward = "";
+				switch (item.getCoinType()) {
+					case EconomicCircle.COIN_TYPE_CASH:
+						reward = item.getReward() + context.getString(R.string.cash);
+						break;
+					case EconomicCircle.COIN_TYPE_INGOT:
+						reward = item.getReward() + context.getString(R.string.ingot);
+						break;
+					case EconomicCircle.COIN_TYPE_INTEGRAL:
+						reward = item.getReward() + context.getString(R.string.integral);
+						break;
+				}
+
+				mBounty.setText(reward);
+				switch (item.getGameStatus()) {
+					case EconomicCircle.GAME_STATUS_CANCELED:
+						mStatus.setText(context.getString(R.string.versus_cancel));
+						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
+						mAgainstUserName.setText("加入对战");
+						mVersus.setVisibility(View.VISIBLE);
+						showScoreProgress(0, 0, true);
+						break;
+
+					case EconomicCircle.GAME_STATUS_CREATED:
+						mStatus.setText(DateUtil.getMinutes(item.getEndline()));
+						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
+						mAgainstUserName.setText("加入对战");
+						mVersus.setVisibility(View.VISIBLE);
+						showScoreProgress(0, 0, true);
+						break;
+
+					case EconomicCircle.GAME_STATUS_STARTED:
+						mStatus.setText(context.getString(R.string.versusing));
+						Glide.with(context)
+								.load(item.getAgainstUserPortrait())
+								.placeholder(R.drawable.ic_default_avatar_big)
+								.transform(new GlideCircleTransform(context))
+								.into(mAgainstUserAvatar);
+						mAgainstUserName.setText(item.getAgainstUserName());
+						mVersus.setVisibility(View.GONE);
+						showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+						break;
+
+					case EconomicCircle.GAME_STATUS_END:
+						if (item.getWinResult() == VersusGaming.RESULT_TIE) {
+							mStatus.setText(context.getString(R.string.tie));
+						} else {
+							mStatus.setText(context.getString(R.string.versus_end));
+						}
+
+						Glide.with(context)
+								.load(item.getAgainstUserPortrait())
+								.placeholder(R.drawable.ic_default_avatar_big)
+								.transform(new GlideCircleTransform(context))
+								.into(mAgainstUserAvatar);
+						mAgainstUserName.setText(item.getAgainstUserName());
+						mVersus.setVisibility(View.GONE);
+						showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+						break;
+				}
+
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+			}
+
+			/**
+			 * 显示对抗状态条
+			 *
+			 * @param createProfit  我的盈利状况
+			 * @param fighterProfit 对抗者盈利状况
+			 * @param isInviting    是否正在邀请中
+			 * @return
+			 */
+			private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
+				String myFlag = "";
+				String fighterFlag = "";
+				if (isInviting) {
+					mProgressBar.setProgress(0);
+					mProgressBar.setSecondaryProgress(0);
+					mCreateProfit.setText(null);
+					mAgainstProfit.setText(null);
+				} else {
+					//正正
+					if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
+						int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
+						mProgressBar.setProgress(progress);
+					}
+					//正负
+					if (createProfit >= 0 && fighterProfit < 0) {
+						mProgressBar.setProgress(100);
+					}
+					//负正
+					if (createProfit < 0 && fighterProfit >= 0) {
+						mProgressBar.setProgress(0);
+					}
+					//负负
+					if (createProfit < 0 && fighterProfit < 0) {
+						int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
+						mProgressBar.setProgress(100 - progress);
+					}
+					//都为0
+					if (createProfit == 0 && fighterProfit == 0) {
+						mProgressBar.setProgress(50);
+					}
+					mProgressBar.setSecondaryProgress(100);
+
+					if (createProfit > 0) {
+						myFlag = "+";
+					}
+
+					if (fighterProfit > 0) {
+						fighterFlag = "+";
+					}
+					mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
+					mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
 				}
 			}
 		}

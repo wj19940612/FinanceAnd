@@ -4,6 +4,17 @@ import java.io.Serializable;
 
 public class EconomicCircle implements Serializable {
 
+	//赏金类型 0现金 1元宝 2积分
+	public static final int COIN_TYPE_CASH = 1;
+	public static final int COIN_TYPE_INGOT = 2;
+	public static final int COIN_TYPE_INTEGRAL = 3;
+
+	//游戏状态 0取消 1发起 2对战开始 3对战结束
+	public static final int GAME_STATUS_CANCELED = 0;
+	public static final int GAME_STATUS_CREATED = 1;
+	public static final int GAME_STATUS_STARTED = 2;
+	public static final int GAME_STATUS_END = 3;
+
 	private int auditStatus;
 	private String bigVarietyTypeCode;
 	private String bigVarietyTypeName;
@@ -26,15 +37,6 @@ public class EconomicCircle implements Serializable {
 	private String content;
 	private String land;
 	private String location;
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
 	private double money;
 	private double interest;
 	private int days;
@@ -42,6 +44,87 @@ public class EconomicCircle implements Serializable {
 	private String risePre;
 	private String risePrice;
 	private String contentImg;
+	private int coinType;// '对战类型， 1，现金，2，元宝， 3积分',
+	private int reward; //'赏金',
+	private int gameStatus;// '1 发起， 2，开始， 3 结束。0,取消.',
+	private String againstUserName; // 迎战人名称
+	private String againstUserPortrait; //  迎战人头像
+	private int endline;// '对战时长， 按照s 来计算',
+	private int winResult; // 胜利的人 0:平手， 1，发起人赢，2，对战者赢
+	private double launchScore; //'发起用户得分'
+	private double againstScore; //'应战者得分'
+
+	public double getLaunchScore() {
+		return launchScore;
+	}
+
+	public void setLaunchScore(double launchScore) {
+		this.launchScore = launchScore;
+	}
+
+	public double getAgainstScore() {
+		return againstScore;
+	}
+
+	public void setAgainstScore(double againstScore) {
+		this.againstScore = againstScore;
+	}
+
+	public int getWinResult() {
+		return winResult;
+	}
+
+	public void setWinResult(int winResult) {
+		this.winResult = winResult;
+	}
+
+	public int getEndline() {
+		return endline;
+	}
+
+	public void setEndline(int endline) {
+		this.endline = endline;
+	}
+
+	public int getCoinType() {
+		return coinType;
+	}
+
+	public void setCoinType(int coinType) {
+		this.coinType = coinType;
+	}
+
+	public int getReward() {
+		return reward;
+	}
+
+	public void setReward(int reward) {
+		this.reward = reward;
+	}
+
+	public int getGameStatus() {
+		return gameStatus;
+	}
+
+	public void setGameStatus(int gameStatus) {
+		this.gameStatus = gameStatus;
+	}
+
+	public String getAgainstUserName() {
+		return againstUserName;
+	}
+
+	public void setAgainstUserName(String againstUserName) {
+		this.againstUserName = againstUserName;
+	}
+
+	public String getAgainstUserPortrait() {
+		return againstUserPortrait;
+	}
+
+	public void setAgainstUserPortrait(String againstUserPortrait) {
+		this.againstUserPortrait = againstUserPortrait;
+	}
 
 	public String getContentImg() {
 		return contentImg;
@@ -217,6 +300,14 @@ public class EconomicCircle implements Serializable {
 
 	public void setLand(String land) {
 		this.land = land;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public double getMoney() {
