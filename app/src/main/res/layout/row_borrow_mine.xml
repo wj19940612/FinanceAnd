@@ -5,6 +5,7 @@
               android:layout_height="wrap_content"
               android:background="@android:color/white"
               android:orientation="vertical">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="14dp"
@@ -33,6 +34,7 @@
             android:textColor="#222222"
             android:textSize="16sp"
             tools:text="反方向的钟"/>
+
         <TextView
             android:id="@+id/isAttention"
             android:layout_width="wrap_content"
@@ -43,6 +45,7 @@
             android:textColor="#999999"
             android:textSize="10sp"
             tools:text="@string/is_attention"/>
+
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
@@ -54,20 +57,30 @@
             tools:text="已提交"/>
     </RelativeLayout>
 
-    <com.sbai.finance.view.CollapsedTextView
+    <!--<com.sbai.finance.view.CollapsedTextView-->
+    <!--android:id="@+id/borrowMoneyContent"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="54dp"-->
+    <!--android:layout_marginRight="14dp"-->
+    <!--android:layout_marginTop="8dp"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:ellipsize="end"-->
+    <!--android:lineSpacingExtra="8dp"-->
+    <!--android:maxLines="2"-->
+    <!--android:textColor="#222222"-->
+    <!--android:textSize="14sp"-->
+    <!--tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>-->
+
+    <com.sbai.finance.view.CollapsedTextLayout
         android:id="@+id/borrowMoneyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:ellipsize="end"
-        android:lineSpacingExtra="8dp"
-        android:maxLines="2"
-        android:textColor="#222222"
-        android:textSize="14sp"
-        tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
+        android:background="@drawable/bg_white"
+        android:visibility="visible"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -126,8 +139,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/borrow_deadline"
                     android:layout_marginRight="5dp"
+                    android:text="@string/borrow_deadline"
                     android:textColor="#999999"
                     android:textSize="14sp"/>
 
