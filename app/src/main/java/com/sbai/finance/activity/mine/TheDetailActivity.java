@@ -20,6 +20,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 
@@ -48,7 +49,7 @@ public class TheDetailActivity extends BaseActivity {
     @BindView(R.id.dataLayout)
     FrameLayout mDataLayout;
 
-    private int mPageSize = 10;
+    private int mPageSize = 20;
     private int mPageNo = 0;
     private ArrayList<Detail> mDetailArrayList;
     private TheDetailAdapter mTheDetailAdapter;
@@ -143,6 +144,9 @@ public class TheDetailActivity extends BaseActivity {
         if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
             mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         } else {
             mDataLayout.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
@@ -244,7 +248,12 @@ public class TheDetailActivity extends BaseActivity {
                 }
                 mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
-                mMoney.setText(context.getString(R.string.RMB, String.valueOf(detail.getMoney())));
+
+                if (detail.getType() < 0) {
+                    mMoney.setText(context.getString(R.string.minus_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                } else {
+                    mMoney.setText(context.getString(R.string.earnings_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                }
             }
         }
     }

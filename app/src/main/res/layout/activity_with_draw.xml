@@ -64,10 +64,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:paddingTop="@dimen/common_padding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
+                android:paddingTop="@dimen/common_padding"
                 android:text="@string/REM_HINT"
                 android:textColor="@color/blackAssist"
                 android:textSize="20sp"/>
@@ -78,8 +78,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
+                android:hint="@string/with_draw_limit"
                 android:inputType="numberDecimal"
-                android:paddingTop="@dimen/common_padding"/>
+                android:maxLength="9"
+                android:paddingTop="@dimen/common_padding"
+                android:textColorHint="@color/unluckyText"
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <View
@@ -136,7 +140,7 @@
         android:layout_marginRight="@dimen/common_padding"
         android:background="@drawable/btn_red_rounded"
         android:enabled="false"
-        android:text="@string/complete"
+        android:text="@string/with_draw"
         android:textColor="@android:color/white"/>
 
     <android.support.v7.widget.AppCompatTextView

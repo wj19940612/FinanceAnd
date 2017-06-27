@@ -760,7 +760,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					case EconomicCircle.GAME_STATUS_CANCELED:
 						mStatus.setText(context.getString(R.string.versus_cancel));
 						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
-						mAgainstUserName.setText("加入对战");
+						mAgainstUserName.setText(context.getString(R.string.join_versus));
 						mVersus.setVisibility(View.VISIBLE);
 						showScoreProgress(0, 0, true);
 						break;
@@ -768,7 +768,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					case EconomicCircle.GAME_STATUS_CREATED:
 						mStatus.setText(DateUtil.getMinutes(item.getEndline()));
 						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
-						mAgainstUserName.setText("加入对战");
+						mAgainstUserName.setText(context.getString(R.string.join_versus));
 						mVersus.setVisibility(View.VISIBLE);
 						showScoreProgress(0, 0, true);
 						break;
