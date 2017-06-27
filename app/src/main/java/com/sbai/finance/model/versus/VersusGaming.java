@@ -42,6 +42,8 @@ public class VersusGaming implements Parcelable {
     public static final String SOURCE_WEIBO = "weibo";
     public static final String SOURCE_FRIEND = "friend";
 
+    public static final int CODE_EXIT_VERSUS=300;
+    public static final int CODE_NO_ENOUGH_MONEY=2201;
 
 
     /**
