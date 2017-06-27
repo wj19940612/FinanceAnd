@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
@@ -46,7 +47,6 @@ import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
 import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
-import static com.sbai.finance.websocket.PushCode.QUICK_MATCH_FAILURE;
 import static com.sbai.finance.websocket.PushCode.QUICK_MATCH_SUCCESS;
 import static com.sbai.finance.websocket.PushCode.QUICK_MATCH_TIMEOUT;
 import static com.sbai.finance.websocket.PushCode.ROOM_CREATE_TIMEOUT;
@@ -65,6 +65,11 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private FutureBattleFragment mFutureBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
     private StartMatchDialogFragment mStartMatchDialogFragment;
+    private ShareDialogFragment mShareDialogFragment;
+
+    private SmartDialog mCancelMatchDialog;
+    private SmartDialog mOvertimeMatchDialog;
+    private SmartDialog mCancelBattleDialog;
 
     private VersusGaming mVersusGaming;
     private int mGameStatus;
@@ -166,10 +171,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 switch (objectWSPush.getContent().getType()) {
                     case BATTLE_JOINED:
                         //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                        mVersusGaming = (VersusGaming) objectWSPush.getContent().getData();
-                        mBattleView.initWithModel(mVersusGaming);
-                        mGameStatus = GAME_STATUS_STARTED;
-                        startScheduleJob(1000);
+                        dismissAllDialog();
+                        startGame(objectWSPush);
                         break;
                     case BATTLE_OVER:
                         //对战结束 一个弹窗
@@ -181,15 +184,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         mFutureBattleFragment.requestOrderHistory();
                         break;
                     case QUICK_MATCH_SUCCESS:
-                        //和对战有人加入逻辑一样
-                        mVersusGaming = (VersusGaming) objectWSPush.getContent().getData();
-                        mBattleView.initWithModel(mVersusGaming);
+                        //和对战有人加入逻辑一样 多了个匹配头像
+                        startGame(objectWSPush);
                         mStartMatchDialogFragment.setMatchSuccess(mVersusGaming.getAgainstUserPortrait());
-                        mGameStatus = GAME_STATUS_STARTED;
-                        startScheduleJob(1000);
-                        break;
-                    case QUICK_MATCH_FAILURE:
-                        //没这个逻辑
                         break;
                     case QUICK_MATCH_TIMEOUT:
                         //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
@@ -203,6 +200,32 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 }
             }
         });
+    }
+
+    private void dismissAllDialog() {
+        if (mStartMatchDialogFragment != null) {
+            mStartMatchDialogFragment.dismiss();
+        }
+        if (mShareDialogFragment != null) {
+            mShareDialogFragment.dismiss();
+        }
+        if (mCancelMatchDialog != null) {
+            mCancelMatchDialog.dismiss();
+        }
+        if (mOvertimeMatchDialog != null) {
+            mOvertimeMatchDialog.dismiss();
+        }
+        if (mCancelBattleDialog != null) {
+            mCancelBattleDialog.dismiss();
+        }
+    }
+
+    private void startGame(WSPush<Object> objectWSPush) {
+        mVersusGaming = (VersusGaming) objectWSPush.getContent().getData();
+        mBattleView.initWithModel(mVersusGaming);
+        mFutureBattleFragment.showBattleTradeView();
+        mGameStatus = GAME_STATUS_STARTED;
+        startScheduleJob(1000);
     }
 
     public void showFutureBattleDetail() {
@@ -296,7 +319,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void showInviteDialog() {
-        // TODO: 2017/6/22 分享
+        if (mShareDialogFragment == null) {
+            mShareDialogFragment = ShareDialogFragment.newInstance();
+        }
+        mShareDialogFragment.show(getSupportFragmentManager());
     }
 
     @Override
@@ -323,26 +349,29 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     //取消匹配弹窗
     private void showCancelMatchDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
-                .setMessageTextSize(15)
-                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        requestQuickSearchForLaunch(QuickMatchLauncher.TYPE_CANCEL);
-                    }
-                })
-                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        showMatchDialog();
-                    }
-                })
-                .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .show();
+        if (mCancelMatchDialog == null) {
+            mCancelMatchDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
+                    .setMessageTextSize(15)
+                    .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            requestQuickSearchForLaunch(QuickMatchLauncher.TYPE_CANCEL);
+                        }
+                    })
+                    .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            showMatchDialog();
+                        }
+                    })
+                    .setTitleMaxLines(1)
+                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
+        }
+
+        mCancelMatchDialog.show();
 
     }
 
@@ -361,38 +390,28 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         });
     }
 
-    private void requestCancelBattle() {
-        Client.cancelBattle(mVersusGaming.getId())
-                .setTag(TAG)
-                .setCallback(new Callback<Resp>() {
-                    @Override
-                    protected void onRespSuccess(Resp resp) {
-
-                    }
-                })
-                .fire();
-    }
-
-    //超时弹窗
+    //匹配超时弹窗
     private void showOvertimeMatchDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
-                .setMessageTextSize(15)
-                .setPositive(R.string.later_try_again, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegative(R.string.rematch, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                })
-                .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .show();
+        if (mOvertimeMatchDialog == null) {
+            mOvertimeMatchDialog = SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
+                    .setMessageTextSize(15)
+                    .setPositive(R.string.later_try_again, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegative(R.string.rematch, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setTitleMaxLines(1)
+                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
+        }
+        mOvertimeMatchDialog.show();
 
     }
 
@@ -426,27 +445,43 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         showCancelBattleDialog();
     }
 
+    //取消对战弹窗
     private void showCancelBattleDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip), getString(R.string.cancel_battle))
-                .setMessageTextSize(15)
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        // TODO: 2017/6/22 退出房间 退出失败弹提示
-                    }
-                })
-                .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .show();
+        if (mCancelBattleDialog == null) {
+            mCancelBattleDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip), getString(R.string.cancel_battle))
+                    .setMessageTextSize(15)
+                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            requestCancelBattle();
+                        }
+                    })
+                    .setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setTitleMaxLines(1)
+                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
+        }
 
+        mCancelBattleDialog.show();
+
+    }
+
+    private void requestCancelBattle() {
+        Client.cancelBattle(mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                      finish();
+                    }
+                })
+                .fire();
     }
 
 
