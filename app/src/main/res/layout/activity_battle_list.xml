@@ -29,6 +29,7 @@
                 android:layout_above="@+id/bottom"
                 android:layout_centerInParent="true"
                 android:background="#2d283a"
+                android:scrollbars="none"
                 android:divider="@null"
                 android:dividerHeight="14dp"/>
 

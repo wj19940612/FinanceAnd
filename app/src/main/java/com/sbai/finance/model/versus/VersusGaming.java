@@ -42,6 +42,8 @@ public class VersusGaming implements Parcelable {
     public static final String SOURCE_WEIBO = "weibo";
     public static final String SOURCE_FRIEND = "friend";
 
+
+
     /**
      * againstFrom : 经济圈
      * againstUser : 286
