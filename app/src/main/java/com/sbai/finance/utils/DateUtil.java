@@ -344,15 +344,12 @@ public class DateUtil {
     public static String getDetailFormatTime(long createTime) {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (isToday(createTime, systemTime)) {
-            return "今日" ;
+            return "今日";
         }
         if (isYesterday(createTime, systemTime)) {
-            return "昨日" ;
+            return "昨日";
         }
-        if (isInThisYear(createTime)) {
-            return DateUtil.format(createTime, FORMAT_ONLY_DATE);
-        }
-        return DateUtil.format(createTime, FORMAT_YEAR_MONTH);
+        return DateUtil.format(createTime, FORMAT_ONLY_DATE);
     }
 
     /**

@@ -208,12 +208,27 @@ public class ExChangeProductFragment extends BaseFragment {
                         super.onReceive(objectResp);
                         if (objectResp.getCode() == 2201) {
                             showExchangeFailDialog(item);
+                            // TODO: 2017/6/27 后台没有该配置 刷新页面
                         } else {
                             ToastUtil.curt(objectResp.getMsg());
                         }
                     }
                 })
                 .fire();
+    }
+
+    private void showExchangeProductIsChangeDialog(CornucopiaProductModel item) {
+        int title = item.isVcoin() ? R.string.buy_fail : R.string.exchange_fail;
+        int msg = item.isVcoin() ? R.string.buy_product_is_change : R.string.exchange_product_is_change;
+        SmartDialog.with(getActivity(), msg, title)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeVisable(View.GONE)
+                .show();
     }
 
     private void showExchangeFailDialog(CornucopiaProductModel item) {
