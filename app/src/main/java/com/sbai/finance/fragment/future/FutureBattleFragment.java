@@ -21,6 +21,7 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.versus.TradeOrder;
 import com.sbai.finance.model.versus.TradeRecord;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback2D;
@@ -46,6 +47,7 @@ import butterknife.Unbinder;
 
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
+import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
 /**
@@ -87,6 +89,7 @@ public class FutureBattleFragment extends BaseFragment {
     private VersusGaming mVersusGaming;
     private Variety mVariety;
     private FutureData mFutureData;
+    private TradeOrder mCurrentOrder;
     private int mCount = 600;
 
 
@@ -142,8 +145,8 @@ public class FutureBattleFragment extends BaseFragment {
                 showBattleButtons();
             } else if (mVersusGaming.getGameStatus() == GAME_STATUS_STARTED) {
                 showBattleTradeView();
-                setBattleTradeState(STATE_TRADE);
-
+                requestOrderHistory();
+                requestCurrentOrder();
             }
         }
     }
@@ -240,10 +243,37 @@ public class FutureBattleFragment extends BaseFragment {
                 .fire();
     }
 
+    private void requestCurrentOrder() {
+        Client.requestCurrentOrder(mVersusGaming.getId())
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TradeOrder>>,List<TradeOrder>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TradeOrder> data) {
+                        updateCurrentOrder(data);
+                    }
+                })
+                .fire();
+    }
+
     private void updateTradeHistory(List<TradeRecord> resp) {
         mBattleTradeView.addTradeData(resp, mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
     }
 
+    private void updateCurrentOrder(List<TradeOrder> data) {
+        TradeOrder order = null;
+        for (TradeOrder tradeOrder : data) {
+            if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                order = tradeOrder;
+            }
+        }
+        if (order != null) {
+            mCurrentOrder = order;
+            setBattleTradeState(STATE_CLOSE_POSITION);
+            mBattleTradeView.setTradeData(order.getDirection(), order.getOrderPrice(), 0);
+        } else {
+            setBattleTradeState(STATE_TRADE);
+        }
+    }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
@@ -312,6 +342,7 @@ public class FutureBattleFragment extends BaseFragment {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
+                updateTradeProfit(mFutureData);
 
                 int exchangeStatus = mVariety.getExchangeStatus();
                 if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
@@ -358,6 +389,19 @@ public class FutureBattleFragment extends BaseFragment {
         mHighest.setText(FinanceUtil.formatWithScale(data.getHighestPrice(), mVariety.getPriceScale()));
         mLowest.setText(FinanceUtil.formatWithScale(data.getLowestPrice(), mVariety.getPriceScale()));
         mPreClose.setText(FinanceUtil.formatWithScale(data.getPreClsPrice(), mVariety.getPriceScale()));
+    }
+
+    private void updateTradeProfit(FutureData futureData) {
+        if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
+            //持仓盈亏 = 差价
+            double profit = 0;
+            if (mCurrentOrder.getDirection() == 1) {
+                profit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
+            } else {
+                profit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), profit);
+        }
     }
 
     private void requestExchangeStatus() {

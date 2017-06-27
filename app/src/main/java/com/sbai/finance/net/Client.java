@@ -1784,4 +1784,14 @@ public class Client {
                 .put("battleIds", battleId));
     }
 
+    /**
+     * 查询房间交易中的订单
+     * @param battleId
+     * @return
+     */
+    public static API requestCurrentOrder(int battleId){
+        return new API("/game/battleorder/orders.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
 }

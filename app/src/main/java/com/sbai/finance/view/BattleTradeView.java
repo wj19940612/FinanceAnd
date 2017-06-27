@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.versus.TradeRecord.DIRECTION_DOWN;
+import static com.sbai.finance.model.versus.TradeRecord.DIRECTION_UP;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_CLOSE_POSITION;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_POSITION;
 import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHOET_CLOSE_POSITION;
@@ -70,6 +70,8 @@ public class BattleTradeView extends LinearLayout {
     private BattleTradeAdapter mBattleTradeAdapter;
 
     private OnViewClickListener mOnViewClickListener;
+
+    private int mState;
 
     public interface OnViewClickListener {
         void onLongPurchaseButtonClick();
@@ -155,7 +157,12 @@ public class BattleTradeView extends LinearLayout {
         mListView.setLayoutParams(params);
     }
 
+    public int getTradeState() {
+        return mState;
+    }
+
     public void changeTradeState(int state) {
+        mState = state;
         if (state == STATE_CLOSE_POSITION) {
             mLongPurchase.setVisibility(GONE);
             mShortPurchase.setVisibility(GONE);
@@ -173,7 +180,7 @@ public class BattleTradeView extends LinearLayout {
 
     public void setTradeData(int direction, double buyPrice, double profit) {
         //设置方向  买入价格 盈利
-        if (direction == DIRECTION_DOWN) {
+        if (direction == DIRECTION_UP) {
             mDirection.setText(getContext().getString(R.string.take_more));
         } else {
             mDirection.setText(getContext().getString(R.string.take_short));
