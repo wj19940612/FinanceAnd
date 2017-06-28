@@ -15,4 +15,5 @@ public interface PushCode {
     int QUICK_MATCH_TIMEOUT = 33;
 
     int ROOM_CREATE_TIMEOUT = 41; // 房间创建超时
+    int USER_PRAISE  = 51; // 用户点赞
 }

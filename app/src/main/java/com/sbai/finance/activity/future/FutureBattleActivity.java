@@ -50,6 +50,7 @@ import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
 import static com.sbai.finance.websocket.PushCode.QUICK_MATCH_SUCCESS;
 import static com.sbai.finance.websocket.PushCode.QUICK_MATCH_TIMEOUT;
 import static com.sbai.finance.websocket.PushCode.ROOM_CREATE_TIMEOUT;
+import static com.sbai.finance.websocket.PushCode.USER_PRAISE;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH;
 
@@ -206,6 +207,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 case ROOM_CREATE_TIMEOUT:
                     showRoomOvertimeDialog();
                     break;
+                case USER_PRAISE:
+                    VersusGaming temp = (VersusGaming) versusGamingWSPush.getContent().getData();
+                    updatePraiseView(temp.getCurrentPraise(), temp.getPraiseUserId(), false);
+                    break;
 
             }
         }
@@ -330,7 +335,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     protected void onRespSuccess(Resp<Integer> resp) {
                         if (resp.isSuccess()) {
                             int data = resp.getData();
-                            updatePraiseView(data, userId);
+                            updatePraiseView(data, userId, true);
                         } else {
                             ToastUtil.curt(resp.getMsg());
                         }
@@ -338,16 +343,19 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 }).fireFree();
     }
 
-    private void updatePraiseView(int count, int userId) {
+    private void updatePraiseView(int count, int userId, boolean needLight) {
         boolean isLeft = userId == mVersusGaming.getLaunchUser();
         if (isLeft) {
             mVersusGaming.setLaunchPraise(count);
         } else {
             mVersusGaming.setAgainstPraise(count);
         }
-        mBattleView.setPraiseLight(isLeft);
+        if (needLight) {
+            mBattleView.setPraiseLight(isLeft);
+        }
         mBattleView.setPraise(mVersusGaming.getLaunchPraise(), mVersusGaming.getAgainstPraise());
     }
+
 
     @Override
     public void onInviteButtonClick() {

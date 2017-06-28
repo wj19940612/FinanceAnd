@@ -98,6 +98,11 @@ public class VersusGaming implements Parcelable {
     private int againstPraise;
     private int launchPraise;
 
+    //临时数据
+    private int battleId;
+    private int currentPraise;
+    private int praiseUserId;
+
     public int getPageType() {
         return pageType;
     }
@@ -306,6 +311,33 @@ public class VersusGaming implements Parcelable {
         this.launchPraise = launchPraise;
     }
 
+    public int getBattleId() {
+        return battleId;
+    }
+
+    public void setBattleId(int battleId) {
+        this.battleId = battleId;
+    }
+
+    public int getCurrentPraise() {
+        return currentPraise;
+    }
+
+    public void setCurrentPraise(int currentPraise) {
+        this.currentPraise = currentPraise;
+    }
+
+    public int getPraiseUserId() {
+        return praiseUserId;
+    }
+
+    public void setPraiseUserId(int praiseUserId) {
+        this.praiseUserId = praiseUserId;
+    }
+
+    public VersusGaming() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -339,9 +371,9 @@ public class VersusGaming implements Parcelable {
         dest.writeInt(this.pageType);
         dest.writeInt(this.againstPraise);
         dest.writeInt(this.launchPraise);
-    }
-
-    public VersusGaming() {
+        dest.writeInt(this.battleId);
+        dest.writeInt(this.currentPraise);
+        dest.writeInt(this.praiseUserId);
     }
 
     protected VersusGaming(Parcel in) {
@@ -371,9 +403,12 @@ public class VersusGaming implements Parcelable {
         this.pageType = in.readInt();
         this.againstPraise = in.readInt();
         this.launchPraise = in.readInt();
+        this.battleId = in.readInt();
+        this.currentPraise = in.readInt();
+        this.praiseUserId = in.readInt();
     }
 
-    public static final Parcelable.Creator<VersusGaming> CREATOR = new Parcelable.Creator<VersusGaming>() {
+    public static final Creator<VersusGaming> CREATOR = new Creator<VersusGaming>() {
         @Override
         public VersusGaming createFromParcel(Parcel source) {
             return new VersusGaming(source);
