@@ -33,6 +33,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
@@ -169,7 +170,7 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), RechargeActivity.class).execute();
+                    Launcher.with(getActivity(), CornucopiaActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
