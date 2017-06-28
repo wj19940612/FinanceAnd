@@ -661,4 +661,6 @@
     <string name="recreate_room">重新创建</string>
     <string name="invite_invalid">对战邀请已失效</string>
     <string name="cancel_failed_game_start">取消失败，对战已开始</string>
+    <string name="remaining_time">剩余%1$s</string>
+    <string name="support">%1$s赞</string>
 </resources>
