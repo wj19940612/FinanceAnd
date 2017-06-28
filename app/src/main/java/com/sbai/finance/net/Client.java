@@ -1092,7 +1092,7 @@ public class Client {
     //乐米协议
 
     /**
-     * @param id 2 借款协议  3 用户协议
+     * @param id 2 借款协议  3 用户协议  4 兑换规则
      * @return
      */
     public static API getArticleProtocol(int id) {
@@ -1466,6 +1466,31 @@ public class Client {
                 .put("bankId", bankId));
     }
 
+    /**
+     * /user/bankCard/updateBankCard.do
+     * POST
+     * 修改银行卡（wms）
+     *
+     * @param realName
+     * @param idCard
+     * @param cardNumber
+     * @param cardPhone
+     * @param issuingBankName
+     * @param bankId
+     * @return
+     */
+    public static API updateBankCard(String realName, String idCard, String cardNumber,
+                                     String cardPhone, String issuingBankName, int bankId, int id) {
+        return new API(POST, "/user/bankCard/updateBankCard.do", new ApiParams()
+                .put("realName", realName)
+                .put("idCard", idCard)
+                .put("cardNumber", cardNumber)
+                .put("cardPhone", cardPhone)
+                .put("issuingBankName", issuingBankName)
+                .put("bankId", bankId)
+                .put("id", id));
+    }
+
 
     /**
      * /user/userpayForDeposit/payDepositMoney.do
@@ -1577,6 +1602,54 @@ public class Client {
      */
     public static API getBankLimit(int bankId) {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
+    }
+
+    /**
+     * /user/userAccount/getExchangeConfig.do
+     * GET
+     * 获取快捷兑换接口（wms）
+     *
+     * @return
+     */
+    public static API getExchangeProduct() {
+        return new API("/user/userAccount/getExchangeConfig.do", null);
+    }
+
+    /**
+     * /user/userAccount/exchange.do
+     * POST
+     * 兑换接口（wms）
+     *
+     * @param exchangeId    兑换配置ID
+     * @param password      密码
+     * @param toMoney
+     * @param fromRealMoney 兑换来源金额
+     * @return
+     */
+    public static API exchange(int exchangeId, String password, double fromRealMoney, double toMoney) {
+        return new API(POST, "/user/userAccount/exchange.do", new ApiParams()
+                .put("exchangeId", exchangeId)
+                .put("password", password)
+                .put("fromRealMoney", fromRealMoney)
+                .put("toMoney", toMoney));
+    }
+
+    /**
+     * /user/userAccount/userCurrencyFlow.do
+     * GET
+     * 元宝积分明细（wms）
+     *
+     * @param inOrOut
+     * @param currencyType
+     * @param page
+     * @return
+     */
+    public static API getExchangeDetailList(int inOrOut, int currencyType, int page) {
+        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
+                .put("inOrOut", inOrOut)
+                .put("currencyType", currencyType)
+                .put("page", page)
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details

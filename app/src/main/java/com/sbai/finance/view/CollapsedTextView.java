@@ -105,7 +105,6 @@ public class CollapsedTextView extends android.support.v7.widget.AppCompatTextVi
 
     public void setShowText(final String text) {
         this.text = text;
-
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -160,6 +159,7 @@ public class CollapsedTextView extends android.support.v7.widget.AppCompatTextVi
                     SpannableStringBuilder s = new SpannableStringBuilder(getReplaceString(text), 0, end)
                             .append(ELLIPSE)
                             .append(expandedText);
+
 
                     ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#999999"));
                     s.setSpan(colorSpan, s.length() - expandedText.length(), s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

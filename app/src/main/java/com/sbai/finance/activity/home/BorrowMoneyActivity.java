@@ -36,6 +36,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CollapsedTextLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -267,7 +268,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 			@BindView(R.id.location)
 			TextView mLocation;
 			@BindView(R.id.borrowMoneyContent)
-			TextView mBorrowMoneyContent;
+			CollapsedTextLayout mBorrowMoneyContent;
 			@BindView(R.id.needAmount)
 			TextView mNeedAmount;
 			@BindView(R.id.borrowDeadline)
@@ -301,7 +302,7 @@ public class BorrowMoneyActivity extends BaseActivity implements AbsListView.OnS
 					mIsAttention.setText("");
 				}
 
-				mBorrowMoneyContent.setText(item.getContent());
+				mBorrowMoneyContent.setContentText(item.getContent());
 				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
 				mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
 				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));

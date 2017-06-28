@@ -23,7 +23,7 @@
         android:id="@+id/safety_password_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="110dp"
         android:text="@string/please_input_old_password"/>
 
     <com.sbai.finance.view.SafetyPasswordEditText

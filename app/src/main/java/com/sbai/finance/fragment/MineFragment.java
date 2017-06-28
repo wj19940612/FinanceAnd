@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.PublishActivity;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.wallet.WalletActivity;
 import com.sbai.finance.model.LocalUser;
@@ -81,6 +81,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
+    @BindView(R.id.cornucopia)
+    IconTextRow mCornucopia;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -163,6 +165,7 @@ public class MineFragment extends BaseFragment {
     private void requestNoReadFeedbackNumber() {
         Client.getNoReadFeedbackNumber()
                 .setTag(TAG)
+                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -222,8 +225,9 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.headImageLayout, R.id.userHeadImage,
-            R.id.attention, R.id.fans, R.id.minePublish, R.id.news,
-            R.id.setting, R.id.aboutUs, R.id.wallet, R.id.feedBack})
+            R.id.attention, R.id.fans, R.id.minePublish,
+            R.id.cornucopia, R.id.wallet,
+            R.id.news, R.id.setting, R.id.aboutUs, R.id.feedBack})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
@@ -293,6 +297,13 @@ public class MineFragment extends BaseFragment {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
+            case R.id.cornucopia:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), CornucopiaActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
         }
     }
 
@@ -302,8 +313,6 @@ public class MineFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
                     @Override
                     protected void onRespSuccessData(AttentionAndFansNumberModel data) {
-                        Log.d(TAG, "粉丝数量 " + data.toString());
-
                         updateUserNumber(data);
                     }
                 })

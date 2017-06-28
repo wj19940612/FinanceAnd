@@ -65,7 +65,6 @@ public class TopicActivity extends BaseActivity {
         setContentView(R.layout.activity_topic);
         ButterKnife.bind(this);
         translucentStatusBar();
-
         initData();
         initView();
         requestTopicDetailInfo();

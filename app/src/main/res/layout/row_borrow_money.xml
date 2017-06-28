@@ -51,19 +51,28 @@
             tools:text="@string/is_attention"/>
     </RelativeLayout>
 
-    <com.sbai.finance.view.CollapsedTextView
+    <!--<com.sbai.finance.view.CollapsedTextView-->
+    <!--android:id="@+id/borrowMoneyContent"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:layout_marginLeft="54dp"-->
+    <!--android:layout_marginRight="14dp"-->
+    <!--android:lineSpacingExtra="6dp"-->
+    <!--android:maxLines="2"-->
+    <!--android:textColor="@color/blackAssist"-->
+    <!--android:textSize="14sp"-->
+    <!--android:visibility="visible"-->
+    <!--tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>-->
+    <com.sbai.finance.view.CollapsedTextLayout
         android:id="@+id/borrowMoneyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:lineSpacingExtra="6dp"
-        android:maxLines="2"
-        android:textColor="@color/blackAssist"
-        android:textSize="14sp"
-        android:visibility="visible"
-        tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
+        android:visibility="visible"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

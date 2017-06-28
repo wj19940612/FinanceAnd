@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:minWidth="80dp"
             android:textColor="@color/unluckyText"
+            android:lineSpacingExtra="3dp"
             android:textSize="15sp"
             tool:text="30日\n07:50"/>
 

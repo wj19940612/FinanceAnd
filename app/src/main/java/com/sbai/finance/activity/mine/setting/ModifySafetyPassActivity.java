@@ -137,6 +137,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                         ToastMassage(resp);
                                     }
                                 }
+
                             })
                             .fire();
                 }
@@ -162,10 +163,18 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                     mPasswordInputCount++;
                                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
                                     mSafetyPasswordNumber.clearSafetyNumber();
-                                } else {
-                                    ToastMassage(resp);
+                                }
+                                ToastMassage(resp);
+                            }
+
+                            @Override
+                            protected void onReceive(Resp<Object> objectResp) {
+                                super.onReceive(objectResp);
+                                if (objectResp.getCode() == 600) {
+                                    mSafetyPasswordNumber.clearSafetyNumber();
                                 }
                             }
+
                         })
                         .fire();
 

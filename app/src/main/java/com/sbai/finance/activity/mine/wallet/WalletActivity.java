@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.TheDetailActivity;
+import com.sbai.finance.activity.mine.FundDetailActivity;
 import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.model.payment.UserFundInfoModel;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
 public class WalletActivity extends BaseActivity {
 
     private static final int REQ_CODE_ADD_SAFETY_PASS = 5120;
-
+    private static final int REQ_CODE_BIND_BANK = 1445;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -104,24 +104,8 @@ public class WalletActivity extends BaseActivity {
             case R.id.balance:
                 break;
             case R.id.recharge:
-                Client.requestUserBankCardInfo()
-                        .setTag(TAG)
-                        .setIndeterminate(this)
-                        .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
-                                if (resp.isSuccess()) {
-                                    if (resp.hasData()) {
-                                        mUserBankCardInfoModel = resp.getData().get(0);
-                                    }
-                                    Launcher.with(getActivity(), RechargeActivity.class)
-                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                            .putExtra(Launcher.EX_PAYLOAD, money)
-                                            .execute();
-                                }
-                            }
-                        })
-                        .fire();
+                Launcher.with(getActivity(), RechargeActivity.class)
+                        .execute();
                 break;
             case R.id.withdraw:
                 Client.getUserHasPassWord()
@@ -141,7 +125,7 @@ public class WalletActivity extends BaseActivity {
 
                 break;
             case R.id.market_detail:
-                Launcher.with(getActivity(), TheDetailActivity.class).execute();
+                Launcher.with(getActivity(), FundDetailActivity.class).execute();
                 break;
             case R.id.bankCard:
                 Client.requestUserBankCardInfo()
@@ -156,7 +140,7 @@ public class WalletActivity extends BaseActivity {
                                     }
                                     Launcher.with(getActivity(), BindBankCardActivity.class)
                                             .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                            .execute();
+                                            .executeForResult(REQ_CODE_BIND_BANK);
                                 }
                             }
                         })
@@ -215,11 +199,21 @@ public class WalletActivity extends BaseActivity {
                     break;
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
                     mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                    if (mUserBankCardInfoModel != null && !mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-                        Launcher.with(getActivity(), WithDrawActivity.class)
-                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                .putExtra(Launcher.EX_PAYLOAD, money)
-                                .execute();
+                    Launcher.with(getActivity(), WithDrawActivity.class)
+                            .execute();
+                    break;
+                case REQ_CODE_BIND_BANK:
+                    boolean firstConfirm = data.getBooleanExtra(Launcher.EX_PAY_END, false);
+                    if (firstConfirm) {
+                        SmartDialog.with(getActivity(), R.string.bind_bank_success_hint)
+                                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(Dialog dialog) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeVisable(View.GONE)
+                                .show();
                     }
                     break;
             }

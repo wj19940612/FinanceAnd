@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.Detail;
+import com.sbai.finance.model.FundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by ${wangJie} on 2017/6/21.
  * 明细界面
  */
-public class TheDetailActivity extends BaseActivity {
+public class FundDetailActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
@@ -51,7 +52,7 @@ public class TheDetailActivity extends BaseActivity {
 
     private int mPageSize = 20;
     private int mPageNo = 0;
-    private ArrayList<Detail> mDetailArrayList;
+    private ArrayList<FundDetail> mFundDetailArrayList;
     private TheDetailAdapter mTheDetailAdapter;
     private boolean mLoadMore = true;
 
@@ -61,8 +62,8 @@ public class TheDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-        mDetailArrayList = new ArrayList<>();
-        mTheDetailAdapter = new TheDetailAdapter(mDetailArrayList, this);
+        mFundDetailArrayList = new ArrayList<>();
+        mTheDetailAdapter = new TheDetailAdapter(mFundDetailArrayList, this);
 
         mRecyclerView.setAdapter(mTheDetailAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -75,32 +76,7 @@ public class TheDetailActivity extends BaseActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (isSlideToBottom(mRecyclerView) && mLoadMore) {
-                    requestDetailList();
-                }
-                View stickyInfoView = recyclerView.findChildViewUnder(
-                        mAdsorbText.getMeasuredWidth() / 2, 5);
-
-                if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
-                    mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
-                }
-
-                View transInfoView = recyclerView.findChildViewUnder(
-                        mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
-                if (transInfoView != null && transInfoView.getTag() != null) {
-                    int transViewStatus = (int) transInfoView.getTag();
-                    int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
-
-                    if (transViewStatus == TheDetailAdapter.HAS_STICKY_VIEW) {
-                        if (transInfoView.getTop() > 0) {
-                            mAdsorbText.setTranslationY(dealtY);
-                        } else {
-                            mAdsorbText.setTranslationY(0);
-                        }
-                    } else if (transViewStatus == TheDetailAdapter.NONE_STICKY_VIEW) {
-                        mAdsorbText.setTranslationY(0);
-                    }
-                }
+                handleRecycleViewScroll(recyclerView);
             }
         });
         requestDetailList();
@@ -119,6 +95,35 @@ public class TheDetailActivity extends BaseActivity {
         });
     }
 
+    private void handleRecycleViewScroll(RecyclerView recyclerView) {
+        if (isSlideToBottom(mRecyclerView) && mLoadMore) {
+            requestDetailList();
+        }
+        View stickyInfoView = recyclerView.findChildViewUnder(
+                mAdsorbText.getMeasuredWidth() / 2, 5);
+
+        if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
+            mAdsorbText.setText(String.valueOf(stickyInfoView.getContentDescription()));
+        }
+
+        View transInfoView = recyclerView.findChildViewUnder(
+                mAdsorbText.getMeasuredWidth() / 2, mAdsorbText.getMeasuredHeight() + 1);
+        if (transInfoView != null && transInfoView.getTag() != null) {
+            int transViewStatus = (int) transInfoView.getTag();
+            int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
+
+            if (transViewStatus == TheDetailAdapter.HAS_STICKY_VIEW) {
+                if (transInfoView.getTop() > 0) {
+                    mAdsorbText.setTranslationY(dealtY);
+                } else {
+                    mAdsorbText.setTranslationY(0);
+                }
+            } else if (transViewStatus == TheDetailAdapter.NONE_STICKY_VIEW) {
+                mAdsorbText.setTranslationY(0);
+            }
+        }
+    }
+
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
         if (recyclerView == null) return false;
         if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
@@ -131,17 +136,17 @@ public class TheDetailActivity extends BaseActivity {
         Client.getDetail(mPageNo, mPageSize)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Detail>>, List<Detail>>() {
+                .setCallback(new Callback2D<Resp<List<FundDetail>>, List<FundDetail>>() {
                     @Override
-                    protected void onRespSuccessData(List<Detail> data) {
+                    protected void onRespSuccessData(List<FundDetail> data) {
                         updateDetailList(data);
                     }
                 })
                 .fire();
     }
 
-    private void updateDetailList(List<Detail> detailList) {
-        if (detailList == null || detailList.isEmpty() && mDetailArrayList.isEmpty()) {
+    private void updateDetailList(List<FundDetail> fundDetailList) {
+        if (fundDetailList == null || fundDetailList.isEmpty() && mFundDetailArrayList.isEmpty()) {
             mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
             if (mSwipeRefreshLayout.isRefreshing()) {
@@ -154,8 +159,8 @@ public class TheDetailActivity extends BaseActivity {
                 mTheDetailAdapter.clear();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-            mDetailArrayList.addAll(detailList);
-            if (detailList.size() < mPageSize) {
+            mFundDetailArrayList.addAll(fundDetailList);
+            if (fundDetailList.size() < mPageSize) {
                 mLoadMore = false;
             } else {
                 mLoadMore = true;
@@ -169,22 +174,22 @@ public class TheDetailActivity extends BaseActivity {
 
         public static final int HAS_STICKY_VIEW = 2;
         public static final int NONE_STICKY_VIEW = 3;
-        private ArrayList<Detail> mDetailArrayList;
+        private ArrayList<FundDetail> mFundDetailArrayList;
         private Context mContext;
 
-        public TheDetailAdapter(ArrayList<Detail> detailArrayList, Context context) {
-            this.mDetailArrayList = detailArrayList;
+        public TheDetailAdapter(ArrayList<FundDetail> fundDetailArrayList, Context context) {
+            this.mFundDetailArrayList = fundDetailArrayList;
             this.mContext = context;
         }
 
-        public void addAll(ArrayList<Detail> detailArrayList) {
-            this.addAll(mDetailArrayList);
-            notifyItemRangeInserted(mDetailArrayList.size() - detailArrayList.size(), mDetailArrayList.size());
+        public void addAll(ArrayList<FundDetail> fundDetailArrayList) {
+            this.addAll(mFundDetailArrayList);
+            notifyItemRangeInserted(mFundDetailArrayList.size() - fundDetailArrayList.size(), mFundDetailArrayList.size());
         }
 
         public void clear() {
-            mDetailArrayList.clear();
-            notifyItemRangeRemoved(0, mDetailArrayList.size());
+            mFundDetailArrayList.clear();
+            notifyItemRangeRemoved(0, mFundDetailArrayList.size());
         }
 
         @Override
@@ -195,26 +200,26 @@ public class TheDetailActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext);
+            holder.bindDataWithView(mFundDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext);
             if (isTheDifferentMonth(position)) {
                 holder.itemView.setTag(HAS_STICKY_VIEW);
             } else {
                 holder.itemView.setTag(NONE_STICKY_VIEW);
             }
-            holder.itemView.setContentDescription(DateUtil.getFormatMonth(mDetailArrayList.get(position).getCreateTime()));
+            holder.itemView.setContentDescription(DateUtil.getFormatMonth(mFundDetailArrayList.get(position).getCreateTime()));
         }
 
         @Override
         public int getItemCount() {
-            return mDetailArrayList != null ? mDetailArrayList.size() : 0;
+            return mFundDetailArrayList != null ? mFundDetailArrayList.size() : 0;
         }
 
         private boolean isTheDifferentMonth(int position) {
             if (position == 0) {
                 return true;
             }
-            Detail pre = mDetailArrayList.get(position - 1);
-            Detail next = mDetailArrayList.get(position);
+            FundDetail pre = mFundDetailArrayList.get(position - 1);
+            FundDetail next = mFundDetailArrayList.get(position);
             //判断两个时间在不在一个月内  不是就要显示标题
             long preTime = pre.getCreateTime();
             long nextTime = next.getCreateTime();
@@ -239,20 +244,24 @@ public class TheDetailActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(Detail detail, int position, boolean theDifferentMonth, Context context) {
+            public void bindDataWithView(FundDetail fundDetail, int position, boolean theDifferentMonth, Context context) {
                 if (theDifferentMonth) {
                     mAdsorbText.setVisibility(View.VISIBLE);
-                    mAdsorbText.setText(DateUtil.getFormatMonth(detail.getCreateTime()));
+                    mAdsorbText.setText(DateUtil.getFormatMonth(fundDetail.getCreateTime()));
                 } else {
                     mAdsorbText.setVisibility(View.GONE);
                 }
-                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getFeedbackFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
-                mPayWay.setText(detail.getRemark());
+                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getDetailFormatTime(fundDetail.getCreateTime()), "\n" + DateUtil.format(fundDetail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
 
-                if (detail.getType() < 0) {
-                    mMoney.setText(context.getString(R.string.minus_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                if (!TextUtils.isEmpty(fundDetail.getPlatformName())) {
+                    mPayWay.setText(context.getString(R.string.money_from, fundDetail.getRemark(), fundDetail.getPlatformName()));
                 } else {
-                    mMoney.setText(context.getString(R.string.earnings_yuan, FinanceUtil.formatWithScale(detail.getMoney())));
+                    mPayWay.setText(fundDetail.getRemark());
+                }
+                if (fundDetail.getType() < 0) {
+                    mMoney.setText(context.getString(R.string.minus_yuan, FinanceUtil.formatWithScale(fundDetail.getMoney())));
+                } else {
+                    mMoney.setText(context.getString(R.string.earnings_yuan, FinanceUtil.formatWithScale(fundDetail.getMoney())));
                 }
             }
         }

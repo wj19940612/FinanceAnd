@@ -76,7 +76,7 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 19
+            minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
@@ -87,8 +87,8 @@ android {
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-            versionCode 29
-            versionName "0.3.2"
+            versionCode 36
+            versionName "0.3.9"
             buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
 
@@ -151,7 +151,6 @@ dependencies {
     compile 'com.getui:sdk:2.10.2.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
-    compile 'com.ashokvarma.android:bottom-navigation-bar:1.4.3'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }

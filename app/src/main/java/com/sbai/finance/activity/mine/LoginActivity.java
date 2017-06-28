@@ -272,7 +272,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void openUserProtocolPage() {
-        Client.getArticleProtocol(3).setTag(TAG)
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {

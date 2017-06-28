@@ -20,8 +20,9 @@ public class Preference {
         String USER_HAS_HOLDING_ORDER = "has_order";
         String DATA_SOURCE = "data_source";
         String AUTHORIZATION_LOGIN_TIME = "authorization_login_time";
-        String RECHARGE_WAY = "recharge_way";
+        String RECHARGE_WAY = "recharge_way_";
         String IS_FIRST_WITH_DRAW = "is_first_with_draw";
+        String USER_HAS_SafePass = "user_has_safe_pass";
     }
 
     private static Preference sInstance;
@@ -127,12 +128,12 @@ public class Preference {
         return mPrefs.getLong(Key.AUTHORIZATION_LOGIN_TIME, 0);
     }
 
-    public void setRechargeWay(String key, int way) {
+    public void setRechargeWay(String key, String way) {
         apply(key + Key.RECHARGE_WAY, way);
     }
 
-    public int getRechargeWay(String key) {
-        return mPrefs.getInt(key + Key.RECHARGE_WAY, UsablePlatform.TYPE_AIL_PAY);
+    public String getRechargeWay(String key) {
+        return mPrefs.getString(key + Key.RECHARGE_WAY, UsablePlatform.PLATFORM_AIL_PAY);
     }
 
     public boolean isFirstWithDraw(String key) {
@@ -141,5 +142,13 @@ public class Preference {
 
     public void setIsFirstWithDraw(String key, boolean isFirstWithDraw) {
         apply(key + Key.IS_FIRST_WITH_DRAW, isFirstWithDraw);
+    }
+
+    public boolean hasUserSetSafePass(String key) {
+        return mPrefs.getBoolean(key + Key.USER_HAS_SafePass, false);
+    }
+
+    public void setUserSetSafePass(String key, boolean userHasSetPass) {
+        apply(key + Key.USER_HAS_SafePass, userHasSetPass);
     }
 }
