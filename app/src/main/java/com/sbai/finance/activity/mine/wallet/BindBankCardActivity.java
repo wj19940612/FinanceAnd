@@ -284,7 +284,6 @@ public class BindBankCardActivity extends BaseActivity {
                                     if (resp.hasData()) {
                                         mUserBankCardInfoModel.setId(resp.getData());
                                     }
-
                                     Intent intent = new Intent();
                                     intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
                                     setResult(RESULT_OK, intent);
@@ -325,6 +324,7 @@ public class BindBankCardActivity extends BaseActivity {
                         for (CanUseBankListModel data : mCanUseBankListModels) {
                             if (data.getName().equalsIgnoreCase(item)) {
                                 mCanUseBankListModel = data;
+                                mUserBankCardInfoModel.setBankId(mCanUseBankListModel.getId());
                                 break;
                             }
                         }

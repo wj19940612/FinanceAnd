@@ -104,24 +104,8 @@ public class WalletActivity extends BaseActivity {
             case R.id.balance:
                 break;
             case R.id.recharge:
-                Client.requestUserBankCardInfo()
-                        .setTag(TAG)
-                        .setIndeterminate(this)
-                        .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
-                                if (resp.isSuccess()) {
-                                    if (resp.hasData()) {
-                                        mUserBankCardInfoModel = resp.getData().get(0);
-                                    }
-                                    Launcher.with(getActivity(), RechargeActivity.class)
-                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                            .putExtra(Launcher.EX_PAYLOAD, money)
-                                            .execute();
-                                }
-                            }
-                        })
-                        .fire();
+                Launcher.with(getActivity(), RechargeActivity.class)
+                        .execute();
                 break;
             case R.id.withdraw:
                 Client.getUserHasPassWord()

@@ -175,14 +175,14 @@ public class BankCardPayActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             boolean checkSubmitEnable = checkSubmitEnable();
-            if (!mSubmitRechargeInfo.isEnabled()) {
+            if (mSubmitRechargeInfo.isEnabled()!=checkSubmitEnable) {
                 mSubmitRechargeInfo.setEnabled(checkSubmitEnable);
             }
         }
     };
 
     private boolean checkSubmitEnable() {
-        return !TextUtils.isEmpty(mAuthCode.getText().toString()) && mAgreeProtocol.isChecked();
+        return !TextUtils.isEmpty(mAuthCode.getText().toString().trim()) && mAgreeProtocol.isChecked() && mFreezeObtainAuthCode;
     }
 
     @Override
@@ -208,13 +208,13 @@ public class BankCardPayActivity extends BaseActivity {
     }
 
     private void openUserProtocolPage() {
-        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_RECHARGE_SERVICE).setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
 
                         Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                                .putExtra(WebActivity.EX_TITLE, data.getTitle())
                                 .putExtra(WebActivity.EX_HTML, data.getContent())
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
@@ -236,7 +236,7 @@ public class BankCardPayActivity extends BaseActivity {
         String authCode = mAuthCode.getText().toString().trim();
         if (mPaymentPath != null) {
             Client.confirmBankPay(mPaymentPath.getMerchantOrderId(), authCode)
-                    .setRetryPolicy(new DefaultRetryPolicy(15000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
@@ -252,6 +252,7 @@ public class BankCardPayActivity extends BaseActivity {
     private void getBankPayAuthCode() {
         if (mUserBankCardInfoModel != null) {
             Client.submitRechargeData(mUsablePlatform.getPlatform(), mMoney, mUserBankCardInfoModel.getId())
+                    .setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
@@ -273,7 +274,6 @@ public class BankCardPayActivity extends BaseActivity {
     public void onTimeUp(int count) {
         mCounter--;
         if (mCounter <= 0) {
-            mFreezeObtainAuthCode = false;
             mGetAuthCode.setEnabled(true);
             mGetAuthCode.setText(R.string.obtain_auth_code_continue);
             stopScheduleJob();

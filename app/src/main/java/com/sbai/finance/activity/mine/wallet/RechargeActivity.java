@@ -83,8 +83,8 @@ public class RechargeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostResume() {
+        super.onPostResume();
         requestUserBankInfo();
     }
 
@@ -263,12 +263,12 @@ public class RechargeActivity extends BaseActivity {
             Launcher.with(getActivity(), BankCardPayActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, money)
                     .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                    .putExtra(Launcher.EX_PAYLOAD_1,mUsablePlatform)
+                    .putExtra(Launcher.EX_PAYLOAD_1, mUsablePlatform)
                     .execute();
         } else {
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
-                    .setRetryPolicy(new DefaultRetryPolicy(15000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {

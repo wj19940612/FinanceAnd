@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -314,8 +313,6 @@ public class MineFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
                     @Override
                     protected void onRespSuccessData(AttentionAndFansNumberModel data) {
-                        Log.d(TAG, "粉丝数量 " + data.toString());
-
                         updateUserNumber(data);
                     }
                 })
