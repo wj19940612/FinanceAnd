@@ -23,6 +23,7 @@
         android:background="@color/split"/>
 
     <TextView
+        android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -49,6 +50,7 @@
         android:layout_margin="10dp"
         android:layout_marginBottom="15dp"
         android:cursorVisible="false"
+        android:background="@android:color/white"
         android:focusableInTouchMode="true"
         android:inputType="number"
         android:lines="1"

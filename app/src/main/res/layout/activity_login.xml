@@ -56,7 +56,9 @@
                         android:id="@+id/phoneNumberClear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
                         android:visibility="invisible"
                         app:srcCompat="@drawable/ic_data_clear"/>
                 </android.support.v7.widget.LinearLayoutCompat>

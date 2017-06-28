@@ -72,7 +72,6 @@
                 tools:text="涨黄金涨涨涨黄金涨涨涨黄金涨涨涨"/>
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/commentRl"
             android:layout_width="match_parent"

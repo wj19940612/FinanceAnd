@@ -62,6 +62,7 @@ public class SmartDialog {
     private int mTitleMargin = 15;
     private int mTitleTextColor = Color.parseColor("#222222");
     private int mMessageTextColor = Color.parseColor("#666666");
+    private int mNegativeVisable = View.VISIBLE;
     private String mIconUrl;
     private int mIconResId = -1;
 
@@ -211,8 +212,10 @@ public class SmartDialog {
         mIsDoubleButtons = true;
         return this;
     }
-    public SmartDialog setNegativeHide(){
-        mHideNegativeButton = true;
+
+
+    public SmartDialog setNegativeVisable(int visable) {
+        mNegativeVisable = visable;
         return this;
     }
     public SmartDialog setCancelableOnTouchOutside(boolean cancelable) {
@@ -392,6 +395,7 @@ public class SmartDialog {
                 }
             }
         });
+        mNegative.setVisibility(mNegativeVisable);
         mNegative.setText(mNegativeId);
         mNegative.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.versus.TradeRecord;
+import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
@@ -26,11 +26,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.versus.TradeRecord.DIRECTION_UP;
-import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_CLOSE_POSITION;
-import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_MORE_POSITION;
-import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHOET_CLOSE_POSITION;
-import static com.sbai.finance.model.versus.TradeRecord.STATUS_TAKE_SHORT_POSITION;
+import static com.sbai.finance.model.battle.TradeRecord.DIRECTION_UP;
+import static com.sbai.finance.model.battle.TradeRecord.STATUS_TAKE_MORE_CLOSE_POSITION;
+import static com.sbai.finance.model.battle.TradeRecord.STATUS_TAKE_MORE_POSITION;
+import static com.sbai.finance.model.battle.TradeRecord.STATUS_TAKE_SHOET_CLOSE_POSITION;
+import static com.sbai.finance.model.battle.TradeRecord.STATUS_TAKE_SHORT_POSITION;
 
 /**
  * Created by linrongfang on 2017/6/20.

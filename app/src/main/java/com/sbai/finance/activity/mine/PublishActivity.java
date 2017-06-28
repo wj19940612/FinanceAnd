@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.CollapsedTextView;
+import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -126,6 +127,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                     @Override
                     protected void onRespSuccessData(List<UserPublishModel> data) {
                         mUserPublishModelList = data;
+                        Log.d(TAG, "onRespSuccessData: "+data.size());
                         updateUserPublishData(data);
                     }
 
@@ -223,7 +225,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_economic_circle_opinion, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_publish, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -244,7 +246,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
             @BindView(R.id.publishTime)
             TextView mPublishTime;
             @BindView(R.id.opinionContent)
-            CollapsedTextView mOpinionContent;
+            CollapsedTextLayout mOpinionContent;
             @BindView(R.id.bigVarietyName)
             TextView mBigVarietyName;
             @BindView(R.id.varietyName)
@@ -263,7 +265,7 @@ public class PublishActivity extends BaseActivity implements AdapterView.OnItemC
                         .bitmapTransform(new GlideCircleTransform(context))
                         .into(mAvatar);
                 mVarietyName.setText(item.getVarietyName());
-                mOpinionContent.setShowText(item.getContent());
+                mOpinionContent.setContentText(item.getContent());
                 mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
                 mBigVarietyName.setText(context.getString(R.string.big_variety_name, item.getBigVarietyTypeName()));
                 if (!isHimSelf) {

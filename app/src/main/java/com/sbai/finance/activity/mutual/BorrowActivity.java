@@ -295,7 +295,7 @@ public class BorrowActivity extends BaseActivity {
                 Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD_1, true).putExtra(Launcher.EX_PAYLOAD_2,location).executeForResult(REQ_CODE_ADDRESS);
                 break;
             case R.id.protocol:
-                Client.getArticleProtocol(2).setTag(TAG)
+                Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BORROW).setTag(TAG)
                         .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
                             protected void onRespSuccessData(ArticleProtocol data) {

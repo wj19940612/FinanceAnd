@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:customView="@layout/tb_future_versus_list"/>
+        app:customView="@layout/tb_battle_list"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -26,14 +26,13 @@
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_above="@+id/bottom"
                 android:layout_alignParentTop="true"
                 android:background="@android:color/transparent"
                 android:scrollbars="none"
                 android:divider="@null"
                 android:dividerHeight="14dp"/>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

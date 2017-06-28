@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import butterknife.Unbinder;
 public class InputSafetyPassDialogFragment extends DialogFragment {
 
     private static final String KEY_MONEY = "MONEY";
+    private static final String KEY_HINT = "hint";
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -39,10 +41,13 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
     TextView mMoney;
     @BindView(R.id.safety_password_number)
     SafetyPasswordEditText mSafetyPasswordNumber;
+    @BindView(R.id.hint)
+    TextView mHint;
     private Unbinder mBind;
 
     OnPasswordListener mOnPasswordListener;
     private String mRechargeMoney;
+    private String mTitleHint;
 
     public interface OnPasswordListener {
         void onPassWord(String passWord);
@@ -50,7 +55,6 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
 
 
     public static InputSafetyPassDialogFragment newInstance(String money) {
-
         Bundle args = new Bundle();
         InputSafetyPassDialogFragment fragment = new InputSafetyPassDialogFragment();
         args.putString(KEY_MONEY, money);
@@ -58,11 +62,27 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    public static InputSafetyPassDialogFragment newInstance(String money, String hint) {
+        Bundle args = new Bundle();
+        InputSafetyPassDialogFragment fragment = new InputSafetyPassDialogFragment();
+        args.putString(KEY_MONEY, money);
+        args.putString(KEY_HINT,hint);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public InputSafetyPassDialogFragment setOnPasswordListener(OnPasswordListener onPasswordListener) {
+        mOnPasswordListener = onPasswordListener;
+        return this;
+    }
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.toString().length() == 6) {
-                mOnPasswordListener.onPassWord(s.toString());
+                if (mOnPasswordListener != null) {
+                    mOnPasswordListener.onPassWord(s.toString());
+                }
                 dismissAllowingStateLoss();
             }
         }
@@ -73,9 +93,10 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         super.onAttach(context);
         if (context instanceof OnPasswordListener) {
             mOnPasswordListener = (OnPasswordListener) context;
-        } else {
-            throw new IllegalStateException(context.toString() + " must  implements InputSafetyPassDialogFragment.OnPasswordListener");
         }
+//        else {
+//            throw new IllegalStateException(context.toString() + " must  implements InputSafetyPassDialogFragment.OnPasswordListener");
+//        }
     }
 
 
@@ -95,7 +116,10 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
             mSafetyPasswordNumber.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
-        mMoney.setText(getString(R.string.yuan, mRechargeMoney));
+        mMoney.setText(mRechargeMoney);
+        if (!TextUtils.isEmpty(mTitleHint)) {
+            mHint.setText(mTitleHint);
+        }
 
     }
 
@@ -114,6 +138,7 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
             mRechargeMoney = getArguments().getString(KEY_MONEY);
+            mTitleHint = getArguments().getString(KEY_HINT);
         }
     }
 
@@ -126,6 +151,9 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         super.onDestroyView();
         if (mBind != null) {
             mBind.unbind();
+        }
+        if (mOnPasswordListener != null) {
+            mOnPasswordListener = null;
         }
 //        mSafetyPasswordNumber.removeTextChangedListener(mValidationWatcher);
     }

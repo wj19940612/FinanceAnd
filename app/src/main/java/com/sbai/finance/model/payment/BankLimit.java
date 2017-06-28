@@ -95,4 +95,18 @@ public class BankLimit {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "BankLimit{" +
+                "bankId=" + bankId +
+                ", createTime=" + createTime +
+                ", id=" + id +
+                ", limitDay=" + limitDay +
+                ", limitSingle=" + limitSingle +
+                ", payRule='" + payRule + '\'' +
+                ", status=" + status +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

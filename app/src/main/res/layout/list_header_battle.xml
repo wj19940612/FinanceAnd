@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="5dp"
+             android:background="@android:color/transparent"
+             android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/battleBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/checkBattleRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="19dp"
+                android:background="@drawable/bg_check_battle_record"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:text="@string/see_record"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"/>
+
+            <TextView
+                android:id="@+id/battleRule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/versus_rule"
+                android:textColor="@color/unluckyText"
+                android:textSize="@dimen/sp_12"/>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

@@ -23,7 +23,7 @@ import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
-import com.sbai.finance.activity.recharge.BattleListActivity;
+import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
@@ -31,7 +31,7 @@ import com.sbai.finance.activity.web.TopicDetailActivity;
 import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -232,7 +232,7 @@ public class HomeFragment extends BaseFragment {
                     }
                 }).fire();
 
-        //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改
+        //获取最新事件标题  
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
