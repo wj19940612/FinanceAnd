@@ -53,6 +53,8 @@
         <attr name="backFeature" format="boolean"/>
         <attr name="backIcon" format="reference"/>
         <attr name="barBackground" format="reference"/>
+        <attr name="hasBottomSplitLine" format="boolean"/>
+        <attr name="splitLineColor" format="color|reference"/>
     </declare-styleable>
 
     <declare-styleable name="TradeFloatButtons">
