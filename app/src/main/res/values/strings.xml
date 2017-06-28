@@ -659,4 +659,5 @@
     <string name="wait_overtime">等待超时</string>
     <string name="wait_to_overtime">等待时间过长，房间已超时</string>
     <string name="recreate_room">重新创建</string>
+    <string name="invite_invalid">对战邀请已失效</string>
 </resources>

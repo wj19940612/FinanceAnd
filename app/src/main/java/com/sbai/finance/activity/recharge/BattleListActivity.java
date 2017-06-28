@@ -63,6 +63,7 @@ import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -102,6 +103,23 @@ public class BattleListActivity extends BaseActivity implements
     private StartMatchDialogFragment mStartMatchDialogFragment;
     private StringBuilder mRefusedIds;
 
+    private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Object>>() {
+        @Override
+        public void onPushReceive(final WSPush<Object> versusGamingWSPush) {
+            switch (versusGamingWSPush.getContent().getType()) {
+                case PushCode.QUICK_MATCH_TIMEOUT:
+                    showMatchTimeoutDialog();
+                    break;
+                case PushCode.QUICK_MATCH_FAILURE:
+                    showMatchTimeoutDialog();
+                    break;
+                case PushCode.QUICK_MATCH_SUCCESS:
+                    showMatchSuccessDialog((VersusGaming) versusGamingWSPush.getContent().getData());
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,22 +132,7 @@ public class BattleListActivity extends BaseActivity implements
         updateAvatar();
         requestVersusData();
 
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<Object>>() {
-            @Override
-            public void onPushReceive(final WSPush<Object> versusGamingWSPush) {
-                switch (versusGamingWSPush.getContent().getType()){
-                    case PushCode.QUICK_MATCH_TIMEOUT:
-                        showMatchTimeoutDialog();
-                        break;
-                    case PushCode.QUICK_MATCH_FAILURE:
-                        showMatchTimeoutDialog();
-                        break;
-                    case PushCode.QUICK_MATCH_SUCCESS:
-                        showMatchSuccessDialog((VersusGaming) versusGamingWSPush.getContent().getData());
-                        break;
-                }
-            }
-        });
+        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
     }
 
     private void initCustomView() {
@@ -204,17 +207,17 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onClick(VersusGaming item) {
                 if (LocalUser.getUser().isLogin()) {
-                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
-                            if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
-                                //如果是自己创建的房间 进入到详情页
-                                item.setPageType(VersusGaming.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, item)
-                                        .execute();
-                            } else {
-                                showJoinVersusDialog(item);
-                            }
+                    if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
+                        if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
+                            //如果是自己创建的房间 进入到详情页
+                            item.setPageType(VersusGaming.PAGE_VERSUS);
+                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, item)
+                                    .execute();
+                        } else {
+                            showJoinVersusDialog(item);
                         }
+                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -231,10 +234,10 @@ public class BattleListActivity extends BaseActivity implements
                             if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
                                 item.setPageType(VersusGaming.PAGE_RECORD);
                                 Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
-                            } else if (item.getGameStatus()==VersusGaming.GAME_STATUS_CREATED
-                                    &&LocalUser.getUser().getUserInfo().getId()!=item.getLaunchUser()){
+                            } else if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED
+                                    && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
                                 showJoinVersusDialog(item);
-                            }else{
+                            } else {
                                 item.setPageType(VersusGaming.PAGE_VERSUS);
                                 Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
                             }
@@ -313,10 +316,15 @@ public class BattleListActivity extends BaseActivity implements
                 .setCallback(new ApiCallback<Resp>() {
                     @Override
                     public void onSuccess(Resp resp) {
-                        if (resp.isSuccess()){
+                        if (resp.isSuccess()) {
+                            data.setPageType(VersusGaming.PAGE_VERSUS);
+                            data.setGameStatus(VersusGaming.GAME_STATUS_STARTED);
+                            data.setAgainstUser(LocalUser.getUser().getUserInfo().getId());
+                            data.setAgainstUserName(LocalUser.getUser().getUserInfo().getUserName());
+                            data.setAgainstUserPortrait(LocalUser.getUser().getUserInfo().getUserPortrait());
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
-                        }else{
-                            showJoinVersusFailureDialog(resp.getMsg(),resp.getCode());
+                        } else {
+                            showJoinVersusFailureDialog(resp.getMsg(), resp.getCode());
                         }
                     }
                     @Override
@@ -346,6 +354,7 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }).fireFree();
     }
+
     private void requestMatchVersusOfSocket(String refuseId) {
         String refuseIds = "";
         if (refuseId.isEmpty()) {
@@ -359,12 +368,14 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
             }
+
             @Override
             public void onError(final int code) {
                 ToastUtil.curt(String.valueOf(code));
             }
         });
     }
+
     private void requestCancelMatchOfSocket() {
 
         WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL, ""), new WSCallback<WSMessage<Resp>>() {
@@ -372,12 +383,14 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
 
             }
+
             @Override
             public void onError(final int code) {
                 ToastUtil.curt(String.valueOf(code));
             }
         });
     }
+
     private void requestMatchResult() {
         Client.getQuickMatchResult(VersusGaming.AGAGINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new Callback<Resp<VersusGaming>>() {
@@ -427,7 +440,7 @@ public class BattleListActivity extends BaseActivity implements
         for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
             VersusGaming item = mVersusListAdapter.getItem(i);
             for (VersusGaming versusGaming : data) {
-                if (item.getId() == versusGaming.getId()&&item.getGameStatus()==VersusGaming.GAME_STATUS_STARTED) {
+                if (item.getId() == versusGaming.getId() && item.getGameStatus() == VersusGaming.GAME_STATUS_STARTED) {
                     item.setGameStatus(versusGaming.getGameStatus());
                     item.setLaunchPraise(versusGaming.getLaunchPraise());
                     item.setLaunchScore(versusGaming.getLaunchScore());
@@ -554,14 +567,13 @@ public class BattleListActivity extends BaseActivity implements
                 reward = item.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip,reward), getString(R.string.join_versus_title))
+        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip, reward), getString(R.string.join_versus_title))
 
                 .setMessageTextSize(15)
-                .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        item.setPageType(VersusGaming.PAGE_VERSUS);
                         requestJoinVersus(item);
                     }
                 })
@@ -574,14 +586,17 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showJoinVersusFailureDialog(String msg, final int type) {
-        int positiveMsg = R.string.go_recharge;
+        int positiveMsg;
         //存在还没有结束的游戏
-        if (type ==VersusGaming.CODE_EXIT_VERSUS){
+        if (type == VersusGaming.CODE_EXIT_VERSUS) {
             msg = getString(R.string.exit_versus);
             positiveMsg = R.string.go_versus;
-        }else if (type==VersusGaming.CODE_NO_ENOUGH_MONEY){
+        } else if (type == VersusGaming.CODE_NO_ENOUGH_MONEY) {
             msg = getString(R.string.join_versus_failure_tip);
             positiveMsg = R.string.go_recharge;
+        }else {
+            msg = getString(R.string.invite_invalid);
+            positiveMsg =R.string.ok;
         }
         SmartDialog.with(getActivity(), msg, getString(R.string.join_versus_failure_title))
                 .setMessageTextSize(15)
@@ -589,15 +604,14 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        if (type ==VersusGaming.CODE_EXIT_VERSUS){
-                                if (mMyCurrentGame!=null){
+                        if (type == VersusGaming.CODE_EXIT_VERSUS) {
+                            if (mMyCurrentGame != null) {
                                 mMyCurrentGame.setPageType(VersusGaming.PAGE_VERSUS);
                                 Launcher.with(getActivity(), FutureBattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, mMyCurrentGame)
                                         .execute();
                             }
-
-                        }else if (type==VersusGaming.CODE_NO_ENOUGH_MONEY){
+                        } else if (type == VersusGaming.CODE_NO_ENOUGH_MONEY) {
                             Launcher.with(getActivity(), RechargeActivity.class).execute();
                         }
                     }
@@ -613,7 +627,7 @@ public class BattleListActivity extends BaseActivity implements
     private void showAskMatchDialog() {
         SmartDialog.with(getActivity(), getString(R.string.match_versus_tip), getString(R.string.match_versus_title))
                 .setMessageTextSize(15)
-                .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
@@ -628,6 +642,7 @@ public class BattleListActivity extends BaseActivity implements
                 .show();
 
     }
+
     private void showMatchingDialog() {
         SmartDialog.with(getActivity(), getString(R.string.matching_tip), getString(R.string.matching))
                 .setMessageTextSize(15)
@@ -686,8 +701,9 @@ public class BattleListActivity extends BaseActivity implements
                 .show();
 
     }
-    private void showMatchTimeoutDialog(){
-        if (mStartMatchDialogFragment!=null){
+
+    private void showMatchTimeoutDialog() {
+        if (mStartMatchDialogFragment != null) {
             mStartMatchDialogFragment.dismiss();
         }
         SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
@@ -711,8 +727,9 @@ public class BattleListActivity extends BaseActivity implements
                 .setCancelableOnTouchOutside(false)
                 .show();
     }
+
     private void showMatchSuccessDialog(final VersusGaming data) {
-        if (mStartMatchDialogFragment!=null){
+        if (mStartMatchDialogFragment != null) {
             mStartMatchDialogFragment.dismiss();
         }
         if (data == null) return;
@@ -748,8 +765,6 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        data.setPageType(VersusGaming.PAGE_VERSUS);
-                        data.setGameStatus(VersusGaming.GAME_STATUS_STARTED);
                         requestJoinVersus(data);
                     }
                 })
@@ -764,6 +779,7 @@ public class BattleListActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         mLocalBroadcastManager.unregisterReceiver(mVersusBroadcastReceiver);
+        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -775,6 +791,7 @@ public class BattleListActivity extends BaseActivity implements
     public void onRefresh() {
         reset();
         requestVersusData();
+        requestCurrentBattle();
     }
 
     private void reset() {
