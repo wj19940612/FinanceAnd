@@ -141,7 +141,7 @@ public class BattleTradeView extends LinearLayout {
         mBattleTradeAdapter.setUserId(creatorId, againstId);
         mBattleTradeAdapter.clear();
         mBattleTradeAdapter.addAll(list);
-        mListView.setSelection(View.FOCUS_DOWN);
+        mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
     }
 
     public void setVisitor(boolean isVisitor) {
@@ -259,7 +259,7 @@ public class BattleTradeView extends LinearLayout {
             private void bindDataWithView(TradeRecord item, boolean isLeft, Context context) {
 
                 StringBuilder info = new StringBuilder();
-                info.append(FinanceUtil.formatWithScale(item.getOptPrice()));
+                info.append(FinanceUtil.formatWithScale(item.getOptPrice(),item.getMarketPoint()));
                 String time = DateUtil.format(item.getOptTime(), "HH:mm:ss");
 
                 switch (item.getOptStatus()) {

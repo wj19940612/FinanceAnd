@@ -177,14 +177,17 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void requestCurrentBattle() {
-        if (!LocalUser.getUser().isLogin()) return;
-        Client.getCurrentBattle().setTag(TAG)
+        if (LocalUser.getUser().isLogin()) {
+          Client.getCurrentBattle().setTag(TAG)
                 .setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
                     @Override
                     protected void onRespSuccessData(VersusGaming data) {
                         updateBattleView(data);
                     }
                 }).fireFree();
+        }else{
+            mBattle.setSubText(null);
+        }
     }
 
     private void updateBattleView(VersusGaming battle) {

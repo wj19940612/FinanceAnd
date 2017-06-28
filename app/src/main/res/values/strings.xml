@@ -608,6 +608,7 @@
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
     <string name="versus_record">期货对战-战绩</string>
+    <string name="go_versus">前往对战</string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
     <string name="position_direction">持仓方向</string>
@@ -618,7 +619,8 @@
     <string name="join_versus_failure_title">加入失败</string>
     <string name="join_versus_failure_tip">余额不足，请充值或选择其他赏金较低的对战</string>
     <string name="join_versus_title">确认加入对战？</string>
-    <string name="join_versus_tip">加入对战将暂时冻结2000积分作为对战奖金，胜利时返还，失败扣除</string>
+    <string name="join_versus_tip">加入对战将暂时冻结%1$s作为对战奖金，胜利时返还，失败扣除</string>
+    <string name="exit_versus">已存在进行中的对战，对战结束后可加入新的对战</string>
     <string name="continue_versus">继续匹配</string>
     <string name="no_waiting">不等了</string>
     <string name="cancel_matching">取消匹配</string>
@@ -651,7 +653,7 @@
     <string name="versus_variety_name">对战品种 : </string>
     <string name="versus_time">对战时长 : </string>
     <string name="versus_reward">对战赏金 : </string>
-    <string name="versus_tip">（加入对战后，赏金将会暂时冻结，对战胜利后返还，失败扣除)</string>
+    <string name="versus_tip">(加入对战后,赏金将会暂时冻结,对战胜利后返还,失败扣除)</string>
     <string name="join_versus">加入对战</string>
     <string name="wait_to_join">等待加入</string>
     <string name="wait_overtime">等待超时</string>

@@ -12,9 +12,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -63,6 +65,7 @@ import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,9 +114,9 @@ public class BattleListActivity extends BaseActivity implements
         updateAvatar();
         requestVersusData();
 
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<Object>>() {
             @Override
-            public void onPushReceive(final WSPush<VersusGaming> versusGamingWSPush) {
+            public void onPushReceive(final WSPush<Object> versusGamingWSPush) {
                 switch (versusGamingWSPush.getContent().getType()){
                     case PushCode.QUICK_MATCH_TIMEOUT:
                         showMatchTimeoutDialog();
@@ -264,7 +267,6 @@ public class BattleListActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
-        requestMatchVersus(VersusGaming.MATCH_CANCEL, "");
     }
 
     @Override
@@ -312,10 +314,9 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onSuccess(Resp resp) {
                         if (resp.isSuccess()){
-                            data.setPageType(VersusGaming.PAGE_VERSUS);
                             Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
                         }else{
-                            showJoinVersusFailureDialog(resp.getMsg());
+                            showJoinVersusFailureDialog(resp.getMsg(),resp.getCode());
                         }
                     }
                     @Override
@@ -426,7 +427,7 @@ public class BattleListActivity extends BaseActivity implements
         for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
             VersusGaming item = mVersusListAdapter.getItem(i);
             for (VersusGaming versusGaming : data) {
-                if (item.getId() == versusGaming.getId()) {
+                if (item.getId() == versusGaming.getId()&&item.getGameStatus()==VersusGaming.GAME_STATUS_STARTED) {
                     item.setGameStatus(versusGaming.getGameStatus());
                     item.setLaunchPraise(versusGaming.getLaunchPraise());
                     item.setLaunchScore(versusGaming.getLaunchScore());
@@ -541,13 +542,26 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showJoinVersusDialog(final VersusGaming item) {
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip), getString(R.string.join_versus_title))
+        String reward = "";
+        switch (item.getCoinType()) {
+            case VersusGaming.COIN_TYPE_BAO:
+                reward = item.getReward() + getActivity().getString(R.string.ingot);
+                break;
+            case VersusGaming.COIN_TYPE_CASH:
+                reward = item.getReward() + getActivity().getString(R.string.cash);
+                break;
+            case VersusGaming.COIN_TYPE_INTEGRAL:
+                reward = item.getReward() + getActivity().getString(R.string.integral);
+                break;
+        }
+        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip,reward), getString(R.string.join_versus_title))
 
                 .setMessageTextSize(15)
                 .setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        item.setPageType(VersusGaming.PAGE_VERSUS);
                         requestJoinVersus(item);
                     }
                 })
@@ -559,14 +573,33 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinVersusFailureDialog(String msg) {
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_failure_tip), getString(R.string.join_versus_failure_title))
+    private void showJoinVersusFailureDialog(String msg, final int type) {
+        int positiveMsg = R.string.go_recharge;
+        //存在还没有结束的游戏
+        if (type ==VersusGaming.CODE_EXIT_VERSUS){
+            msg = getString(R.string.exit_versus);
+            positiveMsg = R.string.go_versus;
+        }else if (type==VersusGaming.CODE_NO_ENOUGH_MONEY){
+            msg = getString(R.string.join_versus_failure_tip);
+            positiveMsg = R.string.go_recharge;
+        }
+        SmartDialog.with(getActivity(), msg, getString(R.string.join_versus_failure_title))
                 .setMessageTextSize(15)
-                .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
+                .setPositive(positiveMsg, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(getActivity(), RechargeActivity.class).execute();
+                        if (type ==VersusGaming.CODE_EXIT_VERSUS){
+                                if (mMyCurrentGame!=null){
+                                mMyCurrentGame.setPageType(VersusGaming.PAGE_VERSUS);
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, mMyCurrentGame)
+                                        .execute();
+                            }
+
+                        }else if (type==VersusGaming.CODE_NO_ENOUGH_MONEY){
+                            Launcher.with(getActivity(), RechargeActivity.class).execute();
+                        }
                     }
                 })
                 .setTitleMaxLines(1)
@@ -696,9 +729,9 @@ public class BattleListActivity extends BaseActivity implements
                 break;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(getString(R.string.versus_variety_name)).append(data.getVarietyName()).append("\n")
-                .append(getString(R.string.versus_time)).append(DateUtil.getMinutes(data.getEndline())).append("\n")
-                .append(getString(R.string.versus_reward)).append(reward).append("\n")
+        sb.append(getString(R.string.versus_variety_name)).append(" ").append(data.getVarietyName()).append("\n")
+                .append(getString(R.string.versus_time)).append(" ").append(DateUtil.getMinutes(data.getEndline())).append("\n")
+                .append(getString(R.string.versus_reward)).append(" ").append(reward).append("\n")
                 .append(getString(R.string.versus_tip));
         SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
                 .setMessageTextSize(15)
@@ -715,6 +748,8 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        data.setPageType(VersusGaming.PAGE_VERSUS);
+                        data.setGameStatus(VersusGaming.GAME_STATUS_STARTED);
                         requestJoinVersus(data);
                     }
                 })
@@ -945,7 +980,7 @@ public class BattleListActivity extends BaseActivity implements
                     if (createProfit == 0 && fighterProfit == 0) {
                         mProgressBar.setProgress(50);
                     }
-
+                    mProgressBar.setSecondaryProgress(100);
                     if (createProfit > 0) {
                         myFlag = "+";
                     }

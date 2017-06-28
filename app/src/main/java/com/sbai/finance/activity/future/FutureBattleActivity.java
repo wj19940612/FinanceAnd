@@ -14,7 +14,6 @@ import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.future.FutureBattleFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.versus.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -153,8 +152,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             //分两种状态  1.发起匹配  2.对战中
             int gameStatus = mVersusGaming.getGameStatus();
             if (gameStatus == GAME_STATUS_CREATED) {
+                mGameStatus = GAME_STATUS_CREATED;
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), true);
             } else if (gameStatus == GAME_STATUS_STARTED) {
+                mGameStatus = GAME_STATUS_STARTED;
                 mBattleView.setProgress(mVersusGaming.getLaunchScore(), mVersusGaming.getAgainstScore(), false);
                 startScheduleJob(1000);
             }
@@ -164,10 +165,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void initPushReceiveListener() {
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<Object>>() {
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
 
             @Override
-            public void onPushReceive(WSPush<Object> objectWSPush) {
+            public void onPushReceive(WSPush<VersusGaming> objectWSPush) {
                 switch (objectWSPush.getContent().getType()) {
                     case BATTLE_JOINED:
                         //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
@@ -220,7 +221,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
     }
 
-    private void startGame(WSPush<Object> objectWSPush) {
+    private void startGame(WSPush<VersusGaming> objectWSPush) {
         mVersusGaming = (VersusGaming) objectWSPush.getContent().getData();
         mBattleView.initWithModel(mVersusGaming);
         mFutureBattleFragment.showBattleTradeView();
@@ -493,17 +494,18 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 requestBattleData();
                 mFutureBattleFragment.requestOrderHistory();
             }
-            showDeadlineTime(count);
+            showDeadlineTime();
         }
         if (mGameStatus == GAME_STATUS_STARTED) {
-           showDeadlineTime(count);
+           showDeadlineTime();
         }
     }
 
-    private void showDeadlineTime(int count) {
-        int diffTime = DateUtil.getDiffSeconds(mVersusGaming.getEndTime(), SysTime.getSysTime().getSystemTimestamp());
-        diffTime -= count;
-        mBattleView.setDeadline(mVersusGaming.getGameStatus(), diffTime);
+    private void showDeadlineTime() {
+        long currentTime = System.currentTimeMillis();
+        long startTime = mVersusGaming.getStartTime();
+        int diff = mVersusGaming.getEndline() - DateUtil.getDiffSeconds(currentTime, startTime);
+        mBattleView.setDeadline(mVersusGaming.getGameStatus(), diff);
     }
 
     private void requestBattleData() {
