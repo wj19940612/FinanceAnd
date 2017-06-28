@@ -225,7 +225,7 @@ public class BattleListActivity extends BaseActivity implements
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position!=0||position!=mListView.getCount()-1) {
+                if (position != 0 || position != mListView.getCount() - 1) {
                     if (LocalUser.getUser().isLogin()) {
                         VersusGaming item = (VersusGaming) parent.getItemAtPosition(position);
                         if (item != null) {
@@ -248,7 +248,8 @@ public class BattleListActivity extends BaseActivity implements
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
                 }
-        }});
+            }
+        });
     }
 
     @Override
@@ -270,6 +271,7 @@ public class BattleListActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
+        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -324,7 +326,7 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUser(versusGaming.getAgainstUser());
                                 data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
                                 data.setAgainstUserName(versusGaming.getAgainstUserName());
-                                
+
                                 versusGaming.setPageType(VersusGaming.PAGE_VERSUS);
                                 Launcher.with(getActivity(), FutureBattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, versusGaming)
@@ -808,7 +810,6 @@ public class BattleListActivity extends BaseActivity implements
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity())
                 .unregisterReceiver(mLoginBroadcastReceiver);
-        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -1020,6 +1021,7 @@ public class BattleListActivity extends BaseActivity implements
 
                 }
             }
+
             private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
                 String myFlag = "";
                 String fighterFlag = "";
