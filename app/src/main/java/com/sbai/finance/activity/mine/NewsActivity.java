@@ -84,6 +84,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
+                mHistoryNewsModels = null;
                 mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
                 requestSystemNewsList();
             }
@@ -93,7 +94,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
     private void requestSystemNewsList() {
         Long createTime = null;
         if (mHistoryNewsModels != null && !mHistoryNewsModels.isEmpty()) {
-            createTime = mHistoryNewsModels.get(mHistoryNewsModels.size()-1).getCreateTime();
+            createTime = mHistoryNewsModels.get(mHistoryNewsModels.size() - 1).getCreateTime();
         }
         Client.requestHistoryNews(false, HistoryNewsModel.NEW_TYPE_SYSTEM_NEWS, mPage, mSize, null, createTime)
                 .setTag(TAG)
