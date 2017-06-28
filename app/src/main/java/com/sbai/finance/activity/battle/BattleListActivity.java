@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,6 +45,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
@@ -69,9 +71,7 @@ import butterknife.OnClick;
 
 public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
-
     public static final int CANCEL_BATTLE = 250;
-
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
@@ -86,7 +86,6 @@ public class BattleListActivity extends BaseActivity implements
     LinearLayout mCreateAndMatchArea;
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
-
     private ImageView mAvatar;
     private TextView mIntegral;
     private TextView mIngot;
@@ -127,19 +126,17 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
-
         initTitleBar();
-        initListHeader();
+        initListHeaderAndFooter();
         initListView();
 
         initLoginReceiver();
-
         updateAvatar();
         requestBattleList();
 
         WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
-
         scrollToTop(mTitleBar, mListView);
+
     }
 
     private void initLoginReceiver() {
@@ -180,7 +177,7 @@ public class BattleListActivity extends BaseActivity implements
         });
     }
 
-    private void initListHeader() {
+    private void initListHeaderAndFooter() {
         FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.list_header_battle, null);
         ImageView battleBanner = (ImageView) header.findViewById(R.id.battleBanner);
         TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
@@ -205,6 +202,14 @@ public class BattleListActivity extends BaseActivity implements
             }
         });
         mListView.addHeaderView(header);
+        //add footer
+        LinearLayout footParent = new LinearLayout(getActivity());
+        View view = new View(getActivity());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(60, getResources()));
+        view.setLayoutParams(layoutParams);
+        footParent.setBackgroundColor(Color.TRANSPARENT);
+        footParent.addView(view);
+        mListView.addFooterView(footParent);
     }
 
     private void initListView() {
@@ -218,6 +223,8 @@ public class BattleListActivity extends BaseActivity implements
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0 || position == parent.getCount() - 1) return;
+
                 if (LocalUser.getUser().isLogin()) {
                     VersusGaming item = (VersusGaming) parent.getItemAtPosition(position);
                     if (item != null) {
@@ -235,12 +242,11 @@ public class BattleListActivity extends BaseActivity implements
                                     .putExtra(Launcher.EX_PAYLOAD, item)
                                     .executeForResult(CANCEL_BATTLE);
                         }
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
-            }
-        });
+        }});
     }
 
     @Override
@@ -255,7 +261,7 @@ public class BattleListActivity extends BaseActivity implements
             mIntegral.setText("0.00");
             mIngot.setText("0");
         }
-        startScheduleJob(10 * 1000);
+        startScheduleJob(5 * 1000);
     }
 
     @Override
@@ -310,12 +316,19 @@ public class BattleListActivity extends BaseActivity implements
                     public void onSuccess(Resp<VersusGaming> resp) {
                         if (resp.isSuccess()) {
                             VersusGaming versusGaming = resp.getData();
-                            if (versusGaming!=null){
+                            if (versusGaming != null) {
+                                //更新列表对战信息
+                                data.setGameStatus(versusGaming.getGameStatus());
+                                data.setAgainstUser(versusGaming.getAgainstUser());
+                                data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
+                                data.setAgainstUserName(versusGaming.getAgainstUserName());
+                                
                                 versusGaming.setPageType(VersusGaming.PAGE_VERSUS);
                                 Launcher.with(getActivity(), FutureBattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, versusGaming)
                                         .executeForResult(CANCEL_BATTLE);
-                            }else{
+
+                            } else {
                                 requestBattleInfo(data);
                             }
                         } else {
@@ -329,18 +342,20 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }).fireFree();
     }
-   private void requestBattleInfo(VersusGaming item){
-       Client.getBattleInfo(item.getId(),item.getBatchCode()).setTag(TAG)
-               .setCallback(new Callback2D<Resp<VersusGaming>,VersusGaming>() {
-                   @Override
-                   protected void onRespSuccessData(VersusGaming data) {
-                       data.setPageType(VersusGaming.PAGE_VERSUS);
-                       Launcher.with(getActivity(), FutureBattleActivity.class)
-                               .putExtra(Launcher.EX_PAYLOAD, data)
-                               .executeForResult(CANCEL_BATTLE);
-                   }
-               }).fire();
-   }
+
+    private void requestBattleInfo(VersusGaming item) {
+        Client.getBattleInfo(item.getId(), item.getBatchCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
+                    @Override
+                    protected void onRespSuccessData(VersusGaming data) {
+                        data.setPageType(VersusGaming.PAGE_VERSUS);
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, data)
+                                .executeForResult(CANCEL_BATTLE);
+                    }
+                }).fire();
+    }
+
     private void requestMatchVersus(final int type, String refuseId) {
         String refuseIds = "";
         if (refuseId.isEmpty()) {
@@ -415,11 +430,11 @@ public class BattleListActivity extends BaseActivity implements
     private void requestVisibleBattleData() {
         if (mListView != null && mVersusListAdapter != null) {
             StringBuilder stringBuilder = new StringBuilder();
-            int first = mListView.getFirstVisiblePosition() - 1;
+            int first = mListView.getFirstVisiblePosition();
             int last = mListView.getLastVisiblePosition();
             for (int i = first; i < last; i++) {
                 if (i >= 0) {
-                    VersusGaming item = mVersusListAdapter.getItem(i);
+                    VersusGaming item = (VersusGaming) mListView.getItemAtPosition(i);
                     if (item != null && item.getGameStatus() != VersusGaming.GAME_STATUS_END) {
                         stringBuilder.append(item.getId()).append(",");
                     }
@@ -569,7 +584,6 @@ public class BattleListActivity extends BaseActivity implements
                 reward = item.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
-
         if (mJoinDialog == null) {
             mJoinDialog = SmartDialog.with(getActivity());
         }
@@ -942,12 +956,6 @@ public class BattleListActivity extends BaseActivity implements
                 mCreateName.setText(item.getLaunchUserName());
                 mCreateProfit.setText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onClick(item);
-                    }
-                });
                 mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
@@ -968,7 +976,7 @@ public class BattleListActivity extends BaseActivity implements
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageDrawable(null);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
-                        mAgainstAvatar.setClickable(true);
+                        mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
                         showScoreProgress(0, 0, true);
                         break;
@@ -1010,15 +1018,6 @@ public class BattleListActivity extends BaseActivity implements
 
                 }
             }
-
-            /**
-             * 显示对抗状态条
-             *
-             * @param createProfit  我的盈利状况
-             * @param fighterProfit 对抗者盈利状况
-             * @param isInviting    是否正在邀请中
-             * @return
-             */
             private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
                 String myFlag = "";
                 String fighterFlag = "";
