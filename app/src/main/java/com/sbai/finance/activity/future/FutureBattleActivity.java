@@ -166,41 +166,42 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         requestSubscribeBattle();
     }
 
-    private void initPushReceiveListener() {
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+    private OnPushReceiveListener<WSPush<VersusGaming>> mPushReceiveListener = new OnPushReceiveListener<WSPush<VersusGaming>>() {
+        @Override
+        public void onPushReceive(WSPush<VersusGaming> versusGamingWSPush) {
+            switch (versusGamingWSPush.getContent().getType()) {
+                case BATTLE_JOINED:
+                    //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
+                    dismissAllDialog();
+                    startGame(versusGamingWSPush);
+                    break;
+                case BATTLE_OVER:
+                    //对战结束 一个弹窗
+                    break;
+                case ORDER_CREATED:
+                    mFutureBattleFragment.requestOrderHistory();
+                    break;
+                case ORDER_CLOSE:
+                    mFutureBattleFragment.requestOrderHistory();
+                    break;
+                case QUICK_MATCH_SUCCESS:
+                    //和对战有人加入逻辑一样 多了个匹配头像
+                    break;
+                case QUICK_MATCH_TIMEOUT:
+                    //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
+                    mStartMatchDialogFragment.dismiss();
+                    showOvertimeMatchDialog();
+                    break;
+                case ROOM_CREATE_TIMEOUT:
+                    showRoomOvertimeDialog();
+                    break;
 
-            @Override
-            public void onPushReceive(WSPush<VersusGaming> objectWSPush) {
-                switch (objectWSPush.getContent().getType()) {
-                    case BATTLE_JOINED:
-                        //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                        dismissAllDialog();
-                        startGame(objectWSPush);
-                        break;
-                    case BATTLE_OVER:
-                        //对战结束 一个弹窗
-                        break;
-                    case ORDER_CREATED:
-                        mFutureBattleFragment.requestOrderHistory();
-                        break;
-                    case ORDER_CLOSE:
-                        mFutureBattleFragment.requestOrderHistory();
-                        break;
-                    case QUICK_MATCH_SUCCESS:
-                        //和对战有人加入逻辑一样 多了个匹配头像
-                        break;
-                    case QUICK_MATCH_TIMEOUT:
-                        //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
-                        mStartMatchDialogFragment.dismiss();
-                        showOvertimeMatchDialog();
-                        break;
-                    case ROOM_CREATE_TIMEOUT:
-                        showRoomOvertimeDialog();
-                        break;
-
-                }
             }
-        });
+        }
+    };
+
+    private void initPushReceiveListener() {
+        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
     }
 
     private void dismissAllDialog() {
@@ -544,5 +545,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         super.onDestroy();
         stopScheduleJob();
         requestUnSubscribeBattle();
+        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 }

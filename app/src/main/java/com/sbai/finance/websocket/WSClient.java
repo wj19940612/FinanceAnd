@@ -16,8 +16,10 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class WSClient implements WSAbsClient {
@@ -30,7 +32,7 @@ public class WSClient implements WSAbsClient {
     private Queue<WSMessage> mPendingList;
     private Queue<WSMessage> mExecutedList;
     private Status mStatus;
-    private OnPushReceiveListener mOnPushReceiveListener;
+    private List<OnPushReceiveListener>mOnPushReceiveListeners;
     private Handler mHandler;
 
     enum Status {
@@ -69,7 +71,18 @@ public class WSClient implements WSAbsClient {
     }
 
     public void setOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
-        mOnPushReceiveListener = onPushReceiveListener;
+        if (mOnPushReceiveListeners == null) {
+            mOnPushReceiveListeners = new ArrayList<>();
+        }
+        mOnPushReceiveListeners.add(onPushReceiveListener);
+    }
+
+    public void removePushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
+        if (mOnPushReceiveListeners != null) {
+            if (mOnPushReceiveListeners.contains(onPushReceiveListener)) {
+                mOnPushReceiveListeners.remove(onPushReceiveListener);
+            }
+        }
     }
 
     @Override
@@ -156,14 +169,19 @@ public class WSClient implements WSAbsClient {
         }
 
         if (resp.getCode() == SocketCode.CODE_RESP_PUSH) {
-            if (mOnPushReceiveListener != null) {
-                final Object o = new Gson().fromJson(message, mOnPushReceiveListener.getGenericType());
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnPushReceiveListener.onPushReceive(o);
+            if (mOnPushReceiveListeners != null) {
+                for (int i = 0; i < mOnPushReceiveListeners.size(); i++) {
+                    final OnPushReceiveListener listener = mOnPushReceiveListeners.get(i);
+                    if (listener != null) {
+                        final Object o = new Gson().fromJson(message, listener.getGenericType());
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                listener.onPushReceive(o);
+                            }
+                        });
                     }
-                });
+                }
             }
             return;
         }
