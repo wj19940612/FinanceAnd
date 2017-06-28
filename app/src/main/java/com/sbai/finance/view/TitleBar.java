@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 
 public class TitleBar extends RelativeLayout {
+
+    private static final float HEIGHT_SPLIT_LINE_DP = 0.5f;
 
     private CharSequence mTitle;
     private int mTitleSize;
@@ -39,11 +44,14 @@ public class TitleBar extends RelativeLayout {
     private TextView mRightView;
     private View mCustomView;
 
+    private boolean mHasBottomSplitLine;
+    private ColorStateList mSplitLineColor;
+    private Paint mPaint;
+    private float mSplitLineHeight;
+
     public TitleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         processAttrs(attrs);
-
         init();
     }
 
@@ -84,9 +92,28 @@ public class TitleBar extends RelativeLayout {
         if (customViewResId != -1) {
             mCustomView = LayoutInflater.from(getContext()).inflate(customViewResId, null);
         }
-
         mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.white);
+
+
+        mHasBottomSplitLine = typedArray.getBoolean(R.styleable.TitleBar_bottomHasSplitLine, false);
+        mSplitLineColor = typedArray.getColorStateList(R.styleable.TitleBar_bottomSplitLineColor);
+        if (mSplitLineColor == null) {
+            mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.split));
+        }
+        mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
+                getResources().getDisplayMetrics());
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         typedArray.recycle();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mHasBottomSplitLine) {
+            mPaint.setColor(mSplitLineColor.getDefaultColor());
+            mPaint.setStrokeWidth(mSplitLineHeight);
+            canvas.drawLine(0, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
+        }
     }
 
     private void init() {
