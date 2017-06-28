@@ -13,12 +13,13 @@ public class VersusGaming implements Parcelable {
     public static final int COIN_TYPE_BAO = 2;
     public static final int COIN_TYPE_INTEGRAL = 3;
 
-    // 0取消 1发起 2对战开始 3对战结束 4观战
+    // 0取消 1发起 2对战开始 3对战结束 4观战  5正在取消
     public static final int GAME_STATUS_CANCELED = 0;
     public static final int GAME_STATUS_CREATED = 1;
     public static final int GAME_STATUS_STARTED = 2;
     public static final int GAME_STATUS_END = 3;
     public static final int GAME_STATUS_OBESERVE = 4;
+    public static final int GAME_STATUS_CANCELING = 5;
 
     //0平手 1发起者赢 2应战者赢
     public static final int RESULT_TIE = 0;

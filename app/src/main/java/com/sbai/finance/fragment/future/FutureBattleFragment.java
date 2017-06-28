@@ -518,8 +518,8 @@ public class FutureBattleFragment extends BaseFragment {
         //更新房间存在倒计时
         long currentTime = System.currentTimeMillis();
         long createTime = mVersusGaming.getCreateTime();
-        int diff = DateUtil.getDiffSeconds(currentTime,createTime);
-        if (mBattleButtons.isShown()) {
+        int diff = DateUtil.getDiffSeconds(currentTime, createTime);
+        if (mBattleButtons.getVisibility() == View.VISIBLE) {
             mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));
         }
     }
