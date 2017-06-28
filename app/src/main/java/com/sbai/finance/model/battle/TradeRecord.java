@@ -1,4 +1,4 @@
-package com.sbai.finance.model.versus;
+package com.sbai.finance.model.battle;
 
 /**
  * Created by linrongfang on 2017/6/23.

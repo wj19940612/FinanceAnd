@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.recharge;
+package com.sbai.finance.activity.battle;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,11 +18,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.versus.FutureVersus;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.FutureVersus;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;

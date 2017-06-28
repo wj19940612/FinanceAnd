@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.recharge;
+package com.sbai.finance.activity.battle;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -31,8 +31,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.future.CreateFightActivity;
-import com.sbai.finance.activity.future.FutureBattleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
@@ -40,8 +38,8 @@ import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.payment.UserFundInfoModel;
-import com.sbai.finance.model.versus.FutureVersus;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.FutureVersus;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -134,7 +132,7 @@ public class BattleListActivity extends BaseActivity implements
 
         initLoginReceiver();
         updateAvatar();
-        requestVersusData();
+        requestBattleList();
 
         WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         scrollToTop(mTitleBar, mListView);
@@ -225,24 +223,24 @@ public class BattleListActivity extends BaseActivity implements
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position != 0 || position != mListView.getCount() - 1) {
-                    if (LocalUser.getUser().isLogin()) {
-                        VersusGaming item = (VersusGaming) parent.getItemAtPosition(position);
-                        if (item != null) {
-                            if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
-                                item.setPageType(VersusGaming.PAGE_RECORD);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, item)
-                                        .executeForResult(CANCEL_BATTLE);
-                            } else if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED
-                                    && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
-                                showJoinVersusDialog(item);
-                            } else {
-                                item.setPageType(VersusGaming.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, item)
-                                        .executeForResult(CANCEL_BATTLE);
-                            }
+                if (position == 0 || position == parent.getCount() - 1) return;
+
+                if (LocalUser.getUser().isLogin()) {
+                    VersusGaming item = (VersusGaming) parent.getItemAtPosition(position);
+                    if (item != null) {
+                        if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
+                            item.setPageType(VersusGaming.PAGE_RECORD);
+                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, item)
+                                    .executeForResult(CANCEL_BATTLE);
+                        } else if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED
+                                && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
+                            showJoinBattleDialog(item);
+                        } else {
+                            item.setPageType(VersusGaming.PAGE_VERSUS);
+                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, item)
+                                    .executeForResult(CANCEL_BATTLE);
                         }
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -280,7 +278,7 @@ public class BattleListActivity extends BaseActivity implements
         requestVisibleBattleData();
     }
 
-    private void requestVersusData() {
+    private void requestBattleList() {
         Client.getVersusGaming(mLocation).setTag(TAG)
                 .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
                     @Override
@@ -313,7 +311,7 @@ public class BattleListActivity extends BaseActivity implements
                 }).fire();
     }
 
-    private void requestJoinVersus(final VersusGaming data) {
+    private void requestJoinBattle(final VersusGaming data) {
         Client.joinVersus(data.getId(), VersusGaming.SOURCE_HALL).setTag(TAG)
                 .setCallback(new ApiCallback<Resp<VersusGaming>>() {
                     @Override
@@ -575,7 +573,7 @@ public class BattleListActivity extends BaseActivity implements
         }
     }
 
-    private void showJoinVersusDialog(final VersusGaming item) {
+    private void showJoinBattleDialog(final VersusGaming item) {
         String reward = "";
         switch (item.getCoinType()) {
             case VersusGaming.COIN_TYPE_BAO:
@@ -597,7 +595,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestJoinVersus(item);
+                        requestJoinBattle(item);
                     }
                 })
                 .setTitle(getString(R.string.join_versus_title))
@@ -795,7 +793,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestJoinVersus(data);
+                        requestJoinBattle(data);
                     }
                 })
                 .setTitleMaxLines(1)
@@ -835,13 +833,13 @@ public class BattleListActivity extends BaseActivity implements
 
     @Override
     public void onLoadMore() {
-        requestVersusData();
+        requestBattleList();
     }
 
     @Override
     public void onRefresh() {
         reset();
-        requestVersusData();
+        requestBattleList();
         requestCurrentBattle();
     }
 

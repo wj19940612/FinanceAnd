@@ -296,15 +296,15 @@
 
         <!-- 期货大战-->
         <activity
-            android:name=".activity.future.FutureBattleActivity"
+            android:name=".activity.battle.FutureBattleActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.recharge.BattleListActivity"
+        <activity android:name=".activity.battle.BattleListActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.recharge.FutureVersusRecordActivity"
+        <activity android:name=".activity.battle.FutureVersusRecordActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.future.CreateFightActivity"
+        <activity android:name=".activity.battle.CreateFightActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.future.ChooseFuturesActivity"
+        <activity android:name=".activity.battle.ChooseFuturesActivity"
                   android:screenOrientation="portrait"/>
 
     </application>

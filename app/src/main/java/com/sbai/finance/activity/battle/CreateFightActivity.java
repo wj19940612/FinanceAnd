@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.future;
+package com.sbai.finance.activity.battle;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.future.FutureBattleConfig;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.FutureBattleConfig;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.ingotWar;
-import static com.sbai.finance.model.versus.VersusGaming.PAGE_VERSUS;
+import static com.sbai.finance.model.battle.VersusGaming.PAGE_VERSUS;
 
 public class CreateFightActivity extends BaseActivity {
 

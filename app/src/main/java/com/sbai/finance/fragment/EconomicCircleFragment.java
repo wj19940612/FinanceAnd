@@ -32,7 +32,7 @@ import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;

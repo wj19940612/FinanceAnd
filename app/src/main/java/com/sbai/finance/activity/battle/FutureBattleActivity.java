@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.future;
+package com.sbai.finance.activity.battle;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,11 +12,11 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
-import com.sbai.finance.fragment.future.FutureBattleDetailFragment;
-import com.sbai.finance.fragment.future.FutureBattleFragment;
+import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
+import com.sbai.finance.fragment.battle.FutureBattleFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.versus.BattleInfo;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.BattleInfo;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -38,11 +38,11 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CANCELING;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
-import static com.sbai.finance.model.versus.VersusGaming.PAGE_RECORD;
+import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_CANCELING;
+import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_OBESERVE;
+import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_STARTED;
+import static com.sbai.finance.model.battle.VersusGaming.PAGE_RECORD;
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;

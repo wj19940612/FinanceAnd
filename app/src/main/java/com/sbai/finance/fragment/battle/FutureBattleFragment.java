@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.future;
+package com.sbai.finance.fragment.battle;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,15 +16,15 @@ import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.future.FutureBattleActivity;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
-import com.sbai.finance.model.versus.TradeOrder;
-import com.sbai.finance.model.versus.TradeOrderClosePosition;
-import com.sbai.finance.model.versus.TradeRecord;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.TradeOrder;
+import com.sbai.finance.model.battle.TradeOrderClosePosition;
+import com.sbai.finance.model.battle.TradeRecord;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -47,8 +47,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
-import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
+import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_STARTED;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 

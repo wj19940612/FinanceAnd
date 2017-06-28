@@ -1,4 +1,4 @@
-package com.sbai.finance.model.versus;
+package com.sbai.finance.model.battle;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class VersusGaming implements Parcelable {
+
     //0现金 1元宝 2积分
     public static final int COIN_TYPE_CASH = 1;
     public static final int COIN_TYPE_BAO = 2;

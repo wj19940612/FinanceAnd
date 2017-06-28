@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.future;
+package com.sbai.finance.fragment.battle;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,8 +9,8 @@ import android.widget.ListView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.versus.TradeRecord;
-import com.sbai.finance.model.versus.VersusGaming;
+import com.sbai.finance.model.battle.TradeRecord;
+import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;

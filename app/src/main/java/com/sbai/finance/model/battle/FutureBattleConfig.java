@@ -1,4 +1,4 @@
-package com.sbai.finance.model.future;
+package com.sbai.finance.model.battle;
 
 /**
  * Created by lixiaokuan0819 on 2017/6/22.

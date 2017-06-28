@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.future;
+package com.sbai.finance.activity.battle;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.ChooseFuturesFragment;
+import com.sbai.finance.fragment.battle.ChooseFuturesFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
