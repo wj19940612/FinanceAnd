@@ -92,6 +92,8 @@ public class FutureBattleFragment extends BaseFragment {
     private Variety mVariety;
     private FutureData mFutureData;
     private TradeOrder mCurrentOrder;
+    private TradeOrder mCreatorOrder;
+    private TradeOrder mAgainstOrder;
 
     private int mCount = 600;
     private int mGameStatus;
@@ -291,16 +293,20 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void updateCurrentOrder(List<TradeOrder> data) {
-        TradeOrder order = null;
         for (TradeOrder tradeOrder : data) {
             if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                order = tradeOrder;
+                mCurrentOrder = tradeOrder;
+            }
+            if (tradeOrder.getId() == mVersusGaming.getLaunchUser()) {
+                mCreatorOrder = tradeOrder;
+            }
+            if (tradeOrder.getId() == mVersusGaming.getAgainstUser()) {
+                mAgainstOrder = tradeOrder;
             }
         }
-        if (order != null) {
-            mCurrentOrder = order;
+        if (mCurrentOrder != null) {
             setBattleTradeState(STATE_CLOSE_POSITION);
-            mBattleTradeView.setTradeData(order.getDirection(), order.getOrderPrice(), 0);
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), 0);
         } else {
             setBattleTradeState(STATE_TRADE);
         }
@@ -424,16 +430,37 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void updateTradeProfit(FutureData futureData) {
+        double myProfit = 0;
+        double creatorProfit = 0;
+        double againstProfit = 0;
+        //这里只更新对战者的持仓信息
         if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
 
-            double profit = 0;
             if (mCurrentOrder.getDirection() == 1) {
-                profit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
+                myProfit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
             } else {
-                profit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
+                myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
             }
-            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), profit);
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), myProfit);
         }
+        //房主的累计收益
+        if (mCreatorOrder != null) {
+            if (mCreatorOrder.getDirection() == 1) {
+                creatorProfit = futureData.getLastPrice() - mCreatorOrder.getOrderPrice();
+            } else {
+                creatorProfit = mCreatorOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+        }
+        //对抗者的累计收益
+        if (mAgainstOrder != null) {
+            if (mAgainstOrder.getDirection() == 1) {
+                againstProfit = futureData.getLastPrice() - mAgainstOrder.getOrderPrice();
+            } else {
+                againstProfit = mAgainstOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+        }
+        ((FutureBattleActivity)getActivity()).updateBattleInfo(creatorProfit,againstProfit);
+
     }
 
     private void requestExchangeStatus() {
