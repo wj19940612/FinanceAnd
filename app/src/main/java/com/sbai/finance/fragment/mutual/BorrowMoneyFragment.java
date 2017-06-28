@@ -31,7 +31,6 @@ import com.sbai.finance.model.economiccircle.BorrowMoney;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mutual.BorrowDetail;
-import com.sbai.finance.model.mutual.BorrowMine;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -39,11 +38,10 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.CollapsedTextView;
+import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -248,7 +246,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
             @BindView(R.id.isAttention)
             TextView mIsAttention;
             @BindView(R.id.borrowMoneyContent)
-            CollapsedTextView mBorrowMoneyContent;
+            CollapsedTextLayout mBorrowMoneyContent;
             @BindView(R.id.borrowingIcon)
             ImageView mBorrowingIcon;
             @BindView(R.id.needAmount)
@@ -288,7 +286,7 @@ public class BorrowMoneyFragment extends BaseFragment implements
                     mBorrowMoneyContent.setVisibility(View.GONE);
                 }else{
                     mBorrowMoneyContent.setVisibility(View.VISIBLE);
-                    mBorrowMoneyContent.setShowText(item.getContent().trim());
+                    mBorrowMoneyContent.setContentText(item.getContent().trim());
                 }
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));

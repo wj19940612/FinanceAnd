@@ -78,20 +78,13 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
         updateBankInfo(mUserBankCardInfoModel);
         mMoney = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD, 0);
         //从消息界面进入
-        if (mUserBankCardInfoModel == null) {
-            requestUserBankInfo();
-            requestFundInfo();
-        }
+        requestUserBankInfo();
+        requestFundInfo();
 
         mWithdrawMoney.addTextChangedListener(mValidationWatcher);
         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
 
         requestWithDrawPoundage();
-
-        if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
-            showWithDrawRuleDialog();
-            Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
-        }
     }
 
     private void requestFundInfo() {
@@ -129,7 +122,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
 
 
     private void updateBankInfo(UserBankCardInfoModel userBankCardInfoModel) {
-        if (userBankCardInfoModel != null) {
+        if (userBankCardInfoModel != null && !TextUtils.isEmpty(userBankCardInfoModel.getCardNumber())) {
             String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
             mWithdrawBank.setText(getString(R.string.with_draw_bank, withDrawBankAndNumber));
         }
@@ -146,6 +139,10 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                             mPoundage = data.getFee();
                         }
                         mCanWithPoundage.setText(getString(R.string.can_with_poundage, FinanceUtil.formatWithScale(mPoundage)));
+                        if (Preference.get().isFirstWithDraw(LocalUser.getUser().getPhone())) {
+                            showWithDrawRuleDialog();
+                            Preference.get().setIsFirstWithDraw(LocalUser.getUser().getPhone(), false);
+                        }
                     }
                 })
                 .fire();
@@ -199,7 +196,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 mWithdrawMoney.setText(FinanceUtil.formatWithScale(mMoney));
                 break;
             case R.id.withdraw:
-                InputSafetyPassDialogFragment.newInstance(mWithdrawMoney.getText().toString()).show(getSupportFragmentManager());
+                InputSafetyPassDialogFragment.newInstance(getString(R.string.yuan, mWithdrawMoney.getText().toString())).show(getSupportFragmentManager());
                 break;
             case R.id.connect_service:
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();

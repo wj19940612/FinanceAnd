@@ -32,4 +32,6 @@
     <color name="wallet_bg">#424242</color>
 
     <color name="bank_card_hint">#bfbfbf</color>
+
+    <color name="picker_press">#999999</color>
 </resources>

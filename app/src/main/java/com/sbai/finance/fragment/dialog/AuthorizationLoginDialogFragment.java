@@ -112,7 +112,7 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
     }
 
     private void openUserProtocolPage() {
-        Client.getArticleProtocol(3)
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {

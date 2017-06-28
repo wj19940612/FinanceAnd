@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -26,6 +27,7 @@ import com.sbai.finance.model.payment.BankLimit;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -44,7 +46,6 @@ import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.widget.WheelView;
 
 import static com.sbai.finance.R.id.rechargeCount;
-import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 
 
 public class RechargeActivity extends BaseActivity {
@@ -77,11 +78,38 @@ public class RechargeActivity extends BaseActivity {
         mRechargeCount.addTextChangedListener(mValidationWatcher);
 
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-        requestUsablePlatformList();
+
+        formatBankPay();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        requestUserBankInfo();
+    }
+
+    private void formatBankPay() {
         if (mUserBankCardInfoModel != null && !TextUtils.isEmpty(mUserBankCardInfoModel.getCardNumber())) {
             mBankPay = mUserBankCardInfoModel.getIssuingBankName() + "(" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
         }
+    }
 
+    private void requestUserBankInfo() {
+        Client.requestUserBankCardInfo()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<UserBankCardInfoModel>>, List<UserBankCardInfoModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
+                        if (data != null && !data.isEmpty()) {
+                            mUserBankCardInfoModel = data.get(0);
+                            formatBankPay();
+                            requestUsablePlatformList();
+                        }
+                    }
+
+                })
+                .fire();
     }
 
     private void requestBankLimit() {
@@ -93,7 +121,7 @@ public class RechargeActivity extends BaseActivity {
                         protected void onRespSuccessData(List<BankLimit> data) {
                             if (data != null && !data.isEmpty()) {
                                 mBankLimit = data.get(0);
-                                if (mUsablePlatform != null && mUsablePlatform.isBankPay()) {
+                                if (mUsablePlatform != null && mUsablePlatform.isBankPay() && !TextUtils.isEmpty(mBankPay)) {
                                     SpannableString payBank = StrUtil.mergeTextWithRatioColor(mBankPay, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
                                             ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
                                     mRechargeWay.setText(payBank);
@@ -117,19 +145,23 @@ public class RechargeActivity extends BaseActivity {
                         requestBankLimit();
                         for (int i = 0; i < usablePlatformList.size(); i++) {
                             UsablePlatform usablePlatform = usablePlatformList.get(i);
-                            if (usablePlatform.isBankPay() && mUserBankCardInfoModel != null&&!TextUtils.isEmpty(mBankPay)) {
+                            if (usablePlatform.isBankPay() && mUserBankCardInfoModel != null && !TextUtils.isEmpty(mBankPay)) {
                                 mPayData[i] = mBankPay;
                             } else {
                                 mPayData[i] = usablePlatform.getName();
                             }
-                            if (usablePlatform.getType() == Preference.get().getRechargeWay(LocalUser.getUser().getPhone())) {
+                            if (usablePlatform.getPlatform().equalsIgnoreCase(Preference.get().getRechargeWay(LocalUser.getUser().getPhone()))) {
                                 mUsablePlatform = usablePlatform;
-                                if (mUsablePlatform.isBankPay() && mUserBankCardInfoModel != null) {
+                                if (mUsablePlatform.isBankPay()
+                                        && mUserBankCardInfoModel != null
+                                        && !mUserBankCardInfoModel.isNotConfirmBankInfo()
+                                        && !TextUtils.isEmpty(mBankPay)) {
                                     mSelectPayWayName = mBankPay;
                                 } else {
                                     mSelectPayWayName = mUsablePlatform.getName();
                                 }
                                 mRechargeWay.setText(mSelectPayWayName);
+                                Log.d(TAG, "onRespSuccessData: " + mSelectPayWayName);
                             }
                         }
                     }
@@ -140,12 +172,16 @@ public class RechargeActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             formatRechargeCount();
-            boolean rechargeBtnEnable = checkRechargeBtnEnable();
-            if (mRecharge.isEnabled() != rechargeBtnEnable) {
-                mRecharge.setEnabled(rechargeBtnEnable);
-            }
+            changeRechargeBtnStatus();
         }
     };
+
+    private void changeRechargeBtnStatus() {
+        boolean rechargeBtnEnable = checkRechargeBtnEnable();
+        if (mRecharge.isEnabled() != rechargeBtnEnable) {
+            mRecharge.setEnabled(rechargeBtnEnable);
+        }
+    }
 
     private void formatRechargeCount() {
         String oldMoney = mRechargeCount.getText().toString().trim();
@@ -159,8 +195,7 @@ public class RechargeActivity extends BaseActivity {
     private boolean checkRechargeBtnEnable() {
         String count = mRechargeCount.getText().toString();
         if (count.startsWith(".")) return false;
-        if (mBankLimit == null) return false;
-        if (mUsablePlatform != null && mUsablePlatform.isBankPay()) {
+        if (mUsablePlatform != null && mUsablePlatform.isBankPay() && mBankLimit != null) {
             return !TextUtils.isEmpty(count)
                     && Double.parseDouble(count) >= 5
                     && mBankLimit.getLimitSingle() >= Double.parseDouble(count);
@@ -168,7 +203,6 @@ public class RechargeActivity extends BaseActivity {
             return !TextUtils.isEmpty(count)
                     && Double.parseDouble(count) >= 5;
         }
-
     }
 
     @OnClick({R.id.rechargeWay, rechargeCount, R.id.recharge, R.id.connect_service, R.id.rechargeLL})
@@ -203,22 +237,38 @@ public class RechargeActivity extends BaseActivity {
         if (mUsablePlatform == null) return;
         final String money = mRechargeCount.getText().toString();
         Integer bankId = null;
-        if (mUserBankCardInfoModel != null && mUsablePlatform.isBankPay()) {
+        if (mUserBankCardInfoModel != null && mUsablePlatform.isBankPay() && !mUserBankCardInfoModel.isNotConfirmBankInfo()) {
             bankId = mUserBankCardInfoModel.getId();
         }
 
-        if (mUsablePlatform.isBankPay() && mUserBankCardInfoModel == null) {
-            Launcher.with(getActivity(), BindBankCardActivity.class)
-                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                    .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
-        } else {
-            if (mUsablePlatform.isBankPay() && mBankLimit != null && mBankLimit.getLimitSingle() < Double.parseDouble(money)) {
-                ToastUtil.curt(R.string.input_money_more_than_limit);
-                return;
+        if (mUsablePlatform.isBankPay()) {
+            if (mUserBankCardInfoModel == null || mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                Launcher.with(getActivity(), BindBankCardActivity.class)
+                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                        .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
+            } else {
+                if (mUsablePlatform.isBankPay() && mBankLimit != null && mBankLimit.getLimitSingle() < Double.parseDouble(money)) {
+                    ToastUtil.curt(R.string.input_money_more_than_limit);
+                    return;
+                }
+                confirmRecharge(money, bankId);
             }
+        } else {
+            confirmRecharge(money, null);
+        }
+    }
 
+    private void confirmRecharge(final String money, Integer bankId) {
+        if (mUsablePlatform.isBankPay()) {
+            Launcher.with(getActivity(), BankCardPayActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, money)
+                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                    .putExtra(Launcher.EX_PAYLOAD_1, mUsablePlatform)
+                    .execute();
+        } else {
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
+                    .setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {
@@ -259,6 +309,7 @@ public class RechargeActivity extends BaseActivity {
         picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
         picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
+        picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setOffset(2);
@@ -273,16 +324,16 @@ public class RechargeActivity extends BaseActivity {
             @Override
             public void onOptionPicked(int index, String item) {
                 if (!TextUtils.isEmpty(item)) {
+                    changeRechargeBtnStatus();
                     mRechargeWay.setText(item);
                     mSelectPayWayName = item;
                     for (UsablePlatform data : mUsablePlatformList) {
                         if (data.getName().equalsIgnoreCase(item)) {
-                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getType());
+                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getPlatform());
                             mUsablePlatform = data;
                             break;
                         } else if (item.contains("银行") && data.getName().contains("银行")) {
-                            Log.d(TAG, "银行 : " + data.toString());
-                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getType());
+                            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), data.getPlatform());
                             if (mBankLimit != null) {
                                 SpannableString payBank = StrUtil.mergeTextWithRatioColor(item, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
                                         ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
@@ -293,6 +344,7 @@ public class RechargeActivity extends BaseActivity {
                                 mRechargeWay.setText(payBank);
                             }
                             mUsablePlatform = data;
+                            break;
                         }
                     }
                 }
@@ -302,13 +354,30 @@ public class RechargeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
-                    mUserBankCardInfoModel = data.getParcelableExtra(EX_PAYLOAD);
-                    submitRechargeData();
+                    Client.requestUserBankCardInfo()
+                            .setTag(TAG)
+                            .setIndeterminate(this)
+                            .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
+                                    if (resp.isSuccess()) {
+                                        formatBankPay();
+                                        requestUsablePlatformList();
+                                        if (resp.hasData()) {
+                                            mUserBankCardInfoModel = resp.getData().get(0);
+                                            submitRechargeData();
+                                        }
+                                    } else {
+                                        ToastUtil.curt(resp.getMsg());
+                                    }
+                                }
+                            })
+                            .fire();
                     break;
                 default:
                     break;

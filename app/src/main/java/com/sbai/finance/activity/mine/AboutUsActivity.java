@@ -66,13 +66,14 @@ public class AboutUsActivity extends BaseActivity {
     }
 
     private void openUserProtocolPage() {
-        Client.getArticleProtocol(3).setTag(TAG)
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_HTML, data.getContent())
+//                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .putExtra(WebActivity.EX_URL,Client.WEB_USER_PROTOCOL_PAGE_URL)
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
                     }

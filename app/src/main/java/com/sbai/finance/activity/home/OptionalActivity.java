@@ -368,16 +368,23 @@ public class OptionalActivity extends BaseActivity implements
                     StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
                         mLastPrice.setText(stockData.getLastPrice());
-                        String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
-                        if (priceChange.startsWith("-")) {
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                            mRate.setSelected(false);
-                            mRate.setText(priceChange);
+                        if (stockData.isDelist()) {
+                            mRate.setEnabled(false);
+                            mRate.setText(R.string.delist);
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
                         } else {
+                            mRate.setEnabled(true);
+                            String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
+                            if (priceChange.startsWith("-")) {
+                                mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                                mRate.setSelected(false);
+                                mRate.setText(priceChange);
+                            } else {
 
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                            mRate.setSelected(true);
-                            mRate.setText("+" + priceChange);
+                                mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                                mRate.setSelected(true);
+                                mRate.setText("+" + priceChange);
+                            }
                         }
                     } else {
                         mLastPrice.setText("--");

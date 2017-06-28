@@ -9,14 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
+        app:bottomHasSplitLine="true"
+        app:bottomSplitLineColor="@color/split"
         app:titleTextColor="@color/blackAssist"/>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@+id/titleBar"
-        android:background="@color/split"/>
 
     <WebView
         android:id="@+id/webView"
@@ -31,7 +26,7 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@id/divider"
+        android:layout_below="@id/titleBar"
         android:progressDrawable="@drawable/progress_horizontal"/>
 
     <LinearLayout

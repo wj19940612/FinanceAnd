@@ -201,7 +201,6 @@ public class GpsUtils {
                 }
 
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 Log.d(TAG, " e: " + e.getMessage());
             }
 

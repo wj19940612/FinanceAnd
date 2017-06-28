@@ -687,7 +687,7 @@ public class BattleListActivity extends BaseActivity implements
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setCancelableOnTouchOutside(false)
-                .setNegativeHide()
+                .setNegativeVisable(View.GONE)
                 .show();
     }
 

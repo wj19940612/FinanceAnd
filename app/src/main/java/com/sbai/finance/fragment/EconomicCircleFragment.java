@@ -41,6 +41,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
+import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CollapsedTextView;
 import com.sbai.finance.view.TitleBar;
 
@@ -518,7 +519,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			@BindView(R.id.publishTime)
 			TextView mPublishTime;
 			@BindView(R.id.opinionContent)
-			CollapsedTextView mOpinionContent;
+			CollapsedTextLayout mOpinionContent;
 			@BindView(R.id.label)
 			ImageView mLabel;
 			@BindView(R.id.bigVarietyName)
@@ -556,7 +557,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				}
 
 
-				mOpinionContent.setShowText(item.getContent());
+				mOpinionContent.setContentText(item.getContent());
 
 				if (item.getDirection() == 1) {
 					if (item.getGuessPass() == 1) {
@@ -595,7 +596,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			@BindView(R.id.location)
 			TextView mLocation;
 			@BindView(R.id.borrowMoneyContent)
-			CollapsedTextView mBorrowMoneyContent;
+			CollapsedTextLayout mBorrowMoneyContent;
 			@BindView(R.id.needAmount)
 			TextView mNeedAmount;
 			@BindView(R.id.borrowDeadline)
@@ -643,7 +644,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mBorrowMoneyContent.setVisibility(View.GONE);
 				} else {
 					mBorrowMoneyContent.setVisibility(View.VISIBLE);
-					mBorrowMoneyContent.setShowText(item.getContent().trim());
+					mBorrowMoneyContent.setContentText(item.getContent().trim());
 				}
 
 				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
@@ -651,7 +652,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
 
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-				if (TextUtils.isEmpty(item.getLand())) {
+				if (TextUtils.isEmpty(item.getLocation())) {
 					mLocation.setText(R.string.no_location_information);
 				} else {
 					mLocation.setText(item.getLocation());

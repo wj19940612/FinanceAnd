@@ -58,7 +58,8 @@ public class ShareDialogFragment extends DialogFragment {
 
     public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareUrl) {
         mActivity = activity;
-        mShareDescription = mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
+        mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
+        mShareDescription = activity.getString(R.string.share_desc);
         mShareUrl = shareUrl;
         return this;
     }
@@ -112,23 +113,29 @@ public class ShareDialogFragment extends DialogFragment {
     }
 
     private void shareToPlatform(SHARE_MEDIA platform) {
-        UMWeb mWeb = new UMWeb(mShareUrl);
-        mWeb.setTitle(mShareTitle);
-
-        if (platform == SHARE_MEDIA.SINA) {
-            mWeb.setDescription(mShareDescription + mShareUrl);
-        } else {
+        if (platform != SHARE_MEDIA.SINA) {
+            UMWeb mWeb = new UMWeb(mShareUrl);
+            mWeb.setTitle(mShareTitle);
             mWeb.setDescription(mShareDescription);
+            UMImage thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
+            mWeb.setThumb(thumb);
+
+            new ShareAction(mActivity)
+                    .withMedia(mWeb)
+                    .setPlatform(platform)
+                    .setCallback(mUMShareListener)
+                    .share();
+        } else {
+            String text = mShareTitle + mShareUrl;
+            UMImage image = new UMImage(mActivity, R.drawable.ic_share_logo);
+            image.setThumb(new UMImage(mActivity, R.drawable.ic_share_logo));
+            new ShareAction(mActivity)
+                    .withText(text)
+                    .withMedia(image)
+                    .setPlatform(platform)
+                    .setCallback(mUMShareListener)
+                    .share();
         }
-
-        UMImage thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
-        mWeb.setThumb(thumb);
-
-        new ShareAction(mActivity)
-                .withMedia(mWeb)
-                .setPlatform(platform)
-                .setCallback(mUMShareListener)
-                .share();
     }
 
 

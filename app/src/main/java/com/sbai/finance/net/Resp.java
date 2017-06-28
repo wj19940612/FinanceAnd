@@ -16,7 +16,9 @@ public class Resp<T> {
     // 自选重复添加
     public static final int CODE_REPEAT_ADD = 701;
 
-    //闪电下单已失效
+    //聚宝盆兑换资金不足
+    public static final int CODE_EXCHANGE_FUND_IS_NOT_ENOUGH = 2201;
+
     public static final int CODE_LIGHTNING_ORDER_INVALID = 703;
 
     private int code;
@@ -50,6 +52,12 @@ public class Resp<T> {
 
     public boolean isTokenExpired() {
         return code == 503;
+    }
+
+    //兑换项目不存在 2204
+    // 兑换项目已修改 2205
+    public boolean isExchangeProductHasChange() {
+        return getCode() == 2204 || getCode() == 2205;
     }
 
     /**

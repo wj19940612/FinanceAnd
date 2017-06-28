@@ -39,7 +39,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.CollapsedTextView;
+import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
@@ -244,7 +244,7 @@ public class BorrowMineFragment extends BaseFragment implements
                 }
                 for (int i = 0; i < mBorrowMoneyAdapter.getCount(); i++) {
                     BorrowMine item = mBorrowMoneyAdapter.getItem(i);
-                    if (item.getId()==dataId&&(dataStatus==BorrowDetail.STATUS_END_CANCEL||dataStatus==BorrowDetail.STATUS_END_REPAY)){
+                    if (item.getId()==dataId){
                         item.setStatus(dataStatus);
                         mBorrowMoneyAdapter.notifyDataSetChanged();
                         break;
@@ -295,7 +295,7 @@ public class BorrowMineFragment extends BaseFragment implements
             @BindView(R.id.status)
             TextView mStatus;
             @BindView(R.id.borrowMoneyContent)
-            CollapsedTextView mBorrowMoneyContent;
+            CollapsedTextLayout mBorrowMoneyContent;
             @BindView(R.id.borrowingIcon)
             ImageView mBorrowingIcon;
             @BindView(R.id.needAmount)
@@ -374,7 +374,8 @@ public class BorrowMineFragment extends BaseFragment implements
                     mBorrowMoneyContent.setVisibility(View.GONE);
                 }else{
                     mBorrowMoneyContent.setVisibility(View.VISIBLE);
-                    mBorrowMoneyContent.setShowText(item.getContent().trim());
+
+                    mBorrowMoneyContent.setContentText(item.getContent().trim());
                 }
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));

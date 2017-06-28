@@ -18,6 +18,8 @@
         app:titleText="@string/news"
         app:titleTextColor="@color/blackAssist"/>
 
+    <include layout="@layout/split_line_grey_light"/>
+
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/customSwipeRefreshLayout"
         android:layout_width="match_parent"

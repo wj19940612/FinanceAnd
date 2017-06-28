@@ -232,7 +232,7 @@ public class HomeFragment extends BaseFragment {
                     }
                 }).fire();
 
-        //获取最新事件标题  // TODO: 2017/4/27 服务器返回数据问题 后期做修改
+        //获取最新事件标题  
         Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
