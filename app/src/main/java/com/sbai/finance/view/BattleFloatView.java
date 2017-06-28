@@ -273,10 +273,10 @@ public class BattleFloatView extends RelativeLayout {
      */
     public BattleFloatView setDeadline(int gameStatus, int endTime) {
         if (gameStatus == 3) {
-            mDeadline.setText("已结束");
+            mDeadline.setText(getContext().getString(R.string.end));
         } else if (gameStatus == 2) {
-            mDeadline.setText("剩余" + DateUtil.getCountdownTime(endTime, 0));
-        }else if (gameStatus == 1){
+            mDeadline.setText(getContext().getString(R.string.remaining_time,DateUtil.getCountdownTime(endTime, 0)));
+        } else if (gameStatus == 1) {
             mDeadline.setText(DateUtil.getCountdownTime(endTime, 0));
         }
         return this;
@@ -294,8 +294,8 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(String.valueOf(myPraiseNumber) + "赞");
-            mUserPraise.setText(String.valueOf(fighterPraiseNumber) + "赞");
+            mMyPraise.setText(getContext().getString(R.string.support,String.valueOf(myPraiseCount)));
+            mUserPraise.setText(getContext().getString(R.string.support,String.valueOf(fighterPraiseNumber)));
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
