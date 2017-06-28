@@ -31,6 +31,8 @@ import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
+import com.sbai.finance.websocket.cmd.SubscribeBattle;
+import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 
 import java.util.List;
 
@@ -142,7 +144,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     });
 
             startScheduleJob(1000);
-            requestSubscribeBattle();
 
         } else {
             //初始化
@@ -162,6 +163,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
 
         initPushReceiveListener();
+        requestSubscribeBattle();
     }
 
     private void initPushReceiveListener() {
@@ -186,8 +188,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         break;
                     case QUICK_MATCH_SUCCESS:
                         //和对战有人加入逻辑一样 多了个匹配头像
-                        startGame(objectWSPush);
-                        mStartMatchDialogFragment.setMatchSuccess(mVersusGaming.getAgainstUserPortrait());
                         break;
                     case QUICK_MATCH_TIMEOUT:
                         //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
@@ -261,29 +261,32 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestSubscribeBattle() {
-        Client.requestSubscribeBattle(mVersusGaming.getId())
-                .setTag(TAG)
-                .setCallback(new Callback<Resp>() {
-                    @Override
-                    protected void onRespSuccess(Resp resp) {
+        WSClient.get().send(new SubscribeBattle(mVersusGaming.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
 
-                    }
-                })
-                .fire();
+            }
+
+            @Override
+            public void onError(int code) {
+            }
+
+        });
     }
 
     private void requestUnSubscribeBattle() {
         if (mVersusGaming.getGameStatus() == GAME_STATUS_OBESERVE) {
-            Client.requestUnsubscribeBattle(mVersusGaming.getId())
-                    .setTag(TAG)
-                    .setCallback(new Callback<Resp>() {
+            WSClient.get().send(new UnSubscribeBattle(mVersusGaming.getId()), new WSCallback<WSMessage<Resp>>() {
+                @Override
+                public void onResponse(WSMessage<Resp> respWSMessage) {
 
-                        @Override
-                        protected void onRespSuccess(Resp resp) {
+                }
 
-                        }
-                    })
-                    .fire();
+                @Override
+                public void onError(int code) {
+                }
+
+            });
         }
     }
 
@@ -328,7 +331,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onMatchButtonClick() {
-        showMatchDialog();
         requestQuickSearchForLaunch(QuickMatchLauncher.TYPE_QUICK_MATCH);
     }
 
@@ -380,12 +382,11 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         WSClient.get().send(new QuickMatchLauncher(type, mVersusGaming.getId()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
-
+                showMatchDialog();
             }
 
             @Override
             public void onError(int code) {
-
             }
 
         });

@@ -33,6 +33,8 @@ public class WSMessage<T> extends WSRequest {
         super(false);
         this.code = code;
         this.content = content;
+        this.timestamp = SysTime.getSysTime().getSystemTimestamp();
+        this.uuid = createUUID();
     }
 
     private String createUUID() {
