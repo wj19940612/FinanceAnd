@@ -38,6 +38,7 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CANCELING;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.versus.VersusGaming.GAME_STATUS_STARTED;
@@ -175,8 +176,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             switch (versusGamingWSPush.getContent().getType()) {
                 case BATTLE_JOINED:
                     //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                    dismissAllDialog();
-                    startGame(versusGamingWSPush);
+                    if (mGameStatus == GAME_STATUS_CANCELING){
+                         ToastUtil.curt(getString(R.string.cancel_failed_game_start));
+                         startGame(versusGamingWSPush);
+                    }else {
+                        dismissAllDialog();
+                        startGame(versusGamingWSPush);
+                    }
                     break;
                 case BATTLE_OVER:
                     //对战结束 一个弹窗
@@ -312,7 +318,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     public void updateBattleInfo(double createProfit, double againstProfit) {
         double leftProfit = mBattleInfo.getLaunchUnwindScore() + createProfit;
         double rightProfit = mBattleInfo.getAgainstUnwindScore() + againstProfit;
-        mBattleView.setProgress(leftProfit, rightProfit, false);
+        boolean isInviting = mGameStatus == GAME_STATUS_CREATED;
+        mBattleView.setProgress(leftProfit, rightProfit, isInviting);
     }
 
     private void requestAddBattlePraise(final int userId) {
@@ -474,6 +481,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onCancelButtonClick() {
+        mGameStatus = GAME_STATUS_CANCELING;
         showCancelBattleDialog();
     }
 
@@ -528,7 +536,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             showDeadlineTime();
         }
         if (mGameStatus == GAME_STATUS_STARTED) {
-           showDeadlineTime();
+            showDeadlineTime();
         }
     }
 
