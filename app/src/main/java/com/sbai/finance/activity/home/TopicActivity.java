@@ -82,7 +82,7 @@ public class TopicActivity extends BaseActivity {
                 mListView.smoothScrollToPosition(0);
             }
         });
-        mTopicTitle.setText("机 的的的的的的的的的的的的 的的的的的的的 的的的是是是的是的的是是是的的的的的的的的的的的的机 的的的的的的的 的的的是是是的是的的是是是的的的的的的的的的的的的哦哦哦");
+        mTopicTitle.setText(mTopic.getIntroduction());
         ViewTreeObserver viewTreeObserver = mTopicTitle.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
