@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
@@ -80,7 +83,28 @@ public class TopicActivity extends BaseActivity {
                 mListView.smoothScrollToPosition(0);
             }
         });
-        mTopicTitle.setText(mTopic.getIntroduction());
+        mTopicTitle.setText("机 的的的的的的的的的的的的 的的的的的的的 的的的是是是的是的的是是是的的的的的的的的的的的的机 的的的的的的的 的的的是是是的是的的是是是的的的的的的的的的的的的哦哦哦");
+        ViewTreeObserver viewTreeObserver = mTopicTitle.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                TextPaint textPaint = mTopicTitle.getPaint();
+                float width = textPaint.measureText(mTopicTitle.getText().toString());
+                /* 计算行数 */
+                //获取显示宽度
+                int showWidth = mTopicTitle.getMeasuredWidth() - mTopicTitle.getPaddingRight() - mTopicTitle.getPaddingLeft();
+                int lines = (int) (width / showWidth);
+                if (width % showWidth != 0) {
+                    lines++;
+                }
+                if (lines <= 3) {
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTop.getLayoutParams();
+                    params.height = (int) Display.dp2Px(180, getResources());
+                    mTop.setLayoutParams(params);
+                    mTop.setBackgroundResource(R.drawable.bg_subject_small);
+                }
+            }
+        });
 
         mTopicListAdapter = new ListAdapter(this);
         mListView.setEmptyView(mEmpty);
