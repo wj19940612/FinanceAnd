@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -178,6 +179,7 @@ public class BattleListActivity extends BaseActivity implements
         Glide.with(getActivity())
                 .load(R.drawable.versus_banner)
                 .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .priority(Priority.HIGH)
                 .into(versusBanner);
         seeVersusRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,16 +319,19 @@ public class BattleListActivity extends BaseActivity implements
 
     private void requestJoinVersus(final VersusGaming data) {
         Client.joinVersus(data.getId(), VersusGaming.SOURCE_HALL).setTag(TAG)
-                .setCallback(new ApiCallback<Resp>() {
+                .setCallback(new ApiCallback<Resp<VersusGaming>>() {
                     @Override
-                    public void onSuccess(Resp resp) {
+                    public void onSuccess(Resp<VersusGaming> resp) {
                         if (resp.isSuccess()) {
-                            data.setPageType(VersusGaming.PAGE_VERSUS);
-                            data.setGameStatus(VersusGaming.GAME_STATUS_STARTED);
-                            data.setAgainstUser(LocalUser.getUser().getUserInfo().getId());
-                            data.setAgainstUserName(LocalUser.getUser().getUserInfo().getUserName());
-                            data.setAgainstUserPortrait(LocalUser.getUser().getUserInfo().getUserPortrait());
-                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).executeForResult(CANCEL_BATTLE);
+                            VersusGaming versusGaming = resp.getData();
+                            if (versusGaming!=null){
+                                versusGaming.setPageType(VersusGaming.PAGE_VERSUS);
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, versusGaming)
+                                        .executeForResult(CANCEL_BATTLE);
+                            }else{
+                                requestBattleInfo(data);
+                            }
                         } else {
                             showJoinVersusFailureDialog(resp.getMsg(), resp.getCode());
                         }
@@ -337,7 +342,18 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }).fireFree();
     }
-
+   private void requestBattleInfo(VersusGaming item){
+       Client.getBattleInfo(item.getId(),item.getBatchCode()).setTag(TAG)
+               .setCallback(new Callback2D<Resp<VersusGaming>,VersusGaming>() {
+                   @Override
+                   protected void onRespSuccessData(VersusGaming data) {
+                       data.setPageType(VersusGaming.PAGE_VERSUS);
+                       Launcher.with(getActivity(), FutureBattleActivity.class)
+                               .putExtra(Launcher.EX_PAYLOAD, data)
+                               .executeForResult(CANCEL_BATTLE);
+                   }
+               }).fire();
+   }
     private void requestMatchVersus(final int type, String refuseId) {
         String refuseIds = "";
         if (refuseId.isEmpty()) {
@@ -958,6 +974,7 @@ public class BattleListActivity extends BaseActivity implements
                         mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
+                        mAgainstAvatar.setImageDrawable(null);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         mAgainstAvatar.setClickable(true);
                         mAgainstName.setText(context.getString(R.string.join_versus));
