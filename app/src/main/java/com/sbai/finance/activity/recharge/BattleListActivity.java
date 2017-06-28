@@ -56,13 +56,13 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.httplib.ApiCallback;
 import com.sbai.finance.websocket.WSClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
+import com.sbai.httplib.ApiCallback;
 
 import java.util.HashSet;
 import java.util.List;
@@ -90,15 +90,16 @@ public class BattleListActivity extends BaseActivity implements
     TextView mCurrentVersus;
     private ImageView mAvatar;
     private TextView mIntegral;
-    private TextView mWining;
+    private TextView mIngot;
     private TextView mRecharge;
     private VersusListAdapter mVersusListAdapter;
     private Long mLocation;
-    private VersusBroadcastReceiver mVersusBroadcastReceiver;
-    private LocalBroadcastManager mLocalBroadcastManager;
+    private LoginBroadcastReceiver mLoginBroadcastReceiver;
+
     private HashSet<Integer> mSet;
     private VersusGaming mMyCurrentGame;
     private StartMatchDialogFragment mStartMatchDialogFragment;
+
     private SmartDialog mJoinDialog;
     private SmartDialog mJoinFailureDialog;
     private SmartDialog mAskMatchDialog;
@@ -127,23 +128,33 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+        initTitleBar();
+        initListHeaderAndFooter();
+        initListView();
 
-        initListHeaderAndFoot();
-        initCustomView();
-        initView();
+        initLoginReceiver();
         updateAvatar();
         requestVersusData();
 
         WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         scrollToTop(mTitleBar, mListView);
+
     }
 
-    private void initCustomView() {
-        View customView = mTitleBar.getCustomView();
-        mAvatar = (ImageView) customView.findViewById(R.id.avatar);
-        mIntegral = (TextView) customView.findViewById(R.id.integral);
-        mWining = (TextView) customView.findViewById(R.id.wining);
-        mRecharge = (TextView) customView.findViewById(R.id.recharge);
+    private void initLoginReceiver() {
+        mLoginBroadcastReceiver = new LoginBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mLoginBroadcastReceiver, intentFilter);
+    }
+
+    private void initTitleBar() {
+        View view = mTitleBar.getCustomView();
+        mAvatar = (ImageView) view.findViewById(R.id.avatar);
+        mIntegral = (TextView) view.findViewById(R.id.integral);
+        mIngot = (TextView) view.findViewById(R.id.ingot);
+        mRecharge = (TextView) view.findViewById(R.id.recharge);
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,30 +177,30 @@ public class BattleListActivity extends BaseActivity implements
                 }
             }
         });
-
     }
 
-    private void initListHeaderAndFoot() {
-        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.layout_future_versus_header, null);
-        ImageView versusBanner = (ImageView) header.findViewById(R.id.versusBanner);
-        TextView seeVersusRecord = (TextView) header.findViewById(R.id.seeVersusRecord);
-        TextView versusRule = (TextView) header.findViewById(R.id.versusRule);
+    private void initListHeaderAndFooter() {
+        FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.list_header_battle, null);
+        ImageView battleBanner = (ImageView) header.findViewById(R.id.battleBanner);
+        TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
+        TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
         Glide.with(getActivity())
-                .load(R.drawable.versus_banner)
+                .load(R.drawable.battle_banner)
                 .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .priority(Priority.HIGH)
-                .into(versusBanner);
-        seeVersusRecord.setOnClickListener(new View.OnClickListener() {
+                .into(battleBanner);
+        checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
-
             }
         });
-        versusRule.setOnClickListener(new View.OnClickListener() {
+        battleRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BindBankHintDialogFragment.newInstance(R.string.versus_rule_title,  R.string.versus_rule_tip).show(getSupportFragmentManager());
+                BindBankHintDialogFragment
+                        .newInstance(R.string.versus_rule_title, R.string.versus_rule_tip)
+                        .show(getSupportFragmentManager());
             }
         });
         mListView.addHeaderView(header);
@@ -203,14 +214,9 @@ public class BattleListActivity extends BaseActivity implements
         mListView.addFooterView(footParent);
     }
 
-    private void initView() {
+    private void initListView() {
         mSet = new HashSet<>();
         mRefusedIds = new StringBuilder();
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-        mVersusBroadcastReceiver = new VersusBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
-        mLocalBroadcastManager.registerReceiver(mVersusBroadcastReceiver, intentFilter);
         mVersusListAdapter = new VersusListAdapter(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
@@ -242,8 +248,7 @@ public class BattleListActivity extends BaseActivity implements
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
                 }
-            }
-        });
+        }});
     }
 
     @Override
@@ -256,7 +261,7 @@ public class BattleListActivity extends BaseActivity implements
             mCurrentVersus.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
             mIntegral.setText("0.00");
-            mWining.setText("0");
+            mIngot.setText("0");
         }
         startScheduleJob(5 * 1000);
     }
@@ -270,7 +275,7 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        requestVisibleVersusData();
+        requestVisibleBattleData();
     }
 
     private void requestVersusData() {
@@ -316,8 +321,10 @@ public class BattleListActivity extends BaseActivity implements
                             if (versusGaming != null) {
                                 //更新列表对战信息
                                 data.setGameStatus(versusGaming.getGameStatus());
-                               
-
+                                data.setAgainstUser(versusGaming.getAgainstUser());
+                                data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
+                                data.setAgainstUserName(versusGaming.getAgainstUserName());
+                                
                                 versusGaming.setPageType(VersusGaming.PAGE_VERSUS);
                                 Launcher.with(getActivity(), FutureBattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, versusGaming)
@@ -422,7 +429,7 @@ public class BattleListActivity extends BaseActivity implements
                 }).fireFree();
     }
 
-    private void requestVisibleVersusData() {
+    private void requestVisibleBattleData() {
         if (mListView != null && mVersusListAdapter != null) {
             StringBuilder stringBuilder = new StringBuilder();
             int first = mListView.getFirstVisiblePosition();
@@ -437,12 +444,12 @@ public class BattleListActivity extends BaseActivity implements
             }
             if (stringBuilder.length() > 0) {
                 stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-                requestVisibleVersusData(stringBuilder.toString());
+                requestVisibleBattleData(stringBuilder.toString());
             }
         }
     }
 
-    private void requestVisibleVersusData(String battleIds) {
+    private void requestVisibleBattleData(String battleIds) {
         Client.getBattleGamingData(battleIds).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<VersusGaming>>, List<VersusGaming>>() {
                     @Override
@@ -502,7 +509,7 @@ public class BattleListActivity extends BaseActivity implements
 
     private void updateUserFund(UserFundInfoModel data) {
         mIntegral.setText(String.valueOf(data.getCredit()));
-        mWining.setText(data.getYuanbao() + "个");
+        mIngot.setText(data.getYuanbao() + "个");
     }
 
 
@@ -799,7 +806,8 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocalBroadcastManager.unregisterReceiver(mVersusBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity())
+                .unregisterReceiver(mLoginBroadcastReceiver);
         WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
@@ -869,7 +877,7 @@ public class BattleListActivity extends BaseActivity implements
         }
     }
 
-    class VersusBroadcastReceiver extends BroadcastReceiver {
+    class LoginBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() == LoginActivity.LOGIN_SUCCESS_ACTION) {
