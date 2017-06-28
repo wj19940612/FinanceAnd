@@ -32,7 +32,7 @@ public class WSClient implements WSAbsClient {
     private Queue<WSMessage> mPendingList;
     private Queue<WSMessage> mExecutedList;
     private Status mStatus;
-    private List<OnPushReceiveListener>mOnPushReceiveListeners;
+    private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
 
     enum Status {
