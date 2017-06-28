@@ -182,7 +182,7 @@ public class BankCardPayActivity extends BaseActivity {
     };
 
     private boolean checkSubmitEnable() {
-        return !TextUtils.isEmpty(mAuthCode.getText().toString().trim()) && mAgreeProtocol.isChecked() && mFreezeObtainAuthCode;
+        return !TextUtils.isEmpty(mAuthCode.getText().toString().trim()) && mAgreeProtocol.isChecked() ;
     }
 
     @Override
