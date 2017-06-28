@@ -626,7 +626,7 @@
     <string name="exchange_fail">兑换失败</string>
     <string name="buy_fail">购买失败</string>
     <string name="coin_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
-    <string name="money_is_not_enough">现金余额不足，请充值或降低兑换数量</string>
+    <string name="money_is_not_enough">现金余额不足，请充值或降低购买数量</string>
     <string name="buy_product_is_change">购买项目已修改</string>
     <string name="exchange_product_is_change">兑换项目已修改</string>
     <string name="is_not_set_safety_pass">未设置安全密码</string>
