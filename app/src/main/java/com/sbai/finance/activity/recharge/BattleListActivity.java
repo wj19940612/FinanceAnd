@@ -74,7 +74,7 @@ import butterknife.OnClick;
 
 public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
-
+    public static final int CANCEL_BATTLE=250;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
@@ -101,6 +101,10 @@ public class BattleListActivity extends BaseActivity implements
     private HashSet<Integer> mSet;
     private VersusGaming mMyCurrentGame;
     private StartMatchDialogFragment mStartMatchDialogFragment;
+    private SmartDialog mJoinDialog;
+    private SmartDialog mJoinFailureDialog;
+    private SmartDialog mAskMatchDialog;
+    private SmartDialog mCancelMatchDialog;
     private StringBuilder mRefusedIds;
 
     private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Object>>() {
@@ -213,7 +217,7 @@ public class BattleListActivity extends BaseActivity implements
                             item.setPageType(VersusGaming.PAGE_VERSUS);
                             Launcher.with(getActivity(), FutureBattleActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, item)
-                                    .execute();
+                                    .executeForResult(CANCEL_BATTLE);
                         } else {
                             showJoinVersusDialog(item);
                         }
@@ -233,13 +237,13 @@ public class BattleListActivity extends BaseActivity implements
                         if (item != null) {
                             if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
                                 item.setPageType(VersusGaming.PAGE_RECORD);
-                                Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                                Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).executeForResult(CANCEL_BATTLE);
                             } else if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED
                                     && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
                                 showJoinVersusDialog(item);
                             } else {
                                 item.setPageType(VersusGaming.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                                Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).executeForResult(CANCEL_BATTLE);
                             }
                         }
                     } else {
@@ -263,7 +267,7 @@ public class BattleListActivity extends BaseActivity implements
             mIntegral.setText("0.00");
             mWining.setText("0");
         }
-        startScheduleJob(5 * 1000);
+        startScheduleJob(10 * 1000);
     }
 
     @Override
@@ -322,7 +326,7 @@ public class BattleListActivity extends BaseActivity implements
                             data.setAgainstUser(LocalUser.getUser().getUserInfo().getId());
                             data.setAgainstUserName(LocalUser.getUser().getUserInfo().getUserName());
                             data.setAgainstUserPortrait(LocalUser.getUser().getUserInfo().getUserPortrait());
-                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).execute();
+                            Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, data).executeForResult(CANCEL_BATTLE);
                         } else {
                             showJoinVersusFailureDialog(resp.getMsg(), resp.getCode());
                         }
@@ -413,7 +417,7 @@ public class BattleListActivity extends BaseActivity implements
             for (int i = first; i < last; i++) {
                 if (i >= 0) {
                     VersusGaming item = mVersusListAdapter.getItem(i);
-                    if (item != null) {
+                    if (item != null&&item.getGameStatus()!=VersusGaming.GAME_STATUS_END) {
                         stringBuilder.append(item.getId()).append(",");
                     }
                 }
@@ -488,11 +492,6 @@ public class BattleListActivity extends BaseActivity implements
         mWining.setText(data.getYuanbao() + "个");
     }
 
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-
-    }
 
     private void updateAvatar() {
         if (LocalUser.getUser().isLogin()) {
@@ -546,7 +545,7 @@ public class BattleListActivity extends BaseActivity implements
                     mMyCurrentGame.setPageType(VersusGaming.PAGE_VERSUS);
                     Launcher.with(getActivity(), FutureBattleActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mMyCurrentGame)
-                            .execute();
+                            .executeForResult(CANCEL_BATTLE);
                 }
                 break;
             default:
@@ -567,8 +566,10 @@ public class BattleListActivity extends BaseActivity implements
                 reward = item.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
-        SmartDialog.with(getActivity(), getString(R.string.join_versus_tip, reward), getString(R.string.join_versus_title))
-
+        if (mJoinDialog==null){
+            mJoinDialog=SmartDialog.with(getActivity());
+        }
+          mJoinDialog.setMessage(getString(R.string.join_versus_tip, reward))
                 .setMessageTextSize(15)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
@@ -577,6 +578,7 @@ public class BattleListActivity extends BaseActivity implements
                         requestJoinVersus(item);
                     }
                 })
+                .setTitle(getString(R.string.join_versus_title))
                 .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
@@ -586,7 +588,8 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showJoinVersusFailureDialog(String msg, final int type) {
-        int positiveMsg;
+        Integer positiveMsg;
+        Integer negativeMsg=R.string.cancel;
         //存在还没有结束的游戏
         if (type == VersusGaming.CODE_EXIT_VERSUS) {
             msg = getString(R.string.exit_versus);
@@ -597,8 +600,12 @@ public class BattleListActivity extends BaseActivity implements
         }else {
             msg = getString(R.string.invite_invalid);
             positiveMsg =R.string.ok;
+            negativeMsg = null;
         }
-        SmartDialog.with(getActivity(), msg, getString(R.string.join_versus_failure_title))
+        if (mJoinFailureDialog==null){
+            mJoinFailureDialog = SmartDialog.with(getActivity());
+        }
+        mJoinFailureDialog.setMessage(msg)
                 .setMessageTextSize(15)
                 .setPositive(positiveMsg, new SmartDialog.OnClickListener() {
                     @Override
@@ -616,30 +623,33 @@ public class BattleListActivity extends BaseActivity implements
                         }
                     }
                 })
+                .setTitle(getString(R.string.join_versus_failure_title))
                 .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .setNegative(R.string.cancel)
+                .setNegative(negativeMsg)
                 .show();
 
     }
 
     private void showAskMatchDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.match_versus_tip), getString(R.string.match_versus_title))
+        if (mAskMatchDialog==null){
+            mAskMatchDialog =SmartDialog.with(getActivity(), getString(R.string.match_versus_tip), getString(R.string.match_versus_title));
+            mAskMatchDialog
                 .setMessageTextSize(15)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         requestMatchVersusOfSocket("");
-
                     }
                 })
                 .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .setNegative(R.string.cancel)
-                .show();
+                .setNegative(R.string.cancel);
+        }
+        mAskMatchDialog.show();
 
     }
 
@@ -678,34 +688,34 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showCancelMatchDialog() {
-        SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
-                .setMessageTextSize(15)
-                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        requestMatchVersus(VersusGaming.MATCH_CANCEL, "");
-                    }
-                })
-                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        showMatchDialog();
-                    }
-                })
-                .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                .setCancelableOnTouchOutside(false)
-                .show();
-
+        if (mCancelMatchDialog==null){
+            mCancelMatchDialog= SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching));
+            mCancelMatchDialog.setMessageTextSize(15)
+                    .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            requestMatchVersus(VersusGaming.MATCH_CANCEL, "");
+                        }
+                    })
+                    .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            showMatchDialog();
+                        }
+                    })
+                    .setTitleMaxLines(1)
+                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                    .setCancelableOnTouchOutside(false)
+                    .show();
+        }
+        mCancelMatchDialog.show();
     }
 
     private void showMatchTimeoutDialog() {
-        if (mStartMatchDialogFragment != null) {
-            mStartMatchDialogFragment.dismiss();
-        }
+        dismissAllDialog();
         SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
                 .setMessageTextSize(15)
                 .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
@@ -727,11 +737,8 @@ public class BattleListActivity extends BaseActivity implements
                 .setCancelableOnTouchOutside(false)
                 .show();
     }
-
     private void showMatchSuccessDialog(final VersusGaming data) {
-        if (mStartMatchDialogFragment != null) {
-            mStartMatchDialogFragment.dismiss();
-        }
+        dismissAllDialog();
         if (data == null) return;
         String reward = "";
         switch (data.getCoinType()) {
@@ -783,6 +790,27 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==CANCEL_BATTLE&&resultCode==RESULT_OK){
+            int gameStatus = data.getIntExtra(Launcher.EX_PAYLOAD,-1);
+            int id = data.getIntExtra(Launcher.EX_PAYLOAD_1,-1);
+            if (id!=-1&&gameStatus==VersusGaming.GAME_STATUS_CANCELED){
+                if (mVersusListAdapter!=null){
+                    for (int i=0;i<mVersusListAdapter.getCount();i++){
+                         VersusGaming item = mVersusListAdapter.getItem(i);
+                        if (item!=null){
+                            mVersusListAdapter.remove(item);
+                            mVersusListAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void onLoadMore() {
         requestVersusData();
     }
@@ -799,7 +827,23 @@ public class BattleListActivity extends BaseActivity implements
         mLocation = null;
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
-
+    private void dismissAllDialog(){
+       if (mJoinDialog!=null){
+           mJoinDialog.dismiss();
+       }
+        if (mJoinFailureDialog!=null){
+            mJoinFailureDialog.dismiss();
+        }
+        if (mAskMatchDialog!=null){
+            mAskMatchDialog.dismiss();
+        }
+        if (mCancelMatchDialog!=null){
+            mCancelMatchDialog.dismiss();
+        }
+        if (mStartMatchDialogFragment != null) {
+            mStartMatchDialogFragment.dismiss();
+        }
+    }
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
