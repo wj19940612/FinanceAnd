@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -267,6 +268,7 @@ public class RechargeActivity extends BaseActivity {
         } else {
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
+                    .setRetryPolicy(new DefaultRetryPolicy(15000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {

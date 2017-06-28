@@ -296,14 +296,14 @@ public class ExchangeDetailFragment extends BaseFragment {
                 mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getDetailFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
                 mPayWay.setText(detail.getRemark());
                 if (detail.isVcoin()) {
-                    if (detail.getMoney() < 0) {
-                        mMoney.setText(context.getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
+                    if (detail.getFlowType() < 0) {
+                        mMoney.setText(context.getString(R.string.minus_coin, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
                     } else {
                         mMoney.setText(context.getString(R.string.add_coin, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
                     }
                 } else {
-                    if (detail.getMoney() < 0) {
-                        mMoney.setText(context.getString(R.string.integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
+                    if (detail.getFlowType() < 0) {
+                        mMoney.setText(context.getString(R.string.minus_integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
                     } else {
                         mMoney.setText(context.getString(R.string.add_integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
                     }

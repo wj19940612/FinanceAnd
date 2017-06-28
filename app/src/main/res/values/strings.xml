@@ -608,8 +608,10 @@
     <string name="exchange_integrate">兑换积分</string>
     <string name="coin_number">%1$s  元宝</string>
     <string name="add_coin">+%1$s  元宝</string>
+    <string name="minus_coin">-%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
     <string name="add_integrate_number">+%1$s  积分</string>
+    <string name="minus_integrate_number">-%1$s  积分</string>
     <string name="check_details">查看明细></string>
     <string name="old_price">原价: ￥%1$s</string>
     <string name="exchange">兑换</string>

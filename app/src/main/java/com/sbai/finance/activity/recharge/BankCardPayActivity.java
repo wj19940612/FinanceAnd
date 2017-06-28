@@ -236,7 +236,7 @@ public class BankCardPayActivity extends BaseActivity {
         String authCode = mAuthCode.getText().toString().trim();
         if (mPaymentPath != null) {
             Client.confirmBankPay(mPaymentPath.getMerchantOrderId(), authCode)
-                    .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setRetryPolicy(new DefaultRetryPolicy(15000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
