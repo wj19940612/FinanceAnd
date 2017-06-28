@@ -105,7 +105,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                         mCanWithDrawMoney.setText(getString(R.string.can_with_draw_money, FinanceUtil.formatWithScale(mMoney)));
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void requestUserBankInfo() {
