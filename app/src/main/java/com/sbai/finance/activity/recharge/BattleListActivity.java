@@ -65,6 +65,7 @@ import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,9 +114,9 @@ public class BattleListActivity extends BaseActivity implements
         updateAvatar();
         requestVersusData();
 
-        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<VersusGaming>>() {
+        WSClient.get().setOnPushReceiveListener(new OnPushReceiveListener<WSPush<Object>>() {
             @Override
-            public void onPushReceive(final WSPush<VersusGaming> versusGamingWSPush) {
+            public void onPushReceive(final WSPush<Object> versusGamingWSPush) {
                 switch (versusGamingWSPush.getContent().getType()){
                     case PushCode.QUICK_MATCH_TIMEOUT:
                         showMatchTimeoutDialog();
@@ -560,6 +561,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        item.setPageType(VersusGaming.PAGE_VERSUS);
                         requestJoinVersus(item);
                     }
                 })
