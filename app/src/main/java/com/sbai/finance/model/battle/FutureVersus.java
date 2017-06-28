@@ -1,4 +1,4 @@
-package com.sbai.finance.model.versus;
+package com.sbai.finance.model.battle;
 
 import java.util.List;
 

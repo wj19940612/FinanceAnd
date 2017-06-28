@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.future;
+package com.sbai.finance.fragment.battle;
 
 import android.content.Context;
 import android.content.Intent;
