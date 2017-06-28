@@ -241,6 +241,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void startGame(WSPush<VersusGaming> objectWSPush) {
         mVersusGaming = (VersusGaming) objectWSPush.getContent().getData();
         mBattleView.initWithModel(mVersusGaming);
+        mBattleView.setProgress(0, 0, false);
         mFutureBattleFragment.showBattleTradeView();
         mGameStatus = GAME_STATUS_STARTED;
         startScheduleJob(1000);
