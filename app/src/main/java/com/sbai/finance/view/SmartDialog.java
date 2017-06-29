@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,15 +23,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 统一普通弹框
+ */
 public class SmartDialog {
 
     private TextView mTitle;
     private TextView mMessage;
     private TextView mNegative;
     private TextView mPosition;
-    private LinearLayout mDoubleButtons;
     private AppCompatImageView mIcon;
-//    TextView mSingleButton;
 
     private int mPositiveId = R.string.ok;
     private int mNegativeId = R.string.cancel;
@@ -40,9 +40,6 @@ public class SmartDialog {
     private OnClickListener mNegativeListener;
     private OnCancelListener mOnCancelListener;
     private OnDismissListener mDismissListener;
-
-    private boolean mIsDoubleButtons;
-    private boolean mHideNegativeButton;
 
     private String mMessageText;
     private String mTitleText;
@@ -55,14 +52,11 @@ public class SmartDialog {
     private Activity mActivity;
 
     private int mPositiveTextColor = Color.parseColor("#CD4A47");
-    private boolean mSingleButtonIsNeedBg;
-    private int mSingleButtonBg = R.drawable.btn_dialog_single;
     private int mMessageGravity = Gravity.CENTER_VERTICAL;
     private int mMessageTextSize = 14;
-    private int mTitleMargin = 15;
     private int mTitleTextColor = Color.parseColor("#222222");
     private int mMessageTextColor = Color.parseColor("#666666");
-    private int mNegativeVisable = View.VISIBLE;
+    private int mNegativeVisible = View.VISIBLE;
     private String mIconUrl;
     private int mIconResId = -1;
 
@@ -184,17 +178,6 @@ public class SmartDialog {
         return this;
     }
 
-    public SmartDialog setSingleButtonBg(int resBgId) {
-        mSingleButtonIsNeedBg = true;
-        mSingleButtonBg = resBgId;
-        return this;
-    }
-
-    public SmartDialog setSingleButtonBg(boolean singleButtonIsNeedBg) {
-        this.mSingleButtonIsNeedBg = singleButtonIsNeedBg;
-        return this;
-    }
-
     public SmartDialog setMessageGravity(int gravity) {
         mMessageGravity = gravity;
         return this;
@@ -203,19 +186,17 @@ public class SmartDialog {
     public SmartDialog setNegative(int textId, OnClickListener listener) {
         mNegativeId = textId;
         mNegativeListener = listener;
-        mIsDoubleButtons = true;
         return this;
     }
 
     public SmartDialog setNegative(int textId) {
         mNegativeId = textId;
-        mIsDoubleButtons = true;
         return this;
     }
 
 
-    public SmartDialog setNegativeVisable(int visable) {
-        mNegativeVisable = visable;
+    public SmartDialog setNegativeVisible(int visable) {
+        mNegativeVisible = visable;
         return this;
     }
     public SmartDialog setCancelableOnTouchOutside(boolean cancelable) {
@@ -259,7 +240,7 @@ public class SmartDialog {
         return this;
     }
 
-    public SmartDialog setIconUrl(int iconResId) {
+    public SmartDialog setIconRes(int iconResId) {
         mIconResId = iconResId;
         return this;
     }
@@ -274,18 +255,8 @@ public class SmartDialog {
         return this;
     }
 
-    public SmartDialog setTitleMaxLines(int maxLines) {
-//        mTitleTextMaxLines = maxLines;
-        return this;
-    }
-
     public SmartDialog setMessageMaxLines(int maxLines) {
         mMessageTextMaxLines = maxLines;
-        return this;
-    }
-
-    public SmartDialog setTitleMargin(int margin) {
-        mTitleMargin = margin;
         return this;
     }
 
@@ -310,7 +281,6 @@ public class SmartDialog {
 
     private void create() {
         mDialog = new AppCompatDialog(mActivity, R.style.DialogTheme_NoTitle);
-        mIsDoubleButtons = true;
         View view = LayoutInflater.from(mActivity).inflate(R.layout.dialog_smart, null);
         mDialog.setContentView(view);
         mDialog.setCanceledOnTouchOutside(mCancelableOnTouchOutside);
@@ -339,12 +309,10 @@ public class SmartDialog {
 
         mTitle = (TextView) view.findViewById(R.id.title);
         mMessage = (TextView) view.findViewById(R.id.message);
-        mDoubleButtons = (LinearLayout) view.findViewById(R.id.doubleButtons);
         mNegative = (TextView) view.findViewById(R.id.negative);
         mPosition = (TextView) view.findViewById(R.id.position);
         mIcon = (AppCompatImageView) view.findViewById(R.id.dialogIcon);
-//        mSingleButton = (TextView) view.findViewById(R.id.singleButton);
-        if (mMessageText == null || mMessageText.equalsIgnoreCase("")) {
+        if (TextUtils.isEmpty(mMessageText)) {
             mMessage.setVisibility(View.GONE);
         }
         mMessage.setText(mMessageText);
@@ -365,23 +333,14 @@ public class SmartDialog {
                     .bitmapTransform(new GlideCircleTransform(mActivity))
                     .into(mIcon);
         }
-//        mMessage.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mMessageTextSize, mActivity.getResources().getDisplayMetrics()));
+
         mMessage.setTextSize(mMessageTextSize);
         if (TextUtils.isEmpty(mTitleText)) {
             mTitle.setVisibility(View.GONE);
         } else {
-//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            int marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mTitleMargin, mActivity.getResources().getDisplayMetrics());
-//            if (mMessage.getVisibility() == View.GONE) {
-//                layoutParams.setMargins(0, marginTop, 0, marginTop);
-//            } else {
-//                layoutParams.setMargins(0, marginTop, 0, 0);
-//            }
-//            mTitle.setLayoutParams(layoutParams);
             mTitle.setText(mTitleText);
             mTitle.setTextColor(mTitleTextColor);
         }
-        mDoubleButtons.setVisibility(View.VISIBLE);
 
         mPosition.setText(mPositiveId);
         mPosition.setTextColor(mPositiveTextColor);
@@ -395,7 +354,7 @@ public class SmartDialog {
                 }
             }
         });
-        mNegative.setVisibility(mNegativeVisable);
+        mNegative.setVisibility(mNegativeVisible);
         mNegative.setText(mNegativeId);
         mNegative.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -407,26 +366,5 @@ public class SmartDialog {
                 }
             }
         });
-        if (mHideNegativeButton){
-            mNegative.setVisibility(View.GONE);
-        }
-//        } else {
-//            mSingleButton.setVisibility(View.VISIBLE);
-//            mDoubleButtons.setVisibility(View.GONE);
-//            if (mSingleButtonIsNeedBg) {
-//                mSingleButton.setBackgroundResource(mSingleButtonBg);
-//            }
-//            mSingleButton.setText(mPositiveId);
-//            mSingleButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (mPositiveListener != null) {
-//                        mPositiveListener.onClick(mDialog);
-//                    } else {
-//                        mDialog.dismiss();
-//                    }
-//                }
-//            });
-//        }
     }
 }

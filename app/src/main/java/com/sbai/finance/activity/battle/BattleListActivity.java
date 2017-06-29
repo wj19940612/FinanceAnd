@@ -72,7 +72,9 @@ import butterknife.OnClick;
 
 public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+
     public static final int CANCEL_BATTLE = 250;
+
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.titleBar)
@@ -87,6 +89,7 @@ public class BattleListActivity extends BaseActivity implements
     LinearLayout mCreateAndMatchArea;
     @BindView(R.id.currentVersus)
     TextView mCurrentVersus;
+
     private ImageView mAvatar;
     private TextView mIntegral;
     private TextView mIngot;
@@ -675,7 +678,7 @@ public class BattleListActivity extends BaseActivity implements
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setCancelableOnTouchOutside(false)
-                .setNegativeVisable(View.GONE)
+                .setNegativeVisible(View.GONE)
                 .show();
     }
 

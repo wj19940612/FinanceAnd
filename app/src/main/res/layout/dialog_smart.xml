@@ -6,7 +6,6 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +15,6 @@
         android:orientation="horizontal"
         android:paddingLeft="24dp"
         android:paddingTop="24dp">
-
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/dialogIcon"
@@ -54,7 +52,6 @@
         android:textColor="@color/unluckyText"
         tools:text="Message肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范fMessage肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范f"/>
 
-
     <LinearLayout
         android:id="@+id/doubleButtons"
         android:layout_width="match_parent"
@@ -83,7 +80,6 @@
             android:textColor="@color/redPrimary"
             android:textSize="14sp"/>
 
-
         <TextView
             android:id="@+id/position"
             android:layout_width="wrap_content"
@@ -96,5 +92,4 @@
             android:textColor="@color/redPrimary"
             android:textSize="14sp"/>
     </LinearLayout>
-
 </LinearLayout>
