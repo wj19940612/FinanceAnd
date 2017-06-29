@@ -386,7 +386,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onInviteButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.WAITTING_ROOM_INVITE_FRIENDS);
+        umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_INVITE_FRIENDS);
         showInviteDialog();
     }
 
@@ -406,7 +406,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onMatchButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.WAITTING_ROOM_FAST_MATCH);
+        umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
         requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
     }
 
@@ -525,7 +525,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onCancelButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.WAITTING_ROOM_CANCEL_BATTLE);
+        umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_CANCEL_BATTLE);
         mGameStatus = GAME_STATUS_CANCELING;
         showCancelBattleDialog();
     }

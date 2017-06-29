@@ -329,6 +329,7 @@ public class CreateFightActivity extends BaseActivity {
 				mCoinType = 3;
 				break;
 			case R.id.launch_fight:
+				umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
 				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
 						.setCallback(new Callback2D<Resp<Battle>, Battle>() {
 							@Override
@@ -339,7 +340,6 @@ public class CreateFightActivity extends BaseActivity {
 										.execute();
 							}
 						}).fire();
-				umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
 				break;
 		}
 	}
