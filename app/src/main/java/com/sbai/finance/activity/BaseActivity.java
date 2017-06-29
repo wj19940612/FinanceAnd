@@ -225,7 +225,7 @@ public class BaseActivity extends AppCompatActivity implements
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {
-        MobclickAgent.onEvent(getActivity(), eventKey);
+        //MobclickAgent.onEvent(getActivity(), eventKey);
     }
 
     @Override
