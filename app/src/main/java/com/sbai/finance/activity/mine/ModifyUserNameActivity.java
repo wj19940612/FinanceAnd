@@ -41,8 +41,8 @@ public class ModifyUserNameActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_user_name);
         ButterKnife.bind(this);
-        mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         mUserName.addTextChangedListener(mValidationWatcher);
+        mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
     }
 
     @Override
@@ -67,8 +67,8 @@ public class ModifyUserNameActivity extends BaseActivity {
             if (string.contains(" ")) {
                 String newData = string.replaceAll(" ", "");
                 mUserName.setText(newData);
-                mUserName.setSelection(mUserName.getText().toString().length());
             }
+            mUserName.setSelection(mUserName.getText().toString().length());
         }
     };
 

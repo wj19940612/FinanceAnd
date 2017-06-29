@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.battle.FutureBattleFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
@@ -38,14 +39,15 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
+import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
+import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELING;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.battle.Battle.PAGE_RECORD;
-
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
@@ -192,9 +194,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     break;
                 case BATTLE_OVER:
                     //对战结束 一个弹窗
-                    mGameStatus = GAME_STATUS_END;
-                    ToastUtil.show(getString(R.string.game_over));
-                    finish();
+                    if (mGameStatus != GAME_STATUS_OBESERVE) {
+                        mGameStatus = GAME_STATUS_END;
+                        requestBattleInfo();
+                    }
                     break;
                 case ORDER_CREATED:
                     requestBattleInfo();
@@ -324,6 +327,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     protected void onRespSuccess(Resp<BattleInfo> resp) {
                         if (resp.isSuccess()) {
                             mBattleInfo = resp.getData();
+                            //游戏结束后
+                            if (mGameStatus == GAME_STATUS_END) {
+                                showGameOverDialog();
+                            }
                         }
                     }
                 })
@@ -534,6 +541,69 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
         mCancelBattleDialog.show();
 
+    }
+
+    private void showGameOverDialog() {
+        BattleResultDialogFragment fragment = null;
+
+        if (mBattleInfo.getWinResult() == 0) {
+            //平局
+            fragment = BattleResultDialogFragment
+                    .newInstance(GAME_RESULT_DRAW, getString(R.string.return_reward));
+        } else {
+            boolean win = getWinResult();
+
+            String coinType = getCoinType(mBattleInfo);
+
+            if (win) {
+                fragment = BattleResultDialogFragment
+                        .newInstance(GAME_RESULT_WIN, "+" + mBattleInfo.getReward() + coinType);
+            } else {
+                fragment = BattleResultDialogFragment
+                        .newInstance(GAME_RESULT_LOSE, "-" + mBattleInfo.getReward() + coinType);
+            }
+        }
+
+        fragment.setOnCloseListener(new BattleResultDialogFragment.OnCloseListener() {
+            @Override
+            public void onClose() {
+                finish();
+            }
+        });
+
+        fragment.show(getSupportFragmentManager());
+    }
+
+    private boolean getWinResult() {
+        boolean win = false;
+         //我是房主
+        if (mBattle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
+            //result ==1为房主赢
+            if (mBattleInfo.getWinResult() == 1) {
+                //我赢了
+                win = true;
+            } else {
+                //我输了
+                win = false;
+            }
+        } else {
+            //我不是房主
+            if (mBattleInfo.getWinResult() == 2) {
+                //我赢了
+                win = true;
+            } else {
+                //我输了
+                win = false;
+            }
+        }
+        return win;
+    }
+
+    private String getCoinType(BattleInfo battleInfo) {
+        if (battleInfo.getCoinType() == 2) {
+            return getString(R.string.ingot);
+        }
+        return getString(R.string.integral);
     }
 
     private void requestCancelBattle() {
