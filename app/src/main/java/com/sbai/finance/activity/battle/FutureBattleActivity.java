@@ -10,13 +10,13 @@ import android.widget.LinearLayout;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.fragment.dialog.ShareDialogFragment;
-import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.battle.FutureBattleFragment;
+import com.sbai.finance.fragment.dialog.ShareDialogFragment;
+import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.battle.BattleInfo;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.BattleInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -67,6 +67,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private FutureBattleFragment mFutureBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
+
     private StartMatchDialogFragment mStartMatchDialogFragment;
     private ShareDialogFragment mShareDialogFragment;
 
@@ -316,7 +317,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback<Resp<BattleInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<BattleInfo> resp) {
-                        if (resp.isSuccess()){
+                        if (resp.isSuccess()) {
                             mBattleInfo = resp.getData();
                         }
                     }
@@ -402,7 +403,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void showCancelMatchDialog() {
         if (mCancelMatchDialog == null) {
             mCancelMatchDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
-                    .setMessageTextSize(15)
                     .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
@@ -416,7 +416,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             showMatchDialog();
                         }
                     })
-                    .setTitleMaxLines(1)
                     .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                     .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
         }
@@ -486,7 +485,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(FutureBattleActivity.this,CreateFightActivity.class).execute();
+                        Launcher.with(FutureBattleActivity.this, CreateFightActivity.class).execute();
                         finish();
                     }
                 })

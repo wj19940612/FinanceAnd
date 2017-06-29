@@ -1624,7 +1624,7 @@ public class Client {
      * @param userFrom  用户来源
      * @return
      */
-    public static API joinVersus(int battleId,String userFrom){
+    public static API joinBattle(int battleId, String userFrom){
         return new API(POST,"/game/battle/joinBattle.do", new ApiParams()
                 .put("battleId", battleId)
                 .put("userFrom", userFrom));
