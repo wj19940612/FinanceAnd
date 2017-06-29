@@ -387,7 +387,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void showInviteDialog() {
         if (mShareDialogFragment == null) {
-            mShareDialogFragment = ShareDialogFragment.newInstance();
+            String shareTitle = getString(R.string.invite_you_join_future_battle
+                    , LocalUser.getUser().getUserInfo().getUserName());
+            String shareDescribe = getString(R.string.future_battle_desc);
+            String url = "";
+            mShareDialogFragment = ShareDialogFragment
+                    .newInstance()
+                    .setShareMode(true)
+                    .setShareContent(FutureBattleActivity.this, shareTitle, shareDescribe, url);
         }
         mShareDialogFragment.show(getSupportFragmentManager());
     }
