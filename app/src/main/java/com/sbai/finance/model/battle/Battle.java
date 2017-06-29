@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Administrator on 2017-06-21.
  */
 
-public class VersusGaming implements Parcelable {
+public class Battle implements Parcelable {
 
     //0现金 1元宝 2积分
     public static final int COIN_TYPE_CASH = 1;
@@ -336,7 +336,7 @@ public class VersusGaming implements Parcelable {
         this.praiseUserId = praiseUserId;
     }
 
-    public VersusGaming() {
+    public Battle() {
     }
 
     @Override
@@ -377,7 +377,7 @@ public class VersusGaming implements Parcelable {
         dest.writeInt(this.praiseUserId);
     }
 
-    protected VersusGaming(Parcel in) {
+    protected Battle(Parcel in) {
         this.againstFrom = in.readString();
         this.againstUser = in.readInt();
         this.againstUserName = in.readString();
@@ -409,15 +409,15 @@ public class VersusGaming implements Parcelable {
         this.praiseUserId = in.readInt();
     }
 
-    public static final Creator<VersusGaming> CREATOR = new Creator<VersusGaming>() {
+    public static final Creator<Battle> CREATOR = new Creator<Battle>() {
         @Override
-        public VersusGaming createFromParcel(Parcel source) {
-            return new VersusGaming(source);
+        public Battle createFromParcel(Parcel source) {
+            return new Battle(source);
         }
 
         @Override
-        public VersusGaming[] newArray(int size) {
-            return new VersusGaming[size];
+        public Battle[] newArray(int size) {
+            return new Battle[size];
         }
     };
 }

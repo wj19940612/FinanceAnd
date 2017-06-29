@@ -24,7 +24,7 @@ import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.battle.TradeOrder;
 import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
-import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -47,8 +47,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_CREATED;
-import static com.sbai.finance.model.battle.VersusGaming.GAME_STATUS_STARTED;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
@@ -88,7 +88,7 @@ public class FutureBattleFragment extends BaseFragment {
 
     Unbinder unbinder;
 
-    private VersusGaming mVersusGaming;
+    private Battle mBattle;
     private Variety mVariety;
     private FutureData mFutureData;
 
@@ -100,10 +100,10 @@ public class FutureBattleFragment extends BaseFragment {
     private int mGameStatus;
 
 
-    public static FutureBattleFragment newInstance(VersusGaming versusGaming) {
+    public static FutureBattleFragment newInstance(Battle battle) {
         FutureBattleFragment futureBattleFragment = new FutureBattleFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("versusGaming", versusGaming);
+        bundle.putParcelable("versusGaming", battle);
         futureBattleFragment.setArguments(bundle);
         return futureBattleFragment;
     }
@@ -112,7 +112,7 @@ public class FutureBattleFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mVersusGaming = (VersusGaming) getArguments().get("versusGaming");
+            mBattle = (Battle) getArguments().get("versusGaming");
         }
     }
 
@@ -141,7 +141,7 @@ public class FutureBattleFragment extends BaseFragment {
         //判断是否是观战 观战条件 房主id!=本地id && 对抗者id!=本地id
         //观战情况下 对战区域只显示对战数据
         int userId = LocalUser.getUser().getUserInfo().getId();
-        if (mVersusGaming.getAgainstUser() != userId && mVersusGaming.getLaunchUser() != userId) {
+        if (mBattle.getAgainstUser() != userId && mBattle.getLaunchUser() != userId) {
             showBattleTradeView();
             setVisitorMode();
             requestOrderHistory();
@@ -149,11 +149,11 @@ public class FutureBattleFragment extends BaseFragment {
         } else {
             //判断状态是否在对抗中
             //未开始显示邀请 匹配  取消  视图
-            if (mVersusGaming.getGameStatus() == GAME_STATUS_CREATED) {
+            if (mBattle.getGameStatus() == GAME_STATUS_CREATED) {
                 mGameStatus = GAME_STATUS_CREATED;
                 showBattleButtons();
                 updateRoomExistsTime();
-            } else if (mVersusGaming.getGameStatus() == GAME_STATUS_STARTED) {
+            } else if (mBattle.getGameStatus() == GAME_STATUS_STARTED) {
                 showBattleTradeView();
                 requestOrderHistory();
                 requestCurrentOrder();
@@ -228,7 +228,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void requestCreateOrder(int direction) {
-        Client.createOrder(mVersusGaming.getId(), direction)
+        Client.createOrder(mBattle.getId(), direction)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<TradeOrder>>() {
@@ -241,7 +241,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void requestClosePosition(int orderId) {
-        Client.closePosition(mVersusGaming.getId(), orderId)
+        Client.closePosition(mBattle.getId(), orderId)
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
@@ -253,7 +253,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void requestVarietyData() {
-        Client.requsetVarietyPrice(mVersusGaming.getVarietyId()).setTag(TAG)
+        Client.requsetVarietyPrice(mBattle.getVarietyId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Variety>, Variety>() {
                     @Override
                     protected void onRespSuccessData(Variety variety) {
@@ -266,7 +266,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     public void requestOrderHistory(){
-        Client.getOrderHistory(mVersusGaming.getId())
+        Client.getOrderHistory(mBattle.getId())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
                     @Override
@@ -278,7 +278,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void requestCurrentOrder() {
-        Client.requestCurrentOrder(mVersusGaming.getId())
+        Client.requestCurrentOrder(mBattle.getId())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeOrder>>,List<TradeOrder>>() {
                     @Override
@@ -290,7 +290,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
-        mBattleTradeView.addTradeData(resp, mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
+        mBattleTradeView.addTradeData(resp, mBattle.getLaunchUser(), mBattle.getAgainstUser());
     }
 
     private void updateCurrentOrder(List<TradeOrder> data) {
@@ -301,10 +301,10 @@ public class FutureBattleFragment extends BaseFragment {
             if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
                 currentOrder = tradeOrder;
             }
-            if (tradeOrder.getUserId() == mVersusGaming.getLaunchUser()) {
+            if (tradeOrder.getUserId() == mBattle.getLaunchUser()) {
                 creatorOrder = tradeOrder;
             }
-            if (tradeOrder.getUserId() == mVersusGaming.getAgainstUser()) {
+            if (tradeOrder.getUserId() == mBattle.getAgainstUser()) {
                 againstOrder = tradeOrder;
             }
         }
@@ -533,7 +533,7 @@ public class FutureBattleFragment extends BaseFragment {
     public void updateRoomExistsTime(){
         //更新房间存在倒计时
         long currentTime = System.currentTimeMillis();
-        long createTime = mVersusGaming.getCreateTime();
+        long createTime = mBattle.getCreateTime();
         int diff = DateUtil.getDiffSeconds(currentTime, createTime);
         if (mBattleButtons.getVisibility() == View.VISIBLE) {
             mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));

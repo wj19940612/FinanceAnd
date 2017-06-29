@@ -10,7 +10,7 @@ import android.widget.ListView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.battle.TradeRecord;
-import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -37,12 +37,12 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
 
-    private VersusGaming mVersusGaming;
+    private Battle mBattle;
 
-    public static FutureBattleDetailFragment newInstance(VersusGaming versusGaming) {
+    public static FutureBattleDetailFragment newInstance(Battle battle) {
         FutureBattleDetailFragment detailFragment = new FutureBattleDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("versusGaming", versusGaming);
+        bundle.putParcelable("versusGaming", battle);
         detailFragment.setArguments(bundle);
         return detailFragment;
     }
@@ -51,7 +51,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mVersusGaming = (VersusGaming) getArguments().get("versusGaming");
+            mBattle = (Battle) getArguments().get("versusGaming");
         }
     }
 
@@ -76,7 +76,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     }
 
     private void requestOrderHistory() {
-        Client.getOrderHistory(mVersusGaming.getId())
+        Client.getOrderHistory(mBattle.getId())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
                     @Override
@@ -88,7 +88,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
-        mBattleTradeAdapter.setUserId(mVersusGaming.getLaunchUser(), mVersusGaming.getAgainstUser());
+        mBattleTradeAdapter.setUserId(mBattle.getLaunchUser(), mBattle.getAgainstUser());
         mBattleTradeAdapter.addAll(resp);
         mListview.setSelection(View.FOCUS_DOWN);
     }
