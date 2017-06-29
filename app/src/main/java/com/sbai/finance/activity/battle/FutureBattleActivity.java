@@ -325,9 +325,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     public void updateBattleInfo(double createProfit, double againstProfit) {
-        double leftProfit = mBattleInfo.getLaunchUnwindScore() + createProfit;
-        double rightProfit = mBattleInfo.getAgainstUnwindScore() + againstProfit;
+        double leftProfit = createProfit;
+        double rightProfit = againstProfit;
         boolean isInviting = mGameStatus == GAME_STATUS_CREATED;
+        if (mBattleInfo != null) {
+            leftProfit += mBattleInfo.getLaunchUnwindScore();
+            rightProfit += mBattleInfo.getAgainstUnwindScore();
+        }
         mBattleView.setProgress(leftProfit, rightProfit, isInviting);
     }
 
