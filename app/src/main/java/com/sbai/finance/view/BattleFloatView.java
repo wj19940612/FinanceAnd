@@ -274,10 +274,10 @@ public class BattleFloatView extends RelativeLayout {
      * @return
      */
     public BattleFloatView setDeadline(int gameStatus, int endTime) {
-        if (gameStatus == 3) {
+        if (gameStatus == 3 || endTime == 0) {
             mDeadline.setText(getContext().getString(R.string.end));
         } else if (gameStatus == 2) {
-            mDeadline.setText(getContext().getString(R.string.remaining_time,DateUtil.getCountdownTime(endTime, 0)));
+            mDeadline.setText(getContext().getString(R.string.remaining_time, DateUtil.getCountdownTime(endTime, 0)));
         } else if (gameStatus == 1) {
             mDeadline.setText(DateUtil.getCountdownTime(endTime, 0));
         }
