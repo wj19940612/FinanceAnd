@@ -325,7 +325,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback<Resp<BattleInfo>>() {
                     @Override
                     protected void onRespSuccess(Resp<BattleInfo> resp) {
-                        if (resp.isSuccess()){
+                        if (resp.isSuccess()) {
                             mBattleInfo = resp.getData();
                             //游戏结束后
                             if (mGameStatus == GAME_STATUS_END) {
@@ -417,7 +417,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void showCancelMatchDialog() {
         if (mCancelMatchDialog == null) {
             mCancelMatchDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching))
-                    .setMessageTextSize(15)
                     .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
@@ -431,7 +430,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             showMatchDialog();
                         }
                     })
-                    .setTitleMaxLines(1)
                     .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                     .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
         }
@@ -501,7 +499,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(FutureBattleActivity.this,CreateFightActivity.class).execute();
+                        Launcher.with(FutureBattleActivity.this, CreateFightActivity.class).execute();
                         finish();
                     }
                 })

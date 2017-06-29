@@ -30,9 +30,10 @@
                 android:layout_above="@+id/bottom"
                 android:layout_alignParentTop="true"
                 android:background="@android:color/transparent"
-                android:scrollbars="none"
                 android:divider="@null"
-                android:dividerHeight="14dp"/>
+                android:dividerHeight="14dp"
+                android:scrollbars="none"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
