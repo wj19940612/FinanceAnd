@@ -56,6 +56,26 @@ public class Variety implements Parcelable {
     private String exchangeCode;
     private int checkOptional;
 
+    /**
+     * decimalScale : 0.2
+     * sign : $
+     * flashChartPriceInterval : 14
+     * beatFewPoints : 0.01
+     * currency : USD
+     * eachPointMoney : 1000
+     * currencyUnit : 美元
+     * ratio : 7.5
+     */
+   /* 游戏所需 */
+    private String sign;  //	汇率符号
+    private double beatFewPoints; //每次跳几个点
+    private String currency;    //汇率单位
+    private int eachPointMoney;  //每个点多少钱
+    private String currencyUnit; //单位名称
+    private double ratio;    //汇率
+
+
+
     public int getCheckOptional() {
         return checkOptional;
     }
@@ -268,4 +288,52 @@ public class Variety implements Parcelable {
             return new Variety[size];
         }
     };
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public double getBeatFewPoints() {
+        return beatFewPoints;
+    }
+
+    public void setBeatFewPoints(double beatFewPoints) {
+        this.beatFewPoints = beatFewPoints;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public int getEachPointMoney() {
+        return eachPointMoney;
+    }
+
+    public void setEachPointMoney(int eachPointMoney) {
+        this.eachPointMoney = eachPointMoney;
+    }
+
+    public String getCurrencyUnit() {
+        return currencyUnit;
+    }
+
+    public void setCurrencyUnit(String currencyUnit) {
+        this.currencyUnit = currencyUnit;
+    }
+
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+    }
 }

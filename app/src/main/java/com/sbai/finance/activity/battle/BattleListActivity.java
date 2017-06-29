@@ -63,6 +63,7 @@ import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 
@@ -157,18 +158,6 @@ public class BattleListActivity extends BaseActivity implements
         mIntegral = (TextView) view.findViewById(R.id.integral);
         mIngot = (TextView) view.findViewById(R.id.ingot);
         mRecharge = (TextView) view.findViewById(R.id.recharge);
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId())
-                            .execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-        });
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,7 +328,7 @@ public class BattleListActivity extends BaseActivity implements
                                         .executeForResult(CANCEL_BATTLE);
                             }
                         } else {
-                            showJoinVersusFailureDialog(resp.getMsg(), resp.getCode());
+                            showJoinVersusFailureDialog(resp.getCode());
                         }
                     }
 
@@ -499,8 +488,26 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void updateUserFund(UserFundInfoModel data) {
-        mIntegral.setText(String.valueOf(data.getCredit()));
-        mIngot.setText(data.getYuanbao() + "个");
+        if (data.getCredit()>10000){
+             double create=Double.valueOf(new DecimalFormat("0.0").format(data.getCredit()/10000));
+//             double createInt = Math.floor(create);
+//             if (createInt==create){
+//                 create=createInt;
+//             }
+            mIntegral.setText(create+"万");
+        }else{
+            mIntegral.setText(new DecimalFormat("0.00").format(data.getCredit()));
+        }
+        if (data.getYuanbao()>10000){
+            double ingot=Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao()/10000));
+//            double ingotInt = Math.floor(ingot);
+//            if (ingotInt==ingot){
+//                ingot=ingotInt;
+//            }
+            mIngot.setText(ingot+ "万个");
+        }else{
+            mIngot.setText(Math.round(data.getYuanbao()) + "个");
+        }
     }
 
 
@@ -598,9 +605,10 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinVersusFailureDialog(String msg, final int type) {
+    private void showJoinVersusFailureDialog(final int type) {
         Integer positiveMsg;
         Integer negativeMsg = R.string.cancel;
+        String msg;
         //存在还没有结束的游戏
         if (type == VersusGaming.CODE_EXIT_VERSUS) {
             msg = getString(R.string.exit_versus);
@@ -831,7 +839,10 @@ public class BattleListActivity extends BaseActivity implements
     public void onRefresh() {
         reset();
         requestBattleList();
-        requestCurrentBattle();
+        if (LocalUser.getUser().isLogin()){
+            requestCurrentBattle();
+            requestUserFindInfo();
+        }
     }
 
     private void reset() {
@@ -995,15 +1006,12 @@ public class BattleListActivity extends BaseActivity implements
                         if (item.getWinResult() == VersusGaming.RESULT_AGAINST_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                            mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
                         } else if (item.getWinResult() == VersusGaming.RESULT_CREATE_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
-                            mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
                         } else {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
-                            mDepositAndTime.setText(reward + " " + context.getString(R.string.tie));
                         }
                         showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
