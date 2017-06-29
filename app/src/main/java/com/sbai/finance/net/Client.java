@@ -1866,4 +1866,10 @@ public class Client {
                 .put("battleId", battleId));
     }
 
+
+    public static API requsetVarietyPrice(int varietyId) {
+        return new API("/order/future/query/infoPrice.do", new ApiParams()
+                .put("varietyId", varietyId));
+    }
+
 }
