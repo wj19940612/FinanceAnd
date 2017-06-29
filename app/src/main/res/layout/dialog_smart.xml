@@ -54,7 +54,6 @@
         tools:text="Message肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范fMessage肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范f"/>
 
     <LinearLayout
-        android:id="@+id/doubleButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_dialog_bottom"
