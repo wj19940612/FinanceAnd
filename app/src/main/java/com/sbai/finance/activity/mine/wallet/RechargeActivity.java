@@ -265,6 +265,7 @@ public class RechargeActivity extends BaseActivity {
                     .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
                     .putExtra(Launcher.EX_PAYLOAD_1, mUsablePlatform)
                     .execute();
+            finish();
         } else {
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
