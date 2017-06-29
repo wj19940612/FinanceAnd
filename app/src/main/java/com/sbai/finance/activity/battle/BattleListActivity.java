@@ -34,11 +34,13 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
+import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -189,9 +191,15 @@ public class BattleListActivity extends BaseActivity implements
         battleRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BindBankHintDialogFragment
-                        .newInstance(R.string.versus_rule_title, R.string.versus_rule_tip)
-                        .show(getSupportFragmentManager());
+                Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
+                        .setCallback(new Callback2D<Resp<ArticleProtocol>,ArticleProtocol>() {
+                            @Override
+                            protected void onRespSuccessData(ArticleProtocol data) {
+                                BattleRuleDialogFragment
+                                        .newInstance(data.getTitle(), data.getContent())
+                                        .show(getSupportFragmentManager());
+                            }
+                        }).fire();
             }
         });
         mListView.addHeaderView(header);
