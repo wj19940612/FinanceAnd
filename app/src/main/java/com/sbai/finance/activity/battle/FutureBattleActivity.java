@@ -188,6 +188,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     break;
                 case BATTLE_OVER:
                     //对战结束 一个弹窗
+                    ToastUtil.show(getString(R.string.game_over));
+                    finish();
                     break;
                 case ORDER_CREATED:
                     requestBattleInfo();
