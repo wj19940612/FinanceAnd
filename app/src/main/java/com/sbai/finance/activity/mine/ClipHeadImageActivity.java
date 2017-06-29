@@ -57,7 +57,6 @@ public class ClipHeadImageActivity extends BaseActivity {
                 break;
             case R.id.complete:
                 Bitmap clipBitmap = mClipImageLayout.clip();
-                Log.d(TAG, "开始时间 " + System.currentTimeMillis());
                 String bitmapToBase64 = ImageUtils.compressImageToBase64(clipBitmap);
                 if (clipBitmap != null) {
                     clipBitmap.recycle();
@@ -74,9 +73,9 @@ public class ClipHeadImageActivity extends BaseActivity {
 //                .setIndeterminate(this)
 //                .setTag(TAG)
 //                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-//                .setCallback(new Callback2D<Resp<Object>, Object>() {
+//                .setCallback(new Callback2D<Resp<String>, String>() {
 //                    @Override
-//                    protected void onRespSuccessData(Object data) {
+//                    protected void onRespSuccessData(String data) {
 //                        Log.d(TAG, "结束时间 " + System.currentTimeMillis());
 //                        uploadUserHeadImageUrl(data);
 //                    }
@@ -103,9 +102,10 @@ public class ClipHeadImageActivity extends BaseActivity {
                 .fire();
     }
 
-    private void uploadUserHeadImageUrl(Object data) {
-        if (data != null) {
-            Client.updateUserHeadImage(data.toString())
+    private void uploadUserHeadImageUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            Log.d(TAG, "uploadUserHeadImageUrl: " + url);
+            Client.updateUserHeadImage(url)
                     .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setTag(TAG)

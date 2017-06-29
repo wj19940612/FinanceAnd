@@ -6,7 +6,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -241,8 +240,8 @@ public class BankCardPayActivity extends BaseActivity {
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            Log.d(TAG, "onRespSuccess: " + resp.toString());
-                            ToastUtil.curt(resp.toString());
+                            ToastUtil.curt(resp.getMsg());
+                            finish();
                         }
                     })
                     .fire();

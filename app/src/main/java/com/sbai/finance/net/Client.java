@@ -310,6 +310,18 @@ public class Client {
         return new API(POST, "/user/user/updatePic.do", new ApiParams().put("pic", pic));
     }
 
+//    /**
+//     * 请求类型 post
+//     * 请求Url  user/user/updatePicLand.do 提交头像
+//     * 接口描述 修改头像
+//     *
+//     * @param pic  String 图片网址
+//     * @return
+//     */
+//    public static API updateUserHeadImage(String pic) {
+//        return new API("/user/user/updatePicLand.do", new ApiParams().put("picLand", pic));
+//    }
+
     /**
      * /user/upload/image.do
      * POST

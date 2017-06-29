@@ -272,7 +272,6 @@ public class RechargeActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {
-                            Log.d(TAG, "onRespSuccessData: " + data.toString());
                             if (mUsablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
                                 Launcher.with(getActivity(), AliPayActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())
