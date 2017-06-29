@@ -339,10 +339,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		Integer negativeMsg = R.string.cancel;
 		//存在还没有结束的游戏
 		if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
-			msg = getString(R.string.exit_versus);
-			positiveMsg = R.string.go_versus;
+			msg = getString(R.string.battle_joined_or_created);
+			positiveMsg = R.string.go_battle;
 		} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {
-			msg = getString(R.string.join_versus_failure_tip);
+			msg = getString(R.string.join_battle_balance_not_enough);
 			positiveMsg = R.string.go_recharge;
 		} else {
 			msg = getString(R.string.invite_invalid);
@@ -370,7 +370,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						}
 					}
 				})
-				.setTitle(getString(R.string.join_versus_failure_title))
+				.setTitle(getString(R.string.join_versus_failure))
 				.setTitleMaxLines(1)
 				.setTitleTextColor(ContextCompat.getColor(getContext(), R.color.blackAssist))
 				.setMessageTextColor(ContextCompat.getColor(getContext(), R.color.opinionText))
