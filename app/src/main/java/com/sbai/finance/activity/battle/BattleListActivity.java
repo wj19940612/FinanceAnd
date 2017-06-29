@@ -191,7 +191,11 @@ public class BattleListActivity extends BaseActivity implements
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                     Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
+                }else{
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         battleRule.setOnClickListener(new View.OnClickListener() {
@@ -243,9 +247,9 @@ public class BattleListActivity extends BaseActivity implements
                                     .putExtra(Launcher.EX_PAYLOAD, item)
                                     .executeForResult(CANCEL_BATTLE);
                         }
-                    } else {
-                        Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
+                }else{
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
         });
