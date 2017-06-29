@@ -24,6 +24,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.SmartDialog;
@@ -128,6 +129,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
                         @Override
                         public void onCreateAvatarClick() {
+                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
                             Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                     .execute();
@@ -135,6 +137,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
                         @Override
                         public void onAgainstAvatarClick() {
+                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
                             Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                     .execute();
@@ -351,6 +354,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestAddBattlePraise(final int userId) {
+        umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
         Client.addBattlePraise(mBattle.getId(), userId)
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<Integer>>() {
@@ -382,6 +386,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onInviteButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.WAITTING_ROOM_INVITE_FRIENDS);
         showInviteDialog();
     }
 
@@ -401,6 +406,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onMatchButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.WAITTING_ROOM_FAST_MATCH);
         requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
     }
 
@@ -519,6 +525,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onCancelButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.WAITTING_ROOM_CANCEL_BATTLE);
         mGameStatus = GAME_STATUS_CANCELING;
         showCancelBattleDialog();
     }
