@@ -234,6 +234,8 @@ public class BattleFloatView extends RelativeLayout {
                 mProgressBar.setProgress(50);
             }
 
+            mProgressBar.setSecondaryProgress(100);
+
             if (myProfit > 0) {
                 myFlag = "+";
             }

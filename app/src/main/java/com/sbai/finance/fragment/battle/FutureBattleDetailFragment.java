@@ -78,7 +78,6 @@ public class FutureBattleDetailFragment extends BaseFragment {
     private void requestOrderHistory() {
         Client.getOrderHistory(mVersusGaming.getId())
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {

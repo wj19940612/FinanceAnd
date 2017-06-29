@@ -177,16 +177,19 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             switch (versusGamingWSPush.getContent().getType()) {
                 case BATTLE_JOINED:
                     //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                    if (mGameStatus == GAME_STATUS_CANCELING){
-                         ToastUtil.curt(getString(R.string.cancel_failed_game_start));
-                         startGame(versusGamingWSPush);
-                    }else {
+                    if (mGameStatus == GAME_STATUS_CANCELING) {
+                        dismissAllDialog();
+                        ToastUtil.curt(getString(R.string.cancel_failed_game_start));
+                        startGame(versusGamingWSPush);
+                    } else {
                         dismissAllDialog();
                         startGame(versusGamingWSPush);
                     }
                     break;
                 case BATTLE_OVER:
                     //对战结束 一个弹窗
+                    ToastUtil.show(getString(R.string.game_over));
+                    finish();
                     break;
                 case ORDER_CREATED:
                     requestBattleInfo();

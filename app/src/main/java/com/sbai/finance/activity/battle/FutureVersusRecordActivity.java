@@ -69,24 +69,16 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
         mCustomSwipeRefreshLayout.setOnRefreshListener(this);
         mCustomSwipeRefreshLayout.setOnLoadMoreListener(this);
         mCustomSwipeRefreshLayout.setAdapter(mListView,mVersusRecordListAdapter);
-        mVersusRecordListAdapter.setCallback(new VersusRecordListAdapter.Callback() {
-            @Override
-            public void onClick(int userId) {
-                Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID,userId).execute();
-            }
-        });
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mVersusRecordListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!mVersusRecordListAdapter.isEmpty()){
-                    VersusGaming item = mVersusRecordListAdapter.getItem(position);
+                    VersusGaming item = (VersusGaming) parent.getItemAtPosition(position);
                     if (item!=null){
                         item.setPageType(VersusGaming.PAGE_RECORD);
                         Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
                     }
-                }
             }
         });
     }
@@ -144,15 +136,6 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
     }
 
     static class VersusRecordListAdapter extends ArrayAdapter<VersusGaming> {
-        interface Callback {
-            void onClick(int userId);
-        }
-
-        private Callback mCallback;
-
-        public void setCallback(Callback callback) {
-            mCallback = callback;
-        }
 
         public VersusRecordListAdapter(@NonNull Context context) {
             super(context, 0);
@@ -169,7 +152,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), getContext(), mCallback);
+            viewHolder.bindDataWithView(getItem(position), getContext());
             return convertView;
         }
 
@@ -192,20 +175,8 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
-            private void bindDataWithView(final VersusGaming item, Context context, final Callback callback){
+            private void bindDataWithView(final VersusGaming item, Context context){
                 if (item.getLaunchUser()== LocalUser.getUser().getUserInfo().getId()){
-                    mMyAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            callback.onClick(item.getLaunchUser());
-                        }
-                    });
-                    mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            callback.onClick(item.getAgainstUser());
-                        }
-                    });
                     Glide.with(context)
                             .load(item.getLaunchUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
@@ -219,18 +190,6 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                     mMyName.setText(item.getLaunchUserName());
                     mAgainstName.setText(item.getAgainstUserName());
                 }else {
-                    mMyAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            callback.onClick(item.getAgainstUser());
-                        }
-                    });
-                    mAgainstAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            callback.onClick(item.getLaunchUser());
-                        }
-                    });
                     Glide.with(context)
                             .load(item.getAgainstUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)

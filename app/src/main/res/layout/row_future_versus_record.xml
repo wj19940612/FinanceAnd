@@ -3,111 +3,115 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#564f68"
-              android:orientation="horizontal"
-              android:paddingBottom="18dp"
-              android:paddingLeft="19dp"
-              android:paddingRight="26dp"
-              android:paddingTop="14dp">
-
-    <ImageView
-        android:id="@+id/versusResultImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:src="@drawable/ic_versus_victory"/>
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/versusResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingTop="2dp"
-            android:textColor="@color/redAssist"
-            android:textSize="16sp"
-            tools:text="获胜"/>
-
-        <TextView
-            android:id="@+id/versusVarietyAndProfit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="14dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/redAssist"
-            android:textSize="10sp"
-            tools:text="美黄金  +200元宝"/>
-    </RelativeLayout>
-
+              android:background="@android:color/transparent">
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
+        android:orientation="horizontal"
+        android:background="#564f68"
+        android:layout_marginTop="14dp"
+        android:paddingBottom="18dp"
+        android:paddingLeft="19dp"
+        android:paddingRight="26dp"
+        android:paddingTop="14dp">
         <ImageView
-            android:id="@+id/myAvatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:clickable="true"
-            android:scaleType="centerInside"
-            tools:src="@drawable/ic_default_avatar"/>
-
-        <TextView
-            android:id="@+id/myName"
+            android:id="@+id/versusResultImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="4dp"
-            android:textColor="@android:color/white"
-            android:textSize="10sp"
-            tools:text="斯克图"/>
-    </LinearLayout>
+            tools:src="@drawable/ic_versus_victory"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_versus_vs"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/versusResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:textColor="@color/redAssist"
+                android:textSize="16sp"
+                tools:text="获胜"/>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/versusVarietyAndProfit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/redAssist"
+                android:textSize="10sp"
+                tools:text="美黄金  +200元宝"/>
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/againstAvatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:clickable="true"
-            tools:src="@drawable/ic_default_avatar"/>
-
-        <TextView
-            android:id="@+id/againstName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="4dp"
-            android:textColor="@android:color/white"
-            android:textSize="10sp"
-            tools:text="我的名字很长"/>
-    </LinearLayout>
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/myAvatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:scaleType="centerInside"
+                tools:src="@drawable/ic_default_avatar"/>
+
+            <TextView
+                android:id="@+id/myName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                tools:text="斯克图"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_versus_vs"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/againstAvatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:clickable="true"
+                tools:src="@drawable/ic_default_avatar"/>
+
+            <TextView
+                android:id="@+id/againstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                tools:text="我的名字很长"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
