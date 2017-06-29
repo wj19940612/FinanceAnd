@@ -317,12 +317,17 @@ public class FutureBattleFragment extends BaseFragment {
         }
 
         if (creatorOrder != null) {
-            mCurrentOrder = creatorOrder;
+            mCreatorOrder = creatorOrder;
+        } else {
+            mCreatorOrder = null;
         }
 
         if (againstOrder != null) {
             mAgainstOrder = againstOrder;
+        } else {
+            mAgainstOrder = null;
         }
+
         mGameStatus = GAME_STATUS_STARTED;
     }
 
@@ -528,6 +533,10 @@ public class FutureBattleFragment extends BaseFragment {
 
     private void setVisitorMode() {
         mBattleTradeView.setVisitor(true);
+    }
+
+    public void updateGameInfo(Battle battle){
+        mBattle = battle;
     }
 
     public void updateRoomExistsTime(){

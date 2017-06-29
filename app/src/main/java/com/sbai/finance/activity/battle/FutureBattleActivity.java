@@ -38,11 +38,14 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELING;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.battle.Battle.PAGE_RECORD;
+
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
@@ -189,6 +192,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     break;
                 case BATTLE_OVER:
                     //对战结束 一个弹窗
+                    mGameStatus = GAME_STATUS_END;
                     ToastUtil.show(getString(R.string.game_over));
                     finish();
                     break;
@@ -247,6 +251,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mBattleView.initWithModel(mBattle);
         mBattleView.setProgress(0, 0, false);
         mFutureBattleFragment.showBattleTradeView();
+        mFutureBattleFragment.updateGameInfo(mBattle);
         mGameStatus = GAME_STATUS_STARTED;
         startScheduleJob(1000);
     }
@@ -333,7 +338,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             leftProfit += mBattleInfo.getLaunchUnwindScore();
             rightProfit += mBattleInfo.getAgainstUnwindScore();
         }
-        mBattleView.setProgress(leftProfit, rightProfit, isInviting);
+        if (mGameStatus != GAME_STATUS_END) {
+            mBattleView.setProgress(leftProfit, rightProfit, isInviting);
+        }
     }
 
     private void requestAddBattlePraise(final int userId) {
@@ -548,7 +555,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onTimeUp(int count) {
-        //观战 底部栏每秒刷 交易内容与点赞20s刷一次
         if (mGameStatus == GAME_STATUS_OBESERVE) {
             showDeadlineTime();
         }
@@ -568,6 +574,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        requestSubscribeBattle();
     }
 
     @Override
