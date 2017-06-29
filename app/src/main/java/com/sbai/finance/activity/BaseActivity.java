@@ -21,15 +21,22 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
+
+import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
@@ -108,6 +115,51 @@ public class BaseActivity extends AppCompatActivity implements
         SysTime.getSysTime().sync();
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+
+        initPushReceiveListener();
+    }
+
+    private OnPushReceiveListener<WSPush<Battle>> mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
+        @Override
+        public void onPushReceive(WSPush<Battle> versusGamingWSPush) {
+            switch (versusGamingWSPush.getContent().getType()) {
+                case BATTLE_JOINED:
+                    if (getActivity() instanceof FutureBattleActivity) {
+                    } else {
+                       showJoinBattleDialog(versusGamingWSPush);
+                    }
+                    break;
+            }
+        }
+    };
+
+    private void initPushReceiveListener() {
+        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
+    }
+
+    private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
+        final Battle battle = (Battle) objectWSPush.getContent().getData();
+//        Launcher.with(getActivity(), FutureBattleActivity.class)
+//                .putExtra(Launcher.EX_PAYLOAD, battle)
+//                .execute();
+//        SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
+//                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+//                    @Override
+//                    public void onClick(Dialog dialog) {
+//                        dialog.dismiss();
+//                        Launcher.with(getActivity(), FutureBattleActivity.class)
+//                                .putExtra(Launcher.EX_PAYLOAD, battle)
+//                                .execute();
+//                    }
+//                })
+//                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+//                    @Override
+//                    public void onClick(Dialog dialog) {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNegativeVisible(GONE)
+//                .show();
     }
 
     private void scrollToTop(View view) {

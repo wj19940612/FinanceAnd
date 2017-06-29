@@ -704,6 +704,8 @@
     <string name="game_result_lose">别气馁，下一站大神</string>
     <string name="game_result_draw">英雄所见略同，平局的概率约为1/10000000</string>
     <string name="return_reward">赏金退还</string>
+    <string name="join_battle">进入对战</string>
+    <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
 
 
     <string name="you_not_install_weixin">您尚未安装微信</string>
