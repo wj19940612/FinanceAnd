@@ -135,8 +135,6 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         updateAvatar();
         requestBattleList();
-
-        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         scrollToTop(mTitleBar, mListView);
 
     }
@@ -218,8 +216,6 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0 || position == parent.getCount() - 1) return;
-
-                if (LocalUser.getUser().isLogin()) {
                     VersusGaming item = (VersusGaming) parent.getItemAtPosition(position);
                     if (item != null) {
                         if (item.getGameStatus() == VersusGaming.GAME_STATUS_END) {
@@ -227,26 +223,29 @@ public class BattleListActivity extends BaseActivity implements
                             Launcher.with(getActivity(), FutureBattleActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, item)
                                     .executeForResult(CANCEL_BATTLE);
-                        } else if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED
-                                && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
-                            showJoinBattleDialog(item);
-                        } else {
-                            item.setPageType(VersusGaming.PAGE_VERSUS);
-                            Launcher.with(getActivity(), FutureBattleActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, item)
-                                    .executeForResult(CANCEL_BATTLE);
+                        } else if (LocalUser.getUser().isLogin()) {
+
+                            if (item.getGameStatus() == VersusGaming.GAME_STATUS_CREATED
+                                    && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
+                                showJoinBattleDialog(item);
+                            } else {
+                                item.setPageType(VersusGaming.PAGE_VERSUS);
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, item)
+                                        .executeForResult(CANCEL_BATTLE);
+                            }
+                        }else{
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
                         }
                     }
-                }else{
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
-            }
         });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
             requestCurrentBattle();
@@ -603,8 +602,11 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showJoinVersusFailureDialog(final int type) {
-        Integer positiveMsg;
-        Integer negativeMsg = R.string.cancel;
+        if (mJoinFailureDialog == null) {
+            mJoinFailureDialog = SmartDialog.with(getActivity());
+        }
+        int positiveMsg;
+        int negativeMsg = R.string.cancel;
         String msg;
         //存在还没有结束的游戏
         if (type == VersusGaming.CODE_EXIT_VERSUS) {
@@ -616,10 +618,7 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             msg = getString(R.string.invite_invalid);
             positiveMsg = R.string.ok;
-            negativeMsg = null;
-        }
-        if (mJoinFailureDialog == null) {
-            mJoinFailureDialog = SmartDialog.with(getActivity());
+            mJoinFailureDialog.setNegativeVisable(View.GONE);
         }
         mJoinFailureDialog.setMessage(msg)
                 .setMessageTextSize(15)
@@ -645,6 +644,7 @@ public class BattleListActivity extends BaseActivity implements
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(negativeMsg)
                 .show();
+
 
     }
 
