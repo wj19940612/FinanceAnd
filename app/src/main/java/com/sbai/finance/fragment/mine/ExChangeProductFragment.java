@@ -28,6 +28,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
@@ -114,7 +115,8 @@ public class ExChangeProductFragment extends BaseFragment {
             public void exchange(CornucopiaProductModel item) {
                 if (item != null) {
                     if (mUserFundInfoModel != null) {
-                        if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney() : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
+                        if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney()
+                                : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
                             showExchangePassDialog(item);
                         } else {
                             showExchangeFailDialog(item);
@@ -133,8 +135,8 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     private void showExchangePassDialog(final CornucopiaProductModel item) {
-        String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, FinanceUtil.formatWithScale(item.getFromRealMoney()), FinanceUtil.formatWithScaleNoZero(item.getToRealMoney())) :
-                getString(R.string.confirm_use_coin_buy_integrate, FinanceUtil.formatWithScaleNoZero(item.getFromRealMoney()), FinanceUtil.formatWithScale(item.getToRealMoney()));
+        String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, FinanceUtil.formatWithScale(item.getFromRealMoney()), StrFormatter.getFormIngot(item.getToRealMoney())) :
+                getString(R.string.confirm_use_coin_buy_integrate, StrFormatter.getFormIngot(item.getFromRealMoney()), StrFormatter.getFormIntegrate(item.getToRealMoney()));
         String title = item.isVcoin() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
         SmartDialog.with(getActivity(), msg, title)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
@@ -171,8 +173,8 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     private void showInputSafetyPassDialog(final CornucopiaProductModel item) {
-        String content = item.isVcoin() ? getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(item.getToRealMoney())) :
-                getString(R.string.integrate_number, FinanceUtil.formatWithScale(item.getToRealMoney()));
+        String content = item.isVcoin() ? getString(R.string.coin_number, StrFormatter.getFormIngot(item.getToRealMoney())) :
+                getString(R.string.integrate_number, StrFormatter.getFormIntegrate(item.getToRealMoney()));
         String hintText = item.isVcoin() ? getString(R.string.buy) : getString(R.string.exchange);
         InputSafetyPassDialogFragment.newInstance(content, hintText)
                 .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
@@ -236,6 +238,7 @@ public class ExChangeProductFragment extends BaseFragment {
                             dialog.dismiss();
                         }
                     })
+                    .setNegativeVisable(View.GONE)
                     .show();
         }
     }
@@ -344,16 +347,20 @@ public class ExChangeProductFragment extends BaseFragment {
             public void bindDataWithView(Context context, final CornucopiaProductModel item, int position, final OnExchangeListener onExchangeListener) {
                 if (item.isVcoin()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
-                    mProduct.setText(FinanceUtil.formatWithScaleNoZero(item.getToRealMoney()));
+                    mProduct.setText(StrFormatter.getFormIngot(item.getToRealMoney()));
                     mPrice.setText(context.getString(R.string.yuan, FinanceUtil.formatWithScale(item.getFromRealMoney())));
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
-                    mProduct.setText(FinanceUtil.formatWithScale(item.getToRealMoney()));
-                    mPrice.setText(context.getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(item.getFromRealMoney())));
+                    mProduct.setText(StrFormatter.getFormIntegrate(item.getToRealMoney()));
+                    mPrice.setText(context.getString(R.string.coin_number, StrFormatter.getFormIngot(item.getFromRealMoney())));
                 }
                 if (item.isDiscount()) {
                     mOldPrice.setVisibility(View.VISIBLE);
-                    mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
+                    if (item.isVcoin()) {
+                        mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
+                    } else {
+                        mOldPrice.setText(context.getString(R.string.old_price_exchange_integrate, StrFormatter.getFormIngot(item.getFromMoney())));
+                    }
                 } else {
                     mOldPrice.setVisibility(View.GONE);
                 }
