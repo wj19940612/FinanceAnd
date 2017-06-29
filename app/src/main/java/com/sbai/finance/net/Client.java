@@ -310,6 +310,30 @@ public class Client {
     }
 
     /**
+     * 请求类型 post
+     * 请求Url  user/user/updatePicLand.do 提交头像
+     * 接口描述 修改头像
+     *
+     * @param picPath  String 图片网址
+     * @return
+     */
+    public static API updateUserHeadImagePath(String picPath) {
+        return new API("/user/user/updatePicLand.do", new ApiParams().put("picLand", picPath));
+    }
+
+    /**
+     * /user/upload/image.do
+     * POST
+     * 上传-图片上传（yhj）
+     *
+     * @param base64ImageString
+     * @return
+     */
+    public static API uploadImage(String base64ImageString) {
+        return new API(POST, "/user/upload/image.do", new ApiParams().put("picture", base64ImageString));
+    }
+
+    /**
      * 观点回复点赞
      *
      * @param replyId

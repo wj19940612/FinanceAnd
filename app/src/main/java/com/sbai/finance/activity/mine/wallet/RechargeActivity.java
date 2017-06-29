@@ -265,6 +265,7 @@ public class RechargeActivity extends BaseActivity {
                     .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
                     .putExtra(Launcher.EX_PAYLOAD_1, mUsablePlatform)
                     .execute();
+            finish();
         } else {
             Client.submitRechargeData(mUsablePlatform.getPlatform(), money, bankId)
                     .setIndeterminate(this)
@@ -272,7 +273,6 @@ public class RechargeActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {
-                            Log.d(TAG, "onRespSuccessData: " + data.toString());
                             if (mUsablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
                                 Launcher.with(getActivity(), AliPayActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, data.getPlatform())

@@ -87,6 +87,14 @@ public class BaseFragment extends Fragment implements
         }
     }
 
+    /**
+     *  友盟统计埋点
+     * @param eventKey
+     */
+    protected void umengEventCount(String eventKey) {
+        MobclickAgent.onEvent(getActivity(), eventKey);
+    }
+
     @Override
     public void onTimeUp(int count) {
 

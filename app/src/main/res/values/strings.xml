@@ -621,6 +621,7 @@
     <string name="minus_integrate_number">-%1$s  积分</string>
     <string name="check_details">查看明细></string>
     <string name="old_price">原价: ￥%1$s</string>
+    <string name="old_price_exchange_integrate">原价: %1$s元宝</string>
     <string name="exchange">兑换</string>
     <string name="buy">购买</string>
     <string name="exchange_confirm">确认兑换</string>
@@ -634,8 +635,6 @@
     <string name="buy_fail">购买失败</string>
     <string name="coin_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
     <string name="money_is_not_enough">现金余额不足，请充值或降低购买数量</string>
-    <string name="buy_product_is_change">购买项目已修改</string>
-    <string name="exchange_product_is_change">兑换项目已修改</string>
     <string name="is_not_set_safety_pass">未设置安全密码</string>
     <string name="full_text">...全文</string>
     <string name="go_to_set">去设置</string>
@@ -703,4 +702,8 @@
     <string name="game_result_lose">别气馁，下一站大神</string>
     <string name="game_result_draw">英雄所见略同，平局的概率约为1/10000000</string>
     <string name="return_reward">赏金退还</string>
+
+
+    <string name="you_not_install_weixin">您尚未安装微信</string>
+    <string name="you_not_install_weibo">您尚未安装微博</string>
 </resources>

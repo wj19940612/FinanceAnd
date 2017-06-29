@@ -168,6 +168,14 @@ public class BaseActivity extends AppCompatActivity implements
         return result;
     }
 
+    /**
+     *  友盟统计埋点
+     * @param eventKey
+     */
+    protected void umengEventCount(String eventKey) {
+        MobclickAgent.onEvent(getActivity(), eventKey);
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();

@@ -93,6 +93,11 @@ public class InfiniteViewPager extends ViewPager {
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
         public int getCount() {
             if (mExternalAdapter.getCount() > 1) {
                 return mExternalAdapter.getCount() + 2; // fake object at head and tail

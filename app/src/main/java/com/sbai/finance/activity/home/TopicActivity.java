@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -83,20 +81,11 @@ public class TopicActivity extends BaseActivity {
             }
         });
         mTopicTitle.setText(mTopic.getIntroduction());
-        ViewTreeObserver viewTreeObserver = mTopicTitle.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        mTopicTitle.post(new Runnable() {
             @Override
-            public void onGlobalLayout() {
-                TextPaint textPaint = mTopicTitle.getPaint();
-                float width = textPaint.measureText(mTopicTitle.getText().toString());
-                /* 计算行数 */
-                //获取显示宽度
-                int showWidth = mTopicTitle.getMeasuredWidth() - mTopicTitle.getPaddingRight() - mTopicTitle.getPaddingLeft();
-                int lines = (int) (width / showWidth);
-                if (width % showWidth != 0) {
-                    lines++;
-                }
-                if (lines <= 3) {
+            public void run() {
+                int lineCount = mTopicTitle.getLineCount();
+                if (lineCount <= 3) {
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTop.getLayoutParams();
                     params.height = (int) Display.dp2Px(180, getResources());
                     mTop.setLayoutParams(params);
@@ -104,7 +93,6 @@ public class TopicActivity extends BaseActivity {
                 }
             }
         });
-
         mTopicListAdapter = new ListAdapter(this);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mTopicListAdapter);

@@ -88,9 +88,9 @@ android {
         alpha {
             applicationId "com.sbai.finance.alpha"
 
-            versionCode 36
-            versionName "0.3.9"
-            buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
+            versionCode 39
+            versionName "0.4.2"
+            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
 
             manifestPlaceholders = [
@@ -103,9 +103,9 @@ android {
         }
 
         prod {
-            versionCode 20
-            versionName "1.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
+            versionCode 21
+            versionName "1.0.1"
+            buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
             buildConfigField('boolean', 'isProd', 'true')
 
             manifestPlaceholders = [

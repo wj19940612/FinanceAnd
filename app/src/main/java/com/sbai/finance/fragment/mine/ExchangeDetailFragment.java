@@ -20,7 +20,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
@@ -297,15 +297,15 @@ public class ExchangeDetailFragment extends BaseFragment {
                 mPayWay.setText(detail.getRemark());
                 if (detail.isVcoin()) {
                     if (detail.getFlowType() < 0) {
-                        mMoney.setText(context.getString(R.string.minus_coin, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.minus_coin, StrFormatter.getFormIngot(detail.getMoney())));
                     } else {
-                        mMoney.setText(context.getString(R.string.add_coin, FinanceUtil.formatWithScaleNoZero(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.add_coin, StrFormatter.getFormIngot(detail.getMoney())));
                     }
                 } else {
                     if (detail.getFlowType() < 0) {
-                        mMoney.setText(context.getString(R.string.minus_integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.minus_integrate_number,StrFormatter.getFormIntegrate(detail.getMoney())));
                     } else {
-                        mMoney.setText(context.getString(R.string.add_integrate_number, FinanceUtil.formatWithScale(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.add_integrate_number, StrFormatter.getFormIntegrate(detail.getMoney())));
                     }
                 }
             }
