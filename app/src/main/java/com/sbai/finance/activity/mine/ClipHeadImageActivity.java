@@ -57,11 +57,13 @@ public class ClipHeadImageActivity extends BaseActivity {
                 break;
             case R.id.complete:
                 Bitmap clipBitmap = mClipImageLayout.clip();
-                String bitmapToBase64 = ImageUtils.compressImageToBase64(clipBitmap);
                 if (clipBitmap != null) {
+//                    String bitmapToBase64 = ImageUtils.compressImageToBase64(clipBitmap);
+                    String bitmapToBase64 = ImageUtils.bitmapToBase64(clipBitmap);
+                    Log.d(TAG, "onViewClicked: "+clipBitmap.getAllocationByteCount());
                     clipBitmap.recycle();
+                    confirmUserNewHeadImage(bitmapToBase64);
                 }
-                confirmUserNewHeadImage(bitmapToBase64);
                 break;
         }
     }
@@ -69,37 +71,37 @@ public class ClipHeadImageActivity extends BaseActivity {
     private void confirmUserNewHeadImage(String bitmapToBase64) {
         Log.d(TAG, "confirmUserNewHeadImage: " + bitmapToBase64.length());
         // TODO: 2017/6/29 使用直接上传图片
-//        Client.uploadImage(bitmapToBase64)
-//                .setIndeterminate(this)
-//                .setTag(TAG)
-//                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-//                .setCallback(new Callback2D<Resp<String>, String>() {
-//                    @Override
-//                    protected void onRespSuccessData(String data) {
-//                        Log.d(TAG, "结束时间 " + System.currentTimeMillis());
-//                        uploadUserHeadImageUrl(data);
-//                    }
-//                })
-//                .fire();
-
-
-        Client.updateUserHeadImage(bitmapToBase64)
-                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+        Client.uploadImage(bitmapToBase64)
                 .setIndeterminate(this)
                 .setTag(TAG)
+                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                 .setCallback(new Callback2D<Resp<String>, String>() {
                     @Override
                     protected void onRespSuccessData(String data) {
-                        if (!TextUtils.isEmpty(data)) {
-                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                            userInfo.setUserPortrait(data);
-                            LocalUser.getUser().setUserInfo(userInfo);
-                        }
-                        setResult(RESULT_OK);
-                        finish();
+                        Log.d(TAG, "结束时间 " + System.currentTimeMillis());
+                        uploadUserHeadImageUrl(data);
                     }
                 })
                 .fire();
+
+
+//        Client.updateUserHeadImage(bitmapToBase64)
+//                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+//                .setIndeterminate(this)
+//                .setTag(TAG)
+//                .setCallback(new Callback2D<Resp<String>, String>() {
+//                    @Override
+//                    protected void onRespSuccessData(String data) {
+//                        if (!TextUtils.isEmpty(data)) {
+//                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
+//                            userInfo.setUserPortrait(data);
+//                            LocalUser.getUser().setUserInfo(userInfo);
+//                        }
+//                        setResult(RESULT_OK);
+//                        finish();
+//                    }
+//                })
+//                .fire();
     }
 
     private void uploadUserHeadImageUrl(String url) {
