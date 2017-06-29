@@ -31,7 +31,7 @@ import com.sbai.finance.activity.web.TopicDetailActivity;
 import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Topic;
-import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -179,9 +179,9 @@ public class HomeFragment extends BaseFragment {
 	private void requestCurrentBattle() {
 		if (LocalUser.getUser().isLogin()) {
 			Client.getCurrentBattle().setTag(TAG)
-					.setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
+					.setCallback(new Callback2D<Resp<Battle>, Battle>() {
 						@Override
-						protected void onRespSuccessData(VersusGaming data) {
+						protected void onRespSuccessData(Battle data) {
 							updateBattleView(data);
 						}
 					}).fireFree();
@@ -190,10 +190,10 @@ public class HomeFragment extends BaseFragment {
 		}
 	}
 
-	private void updateBattleView(VersusGaming battle) {
-		if (battle.getGameStatus() == VersusGaming.GAME_STATUS_CREATED) {
+	private void updateBattleView(Battle battle) {
+		if (battle.getGameStatus() == Battle.GAME_STATUS_CREATED) {
 			mBattle.setSubText(R.string.battle_status_pending);
-		} else if (battle.getGameStatus() == VersusGaming.GAME_STATUS_STARTED) {
+		} else if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED) {
 			mBattle.setSubText(R.string.battle_status_fighting);
 		}
 	}

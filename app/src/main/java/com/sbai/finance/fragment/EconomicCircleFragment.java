@@ -32,7 +32,7 @@ import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
-import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -787,7 +787,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 
 					case EconomicCircle.GAME_STATUS_END:
-						if (item.getWinResult() == VersusGaming.RESULT_TIE) {
+						if (item.getWinResult() == Battle.RESULT_TIE) {
 							mStatus.setText(context.getString(R.string.tie));
 						} else {
 							mStatus.setText(context.getString(R.string.versus_end));

@@ -98,7 +98,7 @@
                 app:rowSubText="来一把紧张激烈的对战吧！"
                 app:rowSubTextColor="@color/unluckyText"
                 app:rowSubTextSize="10sp"
-                app:rowText="期货对决"
+                app:rowText="期货对战"
                 app:rowTextColor="@color/primaryText"
                 app:rowTextSize="15sp"
                 app:rowTextSpaceExtra="4dp"

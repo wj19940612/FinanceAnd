@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.battle.FutureBattleConfig;
-import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.ingotWar;
-import static com.sbai.finance.model.battle.VersusGaming.PAGE_VERSUS;
+import static com.sbai.finance.model.battle.Battle.PAGE_VERSUS;
 
 public class CreateFightActivity extends BaseActivity {
 
@@ -329,12 +329,12 @@ public class CreateFightActivity extends BaseActivity {
 				break;
 			case R.id.launch_fight:
 				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
-						.setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
+						.setCallback(new Callback2D<Resp<Battle>, Battle>() {
 							@Override
-							protected void onRespSuccessData(VersusGaming versusGaming) {
-								versusGaming.setPageType(PAGE_VERSUS);
+							protected void onRespSuccessData(Battle battle) {
+								battle.setPageType(PAGE_VERSUS);
 								Launcher.with(getActivity(), FutureBattleActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, versusGaming)
+										.putExtra(Launcher.EX_PAYLOAD, battle)
 										.execute();
 							}
 						}).fire();

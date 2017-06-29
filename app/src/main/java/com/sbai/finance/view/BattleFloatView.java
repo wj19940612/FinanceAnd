@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
@@ -148,7 +148,7 @@ public class BattleFloatView extends RelativeLayout {
         mFighterDataArea.setLayoutParams(params);
     }
 
-    public BattleFloatView initWithModel(VersusGaming model) {
+    public BattleFloatView initWithModel(Battle model) {
         this.setCreateAvatar(model.getLaunchUserPortrait())
                 .setCreateName(model.getLaunchUserName())
                 .setAgainstAvatar(model.getAgainstUserPortrait())
