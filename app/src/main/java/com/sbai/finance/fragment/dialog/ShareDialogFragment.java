@@ -19,6 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomToast;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -101,15 +102,27 @@ public class ShareDialogFragment extends DialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.weChatFriend:
-                shareToPlatform(SHARE_MEDIA.WEIXIN);
+                if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
+                    shareToPlatform(SHARE_MEDIA.WEIXIN);
+                } else {
+                    ToastUtil.curt(R.string.you_not_install_weixin);
+                }
                 dismiss();
                 break;
             case R.id.weChatFriendCircle:
-                shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE)) {
+                    shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                } else {
+                    ToastUtil.curt(R.string.you_not_install_weixin);
+                }
                 dismiss();
                 break;
             case R.id.weibo:
-                shareToPlatform(SHARE_MEDIA.SINA);
+                if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.SINA)) {
+                    shareToPlatform(SHARE_MEDIA.SINA);
+                } else {
+                    ToastUtil.curt(R.string.you_not_install_weibo);
+                }
                 dismiss();
                 break;
             case R.id.cancel:

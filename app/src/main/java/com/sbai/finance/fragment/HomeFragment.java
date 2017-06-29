@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
@@ -23,7 +24,6 @@ import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
-import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
@@ -54,277 +54,282 @@ import butterknife.Unbinder;
 
 public class HomeFragment extends BaseFragment {
 
-	@BindView(R.id.event)
-	TextView mEvent;
-	@BindView(R.id.homeBanner)
-	HomeBanner mHomeBanner;
-	@BindView(R.id.homeHeader)
-	HomeHeader mHomeHeader;
-	@BindView(R.id.topicGv)
-	MyGridView mTopicGv;
-	@BindView(R.id.nestedScrollView)
-	ScrollView mNestedScrollView;
-	@BindView(R.id.bigEvent)
-	LinearLayout mBigEvent;
-	@BindView(R.id.titleBar)
-	TitleBar mTitleBar;
-	@BindView(R.id.battle)
-	IconTextRow mBattle;
+    @BindView(R.id.event)
+    TextView mEvent;
+    @BindView(R.id.homeBanner)
+    HomeBanner mHomeBanner;
+    @BindView(R.id.homeHeader)
+    HomeHeader mHomeHeader;
+    @BindView(R.id.topicGv)
+    MyGridView mTopicGv;
+    @BindView(R.id.nestedScrollView)
+    ScrollView mNestedScrollView;
+    @BindView(R.id.bigEvent)
+    LinearLayout mBigEvent;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+    @BindView(R.id.battle)
+    IconTextRow mBattle;
 
-	private Unbinder unbinder;
-	private TopicGridAdapter mTopicGridAdapter;
+    private Unbinder unbinder;
+    private TopicGridAdapter mTopicGridAdapter;
 
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_home, container, false);
-		unbinder = ButterKnife.bind(this, view);
-		return view;
-	}
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
 
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mNestedScrollView.smoothScrollTo(0, 0);
-			}
-		});
-		mTopicGridAdapter = new TopicGridAdapter(getContext());
-		mTopicGv.setAdapter(mTopicGridAdapter);
-		mTopicGv.setFocusable(false);
-		mTopicGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Topic topic = (Topic) parent.getItemAtPosition(position);
-				if (topic != null) {
-					if (topic.getContextType() == Topic.CONTEXT_TYPE_VARIETY) {
-						Launcher.with(getContext(), TopicActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, topic)
-								.execute();
-					} else if (topic.getContextType() == Topic.CONTEXT_TYPE_H5) {
-						Launcher.with(getActivity(), HideTitleWebActivity.class)
-								.putExtra(HideTitleWebActivity.EX_URL, topic.getContext())
-								.putExtra(HideTitleWebActivity.EX_TITLE, topic.getTitle())
-								.putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-								.execute();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-					} else if (topic.getContextType() == Topic.CONTEXT_TYPE_TEXT) {
-						Launcher.with(getActivity(), TopicDetailActivity.class)
-								.putExtra(TopicDetailActivity.TOPIC, topic)
-								.putExtra(TopicDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-								.execute();
-					}
-				}
-			}
-		});
-		mHomeBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
-			@Override
-			public void onBannerClick(BannerModel information) {
-				if (information.isH5Style()) {
-					Launcher.with(getActivity(), HideTitleWebActivity.class)
-							.putExtra(HideTitleWebActivity.EX_URL, information.getContent())
-							.putExtra(HideTitleWebActivity.EX_TITLE, information.getTitle())
-							.putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-							.execute();
-				} else {
-					Launcher.with(getActivity(), BannerActivity.class)
-							.putExtra(BannerActivity.EX_HTML, information.getContent())
-							.putExtra(BannerActivity.EX_TITLE, information.getTitle())
-							.putExtra(BannerActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-							.execute();
-				}
-			}
-		});
-		mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
-			@Override
-			public void onFutureClick() {
-				Launcher.with(getActivity(), FutureListActivity.class).execute();
-			}
+//        addTopPaddingWithStatusBar(mTitleBar);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNestedScrollView.smoothScrollTo(0, 0);
 
-			@Override
-			public void onStockClick() {
-				Launcher.with(getActivity(), StockListActivity.class).execute();
-			}
+            }
+        });
+        mTopicGridAdapter = new TopicGridAdapter(getContext());
+        mTopicGv.setAdapter(mTopicGridAdapter);
+        mTopicGv.setFocusable(false);
+        mTopicGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Topic topic = (Topic) parent.getItemAtPosition(position);
+                if (topic != null) {
+                    if (topic.getContextType() == Topic.CONTEXT_TYPE_VARIETY) {
+                        Launcher.with(getContext(), TopicActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, topic)
+                                .execute();
+                    } else if (topic.getContextType() == Topic.CONTEXT_TYPE_H5) {
+                        Launcher.with(getActivity(), HideTitleWebActivity.class)
+                                .putExtra(HideTitleWebActivity.EX_URL, topic.getContext())
+                                .putExtra(HideTitleWebActivity.EX_TITLE, topic.getTitle())
+                                .putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    } else if (topic.getContextType() == Topic.CONTEXT_TYPE_TEXT) {
+                        Launcher.with(getActivity(), TopicDetailActivity.class)
+                                .putExtra(TopicDetailActivity.TOPIC, topic)
+                                .putExtra(TopicDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+                }
+            }
+        });
+        mHomeBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
+            @Override
+            public void onBannerClick(BannerModel information) {
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), HideTitleWebActivity.class)
+                            .putExtra(HideTitleWebActivity.EX_URL, information.getContent())
+                            .putExtra(HideTitleWebActivity.EX_TITLE, information.getTitle())
+                            .putExtra(HideTitleWebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), BannerActivity.class)
+                            .putExtra(BannerActivity.EX_HTML, information.getContent())
+                            .putExtra(BannerActivity.EX_TITLE, information.getTitle())
+                            .putExtra(BannerActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                }
+            }
+        });
+        mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
+            @Override
+            public void onFutureClick() {
+                Launcher.with(getActivity(), FutureListActivity.class).execute();
+            }
 
-			@Override
-			public void onHelpClick() {
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), MutualActivity.class).execute();
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
-				}
-			}
+            @Override
+            public void onStockClick() {
+                Launcher.with(getActivity(), StockListActivity.class).execute();
+            }
 
-			@Override
-			public void onSelfChoiceClick() {
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), OptionalActivity.class).execute();
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
-				}
-			}
-		});
-	}
+            @Override
+            public void onHelpClick() {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), MutualActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		startScheduleJob(1 * 1000);
-		requestHomeInfo();
-		requestCurrentBattle();
-	}
+            @Override
+            public void onSelfChoiceClick() {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), OptionalActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+    }
 
-	private void requestCurrentBattle() {
-		if (LocalUser.getUser().isLogin()) {
-			Client.getCurrentBattle().setTag(TAG)
-					.setCallback(new Callback2D<Resp<Battle>, Battle>() {
-						@Override
-						protected void onRespSuccessData(Battle data) {
-							updateBattleView(data);
-						}
-					}).fireFree();
-		} else {
-			mBattle.setSubText(null);
-		}
-	}
 
-	private void updateBattleView(Battle battle) {
-		if (battle.getGameStatus() == Battle.GAME_STATUS_CREATED) {
-			mBattle.setSubText(R.string.battle_status_pending);
-		} else if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED) {
-			mBattle.setSubText(R.string.battle_status_fighting);
-		}
-	}
+    @Override
 
-	@Override
-	public void onTimeUp(int count) {
-		super.onTimeUp(count);
-		if (getUserVisibleHint()) {
-			int counter = mHomeBanner.getInnerCounter();
-			mHomeBanner.setInnerCounter(++counter);
-		}
-	}
+    public void onResume() {
+        super.onResume();
+        startScheduleJob(1 * 1000);
+        requestHomeInfo();
+        requestCurrentBattle();
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		stopScheduleJob();
-	}
+    private void requestCurrentBattle() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.getCurrentBattle().setTag(TAG)
+                    .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+                        @Override
+                        protected void onRespSuccessData(Battle data) {
+                            updateBattleView(data);
+                        }
+                    }).fireFree();
+        } else {
+            mBattle.setSubText(null);
+        }
+    }
 
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		if (isVisibleToUser) {
-			startScheduleJob(1 * 1000);
-		} else {
-			stopScheduleJob();
-		}
-	}
+    private void updateBattleView(Battle battle) {
+        if (battle.getGameStatus() == Battle.GAME_STATUS_CREATED) {
+            mBattle.setSubText(R.string.battle_status_pending);
+        } else if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED) {
+            mBattle.setSubText(R.string.battle_status_fighting);
+        }
+    }
 
-	private void requestHomeInfo() {
-		//获取banner数据
-		Client.getBannerData().setTag(TAG).setIndeterminate(this)
-				.setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
-					@Override
-					protected void onRespSuccessData(List<BannerModel> data) {
-						mHomeBanner.setHomeAdvertisement(data);
-					}
-				}).fire();
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        if (getUserVisibleHint()) {
+            int counter = mHomeBanner.getInnerCounter();
+            mHomeBanner.setInnerCounter(++counter);
+        }
+    }
 
-		//获取最新事件标题
-		Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
-				.setCallback(new Callback<Resp<String>>() {
-					@Override
-					protected void onRespSuccess(Resp<String> resp) {
-						updateEventInfo(resp.getData());
-					}
-				}).fire();
-		//获取主题信息
-		Client.getTopicData().setTag(TAG)
-				.setCallback(new Callback2D<Resp<List<Topic>>, List<Topic>>() {
-					@Override
-					protected void onRespSuccessData(List<Topic> data) {
-						updateTopicInfo((ArrayList<Topic>) data);
-					}
-				}).fire();
-	}
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
 
-	private void updateEventInfo(String data) {
-		mEvent.setText(data);
-	}
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            startScheduleJob(1 * 1000);
+        } else {
+            stopScheduleJob();
+        }
+    }
 
-	private void updateTopicInfo(ArrayList<Topic> topics) {
-		mTopicGridAdapter.clear();
-		mTopicGridAdapter.addAll(topics);
-		mTopicGridAdapter.notifyDataSetChanged();
-	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		unbinder.unbind();
-	}
+    private void requestHomeInfo() {
+        //获取banner数据
+        Client.getBannerData().setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<BannerModel> data) {
+                        mHomeBanner.setHomeAdvertisement(data);
+                    }
+                }).fire();
 
-	@OnClick({R.id.opinionMaster, R.id.bigEvent, R.id.battle})
-	public void onClick(View view) {
-		switch (view.getId()) {
-			case R.id.bigEvent:
-				Launcher.with(getActivity(), EventActivity.class).execute();
-				break;
-			case R.id.opinionMaster:
-				Launcher.with(getActivity(), OpinionActivity.class).execute();
-				break;
-			case R.id.battle:
-				Launcher.with(getActivity(), BattleListActivity.class).execute();
-				break;
-			default:
-				break;
+        //获取最新事件标题
+        Client.getBreakingNewsTitleData().setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback<Resp<String>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<String> resp) {
+                        updateEventInfo(resp.getData());
+                    }
+                }).fire();
+        //获取主题信息
+        Client.getTopicData().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Topic>>, List<Topic>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Topic> data) {
+                        updateTopicInfo((ArrayList<Topic>) data);
+                    }
+                }).fire();
+    }
 
-		}
-	}
+    private void updateEventInfo(String data) {
+        mEvent.setText(data);
+    }
 
-	static class TopicGridAdapter extends ArrayAdapter<Topic> {
+    private void updateTopicInfo(ArrayList<Topic> topics) {
+        mTopicGridAdapter.clear();
+        mTopicGridAdapter.addAll(topics);
+        mTopicGridAdapter.notifyDataSetChanged();
+    }
 
-		public TopicGridAdapter(@NonNull Context context) {
-			super(context, 0);
-		}
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
-		@NonNull
-		@Override
-		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-			ViewHolder viewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_topic, null);
-				viewHolder = new ViewHolder(convertView, getContext());
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			viewHolder.bindingData(getItem(position));
-			return convertView;
-		}
+    @OnClick({R.id.opinionMaster, R.id.bigEvent, R.id.battle})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.bigEvent:
+                Launcher.with(getActivity(), EventActivity.class).execute();
+                break;
+            case R.id.opinionMaster:
+                Launcher.with(getActivity(), OpinionActivity.class).execute();
+                break;
+            case R.id.battle:
+                Launcher.with(getActivity(), BattleListActivity.class).execute();
+                break;
+            default:
+                break;
 
-		static class ViewHolder {
-			@BindView(R.id.topicTitle)
-			TextView mTopicTitle;
-			@BindView(R.id.topicDetail)
-			TextView mTopicDetail;
-			@BindView(R.id.topicImg)
-			ImageView mTopicImg;
-			private Context mContext;
+        }
+    }
 
-			ViewHolder(View view, Context context) {
-				mContext = context;
-				ButterKnife.bind(this, view);
-			}
+    static class TopicGridAdapter extends ArrayAdapter<Topic> {
 
-			public void bindingData(Topic item) {
-				mTopicTitle.setText(item.getTitle());
-				mTopicDetail.setText(item.getSubTitle());
-				Glide.with(mContext).load(item.getBackgroundImg()).placeholder(R.drawable.bg_topic).into(mTopicImg);
-			}
-		}
-	}
+        public TopicGridAdapter(@NonNull Context context) {
+            super(context, 0);
+        }
 
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_topic, null);
+                viewHolder = new ViewHolder(convertView, getContext());
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.bindingData(getItem(position));
+            return convertView;
+        }
+
+        static class ViewHolder {
+            @BindView(R.id.topicTitle)
+            TextView mTopicTitle;
+            @BindView(R.id.topicDetail)
+            TextView mTopicDetail;
+            @BindView(R.id.topicImg)
+            ImageView mTopicImg;
+            private Context mContext;
+
+            ViewHolder(View view, Context context) {
+                mContext = context;
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindingData(Topic item) {
+                mTopicTitle.setText(item.getTitle());
+                mTopicDetail.setText(item.getSubTitle());
+                Glide.with(mContext).load(item.getBackgroundImg()).placeholder(R.drawable.bg_topic).into(mTopicImg);
+            }
+        }
+    }
 }
+

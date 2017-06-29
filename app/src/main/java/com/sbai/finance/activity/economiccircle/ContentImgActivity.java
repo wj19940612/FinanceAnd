@@ -26,7 +26,6 @@ import butterknife.OnClick;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_1;
 import static com.sbai.finance.utils.Launcher.EX_PAYLOAD_2;
@@ -167,6 +166,7 @@ public class ContentImgActivity extends BaseActivity implements ViewPager.OnPage
             PhotoView imageView = new PhotoView(mContext);
             Glide.with(mContext).load(mList.get(position))
                     .thumbnail(0.1f)
+                    .error(R.drawable.ic_default_avatar_big)
                     .dontAnimate()
                     .into(imageView);
             container.addView(imageView);
