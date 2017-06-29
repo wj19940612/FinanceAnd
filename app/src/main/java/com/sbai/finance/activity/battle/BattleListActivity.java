@@ -32,15 +32,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.battle.VersusGaming;
+import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -597,7 +596,6 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 })
                 .setTitle(getString(R.string.join_versus_title))
-                .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(R.string.cancel)
@@ -643,7 +641,6 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 })
                 .setTitle(getString(R.string.join_versus_failure_title))
-                .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(negativeMsg)
@@ -663,7 +660,6 @@ public class BattleListActivity extends BaseActivity implements
                             requestMatchVersusOfSocket("");
                         }
                     })
-                    .setTitleMaxLines(1)
                     .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                     .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                     .setNegative(R.string.cancel);
@@ -682,7 +678,6 @@ public class BattleListActivity extends BaseActivity implements
                         showCancelMatchDialog();
                     }
                 })
-                .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setCancelableOnTouchOutside(false)
@@ -724,7 +719,6 @@ public class BattleListActivity extends BaseActivity implements
                             showMatchDialog();
                         }
                     })
-                    .setTitleMaxLines(1)
                     .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                     .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                     .setCancelableOnTouchOutside(false)
@@ -750,7 +744,6 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                     }
                 })
-                .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setCancelableOnTouchOutside(false)
@@ -795,7 +788,6 @@ public class BattleListActivity extends BaseActivity implements
                         requestJoinBattle(data);
                     }
                 })
-                .setTitleMaxLines(1)
                 .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setCancelableOnTouchOutside(false)
