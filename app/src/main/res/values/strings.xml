@@ -494,6 +494,8 @@
     <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <string name="share_desc">乐米金融，金融小白的第一战!</string>
+    <string name="invite_you_join_future_battle">%1$s邀请你进行一场【美黄金】期货对战，我敢邀，你敢来吗？</string>
+    <string name="future_battle_desc">乐米期货对战，紧张激烈的金融游戏，勇者无所畏惧，还有更多元宝好礼等你领取，快来加入吧！</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
