@@ -635,4 +635,8 @@
     <string name="versus_rule">决斗规则></string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
+
+
+    <string name="you_not_install_weixin">您尚未安装微信</string>
+    <string name="you_not_install_weibo">您尚未安装微博</string>
 </resources>
