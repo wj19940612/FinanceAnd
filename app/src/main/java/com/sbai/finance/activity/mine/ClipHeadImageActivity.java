@@ -69,7 +69,7 @@ public class ClipHeadImageActivity extends BaseActivity {
 
     private void confirmUserNewHeadImage(String bitmapToBase64) {
         Log.d(TAG, "confirmUserNewHeadImage: " + bitmapToBase64.length());
-        // TODO: 2017/6/29 使用直接上传图片 
+        // TODO: 2017/6/29 使用直接上传图片
 //        Client.uploadImage(bitmapToBase64)
 //                .setIndeterminate(this)
 //                .setTag(TAG)
