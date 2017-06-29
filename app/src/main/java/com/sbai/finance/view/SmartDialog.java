@@ -43,6 +43,7 @@ public class SmartDialog {
 
     private String mMessageText;
     private String mTitleText;
+    private int mTitleMaxLines;
 
     private int mMessageTextMaxLines = 3;
 
@@ -184,6 +185,7 @@ public class SmartDialog {
     }
 
     public SmartDialog setTitleMaxLines(int titleMaxLines) {
+        mTitleMaxLines = titleMaxLines;
         return this;
     }
 
@@ -339,6 +341,7 @@ public class SmartDialog {
         }
 
         mMessage.setTextSize(mMessageTextSize);
+        mTitle.setMaxLines(mTitleMaxLines);
         if (TextUtils.isEmpty(mTitleText)) {
             mTitle.setVisibility(View.GONE);
         } else {
