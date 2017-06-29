@@ -311,6 +311,18 @@ public class Client {
     }
 
     /**
+     * /user/upload/image.do
+     * POST
+     * 上传-图片上传（yhj）
+     *
+     * @param base64ImageString
+     * @return
+     */
+    public static API uploadImage(String base64ImageString) {
+        return new API(POST, "/user/upload/image.do", new ApiParams().put("picture", base64ImageString));
+    }
+
+    /**
      * 观点回复点赞
      *
      * @param replyId
