@@ -183,6 +183,10 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setTitleMaxLines(int titleMaxLines) {
+        return this;
+    }
+
     public SmartDialog setNegative(int textId, OnClickListener listener) {
         mNegativeId = textId;
         mNegativeListener = listener;
