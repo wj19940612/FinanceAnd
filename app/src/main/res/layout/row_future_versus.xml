@@ -30,20 +30,24 @@
                 android:paddingRight="9dp">
 
                 <FrameLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp">
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_battle_avatar">
 
                     <ImageView
                         android:id="@+id/createAvatar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_battle_avatar"
                         android:clickable="false"
                         tools:src="@drawable/btn_join_versus"/>
 
                     <ImageView
                         android:id="@+id/createKo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_versus_ko"
                         android:visibility="gone"/>
                 </FrameLayout>
@@ -138,20 +142,23 @@
                 android:paddingRight="9dp">
 
                 <FrameLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp">
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_battle_avatar">
 
                     <ImageView
                         android:id="@+id/againstAvatar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
                         android:clickable="true"
                         tools:src="@drawable/btn_join_versus"/>
 
                     <ImageView
                         android:id="@+id/againstKo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_versus_ko"
                         android:visibility="gone"/>
                 </FrameLayout>

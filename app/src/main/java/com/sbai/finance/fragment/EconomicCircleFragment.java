@@ -32,11 +32,11 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.battle.VersusGaming;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -90,7 +90,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	private OnNoReadNewsListener mOnNoReadNewsListener;
 	private SmartDialog mJoinDialog;
 	private SmartDialog mJoinFailureDialog;
-	private VersusGaming mVersusGaming;
+	private Battle mBattle;
 
 	@Override
 	public void onAttach(Context context) {
@@ -114,7 +114,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 //		addTopPaddingWithStatusBar(mTitleBar);
 		mEconomicCircleList = new ArrayList<>();
 		mSet = new HashSet<>();
-		mVersusGaming = new VersusGaming();
+		mBattle = new Battle();
 		mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEconomicCircleAdapter);
@@ -221,17 +221,17 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				//游戏
 				if (LocalUser.getUser().isLogin()) {
 					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-						mVersusGaming.setPageType(EconomicCircle.PAGE_RECORD);
+						mBattle.setPageType(EconomicCircle.PAGE_RECORD);
 						Launcher.with(getActivity(), FutureBattleActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mVersusGaming)
+								.putExtra(Launcher.EX_PAYLOAD, mBattle)
 								.execute();
 					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
 							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
-						showJoinBattleDialog(mVersusGaming);
+						showJoinBattleDialog(mBattle);
 					} else {
-						mVersusGaming.setPageType(EconomicCircle.PAGE_VERSUS);
+						mBattle.setPageType(EconomicCircle.PAGE_VERSUS);
 						Launcher.with(getActivity(), FutureBattleActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mVersusGaming)
+								.putExtra(Launcher.EX_PAYLOAD, mBattle)
 								.execute();
 					}
 				} else {
@@ -242,34 +242,34 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	}
 
 	private void setVersusGaming(EconomicCircle item) {
-		mVersusGaming.setAgainstFrom(item.getAgainstFrom());
-		mVersusGaming.setAgainstPraise(item.getAgainstPraise());
-		mVersusGaming.setAgainstScore(item.getAgainstScore());
-		mVersusGaming.setAgainstUser(item.getAgainstUser());
-		mVersusGaming.setAgainstUserName(item.getAgainstUserName());
-		mVersusGaming.setAgainstUserPortrait(item.getAgainstUserPortrait());
-		mVersusGaming.setBatchCode(item.getBatchCode());
-		mVersusGaming.setBattleId(item.getDataId());
-		mVersusGaming.setCoinType(item.getCoinType());
-		mVersusGaming.setCreateTime(item.getCreateTime());
-		mVersusGaming.setEndline(item.getEndline());
-		mVersusGaming.setEndTime(item.getEndTime());
-		mVersusGaming.setGameStatus(item.getGameStatus());
-		mVersusGaming.setLaunchUser(item.getLaunchUser());
-		mVersusGaming.setLaunchUserName(item.getUserName());
-		mVersusGaming.setLaunchPraise(item.getLaunchPraise());
-		mVersusGaming.setLaunchUserPortrait(item.getUserPortrait());
-		mVersusGaming.setLaunchScore(item.getLaunchScore());
-		mVersusGaming.setReward(item.getReward());
-		mVersusGaming.setStartTime(item.getStartTime());
-		mVersusGaming.setVarietyId(item.getVarietyId());
-		mVersusGaming.setVarietyName(item.getVarietyName());
-		mVersusGaming.setVarietyType(item.getVarietyType());
-		mVersusGaming.setWinResult(item.getWinResult());
-		mVersusGaming.setId(item.getDataId());
+		mBattle.setAgainstFrom(item.getAgainstFrom());
+		mBattle.setAgainstPraise(item.getAgainstPraise());
+		mBattle.setAgainstScore(item.getAgainstScore());
+		mBattle.setAgainstUser(item.getAgainstUser());
+		mBattle.setAgainstUserName(item.getAgainstUserName());
+		mBattle.setAgainstUserPortrait(item.getAgainstUserPortrait());
+		mBattle.setBatchCode(item.getBatchCode());
+		mBattle.setBattleId(item.getDataId());
+		mBattle.setCoinType(item.getCoinType());
+		mBattle.setCreateTime(item.getCreateTime());
+		mBattle.setEndline(item.getEndline());
+		mBattle.setEndTime(item.getEndTime());
+		mBattle.setGameStatus(item.getGameStatus());
+		mBattle.setLaunchUser(item.getLaunchUser());
+		mBattle.setLaunchUserName(item.getUserName());
+		mBattle.setLaunchPraise(item.getLaunchPraise());
+		mBattle.setLaunchUserPortrait(item.getUserPortrait());
+		mBattle.setLaunchScore(item.getLaunchScore());
+		mBattle.setReward(item.getReward());
+		mBattle.setStartTime(item.getStartTime());
+		mBattle.setVarietyId(item.getVarietyId());
+		mBattle.setVarietyName(item.getVarietyName());
+		mBattle.setVarietyType(item.getVarietyType());
+		mBattle.setWinResult(item.getWinResult());
+		mBattle.setId(item.getDataId());
 	}
 
-	private void showJoinBattleDialog(final VersusGaming item) {
+	private void showJoinBattleDialog(final Battle item) {
 		String reward = "";
 		switch (item.getCoinType()) {
 			case EconomicCircle.COIN_TYPE_INGOT:
@@ -303,13 +303,13 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 	}
 
-	private void requestJoinBattle(final VersusGaming data) {
-		Client.joinVersus(data.getId(), VersusGaming.SOURCE_COTERIE).setTag(TAG)
-				.setCallback(new ApiCallback<Resp<VersusGaming>>() {
+	private void requestJoinBattle(final Battle data) {
+		Client.joinBattle(data.getId(), Battle.SOURCE_COTERIE).setTag(TAG)
+				.setCallback(new ApiCallback<Resp<Battle>>() {
 					@Override
-					public void onSuccess(Resp<VersusGaming> resp) {
+					public void onSuccess(Resp<Battle> resp) {
 						if (resp.isSuccess()) {
-							VersusGaming versusGaming = resp.getData();
+							Battle versusGaming = resp.getData();
 							if (versusGaming != null) {
 								//更新列表对战信息
 								data.setGameStatus(versusGaming.getGameStatus());
@@ -317,7 +317,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 								data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
 								data.setAgainstUserName(versusGaming.getAgainstUserName());
 
-								data.setPageType(VersusGaming.PAGE_VERSUS);
+								data.setPageType(Battle.PAGE_VERSUS);
 								Launcher.with(getActivity(), FutureBattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
 										.execute();
@@ -334,14 +334,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				}).fireFree();
 	}
 
-	private void showJoinVersusFailureDialog(String msg, final int type, final VersusGaming data) {
+	private void showJoinVersusFailureDialog(String msg, final int type, final Battle data) {
 		Integer positiveMsg;
 		Integer negativeMsg = R.string.cancel;
 		//存在还没有结束的游戏
-		if (type == VersusGaming.CODE_EXIT_VERSUS) {
+		if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 			msg = getString(R.string.exit_versus);
 			positiveMsg = R.string.go_versus;
-		} else if (type == VersusGaming.CODE_NO_ENOUGH_MONEY) {
+		} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {
 			msg = getString(R.string.join_versus_failure_tip);
 			positiveMsg = R.string.go_recharge;
 		} else {
@@ -358,14 +358,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					@Override
 					public void onClick(Dialog dialog) {
 						dialog.dismiss();
-						if (type == VersusGaming.CODE_EXIT_VERSUS) {
+						if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							if (data != null) {
-								data.setPageType(VersusGaming.PAGE_VERSUS);
+								data.setPageType(Battle.PAGE_VERSUS);
 								Launcher.with(getActivity(), FutureBattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
 										.execute();
 							}
-						} else if (type == VersusGaming.CODE_NO_ENOUGH_MONEY) {
+						} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {
 							Launcher.with(getActivity(), RechargeActivity.class).execute();
 						}
 					}
@@ -957,7 +957,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 
 					case EconomicCircle.GAME_STATUS_END:
-						if (item.getWinResult() == VersusGaming.RESULT_TIE) {
+						if (item.getWinResult() == Battle.RESULT_TIE) {
 							mStatus.setText(context.getString(R.string.tie));
 						} else {
 							mStatus.setText(context.getString(R.string.versus_end));

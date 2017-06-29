@@ -9,7 +9,7 @@ import java.util.List;
 public class FutureVersus {
     public static final int HAS_MORE=0;
     private int end;
-    private List<VersusGaming> list;
+    private List<Battle> list;
     public boolean hasMore(){
         return end==HAS_MORE;
     }
@@ -21,11 +21,11 @@ public class FutureVersus {
         this.end = end;
     }
 
-    public List<VersusGaming> getList() {
+    public List<Battle> getList() {
         return list;
     }
 
-    public void setList(List<VersusGaming> list) {
+    public void setList(List<Battle> list) {
         this.list = list;
     }
 }

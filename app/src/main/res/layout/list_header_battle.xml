@@ -29,8 +29,8 @@
                 android:layout_marginRight="19dp"
                 android:background="@drawable/bg_check_battle_record"
                 android:paddingBottom="2dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
                 android:paddingTop="2dp"
                 android:text="@string/see_record"
                 android:textColor="@android:color/white"
@@ -39,7 +39,8 @@
             <TextView
                 android:id="@+id/battleRule"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="@string/versus_rule"
                 android:textColor="@color/unluckyText"
                 android:textSize="@dimen/sp_12"/>
