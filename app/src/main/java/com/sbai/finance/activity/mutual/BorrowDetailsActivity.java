@@ -75,6 +75,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 	public static final String STATUS_CHANAGE = "xxx";
 	public static final String DATA_ID = "id";
 	public static final String DATA_STATUS = "status";
+
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.listView)
@@ -119,7 +120,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 	RelativeLayout mGoodHeartPeopleArea;
 	TextView mLeaveMessageNum;
 	TextView mWriteMessage;
-	private int mMax;
+	private int mMax=7;
 	private BorrowDetail mBorrowDetail;
 	private int mLoadId;
 	private MessageAdapter mMessageAdapter;
@@ -129,7 +130,8 @@ public class BorrowDetailsActivity extends BaseActivity {
 	private LocalBroadcastManager mLocalBroadcastManager;
 	private ShieldBroadcastReceiver mShieldBroadcastReceiver;
 	private LinearLayout mheader;
-
+	private int mHorizontalSpacing;
+    private int mAvatarWidth;
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -296,10 +298,17 @@ public class BorrowDetailsActivity extends BaseActivity {
 
 	private void calculateAvatarNum(Context context) {
 		int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-		int margin = (int) Display.dp2Px(68, getResources());
-		int horizontalSpacing = (int) Display.dp2Px(10, getResources());
+		int margin = (int) Display.dp2Px(82, getResources());
 		int avatarWidth = (int) Display.dp2Px(32, getResources());
-		mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
+		int horizontalSpacing = (int) Display.dp2Px(10, getResources());
+		mHorizontalSpacing = (screenWidth-margin)/mMax-avatarWidth;
+		//头像之间的间隔不能过小
+		if (mHorizontalSpacing<=5){
+			mAvatarWidth = (screenWidth-margin)/mMax-horizontalSpacing;
+			mHorizontalSpacing = horizontalSpacing;
+		}else{
+			mAvatarWidth = avatarWidth;
+		}
 	}
 
 	private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
@@ -451,10 +460,6 @@ public class BorrowDetailsActivity extends BaseActivity {
 	private void updateGoodHeartPeopleList(List<GoodHeartPeople> data) {
 		if (data == null) return;
 
-		int width = (int) Display.dp2Px(32, getResources());
-		int height = (int) Display.dp2Px(32, getResources());
-		int margin = (int) Display.dp2Px(10, getResources());
-
 		mAvatarList.removeAllViews();
 		int size = data.size();
 		if (size > 0) {
@@ -462,10 +467,10 @@ public class BorrowDetailsActivity extends BaseActivity {
 		}
 		if (size >= mMax) {
 			size = mMax;
-			for (int i = 0; i < size - 1; i++) {
+			for (int i = 0; i < size; i++) {
 				ImageView imageView = new ImageView(this);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
-				params.leftMargin = (i == 0 ? 0 : margin);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mAvatarWidth, mAvatarWidth);
+				params.leftMargin = (i == 0 ? 0 : mHorizontalSpacing);
 				imageView.setLayoutParams(params);
 				Glide.with(this).load(data.get(i).getPortrait())
 						.bitmapTransform(new GlideCircleTransform(this))
@@ -506,8 +511,8 @@ public class BorrowDetailsActivity extends BaseActivity {
 
 			for (int i = 0; i < size; i++) {
 				ImageView imageView = new ImageView(this);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
-				params.leftMargin = (i == 0 ? 0 : margin);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mAvatarWidth, mAvatarWidth);
+				params.leftMargin = (i == 0 ? 0 : mHorizontalSpacing);
 				imageView.setLayoutParams(params);
 				Glide.with(this).load(data.get(i).getPortrait())
 						.bitmapTransform(new GlideCircleTransform(this))

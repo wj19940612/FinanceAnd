@@ -32,6 +32,7 @@
             android:layout_marginBottom="2dp"
             android:layout_above="@+id/bottom"
             android:layout_centerInParent="true"
+            android:listSelector="@android:color/transparent"
             android:divider="@null"
             android:scrollbars="none"
             android:visibility="visible"/>
