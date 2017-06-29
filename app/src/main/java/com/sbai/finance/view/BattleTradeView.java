@@ -172,6 +172,7 @@ public class BattleTradeView extends LinearLayout {
             mClosePosition.setVisibility(VISIBLE);
             mTradeDataArea.removeAllViews();
             mTradeDataArea.addView(mClosePositionDataArea);
+            mClosePositionDataArea.setVisibility(VISIBLE);
         } else if (state == STATE_TRADE) {
             //未持仓 可以买
             mLongPurchase.setVisibility(VISIBLE);

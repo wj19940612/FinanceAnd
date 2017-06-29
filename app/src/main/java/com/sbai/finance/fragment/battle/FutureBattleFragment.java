@@ -91,6 +91,7 @@ public class FutureBattleFragment extends BaseFragment {
     private VersusGaming mVersusGaming;
     private Variety mVariety;
     private FutureData mFutureData;
+
     private TradeOrder mCurrentOrder;
     private TradeOrder mCreatorOrder;
     private TradeOrder mAgainstOrder;
@@ -267,7 +268,6 @@ public class FutureBattleFragment extends BaseFragment {
     public void requestOrderHistory(){
         Client.getOrderHistory(mVersusGaming.getId())
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {
@@ -295,15 +295,17 @@ public class FutureBattleFragment extends BaseFragment {
 
     private void updateCurrentOrder(List<TradeOrder> data) {
         TradeOrder currentOrder = null;
+        TradeOrder creatorOrder = null;
+        TradeOrder againstOrder = null;
         for (TradeOrder tradeOrder : data) {
             if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                currentOrder =tradeOrder;
+                currentOrder = tradeOrder;
             }
-            if (tradeOrder.getId() == mVersusGaming.getLaunchUser()) {
-                mCreatorOrder = tradeOrder;
+            if (tradeOrder.getUserId() == mVersusGaming.getLaunchUser()) {
+                creatorOrder = tradeOrder;
             }
-            if (tradeOrder.getId() == mVersusGaming.getAgainstUser()) {
-                mAgainstOrder = tradeOrder;
+            if (tradeOrder.getUserId() == mVersusGaming.getAgainstUser()) {
+                againstOrder = tradeOrder;
             }
         }
         if (currentOrder != null) {
@@ -312,6 +314,14 @@ public class FutureBattleFragment extends BaseFragment {
             mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), 0);
         } else {
             setBattleTradeState(STATE_TRADE);
+        }
+
+        if (creatorOrder != null) {
+            mCurrentOrder = creatorOrder;
+        }
+
+        if (againstOrder != null) {
+            mAgainstOrder = againstOrder;
         }
         mGameStatus = GAME_STATUS_STARTED;
     }
@@ -444,6 +454,7 @@ public class FutureBattleFragment extends BaseFragment {
             } else {
                 myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
             }
+            myProfit = myProfit * mVariety.getEachPointMoney() * mVariety.getRatio();
             mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), myProfit);
         }
         //房主的累计收益
@@ -453,6 +464,7 @@ public class FutureBattleFragment extends BaseFragment {
             } else {
                 creatorProfit = mCreatorOrder.getOrderPrice() - futureData.getLastPrice();
             }
+            creatorProfit = creatorProfit * mVariety.getEachPointMoney();
         }
         //对抗者的累计收益
         if (mAgainstOrder != null) {
@@ -461,6 +473,7 @@ public class FutureBattleFragment extends BaseFragment {
             } else {
                 againstProfit = mAgainstOrder.getOrderPrice() - futureData.getLastPrice();
             }
+            againstProfit = againstProfit * mVariety.getEachPointMoney();
         }
         ((FutureBattleActivity)getActivity()).updateBattleInfo(creatorProfit,againstProfit);
 

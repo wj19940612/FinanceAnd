@@ -11,7 +11,6 @@ public class Client {
     private static final int POST = Request.Method.POST;
     public static final int DEFAULT_PAGE_SIZE = 15;
 
-
     /**
      * 获取期货品种
      *
@@ -970,7 +969,6 @@ public class Client {
      * @param money
      * @return
      */
-
     public static API borrowIn(String content, String contentImg, String days, String interest, String money,
                                String location, double locationLng, double locationLat) {
 

@@ -212,7 +212,7 @@ public class WalletActivity extends BaseActivity {
                                         dialog.dismiss();
                                     }
                                 })
-                                .setNegativeVisable(View.GONE)
+                                .setNegativeVisible(View.GONE)
                                 .show();
                     }
                     break;

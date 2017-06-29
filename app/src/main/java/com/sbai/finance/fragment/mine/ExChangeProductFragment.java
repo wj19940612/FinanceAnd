@@ -230,7 +230,7 @@ public class ExChangeProductFragment extends BaseFragment {
                         requestVcoinOrIntegrateList();
                     }
                 })
-                .setNegativeVisable(View.GONE)
+                .setNegativeVisible(View.GONE)
                 .show();
     }
 
