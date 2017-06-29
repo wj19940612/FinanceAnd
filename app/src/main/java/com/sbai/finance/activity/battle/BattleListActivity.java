@@ -487,20 +487,20 @@ public class BattleListActivity extends BaseActivity implements
     private void updateUserFund(UserFundInfoModel data) {
         if (data.getCredit()>10000){
              double create=Double.valueOf(new DecimalFormat("0.0").format(data.getCredit()/10000));
-             double createInt = Math.floor(create);
-             if (createInt==create){
-                 create=createInt;
-             }
+//             double createInt = Math.floor(create);
+//             if (createInt==create){
+//                 create=createInt;
+//             }
             mIntegral.setText(create+"万");
         }else{
             mIntegral.setText(new DecimalFormat("0.00").format(data.getCredit()));
         }
         if (data.getYuanbao()>10000){
             double ingot=Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao()/10000));
-            double ingotInt = Math.floor(ingot);
-            if (ingotInt==ingot){
-                ingot=ingotInt;
-            }
+//            double ingotInt = Math.floor(ingot);
+//            if (ingotInt==ingot){
+//                ingot=ingotInt;
+//            }
             mIngot.setText(ingot+ "万个");
         }else{
             mIngot.setText(Math.round(data.getYuanbao()) + "个");
