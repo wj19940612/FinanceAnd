@@ -334,9 +334,6 @@ public class BattleListActivity extends BaseActivity implements
                                 Launcher.with(getActivity(), FutureBattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, versusGaming)
                                         .executeForResult(CANCEL_BATTLE);
-
-                            } else {
-                                requestBattleInfo(data);
                             }
                         } else {
                             showJoinVersusFailureDialog(resp.getMsg(), resp.getCode());
@@ -349,20 +346,6 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }).fireFree();
     }
-
-    private void requestBattleInfo(VersusGaming item) {
-        Client.getBattleInfo(item.getId(), item.getBatchCode()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<VersusGaming>, VersusGaming>() {
-                    @Override
-                    protected void onRespSuccessData(VersusGaming data) {
-                        data.setPageType(VersusGaming.PAGE_VERSUS);
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
-                                .executeForResult(CANCEL_BATTLE);
-                    }
-                }).fire();
-    }
-
     private void requestMatchVersus(final int type, String refuseId) {
         String refuseIds = "";
         if (refuseId.isEmpty()) {
