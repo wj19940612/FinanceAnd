@@ -53,8 +53,6 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private int mSelectPosition;
 
-    private UserFundInfoModel mUserFundInfoModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +60,6 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         ButterKnife.bind(this);
 
         initView();
-
-        updateCoinAndIntegrateNumber(null);
     }
 
     @Override
@@ -122,7 +118,6 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                 .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
                     @Override
                     protected void onRespSuccessData(UserFundInfoModel data) {
-                        mUserFundInfoModel = data;
                         updateCoinAndIntegrateNumber(data);
                         ExChangeProductFragment exChangeProductFragment = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(0);
                         ExChangeProductFragment exChangeProductFragment2 = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(1);

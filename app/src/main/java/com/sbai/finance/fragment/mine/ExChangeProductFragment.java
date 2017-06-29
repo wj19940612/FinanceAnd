@@ -208,30 +208,12 @@ public class ExChangeProductFragment extends BaseFragment {
                         super.onReceive(objectResp);
                         if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
                             showExchangeFailDialog(item);
-                        } else if (objectResp.isExchangeProductHasChange()) {
-                            showExchangeProductIsChangeDialog(item);
                         } else {
                             ToastUtil.curt(objectResp.getMsg());
                         }
                     }
                 })
                 .fire();
-    }
-
-    private void showExchangeProductIsChangeDialog(CornucopiaProductModel item) {
-        int title = item.isVcoin() ? R.string.buy_fail : R.string.exchange_fail;
-        int msg = item.isVcoin() ? R.string.buy_product_is_change : R.string.exchange_product_is_change;
-        SmartDialog.with(getActivity(), msg, title)
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        mExchangeProductAdapter.clear();
-                        requestVcoinOrIntegrateList();
-                    }
-                })
-                .setNegativeVisable(View.GONE)
-                .show();
     }
 
     private void showExchangeFailDialog(CornucopiaProductModel item) {
