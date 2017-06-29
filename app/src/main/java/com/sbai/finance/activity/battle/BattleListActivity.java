@@ -154,18 +154,6 @@ public class BattleListActivity extends BaseActivity implements
         mIntegral = (TextView) view.findViewById(R.id.integral);
         mIngot = (TextView) view.findViewById(R.id.ingot);
         mRecharge = (TextView) view.findViewById(R.id.recharge);
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class)
-                            .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId())
-                            .execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-        });
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
