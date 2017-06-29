@@ -144,6 +144,7 @@ public class FutureBattleFragment extends BaseFragment {
             showBattleTradeView();
             setVisitorMode();
             requestOrderHistory();
+            requestCurrentOrder();
         } else {
             //判断状态是否在对抗中
             //未开始显示邀请 匹配  取消  视图
@@ -293,9 +294,10 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void updateCurrentOrder(List<TradeOrder> data) {
+        TradeOrder currentOrder = null;
         for (TradeOrder tradeOrder : data) {
             if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                mCurrentOrder = tradeOrder;
+                currentOrder =tradeOrder;
             }
             if (tradeOrder.getId() == mVersusGaming.getLaunchUser()) {
                 mCreatorOrder = tradeOrder;
@@ -304,7 +306,8 @@ public class FutureBattleFragment extends BaseFragment {
                 mAgainstOrder = tradeOrder;
             }
         }
-        if (mCurrentOrder != null) {
+        if (currentOrder != null) {
+            mCurrentOrder = currentOrder;
             setBattleTradeState(STATE_CLOSE_POSITION);
             mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), 0);
         } else {
