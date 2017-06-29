@@ -252,7 +252,7 @@ public class FutureBattleFragment extends BaseFragment {
     }
 
     private void requestVarietyData() {
-        Client.getVarietyDetails(mVersusGaming.getVarietyId()).setTag(TAG)
+        Client.requsetVarietyPrice(mVersusGaming.getVarietyId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Variety>, Variety>() {
                     @Override
                     protected void onRespSuccessData(Variety variety) {

@@ -456,6 +456,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
+                            requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
                         }
                     })
                     .setTitleMaxLines(1)
@@ -474,6 +475,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        finish();
                     }
                 })
                 .setNegative(R.string.recreate_room, new SmartDialog.OnClickListener() {
