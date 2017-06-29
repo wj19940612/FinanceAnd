@@ -105,7 +105,6 @@ public class ExChangeProductFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mExchangeProductAdapter.clear();
                 requestVcoinOrIntegrateList();
             }
         });
@@ -208,6 +207,9 @@ public class ExChangeProductFragment extends BaseFragment {
                         super.onReceive(objectResp);
                         if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
                             showExchangeFailDialog(item);
+                        } else if (objectResp.isExchangeProductHasChange()) {
+                            requestVcoinOrIntegrateList();
+                            ToastUtil.curt(objectResp.getMsg());
                         } else {
                             ToastUtil.curt(objectResp.getMsg());
                         }
