@@ -105,7 +105,7 @@ public class ClipHeadImageActivity extends BaseActivity {
     private void uploadUserHeadImageUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
             Log.d(TAG, "uploadUserHeadImageUrl: " + url);
-            Client.updateUserHeadImage(url)
+            Client.updateUserHeadImagePath(url)
                     .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setTag(TAG)
