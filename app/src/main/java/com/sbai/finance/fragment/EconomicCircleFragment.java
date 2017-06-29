@@ -1,10 +1,12 @@
 package com.sbai.finance.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,10 +24,12 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
@@ -43,7 +47,9 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CollapsedTextView;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.ApiCallback;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,6 +88,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	Unbinder unbinder;
 
 	private OnNoReadNewsListener mOnNoReadNewsListener;
+	private SmartDialog mJoinDialog;
+	private SmartDialog mJoinFailureDialog;
+	private Battle mBattle;
 
 	@Override
 	public void onAttach(Context context) {
@@ -105,6 +114,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 //		addTopPaddingWithStatusBar(mTitleBar);
 		mEconomicCircleList = new ArrayList<>();
 		mSet = new HashSet<>();
+		mBattle = new Battle();
 		mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEconomicCircleAdapter);
@@ -195,19 +205,178 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		EconomicCircle item = (EconomicCircle) parent.getItemAtPosition(position);
+		setVersusGaming(item);
 		if (item != null) {
-			if (item.getType() == 2) {
-				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
-				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
-				startActivityForResult(intent, REQ_CODE_USERDATA);
-			} else if (item.getType() == 3) {
-
-			} else {
+			if (item.getType() == 1) {
+				//借钱
 				Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
+			} else if (item.getType() == 2) {
+				//观点
+				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
+				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
+				startActivityForResult(intent, REQ_CODE_USERDATA);
+			} else {
+				//游戏
+				if (LocalUser.getUser().isLogin()) {
+					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
+						mBattle.setPageType(EconomicCircle.PAGE_RECORD);
+						Launcher.with(getActivity(), FutureBattleActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mBattle)
+								.execute();
+					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
+							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
+						showJoinBattleDialog(mBattle);
+					} else {
+						mBattle.setPageType(EconomicCircle.PAGE_VERSUS);
+						Launcher.with(getActivity(), FutureBattleActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mBattle)
+								.execute();
+					}
+				} else {
+					Launcher.with(getActivity(), LoginActivity.class).execute();
+				}
 			}
 		}
+	}
+
+	private void setVersusGaming(EconomicCircle item) {
+		mBattle.setAgainstFrom(item.getAgainstFrom());
+		mBattle.setAgainstPraise(item.getAgainstPraise());
+		mBattle.setAgainstScore(item.getAgainstScore());
+		mBattle.setAgainstUser(item.getAgainstUser());
+		mBattle.setAgainstUserName(item.getAgainstUserName());
+		mBattle.setAgainstUserPortrait(item.getAgainstUserPortrait());
+		mBattle.setBatchCode(item.getBatchCode());
+		mBattle.setBattleId(item.getDataId());
+		mBattle.setCoinType(item.getCoinType());
+		mBattle.setCreateTime(item.getCreateTime());
+		mBattle.setEndline(item.getEndline());
+		mBattle.setEndTime(item.getEndTime());
+		mBattle.setGameStatus(item.getGameStatus());
+		mBattle.setLaunchUser(item.getLaunchUser());
+		mBattle.setLaunchUserName(item.getUserName());
+		mBattle.setLaunchPraise(item.getLaunchPraise());
+		mBattle.setLaunchUserPortrait(item.getUserPortrait());
+		mBattle.setLaunchScore(item.getLaunchScore());
+		mBattle.setReward(item.getReward());
+		mBattle.setStartTime(item.getStartTime());
+		mBattle.setVarietyId(item.getVarietyId());
+		mBattle.setVarietyName(item.getVarietyName());
+		mBattle.setVarietyType(item.getVarietyType());
+		mBattle.setWinResult(item.getWinResult());
+		mBattle.setId(item.getDataId());
+	}
+
+	private void showJoinBattleDialog(final Battle item) {
+		String reward = "";
+		switch (item.getCoinType()) {
+			case EconomicCircle.COIN_TYPE_INGOT:
+				reward = item.getReward() + getActivity().getString(R.string.ingot);
+				break;
+			case EconomicCircle.COIN_TYPE_CASH:
+				reward = item.getReward() + getActivity().getString(R.string.cash);
+				break;
+			case EconomicCircle.COIN_TYPE_INTEGRAL:
+				reward = item.getReward() + getActivity().getString(R.string.integral);
+				break;
+		}
+		if (mJoinDialog == null) {
+			mJoinDialog = SmartDialog.with(getActivity());
+		}
+		mJoinDialog.setMessage(getString(R.string.join_versus_tip, reward))
+				.setMessageTextSize(15)
+				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+						requestJoinBattle(item);
+					}
+				})
+				.setTitle(getString(R.string.join_versus_title))
+				.setTitleMaxLines(1)
+				.setTitleTextColor(ContextCompat.getColor(getContext(), R.color.blackAssist))
+				.setMessageTextColor(ContextCompat.getColor(getContext(), R.color.opinionText))
+				.setNegative(R.string.cancel)
+				.show();
+
+	}
+
+	private void requestJoinBattle(final Battle data) {
+		Client.joinBattle(data.getId(), Battle.SOURCE_COTERIE).setTag(TAG)
+				.setCallback(new ApiCallback<Resp<Battle>>() {
+					@Override
+					public void onSuccess(Resp<Battle> resp) {
+						if (resp.isSuccess()) {
+							Battle versusGaming = resp.getData();
+							if (versusGaming != null) {
+								//更新列表对战信息
+								data.setGameStatus(versusGaming.getGameStatus());
+								data.setAgainstUser(versusGaming.getAgainstUser());
+								data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
+								data.setAgainstUserName(versusGaming.getAgainstUserName());
+
+								data.setPageType(Battle.PAGE_VERSUS);
+								Launcher.with(getActivity(), FutureBattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, data)
+										.execute();
+							}
+						} else {
+							showJoinVersusFailureDialog(resp.getMsg(), resp.getCode(), data);
+						}
+					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+
+					}
+				}).fireFree();
+	}
+
+	private void showJoinVersusFailureDialog(String msg, final int type, final Battle data) {
+		Integer positiveMsg;
+		Integer negativeMsg = R.string.cancel;
+		//存在还没有结束的游戏
+		if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
+			msg = getString(R.string.battle_joined_or_created);
+			positiveMsg = R.string.go_battle;
+		} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {
+			msg = getString(R.string.join_battle_balance_not_enough);
+			positiveMsg = R.string.go_recharge;
+		} else {
+			msg = getString(R.string.invite_invalid);
+			positiveMsg = R.string.ok;
+			negativeMsg = null;
+		}
+		if (mJoinFailureDialog == null) {
+			mJoinFailureDialog = SmartDialog.with(getActivity());
+		}
+		mJoinFailureDialog.setMessage(msg)
+				.setMessageTextSize(15)
+				.setPositive(positiveMsg, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+						if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
+							if (data != null) {
+								data.setPageType(Battle.PAGE_VERSUS);
+								Launcher.with(getActivity(), FutureBattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, data)
+										.execute();
+							}
+						} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {
+							Launcher.with(getActivity(), RechargeActivity.class).execute();
+						}
+					}
+				})
+				.setTitle(getString(R.string.join_versus_failure))
+				.setTitleMaxLines(1)
+				.setTitleTextColor(ContextCompat.getColor(getContext(), R.color.blackAssist))
+				.setMessageTextColor(ContextCompat.getColor(getContext(), R.color.opinionText))
+				.setNegative(negativeMsg)
+				.show();
+
 	}
 
 	private void requestNewMessageCount() {
@@ -284,6 +453,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
 						mEconomicCircleList = economicCircleList;
 						updateEconomicCircleList(mEconomicCircleList);
+
 					}
 
 					@Override

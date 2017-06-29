@@ -34,6 +34,7 @@ import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
@@ -212,16 +213,19 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
             @Override
             public void onLongPurchaseButtonClick() {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_BULLISH);
                 requestCreateOrder(1);
             }
 
             @Override
             public void onShortPurchaseButtonClick() {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_BEARISH);
                 requestCreateOrder(0);
             }
 
             @Override
             public void onClosePositionButtonClick() {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_CLOSE_POSITION);
                 requestClosePosition(mCurrentOrder.getId());
             }
         });
@@ -459,7 +463,7 @@ public class FutureBattleFragment extends BaseFragment {
             } else {
                 myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
             }
-            myProfit = myProfit * mVariety.getEachPointMoney() * mVariety.getRatio();
+            myProfit = myProfit * mVariety.getEachPointMoney();
             mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), myProfit);
         }
         //房主的累计收益

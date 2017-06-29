@@ -52,6 +52,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -159,6 +160,7 @@ public class BattleListActivity extends BaseActivity implements
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_RECHARGE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CornucopiaActivity.class).execute();
                 } else {
@@ -181,6 +183,7 @@ public class BattleListActivity extends BaseActivity implements
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CHECK_RECODE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
                 } else {
@@ -200,6 +203,7 @@ public class BattleListActivity extends BaseActivity implements
                                         .show(getSupportFragmentManager());
                             }
                         }).fire();
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
             }
         });
         mListView.addHeaderView(header);
@@ -532,6 +536,7 @@ public class BattleListActivity extends BaseActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.createVersus:
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
                 } else {
@@ -539,6 +544,7 @@ public class BattleListActivity extends BaseActivity implements
                 }
                 break;
             case R.id.matchVersus:
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_MATCH_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     showAskMatchDialog();
                 } else {
@@ -546,6 +552,7 @@ public class BattleListActivity extends BaseActivity implements
                 }
                 break;
             case R.id.currentVersus:
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
                     mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
                     Launcher.with(getActivity(), FutureBattleActivity.class)

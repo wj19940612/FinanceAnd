@@ -605,12 +605,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void initTitleBar() {
         final String shareUrl = String.format(Client.FUTURE_SHARE_URL, mVariety.getVarietyId());
+        final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
+        final String shareDescribe = getString(R.string.share_desc);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl)
+                        .setShareContent(FutureTradeActivity.this, shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });

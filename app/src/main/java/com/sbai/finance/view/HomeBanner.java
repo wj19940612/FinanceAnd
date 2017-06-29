@@ -34,6 +34,7 @@ public class HomeBanner extends FrameLayout {
 
     private AdvertisementAdapter mAdapter;
     private int mInnerCounter;
+
     public interface OnViewClickListener {
         void onBannerClick(BannerModel information);
     }
@@ -57,6 +58,7 @@ public class HomeBanner extends FrameLayout {
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.home_banner, this, true);
         ButterKnife.bind(this);
+        mInnerCounter = 1;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class HomeBanner extends FrameLayout {
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
-                setInnerCounter(0);
+                setInnerCounter(1);
             }
         }
     };
@@ -100,7 +102,7 @@ public class HomeBanner extends FrameLayout {
 
     public void setInnerCounter(int innerCounter) {
         mInnerCounter = innerCounter;
-        if (mInnerCounter == 5) { // 5 seconds
+        if (mInnerCounter % 6 == 0) { // 5 seconds (innerCounter: 1~6)
             nextAdvertisement();
         }
     }
@@ -158,12 +160,13 @@ public class HomeBanner extends FrameLayout {
         }
 
         @Override
-        public int getCount() {
-            return mList.size();
-        }
-        @Override
         public int getItemPosition(Object object) {
             return POSITION_NONE;
+        }
+
+        @Override
+        public int getCount() {
+            return mList.size();
         }
 
         @Override

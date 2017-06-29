@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -51,9 +52,9 @@ public class BattleRuleDialogFragment extends DialogFragment {
     WebView mWebView;
 
     private Unbinder mBind;
-    private int mTitleResId;
+    private String mTitleMsg;
     private WebViewClient mWebViewClient;
-    protected String mPureHtml;
+    private String mPureHtml;
     public BattleRuleDialogFragment() {
     }
 
@@ -67,7 +68,6 @@ public class BattleRuleDialogFragment extends DialogFragment {
     }
     protected void initWebView() {
         // init cookies
-
         // init webSettings
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -133,24 +133,13 @@ public class BattleRuleDialogFragment extends DialogFragment {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
         return "<html>" + head + bodyHTML + "</html>";
     }
-
-
-    public static BattleRuleDialogFragment newInstance(int title, String content) {
-        Bundle args = new Bundle();
-        BattleRuleDialogFragment fragment = new BattleRuleDialogFragment();
-        args.putString(KEY_content, content);
-        args.putInt(KEY_TITLE, title);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
-            mTitleResId = getArguments().getInt(KEY_TITLE);
-            mPureHtml = getArguments().getString(KEY_content);
+            mTitleMsg = getArguments().getString(KEY_TITLE);
+            mPureHtml = getArguments().getString(KEY_CONTENT_RES);
         }
     }
 
@@ -172,9 +161,7 @@ public class BattleRuleDialogFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout((int) (dm.widthPixels * 0.65), WindowManager.LayoutParams.WRAP_CONTENT);
         }
-        if (mTitleResId != 0) {
-            mTitle.setText(mTitleResId);
-        }
+        mTitle.setText(mTitleMsg);
         initWebView();
     }
 

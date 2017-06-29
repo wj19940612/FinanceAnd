@@ -23,8 +23,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -53,8 +53,6 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private int mSelectPosition;
 
-    private UserFundInfoModel mUserFundInfoModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +60,6 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         ButterKnife.bind(this);
 
         initView();
-
-        updateCoinAndIntegrateNumber(null);
     }
 
     @Override
@@ -109,8 +105,8 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
         if (userFundInfoModel != null) {
-            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
-            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, StrFormatter.getFormIngot(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, StrFormatter.getFormIngot(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }
 
@@ -122,12 +118,11 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                 .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
                     @Override
                     protected void onRespSuccessData(UserFundInfoModel data) {
-                        mUserFundInfoModel = data;
                         updateCoinAndIntegrateNumber(data);
-                        ExChangeProductFragment exChangeProductFragment = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(0);
-                        ExChangeProductFragment exChangeProductFragment2 = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(1);
-                        exChangeProductFragment.setUserFundInfo(data);
-                        exChangeProductFragment2.setUserFundInfo(data);
+                        ExChangeProductFragment ingotChangeProductFragment = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(0);
+                        ExChangeProductFragment integrateChangeProductFragment2 = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(1);
+                        ingotChangeProductFragment.setUserFundInfo(data);
+                        integrateChangeProductFragment2.setUserFundInfo(data);
                     }
 
                 })

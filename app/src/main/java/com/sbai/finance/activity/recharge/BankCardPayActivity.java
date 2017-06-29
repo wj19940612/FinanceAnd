@@ -6,7 +6,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -89,6 +88,10 @@ public class BankCardPayActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mAgreeProtocol.setChecked(isChecked);
+                boolean checkSubmitEnable = checkSubmitEnable();
+                if (mSubmitRechargeInfo.isEnabled()!=checkSubmitEnable) {
+                    mSubmitRechargeInfo.setEnabled(checkSubmitEnable);
+                }
             }
         });
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -108,6 +111,7 @@ public class BankCardPayActivity extends BaseActivity {
 
         mDealTime.setText(DateUtil.format(SysTime.getSysTime().getSystemTimestamp(), DateUtil.DEFAULT_FORMAT));
         mDealMoney.setText(getString(R.string.RMB, FinanceUtil.formatWithScale(mMoney)));
+
     }
 
 
@@ -241,8 +245,8 @@ public class BankCardPayActivity extends BaseActivity {
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            Log.d(TAG, "onRespSuccess: " + resp.toString());
-                            ToastUtil.curt(resp.toString());
+                            ToastUtil.curt(resp.getMsg());
+                            finish();
                         }
                     })
                     .fire();

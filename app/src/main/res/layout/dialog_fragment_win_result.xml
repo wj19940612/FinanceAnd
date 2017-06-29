@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/dialogDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/ic_popup_delete"/>
+
+    <RelativeLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/dialogDelete">
+
+        <TextView
+            android:id="@+id/winResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="+300元宝"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/winDescribe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/winResult"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:text="+300元宝"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"/>
+
+
+    </RelativeLayout>
+</RelativeLayout>
