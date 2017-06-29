@@ -60,7 +60,6 @@ public class ClipHeadImageActivity extends BaseActivity {
                 if (clipBitmap != null) {
 //                    String bitmapToBase64 = ImageUtils.compressImageToBase64(clipBitmap);
                     String bitmapToBase64 = ImageUtils.bitmapToBase64(clipBitmap);
-                    Log.d(TAG, "onViewClicked: "+clipBitmap.getAllocationByteCount());
                     clipBitmap.recycle();
                     confirmUserNewHeadImage(bitmapToBase64);
                 }
