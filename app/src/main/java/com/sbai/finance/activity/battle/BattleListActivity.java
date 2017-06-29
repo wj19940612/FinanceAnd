@@ -140,7 +140,6 @@ public class BattleListActivity extends BaseActivity implements
 
         WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         scrollToTop(mTitleBar, mListView);
-
     }
 
     private void initLoginReceiver() {
@@ -183,8 +182,8 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 if (LocalUser.getUser().isLogin()) {
-                     Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
-                }else{
+                    Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
@@ -239,7 +238,7 @@ public class BattleListActivity extends BaseActivity implements
                                     .executeForResult(CANCEL_BATTLE);
                         }
                     }
-                }else{
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
@@ -258,6 +257,7 @@ public class BattleListActivity extends BaseActivity implements
             mIntegral.setText("0.00");
             mIngot.setText("0");
         }
+
         startScheduleJob(5 * 1000);
     }
 
@@ -337,6 +337,7 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }).fireFree();
     }
+
     private void requestMatchVersus(final int type, String refuseId) {
         String refuseIds = "";
         if (refuseId.isEmpty()) {
@@ -487,24 +488,24 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void updateUserFund(UserFundInfoModel data) {
-        if (data.getCredit()>10000){
-             double create=Double.valueOf(new DecimalFormat("0.0").format(data.getCredit()/10000));
+        if (data.getCredit() > 10000) {
+            double create = Double.valueOf(new DecimalFormat("0.0").format(data.getCredit() / 10000));
 //             double createInt = Math.floor(create);
 //             if (createInt==create){
 //                 create=createInt;
 //             }
-            mIntegral.setText(create+"万");
-        }else{
+            mIntegral.setText(create + "万");
+        } else {
             mIntegral.setText(new DecimalFormat("0.00").format(data.getCredit()));
         }
-        if (data.getYuanbao()>10000){
-            double ingot=Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao()/10000));
+        if (data.getYuanbao() > 10000) {
+            double ingot = Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao() / 10000));
 //            double ingotInt = Math.floor(ingot);
 //            if (ingotInt==ingot){
 //                ingot=ingotInt;
 //            }
-            mIngot.setText(ingot+ "万个");
-        }else{
+            mIngot.setText(ingot + "万个");
+        } else {
             mIngot.setText(Math.round(data.getYuanbao()) + "个");
         }
     }
@@ -831,7 +832,7 @@ public class BattleListActivity extends BaseActivity implements
     public void onRefresh() {
         reset();
         requestBattleList();
-        if (LocalUser.getUser().isLogin()){
+        if (LocalUser.getUser().isLogin()) {
             requestCurrentBattle();
             requestUserFindInfo();
         }
