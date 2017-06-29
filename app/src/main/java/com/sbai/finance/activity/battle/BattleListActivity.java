@@ -209,22 +209,15 @@ public class BattleListActivity extends BaseActivity implements
         });
         mListView.addHeaderView(header);
         //add footer
-        LinearLayout footParent = new LinearLayout(getActivity());
-        TextView view = new TextView(getActivity());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(100, getResources()));
-        layoutParams.gravity= Gravity.CENTER;
-        view.setLayoutParams(layoutParams);
-        view.setText(getString(R.string.see_his_battle));
-        view.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
-        view.setOnClickListener(new View.OnClickListener() {
+        View view = getLayoutInflater().inflate(R.layout.footer_battle_list,null);
+        TextView seeHisRecord= (TextView) view.findViewById(R.id.seeHisBattle);
+        seeHisRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(),BattleHisRecordActivity.class).execute();
             }
         });
-        footParent.setBackgroundColor(Color.TRANSPARENT);
-        footParent.addView(view);
-        mListView.addFooterView(footParent);
+        mListView.addFooterView(view);
     }
 
     private void initListView() {
