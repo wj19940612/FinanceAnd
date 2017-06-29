@@ -32,6 +32,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.httplib.CookieManger;
 
@@ -84,23 +85,27 @@ public class BankCardPayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bank_card_pay);
         ButterKnife.bind(this);
-        mAgreeProtocol.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mAgreeProtocol.setChecked(isChecked);
-                boolean checkSubmitEnable = checkSubmitEnable();
-                if (mSubmitRechargeInfo.isEnabled()!=checkSubmitEnable) {
-                    mSubmitRechargeInfo.setEnabled(checkSubmitEnable);
-                }
-            }
-        });
-        mAuthCode.addTextChangedListener(mValidationWatcher);
         setKeyboardHelper();
         mMoney = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
         mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         mUsablePlatform = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
 
+        mAuthCode.addTextChangedListener(mValidationWatcher);
+        mAgreeProtocol.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mAgreeProtocol.setChecked(isChecked);
+                boolean checkSubmitEnable = checkSubmitEnable();
+                if (mSubmitRechargeInfo.isEnabled() != checkSubmitEnable) {
+                    mSubmitRechargeInfo.setEnabled(checkSubmitEnable);
+                }
+            }
+        });
 
+        initPayInfo();
+    }
+
+    private void initPayInfo() {
         if (mUserBankCardInfoModel != null) {
             String cardNumber = mUserBankCardInfoModel.getCardNumber();
             mBankCard.setText(getString(R.string.text_number, mUserBankCardInfoModel.getIssuingBankName(), cardNumber.substring(cardNumber.length() - 4)));
@@ -111,7 +116,6 @@ public class BankCardPayActivity extends BaseActivity {
 
         mDealTime.setText(DateUtil.format(SysTime.getSysTime().getSystemTimestamp(), DateUtil.DEFAULT_FORMAT));
         mDealMoney.setText(getString(R.string.RMB, FinanceUtil.formatWithScale(mMoney)));
-
     }
 
 
@@ -179,14 +183,14 @@ public class BankCardPayActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             boolean checkSubmitEnable = checkSubmitEnable();
-            if (mSubmitRechargeInfo.isEnabled()!=checkSubmitEnable) {
+            if (mSubmitRechargeInfo.isEnabled() != checkSubmitEnable) {
                 mSubmitRechargeInfo.setEnabled(checkSubmitEnable);
             }
         }
     };
 
     private boolean checkSubmitEnable() {
-        return !TextUtils.isEmpty(mAuthCode.getText().toString().trim()) && mAgreeProtocol.isChecked() ;
+        return !TextUtils.isEmpty(mAuthCode.getText().toString().trim()) && mAgreeProtocol.isChecked();
     }
 
     @Override
@@ -200,9 +204,11 @@ public class BankCardPayActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
+                umengEventCount(UmengCountEventIdUtils.GET_VERIFICATION_CODE);
                 getBankPayAuthCode();
                 break;
             case R.id.submitRechargeInfo:
+                umengEventCount(UmengCountEventIdUtils.CONFIRM_RECHARGE);
                 recharge();
                 break;
             case R.id.serviceProtocol:
