@@ -459,7 +459,7 @@ public class FutureBattleFragment extends BaseFragment {
             } else {
                 myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
             }
-            myProfit = myProfit * mVariety.getEachPointMoney() * mVariety.getRatio();
+            myProfit = myProfit * mVariety.getEachPointMoney();
             mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), myProfit);
         }
         //房主的累计收益

@@ -699,4 +699,8 @@
     <string name="remaining_time">剩余%1$s</string>
     <string name="support">%1$s赞</string>
     <string name="game_over">游戏结束</string>
+    <string name="game_result_win">神操作！真是羡煞旁人</string>
+    <string name="game_result_lose">别气馁，下一站大神</string>
+    <string name="game_result_draw">英雄所见略同，平局的概率约为1/10000000</string>
+    <string name="return_reward">赏金退还</string>
 </resources>
