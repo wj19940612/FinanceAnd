@@ -92,7 +92,7 @@ public class BaseFragment extends Fragment implements
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {
-        MobclickAgent.onEvent(getActivity(), eventKey);
+        //MobclickAgent.onEvent(getActivity(), eventKey);
     }
 
     @Override
