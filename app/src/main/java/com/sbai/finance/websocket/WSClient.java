@@ -34,6 +34,7 @@ public class WSClient implements WSAbsClient {
     private Status mStatus;
     private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
+    private boolean mIsOpened;
 
     enum Status {
         UNREGISTERED,
@@ -56,6 +57,7 @@ public class WSClient implements WSAbsClient {
 
         mPendingList = new LinkedList<>();
         mExecutedList = new LinkedList<>();
+        mIsOpened = false;
     }
 
     private void register() {
@@ -122,6 +124,7 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void onOpen() {
+        mIsOpened = true;
         register();
     }
 
@@ -130,6 +133,9 @@ public class WSClient implements WSAbsClient {
         mWSClient = new InnerWSClient(createURI());
         mWSClient.setClient(this);
         mStatus = Status.UNREGISTERED;
+        if (mIsOpened) {
+            mWSClient.connect();
+        }
     }
 
     @Override
@@ -142,6 +148,7 @@ public class WSClient implements WSAbsClient {
     @Override
     public void close() {
         mWSClient.close();
+        mIsOpened = false;
     }
 
     @Override
