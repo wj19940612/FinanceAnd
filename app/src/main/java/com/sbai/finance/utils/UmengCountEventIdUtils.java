@@ -40,11 +40,11 @@ public class UmengCountEventIdUtils {
 	//对战大厅_当前对战
 	public static final String BATTLE_HALL_CURRENT_BATTLE = "futurespk0700";
 	//等待房间_邀请好友
-	public static final String WAITTING_ROOM_INVITE_FRIENDS = "futurespk0800";
+	public static final String WAITING_ROOM_INVITE_FRIENDS = "futurespk0800";
 	//等待房间_快速匹配
-	public static final String WAITTING_ROOM_FAST_MATCH = "futurespk0900";
+	public static final String WAITING_ROOM_FAST_MATCH = "futurespk0900";
 	//等待房间_取消对战
-	public static final String WAITTING_ROOM_CANCEL_BATTLE = "futurespk1000";
+	public static final String WAITING_ROOM_CANCEL_BATTLE = "futurespk1000";
 	//对战中_买多
 	public static final String BATTLE_BULLISH = "futurespk1001";
 	//对战中_卖空

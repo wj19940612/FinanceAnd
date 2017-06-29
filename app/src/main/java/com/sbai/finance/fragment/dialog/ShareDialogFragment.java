@@ -52,15 +52,22 @@ public class ShareDialogFragment extends DialogFragment {
     private String mShareUrl;   //链接地址
     private String mShareDescription; //分享描述
 
+    private boolean isFutureGame = false;//默认分享不是游戏
+
     public static ShareDialogFragment newInstance() {
         ShareDialogFragment fragment = new ShareDialogFragment();
         return fragment;
     }
 
-    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareUrl) {
+    public ShareDialogFragment setShareMode(boolean isFutureGame) {
+        this.isFutureGame = isFutureGame;
+        return this;
+    }
+
+    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareDescription,String shareUrl) {
         mActivity = activity;
-        mShareTitle = activity.getString(R.string.wonderful_viewpoint, shareTitle);
-        mShareDescription = activity.getString(R.string.share_desc);
+        mShareTitle = shareTitle;
+        mShareDescription = shareDescription;
         mShareUrl = shareUrl;
         return this;
     }
@@ -130,7 +137,13 @@ public class ShareDialogFragment extends DialogFragment {
             UMWeb mWeb = new UMWeb(mShareUrl);
             mWeb.setTitle(mShareTitle);
             mWeb.setDescription(mShareDescription);
-            UMImage thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
+
+            UMImage thumb = null;
+            if (isFutureGame) {
+                thumb = new UMImage(mActivity, R.drawable.ic_future_battle_game);
+            } else {
+                thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
+            }
             mWeb.setThumb(thumb);
 
             new ShareAction(mActivity)
@@ -140,8 +153,14 @@ public class ShareDialogFragment extends DialogFragment {
                     .share();
         } else {
             String text = mShareTitle + mShareUrl;
-            UMImage image = new UMImage(mActivity, R.drawable.ic_share_logo);
-            image.setThumb(new UMImage(mActivity, R.drawable.ic_share_logo));
+            UMImage image = null;
+            if (isFutureGame){
+                image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
+                image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
+            }else {
+                image = new UMImage(mActivity, R.drawable.ic_share_logo);
+                image.setThumb(new UMImage(mActivity, R.drawable.ic_share_logo));
+            }
             new ShareAction(mActivity)
                     .withText(text)
                     .withMedia(image)

@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -93,6 +95,9 @@ public class BattleResultDialogFragment extends BaseDialogFragment {
         Window window = getDialog().getWindow();
         if (window != null) {
             window.setGravity(Gravity.CENTER);
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
         }
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {

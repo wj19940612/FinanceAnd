@@ -16,12 +16,13 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.battle.FutureBattleConfig;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.FutureBattleConfig;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -328,6 +329,7 @@ public class CreateFightActivity extends BaseActivity {
 				mCoinType = 3;
 				break;
 			case R.id.launch_fight:
+				umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
 				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
 						.setCallback(new Callback2D<Resp<Battle>, Battle>() {
 							@Override

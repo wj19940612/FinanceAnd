@@ -410,12 +410,14 @@ public abstract class StockTradeActivity extends BaseActivity {
     public void setUpTitleBar(TitleBar titleBar) {
         final String shareUrl = String.format(Client.STOCK_SHARE_URL,
                 mVariety.getVarietyType(), mVariety.getVarietyId());
+        final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
+        final String shareDescribe = getString(R.string.share_desc);
         titleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), shareUrl)
+                        .setShareContent(StockTradeActivity.this, shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });
