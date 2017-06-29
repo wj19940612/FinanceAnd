@@ -698,4 +698,5 @@
     <string name="cancel_failed_game_start">取消失败，对战已开始</string>
     <string name="remaining_time">剩余%1$s</string>
     <string name="support">%1$s赞</string>
+    <string name="game_over">游戏结束</string>
 </resources>
