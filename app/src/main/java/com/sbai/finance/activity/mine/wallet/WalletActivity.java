@@ -195,7 +195,7 @@ public class WalletActivity extends BaseActivity {
             switch (requestCode) {
                 //添加安全密码后回调
                 case REQ_CODE_ADD_SAFETY_PASS:
-                    openWithDrawPage();
+//                    openWithDrawPage();
                     break;
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
                     mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
