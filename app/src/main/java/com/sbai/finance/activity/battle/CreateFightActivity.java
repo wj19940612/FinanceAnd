@@ -340,6 +340,7 @@ public class CreateFightActivity extends BaseActivity {
 										.execute();
 							}
 						}).fire();
+				finish();
 				break;
 		}
 	}
