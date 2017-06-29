@@ -60,7 +60,6 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
     @Override
     protected void onResume() {
         super.onResume();
-        scrollToTop(mTitleBar, mListView);
     }
 
     private void initView() {
@@ -81,6 +80,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                     }
             }
         });
+        scrollToTop(mTitleBar, mListView);
     }
     private void requestVersusData(){
         Client.getMyVersusRecord(mLocation).setTag(TAG)
