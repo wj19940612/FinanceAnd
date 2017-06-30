@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FutureVersusRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+
     @BindView(R.id.title)
     TitleBar mTitleBar;
     @BindView(R.id.listView)

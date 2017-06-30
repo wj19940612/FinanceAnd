@@ -71,7 +71,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     public static final int PAGE_TYPE_RECORD = 0;
     public static final int PAGE_TYPE_VERSUS = 1;
 
-    @BindView(R.id.futureArea)
+    @BindView(R.id.content)
     LinearLayout mFutureArea;
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
@@ -122,7 +122,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleFragment)
+                .add(R.id.content, mFutureBattleFragment)
                 .commitAllowingStateLoss();
 
         //观战模式  刷新底部框 可以点赞
@@ -275,7 +275,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleDetailFragment)
+                .add(R.id.content, mFutureBattleDetailFragment)
                 .commitAllowingStateLoss();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
