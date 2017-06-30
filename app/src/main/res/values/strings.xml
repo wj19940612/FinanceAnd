@@ -558,7 +558,7 @@
     <string name="minute">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
-    <string name="battle_status_pending">匹配中...</string>
+    <string name="battle_status_pending">等待中...</string>
     <string name="battle_status_fighting">对战中...</string>
 
     <!--确认充值-->
@@ -644,6 +644,8 @@
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
     <string name="versus_record">期货对战-战绩</string>
+    <string name="battle_his_record">历史对战</string>
+    <string name="see_his_battle">查看更早对战</string>
     <string name="go_battle">前往对战</string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
@@ -704,6 +706,8 @@
     <string name="game_result_lose">别气馁，下一站大神</string>
     <string name="game_result_draw">英雄所见略同，平局的概率约为1/10000000</string>
     <string name="return_reward">赏金退还</string>
+    <string name="join_battle">进入对战</string>
+    <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
 
 
     <string name="you_not_install_weixin">您尚未安装微信</string>

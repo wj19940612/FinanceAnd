@@ -90,7 +90,7 @@ android {
 
             versionCode 39
             versionName "0.4.2"
-            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
+            buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'isProd', 'false')
 
             manifestPlaceholders = [

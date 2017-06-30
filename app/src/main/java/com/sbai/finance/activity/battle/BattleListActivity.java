@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,9 +112,9 @@ public class BattleListActivity extends BaseActivity implements
     private SmartDialog mCancelMatchDialog;
     private StringBuilder mRefusedIds;
 
-    private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Object>>() {
+    private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
         @Override
-        public void onPushReceive(final WSPush<Object> versusGamingWSPush) {
+        public void onPushReceive(final WSPush<Battle> versusGamingWSPush) {
             switch (versusGamingWSPush.getContent().getType()) {
                 case PushCode.QUICK_MATCH_TIMEOUT:
                     showMatchTimeoutDialog();
@@ -208,13 +209,15 @@ public class BattleListActivity extends BaseActivity implements
         });
         mListView.addHeaderView(header);
         //add footer
-        LinearLayout footParent = new LinearLayout(getActivity());
-        View view = new View(getActivity());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(60, getResources()));
-        view.setLayoutParams(layoutParams);
-        footParent.setBackgroundColor(Color.TRANSPARENT);
-        footParent.addView(view);
-        mListView.addFooterView(footParent);
+        View view = getLayoutInflater().inflate(R.layout.footer_battle_list,null);
+        TextView seeHisRecord= (TextView) view.findViewById(R.id.seeHisBattle);
+        seeHisRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getActivity(),BattleHisRecordActivity.class).execute();
+            }
+        });
+        mListView.addFooterView(view);
     }
 
     private void initListView() {
@@ -735,19 +738,19 @@ public class BattleListActivity extends BaseActivity implements
                 .append(getString(R.string.versus_tip));
         SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
                 .setMessageMaxLines(10)
-                .setPositive(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.join_versus, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestJoinBattle(data);
+                    }
+                })
+                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         //传入拒绝的id
                         requestMatchVersusOfSocket(String.valueOf(data.getId()));
-                    }
-                })
-                .setNegative(R.string.join_versus, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        requestJoinBattle(data);
                     }
                 })
                 .setCancelableOnTouchOutside(false)
