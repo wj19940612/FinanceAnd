@@ -89,7 +89,7 @@ public class StartGameDialogFragment extends BaseDialogFragment {
     }
 
     private void init() {
-        mTitle.setText(getString(R.string.title_match_success));
+        mTitle.setText(getString(R.string.title_quick_join_battle));
         mMatchLoading.setVisibility(View.GONE);
         Glide.with(getContext())
                 .load(mImageUrl)
