@@ -48,6 +48,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -62,7 +63,6 @@ import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
 
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 
@@ -264,8 +264,8 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             mCurrentVersus.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mIntegral.setText("0.00");
-            mIngot.setText("0");
+            mIntegral.setText(FinanceUtil.formatWithScale(0));
+            mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
 
         startScheduleJob(5 * 1000);
@@ -478,26 +478,9 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void updateUserFund(UserFundInfoModel data) {
-        if (data.getCredit() > 10000) {
-            double create = Double.valueOf(new DecimalFormat("0.0").format(data.getCredit() / 10000));
-//             double createInt = Math.floor(create);
-//             if (createInt==create){
-//                 create=createInt;
-//             }
-            mIntegral.setText(create + "万");
-        } else {
-            mIntegral.setText(new DecimalFormat("0.00").format(data.getCredit()));
-        }
-        if (data.getYuanbao() > 10000) {
-            double ingot = Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao() / 10000));
-//            double ingotInt = Math.floor(ingot);
-//            if (ingotInt==ingot){
-//                ingot=ingotInt;
-//            }
-            mIngot.setText(ingot + "万个");
-        } else {
-            mIngot.setText(Math.round(data.getYuanbao()) + "个");
-        }
+        if (data == null) return;
+        mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
+        mIngot.setText(StrFormatter.getFormIntegrate(data.getCredit()));
     }
 
 
