@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -109,10 +108,6 @@ public class StartGameDialogFragment extends BaseDialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    public void show(FragmentManager manager) {
-        this.show(manager, StartGameDialogFragment.class.getSimpleName());
     }
 
     private CountDownTimer timer = new CountDownTimer(4000, 1000) {

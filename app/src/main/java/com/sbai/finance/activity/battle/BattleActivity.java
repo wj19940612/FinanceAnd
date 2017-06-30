@@ -110,16 +110,17 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void initViews() {
         if (mPageType == PAGE_TYPE_RECORD) {
-            showFutureBattleDetail();
+            initBattleRecordPage();
         } else {
-            showFutureBattle();
+            initBattlePage();
         }
     }
 
-    public void showFutureBattle() {
+    public void initBattlePage() {
         if (mFutureBattleFragment == null) {
             mFutureBattleFragment = FutureBattleFragment.newInstance(mBattle);
         }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, mFutureBattleFragment)
@@ -269,10 +270,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         startScheduleJob(1000);
     }
 
-    public void showFutureBattleDetail() {
+    public void initBattleRecordPage() {
         if (mFutureBattleDetailFragment == null) {
             mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mBattle);
         }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, mFutureBattleDetailFragment)
@@ -362,19 +364,13 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void requestAddBattlePraise(final int userId) {
         umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
-        Client.addBattlePraise(mBattle.getId(), userId)
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<Integer>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Integer> resp) {
-                        if (resp.isSuccess()) {
-                            int data = resp.getData();
-                            updatePraiseView(data, userId, true);
-                        } else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                }).fireFree();
+        WSClient.get().send(new QuickMatchLauncher(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
+            @Override
+            public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
+                int data = respWSMessage.getContent().getData();
+                updatePraiseView(data, userId, true);
+            }
+        });
     }
 
     private void updatePraiseView(int count, int userId, boolean needLight) {
