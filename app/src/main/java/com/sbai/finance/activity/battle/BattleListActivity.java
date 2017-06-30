@@ -81,14 +81,15 @@ public class BattleListActivity extends BaseActivity implements
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    @BindView(R.id.matchVersus)
-    TextView mMatchVersus;
-    @BindView(R.id.createVersus)
-    TextView mCreateVersus;
+    
+    @BindView(R.id.matchBattle)
+    TextView mMatchBattle;
+    @BindView(R.id.createBattle)
+    TextView mCreateBattle;
     @BindView(R.id.createAndMatchArea)
     LinearLayout mCreateAndMatchArea;
-    @BindView(R.id.currentVersus)
-    TextView mCurrentVersus;
+    @BindView(R.id.currentBattle)
+    TextView mCurrentBattleBtn;
 
     private ImageView mAvatar;
     private TextView mIntegral;
@@ -262,7 +263,7 @@ public class BattleListActivity extends BaseActivity implements
             requestUserFindInfo();
             requestCurrentBattle();
         } else {
-            mCurrentVersus.setVisibility(View.GONE);
+            mCurrentBattleBtn.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
             mIntegral.setText(FinanceUtil.formatWithScale(0));
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
@@ -312,7 +313,14 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
                         mCurrentBattle = resp.getData();
-                        updateCurrentBattle(resp.getData());
+
+                        if (mCurrentBattle == null) {
+                            mCreateAndMatchArea.setVisibility(View.VISIBLE);
+                            mCurrentBattleBtn.setVisibility(View.GONE);
+                        } else {
+                            mCreateAndMatchArea.setVisibility(View.GONE);
+                            mCurrentBattleBtn.setVisibility(View.VISIBLE);
+                        }
                     }
                 }).fire();
     }
@@ -467,16 +475,6 @@ public class BattleListActivity extends BaseActivity implements
         }
     }
 
-    private void updateCurrentBattle(Battle data) {
-        if (null == data) {
-            mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mCurrentVersus.setVisibility(View.GONE);
-        } else {
-            mCreateAndMatchArea.setVisibility(View.GONE);
-            mCurrentVersus.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void updateUserFund(UserFundInfoModel data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
@@ -514,10 +512,10 @@ public class BattleListActivity extends BaseActivity implements
         mVersusListAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
+    @OnClick({R.id.createBattle, R.id.matchBattle, R.id.currentBattle})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.createVersus:
+            case R.id.createBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
@@ -525,7 +523,7 @@ public class BattleListActivity extends BaseActivity implements
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.matchVersus:
+            case R.id.matchBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_MATCH_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     showAskMatchDialog();
@@ -533,7 +531,7 @@ public class BattleListActivity extends BaseActivity implements
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.currentVersus:
+            case R.id.currentBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
                     mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
