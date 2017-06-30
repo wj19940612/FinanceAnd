@@ -240,6 +240,7 @@ public class FutureBattleFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
                         refreshTradeView();
                     }
+
                 })
                 .fire();
     }
