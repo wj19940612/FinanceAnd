@@ -338,9 +338,10 @@ public class CreateFightActivity extends BaseActivity {
 								Launcher.with(getActivity(), FutureBattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, battle)
 										.execute();
+								finish();
 							}
 						}).fire();
-				finish();
+
 				break;
 		}
 	}
