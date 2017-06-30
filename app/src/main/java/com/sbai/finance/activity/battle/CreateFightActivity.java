@@ -335,7 +335,7 @@ public class CreateFightActivity extends BaseActivity {
 							@Override
 							protected void onRespSuccessData(Battle battle) {
 								battle.setPageType(PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
+								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, battle)
 										.execute();
 								finish();

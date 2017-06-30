@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -224,7 +224,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					ToastUtil.curt("对战已取消");
 				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
 					mBattle.setPageType(EconomicCircle.PAGE_RECORD);
-					Launcher.with(getActivity(), FutureBattleActivity.class)
+					Launcher.with(getActivity(), BattleActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mBattle)
 							.execute();
 				} else if (LocalUser.getUser().isLogin()) {
@@ -233,7 +233,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						showJoinBattleDialog(mBattle);
 					} else {
 						mBattle.setPageType(EconomicCircle.PAGE_VERSUS);
-						Launcher.with(getActivity(), FutureBattleActivity.class)
+						Launcher.with(getActivity(), BattleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mBattle)
 								.execute();
 					}
@@ -318,7 +318,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 								data.setAgainstUserName(versusGaming.getAgainstUserName());
 
 								data.setPageType(Battle.PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
+								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
 										.execute();
 							}
@@ -361,7 +361,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							if (data != null) {
 								data.setPageType(Battle.PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
+								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
 										.execute();
 							}

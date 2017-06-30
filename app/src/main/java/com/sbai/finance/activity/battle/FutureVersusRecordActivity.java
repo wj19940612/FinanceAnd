@@ -75,7 +75,7 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                     Battle item = (Battle) parent.getItemAtPosition(position);
                     if (item!=null){
                         item.setPageType(Battle.PAGE_RECORD);
-                        Launcher.with(getActivity(),FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
+                        Launcher.with(getActivity(),BattleActivity.class).putExtra(Launcher.EX_PAYLOAD,item).execute();
                     }
             }
         });

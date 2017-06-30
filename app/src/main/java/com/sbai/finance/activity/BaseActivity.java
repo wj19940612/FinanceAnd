@@ -24,7 +24,7 @@ import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
@@ -131,7 +131,7 @@ public class BaseActivity extends AppCompatActivity implements
         public void onPushReceive(WSPush<Battle> versusGamingWSPush) {
             switch (versusGamingWSPush.getContent().getType()) {
                 case BATTLE_JOINED:
-                    if (getActivity() instanceof FutureBattleActivity) {
+                    if (getActivity() instanceof BattleActivity) {
                     } else {
                         if (!TextUtils.isEmpty(sCurrentActivity)
                                 && getActivity().getClass().getSimpleName().equals(sCurrentActivity)) {
@@ -155,7 +155,7 @@ public class BaseActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, battle)
                                 .execute();
                     }

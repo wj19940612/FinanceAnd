@@ -234,7 +234,7 @@ public class BattleListActivity extends BaseActivity implements
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
                         item.setPageType(Battle.PAGE_RECORD);
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, item)
                                 .executeForResult(CANCEL_BATTLE);
                     } else if (LocalUser.getUser().isLogin()) {
@@ -243,7 +243,7 @@ public class BattleListActivity extends BaseActivity implements
                             showJoinBattleDialog(item);
                         } else {
                             item.setPageType(Battle.PAGE_VERSUS);
-                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                            Launcher.with(getActivity(), BattleActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, item)
                                     .executeForResult(CANCEL_BATTLE);
                         }
@@ -340,7 +340,7 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUserName(battle.getAgainstUserName());
 
                                 battle.setPageType(Battle.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, battle)
                                         .executeForResult(CANCEL_BATTLE);
                             }
@@ -525,7 +525,7 @@ public class BattleListActivity extends BaseActivity implements
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
                     mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
                             .executeForResult(CANCEL_BATTLE);
                 }
@@ -592,7 +592,7 @@ public class BattleListActivity extends BaseActivity implements
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
                                 mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
                                         .execute();
                             }

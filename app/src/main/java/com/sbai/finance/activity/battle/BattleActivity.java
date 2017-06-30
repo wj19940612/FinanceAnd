@@ -65,7 +65,7 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
+public class BattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -90,7 +90,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_battle);
+        setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
 
         initData();
@@ -101,7 +101,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
     }
-
 
     private void initViews() {
         if (mBattle.getPageType() == PAGE_RECORD) {
@@ -131,7 +130,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onCreateAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                     .execute();
                         }
@@ -139,7 +138,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onAgainstAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                     .execute();
                         }
@@ -281,14 +280,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
                     @Override
                     public void onCreateAvatarClick() {
-                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                        Launcher.with(BattleActivity.this, UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                 .execute();
                     }
 
                     @Override
                     public void onAgainstAvatarClick() {
-                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                        Launcher.with(BattleActivity.this, UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                 .execute();
                     }
@@ -401,7 +400,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             mShareDialogFragment = ShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
-                    .setShareContent(FutureBattleActivity.this, shareTitle, shareDescribe, url);
+                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, url);
         }
         mShareDialogFragment.show(getSupportFragmentManager());
     }
@@ -523,7 +522,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(FutureBattleActivity.this, CreateFightActivity.class).execute();
+                        Launcher.with(BattleActivity.this, CreateFightActivity.class).execute();
                         finish();
                     }
                 })
