@@ -39,8 +39,6 @@ import butterknife.Unbinder;
  */
 
 public class BattleRuleDialogFragment extends DialogFragment {
-    public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
-
     private static final String KEY_CONTENT_RES = "content_resId";
     private static final String KEY_content = "content";
     private static final String KEY_TITLE = "TITLE";
@@ -48,12 +46,11 @@ public class BattleRuleDialogFragment extends DialogFragment {
     AppCompatImageView mDialogDelete;
     @BindView(R.id.title)
     TextView mTitle;
-    @BindView(R.id.webView)
-    WebView mWebView;
+    @BindView(R.id.content)
+    TextView mContent;
 
     private Unbinder mBind;
     private String mTitleMsg;
-    private WebViewClient mWebViewClient;
     private String mPureHtml;
     public BattleRuleDialogFragment() {
     }
@@ -65,73 +62,6 @@ public class BattleRuleDialogFragment extends DialogFragment {
         args.putString(KEY_TITLE, title);
         fragment.setArguments(args);
         return fragment;
-    }
-    protected void initWebView() {
-        // init cookies
-        // init webSettings
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setUserAgentString(webSettings.getUserAgentString()
-                + " ###" + getString(R.string.android_web_agent) + "/1.0");
-        //mWebView.getSettings().setAppCacheEnabled(true);l
-        //webSettings.setAppCachePath(getExternalCacheDir().getPath());
-        webSettings.setAllowFileAccess(true);
-
-        // performance improve
-        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSettings.setEnableSmoothTransition(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setBlockNetworkImage(false);//解决图片不显示
-        mWebView.clearHistory();
-        mWebView.clearCache(true);
-        mWebView.clearFormData();
-        mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWebView.setBackgroundColor(0);
-        //硬件加速 有些API19手机不支持
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {
-            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //5.0 以下 默认同时加载http和https
-            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
-        mWebViewClient = new WebViewClient();
-        mWebView.setWebViewClient(mWebViewClient);
-        mWebView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                WebView.HitTestResult result = mWebView.getHitTestResult();
-                if (result != null) {
-                    int type = result.getType();
-                    if (type == WebView.HitTestResult.IMAGE_TYPE) {
-//                        showSaveImageDialog(result);
-                    }
-                }
-                return false;
-            }
-        });
-
-        loadPage();
-    }
-    protected void loadPage() {
-        String content;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            content = INFO_HTML_META + "<body>" + mPureHtml + "</body>";
-        } else {
-            mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            content = getHtmlData(mPureHtml);
-        }
-        mWebView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
-    }
-    private String getHtmlData(String bodyHTML) {
-        String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
-        return "<html>" + head + bodyHTML + "</html>";
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,7 +92,9 @@ public class BattleRuleDialogFragment extends DialogFragment {
             window.setLayout((int) (dm.widthPixels * 0.65), WindowManager.LayoutParams.WRAP_CONTENT);
         }
         mTitle.setText(mTitleMsg);
-        initWebView();
+        if (!TextUtils.isEmpty(mPureHtml)){
+            mContent.setText(Html.fromHtml(mPureHtml).toString().trim().replace("\n\n","\n"));
+        }
     }
 
 

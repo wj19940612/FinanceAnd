@@ -11,7 +11,7 @@ public class FinanceUtil {
 
     public static final String UNIT_WANG = "万";
     public static final String UNIT_YI = "亿";
-
+    public static final String UNIT_WANG_GE = "万个";
     private static final int DEFAULT_SCALE = 2;
     private static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_EVEN;
 
