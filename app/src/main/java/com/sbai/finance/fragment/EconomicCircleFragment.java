@@ -222,7 +222,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				//游戏
 				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
 					ToastUtil.curt("对战已取消");
-				}else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
+				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
 					mBattle.setPageType(EconomicCircle.PAGE_RECORD);
 					Launcher.with(getActivity(), FutureBattleActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mBattle)
@@ -957,12 +957,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 
 					case EconomicCircle.GAME_STATUS_END:
-						if (item.getWinResult() == Battle.RESULT_TIE) {
-							mStatus.setText(context.getString(R.string.tie));
-						} else {
-							mStatus.setText(context.getString(R.string.versus_end));
-						}
-
+						mStatus.setText(context.getString(R.string.versus_end));
 						Glide.with(context)
 								.load(item.getAgainstUserPortrait())
 								.placeholder(R.drawable.ic_default_avatar_big)

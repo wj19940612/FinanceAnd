@@ -87,7 +87,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private BattleInfo mBattleInfo;
     private int mGameStatus;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

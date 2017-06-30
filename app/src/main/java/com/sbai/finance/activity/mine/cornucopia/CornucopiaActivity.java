@@ -26,6 +26,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.httplib.CookieManger;
@@ -133,12 +134,15 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.coin:
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INGOT_DETAILS);
                 Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_COIN).execute();
                 break;
             case R.id.integrate:
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INTEGRAL_DETAILS);
                 Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INTEGRATE).execute();
                 break;
             case R.id.exchange_rule:
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_RULES);
                 openExchangeRulePage();
                 break;
         }

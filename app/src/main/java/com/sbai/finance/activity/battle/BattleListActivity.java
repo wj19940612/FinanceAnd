@@ -48,6 +48,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -62,7 +63,6 @@ import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
 
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 
@@ -81,14 +81,15 @@ public class BattleListActivity extends BaseActivity implements
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    @BindView(R.id.matchVersus)
-    TextView mMatchVersus;
-    @BindView(R.id.createVersus)
-    TextView mCreateVersus;
+    
+    @BindView(R.id.matchBattle)
+    TextView mMatchBattle;
+    @BindView(R.id.createBattle)
+    TextView mCreateBattle;
     @BindView(R.id.createAndMatchArea)
     LinearLayout mCreateAndMatchArea;
-    @BindView(R.id.currentVersus)
-    TextView mCurrentVersus;
+    @BindView(R.id.currentBattle)
+    TextView mCurrentBattleBtn;
 
     private ImageView mAvatar;
     private TextView mIntegral;
@@ -192,6 +193,7 @@ public class BattleListActivity extends BaseActivity implements
         battleRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
                         .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
@@ -201,7 +203,6 @@ public class BattleListActivity extends BaseActivity implements
                                         .show(getSupportFragmentManager());
                             }
                         }).fire();
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
             }
         });
         mListView.addHeaderView(header);
@@ -262,10 +263,10 @@ public class BattleListActivity extends BaseActivity implements
             requestUserFindInfo();
             requestCurrentBattle();
         } else {
-            mCurrentVersus.setVisibility(View.GONE);
+            mCurrentBattleBtn.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mIntegral.setText("0.00");
-            mIngot.setText("0");
+            mIntegral.setText(FinanceUtil.formatWithScale(0));
+            mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
 
         startScheduleJob(5 * 1000);
@@ -312,7 +313,14 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
                         mCurrentBattle = resp.getData();
-                        updateCurrentBattle(resp.getData());
+
+                        if (mCurrentBattle == null) {
+                            mCreateAndMatchArea.setVisibility(View.VISIBLE);
+                            mCurrentBattleBtn.setVisibility(View.GONE);
+                        } else {
+                            mCreateAndMatchArea.setVisibility(View.GONE);
+                            mCurrentBattleBtn.setVisibility(View.VISIBLE);
+                        }
                     }
                 }).fire();
     }
@@ -382,11 +390,6 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
             }
-
-            @Override
-            public void onError(final int code) {
-                ToastUtil.curt(String.valueOf(code));
-            }
         });
     }
 
@@ -396,11 +399,6 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
 
-            }
-
-            @Override
-            public void onError(final int code) {
-                ToastUtil.curt(String.valueOf(code));
             }
         });
     }
@@ -467,37 +465,10 @@ public class BattleListActivity extends BaseActivity implements
         }
     }
 
-    private void updateCurrentBattle(Battle data) {
-        if (null == data) {
-            mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mCurrentVersus.setVisibility(View.GONE);
-        } else {
-            mCreateAndMatchArea.setVisibility(View.GONE);
-            mCurrentVersus.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void updateUserFund(UserFundInfoModel data) {
-        if (data.getCredit() > 10000) {
-            double create = Double.valueOf(new DecimalFormat("0.0").format(data.getCredit() / 10000));
-//             double createInt = Math.floor(create);
-//             if (createInt==create){
-//                 create=createInt;
-//             }
-            mIntegral.setText(create + "万");
-        } else {
-            mIntegral.setText(new DecimalFormat("0.00").format(data.getCredit()));
-        }
-        if (data.getYuanbao() > 10000) {
-            double ingot = Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao() / 10000));
-//            double ingotInt = Math.floor(ingot);
-//            if (ingotInt==ingot){
-//                ingot=ingotInt;
-//            }
-            mIngot.setText(ingot + "万个");
-        } else {
-            mIngot.setText(Math.round(data.getYuanbao()) + "个");
-        }
+        if (data == null) return;
+        mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
+        mIngot.setText(StrFormatter.getFormIngot(data.getYuanbao()));
     }
 
 
@@ -531,10 +502,10 @@ public class BattleListActivity extends BaseActivity implements
         mVersusListAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
+    @OnClick({R.id.createBattle, R.id.matchBattle, R.id.currentBattle})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.createVersus:
+            case R.id.createBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
@@ -542,7 +513,7 @@ public class BattleListActivity extends BaseActivity implements
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.matchVersus:
+            case R.id.matchBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_MATCH_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     showAskMatchDialog();
@@ -550,7 +521,7 @@ public class BattleListActivity extends BaseActivity implements
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.currentVersus:
+            case R.id.currentBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
                     mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
@@ -954,10 +925,10 @@ public class BattleListActivity extends BaseActivity implements
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        if (item.getWinResult() == Battle.RESULT_AGAINST_WIN) {
+                        if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.RESULT_CREATE_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {
