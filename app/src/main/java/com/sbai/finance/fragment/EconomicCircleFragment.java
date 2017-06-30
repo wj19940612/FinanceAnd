@@ -32,11 +32,11 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
-import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -223,18 +223,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
 					ToastUtil.curt("对战已取消");
 				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-					mBattle.setPageType(EconomicCircle.PAGE_RECORD);
 					Launcher.with(getActivity(), BattleActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mBattle)
+							.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
 							.execute();
 				} else if (LocalUser.getUser().isLogin()) {
 					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
 							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
 						showJoinBattleDialog(mBattle);
 					} else {
-						mBattle.setPageType(EconomicCircle.PAGE_VERSUS);
 						Launcher.with(getActivity(), BattleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mBattle)
+								.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 								.execute();
 					}
 				} else {
@@ -317,9 +317,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 								data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
 								data.setAgainstUserName(versusGaming.getAgainstUserName());
 
-								data.setPageType(Battle.PAGE_VERSUS);
 								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
 						} else {
@@ -360,9 +360,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						dialog.dismiss();
 						if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							if (data != null) {
-								data.setPageType(Battle.PAGE_VERSUS);
 								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
 						} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {

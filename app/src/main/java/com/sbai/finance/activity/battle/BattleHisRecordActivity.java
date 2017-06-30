@@ -76,8 +76,9 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    item.setPageType(Battle.PAGE_RECORD);
-                    Launcher.with(getActivity(), BattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    Launcher.with(getActivity(), BattleActivity.class)
+                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+                            .putExtra(Launcher.EX_PAYLOAD, item).execute();
                 }
             }
         });

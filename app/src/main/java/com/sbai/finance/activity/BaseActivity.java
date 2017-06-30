@@ -40,7 +40,6 @@ import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
 import static android.view.View.GONE;
-import static com.sbai.finance.model.battle.Battle.PAGE_VERSUS;
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 
 public class BaseActivity extends AppCompatActivity implements
@@ -149,7 +148,6 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
         final Battle battle = (Battle) objectWSPush.getContent().getData();
-        battle.setPageType(PAGE_VERSUS);
         SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
@@ -157,6 +155,7 @@ public class BaseActivity extends AppCompatActivity implements
                         dialog.dismiss();
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, battle)
+                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                                 .execute();
                     }
                 })

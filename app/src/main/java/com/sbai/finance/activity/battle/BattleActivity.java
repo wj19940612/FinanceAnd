@@ -49,7 +49,6 @@ import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
-import static com.sbai.finance.model.battle.Battle.PAGE_RECORD;
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
@@ -66,6 +65,11 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
  */
 
 public class BattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
+
+    public static final String PAGE_TYPE = "page_type";
+    //0 对战记录 1 对战中
+    public static final int PAGE_TYPE_RECORD = 0;
+    public static final int PAGE_TYPE_VERSUS = 1;
 
     @BindView(R.id.futureArea)
     LinearLayout mFutureArea;
@@ -86,6 +90,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private Battle mBattle;
     private BattleInfo mBattleInfo;
     private int mGameStatus;
+    private int mPageType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,10 +105,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
     }
 
     private void initViews() {
-        if (mBattle.getPageType() == PAGE_RECORD) {
+        if (mPageType == PAGE_TYPE_RECORD) {
             showFutureBattleDetail();
         } else {
             showFutureBattle();
