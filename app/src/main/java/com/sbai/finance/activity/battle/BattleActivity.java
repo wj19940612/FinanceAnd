@@ -418,7 +418,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     //初始化开始游戏弹窗
-    private void showStartGameDialog(){
+    private void showStartGameDialog() {
         if (mStartGameDialogFragment == null) {
             mStartGameDialogFragment = StartGameDialogFragment
                     .newInstance(mBattle.getAgainstUserPortrait());
@@ -601,12 +601,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         });
 
-        fragment.show(getSupportFragmentManager());
+        // handle  java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        if (fragment.isResumed()) {
+            fragment.show(getSupportFragmentManager());
+        }
     }
 
     private boolean getWinResult() {
         boolean win = false;
-         //我是房主
+        //我是房主
         if (mBattle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
             //result ==1为房主赢
             if (mBattleInfo.getWinResult() == 1) {
