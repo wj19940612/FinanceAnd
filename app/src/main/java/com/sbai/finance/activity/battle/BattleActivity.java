@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
@@ -19,8 +18,6 @@ import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.BattleInfo;
-import com.sbai.finance.net.Callback;
-import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
@@ -34,9 +31,12 @@ import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.websocket.cmd.CancelBattle;
+import com.sbai.finance.websocket.cmd.CurrentBattle;
 import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
 import com.sbai.finance.websocket.cmd.SubscribeBattle;
 import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
+import com.sbai.finance.websocket.cmd.UserPraise;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +44,6 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
-import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELING;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
@@ -193,14 +192,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             switch (versusGamingWSPush.getContent().getType()) {
                 case BATTLE_JOINED:
                     //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                    if (mGameStatus == GAME_STATUS_CANCELING) {
-                        dismissAllDialog();
-                        ToastUtil.curt(getString(R.string.cancel_failed_game_start));
-                        startGame(versusGamingWSPush);
-                    } else {
-                        dismissAllDialog();
-                        startGame(versusGamingWSPush);
-                    }
+                    dismissAllDialog();
+                    startGame(versusGamingWSPush);
                     break;
                 case BATTLE_OVER:
                     //对战结束 一个弹窗
@@ -332,21 +325,20 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestBattleInfo() {
-        Client.getBattleInfo(mBattle.getId(), mBattle.getBatchCode())
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<BattleInfo>>() {
+        WSClient.get().send(new CurrentBattle(mBattle.getId(), mBattle.getBatchCode()),
+                new WSCallback<WSMessage<Resp<BattleInfo>>>() {
                     @Override
-                    protected void onRespSuccess(Resp<BattleInfo> resp) {
-                        if (resp.isSuccess()) {
-                            mBattleInfo = resp.getData();
+                    public void onResponse(WSMessage<Resp<BattleInfo>> respWSMessage) {
+                        if (respWSMessage.getContent().isSuccess()) {
+                            mBattleInfo = respWSMessage.getContent().getData();
                             //游戏结束后
                             if (mGameStatus == GAME_STATUS_END) {
                                 showGameOverDialog();
                             }
                         }
                     }
-                })
-                .fire();
+                });
+
     }
 
     public void updateBattleInfo(double createProfit, double againstProfit) {
@@ -364,7 +356,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void requestAddBattlePraise(final int userId) {
         umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
-        WSClient.get().send(new QuickMatchLauncher(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
+        WSClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
                 int data = respWSMessage.getContent().getData();
@@ -414,7 +406,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     //初始化开始游戏弹窗
-    private void showStartGameDialog(){
+    private void showStartGameDialog() {
         if (mStartGameDialogFragment == null) {
             mStartGameDialogFragment = StartGameDialogFragment
                     .newInstance(mBattle.getAgainstUserPortrait());
@@ -454,11 +446,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             dialog.dismiss();
                             showMatchDialog();
                         }
-                    })
-                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
+                    });
         }
-
         mCancelMatchDialog.show();
 
     }
@@ -487,7 +476,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private void showOvertimeMatchDialog() {
         if (mOvertimeMatchDialog == null) {
             mOvertimeMatchDialog = SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
-                    .setMessageTextSize(15)
                     .setPositive(R.string.later_try_again, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
@@ -500,10 +488,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             dialog.dismiss();
                             requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
                         }
-                    })
-                    .setTitleMaxLines(1)
-                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
+                    });
         }
         mOvertimeMatchDialog.show();
 
@@ -512,7 +497,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     //房间超时弹窗
     private void showRoomOvertimeDialog() {
         SmartDialog.with(getActivity(), getString(R.string.wait_to_overtime), getString(R.string.wait_overtime))
-                .setMessageTextSize(15)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -528,9 +512,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         finish();
                     }
                 })
-                .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .show();
 
     }
@@ -538,7 +519,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     public void onCancelButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_CANCEL_BATTLE);
-        mGameStatus = GAME_STATUS_CANCELING;
         showCancelBattleDialog();
     }
 
@@ -546,7 +526,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private void showCancelBattleDialog() {
         if (mCancelBattleDialog == null) {
             mCancelBattleDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_battle_tip), getString(R.string.cancel_battle))
-                    .setMessageTextSize(15)
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
@@ -559,12 +538,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
                         }
-                    })
-                    .setTitleMaxLines(1)
-                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText));
+                    });
         }
-
         mCancelBattleDialog.show();
 
     }
@@ -597,12 +572,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         });
 
-        fragment.show(getSupportFragmentManager());
+        // handle  java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        if (fragment.isResumed()) {
+            fragment.show(getSupportFragmentManager());
+        }
     }
 
     private boolean getWinResult() {
         boolean win = false;
-         //我是房主
+        //我是房主
         if (mBattle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
             //result ==1为房主赢
             if (mBattleInfo.getWinResult() == 1) {
@@ -633,19 +611,24 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestCancelBattle() {
-        Client.cancelBattle(mBattle.getId())
-                .setTag(TAG)
-                .setCallback(new Callback<Resp>() {
-                    @Override
-                    protected void onRespSuccess(Resp resp) {
-                        Intent intent = new Intent();
-                        intent.putExtra(Launcher.EX_PAYLOAD, Battle.GAME_STATUS_CANCELED);
-                        intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                })
-                .fire();
+
+        WSClient.get().send(new CancelBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+                Intent intent = new Intent();
+                intent.putExtra(Launcher.EX_PAYLOAD, Battle.GAME_STATUS_CANCELED);
+                intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void onError(int code) {
+                ToastUtil.curt(getString(R.string.cancel_failed_game_start));
+            }
+
+        });
+
     }
 
 
@@ -669,7 +652,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     protected void onPostResume() {
         super.onPostResume();
-//        requestSubscribeBattle();
     }
 
     @Override
