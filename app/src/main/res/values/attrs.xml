@@ -123,6 +123,9 @@
         </attr>
         <attr name="rightPadding" format="dimension"/>
         <attr name="leftPadding" format="dimension"/>
+        <attr name="max" format="dimension"/>
+        <attr name="progress" format="dimension"/>
+        <attr name="secondaryProgress" format="dimension"/>
         <attr name="rightTextColor" format="color|reference"/>
         <attr name="rightTextSize" format="dimension"/>
         <attr name="rightText" format="reference|string"/>
