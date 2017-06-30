@@ -240,7 +240,9 @@ public class WSClient implements WSAbsClient {
 
     private void sendHeart() {
         if (mWSClient.isOpen()) {
-            mWSClient.send(new WSMessage(SocketCode.CODE_HEART, null).toJson());
+            WSMessage heartMsg = new WSMessage(SocketCode.CODE_HEART, null);
+            mWSClient.send(heartMsg.toJson());
+            Log.d(TAG, "sendHeart: " + heartMsg);
         }
     }
 

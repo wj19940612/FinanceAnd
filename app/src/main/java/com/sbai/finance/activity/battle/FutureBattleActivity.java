@@ -654,7 +654,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mBattleView.setDeadline(mBattle.getGameStatus(), diff);
     }
 
-
     @Override
     protected void onPostResume() {
         super.onPostResume();
