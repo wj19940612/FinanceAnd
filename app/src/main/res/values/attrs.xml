@@ -123,15 +123,15 @@
         </attr>
         <attr name="rightPadding" format="dimension"/>
         <attr name="leftPadding" format="dimension"/>
-        <attr name="max" format="dimension"/>
-        <attr name="progress" format="dimension"/>
-        <attr name="secondaryProgress" format="dimension"/>
-        <attr name="rightTextColor" format="color|reference"/>
-        <attr name="rightTextSize" format="dimension"/>
-        <attr name="rightText" format="reference|string"/>
-        <attr name="leftTextColor" format="color|reference"/>
-        <attr name="leftTextSize" format="dimension"/>
-        <attr name="leftText" format="reference|string"/>
+        <attr name="max" format="integer"/>
+        <attr name="progress" format="integer"/>
+        <attr name="secondaryProgress" format="integer"/>
+        <attr name="rightLabelColor" format="color|reference"/>
+        <attr name="rightLabelSize" format="dimension"/>
+        <attr name="rightLabel" format="reference|string"/>
+        <attr name="leftLabelColor" format="color|reference"/>
+        <attr name="leftLabelSize" format="dimension"/>
+        <attr name="leftLabel" format="reference|string"/>
 
     </declare-styleable>
 </resources>

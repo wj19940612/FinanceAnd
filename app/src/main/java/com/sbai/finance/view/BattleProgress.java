@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.FinanceUtil;
 
 
 public class BattleProgress extends RelativeLayout {
@@ -55,17 +57,17 @@ public class BattleProgress extends RelativeLayout {
         mOrientation= typedArray.getInt(R.styleable.BattleProgress_orientation,ORIENTATION_HORIZONTAL);
         mRightPadding = typedArray.getLayoutDimension(R.styleable.BattleProgress_rightPadding,defaultTextPadding);
         mLeftPadding = typedArray.getLayoutDimension(R.styleable.BattleProgress_leftPadding,defaultTextPadding);
-        mMax = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_max,100);
-        mProgress = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_progress,50);
-        mSecondaryProgress = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_secondaryProgress,100);
+        mMax = typedArray.getInt(R.styleable.BattleProgress_max,100);
+        mProgress = typedArray.getInt(R.styleable.BattleProgress_progress,50);
+        mSecondaryProgress = typedArray.getInt(R.styleable.BattleProgress_secondaryProgress,100);
 
-        mRightSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_rightTextSize,defaultFontSize);
-        mRightText = typedArray.getText(R.styleable.BattleProgress_rightText);
-        mRightTextColor = typedArray.getColorStateList(R.styleable.BattleProgress_rightTextColor);
+        mRightSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_rightLabelSize,defaultFontSize);
+        mRightText = typedArray.getText(R.styleable.BattleProgress_rightLabel);
+        mRightTextColor = typedArray.getColorStateList(R.styleable.BattleProgress_rightLabelColor);
 
-        mLeftSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_leftTextSize,defaultFontSize);
-        mLeftText = typedArray.getText(R.styleable.BattleProgress_leftText);
-        mLeftTextColor = typedArray.getColorStateList(R.styleable.BattleProgress_leftTextColor);
+        mLeftSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_leftLabelSize,defaultFontSize);
+        mLeftText = typedArray.getText(R.styleable.BattleProgress_leftLabel);
+        mLeftTextColor = typedArray.getColorStateList(R.styleable.BattleProgress_leftLabelColor);
 
         if (mRightTextColor==null){
             mRightTextColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(),R.color.white));
@@ -81,33 +83,77 @@ public class BattleProgress extends RelativeLayout {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
         //progressBar
-        mProgressBar = new ProgressBar(getContext());
-        mProgressBar.setBackground(mProgressDrawable);
+        mProgressBar = new ProgressBar(getContext(),null,android.R.attr.progressBarStyleHorizontal);
+        mProgressBar.setProgressDrawable(mProgressDrawable);
+
         mProgressBar.setMax(mMax);
+        mProgressBar.setProgress(mProgress);
         mProgressBar.setSecondaryProgress(mSecondaryProgress);
-        mProgressBar.setPadding(mLeftPadding,0,mRightPadding,0);
-        mProgressBar.setLayoutParams(params);
         addView(mProgressBar,params);
         //rightView
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
         mRightView = new TextView(getContext());
         mRightView.setGravity(Gravity.RIGHT);
         mRightView.setText(mRightText);
         mRightView.setTextColor(mRightTextColor);
-        mRightView.setTextSize(mRightSize);
+        mRightView.setTextSize(TypedValue.COMPLEX_UNIT_PX,mRightSize);
+        mRightView.setPadding(0,0,mRightPadding,0);
         addView(mRightView,params);
         //leftView
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
         mLeftView = new TextView(getContext());
         mLeftView.setGravity(Gravity.LEFT);
-        mLeftView.setText(mRightText);
-        mLeftView.setTextColor(mRightTextColor);
-        mLeftView.setTextSize(mRightSize);
+        mLeftView.setText(mLeftText);
+        mLeftView.setTextColor(mLeftTextColor);
+        mLeftView.setTextSize(TypedValue.COMPLEX_UNIT_PX,mLeftSize);
+        mLeftView.setPadding(mLeftPadding,0,0,0);
         addView(mLeftView,params);
     }
+    public void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
+        String myFlag = "";
+        String fighterFlag = "";
+        if (isInviting) {
+            setProgress(0);
+            setSecondaryProgress(0);
+            setLeftText(null);
+            setRightText(null);
+        } else {
+            //正正
+            if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
+                int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
+                setProgress(progress);
+            }
+            //正负
+            if (createProfit >= 0 && fighterProfit < 0) {
+                setProgress(100);
+            }
+            //负正
+            if (createProfit < 0 && fighterProfit >= 0) {
+                setProgress(0);
+            }
+            //负负
+            if (createProfit < 0 && fighterProfit < 0) {
+                int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
+                setProgress(100 - progress);
+            }
+            //都为0
+            if (createProfit == 0 && fighterProfit == 0) {
+                setProgress(50);
+            }
+            setSecondaryProgress(100);
+            if (createProfit > 0) {
+                myFlag = "+";
+            }
 
+            if (fighterProfit > 0) {
+                fighterFlag = "+";
+            }
+            setLeftText(myFlag + FinanceUtil.formatWithScale(createProfit));
+            setRightText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+        }
+    }
     public void setRightText(CharSequence rightText) {
         mRightText = rightText;
         mRightView.setText(rightText);
@@ -119,6 +165,7 @@ public class BattleProgress extends RelativeLayout {
 
     public void setLeftText(CharSequence leftText) {
         mLeftText = leftText;
+        mLeftView.setText(leftText);
     }
     public void setLeftText(int resId){
         mLeftText = getContext().getText(resId);

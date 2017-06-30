@@ -5,14 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,11 +33,10 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
-import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
@@ -48,12 +44,11 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -106,10 +101,6 @@ public class BattleListActivity extends BaseActivity implements
     private Battle mCurrentBattle;
     private StartMatchDialogFragment mStartMatchDialogFragment;
 
-    private SmartDialog mJoinDialog;
-    private SmartDialog mJoinFailureDialog;
-    private SmartDialog mAskMatchDialog;
-    private SmartDialog mCancelMatchDialog;
     private StringBuilder mRefusedIds;
 
     private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
@@ -196,7 +187,7 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
-                        .setCallback(new Callback2D<Resp<ArticleProtocol>,ArticleProtocol>() {
+                        .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
                             protected void onRespSuccessData(ArticleProtocol data) {
                                 BattleRuleDialogFragment
@@ -209,12 +200,12 @@ public class BattleListActivity extends BaseActivity implements
         });
         mListView.addHeaderView(header);
         //add footer
-        View view = getLayoutInflater().inflate(R.layout.footer_battle_list,null);
-        TextView seeHisRecord= (TextView) view.findViewById(R.id.seeHisBattle);
+        View view = getLayoutInflater().inflate(R.layout.footer_battle_list, null);
+        TextView seeHisRecord = (TextView) view.findViewById(R.id.seeHisBattle);
         seeHisRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(),BattleHisRecordActivity.class).execute();
+                Launcher.with(getActivity(), BattleHisRecordActivity.class).execute();
             }
         });
         mListView.addFooterView(view);
@@ -581,10 +572,7 @@ public class BattleListActivity extends BaseActivity implements
                 reward = item.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
-        if (mJoinDialog == null) {
-            mJoinDialog = SmartDialog.with(getActivity());
-        }
-        mJoinDialog.setMessage(getString(R.string.join_versus_tip, reward))
+        SmartDialog.single(getActivity(),getString(R.string.join_versus_tip, reward))
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -599,13 +587,11 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showJoinVersusFailureDialog(final Resp<Battle> resp) {
-        if (mJoinFailureDialog == null) {
-            mJoinFailureDialog = SmartDialog.with(getActivity());
-        }
         int positiveMsg;
         int negativeMsg = R.string.cancel;
         final int code = resp.getCode();
-        String msg;
+        String msg="";
+        SmartDialog smartDialog = SmartDialog.single(getActivity(),msg);
         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
             msg = getString(R.string.battle_joined_or_created);
             positiveMsg = R.string.go_battle;
@@ -615,9 +601,9 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             msg = getString(R.string.invite_invalid);
             positiveMsg = R.string.ok;
-            mJoinFailureDialog.setNegativeVisible(View.GONE);
+            smartDialog.setNegativeVisible(View.GONE);
         }
-        mJoinFailureDialog.setMessage(msg)
+        smartDialog.setMessage(msg)
                 .setPositive(positiveMsg, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -642,18 +628,16 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showAskMatchDialog() {
-        if (mAskMatchDialog == null) {
-            mAskMatchDialog = SmartDialog.with(getActivity(), getString(R.string.match_battle_tip), getString(R.string.match_battle_confirm));
-            mAskMatchDialog.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            requestMatchVersusOfSocket("");
-                        }
-                    }).setNegative(R.string.cancel);
-        }
-        mAskMatchDialog.show();
-
+        SmartDialog.single(getActivity(),getString(R.string.match_battle_tip))
+                .setTitle(getString(R.string.match_battle_confirm))
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestMatchVersusOfSocket("");
+                    }
+                }).setNegative(R.string.cancel)
+                .show();
     }
 
     //开始匹配弹窗
@@ -672,33 +656,32 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showCancelMatchDialog() {
-        if (mCancelMatchDialog == null) {
-            mCancelMatchDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching));
-            mCancelMatchDialog.setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            requestMatchVersus(Battle.MATCH_CANCEL, "");
+        SmartDialog.single(getActivity(),getString(R.string.cancel_tip))
+                .setTitle(getString(R.string.cancel_matching))
+                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
+                    @Override
+                     public void onClick(Dialog dialog) {
+                      dialog.dismiss();
+                      requestMatchVersus(Battle.MATCH_CANCEL, "");
                         }
-                    })
-                    .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            showMatchDialog();
-                        }
-                    })
-                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                    .setCancelableOnTouchOutside(false)
-                    .show();
-        }
-        mCancelMatchDialog.show();
+                   })
+                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        showMatchDialog();
+                    }
+                })
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
+                .setCancelableOnTouchOutside(false)
+                .show();
     }
 
     private void showMatchTimeoutDialog() {
         dismissAllDialog();
-        SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
+        SmartDialog.single(getActivity(), getString(R.string.match_overtime))
+                .setTitle(getString(R.string.match_failed))
                 .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -736,7 +719,8 @@ public class BattleListActivity extends BaseActivity implements
                 .append(getString(R.string.versus_time)).append(" ").append(DateUtil.getMinutes(data.getEndline())).append("\n")
                 .append(getString(R.string.versus_reward)).append(" ").append(reward).append("\n")
                 .append(getString(R.string.versus_tip));
-        SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
+        SmartDialog.single(getActivity(), sb.toString())
+                .setTitle(getString(R.string.title_match_success))
                 .setMessageMaxLines(10)
                 .setPositive(R.string.join_versus, new SmartDialog.OnClickListener() {
                     @Override
@@ -807,18 +791,6 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void dismissAllDialog() {
-        if (mJoinDialog != null) {
-            mJoinDialog.dismiss();
-        }
-        if (mJoinFailureDialog != null) {
-            mJoinFailureDialog.dismiss();
-        }
-        if (mAskMatchDialog != null) {
-            mAskMatchDialog.dismiss();
-        }
-        if (mCancelMatchDialog != null) {
-            mCancelMatchDialog.dismiss();
-        }
         if (mStartMatchDialogFragment != null) {
             mStartMatchDialogFragment.dismiss();
         }
@@ -883,14 +855,8 @@ public class BattleListActivity extends BaseActivity implements
             TextView mCreateName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
-            @BindView(R.id.progressBar)
-            ProgressBar mProgressBar;
-            @BindView(R.id.createProfit)
-            TextView mCreateProfit;
-            @BindView(R.id.againstProfit)
-            TextView mAgainstProfit;
-            @BindView(R.id.fighterDataArea)
-            RelativeLayout mFighterDataArea;
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.depositAndTime)
             TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
@@ -912,9 +878,9 @@ public class BattleListActivity extends BaseActivity implements
                         .transform(new GlideCircleTransform(context))
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
-                mCreateProfit.setText(String.valueOf(item.getLaunchScore()));
+                mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
+                mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_BAO:
@@ -936,7 +902,7 @@ public class BattleListActivity extends BaseActivity implements
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        showScoreProgress(0, 0, true);
+                        mProgress.showScoreProgress(0, 0, true);
                         break;
                     case Battle.GAME_STATUS_STARTED:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
@@ -948,7 +914,7 @@ public class BattleListActivity extends BaseActivity implements
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case Battle.GAME_STATUS_END:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
@@ -968,55 +934,12 @@ public class BattleListActivity extends BaseActivity implements
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
 
                 }
             }
-
-            private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
-                String myFlag = "";
-                String fighterFlag = "";
-                if (isInviting) {
-                    mProgressBar.setProgress(0);
-                    mProgressBar.setSecondaryProgress(0);
-                    mCreateProfit.setText(null);
-                    mAgainstProfit.setText(null);
-                } else {
-                    //正正
-                    if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
-                        int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
-                        mProgressBar.setProgress(progress);
-                    }
-                    //正负
-                    if (createProfit >= 0 && fighterProfit < 0) {
-                        mProgressBar.setProgress(100);
-                    }
-                    //负正
-                    if (createProfit < 0 && fighterProfit >= 0) {
-                        mProgressBar.setProgress(0);
-                    }
-                    //负负
-                    if (createProfit < 0 && fighterProfit < 0) {
-                        int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
-                        mProgressBar.setProgress(100 - progress);
-                    }
-                    //都为0
-                    if (createProfit == 0 && fighterProfit == 0) {
-                        mProgressBar.setProgress(50);
-                    }
-                    mProgressBar.setSecondaryProgress(100);
-                    if (createProfit > 0) {
-                        myFlag = "+";
-                    }
-
-                    if (fighterProfit > 0) {
-                        fighterFlag = "+";
-                    }
-                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
-                }
-            }
         }
+
     }
 }
