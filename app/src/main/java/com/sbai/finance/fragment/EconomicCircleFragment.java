@@ -220,15 +220,15 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			} else {
 				//游戏
-				if (LocalUser.getUser().isLogin()) {
-					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
-						ToastUtil.curt("对战已取消");
-					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-						mBattle.setPageType(EconomicCircle.PAGE_RECORD);
-						Launcher.with(getActivity(), FutureBattleActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mBattle)
-								.execute();
-					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
+				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
+					ToastUtil.curt("对战已取消");
+				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
+					mBattle.setPageType(EconomicCircle.PAGE_RECORD);
+					Launcher.with(getActivity(), FutureBattleActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mBattle)
+							.execute();
+				} else if (LocalUser.getUser().isLogin()) {
+					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
 							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
 						showJoinBattleDialog(mBattle);
 					} else {
@@ -298,9 +298,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					}
 				})
 				.setTitle(getString(R.string.join_versus_title))
-				.setTitleMaxLines(1)
-				.setTitleTextColor(ContextCompat.getColor(getContext(), R.color.blackAssist))
-				.setMessageTextColor(ContextCompat.getColor(getContext(), R.color.opinionText))
 				.setNegative(R.string.cancel)
 				.show();
 
@@ -960,12 +957,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 
 					case EconomicCircle.GAME_STATUS_END:
-						if (item.getWinResult() == Battle.RESULT_TIE) {
-							mStatus.setText(context.getString(R.string.tie));
-						} else {
-							mStatus.setText(context.getString(R.string.versus_end));
-						}
-
+						mStatus.setText(context.getString(R.string.versus_end));
 						Glide.with(context)
 								.load(item.getAgainstUserPortrait())
 								.placeholder(R.drawable.ic_default_avatar_big)

@@ -5,14 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +34,10 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
-import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
@@ -48,10 +45,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -66,7 +63,6 @@ import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
 
-import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 
@@ -85,14 +81,15 @@ public class BattleListActivity extends BaseActivity implements
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    @BindView(R.id.matchVersus)
-    TextView mMatchVersus;
-    @BindView(R.id.createVersus)
-    TextView mCreateVersus;
+    
+    @BindView(R.id.matchBattle)
+    TextView mMatchBattle;
+    @BindView(R.id.createBattle)
+    TextView mCreateBattle;
     @BindView(R.id.createAndMatchArea)
     LinearLayout mCreateAndMatchArea;
-    @BindView(R.id.currentVersus)
-    TextView mCurrentVersus;
+    @BindView(R.id.currentBattle)
+    TextView mCurrentBattleBtn;
 
     private ImageView mAvatar;
     private TextView mIntegral;
@@ -134,6 +131,7 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+
         initTitleBar();
         initListHeaderAndFooter();
         initListView();
@@ -195,8 +193,9 @@ public class BattleListActivity extends BaseActivity implements
         battleRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
-                        .setCallback(new Callback2D<Resp<ArticleProtocol>,ArticleProtocol>() {
+                        .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
                             protected void onRespSuccessData(ArticleProtocol data) {
                                 BattleRuleDialogFragment
@@ -204,17 +203,15 @@ public class BattleListActivity extends BaseActivity implements
                                         .show(getSupportFragmentManager());
                             }
                         }).fire();
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
             }
         });
         mListView.addHeaderView(header);
         //add footer
-        View view = getLayoutInflater().inflate(R.layout.footer_battle_list,null);
-        TextView seeHisRecord= (TextView) view.findViewById(R.id.seeHisBattle);
-        seeHisRecord.setOnClickListener(new View.OnClickListener() {
+        View view = getLayoutInflater().inflate(R.layout.footer_battle_list, null);
+        view.findViewById(R.id.checkHistoryBattle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(),BattleHisRecordActivity.class).execute();
+                Launcher.with(getActivity(), BattleHisRecordActivity.class).execute();
             }
         });
         mListView.addFooterView(view);
@@ -266,10 +263,10 @@ public class BattleListActivity extends BaseActivity implements
             requestUserFindInfo();
             requestCurrentBattle();
         } else {
-            mCurrentVersus.setVisibility(View.GONE);
+            mCurrentBattleBtn.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mIntegral.setText("0.00");
-            mIngot.setText("0");
+            mIntegral.setText(FinanceUtil.formatWithScale(0));
+            mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
 
         startScheduleJob(5 * 1000);
@@ -316,7 +313,14 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
                         mCurrentBattle = resp.getData();
-                        updateCurrentBattle(resp.getData());
+
+                        if (mCurrentBattle == null) {
+                            mCreateAndMatchArea.setVisibility(View.VISIBLE);
+                            mCurrentBattleBtn.setVisibility(View.GONE);
+                        } else {
+                            mCreateAndMatchArea.setVisibility(View.GONE);
+                            mCurrentBattleBtn.setVisibility(View.VISIBLE);
+                        }
                     }
                 }).fire();
     }
@@ -471,37 +475,10 @@ public class BattleListActivity extends BaseActivity implements
         }
     }
 
-    private void updateCurrentBattle(Battle data) {
-        if (null == data) {
-            mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mCurrentVersus.setVisibility(View.GONE);
-        } else {
-            mCreateAndMatchArea.setVisibility(View.GONE);
-            mCurrentVersus.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void updateUserFund(UserFundInfoModel data) {
-        if (data.getCredit() > 10000) {
-            double create = Double.valueOf(new DecimalFormat("0.0").format(data.getCredit() / 10000));
-//             double createInt = Math.floor(create);
-//             if (createInt==create){
-//                 create=createInt;
-//             }
-            mIntegral.setText(create + "万");
-        } else {
-            mIntegral.setText(new DecimalFormat("0.00").format(data.getCredit()));
-        }
-        if (data.getYuanbao() > 10000) {
-            double ingot = Double.valueOf(new DecimalFormat("0.0").format((double) data.getYuanbao() / 10000));
-//            double ingotInt = Math.floor(ingot);
-//            if (ingotInt==ingot){
-//                ingot=ingotInt;
-//            }
-            mIngot.setText(ingot + "万个");
-        } else {
-            mIngot.setText(Math.round(data.getYuanbao()) + "个");
-        }
+        if (data == null) return;
+        mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
+        mIngot.setText(StrFormatter.getFormIntegrate(data.getCredit()));
     }
 
 
@@ -535,10 +512,10 @@ public class BattleListActivity extends BaseActivity implements
         mVersusListAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.createVersus, R.id.matchVersus, R.id.currentVersus, R.id.titleBar})
+    @OnClick({R.id.createBattle, R.id.matchBattle, R.id.currentBattle})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.createVersus:
+            case R.id.createBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateFightActivity.class).execute();
@@ -546,7 +523,7 @@ public class BattleListActivity extends BaseActivity implements
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.matchVersus:
+            case R.id.matchBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_MATCH_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     showAskMatchDialog();
@@ -554,7 +531,7 @@ public class BattleListActivity extends BaseActivity implements
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.currentVersus:
+            case R.id.currentBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
                     mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
@@ -645,12 +622,12 @@ public class BattleListActivity extends BaseActivity implements
         if (mAskMatchDialog == null) {
             mAskMatchDialog = SmartDialog.with(getActivity(), getString(R.string.match_battle_tip), getString(R.string.match_battle_confirm));
             mAskMatchDialog.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            requestMatchVersusOfSocket("");
-                        }
-                    }).setNegative(R.string.cancel);
+                @Override
+                public void onClick(Dialog dialog) {
+                    dialog.dismiss();
+                    requestMatchVersusOfSocket("");
+                }
+            }).setNegative(R.string.cancel);
         }
         mAskMatchDialog.show();
 
@@ -675,12 +652,12 @@ public class BattleListActivity extends BaseActivity implements
         if (mCancelMatchDialog == null) {
             mCancelMatchDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching));
             mCancelMatchDialog.setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            requestMatchVersus(Battle.MATCH_CANCEL, "");
-                        }
-                    })
+                @Override
+                public void onClick(Dialog dialog) {
+                    dialog.dismiss();
+                    requestMatchVersus(Battle.MATCH_CANCEL, "");
+                }
+            })
                     .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {

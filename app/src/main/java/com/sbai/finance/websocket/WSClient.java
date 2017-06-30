@@ -214,9 +214,16 @@ public class WSClient implements WSAbsClient {
                 });
             }
         } else {
+            final int errorCode = resp.getCode();
+            if (errorCode == SocketCode.CODE_RESP_UNLOGIN) {
+                // when logout token will change, need register again
+                mPendingList.offer(request);
+                register();
+                return;
+            }
+
             final WSCallback callback = request.getCallback();
             if (callback != null) {
-                final int errorCode = resp.getCode();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -233,7 +240,9 @@ public class WSClient implements WSAbsClient {
 
     private void sendHeart() {
         if (mWSClient.isOpen()) {
-            mWSClient.send(new WSMessage(SocketCode.CODE_HEART, null).toJson());
+            WSMessage heartMsg = new WSMessage(SocketCode.CODE_HEART, null);
+            mWSClient.send(heartMsg.toJson());
+            Log.d(TAG, "sendHeart: " + heartMsg);
         }
     }
 
