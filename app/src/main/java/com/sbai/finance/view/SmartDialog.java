@@ -363,8 +363,7 @@ public class SmartDialog {
 
         if (TextUtils.isEmpty(mIconUrl)) {
             mIcon.setVisibility(View.VISIBLE);
-            Glide.with(mActivity)
-                    .load(mIconUrl)
+            Glide.with(mActivity).load(mIconUrl)
                     .bitmapTransform(new GlideCircleTransform(mActivity))
                     .into(mIcon);
         } else {

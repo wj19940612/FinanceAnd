@@ -130,6 +130,7 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+
         initTitleBar();
         initListHeaderAndFooter();
         initListView();
@@ -206,8 +207,7 @@ public class BattleListActivity extends BaseActivity implements
         mListView.addHeaderView(header);
         //add footer
         View view = getLayoutInflater().inflate(R.layout.footer_battle_list, null);
-        TextView seeHisRecord = (TextView) view.findViewById(R.id.seeHisBattle);
-        seeHisRecord.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.checkHistoryBattle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(), BattleHisRecordActivity.class).execute();
