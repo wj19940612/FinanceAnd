@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.dialog;
+package com.sbai.finance.fragment.battle;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
+import com.sbai.finance.fragment.dialog.BaseDialogFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +26,7 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/6/21.
  */
 
-public class StartMatchDialogFragment extends BaseDialogFragment {
+public class StartGameDialogFragment extends BaseDialogFragment {
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -39,27 +39,25 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     @BindView(R.id.cancel)
     TextView mCancel;
 
-    private OnCancelListener mOnCancelListener;
-
     Unbinder unbinder;
 
-    public interface OnCancelListener {
-        void onCancel();
-    }
+    private String mImageUrl;
 
-    public StartMatchDialogFragment setOnCancelListener(OnCancelListener listener) {
-        mOnCancelListener = listener;
-        return this;
-    }
 
-    public static StartMatchDialogFragment newInstance() {
-        StartMatchDialogFragment fragment = new StartMatchDialogFragment();
+    public static StartGameDialogFragment newInstance(String imageUrl) {
+        StartGameDialogFragment fragment = new StartGameDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("url", imageUrl);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mImageUrl = (String) getArguments().get("url");
+        }
     }
 
     @Nullable
@@ -91,31 +89,17 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     private void init() {
-        Glide.with(getContext())
-                .load(R.drawable.ic_future_svs_looking_for)
-                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)//添加缓存
-                .into(mMatchLoading);
-
-        mCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnCancelListener.onCancel();
-            }
-        });
-    }
-
-    public StartMatchDialogFragment setMatchSuccess(String imageUrl) {
         mTitle.setText(getString(R.string.title_match_success));
         mMatchLoading.setVisibility(View.GONE);
         Glide.with(getContext())
-                .load(imageUrl)
+                .load(mImageUrl)
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mMatchHead);
         mCancel.setText("");
         mCancel.setBackgroundResource(android.R.color.white);
         timer.start();
-        return this;
     }
+
 
     public void updateDeadline(int count) {
         mMessage.setText(getString(R.string.desc_match_success, count));
@@ -128,7 +112,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, StartMatchDialogFragment.class.getSimpleName());
+        this.show(manager, StartGameDialogFragment.class.getSimpleName());
     }
 
     private CountDownTimer timer = new CountDownTimer(4000, 1000) {
@@ -140,7 +124,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
 
         @Override
         public void onFinish() {
-            StartMatchDialogFragment.this.dismiss();
+            StartGameDialogFragment.this.dismiss();
         }
     };
 }

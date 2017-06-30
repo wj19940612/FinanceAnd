@@ -13,6 +13,7 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.battle.FutureBattleFragment;
+import com.sbai.finance.fragment.battle.StartGameDialogFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
@@ -75,6 +76,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
 
     private StartMatchDialogFragment mStartMatchDialogFragment;
+    private StartGameDialogFragment mStartGameDialogFragment;
     private ShareDialogFragment mShareDialogFragment;
 
     private SmartDialog mCancelMatchDialog;
@@ -117,7 +119,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.futureArea, mFutureBattleFragment)
-                .commit();
+                .commitAllowingStateLoss();
 
         //观战模式  刷新底部框 可以点赞
         int userId = LocalUser.getUser().getUserInfo().getId();
@@ -259,6 +261,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mFutureBattleFragment.showBattleTradeView();
         mFutureBattleFragment.updateGameInfo(mBattle);
         mGameStatus = GAME_STATUS_STARTED;
+        showStartGameDialog();
         startScheduleJob(1000);
     }
 
@@ -269,7 +272,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.futureArea, mFutureBattleDetailFragment)
-                .commit();
+                .commitAllowingStateLoss();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
                 .initWithModel(mBattle)
@@ -408,6 +411,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     public void onMatchButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
         requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
+    }
+
+    //初始化开始游戏弹窗
+    private void showStartGameDialog(){
+        if (mStartGameDialogFragment == null) {
+            mStartGameDialogFragment = StartGameDialogFragment
+                    .newInstance(mBattle.getAgainstUserPortrait());
+        }
+        mStartGameDialogFragment.show(getSupportFragmentManager());
     }
 
     //开始匹配弹窗
@@ -657,7 +669,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        requestSubscribeBattle();
+//        requestSubscribeBattle();
     }
 
     @Override

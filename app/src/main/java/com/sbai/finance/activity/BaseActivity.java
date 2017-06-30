@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -126,6 +127,7 @@ public class BaseActivity extends AppCompatActivity implements
                 case BATTLE_JOINED:
                     if (getActivity() instanceof FutureBattleActivity) {
                     } else {
+                        Log.d(TAG, "onPushReceive: showJoinBattleDialog");
                        showJoinBattleDialog(versusGamingWSPush);
                     }
                     break;
@@ -139,9 +141,6 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
         final Battle battle = (Battle) objectWSPush.getContent().getData();
-//        Launcher.with(getActivity(), FutureBattleActivity.class)
-//                .putExtra(Launcher.EX_PAYLOAD, battle)
-//                .execute();
 //        SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
 //                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 //                    @Override
