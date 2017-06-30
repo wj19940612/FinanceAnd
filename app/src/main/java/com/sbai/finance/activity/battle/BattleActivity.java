@@ -49,7 +49,6 @@ import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
-import static com.sbai.finance.model.battle.Battle.PAGE_RECORD;
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
@@ -65,9 +64,14 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
+public class BattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
 
-    @BindView(R.id.futureArea)
+    public static final String PAGE_TYPE = "page_type";
+    //0 对战记录 1 对战中
+    public static final int PAGE_TYPE_RECORD = 0;
+    public static final int PAGE_TYPE_VERSUS = 1;
+
+    @BindView(R.id.content)
     LinearLayout mFutureArea;
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
@@ -86,11 +90,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private Battle mBattle;
     private BattleInfo mBattleInfo;
     private int mGameStatus;
+    private int mPageType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_battle);
+        setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
 
         initData();
@@ -100,11 +105,11 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
     }
 
-
     private void initViews() {
-        if (mBattle.getPageType() == PAGE_RECORD) {
+        if (mPageType == PAGE_TYPE_RECORD) {
             showFutureBattleDetail();
         } else {
             showFutureBattle();
@@ -117,7 +122,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleFragment)
+                .add(R.id.content, mFutureBattleFragment)
                 .commitAllowingStateLoss();
 
         //观战模式  刷新底部框 可以点赞
@@ -131,7 +136,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onCreateAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                     .execute();
                         }
@@ -139,7 +144,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onAgainstAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                     .execute();
                         }
@@ -270,7 +275,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleDetailFragment)
+                .add(R.id.content, mFutureBattleDetailFragment)
                 .commitAllowingStateLoss();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
@@ -281,14 +286,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
                     @Override
                     public void onCreateAvatarClick() {
-                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                        Launcher.with(BattleActivity.this, UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                 .execute();
                     }
 
                     @Override
                     public void onAgainstAvatarClick() {
-                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                        Launcher.with(BattleActivity.this, UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                 .execute();
                     }
@@ -401,7 +406,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             mShareDialogFragment = ShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
-                    .setShareContent(FutureBattleActivity.this, shareTitle, shareDescribe, url);
+                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, url);
         }
         mShareDialogFragment.show(getSupportFragmentManager());
     }
@@ -523,7 +528,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(FutureBattleActivity.this, CreateFightActivity.class).execute();
+                        Launcher.with(BattleActivity.this, CreateFightActivity.class).execute();
                         finish();
                     }
                 })

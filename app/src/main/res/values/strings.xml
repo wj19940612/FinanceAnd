@@ -709,6 +709,7 @@
     <string name="join_battle">进入对战</string>
     <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
     <string name="title_quick_join_battle">即将进入游戏</string>
+    <string name="quick_battle">立即对战</string>
 
 
     <string name="you_not_install_weixin">您尚未安装微信</string>

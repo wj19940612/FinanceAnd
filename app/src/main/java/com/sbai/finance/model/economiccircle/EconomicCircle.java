@@ -16,39 +16,42 @@ public class EconomicCircle implements Parcelable {
 	public static final int GAME_STATUS_STARTED = 2;
 	public static final int GAME_STATUS_END = 3;
 
-	//0 对战记录 1 对战中
-	public static final int PAGE_RECORD = 0;
-	public static final int PAGE_VERSUS = 1;
 
-	private int auditStatus;
-	private String bigVarietyTypeCode;
-	private String bigVarietyTypeName;
-	private String contractsCode;
-	private long createTime;
+	private int type;
 	private int dataId;
-	private int direction;
-	private int guessPass;
+	private int userId;
+	private int auditStatus; //1 未审核 2 审核通过 0 不通过
+	private String content;
+	private long createTime;
 	private String id;
 	private int isAttention;
-	private int praiseCount;
-	private int replyCount;
-	private int type;
-	private int userId;
+	private String land;
 	private String userName;
 	private String userPortrait;
-	private int varietyId;
-	private String varietyName;
-	private String varietyType;
-	private String content;
-	private String land;
-	private String location;
+
+	// 借款相关字段
 	private double money;
 	private double interest;
 	private int days;
+	private String location;
+	private String contentImg;
+
+	// 观点相关
+	private String varietyName;
+	private String contractsCode;
+	private String bigVarietyTypeName;
+	private String bigVarietyTypeCode;
+	private int direction;
+	private int varietyId;
+	private String varietyType;
+	private int praiseCount;
+	private int replyCount;
+	private int guessPass; //预测  0等待结果  1成功  2失败
 	private String lastPrice;
 	private String risePre;
 	private String risePrice;
-	private String contentImg;
+
+	// 游戏对战相关
 	private String batchCode; // '批次号码， 也用于短连接。',
 	private int coinType;// '对战类型， 1，现金，2，元宝， 3积分',
 	private int reward; //'赏金',
@@ -66,15 +69,6 @@ public class EconomicCircle implements Parcelable {
 	private int winResult; // 胜利的人 0:平手， 1，发起人赢，2，对战者赢
 	private String againstUserName; // 迎战人名称
 	private String againstUserPortrait; //  迎战人头像'
-	private int pageType;
-
-	public int getPageType() {
-		return pageType;
-	}
-
-	public void setPageType(int pageType) {
-		this.pageType = pageType;
-	}
 
 	public int getAuditStatus() {
 		return auditStatus;
@@ -549,7 +543,6 @@ public class EconomicCircle implements Parcelable {
 		dest.writeInt(this.winResult);
 		dest.writeString(this.againstUserName);
 		dest.writeString(this.againstUserPortrait);
-		dest.writeInt(this.pageType);
 	}
 
 	public EconomicCircle() {
@@ -602,7 +595,6 @@ public class EconomicCircle implements Parcelable {
 		this.winResult = in.readInt();
 		this.againstUserName = in.readString();
 		this.againstUserPortrait = in.readString();
-		this.pageType = in.readInt();
 	}
 
 	public static final Creator<EconomicCircle> CREATOR = new Creator<EconomicCircle>() {

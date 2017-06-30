@@ -28,9 +28,6 @@ public class Battle implements Parcelable {
     public static final int WIN_RESULT_CREATOR_WIN = 1;
     public static final int WIN_RESULT_CHALLENGER_WIN = 2;
 
-    public static final int PAGE_RECORD = 0;
-    public static final int PAGE_VERSUS = 1;
-    
     //1开始快速匹配  0取消匹配 1 继续匹配
     public static final int MATCH_START = 1;
     public static final int MATCH_CANCEL = 0;
@@ -96,7 +93,6 @@ public class Battle implements Parcelable {
     private int winResult;
     private double launchScore;
     private double againstScore;
-    private int pageType;
     private int againstPraise;
     private int launchPraise;
 
@@ -104,14 +100,6 @@ public class Battle implements Parcelable {
     private int battleId;
     private int currentPraise;
     private int praiseUserId;
-
-    public int getPageType() {
-        return pageType;
-    }
-
-    public void setPageType(int pageType) {
-        this.pageType = pageType;
-    }
 
     public double getLaunchScore() {
         return launchScore;
@@ -370,7 +358,6 @@ public class Battle implements Parcelable {
         dest.writeInt(this.winResult);
         dest.writeDouble(this.launchScore);
         dest.writeDouble(this.againstScore);
-        dest.writeInt(this.pageType);
         dest.writeInt(this.againstPraise);
         dest.writeInt(this.launchPraise);
         dest.writeInt(this.battleId);
@@ -402,7 +389,6 @@ public class Battle implements Parcelable {
         this.winResult = in.readInt();
         this.launchScore = in.readDouble();
         this.againstScore = in.readDouble();
-        this.pageType = in.readInt();
         this.againstPraise = in.readInt();
         this.launchPraise = in.readInt();
         this.battleId = in.readInt();

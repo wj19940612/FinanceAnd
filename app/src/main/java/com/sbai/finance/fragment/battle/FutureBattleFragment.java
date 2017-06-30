@@ -16,7 +16,7 @@ import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
@@ -197,17 +197,17 @@ public class FutureBattleFragment extends BaseFragment {
         mBattleButtons.setOnViewClickListener(new BattleButtons.OnViewClickListener() {
             @Override
             public void onInviteButtonClick() {
-                ((FutureBattleActivity)getActivity()).onInviteButtonClick();
+                ((BattleActivity)getActivity()).onInviteButtonClick();
             }
 
             @Override
             public void onMatchButtonClick() {
-                ((FutureBattleActivity)getActivity()).onMatchButtonClick();
+                ((BattleActivity)getActivity()).onMatchButtonClick();
             }
 
             @Override
             public void onCancelButtonClick() {
-                ((FutureBattleActivity)getActivity()).onCancelButtonClick();
+                ((BattleActivity)getActivity()).onCancelButtonClick();
             }
         });
         mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
@@ -240,6 +240,7 @@ public class FutureBattleFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
                         refreshTradeView();
                     }
+
                 })
                 .fire();
     }
@@ -484,7 +485,7 @@ public class FutureBattleFragment extends BaseFragment {
             }
             againstProfit = againstProfit * mVariety.getEachPointMoney();
         }
-        ((FutureBattleActivity)getActivity()).updateBattleInfo(creatorProfit,againstProfit);
+        ((BattleActivity)getActivity()).updateBattleInfo(creatorProfit,againstProfit);
 
     }
 

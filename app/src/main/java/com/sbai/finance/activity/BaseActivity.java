@@ -24,7 +24,7 @@ import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
@@ -39,8 +39,6 @@ import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
-import static android.view.View.GONE;
-import static com.sbai.finance.model.battle.Battle.PAGE_VERSUS;
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 
 public class BaseActivity extends AppCompatActivity implements
@@ -131,7 +129,7 @@ public class BaseActivity extends AppCompatActivity implements
         public void onPushReceive(WSPush<Battle> versusGamingWSPush) {
             switch (versusGamingWSPush.getContent().getType()) {
                 case BATTLE_JOINED:
-                    if (getActivity() instanceof FutureBattleActivity) {
+                    if (getActivity() instanceof BattleActivity) {
                     } else {
                         if (!TextUtils.isEmpty(sCurrentActivity)
                                 && getActivity().getClass().getSimpleName().equals(sCurrentActivity)) {
@@ -149,14 +147,14 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
         final Battle battle = (Battle) objectWSPush.getContent().getData();
-        battle.setPageType(PAGE_VERSUS);
         SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, battle)
+                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                                 .execute();
                     }
                 })
@@ -166,7 +164,6 @@ public class BaseActivity extends AppCompatActivity implements
                         dialog.dismiss();
                     }
                 })
-                .setNegativeVisible(GONE)
                 .show();
     }
 
