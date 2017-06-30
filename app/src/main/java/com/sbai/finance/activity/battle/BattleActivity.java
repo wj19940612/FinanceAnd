@@ -110,16 +110,17 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void initViews() {
         if (mPageType == PAGE_TYPE_RECORD) {
-            showFutureBattleDetail();
+            initBattleRecordPage();
         } else {
-            showFutureBattle();
+            initBattlePage();
         }
     }
 
-    public void showFutureBattle() {
+    public void initBattlePage() {
         if (mFutureBattleFragment == null) {
             mFutureBattleFragment = FutureBattleFragment.newInstance(mBattle);
         }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, mFutureBattleFragment)
@@ -269,10 +270,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         startScheduleJob(1000);
     }
 
-    public void showFutureBattleDetail() {
+    public void initBattleRecordPage() {
         if (mFutureBattleDetailFragment == null) {
             mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mBattle);
         }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, mFutureBattleDetailFragment)

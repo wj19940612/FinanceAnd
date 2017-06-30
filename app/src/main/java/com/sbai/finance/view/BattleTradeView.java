@@ -43,7 +43,7 @@ public class BattleTradeView extends LinearLayout {
     //可交易
     public static final int STATE_TRADE = 1;
 
-    @BindView(R.id.listview)
+    @BindView(R.id.listView)
     ListView mListView;
 
 
