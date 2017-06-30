@@ -105,7 +105,6 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
         }else if (futureVersus.getList().size()>0){
             mLocation = futureVersus.getList().get(futureVersus.getList().size()-1).getCreateTime();
         }
-        mVersusRecordListAdapter.addAll(futureVersus.getList());
         mVersusRecordListAdapter.notifyDataSetChanged();
     }
 
