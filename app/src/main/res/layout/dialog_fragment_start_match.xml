@@ -46,6 +46,7 @@
             <ImageView
                 android:id="@+id/matchHead"
                 android:layout_width="60dp"
+                android:scaleType="centerCrop"
                 android:layout_height="60dp"
                 android:layout_centerInParent="true"/>
 
