@@ -390,11 +390,6 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
             }
-
-            @Override
-            public void onError(final int code) {
-                ToastUtil.curt(String.valueOf(code));
-            }
         });
     }
 
@@ -404,11 +399,6 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
 
-            }
-
-            @Override
-            public void onError(final int code) {
-                ToastUtil.curt(String.valueOf(code));
             }
         });
     }
@@ -935,10 +925,10 @@ public class BattleListActivity extends BaseActivity implements
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        if (item.getWinResult() == Battle.RESULT_AGAINST_WIN) {
+                        if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.RESULT_CREATE_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {

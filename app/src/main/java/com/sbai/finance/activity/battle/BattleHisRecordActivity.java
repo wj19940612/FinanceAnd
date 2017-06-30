@@ -243,10 +243,10 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        if (item.getWinResult() == Battle.RESULT_AGAINST_WIN) {
+                        if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.RESULT_CREATE_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {

@@ -19,16 +19,18 @@ public class Battle implements Parcelable {
     public static final int GAME_STATUS_CREATED = 1;
     public static final int GAME_STATUS_STARTED = 2;
     public static final int GAME_STATUS_END = 3;
+
     public static final int GAME_STATUS_OBESERVE = 4;
     public static final int GAME_STATUS_CANCELING = 5;
 
     //0平手 1发起者赢 2应战者赢
-    public static final int RESULT_TIE = 0;
-    public static final int RESULT_CREATE_WIN = 1;
-    public static final int RESULT_AGAINST_WIN = 2;
+    public static final int WIN_RESULT_TIE = 0;
+    public static final int WIN_RESULT_CREATOR_WIN = 1;
+    public static final int WIN_RESULT_CHALLENGER_WIN = 2;
 
     public static final int PAGE_RECORD = 0;
     public static final int PAGE_VERSUS = 1;
+    
     //1开始快速匹配  0取消匹配 1 继续匹配
     public static final int MATCH_START = 1;
     public static final int MATCH_CANCEL = 0;
@@ -46,7 +48,6 @@ public class Battle implements Parcelable {
 
     public static final int CODE_BATTLE_JOINED_OR_CREATED = 300;
     public static final int CODE_NO_ENOUGH_MONEY = 2201;
-
 
     /**
      * againstFrom : 经济圈
