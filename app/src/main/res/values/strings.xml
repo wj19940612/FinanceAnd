@@ -673,7 +673,7 @@
     <string name="desc_matching">正在进行匹配，请稍后…</string>
     <string name="title_matching">正在匹配</string>
     <string name="title_match_success">匹配成功</string>
-    <string name="desc_match_success">已成功匹配对手\n%1$d秒后进入对战</string>
+    <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>
     <string name="cancel_battle">取消对战</string>
     <string name="cancel_battle_tip">是否要取消对战？</string>
     <string name="continue_to_battle">继续对战</string>
@@ -708,6 +708,8 @@
     <string name="return_reward">赏金退还</string>
     <string name="join_battle">进入对战</string>
     <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
+    <string name="title_quick_join_battle">即将进入游戏</string>
+    <string name="quick_battle">立即对战</string>
 
 
     <string name="you_not_install_weixin">您尚未安装微信</string>

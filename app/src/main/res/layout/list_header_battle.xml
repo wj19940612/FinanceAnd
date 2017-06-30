@@ -28,10 +28,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="19dp"
                 android:background="@drawable/bg_check_battle_record"
-                android:paddingBottom="2dp"
+                android:paddingBottom="4dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:paddingTop="2dp"
+                android:paddingTop="4dp"
                 android:text="@string/see_record"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"/>

@@ -33,7 +33,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.ingotWar;
-import static com.sbai.finance.model.battle.Battle.PAGE_VERSUS;
 
 public class CreateFightActivity extends BaseActivity {
 
@@ -334,13 +333,14 @@ public class CreateFightActivity extends BaseActivity {
 						.setCallback(new Callback2D<Resp<Battle>, Battle>() {
 							@Override
 							protected void onRespSuccessData(Battle battle) {
-								battle.setPageType(PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
+								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, battle)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
+								finish();
 							}
 						}).fire();
-				finish();
+
 				break;
 		}
 	}

@@ -12,15 +12,12 @@
         app:backFeature="true"
         app:titleText="@string/battle_detail"/>
 
-
     <ListView
-        android:id="@+id/listview"
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:paddingTop="@dimen/dp_10"
         android:layout_height="match_parent"
         android:paddingBottom="30dp"
         android:divider="@null"
         android:scrollbars="none"/>
-
-
 </LinearLayout>

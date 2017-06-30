@@ -31,8 +31,8 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
-    @BindView(R.id.listview)
-    ListView mListview;
+    @BindView(R.id.listView)
+    ListView mListView;
     Unbinder unbinder;
 
     BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
@@ -42,7 +42,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     public static FutureBattleDetailFragment newInstance(Battle battle) {
         FutureBattleDetailFragment detailFragment = new FutureBattleDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("versusGaming", battle);
+        bundle.putParcelable("battle", battle);
         detailFragment.setArguments(bundle);
         return detailFragment;
     }
@@ -51,7 +51,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mBattle = (Battle) getArguments().get("versusGaming");
+            mBattle = (Battle) getArguments().get("battle");
         }
     }
 
@@ -70,8 +70,9 @@ public class FutureBattleDetailFragment extends BaseFragment {
     }
 
     private void initViews() {
+        scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
-        mListview.setAdapter(mBattleTradeAdapter);
+        mListView.setAdapter(mBattleTradeAdapter);
         requestOrderHistory();
     }
 
@@ -90,7 +91,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     private void updateTradeHistory(List<TradeRecord> resp) {
         mBattleTradeAdapter.setUserId(mBattle.getLaunchUser(), mBattle.getAgainstUser());
         mBattleTradeAdapter.addAll(resp);
-        mListview.setSelection(View.FOCUS_DOWN);
+        mListView.setSelection(View.FOCUS_DOWN);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class BattleTradeView extends LinearLayout {
     //可交易
     public static final int STATE_TRADE = 1;
 
-    @BindView(R.id.listview)
+    @BindView(R.id.listView)
     ListView mListView;
 
 
@@ -101,7 +101,6 @@ public class BattleTradeView extends LinearLayout {
     private void init() {
         setOrientation(VERTICAL);
         setGravity(Gravity.CENTER_HORIZONTAL);
-        setBackgroundResource(R.drawable.ic_futures_versus_bg);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_trade, null, false);
         addView(view);
         ButterKnife.bind(this);

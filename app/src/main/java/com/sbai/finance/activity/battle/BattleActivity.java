@@ -13,6 +13,7 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
 import com.sbai.finance.fragment.battle.FutureBattleFragment;
+import com.sbai.finance.fragment.battle.StartGameDialogFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
@@ -48,7 +49,6 @@ import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
-import static com.sbai.finance.model.battle.Battle.PAGE_RECORD;
 import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 import static com.sbai.finance.websocket.PushCode.BATTLE_OVER;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
@@ -64,9 +64,14 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
  * Created by linrongfang on 2017/6/19.
  */
 
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
+public class BattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener {
 
-    @BindView(R.id.futureArea)
+    public static final String PAGE_TYPE = "page_type";
+    //0 对战记录 1 对战中
+    public static final int PAGE_TYPE_RECORD = 0;
+    public static final int PAGE_TYPE_VERSUS = 1;
+
+    @BindView(R.id.content)
     LinearLayout mFutureArea;
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
@@ -75,6 +80,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
 
     private StartMatchDialogFragment mStartMatchDialogFragment;
+    private StartGameDialogFragment mStartGameDialogFragment;
     private ShareDialogFragment mShareDialogFragment;
 
     private SmartDialog mCancelMatchDialog;
@@ -84,12 +90,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private Battle mBattle;
     private BattleInfo mBattleInfo;
     private int mGameStatus;
-
+    private int mPageType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_battle);
+        setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
 
         initData();
@@ -99,25 +105,26 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
     }
 
-
     private void initViews() {
-        if (mBattle.getPageType() == PAGE_RECORD) {
-            showFutureBattleDetail();
+        if (mPageType == PAGE_TYPE_RECORD) {
+            initBattleRecordPage();
         } else {
-            showFutureBattle();
+            initBattlePage();
         }
     }
 
-    public void showFutureBattle() {
+    public void initBattlePage() {
         if (mFutureBattleFragment == null) {
             mFutureBattleFragment = FutureBattleFragment.newInstance(mBattle);
         }
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleFragment)
-                .commit();
+                .add(R.id.content, mFutureBattleFragment)
+                .commitAllowingStateLoss();
 
         //观战模式  刷新底部框 可以点赞
         int userId = LocalUser.getUser().getUserInfo().getId();
@@ -130,7 +137,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onCreateAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                     .execute();
                         }
@@ -138,7 +145,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         @Override
                         public void onAgainstAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
                                     .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                     .execute();
                         }
@@ -259,17 +266,19 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mFutureBattleFragment.showBattleTradeView();
         mFutureBattleFragment.updateGameInfo(mBattle);
         mGameStatus = GAME_STATUS_STARTED;
+        showStartGameDialog();
         startScheduleJob(1000);
     }
 
-    public void showFutureBattleDetail() {
+    public void initBattleRecordPage() {
         if (mFutureBattleDetailFragment == null) {
             mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mBattle);
         }
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.futureArea, mFutureBattleDetailFragment)
-                .commit();
+                .add(R.id.content, mFutureBattleDetailFragment)
+                .commitAllowingStateLoss();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)
                 .initWithModel(mBattle)
@@ -279,14 +288,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
                     @Override
                     public void onCreateAvatarClick() {
-                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                        Launcher.with(BattleActivity.this, UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
                                 .execute();
                     }
 
                     @Override
                     public void onAgainstAvatarClick() {
-                        Launcher.with(FutureBattleActivity.this, UserDataActivity.class)
+                        Launcher.with(BattleActivity.this, UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
                                 .execute();
                     }
@@ -355,19 +364,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void requestAddBattlePraise(final int userId) {
         umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
-        Client.addBattlePraise(mBattle.getId(), userId)
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<Integer>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Integer> resp) {
-                        if (resp.isSuccess()) {
-                            int data = resp.getData();
-                            updatePraiseView(data, userId, true);
-                        } else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                }).fireFree();
+        WSClient.get().send(new QuickMatchLauncher(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
+            @Override
+            public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
+                int data = respWSMessage.getContent().getData();
+                updatePraiseView(data, userId, true);
+            }
+        });
     }
 
     private void updatePraiseView(int count, int userId, boolean needLight) {
@@ -399,7 +402,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             mShareDialogFragment = ShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
-                    .setShareContent(FutureBattleActivity.this, shareTitle, shareDescribe, url);
+                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, url);
         }
         mShareDialogFragment.show(getSupportFragmentManager());
     }
@@ -408,6 +411,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     public void onMatchButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
         requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
+    }
+
+    //初始化开始游戏弹窗
+    private void showStartGameDialog(){
+        if (mStartGameDialogFragment == null) {
+            mStartGameDialogFragment = StartGameDialogFragment
+                    .newInstance(mBattle.getAgainstUserPortrait());
+        }
+        mStartGameDialogFragment.show(getSupportFragmentManager());
     }
 
     //开始匹配弹窗
@@ -512,7 +524,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(FutureBattleActivity.this, CreateFightActivity.class).execute();
+                        Launcher.with(BattleActivity.this, CreateFightActivity.class).execute();
                         finish();
                     }
                 })
@@ -654,11 +666,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mBattleView.setDeadline(mBattle.getGameStatus(), diff);
     }
 
-
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        requestSubscribeBattle();
+//        requestSubscribeBattle();
     }
 
     @Override

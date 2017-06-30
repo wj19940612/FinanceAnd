@@ -183,10 +183,10 @@ public class HomeFragment extends BaseFragment {
     private void requestCurrentBattle() {
         if (LocalUser.getUser().isLogin()) {
             Client.getCurrentBattle().setTag(TAG)
-                    .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+                    .setCallback(new Callback<Resp<Battle>>() {
                         @Override
-                        protected void onRespSuccessData(Battle data) {
-                            updateBattleView(data);
+                        protected void onRespSuccess(Resp<Battle> resp) {
+                            updateBattleView(resp.getData());
                         }
                     }).fireFree();
         } else {
@@ -195,10 +195,14 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void updateBattleView(Battle battle) {
-        if (battle.getGameStatus() == Battle.GAME_STATUS_CREATED) {
-            mBattle.setSubText(R.string.battle_status_pending);
-        } else if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED) {
-            mBattle.setSubText(R.string.battle_status_fighting);
+        if (battle != null) {
+            if (battle.getGameStatus() == Battle.GAME_STATUS_CREATED) {
+                mBattle.setSubText(R.string.battle_status_pending);
+            } else if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED) {
+                mBattle.setSubText(R.string.battle_status_fighting);
+            }
+        } else {
+            mBattle.setSubText(null);
         }
     }
 

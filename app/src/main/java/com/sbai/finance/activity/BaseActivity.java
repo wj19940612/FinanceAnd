@@ -1,6 +1,7 @@
 package com.sbai.finance.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,7 +23,8 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
@@ -53,6 +56,8 @@ public class BaseActivity extends AppCompatActivity implements
 
     private TimerHandler mTimerHandler;
     private RequestProgress mRequestProgress;
+
+    private static String sCurrentActivity;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -124,9 +129,12 @@ public class BaseActivity extends AppCompatActivity implements
         public void onPushReceive(WSPush<Battle> versusGamingWSPush) {
             switch (versusGamingWSPush.getContent().getType()) {
                 case BATTLE_JOINED:
-                    if (getActivity() instanceof FutureBattleActivity) {
+                    if (getActivity() instanceof BattleActivity) {
                     } else {
-                       showJoinBattleDialog(versusGamingWSPush);
+                        if (!TextUtils.isEmpty(sCurrentActivity)
+                                && getActivity().getClass().getSimpleName().equals(sCurrentActivity)) {
+                            showJoinBattleDialog(versusGamingWSPush);
+                        }
                     }
                     break;
             }
@@ -139,27 +147,24 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
         final Battle battle = (Battle) objectWSPush.getContent().getData();
-//        Launcher.with(getActivity(), FutureBattleActivity.class)
-//                .putExtra(Launcher.EX_PAYLOAD, battle)
-//                .execute();
-//        SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
-//                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-//                    @Override
-//                    public void onClick(Dialog dialog) {
-//                        dialog.dismiss();
-//                        Launcher.with(getActivity(), FutureBattleActivity.class)
-//                                .putExtra(Launcher.EX_PAYLOAD, battle)
-//                                .execute();
-//                    }
-//                })
-//                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
-//                    @Override
-//                    public void onClick(Dialog dialog) {
-//                        dialog.dismiss();
-//                    }
-//                })
-//                .setNegativeVisible(GONE)
-//                .show();
+        SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
+                .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, battle)
+                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                .execute();
+                    }
+                })
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void scrollToTop(View view) {
@@ -236,6 +241,8 @@ public class BaseActivity extends AppCompatActivity implements
                 new IntentFilter(ACTION_TOKEN_EXPIRED));
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(this);
+
+        sCurrentActivity = getActivity().getClass().getSimpleName();
     }
 
     @Override
@@ -254,6 +261,7 @@ public class BaseActivity extends AppCompatActivity implements
         SmartDialog.dismiss(this);
         mRequestProgress.dismissAll();
         stopScheduleJob();
+        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     protected FragmentActivity getActivity() {

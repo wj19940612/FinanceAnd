@@ -77,8 +77,9 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    item.setPageType(Battle.PAGE_RECORD);
-                    Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    Launcher.with(getActivity(), BattleActivity.class)
+                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+                            .putExtra(Launcher.EX_PAYLOAD, item).execute();
                 }
             }
         });
@@ -110,7 +111,6 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
         } else if (futureVersus.getList().size() > 0) {
             mLocation = futureVersus.getList().get(futureVersus.getList().size() - 1).getCreateTime();
         }
-        mVersusRecordListAdapter.addAll(futureVersus.getList());
         mVersusRecordListAdapter.notifyDataSetChanged();
     }
 
@@ -238,10 +238,10 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        if (item.getWinResult() == Battle.RESULT_AGAINST_WIN) {
+                        if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.RESULT_CREATE_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {

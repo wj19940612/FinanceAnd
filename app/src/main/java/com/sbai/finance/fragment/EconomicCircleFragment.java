@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -32,11 +32,11 @@ import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
-import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -220,21 +220,21 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			} else {
 				//游戏
-				if (LocalUser.getUser().isLogin()) {
-					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
-						ToastUtil.curt("对战已取消");
-					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-						mBattle.setPageType(EconomicCircle.PAGE_RECORD);
-						Launcher.with(getActivity(), FutureBattleActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mBattle)
-								.execute();
-					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
+				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
+					ToastUtil.curt("对战已取消");
+				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
+					Launcher.with(getActivity(), BattleActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mBattle)
+							.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+							.execute();
+				} else if (LocalUser.getUser().isLogin()) {
+					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
 							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
 						showJoinBattleDialog(mBattle);
 					} else {
-						mBattle.setPageType(EconomicCircle.PAGE_VERSUS);
-						Launcher.with(getActivity(), FutureBattleActivity.class)
+						Launcher.with(getActivity(), BattleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mBattle)
+								.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 								.execute();
 					}
 				} else {
@@ -298,9 +298,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					}
 				})
 				.setTitle(getString(R.string.join_versus_title))
-				.setTitleMaxLines(1)
-				.setTitleTextColor(ContextCompat.getColor(getContext(), R.color.blackAssist))
-				.setMessageTextColor(ContextCompat.getColor(getContext(), R.color.opinionText))
 				.setNegative(R.string.cancel)
 				.show();
 
@@ -320,9 +317,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 								data.setAgainstUserPortrait(versusGaming.getAgainstUserPortrait());
 								data.setAgainstUserName(versusGaming.getAgainstUserName());
 
-								data.setPageType(Battle.PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
+								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
 						} else {
@@ -363,9 +360,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						dialog.dismiss();
 						if (type == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							if (data != null) {
-								data.setPageType(Battle.PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
+								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, data)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
 						} else if (type == Battle.CODE_NO_ENOUGH_MONEY) {
@@ -960,12 +957,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 
 					case EconomicCircle.GAME_STATUS_END:
-						if (item.getWinResult() == Battle.RESULT_TIE) {
-							mStatus.setText(context.getString(R.string.tie));
-						} else {
-							mStatus.setText(context.getString(R.string.versus_end));
-						}
-
+						mStatus.setText(context.getString(R.string.versus_end));
 						Glide.with(context)
 								.load(item.getAgainstUserPortrait())
 								.placeholder(R.drawable.ic_default_avatar_big)
