@@ -446,9 +446,8 @@ public class BorrowDetailsActivity extends BaseActivity {
 		if (size > 0) {
 			mGoodHeartPeopleArea.setVisibility(View.VISIBLE);
 		}
-		if (size >= mMax) {
-			size = mMax;
-			for (int i = 0; i < size; i++) {
+		if (size > mMax) {
+			for (int i = 0; i < mMax; i++) {
 				ImageView imageView = new ImageView(this);
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mAvatarWidth, mAvatarWidth);
 				params.leftMargin = (i == 0 ? 0 : mHorizontalSpacing);

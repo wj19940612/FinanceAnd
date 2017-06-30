@@ -468,7 +468,7 @@ public class BattleListActivity extends BaseActivity implements
     private void updateUserFund(UserFundInfoModel data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
-        mIngot.setText(StrFormatter.getFormIngot(data.getYuanbao()));
+        mIngot.setText(StrFormatter.getFormIngotWithUnit(data.getYuanbao()));
     }
 
 
@@ -597,7 +597,7 @@ public class BattleListActivity extends BaseActivity implements
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-                            Launcher.with(getActivity(), RechargeActivity.class).execute();
+                            Launcher.with(getActivity(), CornucopiaActivity.class).execute();
                         }
                     }
                 })
