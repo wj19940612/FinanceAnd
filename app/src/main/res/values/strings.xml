@@ -644,6 +644,8 @@
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
     <string name="versus_record">期货对战-战绩</string>
+    <string name="battle_his_record">历史对战</string>
+    <string name="see_his_battle">查看更早对战</string>
     <string name="go_battle">前往对战</string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
