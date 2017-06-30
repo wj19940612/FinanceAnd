@@ -193,6 +193,7 @@ public class BattleListActivity extends BaseActivity implements
         battleRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
                         .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
@@ -202,7 +203,6 @@ public class BattleListActivity extends BaseActivity implements
                                         .show(getSupportFragmentManager());
                             }
                         }).fire();
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
             }
         });
         mListView.addHeaderView(header);
