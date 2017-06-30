@@ -233,18 +233,18 @@ public class BattleListActivity extends BaseActivity implements
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
-                        item.setPageType(Battle.PAGE_RECORD);
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, item)
+                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
                                 .executeForResult(CANCEL_BATTLE);
                     } else if (LocalUser.getUser().isLogin()) {
                         if (item.getGameStatus() == Battle.GAME_STATUS_CREATED
                                 && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
                             showJoinBattleDialog(item);
                         } else {
-                            item.setPageType(Battle.PAGE_VERSUS);
-                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                            Launcher.with(getActivity(), BattleActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, item)
+                                    .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                                     .executeForResult(CANCEL_BATTLE);
                         }
                     } else {
@@ -339,9 +339,9 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUserPortrait(battle.getAgainstUserPortrait());
                                 data.setAgainstUserName(battle.getAgainstUserName());
 
-                                battle.setPageType(Battle.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, battle)
+                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                                         .executeForResult(CANCEL_BATTLE);
                             }
                         } else {
@@ -390,11 +390,6 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
             }
-
-            @Override
-            public void onError(final int code) {
-                ToastUtil.curt(String.valueOf(code));
-            }
         });
     }
 
@@ -404,11 +399,6 @@ public class BattleListActivity extends BaseActivity implements
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
 
-            }
-
-            @Override
-            public void onError(final int code) {
-                ToastUtil.curt(String.valueOf(code));
             }
         });
     }
@@ -478,7 +468,7 @@ public class BattleListActivity extends BaseActivity implements
     private void updateUserFund(UserFundInfoModel data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
-        mIngot.setText(StrFormatter.getFormIntegrate(data.getCredit()));
+        mIngot.setText(StrFormatter.getFormIngot(data.getYuanbao()));
     }
 
 
@@ -534,9 +524,9 @@ public class BattleListActivity extends BaseActivity implements
             case R.id.currentBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
-                    mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
+                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                             .executeForResult(CANCEL_BATTLE);
                 }
                 break;
@@ -601,9 +591,9 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
-                                mCurrentBattle.setPageType(Battle.PAGE_VERSUS);
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
+                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
@@ -935,10 +925,10 @@ public class BattleListActivity extends BaseActivity implements
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        if (item.getWinResult() == Battle.RESULT_AGAINST_WIN) {
+                        if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.RESULT_CREATE_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {

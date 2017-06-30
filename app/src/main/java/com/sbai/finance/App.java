@@ -23,7 +23,7 @@ public class App extends Application {
         API.init(sContext.getCacheDir());
         CookieManger.getInstance().init(sContext.getFilesDir());
 
-        if (!BuildConfig.isProd) {
+        if (!BuildConfig.IS_PROD) {
             handleUncaughtException();
         }
         
