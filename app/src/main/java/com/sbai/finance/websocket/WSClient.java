@@ -214,9 +214,16 @@ public class WSClient implements WSAbsClient {
                 });
             }
         } else {
+            final int errorCode = resp.getCode();
+            if (errorCode == SocketCode.CODE_RESP_UNLOGIN) {
+                // when logout token will change, need register again
+                mPendingList.offer(request);
+                register();
+                return;
+            }
+
             final WSCallback callback = request.getCallback();
             if (callback != null) {
-                final int errorCode = resp.getCode();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
