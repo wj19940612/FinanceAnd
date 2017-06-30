@@ -45,6 +45,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CollapsedTextView;
 import com.sbai.finance.view.SmartDialog;
@@ -220,7 +221,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			} else {
 				//游戏
 				if (LocalUser.getUser().isLogin()) {
-					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
+					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
+						ToastUtil.curt("对战已取消");
+					} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
 						mBattle.setPageType(EconomicCircle.PAGE_RECORD);
 						Launcher.with(getActivity(), FutureBattleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mBattle)

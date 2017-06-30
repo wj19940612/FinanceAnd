@@ -1641,6 +1641,16 @@ public class Client {
                 .put("location", location)
                 .put("pageSize", 15));
     }
+    /**
+     * 所有对战历史
+     * @param location
+     * @return
+     */
+    public static API getBattleHisRecord(Long location){
+        return new API("/game/battle/allBattleGamed.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
 
     /**
      * 加入对战
