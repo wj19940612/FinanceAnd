@@ -70,7 +70,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     }
 
     private void initViews() {
-        scrollToTop(mTitleBar, mListview);
+        scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
         requestOrderHistory();
