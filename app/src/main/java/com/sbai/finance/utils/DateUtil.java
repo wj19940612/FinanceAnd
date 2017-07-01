@@ -589,15 +589,17 @@ public class DateUtil {
 
     /**
      * 15分钟
+     *
      * @param seconds
      * @return
      */
-    public static String getMinutes(int seconds){
-        return seconds/60+"分钟";
+    public static String getMinutes(int seconds) {
+        return seconds / 60 + "分钟";
     }
 
     /**
      * 获取两段时间相差的秒
+     *
      * @param time1
      * @param time2
      * @return
@@ -605,6 +607,6 @@ public class DateUtil {
     public static int getDiffSeconds(long time1, long time2) {
         long diff = time1 - time2;
         Log.d("TAG", "isLessThanTimeInterval: " + diff);
-        return (int) (diff/1000);
+        return (int) (diff / 1000);
     }
 }

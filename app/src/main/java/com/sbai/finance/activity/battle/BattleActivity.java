@@ -440,7 +440,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             requestQuickSearchForLaunch(TYPE_CANCEL);
                         }
                     })
-                    .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                    .setNegative(R.string.continue_match, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
