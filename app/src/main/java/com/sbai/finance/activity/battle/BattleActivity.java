@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
@@ -137,17 +138,25 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         @Override
                         public void onCreateAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                    .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                    .execute();
+                            if (LocalUser.getUser().isLogin()){
+                                Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                        .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
+                                        .execute();
+                            }else{
+                                Launcher.with(getActivity(), LoginActivity.class).execute();
+                            }
                         }
 
                         @Override
                         public void onAgainstAvatarClick() {
                             umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                    .execute();
+                            if (LocalUser.getUser().isLogin()){
+                                Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                        .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
+                                        .execute();
+                            }else{
+                                Launcher.with(getActivity(), LoginActivity.class).execute();
+                            }
                         }
                     })
                     .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
@@ -282,16 +291,24 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
                     @Override
                     public void onCreateAvatarClick() {
-                        Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                .execute();
+                        if (LocalUser.getUser().isLogin()){
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
+                                    .execute();
+                        }else{
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }
                     }
 
                     @Override
                     public void onAgainstAvatarClick() {
-                        Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                .execute();
+                        if (LocalUser.getUser().isLogin()){
+                            Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
+                                    .execute();
+                        }else{
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }
                     }
                 });
     }

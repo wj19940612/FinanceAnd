@@ -56,7 +56,6 @@ import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 /**
  * Modified by JohnZ on 2017/7/1.
  */
-
 public class BattleFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
