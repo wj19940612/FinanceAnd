@@ -34,7 +34,8 @@ public class WSClient implements WSAbsClient {
     private Status mStatus;
     private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
-    private boolean mIsOpened;
+
+    private boolean mCloseAuto; // websocket will be closed automatically
 
     enum Status {
         UNREGISTERED,
@@ -50,14 +51,12 @@ public class WSClient implements WSAbsClient {
     }
 
     private WSClient() {
-        mWSClient = new InnerWSClient(createURI());
         mStatus = Status.UNREGISTERED;
-        mWSClient.setClient(this);
         mHandler = new Handler(App.getAppContext().getMainLooper());
 
         mPendingList = new LinkedList<>();
         mExecutedList = new LinkedList<>();
-        mIsOpened = false;
+        mCloseAuto = false;
     }
 
     private void register() {
@@ -89,28 +88,39 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void send(WSMessage message) {
-        if (mWSClient.isOpen() && mStatus == Status.REGISTERED) {
+        if (isConnected() && mStatus == Status.REGISTERED) {
             Log.d(TAG, "execute: " + message.toJson());
             mWSClient.send(message.toJson());
             mExecutedList.offer(message);
         } else {
             mPendingList.offer(message);
 
-            if (mWSClient.isConnecting()) {
+            if (isConnecting()) {
                 return;
             }
 
-            if (mWSClient.isOpen() && mStatus == Status.REGISTERING) {
+            if (isConnected() && mStatus == Status.REGISTERING) {
                 return;
             }
 
-            if (mWSClient.isOpen() && mStatus == Status.UNREGISTERED) {
-                register();
-                return;
-            }
-
-            mWSClient.connect();
+            connect();
         }
+    }
+
+    private void connect() {
+        mWSClient = new InnerWSClient(createURI());
+        mWSClient.setClient(this);
+        mWSClient.connect();
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return mWSClient != null && mWSClient.isConnecting();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return mWSClient != null && mWSClient.isOpen();
     }
 
     private void executePendingList() {
@@ -124,32 +134,31 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void onOpen() {
-        mIsOpened = true;
+        mCloseAuto = true;
         register();
     }
 
     @Override
     public void onClose() {
-        mWSClient = new InnerWSClient(createURI());
-        mWSClient.setClient(this);
         mStatus = Status.UNREGISTERED;
-        if (mIsOpened) {
-            mWSClient.connect();
+        if (mCloseAuto) { // if close automatically, reconnect
+            connect();
         }
     }
 
     @Override
     public void onError() {
-        mWSClient = new InnerWSClient(createURI());
-        mWSClient.setClient(this);
         mStatus = Status.UNREGISTERED;
     }
 
     @Override
     public void close() {
-        mWSClient.close();
-        mIsOpened = false;
+        if (isConnected()) {
+            mWSClient.close();
+            mCloseAuto = false;
+        }
     }
+
 
     @Override
     public void onMessage(String message) {
@@ -217,6 +226,11 @@ public class WSClient implements WSAbsClient {
             final int errorCode = resp.getCode();
             if (errorCode == SocketCode.CODE_RESP_UNLOGIN) {
                 // when logout token will change, need register again
+                mPendingList.offer(request);
+                register();
+                return;
+            }
+            if (errorCode == SocketCode.CODE_RESP_UNREGISTER) {
                 mPendingList.offer(request);
                 register();
                 return;

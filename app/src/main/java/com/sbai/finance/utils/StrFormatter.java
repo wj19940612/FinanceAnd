@@ -120,7 +120,7 @@ public class StrFormatter {
             int length = number.length();
             return number.substring(0, length - 4) + "." + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG_GE;
         }
-        return FinanceUtil.formatWithScaleNoZero(money);
+        return FinanceUtil.formatWithScaleNoZero(money)+FinanceUtil.UNIT_GE;
     }
 
     /**
