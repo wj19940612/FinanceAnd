@@ -61,6 +61,7 @@ import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.BuildConfig;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -426,19 +427,33 @@ public class BattleListActivity extends BaseActivity implements
 
     private void updateVisibleVersusData(List<Battle> data) {
         if (data.isEmpty() || mVersusListAdapter == null) return;
+        List<Battle> removeBattleList = new ArrayList<>();
         for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
             Battle item = mVersusListAdapter.getItem(i);
             for (Battle battle : data) {
-                if (item.getId() == battle.getId() && item.getGameStatus() == Battle.GAME_STATUS_STARTED) {
-                    item.setGameStatus(battle.getGameStatus());
-                    item.setLaunchPraise(battle.getLaunchPraise());
-                    item.setLaunchScore(battle.getLaunchScore());
-                    item.setAgainstPraise(battle.getAgainstPraise());
-                    item.setAgainstScore(battle.getAgainstScore());
+                if (item.getId() == battle.getId()&&item.getGameStatus()!=Battle.GAME_STATUS_END) {
+
+                    if (battle.getGameStatus()==Battle.GAME_STATUS_CANCELED){
+                        removeBattleList.add(item);
+                    }else {
+                        item.setGameStatus(battle.getGameStatus());
+                        item.setLaunchPraise(battle.getLaunchPraise());
+                        item.setLaunchScore(battle.getLaunchScore());
+                        item.setAgainstPraise(battle.getAgainstPraise());
+                        item.setAgainstScore(battle.getAgainstScore());
+                        if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED){
+                            item.setAgainstUser(battle.getAgainstUser());
+                            item.setAgainstUserName(battle.getAgainstUserName());
+                            item.setAgainstUserPortrait(battle.getAgainstUserPortrait());
+                        }
+                    }
                     data.remove(battle);
                     break;
                 }
             }
+        }
+        for (Battle battle:removeBattleList){
+            mVersusListAdapter.remove(battle);
         }
         mVersusListAdapter.notifyDataSetChanged();
     }
@@ -671,13 +686,13 @@ public class BattleListActivity extends BaseActivity implements
         String reward = "";
         switch (data.getCoinType()) {
             case Battle.COIN_TYPE_BAO:
-                reward = data.getReward() + getActivity().getString(R.string.integral);
+                reward = data.getReward() + getActivity().getString(R.string.ingot);
                 break;
             case Battle.COIN_TYPE_CASH:
                 reward = data.getReward() + getActivity().getString(R.string.cash);
                 break;
             case Battle.COIN_TYPE_INTEGRAL:
-                reward = data.getReward() + getActivity().getString(R.string.ingot);
+                reward = data.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
         StringBuilder sb = new StringBuilder();
