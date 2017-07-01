@@ -54,10 +54,10 @@ import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
 /**
- * Created by linrongfang on 2017/6/19.
+ * Modified by JohnZ on 2017/7/1.
  */
 
-public class FutureBattleFragment extends BaseFragment {
+public class BattleFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -101,26 +101,26 @@ public class FutureBattleFragment extends BaseFragment {
     private int mGameStatus;
 
 
-    public static FutureBattleFragment newInstance(Battle battle) {
-        FutureBattleFragment futureBattleFragment = new FutureBattleFragment();
+    public static BattleFragment newInstance(Battle battle) {
+        BattleFragment battleFragment = new BattleFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("versusGaming", battle);
-        futureBattleFragment.setArguments(bundle);
-        return futureBattleFragment;
+        bundle.putParcelable("battle", battle);
+        battleFragment.setArguments(bundle);
+        return battleFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mBattle = (Battle) getArguments().get("versusGaming");
+            mBattle = (Battle) getArguments().get("battle");
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_future_battle, container, false);
+        View view = inflater.inflate(R.layout.fragment_battle, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

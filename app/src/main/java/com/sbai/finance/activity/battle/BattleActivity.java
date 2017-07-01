@@ -12,7 +12,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
-import com.sbai.finance.fragment.battle.FutureBattleFragment;
+import com.sbai.finance.fragment.battle.BattleFragment;
 import com.sbai.finance.fragment.battle.StartGameDialogFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
@@ -76,11 +76,12 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
 
-    private FutureBattleFragment mFutureBattleFragment;
+    private BattleFragment mBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
 
     private StartMatchDialogFragment mStartMatchDialogFragment;
     private StartGameDialogFragment mStartGameDialogFragment;
+
     private ShareDialogFragment mShareDialogFragment;
 
     private SmartDialog mCancelMatchDialog;
@@ -117,13 +118,13 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     public void initBattlePage() {
-        if (mFutureBattleFragment == null) {
-            mFutureBattleFragment = FutureBattleFragment.newInstance(mBattle);
+        if (mBattleFragment == null) {
+            mBattleFragment = BattleFragment.newInstance(mBattle);
         }
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content, mFutureBattleFragment)
+                .add(R.id.content, mBattleFragment)
                 .commitAllowingStateLoss();
 
         //观战模式  刷新底部框 可以点赞
@@ -211,11 +212,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                     break;
                 case ORDER_CREATED:
                     requestBattleInfo();
-                    mFutureBattleFragment.refreshTradeView();
+                    mBattleFragment.refreshTradeView();
                     break;
                 case ORDER_CLOSE:
                     requestBattleInfo();
-                    mFutureBattleFragment.refreshTradeView();
+                    mBattleFragment.refreshTradeView();
                     break;
                 case QUICK_MATCH_SUCCESS:
                     //和对战有人加入逻辑一样 多了个匹配头像
@@ -263,8 +264,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattle = (Battle) objectWSPush.getContent().getData();
         mBattleView.initWithModel(mBattle);
         mBattleView.setProgress(0, 0, false);
-        mFutureBattleFragment.showBattleTradeView();
-        mFutureBattleFragment.updateGameInfo(mBattle);
+        mBattleFragment.showBattleTradeView();
+        mBattleFragment.updateGameInfo(mBattle);
         mGameStatus = GAME_STATUS_STARTED;
         showStartGameDialog();
         startScheduleJob(1000);
@@ -639,8 +640,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestCancelBattle() {
-        Client.cancelBattle(mBattle.getId())
-                .setTag(TAG)
+        Client.cancelBattle(mBattle.getId()).setTag(TAG)
                 .setCallback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {

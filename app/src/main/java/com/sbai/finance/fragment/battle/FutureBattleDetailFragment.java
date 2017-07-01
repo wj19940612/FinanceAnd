@@ -33,6 +33,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
+
     Unbinder unbinder;
 
     BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
@@ -70,7 +71,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     }
 
     private void initViews() {
-        scrollToTop(mTitleBar, mListview);
+        scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
         requestOrderHistory();
