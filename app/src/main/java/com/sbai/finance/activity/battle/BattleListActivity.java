@@ -55,7 +55,6 @@ import com.sbai.finance.websocket.PushCode;
 import com.sbai.finance.websocket.WSClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
@@ -103,22 +102,21 @@ public class BattleListActivity extends BaseActivity implements
     private StartMatchDialogFragment mQuickMatchDialogFragment;
     private StringBuilder mRefusedIds;
 
-    private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
-        @Override
-        public void onPushReceive(final WSPush<Battle> versusGamingWSPush) {
-            switch (versusGamingWSPush.getContent().getType()) {
-                case PushCode.QUICK_MATCH_TIMEOUT:
-                    showMatchTimeoutDialog();
-                    break;
-                case PushCode.QUICK_MATCH_FAILURE:
-                    showMatchTimeoutDialog();
-                    break;
-                case PushCode.QUICK_MATCH_SUCCESS:
-                    showMatchSuccessDialog((Battle) versusGamingWSPush.getContent().getData());
-                    break;
-            }
+    @Override
+    protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
+        super.onBattlePushReceived(battleWSPush);
+        switch (battleWSPush.getContent().getType()) {
+            case PushCode.QUICK_MATCH_TIMEOUT:
+                showMatchTimeoutDialog();
+                break;
+            case PushCode.QUICK_MATCH_FAILURE:
+                showMatchTimeoutDialog();
+                break;
+            case PushCode.QUICK_MATCH_SUCCESS:
+                showMatchSuccessDialog((Battle) battleWSPush.getContent().getData());
+                break;
         }
-    };
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -253,7 +251,6 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
             requestCurrentBattle();
@@ -271,7 +268,6 @@ public class BattleListActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
-        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
