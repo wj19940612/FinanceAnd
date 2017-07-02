@@ -202,6 +202,10 @@ public class BattleTradeView extends LinearLayout {
         }
     }
 
+    public ListView getListView() {
+        return mListView;
+    }
+
     public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
         mOnViewClickListener = onViewClickListener;
     }
@@ -260,7 +264,7 @@ public class BattleTradeView extends LinearLayout {
 
                 StringBuilder info = new StringBuilder();
                 info.append(FinanceUtil.formatWithScale(item.getOptPrice(),item.getMarketPoint()));
-                String time = DateUtil.format(item.getOptTime(), "HH:mm:ss");
+                String time = DateUtil.getBattleFormatTime(item.getOptTime());
 
                 switch (item.getOptStatus()) {
                     case STATUS_TAKE_MORE_POSITION:

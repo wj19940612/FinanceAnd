@@ -19,6 +19,7 @@ import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.BattleInfo;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
@@ -332,6 +333,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                     public void onResponse(WSMessage<Resp<BattleInfo>> respWSMessage) {
                         if (respWSMessage.getContent().isSuccess()) {
                             mBattleInfo = respWSMessage.getContent().getData();
+                            //更新左右点赞数
+                            updatePraiseView(mBattleInfo.getLaunchPraise(),mBattleInfo.getLaunchUser(),false);
+                            updatePraiseView(mBattleInfo.getAgainstPraise(),mBattleInfo.getAgainstUser(),false);
                             //游戏结束后
                             if (mGameStatus == Battle.GAME_STATUS_END) {
                                 showGameOverDialog();
@@ -641,7 +645,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void showDeadlineTime() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = SysTime.getSysTime().getSystemTimestamp();
         long startTime = mBattle.getStartTime();
         int diff = mBattle.getEndline() - DateUtil.getDiffSeconds(currentTime, startTime);
         mBattleView.setDeadline(mBattle.getGameStatus(), diff);
