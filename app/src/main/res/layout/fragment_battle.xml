@@ -124,14 +124,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:background="@color/blackAssist"
-        android:layout_height="150dp">
+        android:layout_height="150dp"
+        android:background="@color/blackAssist">
 
         <com.sbai.chart.TrendView
             android:id="@+id/trendView"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
         <com.sbai.chart.KlineView
             android:id="@+id/klineView"
@@ -140,14 +140,16 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <com.sbai.finance.view.BattleButtons
             android:id="@+id/battleButtons"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:visibility="visible"/>
 
         <com.sbai.finance.view.BattleTradeView
@@ -155,5 +157,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"/>
-    </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

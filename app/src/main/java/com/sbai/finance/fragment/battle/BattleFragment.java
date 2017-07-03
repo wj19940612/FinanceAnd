@@ -111,7 +111,20 @@ public class BattleFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mBattle = (Battle) getArguments().get("battle");
+            mIsObserver = checkUserIsObserver();
         }
+    }
+
+    private boolean checkUserIsObserver() {
+        if (LocalUser.getUser().isLogin()) {
+            int userId = LocalUser.getUser().getUserInfo().getId();
+            if (mBattle.getLaunchUser() != userId
+                && mBattle.getAgainstUser() != userId) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     @Nullable
@@ -129,7 +142,6 @@ public class BattleFragment extends BaseFragment {
         initBattleArea();
 
         initTabLayout();
-
         initBattleViews();
 
         requestVarietyData();
