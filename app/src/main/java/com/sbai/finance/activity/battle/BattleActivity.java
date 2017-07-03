@@ -48,6 +48,7 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_END;
@@ -94,7 +95,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         switch (battleWSPush.getContent().getType()) {
             case PushCode.BATTLE_JOINED:
                 //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                if (mBattleRoom.getUserState() != ROOM_STATE_START) {
+                if (mBattleRoom.getRoomState() != ROOM_STATE_START) {
                     dismissAllDialog();
                     startGame(battleWSPush);
                 }
@@ -340,6 +341,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
                             updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
                             //游戏结束后
+                            if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
+                                mBattleRoom.setRoomState(ROOM_STATE_END);
+                            }
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END) {
                                 showGameOverDialog();
                             }
@@ -660,7 +664,10 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     protected void onPostResume() {
         super.onPostResume();
-
+        //判断游戏是否结束
+        if (mBattleRoom.getRoomState() != ROOM_STATE_END) {
+            requestBattleInfo();
+        }
     }
 
     @Override
