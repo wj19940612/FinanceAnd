@@ -17,17 +17,17 @@ import com.google.gson.JsonSyntaxException;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
-import com.igexin.sdk.message.FeedbackCmdMessage;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -88,7 +88,7 @@ public class PushIntentService extends GTIntentService {
         if (action == PushConsts.SET_TAG_RESULT) {
             setTagResult((SetTagCmdMessage) cmdMessage);
         } else if ((action == PushConsts.THIRDPART_FEEDBACK)) {
-            feedbackResult((FeedbackCmdMessage) cmdMessage);
+//            feedbackResult((FeedbackCmdMessage) cmdMessage);
         }
     }
 
@@ -115,9 +115,6 @@ public class PushIntentService extends GTIntentService {
         if (!TextUtils.isEmpty(brand) && brand.equalsIgnoreCase(PHONE_BRAND_SAMSUNG)) {
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
             builder.setLargeIcon(bitmap);
-//            if (bitmap != null) {
-//                bitmap.recycle();
-//            }
         }
         builder.setContentIntent(intent);
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
@@ -127,13 +124,20 @@ public class PushIntentService extends GTIntentService {
 
     @NonNull
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
-        Intent intent=null;
-        if (data.getClassify()==PushMessageModel.CLASSIFY_SYS&&data.getType()==PushMessageModel.TYPE_EVENT){
+        Intent intent = null;
+        if (data.isEventDetail()) {
             intent = new Intent(context, EventDetailActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
-        }else if (data.getClassify()==PushMessageModel.CLASSIFY_USER){
+        } else if (data.isBorrowInfo()) {
             intent = new Intent(context, BorrowDetailsActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+        } else if (data.isBattleMatchSuccess()) {
+            if (!Preference.get().isForeground() && data.getData() != null) {
+                intent = new Intent(context, BattleActivity.class);
+                intent.putExtra(Launcher.EX_PAYLOAD_1, data.getData().getId());
+                intent.putExtra(Launcher.EX_PAYLOAD_2, data.getData().getBatchCode());
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
         }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
@@ -191,16 +195,4 @@ public class PushIntentService extends GTIntentService {
         Log.d(TAG, "settag result sn = " + sn + ", code = " + code + ", text = " + text);
     }
 
-
-    private void feedbackResult(FeedbackCmdMessage feedbackCmdMsg) {
-        String appid = feedbackCmdMsg.getAppid();
-        String taskid = feedbackCmdMsg.getTaskId();
-        String actionid = feedbackCmdMsg.getActionId();
-        String result = feedbackCmdMsg.getResult();
-        long timestamp = feedbackCmdMsg.getTimeStamp();
-        String cid = feedbackCmdMsg.getClientId();
-
-        Log.d(TAG, "onReceiveCommandResult -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nactionid = " + actionid + "\nresult = " + result
-                + "\ncid = " + cid + "\ntimestamp = " + timestamp);
-    }
 }
