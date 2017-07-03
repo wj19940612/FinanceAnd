@@ -127,7 +127,6 @@ public class BorrowDetailsActivity extends BaseActivity {
 	private KeyBoardHelper mKeyBoardHelper;
 	private AttentionAndFansNumberModel mAttentionAndFansNumberModel;
 	private WhetherAttentionShieldOrNot mWhetherAttentionShieldOrNot;
-	private LocalBroadcastManager mLocalBroadcastManager;
 	private ShieldBroadcastReceiver mShieldBroadcastReceiver;
 	private LinearLayout mheader;
 	private int mHorizontalSpacing;
@@ -154,12 +153,11 @@ public class BorrowDetailsActivity extends BaseActivity {
 
 	private void initView() {
 		initHeaderView();
-		mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext());
 		mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(UserDataActivity.SHIELD);
-		intentFilter.addAction(ACTION_TOKEN_EXPIRED);
-        mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
+		intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
+		LocalBroadcastManager.getInstance(getContext()).registerReceiver(mShieldBroadcastReceiver, intentFilter);
         setKeyboardHelper();
         mListView.addHeaderView(mheader);
         mMessageAdapter = new MessageAdapter(getActivity());
@@ -293,11 +291,18 @@ public class BorrowDetailsActivity extends BaseActivity {
     }
 
     private void calculateAvatarNum(Context context) {
-        int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-        int margin = (int) Display.dp2Px(68, getResources());
-        int horizontalSpacing = (int) Display.dp2Px(10, getResources());
-        int avatarWidth = (int) Display.dp2Px(32, getResources());
-        mMax = (screenWidth - margin + horizontalSpacing) / (horizontalSpacing + avatarWidth);
+		int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+		int margin = (int) Display.dp2Px(82, getResources());
+		int avatarWidth = (int) Display.dp2Px(32, getResources());
+		int horizontalSpacing = (int) Display.dp2Px(10, getResources());
+		mHorizontalSpacing = (screenWidth-margin)/mMax-avatarWidth;
+		//头像之间的间隔不能过小
+		if (mHorizontalSpacing<=5){
+			mAvatarWidth = (screenWidth-margin)/mMax-horizontalSpacing;
+			mHorizontalSpacing = horizontalSpacing;
+		}else{
+			mAvatarWidth = avatarWidth;
+		}
     }
 
     private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener(){
@@ -422,7 +427,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		mKeyBoardHelper.onDestroy();
-		mLocalBroadcastManager.unregisterReceiver(mShieldBroadcastReceiver);
+		LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mShieldBroadcastReceiver);
 	}
 
 	private void hideSoftWare() {
@@ -814,7 +819,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 		intent.setAction(STATUS_CHANAGE);
 		intent.putExtra(DATA_STATUS, status);
 		intent.putExtra(DATA_ID, id);
-		mLocalBroadcastManager.sendBroadcastSync(intent);
+		LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
 	}
 
 	private void callPhone(CallPhone phone) {
