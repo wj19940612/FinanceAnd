@@ -23,8 +23,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.TitleBar;
@@ -106,8 +106,8 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
         if (userFundInfoModel != null) {
-            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, StrFormatter.getFormIngot(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
-            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, StrFormatter.getFormIntegrate(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }
 
