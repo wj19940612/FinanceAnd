@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
@@ -21,6 +22,8 @@ import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.BattleInfo;
 import com.sbai.finance.model.battle.BattleRoom;
 import com.sbai.finance.model.local.SysTime;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
@@ -152,14 +155,43 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mPageType != PAGE_TYPE_RECORD) {
             mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         }
+        //push handle
+        int battleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        String batchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+        if (mBattle == null && !TextUtils.isEmpty(batchCode)) {
+            requestLastBattleInfo(battleId, batchCode);
+        }
     }
 
     private void initViews() {
+        if (mBattle == null) return;
+        mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         if (mPageType == PAGE_TYPE_RECORD) {
             initBattleRecordPage();
         } else {
             initBattlePage();
         }
+    }
+
+    private void requestLastBattleInfo(int battleId, String batchCode) {
+        Client.getBattleInfo(battleId, batchCode).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+                    @Override
+                    protected void onRespSuccessData(Battle data) {
+                        if (data != null) {
+                            mBattle = data;
+                            if (data.isBattleStop()) {
+                                mPageType = PAGE_TYPE_RECORD;
+                            } else {
+                                mPageType = data.getGameStatus();
+                            }
+                            initViews();
+                            if (mBattleRoom != null && mBattleRoom.getRoomState() != ROOM_STATE_END) {
+                                requestBattleInfo();
+                            }
+                        }
+                    }
+                }).fire();
     }
 
     public void initBattlePage() {
@@ -667,7 +699,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     protected void onPostResume() {
         super.onPostResume();
         //判断游戏是否结束
-        if (mBattleRoom.getRoomState() != ROOM_STATE_END) {
+        if (mBattleRoom != null && mBattleRoom.getRoomState() != ROOM_STATE_END) {
             requestBattleInfo();
         }
     }

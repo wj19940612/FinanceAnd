@@ -103,6 +103,10 @@ public class Battle implements Parcelable {
     private int currentPraise;
     private int praiseUserId;
 
+    public boolean isBattleStop() {
+        return getGameStatus() == GAME_STATUS_END;
+    }
+
     public double getCommission() {
         return commission;
     }
@@ -405,7 +409,7 @@ public class Battle implements Parcelable {
         this.battleId = in.readInt();
         this.currentPraise = in.readInt();
         this.praiseUserId = in.readInt();
-        this.commission=in.readDouble();
+        this.commission = in.readDouble();
     }
 
     public static final Creator<Battle> CREATOR = new Creator<Battle>() {
@@ -419,4 +423,38 @@ public class Battle implements Parcelable {
             return new Battle[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Battle{" +
+                "againstFrom='" + againstFrom + '\'' +
+                ", againstUser=" + againstUser +
+                ", againstUserName='" + againstUserName + '\'' +
+                ", againstUserPortrait='" + againstUserPortrait + '\'' +
+                ", batchCode='" + batchCode + '\'' +
+                ", coinType=" + coinType +
+                ", createTime=" + createTime +
+                ", endTime=" + endTime +
+                ", endline=" + endline +
+                ", gameStatus=" + gameStatus +
+                ", id=" + id +
+                ", launchUser=" + launchUser +
+                ", launchUserName='" + launchUserName + '\'' +
+                ", launchUserPortrait='" + launchUserPortrait + '\'' +
+                ", modifyTime=" + modifyTime +
+                ", reward=" + reward +
+                ", startTime=" + startTime +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", winResult=" + winResult +
+                ", launchScore=" + launchScore +
+                ", againstScore=" + againstScore +
+                ", againstPraise=" + againstPraise +
+                ", launchPraise=" + launchPraise +
+                ", battleId=" + battleId +
+                ", currentPraise=" + currentPraise +
+                ", praiseUserId=" + praiseUserId +
+                '}';
+    }
 }
