@@ -152,9 +152,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
-        if (mPageType != PAGE_TYPE_RECORD) {
-            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
-        }
         //push handle
         int battleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
         String batchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
@@ -165,11 +162,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void initViews() {
         if (mBattle == null) return;
-        mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         if (mPageType == PAGE_TYPE_RECORD) {
             initBattleRecordPage();
         } else {
             initBattlePage();
+            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         }
     }
 
