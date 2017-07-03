@@ -652,11 +652,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         stopScheduleJob();

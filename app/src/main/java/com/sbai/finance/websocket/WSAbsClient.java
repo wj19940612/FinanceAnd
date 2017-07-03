@@ -17,4 +17,6 @@ public interface WSAbsClient {
     boolean isConnecting();
 
     boolean isConnected();
+
+    boolean isClosing();
 }
