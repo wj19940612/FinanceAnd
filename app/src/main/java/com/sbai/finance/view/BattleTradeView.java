@@ -143,7 +143,7 @@ public class BattleTradeView extends LinearLayout {
         mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
     }
 
-    public void setVisitor(boolean isVisitor) {
+    public void setObserver(boolean isVisitor) {
         //参观模式
         if (isVisitor) {
             updateViewHeight();

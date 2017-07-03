@@ -89,14 +89,13 @@ public class BattleFragment extends BaseFragment {
     private Variety mVariety;
     private FutureData mFutureData;
     private boolean mIsObserver;
+    private int mGameStatus;
 
     private TradeOrder mCurrentOrder;
     private TradeOrder mCreatorOrder;
     private TradeOrder mAgainstOrder;
 
     private int mCount = 600;
-    private int mGameStatus;
-
 
     public static BattleFragment newInstance(Battle battle) {
         BattleFragment battleFragment = new BattleFragment();
@@ -112,6 +111,7 @@ public class BattleFragment extends BaseFragment {
         if (getArguments() != null) {
             mBattle = (Battle) getArguments().get("battle");
             mIsObserver = checkUserIsObserver();
+            mGameStatus = mBattle.getGameStatus();
         }
     }
 
@@ -139,38 +139,44 @@ public class BattleFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initBattleArea();
-
         initTabLayout();
-        initBattleViews();
 
-        requestVarietyData();
-    }
-
-    private void initBattleArea() {
-        //判断是否是观战 观战条件 房主id!=本地id && 对抗者id!=本地id
-        //观战情况下 对战区域只显示对战数据
-        int userId = LocalUser.getUser().getUserInfo().getId();
-        if (mBattle.getAgainstUser() != userId && mBattle.getLaunchUser() != userId) {
-            showBattleTradeView();
-            setVisitorMode();
+        if (mIsObserver) {
+            showObserverView();
             requestOrderHistory();
             requestCurrentOrder();
         } else {
-            //判断状态是否在对抗中
-            //未开始显示邀请 匹配  取消  视图
-            if (mBattle.getGameStatus() == GAME_STATUS_CREATED) {
-                mGameStatus = GAME_STATUS_CREATED;
+            if (mGameStatus == GAME_STATUS_CREATED) {
                 showBattleButtons();
                 updateRoomExistsTime();
-            } else if (mBattle.getGameStatus() == GAME_STATUS_STARTED) {
+            } else if (mGameStatus == GAME_STATUS_STARTED) {
                 showBattleTradeView();
                 requestOrderHistory();
                 requestCurrentOrder();
             }
         }
+
+        initBattleViews();
+
+        requestVarietyData();
     }
 
+    private void showObserverView() {
+        showBattleTradeView();
+        mBattleTradeView.setObserver(true);
+    }
+
+    public void showBattleButtons() {
+        //显示邀请等三个按钮 只针对游戏创建者
+        mBattleButtons.setVisibility(View.VISIBLE);
+        mBattleTradeView.setVisibility(View.GONE);
+    }
+
+    public void showBattleTradeView() {
+        //显示交易视图 区分游客和对战者 默认对战者
+        mBattleButtons.setVisibility(View.GONE);
+        mBattleTradeView.setVisibility(View.VISIBLE);
+    }
 
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
@@ -250,7 +256,6 @@ public class BattleFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
                         refreshTradeView();
                     }
-
                 })
                 .fire();
     }
@@ -288,8 +293,7 @@ public class BattleFragment extends BaseFragment {
                     protected void onRespSuccessData(List<TradeRecord> data) {
                         updateTradeHistory(data);
                     }
-                })
-                .fire();
+                }).fire();
     }
 
     private void requestCurrentOrder() {
@@ -300,8 +304,7 @@ public class BattleFragment extends BaseFragment {
                     protected void onRespSuccessData(List<TradeOrder> data) {
                         updateCurrentOrder(data);
                     }
-                })
-                .fire();
+                }).fire();
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
@@ -342,8 +345,6 @@ public class BattleFragment extends BaseFragment {
         } else {
             mAgainstOrder = null;
         }
-
-        mGameStatus = GAME_STATUS_STARTED;
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -546,10 +547,6 @@ public class BattleFragment extends BaseFragment {
         mKlineView.setVisibility(View.VISIBLE);
     }
 
-    private void setVisitorMode() {
-        mBattleTradeView.setVisitor(true);
-    }
-
     public void updateGameInfo(Battle battle) {
         mBattle = battle;
     }
@@ -562,18 +559,6 @@ public class BattleFragment extends BaseFragment {
         if (mBattleButtons.getVisibility() == View.VISIBLE) {
             mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));
         }
-    }
-
-    public void showBattleButtons() {
-        //显示邀请等三个按钮 只针对对战者
-        mBattleButtons.setVisibility(View.VISIBLE);
-        mBattleTradeView.setVisibility(View.GONE);
-    }
-
-    public void showBattleTradeView() {
-        //显示交易视图 区分游客和对战者 默认对战者
-        mBattleButtons.setVisibility(View.GONE);
-        mBattleTradeView.setVisibility(View.VISIBLE);
     }
 
     public void setBattleTradeState(int state) {
@@ -634,5 +619,4 @@ public class BattleFragment extends BaseFragment {
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
         unbinder.unbind();
     }
-
 }
