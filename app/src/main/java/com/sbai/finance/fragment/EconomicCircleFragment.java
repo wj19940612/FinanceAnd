@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -61,6 +61,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.android.volley.Request.Method.HEAD;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
@@ -205,7 +206,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		EconomicCircle item = (EconomicCircle) parent.getItemAtPosition(position);
-		setVersusGaming(item);
+		setBattleData(item);
 		if (item != null) {
 			if (item.getType() == 1) {
 				//借钱
@@ -231,18 +232,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							.setNegativeVisible(View.GONE)
 							.show();
 				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-					mBattle.setPageType(EconomicCircle.PAGE_RECORD);
-					Launcher.with(getActivity(), FutureBattleActivity.class)
+					Launcher.with(getActivity(), BattleActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mBattle)
+							.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
 							.execute();
 				} else if (LocalUser.getUser().isLogin()) {
 					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
 							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
 						showJoinBattleDialog(mBattle);
 					} else {
-						mBattle.setPageType(EconomicCircle.PAGE_VERSUS);
-						Launcher.with(getActivity(), FutureBattleActivity.class)
+						Launcher.with(getActivity(), BattleActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, mBattle)
+								.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 								.execute();
 					}
 				} else {
@@ -252,7 +253,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		}
 	}
 
-	private void setVersusGaming(EconomicCircle item) {
+	private void setBattleData(EconomicCircle item) {
 		mBattle.setAgainstFrom(item.getAgainstFrom());
 		mBattle.setAgainstPraise(item.getAgainstPraise());
 		mBattle.setAgainstScore(item.getAgainstScore());
@@ -293,11 +294,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				reward = item.getReward() + getActivity().getString(R.string.integral);
 				break;
 		}
-		if (mJoinDialog == null) {
-			mJoinDialog = SmartDialog.with(getActivity());
-		}
-		mJoinDialog.setMessage(getString(R.string.join_versus_tip, reward))
-				.setMessageTextSize(15)
+
+		SmartDialog.single(getActivity(), getString(R.string.join_versus_tip, reward))
 				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 					@Override
 					public void onClick(Dialog dialog) {
@@ -319,9 +317,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (resp.isSuccess()) {
 							Battle battle = resp.getData();
 							if (battle != null) {
-								battle.setPageType(Battle.PAGE_VERSUS);
-								Launcher.with(getActivity(), FutureBattleActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, battle)
+								Launcher.with(getActivity(), BattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, data)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
 						} else {
@@ -337,13 +335,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	}
 
 	private void showJoinVersusFailureDialog(final Resp<Battle> resp) {
-		if (mJoinFailureDialog == null) {
-			mJoinFailureDialog = SmartDialog.with(getActivity());
-		}
-		int positiveMsg;
-		int negativeMsg = R.string.cancel;
 		final int code = resp.getCode();
-		String msg;
+		int positiveMsg;
+		String msg = null;
+		SmartDialog smartDialog = SmartDialog.single(getActivity(), msg);
 		if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 			msg = getString(R.string.battle_joined_or_created);
 			positiveMsg = R.string.go_battle;
@@ -353,9 +348,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		} else {
 			msg = getString(R.string.invite_invalid);
 			positiveMsg = R.string.ok;
-			mJoinFailureDialog.setNegativeVisible(View.GONE);
+			smartDialog.setNegativeVisible(View.GONE);
 		}
-		mJoinFailureDialog.setMessage(msg)
+		smartDialog.setMessage(msg)
 				.setPositive(positiveMsg, new SmartDialog.OnClickListener() {
 					@Override
 					public void onClick(Dialog dialog) {
@@ -363,12 +358,13 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							requestCurrentBattle();
 						} else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
+
 							Launcher.with(getActivity(), RechargeActivity.class).execute();
 						}
 					}
 				})
 				.setTitle(getString(R.string.join_versus_failure))
-				.setNegative(negativeMsg)
+				.setNegative(R.string.cancel)
 				.show();
 
 	}
@@ -379,9 +375,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					@Override
 					protected void onRespSuccess(Resp<Battle> resp) {
 						if (resp.getData() != null) {
-							resp.getData().setPageType(Battle.PAGE_VERSUS);
-							Launcher.with(getActivity(), FutureBattleActivity.class)
+							Launcher.with(getActivity(), BattleActivity.class)
 									.putExtra(Launcher.EX_PAYLOAD, resp.getData())
+									.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 									.execute();
 						}
 					}

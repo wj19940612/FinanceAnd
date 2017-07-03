@@ -114,6 +114,15 @@ public class StrFormatter {
         return FinanceUtil.formatWithScaleNoZero(money);
     }
 
+    public static String getFormIngotWithUnit(double money) {
+        String number = FinanceUtil.formatWithScaleNoZero(money);
+        if (money >= 10000.00) {
+            int length = number.length();
+            return number.substring(0, length - 4) + "." + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG_GE;
+        }
+        return FinanceUtil.formatWithScaleNoZero(money)+FinanceUtil.UNIT_GE;
+    }
+
     /**
      * 积分/元宝超过10000显示为1.0万、1.1万、10.0万、10.1万、以千为单位递进
      *

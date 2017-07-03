@@ -28,6 +28,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -76,8 +77,9 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    item.setPageType(Battle.PAGE_RECORD);
-                    Launcher.with(getActivity(), FutureBattleActivity.class).putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    Launcher.with(getActivity(), BattleActivity.class)
+                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+                            .putExtra(Launcher.EX_PAYLOAD, item).execute();
                 }
             }
         });
@@ -109,7 +111,6 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
         } else if (futureVersus.getList().size() > 0) {
             mLocation = futureVersus.getList().get(futureVersus.getList().size() - 1).getCreateTime();
         }
-        mVersusRecordListAdapter.addAll(futureVersus.getList());
         mVersusRecordListAdapter.notifyDataSetChanged();
     }
 
@@ -169,14 +170,8 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             TextView mCreateName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
-            @BindView(R.id.progressBar)
-            ProgressBar mProgressBar;
-            @BindView(R.id.createProfit)
-            TextView mCreateProfit;
-            @BindView(R.id.againstProfit)
-            TextView mAgainstProfit;
-            @BindView(R.id.fighterDataArea)
-            RelativeLayout mFighterDataArea;
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.depositAndTime)
             TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
@@ -197,9 +192,9 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         .transform(new GlideCircleTransform(context))
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
-                mCreateProfit.setText(String.valueOf(item.getLaunchScore()));
+                mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
+                mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_BAO:
@@ -221,7 +216,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        showScoreProgress(0, 0, true);
+                        mProgress.showScoreProgress(0, 0, true);
                         break;
                     case Battle.GAME_STATUS_STARTED:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
@@ -233,7 +228,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case Battle.GAME_STATUS_END:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
@@ -243,62 +238,19 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        if (item.getWinResult() == Battle.RESULT_AGAINST_WIN) {
+                        if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.RESULT_CREATE_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
 
-                }
-            }
-            private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
-                String myFlag = "";
-                String fighterFlag = "";
-                if (isInviting) {
-                    mProgressBar.setProgress(0);
-                    mProgressBar.setSecondaryProgress(0);
-                    mCreateProfit.setText(null);
-                    mAgainstProfit.setText(null);
-                } else {
-                    //正正
-                    if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
-                        int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
-                        mProgressBar.setProgress(progress);
-                    }
-                    //正负
-                    if (createProfit >= 0 && fighterProfit < 0) {
-                        mProgressBar.setProgress(100);
-                    }
-                    //负正
-                    if (createProfit < 0 && fighterProfit >= 0) {
-                        mProgressBar.setProgress(0);
-                    }
-                    //负负
-                    if (createProfit < 0 && fighterProfit < 0) {
-                        int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
-                        mProgressBar.setProgress(100 - progress);
-                    }
-                    //都为0
-                    if (createProfit == 0 && fighterProfit == 0) {
-                        mProgressBar.setProgress(50);
-                    }
-                    mProgressBar.setSecondaryProgress(100);
-                    if (createProfit > 0) {
-                        myFlag = "+";
-                    }
-
-                    if (fighterProfit > 0) {
-                        fighterFlag = "+";
-                    }
-                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
                 }
             }
         }

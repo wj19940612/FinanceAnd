@@ -82,16 +82,15 @@ android {
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"var.esongbai.xyz\"')
-            buildConfigField('boolean', 'isProd', 'false')
+            buildConfigField('boolean', 'IS_PROD', 'false')
         }
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-
-            versionCode 39
-            versionName "0.4.2"
+            versionCode 42
+            versionName "0.5.2"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
-            buildConfigField('boolean', 'isProd', 'false')
+            buildConfigField('boolean', 'IS_PROD', 'false')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
@@ -106,7 +105,7 @@ android {
             versionCode 21
             versionName "1.0.1"
             buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
-            buildConfigField('boolean', 'isProd', 'true')
+            buildConfigField('boolean', 'IS_PROD', 'true')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",

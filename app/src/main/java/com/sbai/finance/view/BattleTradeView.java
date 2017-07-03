@@ -43,7 +43,7 @@ public class BattleTradeView extends LinearLayout {
     //可交易
     public static final int STATE_TRADE = 1;
 
-    @BindView(R.id.listview)
+    @BindView(R.id.listView)
     ListView mListView;
 
 
@@ -101,7 +101,6 @@ public class BattleTradeView extends LinearLayout {
     private void init() {
         setOrientation(VERTICAL);
         setGravity(Gravity.CENTER_HORIZONTAL);
-        setBackgroundResource(R.drawable.ic_futures_versus_bg);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_trade, null, false);
         addView(view);
         ButterKnife.bind(this);
@@ -203,6 +202,10 @@ public class BattleTradeView extends LinearLayout {
         }
     }
 
+    public ListView getListView() {
+        return mListView;
+    }
+
     public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
         mOnViewClickListener = onViewClickListener;
     }
@@ -261,7 +264,7 @@ public class BattleTradeView extends LinearLayout {
 
                 StringBuilder info = new StringBuilder();
                 info.append(FinanceUtil.formatWithScale(item.getOptPrice(),item.getMarketPoint()));
-                String time = DateUtil.format(item.getOptTime(), "HH:mm:ss");
+                String time = DateUtil.getBattleFormatTime(item.getOptTime());
 
                 switch (item.getOptStatus()) {
                     case STATUS_TAKE_MORE_POSITION:

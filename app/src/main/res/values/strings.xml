@@ -659,7 +659,7 @@
     <string name="join_versus_title">确认加入对战？</string>
     <string name="join_versus_tip">加入对战将暂时冻结%1$s作为对战奖金，胜利时返还，失败扣除</string>
     <string name="battle_joined_or_created">已存在进行中的对战，对战结束后可加入新的对战</string>
-    <string name="continue_versus">继续匹配</string>
+    <string name="continue_match">继续匹配</string>
     <string name="no_waiting">不等了</string>
     <string name="cancel_matching">取消匹配</string>
     <string name="cancel_tip">对手正在来的路上，是否要取消匹配？</string>
@@ -673,7 +673,7 @@
     <string name="desc_matching">正在进行匹配，请稍后…</string>
     <string name="title_matching">正在匹配</string>
     <string name="title_match_success">匹配成功</string>
-    <string name="desc_match_success">已成功匹配对手\n%1$d秒后进入对战</string>
+    <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>
     <string name="cancel_battle">取消对战</string>
     <string name="cancel_battle_tip">是否要取消对战？</string>
     <string name="continue_to_battle">继续对战</string>
@@ -688,9 +688,9 @@
     <string name="take_more_close_position">买多平仓</string>
     <string name="take_short_close_position">卖空平仓</string>
     <string name="join_self_versus_tip">不能加入自己创建的房间</string>
-    <string name="versus_variety_name">对战品种 : </string>
-    <string name="versus_time">对战时长 : </string>
-    <string name="versus_reward">对战赏金 : </string>
+    <string name="battle_variety_name">对战品种 : </string>
+    <string name="battle_time">对战时长 : </string>
+    <string name="battle_reward">对战赏金 : </string>
     <string name="versus_tip">(加入对战后,赏金将会暂时冻结,对战胜利后返还,失败扣除)</string>
     <string name="join_versus">加入对战</string>
     <string name="wait_to_join">等待加入</string>
@@ -708,6 +708,8 @@
     <string name="return_reward">赏金退还</string>
     <string name="join_battle">进入对战</string>
     <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
+    <string name="title_quick_join_battle">即将进入游戏</string>
+    <string name="quick_battle">立即对战</string>
 
 
     <string name="you_not_install_weixin">您尚未安装微信</string>
