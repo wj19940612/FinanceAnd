@@ -125,7 +125,8 @@ public class BaseActivity extends AppCompatActivity implements
                 case PushCode.BATTLE_JOINED:
                     if (!(getActivity() instanceof BattleActivity)) {
                         if (battleWSPush.getContent() != null) {
-                            showJoinBattleDialog((Battle) battleWSPush.getContent().getData());
+                            Battle data = (Battle) battleWSPush.getContent().getData();
+                            showJoinBattleDialog(data);
                         }
                     }
                     break;
@@ -139,21 +140,23 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showJoinBattleDialog(final Battle battle) {
         //只有在自己是房主的情况下才显示
-        boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
-        if (isRoomCreator) {
-            SmartDialog.single(getActivity(), getString(R.string.join_battle))
-                    .setTitle(getString(R.string.quick_join_battle))
-                    .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            Launcher.with(getActivity(), BattleActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, battle)
-                                    .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
-                                    .execute();
-                        }
-                    }).setNegative(R.string.cancel)
-                    .show();
+        if (LocalUser.getUser().isLogin()) {
+            boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
+            if (isRoomCreator) {
+                SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
+                        .setTitle(getString(R.string.join_battle))
+                        .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                Launcher.with(getActivity(), BattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, battle)
+                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                        .execute();
+                            }
+                        }).setNegative(R.string.cancel)
+                        .show();
+            }
         }
     }
 

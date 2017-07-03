@@ -26,6 +26,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -207,20 +208,37 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                     mMyName.setText(item.getAgainstUserName());
                     mAgainstName.setText(item.getLaunchUserName());
                 }
-                String reward = "";
+                String reward="" ;
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
                     item.setReward(0);
                 }
-                switch (item.getCoinType()) {
-                    case Battle.COIN_TYPE_BAO:
-                        reward = item.getReward() + context.getString(R.string.ingot);
-                        break;
-                    case Battle.COIN_TYPE_CASH:
-                        reward = item.getReward() + context.getString(R.string.cash);
-                        break;
-                    case Battle.COIN_TYPE_INTEGRAL:
-                        reward = item.getReward() + context.getString(R.string.integral);
-                        break;
+                if ((LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()
+                        && item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN)
+                        ||(LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
+                        && item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN)) {
+                    switch (item.getCoinType()) {
+                        case Battle.COIN_TYPE_BAO:
+                            reward = Math.round(item.getReward()-item.getCommission()) + context.getString(R.string.ingot);
+                            break;
+                        case Battle.COIN_TYPE_CASH:
+                            reward = item.getReward() + context.getString(R.string.cash);
+                            break;
+                        case Battle.COIN_TYPE_INTEGRAL:
+                            reward = StrFormatter.getFormIntegrate(item.getReward()-item.getCommission()) + context.getString(R.string.integral);
+                            break;
+                    }
+                }else{
+                    switch (item.getCoinType()) {
+                        case Battle.COIN_TYPE_BAO:
+                            reward = item.getReward() + context.getString(R.string.ingot);
+                            break;
+                        case Battle.COIN_TYPE_CASH:
+                            reward = item.getReward() + context.getString(R.string.cash);
+                            break;
+                        case Battle.COIN_TYPE_INTEGRAL:
+                            reward = item.getReward() + context.getString(R.string.integral);
+                            break;
+                    }
                 }
                 if (LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()) {
                     if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {

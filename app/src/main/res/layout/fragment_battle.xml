@@ -140,22 +140,15 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-    <LinearLayout
+    <com.sbai.finance.view.BattleButtons
+        android:id="@+id/battleButtons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:visibility="visible"/>
 
-        <com.sbai.finance.view.BattleButtons
-            android:id="@+id/battleButtons"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:visibility="visible"/>
-
-        <com.sbai.finance.view.BattleTradeView
-            android:id="@+id/battleTradeView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
-    </LinearLayout>
+    <com.sbai.finance.view.BattleTradeView
+        android:id="@+id/battleTradeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -258,10 +258,17 @@ public class BattleListActivity extends BaseActivity implements
                             item.setWinResult(data.getWinResult());
                             item.setGameStatus(data.getGameStatus());
                             item.setEndTime(data.getEndTime());
+                            mVersusListAdapter.notifyDataSetChanged();
+                        }
+                        int pageType;
+                        if (data.getGameStatus()==Battle.GAME_STATUS_END){
+                            pageType = BattleActivity.PAGE_TYPE_RECORD;
+                        }else{
+                            pageType = BattleActivity.PAGE_TYPE_VERSUS;
                         }
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
-                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                .putExtra(BattleActivity.PAGE_TYPE,pageType)
                                 .executeForResult(CANCEL_BATTLE);
 
                     }
@@ -457,6 +464,7 @@ public class BattleListActivity extends BaseActivity implements
                         item.setLaunchScore(battle.getLaunchScore());
                         item.setAgainstPraise(battle.getAgainstPraise());
                         item.setAgainstScore(battle.getAgainstScore());
+                        item.setWinResult(battle.getWinResult());
                         if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED
                                 ||battle.getGameStatus()==Battle.GAME_STATUS_END){
                             item.setAgainstUser(battle.getAgainstUser());

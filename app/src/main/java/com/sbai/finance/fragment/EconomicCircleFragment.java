@@ -61,7 +61,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
-import static com.android.volley.Request.Method.HEAD;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
@@ -218,7 +217,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
-			} else {
+			} else if (item.getType() == 3){
 				//游戏
 				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
 					SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
