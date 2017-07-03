@@ -32,7 +32,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
-import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
@@ -81,7 +80,7 @@ public class BattleListActivity extends BaseActivity implements
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    
+
     @BindView(R.id.matchBattle)
     TextView mMatchBattle;
     @BindView(R.id.createBattle)
@@ -468,7 +467,7 @@ public class BattleListActivity extends BaseActivity implements
     private void updateUserFund(UserFundInfoModel data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
-        mIngot.setText(StrFormatter.getFormIngotWithUnit(data.getYuanbao()));
+        mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));
     }
 
 

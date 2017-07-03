@@ -714,4 +714,5 @@
 
     <string name="you_not_install_weixin">您尚未安装微信</string>
     <string name="you_not_install_weibo">您尚未安装微博</string>
+    <string name="number_ge">%1$s个</string>
 </resources>
