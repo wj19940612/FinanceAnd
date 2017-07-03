@@ -258,6 +258,7 @@ public class BattleListActivity extends BaseActivity implements
                             item.setWinResult(data.getWinResult());
                             item.setGameStatus(data.getGameStatus());
                             item.setEndTime(data.getEndTime());
+                            mVersusListAdapter.notifyDataSetChanged();
                         }
                         int pageType;
                         if (data.getGameStatus()==Battle.GAME_STATUS_END){

@@ -167,6 +167,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         } else {
             mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
             initBattlePage();
+            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         }
     }
 

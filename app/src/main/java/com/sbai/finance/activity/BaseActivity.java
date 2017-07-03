@@ -143,8 +143,8 @@ public class BaseActivity extends AppCompatActivity implements
         if (LocalUser.getUser().isLogin()) {
             boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
             if (isRoomCreator) {
-                SmartDialog.single(getActivity(), getString(R.string.join_battle))
-                        .setTitle(getString(R.string.quick_join_battle))
+                SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
+                        .setTitle(getString(R.string.join_battle))
                         .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
                             @Override
                             public void onClick(Dialog dialog) {
