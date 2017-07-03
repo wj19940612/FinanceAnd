@@ -16,7 +16,7 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="@string/see_his_battle"
+            android:text="@string/battle_his_record"
             android:textColor="@android:color/white"/>
     </LinearLayout>
 </LinearLayout>

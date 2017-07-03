@@ -305,7 +305,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.battle.BattleListActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.battle.FutureVersusRecordActivity"
+        <activity android:name=".activity.battle.BattleRecordListActivity"
                   android:screenOrientation="portrait"/>
         <activity android:name=".activity.battle.CreateFightActivity"
                   android:screenOrientation="portrait"/>
