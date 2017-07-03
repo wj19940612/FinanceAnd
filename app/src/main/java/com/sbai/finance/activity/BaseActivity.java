@@ -125,7 +125,8 @@ public class BaseActivity extends AppCompatActivity implements
                 case PushCode.BATTLE_JOINED:
                     if (!(getActivity() instanceof BattleActivity)) {
                         if (battleWSPush.getContent() != null) {
-                            showJoinBattleDialog((Battle) battleWSPush.getContent().getData());
+                            Battle data = (Battle) battleWSPush.getContent().getData();
+                            showJoinBattleDialog(data);
                         }
                     }
                     break;

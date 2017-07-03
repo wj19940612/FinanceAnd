@@ -101,6 +101,10 @@ public class Battle implements Parcelable {
     private int currentPraise;
     private int praiseUserId;
 
+    public boolean isBattleStop() {
+        return getGameStatus() == GAME_STATUS_END;
+    }
+
     public double getLaunchScore() {
         return launchScore;
     }
@@ -407,4 +411,38 @@ public class Battle implements Parcelable {
             return new Battle[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Battle{" +
+                "againstFrom='" + againstFrom + '\'' +
+                ", againstUser=" + againstUser +
+                ", againstUserName='" + againstUserName + '\'' +
+                ", againstUserPortrait='" + againstUserPortrait + '\'' +
+                ", batchCode='" + batchCode + '\'' +
+                ", coinType=" + coinType +
+                ", createTime=" + createTime +
+                ", endTime=" + endTime +
+                ", endline=" + endline +
+                ", gameStatus=" + gameStatus +
+                ", id=" + id +
+                ", launchUser=" + launchUser +
+                ", launchUserName='" + launchUserName + '\'' +
+                ", launchUserPortrait='" + launchUserPortrait + '\'' +
+                ", modifyTime=" + modifyTime +
+                ", reward=" + reward +
+                ", startTime=" + startTime +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", winResult=" + winResult +
+                ", launchScore=" + launchScore +
+                ", againstScore=" + againstScore +
+                ", againstPraise=" + againstPraise +
+                ", launchPraise=" + launchPraise +
+                ", battleId=" + battleId +
+                ", currentPraise=" + currentPraise +
+                ", praiseUserId=" + praiseUserId +
+                '}';
+    }
 }

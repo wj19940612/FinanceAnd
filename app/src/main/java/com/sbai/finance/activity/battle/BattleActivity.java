@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
@@ -20,6 +21,8 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.BattleInfo;
 import com.sbai.finance.model.local.SysTime;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
@@ -144,14 +147,39 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
+
+        int battleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        String batchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+        if (mBattle == null && !TextUtils.isEmpty(batchCode)) {
+            requestLastBattleInfo(battleId, batchCode);
+        }
     }
 
     private void initViews() {
+        if (mBattle == null) return;
         if (mPageType == PAGE_TYPE_RECORD) {
             initBattleRecordPage();
         } else {
             initBattlePage();
         }
+    }
+
+    private void requestLastBattleInfo(int battleId, String batchCode) {
+        Client.getBattleInfo(battleId, batchCode).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+                    @Override
+                    protected void onRespSuccessData(Battle data) {
+                        if (data != null) {
+                            mBattle = data;
+                            if (data.isBattleStop()) {
+                                mPageType = PAGE_TYPE_RECORD;
+                            } else {
+                                mPageType = data.getGameStatus();
+                            }
+                            initViews();
+                        }
+                    }
+                }).fire();
     }
 
     public void initBattlePage() {
@@ -337,8 +365,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         if (respWSMessage.getContent().isSuccess()) {
                             mBattleInfo = respWSMessage.getContent().getData();
                             //更新左右点赞数
-                            updatePraiseView(mBattleInfo.getLaunchPraise(),mBattleInfo.getLaunchUser());
-                            updatePraiseView(mBattleInfo.getAgainstPraise(),mBattleInfo.getAgainstUser());
+                            updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
+                            updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
                             //游戏结束后
                             if (mGameStatus == GAME_STATUS_END) {
                                 showGameOverDialog();
