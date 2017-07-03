@@ -34,7 +34,7 @@ import java.util.HashSet;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FutureVersusRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class BattleRecordListActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.title)
     TitleBar mTitleBar;
@@ -224,20 +224,20 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                 }
                 if (LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()) {
                     if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
-                        mVersusResultImg.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_versus_victory));
+                        mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_victory));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         mVersusResult.setText(context.getString(R.string.wing));
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         mVersusVarietyAndProfit.setText(item.getVarietyName() + "  +" + reward);
 
                     } else if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
-                        mVersusResultImg.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
+                        mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusResult.setText(context.getString(R.string.failure));
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusVarietyAndProfit.setText(item.getVarietyName() + "  -" + reward);
                     } else if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
-                        mVersusResultImg.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
+                        mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusResult.setText(context.getString(R.string.tie));
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -245,20 +245,20 @@ public class FutureVersusRecordActivity extends BaseActivity implements CustomSw
                     }
                 } else {
                     if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
-                        mVersusResultImg.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_versus_victory));
+                        mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_victory));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         mVersusResult.setText(context.getString(R.string.wing));
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         mVersusVarietyAndProfit.setText(item.getVarietyName() + "  +" + reward);
 
                     } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
-                        mVersusResultImg.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
+                        mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusResult.setText(context.getString(R.string.failure));
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusVarietyAndProfit.setText(item.getVarietyName() + "  -" + reward);
                     } else if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
-                        mVersusResultImg.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
+                        mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusResult.setText(context.getString(R.string.tie));
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.white));

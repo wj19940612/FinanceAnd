@@ -95,11 +95,21 @@ public class Battle implements Parcelable {
     private double againstScore;
     private int againstPraise;
     private int launchPraise;
+    //手续费
+    private double commission;
 
     //临时数据
     private int battleId;
     private int currentPraise;
     private int praiseUserId;
+
+    public double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(double commission) {
+        this.commission = commission;
+    }
 
     public double getLaunchScore() {
         return launchScore;
@@ -363,6 +373,7 @@ public class Battle implements Parcelable {
         dest.writeInt(this.battleId);
         dest.writeInt(this.currentPraise);
         dest.writeInt(this.praiseUserId);
+        dest.writeDouble(this.getCommission());
     }
 
     protected Battle(Parcel in) {
@@ -394,6 +405,7 @@ public class Battle implements Parcelable {
         this.battleId = in.readInt();
         this.currentPraise = in.readInt();
         this.praiseUserId = in.readInt();
+        this.commission=in.readDouble();
     }
 
     public static final Creator<Battle> CREATOR = new Creator<Battle>() {

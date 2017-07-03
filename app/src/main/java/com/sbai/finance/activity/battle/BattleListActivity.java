@@ -115,6 +115,9 @@ public class BattleListActivity extends BaseActivity implements
             case PushCode.QUICK_MATCH_SUCCESS:
                 showMatchSuccessDialog((Battle) battleWSPush.getContent().getData());
                 break;
+            case PushCode.BATTLE_OVER:
+                requestCurrentBattle();
+                break;
         }
     }
 
@@ -177,7 +180,7 @@ public class BattleListActivity extends BaseActivity implements
             public void onClick(View v) {
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CHECK_RECODE);
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), FutureVersusRecordActivity.class).execute();
+                    Launcher.with(getActivity(), BattleRecordListActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
