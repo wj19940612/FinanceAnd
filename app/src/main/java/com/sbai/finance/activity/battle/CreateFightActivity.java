@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.battle;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -330,7 +333,7 @@ public class CreateFightActivity extends BaseActivity {
 			case R.id.launch_fight:
 				umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
 				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
-						.setCallback(new Callback2D<Resp<Battle>, Battle>() {
+						.setCallback(new Callback2D<Resp<Battle>, Battle>(false) {
 							@Override
 							protected void onRespSuccessData(Battle battle) {
 								Launcher.with(getActivity(), BattleActivity.class)
@@ -339,8 +342,31 @@ public class CreateFightActivity extends BaseActivity {
 										.execute();
 								finish();
 							}
-						}).fire();
 
+							@Override
+							protected void onReceive(Resp<Battle> battleResp) {
+								super.onReceive(battleResp);
+
+								if (battleResp.isSuccess()) {
+
+								} else if (battleResp.getCode() == 2201) {
+									SmartDialog.with(getActivity()).setMessage("余额不足,创建失败")
+											.setMessageTextSize(15)
+											.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+												@Override
+												public void onClick(Dialog dialog) {
+													dialog.dismiss();
+												}
+											})
+											.setTitle("提示")
+											.setNegativeVisible(View.GONE)
+											.show();
+								} else {
+									ToastUtil.curt(battleResp.getMsg());
+								}
+
+							}
+						}).fire();
 				break;
 		}
 	}
