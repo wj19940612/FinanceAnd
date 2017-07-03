@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,13 +32,12 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.websocket.PushCode;
 import com.sbai.finance.websocket.WSClient;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
-
-import static com.sbai.finance.websocket.PushCode.BATTLE_JOINED;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
@@ -56,8 +54,6 @@ public class BaseActivity extends AppCompatActivity implements
 
     private TimerHandler mTimerHandler;
     private RequestProgress mRequestProgress;
-
-    private static String sCurrentActivity;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -120,29 +116,23 @@ public class BaseActivity extends AppCompatActivity implements
         SysTime.getSysTime().sync();
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-
-        initPushReceiveListener();
     }
 
     private OnPushReceiveListener<WSPush<Battle>> mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
         @Override
-        public void onPushReceive(WSPush<Battle> versusGamingWSPush) {
-            switch (versusGamingWSPush.getContent().getType()) {
-                case BATTLE_JOINED:
-                    if (getActivity() instanceof BattleActivity) {
-                    } else {
-                        if (!TextUtils.isEmpty(sCurrentActivity)
-                                && getActivity().getClass().getSimpleName().equals(sCurrentActivity)) {
-                            showJoinBattleDialog(versusGamingWSPush);
-                        }
+        public void onPushReceive(WSPush<Battle> battleWSPush) {
+            switch (battleWSPush.getContent().getType()) {
+                case PushCode.BATTLE_JOINED:
+                    if (!(getActivity() instanceof BattleActivity)) {
+                        showJoinBattleDialog(battleWSPush);
                     }
                     break;
             }
+            onBattlePushReceived(battleWSPush);
         }
     };
 
-    private void initPushReceiveListener() {
-        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
+    protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
     }
 
     private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
@@ -157,13 +147,7 @@ public class BaseActivity extends AppCompatActivity implements
                                 .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
                                 .execute();
                     }
-                })
-                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                })
+                }).setNegative(R.string.cancel)
                 .show();
     }
 
@@ -241,8 +225,7 @@ public class BaseActivity extends AppCompatActivity implements
                 new IntentFilter(ACTION_TOKEN_EXPIRED));
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(this);
-
-        sCurrentActivity = getActivity().getClass().getSimpleName();
+        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -252,6 +235,7 @@ public class BaseActivity extends AppCompatActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         MobclickAgent.onPageEnd(TAG);
         MobclickAgent.onPause(this);
+        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -261,7 +245,6 @@ public class BaseActivity extends AppCompatActivity implements
         SmartDialog.dismiss(this);
         mRequestProgress.dismissAll();
         stopScheduleJob();
-        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     protected FragmentActivity getActivity() {

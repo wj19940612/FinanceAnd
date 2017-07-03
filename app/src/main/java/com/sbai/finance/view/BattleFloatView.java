@@ -279,7 +279,7 @@ public class BattleFloatView extends RelativeLayout {
         } else if (gameStatus == 2) {
             mDeadline.setText(getContext().getString(R.string.remaining_time, DateUtil.getCountdownTime(endTime, 0)));
         } else if (gameStatus == 1) {
-            mDeadline.setText(DateUtil.getCountdownTime(endTime, 0));
+            mDeadline.setText(DateUtil.getMinutes(endTime * 1000));
         }
         return this;
     }

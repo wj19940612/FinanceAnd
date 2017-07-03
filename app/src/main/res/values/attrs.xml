@@ -114,4 +114,24 @@
         <!-- Max view width that cannot beyond this -->
         <attr name="maxViewWidth" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="BattleProgress">
+        <attr name="progressDrawable" format="reference|color"/>
+        <attr name="orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="rightPadding" format="dimension"/>
+        <attr name="leftPadding" format="dimension"/>
+        <attr name="max" format="integer"/>
+        <attr name="progress" format="integer"/>
+        <attr name="secondaryProgress" format="integer"/>
+        <attr name="rightLabelColor" format="color|reference"/>
+        <attr name="rightLabelSize" format="dimension"/>
+        <attr name="rightLabel" format="reference|string"/>
+        <attr name="leftLabelColor" format="color|reference"/>
+        <attr name="leftLabelSize" format="dimension"/>
+        <attr name="leftLabel" format="reference|string"/>
+
+    </declare-styleable>
 </resources>

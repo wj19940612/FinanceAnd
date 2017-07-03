@@ -13,4 +13,8 @@ public interface WSAbsClient {
     void close();
 
     void send(WSMessage wsMessage);
+
+    boolean isConnecting();
+
+    boolean isConnected();
 }

@@ -106,7 +106,7 @@ public class StrFormatter {
      * @return
      */
     public static String getFormIngot(double money) {
-        String number = FinanceUtil.formatWithScaleNoZero(money);
+        String number = String.valueOf((long)money);
         if (money >= 10000.00) {
             int length = number.length();
             return number.substring(0, length - 4) + "." + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG;

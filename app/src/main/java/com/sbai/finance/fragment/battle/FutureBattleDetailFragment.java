@@ -33,6 +33,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
+
     Unbinder unbinder;
 
     BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
