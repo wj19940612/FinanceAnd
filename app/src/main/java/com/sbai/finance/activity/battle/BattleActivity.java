@@ -149,7 +149,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private void initData() {
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
-        mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
+        if (mPageType != PAGE_TYPE_RECORD) {
+            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
+        }
     }
 
     private void initViews() {

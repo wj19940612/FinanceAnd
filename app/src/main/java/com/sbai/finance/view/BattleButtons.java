@@ -58,9 +58,11 @@ public class BattleButtons extends LinearLayout {
     private void init() {
         setOrientation(VERTICAL);
         setGravity(Gravity.CENTER_HORIZONTAL);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_buttons, null, false);
-        addView(view);
+        LayoutInflater.from(getContext()).inflate(R.layout.view_battle_buttons, this, true);
         ButterKnife.bind(this);
+
+
+
 
         mInvite.setOnClickListener(new OnClickListener() {
             @Override
