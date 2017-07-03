@@ -235,10 +235,8 @@ public class BattleListActivity extends BaseActivity implements
                                 && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
                             showJoinBattleDialog(item);
                         } else {
-                            Launcher.with(getActivity(), BattleActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, item)
-                                    .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
-                                    .executeForResult(CANCEL_BATTLE);
+                            //请求最新的数据传入到详情页
+                            requestLastBattleInfo(item);
                         }
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -246,6 +244,25 @@ public class BattleListActivity extends BaseActivity implements
                 }
             }
         });
+    }
+
+    private void requestLastBattleInfo(final Battle item) {
+        Client.getBattleInfo(item.getId(),item.getBatchCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Battle>,Battle>() {
+                    @Override
+                    protected void onRespSuccessData(Battle data) {
+                        if (data.getGameStatus()!=item.getGameStatus()){
+                            item.setWinResult(data.getWinResult());
+                            item.setGameStatus(data.getGameStatus());
+                            item.setEndTime(data.getEndTime());
+                        }
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, data)
+                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                .executeForResult(CANCEL_BATTLE);
+
+                    }
+                }).fire();
     }
 
     @Override
@@ -437,10 +454,14 @@ public class BattleListActivity extends BaseActivity implements
                         item.setLaunchScore(battle.getLaunchScore());
                         item.setAgainstPraise(battle.getAgainstPraise());
                         item.setAgainstScore(battle.getAgainstScore());
-                        if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED){
+                        if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED
+                                ||battle.getGameStatus()==Battle.GAME_STATUS_END){
                             item.setAgainstUser(battle.getAgainstUser());
                             item.setAgainstUserName(battle.getAgainstUserName());
                             item.setAgainstUserPortrait(battle.getAgainstUserPortrait());
+                        }
+                        if (battle.getGameStatus()==Battle.GAME_STATUS_END){
+                            item.setWinResult(battle.getWinResult());
                         }
                     }
                     data.remove(battle);
@@ -526,10 +547,7 @@ public class BattleListActivity extends BaseActivity implements
             case R.id.currentBattle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
-                    Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
-                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
-                            .executeForResult(CANCEL_BATTLE);
+                    requestLastBattleInfo(mCurrentBattle);
                 }
                 break;
             default:
