@@ -491,7 +491,7 @@ public class BattleListActivity extends BaseActivity implements
     private void updateUserFund(UserFundInfoModel data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
-        mIngot.setText(StrFormatter.getFormIngotWithUnit(data.getYuanbao()));
+        mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));
     }
 
 
