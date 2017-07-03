@@ -20,6 +20,7 @@ import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.BattleInfo;
+import com.sbai.finance.model.battle.BattleRoom;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -52,7 +53,10 @@ import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_R
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
-import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
+import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
+import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_END;
+import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_START;
+import static com.sbai.finance.model.battle.BattleRoom.USER_STATE_OBSERVER;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH;
 
@@ -82,7 +86,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private Battle mBattle;
     private BattleInfo mBattleInfo;
-    private int mGameStatus;
+    private BattleRoom mBattleRoom;
     private int mPageType;
 
     @Override
@@ -94,15 +98,16 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         switch (battleWSPush.getContent().getType()) {
             case PushCode.BATTLE_JOINED:
                 //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                if (mGameStatus != GAME_STATUS_STARTED) {
+                if (mBattleRoom.getRoomState() != ROOM_STATE_START) {
                     dismissAllDialog();
                     startGame(battleWSPush);
                 }
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
-                if (mGameStatus != GAME_STATUS_OBESERVE && mGameStatus != GAME_STATUS_END) {
-                    mGameStatus = GAME_STATUS_END;
+                if (mBattleRoom.getUserState() != USER_STATE_OBSERVER
+                        && mBattleRoom.getRoomState() != ROOM_STATE_END) {
+                    mBattleRoom.setRoomState(ROOM_STATE_END);
                     requestBattleInfo();
                 }
                 break;
@@ -148,6 +153,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattle = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         mPageType = getIntent().getIntExtra(PAGE_TYPE, PAGE_TYPE_RECORD);
 
+        //push handle
         int battleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
         String batchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
         if (mBattle == null && !TextUtils.isEmpty(batchCode)) {
@@ -157,6 +163,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void initViews() {
         if (mBattle == null) return;
+        mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         if (mPageType == PAGE_TYPE_RECORD) {
             initBattleRecordPage();
         } else {
@@ -193,9 +200,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 .commitAllowingStateLoss();
 
         //观战模式  刷新底部框 可以点赞
-        int userId = LocalUser.getUser().getUserInfo().getId();
-        if (mBattle.getAgainstUser() != userId && mBattle.getLaunchUser() != userId) {
-            mGameStatus = GAME_STATUS_OBESERVE;
+        if (mBattleRoom.getUserState() == USER_STATE_OBSERVER) {
             mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                     .initWithModel(mBattle)
                     .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
@@ -244,12 +249,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                     .initWithModel(mBattle);
 
             //分两种状态  1.发起匹配  2.对战中
-            int gameStatus = mBattle.getGameStatus();
-            if (gameStatus == Battle.GAME_STATUS_CREATED) {
-                mGameStatus = Battle.GAME_STATUS_CREATED;
+            if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
                 mBattleView.setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), true);
-            } else if (gameStatus == GAME_STATUS_STARTED) {
-                mGameStatus = GAME_STATUS_STARTED;
+            } else if (mBattleRoom.getRoomState() == ROOM_STATE_START) {
                 mBattleView.setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false);
                 startScheduleJob(1000);
             }
@@ -283,7 +285,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattleView.setProgress(0, 0, false);
         mBattleFragment.showBattleTradeView();
         mBattleFragment.updateGameInfo(mBattle);
-        mGameStatus = GAME_STATUS_STARTED;
+        mBattleRoom.setRoomState(ROOM_STATE_START);
         showStartGameDialog();
         startScheduleJob(1000);
     }
@@ -368,7 +370,10 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
                             updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
                             //游戏结束后
-                            if (mGameStatus == GAME_STATUS_END) {
+                            if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
+                                mBattleRoom.setRoomState(ROOM_STATE_END);
+                            }
+                            if (mBattleRoom.getRoomState() == ROOM_STATE_END) {
                                 showGameOverDialog();
                             }
                         }
@@ -380,12 +385,12 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     public void updateBattleInfo(double createProfit, double againstProfit) {
         double leftProfit = createProfit;
         double rightProfit = againstProfit;
-        boolean isInviting = mGameStatus == Battle.GAME_STATUS_CREATED;
+        boolean isInviting = mBattleRoom.getRoomState() == ROOM_STATE_CREATE;
         if (mBattleInfo != null) {
             leftProfit += mBattleInfo.getLaunchUnwindScore();
             rightProfit += mBattleInfo.getAgainstUnwindScore();
         }
-        if (mGameStatus != GAME_STATUS_END) {
+        if (mBattleRoom.getRoomState() != ROOM_STATE_END) {
             mBattleView.setProgress(leftProfit, rightProfit, isInviting);
         }
     }
@@ -672,10 +677,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     @Override
     public void onTimeUp(int count) {
-        if (mGameStatus == GAME_STATUS_OBESERVE) {
-            showDeadlineTime();
-        }
-        if (mGameStatus == GAME_STATUS_STARTED) {
+        if (mBattleRoom.getUserState() == USER_STATE_OBSERVER
+                || mBattleRoom.getRoomState() == ROOM_STATE_START) {
             showDeadlineTime();
         }
     }
@@ -690,8 +693,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (mGameStatus == GAME_STATUS_END) {
-
+        //判断游戏是否结束
+        if (mBattleRoom.getRoomState() != ROOM_STATE_END) {
+            requestBattleInfo();
         }
     }
 
