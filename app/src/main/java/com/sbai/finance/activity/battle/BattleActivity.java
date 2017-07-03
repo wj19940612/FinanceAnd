@@ -47,6 +47,7 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
@@ -90,13 +91,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         switch (battleWSPush.getContent().getType()) {
             case PushCode.BATTLE_JOINED:
                 //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
-                dismissAllDialog();
-                startGame(battleWSPush);
+                if (mGameStatus != GAME_STATUS_STARTED) {
+                    dismissAllDialog();
+                    startGame(battleWSPush);
+                }
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
-                if (mGameStatus != GAME_STATUS_OBESERVE) {
-                    mGameStatus = Battle.GAME_STATUS_END;
+                if (mGameStatus != GAME_STATUS_OBESERVE && mGameStatus != GAME_STATUS_END) {
+                    mGameStatus = GAME_STATUS_END;
                     requestBattleInfo();
                 }
                 break;
@@ -121,7 +124,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 break;
             case PushCode.USER_PRAISE:
                 Battle temp = (Battle) battleWSPush.getContent().getData();
-                updatePraiseView(temp.getCurrentPraise(), temp.getPraiseUserId(), false);
+                updatePraiseView(temp.getCurrentPraise(), temp.getPraiseUserId());
                 break;
 
         }
@@ -334,10 +337,10 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         if (respWSMessage.getContent().isSuccess()) {
                             mBattleInfo = respWSMessage.getContent().getData();
                             //更新左右点赞数
-                            updatePraiseView(mBattleInfo.getLaunchPraise(),mBattleInfo.getLaunchUser(),false);
-                            updatePraiseView(mBattleInfo.getAgainstPraise(),mBattleInfo.getAgainstUser(),false);
+                            updatePraiseView(mBattleInfo.getLaunchPraise(),mBattleInfo.getLaunchUser());
+                            updatePraiseView(mBattleInfo.getAgainstPraise(),mBattleInfo.getAgainstUser());
                             //游戏结束后
-                            if (mGameStatus == Battle.GAME_STATUS_END) {
+                            if (mGameStatus == GAME_STATUS_END) {
                                 showGameOverDialog();
                             }
                         }
@@ -354,7 +357,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             leftProfit += mBattleInfo.getLaunchUnwindScore();
             rightProfit += mBattleInfo.getAgainstUnwindScore();
         }
-        if (mGameStatus != Battle.GAME_STATUS_END) {
+        if (mGameStatus != GAME_STATUS_END) {
             mBattleView.setProgress(leftProfit, rightProfit, isInviting);
         }
     }
@@ -364,23 +367,24 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         WSClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
-                int data = respWSMessage.getContent().getData();
-                updatePraiseView(data, userId, true);
+                setPraiseLight(userId);
             }
         });
     }
 
-    private void updatePraiseView(int count, int userId, boolean needLight) {
+    private void updatePraiseView(int count, int userId) {
         boolean isLeft = userId == mBattle.getLaunchUser();
         if (isLeft) {
             mBattle.setLaunchPraise(count);
         } else {
             mBattle.setAgainstPraise(count);
         }
-        if (needLight) {
-            mBattleView.setPraiseLight(isLeft);
-        }
         mBattleView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
+    }
+
+    private void setPraiseLight(int userId) {
+        boolean isLeft = userId == mBattle.getLaunchUser();
+        mBattleView.setPraiseLight(isLeft);
     }
 
 
@@ -570,17 +574,21 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         }
 
+        final BattleResultDialogFragment finalFragment = fragment;
         fragment.setOnCloseListener(new BattleResultDialogFragment.OnCloseListener() {
             @Override
             public void onClose() {
+                finalFragment.dismissAllowingStateLoss();
                 finish();
             }
         });
 
         // handle  java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-        if (fragment.isResumed()) {
-            fragment.show(getSupportFragmentManager());
-        }
+//        if (fragment.isResumed()) {
+//            fragment.show(getSupportFragmentManager());
+//        }
+        fragment.show(getSupportFragmentManager());
+
     }
 
     private boolean getWinResult() {
@@ -654,6 +662,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        if (mGameStatus == GAME_STATUS_END) {
+
+        }
     }
 
     @Override
