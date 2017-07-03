@@ -138,7 +138,8 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     private void showJoinBattleDialog(final Battle battle) {
-        SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
+        SmartDialog.single(getActivity(),getString(R.string.join_battle))
+                .setTitle(getString(R.string.quick_join_battle))
                 .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
