@@ -450,10 +450,14 @@ public class BattleListActivity extends BaseActivity implements
                         item.setLaunchScore(battle.getLaunchScore());
                         item.setAgainstPraise(battle.getAgainstPraise());
                         item.setAgainstScore(battle.getAgainstScore());
-                        if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED){
+                        if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED
+                                ||battle.getGameStatus()==Battle.GAME_STATUS_END){
                             item.setAgainstUser(battle.getAgainstUser());
                             item.setAgainstUserName(battle.getAgainstUserName());
                             item.setAgainstUserPortrait(battle.getAgainstUserPortrait());
+                        }
+                        if (battle.getGameStatus()==Battle.GAME_STATUS_END){
+                            item.setWinResult(battle.getWinResult());
                         }
                     }
                     data.remove(battle);
