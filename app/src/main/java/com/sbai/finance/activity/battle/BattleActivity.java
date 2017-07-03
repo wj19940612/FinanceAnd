@@ -165,6 +165,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mPageType == PAGE_TYPE_RECORD) {
             initBattleRecordPage();
         } else {
+            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
             initBattlePage();
             mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         }
