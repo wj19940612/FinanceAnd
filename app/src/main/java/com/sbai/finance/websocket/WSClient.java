@@ -99,6 +99,10 @@ public class WSClient implements WSAbsClient {
                 return;
             }
 
+            if (isClosing()) {
+                return;
+            }
+
             if (isConnected() && mStatus == Status.REGISTERING) {
                 return;
             }
@@ -120,7 +124,12 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public boolean isConnected() {
-        return mWSClient != null && mWSClient.isOpen();
+        return mWSClient != null && mWSClient.isOpen() && !mWSClient.isClosing();
+    }
+
+    @Override
+    public boolean isClosing() {
+        return mWSClient != null && mWSClient.isClosing();
     }
 
     private void executePendingList() {
