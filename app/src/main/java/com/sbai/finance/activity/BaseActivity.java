@@ -124,7 +124,9 @@ public class BaseActivity extends AppCompatActivity implements
             switch (battleWSPush.getContent().getType()) {
                 case PushCode.BATTLE_JOINED:
                     if (!(getActivity() instanceof BattleActivity)) {
-                        showJoinBattleDialog(battleWSPush);
+                        if (battleWSPush.getContent() != null) {
+                            showJoinBattleDialog((Battle) battleWSPush.getContent().getData());
+                        }
                     }
                     break;
             }
@@ -135,8 +137,7 @@ public class BaseActivity extends AppCompatActivity implements
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
     }
 
-    private void showJoinBattleDialog(WSPush<Battle> objectWSPush) {
-        final Battle battle = (Battle) objectWSPush.getContent().getData();
+    private void showJoinBattleDialog(final Battle battle) {
         SmartDialog.with(getActivity(), getString(R.string.quick_join_battle), getString(R.string.join_battle))
                 .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
                     @Override
@@ -210,7 +211,8 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     /**
-     *  友盟统计埋点
+     * 友盟统计埋点
+     *
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {
