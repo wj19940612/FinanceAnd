@@ -20,11 +20,11 @@ import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.TradeOrder;
 import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
-import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -53,9 +53,6 @@ import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 
-/**
- * Modified by JohnZ on 2017/7/1.
- */
 public class BattleFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
@@ -91,6 +88,7 @@ public class BattleFragment extends BaseFragment {
     private Battle mBattle;
     private Variety mVariety;
     private FutureData mFutureData;
+    private boolean mIsObserver;
 
     private TradeOrder mCurrentOrder;
     private TradeOrder mCreatorOrder;
@@ -270,10 +268,10 @@ public class BattleFragment extends BaseFragment {
                 }).fire();
     }
 
-    public void requestOrderHistory(){
+    public void requestOrderHistory() {
         Client.getOrderHistory(mBattle.getId())
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
+                .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {
                         updateTradeHistory(data);
@@ -285,7 +283,7 @@ public class BattleFragment extends BaseFragment {
     private void requestCurrentOrder() {
         Client.requestCurrentOrder(mBattle.getId())
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TradeOrder>>,List<TradeOrder>>() {
+                .setCallback(new Callback2D<Resp<List<TradeOrder>>, List<TradeOrder>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeOrder> data) {
                         updateCurrentOrder(data);
@@ -485,7 +483,7 @@ public class BattleFragment extends BaseFragment {
             }
             againstProfit = againstProfit * mVariety.getEachPointMoney();
         }
-        ((BattleActivity)getActivity()).updateBattleInfo(creatorProfit,againstProfit);
+        ((BattleActivity) getActivity()).updateBattleInfo(creatorProfit, againstProfit);
 
     }
 
@@ -540,11 +538,11 @@ public class BattleFragment extends BaseFragment {
         mBattleTradeView.setVisitor(true);
     }
 
-    public void updateGameInfo(Battle battle){
+    public void updateGameInfo(Battle battle) {
         mBattle = battle;
     }
 
-    public void updateRoomExistsTime(){
+    public void updateRoomExistsTime() {
         //更新房间存在倒计时
         long currentTime = System.currentTimeMillis();
         long createTime = mBattle.getCreateTime();
@@ -571,7 +569,7 @@ public class BattleFragment extends BaseFragment {
         mBattleTradeView.changeTradeState(state);
     }
 
-    public void refreshTradeView(){
+    public void refreshTradeView() {
         //每次点击交易或平仓后 刷新数据
         requestOrderHistory();
         requestCurrentOrder();

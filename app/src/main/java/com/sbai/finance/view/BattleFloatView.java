@@ -155,7 +155,7 @@ public class BattleFloatView extends RelativeLayout {
                 .setAgainstName(model.getAgainstUserName())
                 .setDeposit(model.getReward(), model.getCoinType())
                 .setPraise(model.getLaunchPraise(), model.getAgainstPraise())
-                .setDeadline(model.getGameStatus(), (int) (model.getEndline()/1000));
+                .setDeadline(model.getGameStatus(), model.getEndline());
         return this;
     }
 
@@ -279,7 +279,7 @@ public class BattleFloatView extends RelativeLayout {
         } else if (gameStatus == 2) {
             mDeadline.setText(getContext().getString(R.string.remaining_time, DateUtil.getCountdownTime(endTime, 0)));
         } else if (gameStatus == 1) {
-            mDeadline.setText(DateUtil.getMinutes(endTime * 1000));
+            mDeadline.setText(DateUtil.getMinutes(endTime));
         }
         return this;
     }
