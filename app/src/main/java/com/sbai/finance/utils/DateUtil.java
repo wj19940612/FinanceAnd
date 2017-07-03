@@ -332,6 +332,30 @@ public class DateUtil {
     }
 
     /**
+     * 格式化时间  如果是当天 则显示18:20
+     * 如果是昨天 则 昨天 18:20
+     * 其他的   12月12日 12:20
+     * 不是今年  则 2015年12月18日
+     *
+     * @param createTime
+     * @return
+     */
+    public static String getBattleFormatTime(long createTime) {
+        long systemTime = System.currentTimeMillis();
+        if (DateUtil.isInThisYear(createTime)) {
+            if (DateUtil.isToday(createTime, systemTime)) {
+                return DateUtil.format(createTime, "HH:mm:ss");
+            } else if (DateUtil.isInThisYear(createTime)) {
+                return DateUtil.format(createTime, "MM/dd HH:mm:ss");
+            } else {
+                return DateUtil.format(createTime, "yy/MM/dd HH:mm:ss");
+            }
+        } else {
+            return DateUtil.format(createTime, DateUtil.FORMAT_YEAR_MONTH_DAY);
+        }
+    }
+
+    /**
      * 获取明细页面的格式化时间
      * 日期显示：
      * 本日记录：今日00:00；
@@ -589,15 +613,17 @@ public class DateUtil {
 
     /**
      * 15分钟
+     *
      * @param seconds
      * @return
      */
-    public static String getMinutes(int seconds){
-        return seconds/60+"分钟";
+    public static String getMinutes(int seconds) {
+        return seconds / 60 + "分钟";
     }
 
     /**
      * 获取两段时间相差的秒
+     *
      * @param time1
      * @param time2
      * @return
@@ -605,6 +631,6 @@ public class DateUtil {
     public static int getDiffSeconds(long time1, long time2) {
         long diff = time1 - time2;
         Log.d("TAG", "isLessThanTimeInterval: " + diff);
-        return (int) (diff/1000);
+        return (int) (diff / 1000);
     }
 }

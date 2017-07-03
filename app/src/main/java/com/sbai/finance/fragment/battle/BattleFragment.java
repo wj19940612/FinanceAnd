@@ -196,17 +196,17 @@ public class BattleFragment extends BaseFragment {
         mBattleButtons.setOnViewClickListener(new BattleButtons.OnViewClickListener() {
             @Override
             public void onInviteButtonClick() {
-                ((BattleActivity)getActivity()).onInviteButtonClick();
+                ((BattleActivity) getActivity()).onInviteButtonClick();
             }
 
             @Override
             public void onMatchButtonClick() {
-                ((BattleActivity)getActivity()).onMatchButtonClick();
+                ((BattleActivity) getActivity()).onMatchButtonClick();
             }
 
             @Override
             public void onCancelButtonClick() {
-                ((BattleActivity)getActivity()).onCancelButtonClick();
+                ((BattleActivity) getActivity()).onCancelButtonClick();
             }
         });
         mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
@@ -228,6 +228,7 @@ public class BattleFragment extends BaseFragment {
                 requestClosePosition(mCurrentOrder.getId());
             }
         });
+        scrollToTop(mTitleBar, mBattleTradeView.getListView());
     }
 
     private void requestCreateOrder(int direction) {

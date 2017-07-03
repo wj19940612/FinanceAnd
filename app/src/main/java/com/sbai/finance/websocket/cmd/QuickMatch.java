@@ -13,10 +13,19 @@ public class QuickMatch extends WSCmd {
         setParameters(new Param(type, refuseIds));
     }
 
+    public QuickMatch(int type) {
+        super("/game/battle/quickSearchForAgainst.do");
+        setParameters(new Param(type));
+    }
+
     class Param {
 
         private int type;
         private String refuseIds;
+
+        public Param(int type) {
+            this.type = type;
+        }
 
         public Param(int type, String refuseIds) {
             this.type = type;

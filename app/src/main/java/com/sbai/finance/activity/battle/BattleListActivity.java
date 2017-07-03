@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -20,8 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -32,7 +29,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
-import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
@@ -51,6 +47,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -58,10 +55,10 @@ import com.sbai.finance.websocket.PushCode;
 import com.sbai.finance.websocket.WSClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
+import com.sbai.httplib.BuildConfig;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,7 +79,7 @@ public class BattleListActivity extends BaseActivity implements
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    
+
     @BindView(R.id.matchBattle)
     TextView mMatchBattle;
     @BindView(R.id.createBattle)
@@ -102,30 +99,24 @@ public class BattleListActivity extends BaseActivity implements
 
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
-    private StartMatchDialogFragment mStartMatchDialogFragment;
-
-    private SmartDialog mJoinDialog;
-    private SmartDialog mJoinFailureDialog;
-    private SmartDialog mAskMatchDialog;
-    private SmartDialog mCancelMatchDialog;
+    private StartMatchDialogFragment mQuickMatchDialogFragment;
     private StringBuilder mRefusedIds;
 
-    private OnPushReceiveListener mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
-        @Override
-        public void onPushReceive(final WSPush<Battle> versusGamingWSPush) {
-            switch (versusGamingWSPush.getContent().getType()) {
-                case PushCode.QUICK_MATCH_TIMEOUT:
-                    showMatchTimeoutDialog();
-                    break;
-                case PushCode.QUICK_MATCH_FAILURE:
-                    showMatchTimeoutDialog();
-                    break;
-                case PushCode.QUICK_MATCH_SUCCESS:
-                    showMatchSuccessDialog((Battle) versusGamingWSPush.getContent().getData());
-                    break;
-            }
+    @Override
+    protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
+        super.onBattlePushReceived(battleWSPush);
+        switch (battleWSPush.getContent().getType()) {
+            case PushCode.QUICK_MATCH_TIMEOUT:
+                showMatchTimeoutDialog();
+                break;
+            case PushCode.QUICK_MATCH_FAILURE:
+                showMatchTimeoutDialog();
+                break;
+            case PushCode.QUICK_MATCH_SUCCESS:
+                showMatchSuccessDialog((Battle) battleWSPush.getContent().getData());
+                break;
         }
-    };
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,6 +131,7 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         updateAvatar();
         requestBattleList();
+        
         scrollToTop(mTitleBar, mListView);
     }
 
@@ -259,7 +251,6 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
         if (LocalUser.getUser().isLogin()) {
             requestUserFindInfo();
             requestCurrentBattle();
@@ -277,7 +268,6 @@ public class BattleListActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         stopScheduleJob();
-        WSClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -346,7 +336,7 @@ public class BattleListActivity extends BaseActivity implements
                                         .executeForResult(CANCEL_BATTLE);
                             }
                         } else {
-                            showJoinVersusFailureDialog(resp);
+                            showJoinBattleFailureDialog(resp);
                         }
                     }
 
@@ -378,15 +368,10 @@ public class BattleListActivity extends BaseActivity implements
                 }).fireFree();
     }
 
-    private void requestMatchVersusOfSocket(String refuseId) {
-        String refuseIds = "";
-        if (refuseId.isEmpty()) {
-            mRefusedIds.delete(0, mRefusedIds.length());
-        } else {
-            mRefusedIds.append(refuseId).append(",");
-            refuseIds = mRefusedIds.substring(0, mRefusedIds.length() - 1);
-        }
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH, refuseIds), new WSCallback<WSMessage<Resp>>() {
+
+
+    private void requestQuickMatch() {
+        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
@@ -394,12 +379,14 @@ public class BattleListActivity extends BaseActivity implements
         });
     }
 
-    private void requestCancelMatchOfSocket() {
 
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL, ""), new WSCallback<WSMessage<Resp>>() {
+    private void requestCancelMatch() {
+        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
-
+                if (BuildConfig.DEBUG) {
+                    ToastUtil.show("Cancel success");
+                }
             }
         });
     }
@@ -567,10 +554,7 @@ public class BattleListActivity extends BaseActivity implements
                 reward = item.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
-        if (mJoinDialog == null) {
-            mJoinDialog = SmartDialog.with(getActivity());
-        }
-        mJoinDialog.setMessage(getString(R.string.join_versus_tip, reward))
+        SmartDialog.single(getActivity(), getString(R.string.join_versus_tip, reward))
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -584,14 +568,11 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinVersusFailureDialog(final Resp<Battle> resp) {
-        if (mJoinFailureDialog == null) {
-            mJoinFailureDialog = SmartDialog.with(getActivity());
-        }
-        int positiveMsg;
-        int negativeMsg = R.string.cancel;
+    private void showJoinBattleFailureDialog(final Resp<Battle> resp) {
         final int code = resp.getCode();
-        String msg;
+        int positiveMsg;
+        String msg = null;
+        SmartDialog smartDialog = SmartDialog.single(getActivity(), msg);
         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
             msg = getString(R.string.battle_joined_or_created);
             positiveMsg = R.string.go_battle;
@@ -601,9 +582,9 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             msg = getString(R.string.invite_invalid);
             positiveMsg = R.string.ok;
-            mJoinFailureDialog.setNegativeVisible(View.GONE);
+            smartDialog.setNegativeVisible(View.GONE);
         }
-        mJoinFailureDialog.setMessage(msg)
+        smartDialog.setMessage(msg)
                 .setPositive(positiveMsg, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -621,75 +602,71 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 })
                 .setTitle(getString(R.string.join_versus_failure))
-                .setNegative(negativeMsg)
+                .setNegative(R.string.cancel)
                 .show();
 
 
     }
 
     private void showAskMatchDialog() {
-        if (mAskMatchDialog == null) {
-            mAskMatchDialog = SmartDialog.with(getActivity(), getString(R.string.match_battle_tip), getString(R.string.match_battle_confirm));
-            mAskMatchDialog.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                @Override
-                public void onClick(Dialog dialog) {
-                    dialog.dismiss();
-                    requestMatchVersusOfSocket("");
-                }
-            }).setNegative(R.string.cancel);
-        }
-        mAskMatchDialog.show();
-
+        SmartDialog.single(getActivity(), getString(R.string.match_battle_tip))
+                .setTitle(getString(R.string.match_battle_confirm))
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestQuickMatch();
+                    }
+                }).setNegative(R.string.cancel)
+                .show();
     }
 
-    //开始匹配弹窗
     private void showMatchDialog() {
-        if (mStartMatchDialogFragment == null) {
-            mStartMatchDialogFragment = StartMatchDialogFragment.newInstance()
+        if (mQuickMatchDialogFragment == null) {
+            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
                     .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
                         @Override
                         public void onCancel() {
-                            mStartMatchDialogFragment.dismiss();
+                            mQuickMatchDialogFragment.dismiss();
                             showCancelMatchDialog();
                         }
                     });
         }
-        mStartMatchDialogFragment.show(getSupportFragmentManager());
+        mQuickMatchDialogFragment.show(getSupportFragmentManager());
     }
 
     private void showCancelMatchDialog() {
-        if (mCancelMatchDialog == null) {
-            mCancelMatchDialog = SmartDialog.with(getActivity(), getString(R.string.cancel_tip), getString(R.string.cancel_matching));
-            mCancelMatchDialog.setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
-                @Override
-                public void onClick(Dialog dialog) {
-                    dialog.dismiss();
-                    requestMatchVersus(Battle.MATCH_CANCEL, "");
-                }
-            })
-                    .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                            showMatchDialog();
-                        }
-                    })
-                    .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
-                    .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
-                    .setCancelableOnTouchOutside(false)
-                    .show();
-        }
-        mCancelMatchDialog.show();
+        SmartDialog.single(getActivity(), getString(R.string.cancel_tip))
+                .setTitle(getString(R.string.cancel_matching))
+                .setCancelableOnTouchOutside(false)
+                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestCancelMatch();
+                    }
+                })
+                .setNegative(R.string.continue_match, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        showMatchDialog();
+                    }
+                })
+                .show();
     }
 
     private void showMatchTimeoutDialog() {
-        dismissAllDialog();
-        SmartDialog.with(getActivity(), getString(R.string.match_overtime), getString(R.string.match_failed))
+        dismissQuickMatchDialog();
+
+        SmartDialog.single(getActivity(), getString(R.string.match_overtime))
+                .setTitle(getString(R.string.match_failed))
+                .setCancelableOnTouchOutside(false)
                 .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestMatchVersusOfSocket("");
+                        requestQuickMatch();
                     }
                 })
                 .setNegative(R.string.later_try_again, new SmartDialog.OnClickListener() {
@@ -698,13 +675,14 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                     }
                 })
-                .setCancelableOnTouchOutside(false)
                 .show();
     }
 
     private void showMatchSuccessDialog(final Battle data) {
-        dismissAllDialog();
+        dismissQuickMatchDialog();
+
         if (data == null) return;
+
         String reward = "";
         switch (data.getCoinType()) {
             case Battle.COIN_TYPE_BAO:
@@ -718,11 +696,13 @@ public class BattleListActivity extends BaseActivity implements
                 break;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(getString(R.string.versus_variety_name)).append(" ").append(data.getVarietyName()).append("\n")
-                .append(getString(R.string.versus_time)).append(" ").append(DateUtil.getMinutes(data.getEndline())).append("\n")
-                .append(getString(R.string.versus_reward)).append(" ").append(reward).append("\n")
+        sb.append(getString(R.string.battle_variety_name)).append(" ").append(data.getVarietyName()).append("\n")
+                .append(getString(R.string.battle_time)).append(" ").append(DateUtil.getMinutes(data.getEndline())).append("\n")
+                .append(getString(R.string.battle_reward)).append(" ").append(reward).append("\n")
                 .append(getString(R.string.versus_tip));
-        SmartDialog.with(getActivity(), sb.toString(), getString(R.string.title_match_success))
+
+        SmartDialog.single(getActivity(), sb.toString())
+                .setTitle(getString(R.string.title_match_success))
                 .setMessageMaxLines(10)
                 .setPositive(R.string.join_versus, new SmartDialog.OnClickListener() {
                     @Override
@@ -731,16 +711,29 @@ public class BattleListActivity extends BaseActivity implements
                         requestJoinBattle(data);
                     }
                 })
-                .setNegative(R.string.continue_versus, new SmartDialog.OnClickListener() {
+                .setNegative(R.string.continue_match, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        //传入拒绝的id
-                        requestMatchVersusOfSocket(String.valueOf(data.getId()));
+                        requestContinueMatch(data.getId());
                     }
                 })
                 .setCancelableOnTouchOutside(false)
                 .show();
+    }
+
+    private void requestContinueMatch(int filteredId) {
+        if (mRefusedIds.length() == 0) {
+            mRefusedIds.append(filteredId);
+        } else {
+            mRefusedIds.append(",").append(filteredId);
+        }
+        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CONTINUE, mRefusedIds.toString()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+                showMatchDialog();
+            }
+        });
     }
 
     @Override
@@ -792,21 +785,9 @@ public class BattleListActivity extends BaseActivity implements
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
-    private void dismissAllDialog() {
-        if (mJoinDialog != null) {
-            mJoinDialog.dismiss();
-        }
-        if (mJoinFailureDialog != null) {
-            mJoinFailureDialog.dismiss();
-        }
-        if (mAskMatchDialog != null) {
-            mAskMatchDialog.dismiss();
-        }
-        if (mCancelMatchDialog != null) {
-            mCancelMatchDialog.dismiss();
-        }
-        if (mStartMatchDialogFragment != null) {
-            mStartMatchDialogFragment.dismiss();
+    private void dismissQuickMatchDialog() {
+        if (mQuickMatchDialogFragment != null) {
+            mQuickMatchDialogFragment.dismiss();
         }
     }
 
@@ -869,14 +850,8 @@ public class BattleListActivity extends BaseActivity implements
             TextView mCreateName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
-            @BindView(R.id.progressBar)
-            ProgressBar mProgressBar;
-            @BindView(R.id.createProfit)
-            TextView mCreateProfit;
-            @BindView(R.id.againstProfit)
-            TextView mAgainstProfit;
-            @BindView(R.id.fighterDataArea)
-            RelativeLayout mFighterDataArea;
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.depositAndTime)
             TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
@@ -898,9 +873,9 @@ public class BattleListActivity extends BaseActivity implements
                         .transform(new GlideCircleTransform(context))
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
-                mCreateProfit.setText(String.valueOf(item.getLaunchScore()));
+                mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mAgainstProfit.setText(String.valueOf(item.getAgainstScore()));
+                mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_BAO:
@@ -922,7 +897,7 @@ public class BattleListActivity extends BaseActivity implements
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        showScoreProgress(0, 0, true);
+                        mProgress.showScoreProgress(0, 0, true);
                         break;
                     case Battle.GAME_STATUS_STARTED:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
@@ -934,7 +909,7 @@ public class BattleListActivity extends BaseActivity implements
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case Battle.GAME_STATUS_END:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
@@ -954,55 +929,12 @@ public class BattleListActivity extends BaseActivity implements
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
 
                 }
             }
-
-            private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
-                String myFlag = "";
-                String fighterFlag = "";
-                if (isInviting) {
-                    mProgressBar.setProgress(0);
-                    mProgressBar.setSecondaryProgress(0);
-                    mCreateProfit.setText(null);
-                    mAgainstProfit.setText(null);
-                } else {
-                    //正正
-                    if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
-                        int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
-                        mProgressBar.setProgress(progress);
-                    }
-                    //正负
-                    if (createProfit >= 0 && fighterProfit < 0) {
-                        mProgressBar.setProgress(100);
-                    }
-                    //负正
-                    if (createProfit < 0 && fighterProfit >= 0) {
-                        mProgressBar.setProgress(0);
-                    }
-                    //负负
-                    if (createProfit < 0 && fighterProfit < 0) {
-                        int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
-                        mProgressBar.setProgress(100 - progress);
-                    }
-                    //都为0
-                    if (createProfit == 0 && fighterProfit == 0) {
-                        mProgressBar.setProgress(50);
-                    }
-                    mProgressBar.setSecondaryProgress(100);
-                    if (createProfit > 0) {
-                        myFlag = "+";
-                    }
-
-                    if (fighterProfit > 0) {
-                        fighterFlag = "+";
-                    }
-                    mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-                    mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
-                }
-            }
         }
+
     }
 }
