@@ -158,7 +158,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 		mShieldBroadcastReceiver = new ShieldBroadcastReceiver();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(UserDataActivity.SHIELD);
-		intentFilter.addAction(ACTION_TOKEN_EXPIRED);
+		intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
         mLocalBroadcastManager.registerReceiver(mShieldBroadcastReceiver, intentFilter);
         setKeyboardHelper();
         mListView.addHeaderView(mheader);
