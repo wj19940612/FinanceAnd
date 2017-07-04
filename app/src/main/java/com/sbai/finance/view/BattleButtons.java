@@ -61,9 +61,6 @@ public class BattleButtons extends LinearLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_battle_buttons, this, true);
         ButterKnife.bind(this);
 
-
-
-
         mInvite.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,4 +97,24 @@ public class BattleButtons extends LinearLayout {
         mOnViewClickListener = onViewClickListener;
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        resetLayoutParams();
+    }
+
+    private void resetLayoutParams() {
+        LinearLayout.LayoutParams params = (LayoutParams) mInvite.getLayoutParams();
+        params.width = mInvite.getMeasuredHeight() * 640 / 176;
+        mInvite.setLayoutParams(params);
+
+        mMatch.setLayoutParams(params);
+
+        mCancel.setLayoutParams(params);
+    }
 }
