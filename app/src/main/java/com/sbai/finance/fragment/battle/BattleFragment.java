@@ -329,7 +329,8 @@ public class BattleFragment extends BaseFragment {
         if (currentOrder != null) {
             mCurrentOrder = currentOrder;
             setBattleTradeState(STATE_CLOSE_POSITION);
-            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), 0);
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
+                    FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), 0);
         } else {
             setBattleTradeState(STATE_TRADE);
         }
@@ -410,7 +411,7 @@ public class BattleFragment extends BaseFragment {
     private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
         @Override
         public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
+            if (data.getCode() == Netty.REQ_QUOTA && data.hasData() && isVisible()) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
@@ -476,7 +477,8 @@ public class BattleFragment extends BaseFragment {
                 myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
             }
             myProfit = myProfit * mVariety.getEachPointMoney();
-            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), myProfit);
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection()
+                    , FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), myProfit);
         }
         //房主的累计收益
         if (mCreatorOrder != null) {
