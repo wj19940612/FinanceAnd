@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.net.API;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomToast;
 import com.umeng.socialize.ShareAction;
@@ -36,6 +37,8 @@ import butterknife.Unbinder;
 
 public class ShareDialogFragment extends DialogFragment {
 
+    private static final String SHARE_URL = API.getHost() + "/mobi/login/share?code=";
+
     @BindView(R.id.weChatFriend)
     TextView mWeChatFriend;
     @BindView(R.id.weChatFriendCircle)
@@ -49,7 +52,8 @@ public class ShareDialogFragment extends DialogFragment {
     private Activity mActivity;
 
     private String mShareTitle;  //分享标题
-    private String mShareUrl;   //链接地址
+    private String mShareUrl;  //链接地址
+    private String mBatchCode;
     private String mShareDescription; //分享描述
 
     private boolean isFutureGame = false;//默认分享不是游戏
@@ -64,11 +68,12 @@ public class ShareDialogFragment extends DialogFragment {
         return this;
     }
 
-    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareDescription,String shareUrl) {
+    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareDescription, String batchCode) {
         mActivity = activity;
         mShareTitle = shareTitle;
         mShareDescription = shareDescription;
-        mShareUrl = shareUrl;
+        mBatchCode = batchCode;
+        mShareUrl = SHARE_URL + batchCode;
         return this;
     }
 
@@ -103,6 +108,7 @@ public class ShareDialogFragment extends DialogFragment {
         switch (view.getId()) {
             case R.id.weChatFriend:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
+                    mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN);
                 } else {
                     ToastUtil.curt(R.string.you_not_install_weixin);
@@ -111,6 +117,7 @@ public class ShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weChatFriendCircle:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE)) {
+                    mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                 } else {
                     ToastUtil.curt(R.string.you_not_install_weixin);
@@ -119,6 +126,7 @@ public class ShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weibo:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.SINA)) {
+                    mShareUrl += "&userFrom=" + "weibo";
                     shareToPlatform(SHARE_MEDIA.SINA);
                 } else {
                     ToastUtil.curt(R.string.you_not_install_weibo);
@@ -154,10 +162,10 @@ public class ShareDialogFragment extends DialogFragment {
         } else {
             String text = mShareTitle + mShareUrl;
             UMImage image = null;
-            if (isFutureGame){
+            if (isFutureGame) {
                 image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
                 image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
-            }else {
+            } else {
                 image = new UMImage(mActivity, R.drawable.ic_share_logo);
                 image.setThumb(new UMImage(mActivity, R.drawable.ic_share_logo));
             }

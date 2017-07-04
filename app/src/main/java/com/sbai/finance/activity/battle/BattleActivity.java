@@ -432,14 +432,14 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void showInviteDialog() {
         if (mShareDialogFragment == null) {
-            String shareTitle = getString(R.string.invite_you_join_future_battle
-                    , LocalUser.getUser().getUserInfo().getUserName());
+            String shareTitle = getString(R.string.invite_you_join_future_battle,
+                    LocalUser.getUser().getUserInfo().getUserName());
             String shareDescribe = getString(R.string.future_battle_desc);
             String url = "";
             mShareDialogFragment = ShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
-                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, url);
+                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, mBattle.getBatchCode());
         }
         mShareDialogFragment.show(getSupportFragmentManager());
     }
