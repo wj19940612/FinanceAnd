@@ -95,6 +95,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
         if (BuildConfig.DEBUG) ToastUtil.show(battleWSPush.getContent().getType());
 
+        if (mBattleRoom == null) return;  //排除对战详情收到推送
+
         switch (battleWSPush.getContent().getType()) {
             case PushCode.BATTLE_JOINED:
                 //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
@@ -167,7 +169,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         } else {
             mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
             initBattlePage();
-            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         }
     }
 
@@ -249,7 +250,34 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
-                    .initWithModel(mBattle);
+                    .initWithModel(mBattle)
+                    .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
+                        @Override
+                        public void onCreateAvatarClick() {
+                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
+                            if (LocalUser.getUser().isLogin()) {
+                                Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                        .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
+                                        .execute();
+                            } else {
+                                Launcher.with(getActivity(), LoginActivity.class).execute();
+                            }
+                        }
+
+                        @Override
+                        public void onAgainstAvatarClick() {
+                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
+                            if (LocalUser.getUser().isLogin()) {
+                                if (mBattle.getAgainstUser() != 0) {
+                                    Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                            .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
+                                            .execute();
+                                }
+                            } else {
+                                Launcher.with(getActivity(), LoginActivity.class).execute();
+                            }
+                        }
+                    });
 
             //分两种状态  1.发起匹配  2.对战中
             if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
