@@ -56,7 +56,7 @@ public class App extends Application {
     }
 
     static {
-        // TODO: 2017/5/16 帐号还未申请 所以还没配置 
+        // 注意：以下全为正式的 appId & secret
         PlatformConfig.setWeixin("wxf53be05ac695d994", "aab33a762834f9f0722190a67aefcef0");
         PlatformConfig.setSinaWeibo("522354160", "af7a654293ada586a62534ac9fd03845", "");
     }
