@@ -80,17 +80,18 @@ android {
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
-            buildConfigField('String', 'HOST', '\"http://var.esongbai.xyz\"')
-//            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
-            buildConfigField('boolean', 'isProd', 'false')
+//            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
+            buildConfigField('String', 'HOST', '\"var.esongbai.xyz\"')
+            buildConfigField('boolean', 'IS_PROD', 'false')
         }
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-            versionCode 39
-            versionName "0.4.2"
-            buildConfigField('String', 'HOST', '\"http://fanli.esongbai.xyz\"')
-            buildConfigField('boolean', 'isProd', 'false')
+            versionCode 44
+            versionName "0.5.4"
+
+            buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
+            buildConfigField('boolean', 'IS_PROD', 'false')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
@@ -102,10 +103,10 @@ android {
         }
 
         prod {
-            versionCode 21
-            versionName "1.0.1"
+            versionCode 22
+            versionName "1.1"
             buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
-            buildConfigField('boolean', 'isProd', 'true')
+            buildConfigField('boolean', 'IS_PROD', 'true')
 
             manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
@@ -146,6 +147,8 @@ dependencies {
     compile 'com.getui:sdk:2.10.2.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
+    compile "org.java-websocket:Java-WebSocket:1.3.4"
+
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }

@@ -30,6 +30,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 
@@ -114,15 +115,20 @@ public class ExChangeProductFragment extends BaseFragment {
             @Override
             public void exchange(CornucopiaProductModel item) {
                 if (item != null) {
+                    if (item.isVcoin()) {
+                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_BUY_INGOT);
+                    } else {
+                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_INTEGRAL);
+                    }
                     if (mUserFundInfoModel != null) {
                         if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney()
                                 : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
-                            showExchangePassDialog(item);
+                            showExchangeConfirmDialog(item);
                         } else {
                             showExchangeFailDialog(item);
                         }
                     } else {
-                        showExchangePassDialog(item);
+                        showExchangeConfirmDialog(item);
                     }
                 }
             }
@@ -134,7 +140,7 @@ public class ExChangeProductFragment extends BaseFragment {
         mListView.smoothScrollToPosition(0);
     }
 
-    private void showExchangePassDialog(final CornucopiaProductModel item) {
+    private void showExchangeConfirmDialog(final CornucopiaProductModel item) {
         String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, FinanceUtil.formatWithScale(item.getFromRealMoney()), StrFormatter.getFormIngot(item.getToRealMoney())) :
                 getString(R.string.confirm_use_coin_buy_integrate, StrFormatter.getFormIngot(item.getFromRealMoney()), StrFormatter.getFormIntegrate(item.getToRealMoney()));
         String title = item.isVcoin() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
@@ -142,23 +148,36 @@ public class ExChangeProductFragment extends BaseFragment {
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
+                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_POPUP_WINDOW_CONFIRM);
                         dialog.dismiss();
-                        Client.getUserHasPassWord()
-                                .setTag(TAG)
-                                .setIndeterminate(ExChangeProductFragment.this)
-                                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                                    @Override
-                                    protected void onRespSuccessData(Boolean data) {
-                                        if (!data) {
-                                            showAddSafetyPassDialog();
-                                        } else {
-                                            showInputSafetyPassDialog(item);
-                                        }
-                                    }
-                                })
-                                .fire();
+                        requestUserHasSafetyPass(item);
                     }
-                }).show();
+                })
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_POPUP_WINDOW_CANCEL);
+                    }
+                })
+                .show();
+    }
+
+    private void requestUserHasSafetyPass(final CornucopiaProductModel item) {
+        Client.getUserHasPassWord()
+                .setTag(TAG)
+                .setIndeterminate(ExChangeProductFragment.this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        if (!data) {
+                            showAddSafetyPassDialog();
+                        } else {
+                            showInputSafetyPassDialog(item);
+                        }
+                    }
+                })
+                .fire();
     }
 
     private void showAddSafetyPassDialog() {
@@ -238,7 +257,7 @@ public class ExChangeProductFragment extends BaseFragment {
                             dialog.dismiss();
                         }
                     })
-                    .setNegativeVisable(View.GONE)
+                    .setNegativeVisible(View.GONE)
                     .show();
         }
     }
@@ -275,7 +294,7 @@ public class ExChangeProductFragment extends BaseFragment {
                         stopRefreshAnimation();
                     }
                 })
-                .fireSync();
+                .fireFree();
 
     }
 

@@ -158,14 +158,14 @@ public class TopicActivity extends BaseActivity {
 //		}
 //		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 //		Client.getStockMarketData(stringBuilder.toString())
-//				.setCallback(new StockCallback<StockResp, List<StockData>>() {
+//				.setClient(new StockCallback<StockResp, List<StockData>>() {
 //					@Override
 //					public void onDataMsg(List<StockData> result, StockResp.Msg msg) {
 //						if (result!=null){
 //							mTopicListAdapter.addStockData(result);
 //						}
 //					}
-//				}).fireSync();
+//				}).fireFree();
 //	}
 
     /**
@@ -189,7 +189,7 @@ public class TopicActivity extends BaseActivity {
                             mTopicListAdapter.addStockData(result);
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestFutureMarketData(List<Variety> data) {
@@ -206,7 +206,7 @@ public class TopicActivity extends BaseActivity {
                         mTopicListAdapter.addFutureData(data);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void updateListViewVisibleItem(FutureData data) {

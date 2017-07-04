@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,16 +22,20 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -39,8 +44,12 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
+import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CollapsedTextLayout;
+import com.sbai.finance.view.CollapsedTextView;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.ApiCallback;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,11 +61,13 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sbai.finance.activity.battle.BattleListActivity.CANCEL_BATTLE;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
-	private static final int TYPE_BORROW_MONEY = 1;
 	private static final int TYPE_OPINION = 0;
+	private static final int TYPE_BORROW_MONEY = 1;
+	private static final int TYPE_FUTURES_BATTLE = 2;
 
 	private List<EconomicCircle> mEconomicCircleList;
 	private EconomicCircleAdapter mEconomicCircleAdapter;
@@ -78,6 +89,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	Unbinder unbinder;
 
 	private OnNoReadNewsListener mOnNoReadNewsListener;
+	private Battle mBattle;
 
 	@Override
 	public void onAttach(Context context) {
@@ -101,6 +113,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 //		addTopPaddingWithStatusBar(mTitleBar);
 		mEconomicCircleList = new ArrayList<>();
 		mSet = new HashSet<>();
+		mBattle = new Battle();
 		mEconomicCircleAdapter = new EconomicCircleAdapter(getContext(), mEconomicCircleList);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mEconomicCircleAdapter);
@@ -191,18 +204,197 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		EconomicCircle item = (EconomicCircle) parent.getItemAtPosition(position);
+		setBattleData(item);
 		if (item != null) {
-			if (item.getType() == 2) {
-				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
-				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
-				startActivityForResult(intent, REQ_CODE_USERDATA);
-
-			} else {
+			if (item.getType() == 1) {
 				Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
+			} else if (item.getType() == 2) {
+				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
+				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
+				startActivityForResult(intent, REQ_CODE_USERDATA);
+			} else if (item.getType() == 3) {
+				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
+					SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
+							.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+								@Override
+								public void onClick(Dialog dialog) {
+									dialog.dismiss();
+								}
+							})
+							.setTitle(getString(R.string.join_versus_failure))
+							.setNegativeVisible(View.GONE)
+							.show();
+				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
+					Launcher.with(getActivity(), BattleActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mBattle)
+							.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+							.execute();
+				} else if (LocalUser.getUser().isLogin()) {
+					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
+							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
+						showJoinBattleDialog(mBattle);
+					} else {
+						requestLastBattleInfo(mBattle);
+					}
+				} else {
+					Launcher.with(getActivity(), LoginActivity.class).execute();
+				}
 			}
 		}
+	}
+
+	private void requestLastBattleInfo(final Battle item) {
+		Client.getBattleInfo(item.getId(), item.getBatchCode()).setTag(TAG)
+				.setCallback(new Callback2D<Resp<Battle>, Battle>() {
+					@Override
+					protected void onRespSuccessData(Battle data) {
+
+						int pageType;
+						if (data.getGameStatus() == Battle.GAME_STATUS_END) {
+							pageType = BattleActivity.PAGE_TYPE_RECORD;
+						} else {
+							pageType = BattleActivity.PAGE_TYPE_VERSUS;
+						}
+
+						Intent intent = new Intent(getContext(), BattleActivity.class);
+						intent.putExtra(Launcher.EX_PAYLOAD, data);
+						intent.putExtra(BattleActivity.PAGE_TYPE, pageType);
+						startActivityForResult(intent, CANCEL_BATTLE);
+
+					}
+				}).fire();
+	}
+
+	private void setBattleData(EconomicCircle item) {
+		mBattle.setAgainstFrom(item.getAgainstFrom());
+		mBattle.setAgainstPraise(item.getAgainstPraise());
+		mBattle.setAgainstScore(item.getAgainstScore());
+		mBattle.setAgainstUser(item.getAgainstUser());
+		mBattle.setAgainstUserName(item.getAgainstUserName());
+		mBattle.setAgainstUserPortrait(item.getAgainstUserPortrait());
+		mBattle.setBatchCode(item.getBatchCode());
+		mBattle.setBattleId(item.getDataId());
+		mBattle.setCoinType(item.getCoinType());
+		mBattle.setCreateTime(item.getCreateTime());
+		mBattle.setEndline(item.getEndline());
+		mBattle.setEndTime(item.getEndTime());
+		mBattle.setGameStatus(item.getGameStatus());
+		mBattle.setLaunchUser(item.getLaunchUser());
+		mBattle.setLaunchUserName(item.getUserName());
+		mBattle.setLaunchPraise(item.getLaunchPraise());
+		mBattle.setLaunchUserPortrait(item.getUserPortrait());
+		mBattle.setLaunchScore(item.getLaunchScore());
+		mBattle.setReward(item.getReward());
+		mBattle.setStartTime(item.getStartTime());
+		mBattle.setVarietyId(item.getVarietyId());
+		mBattle.setVarietyName(item.getVarietyName());
+		mBattle.setVarietyType(item.getVarietyType());
+		mBattle.setWinResult(item.getWinResult());
+		mBattle.setId(item.getDataId());
+	}
+
+	private void showJoinBattleDialog(final Battle item) {
+		String reward = "";
+		switch (item.getCoinType()) {
+			case EconomicCircle.COIN_TYPE_INGOT:
+				reward = item.getReward() + getActivity().getString(R.string.ingot);
+				break;
+			case EconomicCircle.COIN_TYPE_CASH:
+				reward = item.getReward() + getActivity().getString(R.string.cash);
+				break;
+			case EconomicCircle.COIN_TYPE_INTEGRAL:
+				reward = item.getReward() + getActivity().getString(R.string.integral);
+				break;
+		}
+
+		SmartDialog.single(getActivity(), getString(R.string.join_versus_tip, reward))
+				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+						requestJoinBattle(item);
+					}
+				})
+				.setTitle(getString(R.string.join_versus_title))
+				.setNegative(R.string.cancel)
+				.show();
+
+	}
+
+	private void requestJoinBattle(final Battle data) {
+		Client.joinBattle(data.getId(), Battle.SOURCE_COTERIE).setTag(TAG)
+				.setCallback(new ApiCallback<Resp<Battle>>() {
+					@Override
+					public void onSuccess(Resp<Battle> resp) {
+						if (resp.isSuccess()) {
+							Battle battle = resp.getData();
+							if (battle != null) {
+								Launcher.with(getActivity(), BattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD, battle)
+										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+										.execute();
+							}
+						} else {
+							showJoinVersusFailureDialog(resp);
+						}
+					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+
+					}
+				}).fireFree();
+	}
+
+	private void showJoinVersusFailureDialog(final Resp<Battle> resp) {
+		final int code = resp.getCode();
+		int positiveMsg;
+		String msg = null;
+		SmartDialog smartDialog = SmartDialog.single(getActivity(), msg);
+		if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
+			msg = getString(R.string.battle_joined_or_created);
+			positiveMsg = R.string.go_battle;
+		} else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
+			msg = getString(R.string.join_battle_balance_not_enough);
+			positiveMsg = R.string.go_recharge;
+		} else {
+			msg = getString(R.string.invite_invalid);
+			positiveMsg = R.string.ok;
+			smartDialog.setNegativeVisible(View.GONE);
+		}
+		smartDialog.setMessage(msg)
+				.setPositive(positiveMsg, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+						if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
+							requestCurrentBattle();
+						} else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
+							Launcher.with(getActivity(), RechargeActivity.class).execute();
+						}
+					}
+				})
+				.setTitle(getString(R.string.join_versus_failure))
+				.setNegative(R.string.cancel)
+				.show();
+
+	}
+
+	private void requestCurrentBattle() {
+		Client.getCurrentBattle().setTag(TAG)
+				.setCallback(new Callback<Resp<Battle>>() {
+					@Override
+					protected void onRespSuccess(Resp<Battle> resp) {
+						if (resp.getData() != null) {
+							Launcher.with(getActivity(), BattleActivity.class)
+									.putExtra(Launcher.EX_PAYLOAD, resp.getData())
+									.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+									.execute();
+						}
+					}
+				}).fire();
 	}
 
 	private void requestNewMessageCount() {
@@ -279,6 +471,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					protected void onRespSuccessData(List<EconomicCircle> economicCircleList) {
 						mEconomicCircleList = economicCircleList;
 						updateEconomicCircleList(mEconomicCircleList);
+
 					}
 
 					@Override
@@ -370,6 +563,25 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				}
 			}
 		}
+
+		if (requestCode == CANCEL_BATTLE && resultCode == RESULT_OK) {
+			if (data != null) {
+				int gameStatus = data.getIntExtra(Launcher.EX_PAYLOAD, -1);
+				int id = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				if (id != -1 && gameStatus == Battle.GAME_STATUS_CANCELED) {
+					if (mEconomicCircleAdapter != null) {
+						for (int i = 0; i < mEconomicCircleAdapter.getCount(); i++) {
+							EconomicCircle item = (EconomicCircle) mEconomicCircleAdapter.getItem(i);
+							if (item != null && item.getDataId() == id) {
+								item.setGameStatus(EconomicCircle.GAME_STATUS_CANCELED);
+								mEconomicCircleAdapter.notifyDataSetChanged();
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -431,15 +643,18 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 		@Override
 		public int getViewTypeCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public int getItemViewType(int position) {
 			if (mEconomicCircleList.get(position).getType() == 2) {
 				return TYPE_OPINION;
+			} else if (mEconomicCircleList.get(position).getType() == 1) {
+				return TYPE_BORROW_MONEY;
+			} else {
+				return TYPE_FUTURES_BATTLE;
 			}
-			return TYPE_BORROW_MONEY;
 		}
 
 		@NonNull
@@ -447,6 +662,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		public View getView(int position, View convertView, ViewGroup parent) {
 			OpinionViewHolder opinionViewHolder = null;
 			BorrowMoneyViewHolder borrowMoneyViewHolder = null;
+			FuturesBattleViewHolder futuresBattleViewHolder = null;
 			int type = getItemViewType(position);
 			if (convertView == null) {
 				switch (type) {
@@ -461,6 +677,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						borrowMoneyViewHolder = new BorrowMoneyViewHolder(convertView);
 						convertView.setTag(R.id.tag_borrow_money, borrowMoneyViewHolder);
 						break;
+
+					case TYPE_FUTURES_BATTLE:
+						convertView = LayoutInflater.from(mContext).inflate(R.layout.row_futures_battle, null);
+						futuresBattleViewHolder = new FuturesBattleViewHolder(convertView);
+						convertView.setTag(R.id.tag_futures_battle, futuresBattleViewHolder);
+						break;
 				}
 			} else {
 				switch (type) {
@@ -469,6 +691,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 					case TYPE_BORROW_MONEY:
 						borrowMoneyViewHolder = (BorrowMoneyViewHolder) convertView.getTag(R.id.tag_borrow_money);
+						break;
+					case TYPE_FUTURES_BATTLE:
+						futuresBattleViewHolder = (FuturesBattleViewHolder) convertView.getTag(R.id.tag_futures_battle);
 						break;
 				}
 			}
@@ -479,6 +704,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					break;
 				case TYPE_BORROW_MONEY:
 					borrowMoneyViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
+					break;
+				case TYPE_FUTURES_BATTLE:
+					futuresBattleViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
 					break;
 			}
 
@@ -653,6 +881,134 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					mBorrowingImg.setVisibility(View.GONE);
 					mCircleMoreIcon.setVisibility(View.GONE);
 				}
+			}
+		}
+
+		static class FuturesBattleViewHolder {
+			@BindView(R.id.avatar)
+			ImageView mAvatar;
+			@BindView(R.id.userName)
+			TextView mUserName;
+			@BindView(R.id.isAttention)
+			TextView mIsAttention;
+			@BindView(R.id.hotArea)
+			RelativeLayout mHotArea;
+			@BindView(R.id.content)
+			CollapsedTextView mContent;
+			@BindView(R.id.varietyName)
+			TextView mVarietyName;
+			@BindView(R.id.progressBar)
+			BattleProgress mProgressBar;
+			@BindView(R.id.versus)
+			ImageView mVersus;
+			@BindView(R.id.bounty)
+			TextView mBounty;
+			@BindView(R.id.status)
+			TextView mStatus;
+			@BindView(R.id.againstUserAvatar)
+			ImageView mAgainstUserAvatar;
+			@BindView(R.id.againstUserName)
+			TextView mAgainstUserName;
+			@BindView(R.id.publishTime)
+			TextView mPublishTime;
+			@BindView(R.id.location)
+			TextView mLocation;
+
+			FuturesBattleViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
+
+			public void bindingData(Context context, final EconomicCircle item, final Callback callback, int position) {
+				if (item == null) return;
+
+				Glide.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mAvatar);
+
+				mHotArea.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.HotAreaClick(item);
+						}
+					}
+				});
+
+				mUserName.setText(item.getUserName());
+
+				if (item.getIsAttention() == 2) {
+					mIsAttention.setText(R.string.is_attention);
+				} else {
+					mIsAttention.setText("");
+				}
+
+				mVarietyName.setText(item.getVarietyName());
+				mContent.setShowText(item.getContent().trim());
+				mProgressBar.setLeftText(String.valueOf(item.getLaunchScore()));
+				mProgressBar.setRightText(String.valueOf(item.getAgainstScore()));
+
+				String reward = "";
+				switch (item.getCoinType()) {
+					case EconomicCircle.COIN_TYPE_CASH:
+						reward = item.getReward() + context.getString(R.string.cash);
+						break;
+					case EconomicCircle.COIN_TYPE_INGOT:
+						reward = item.getReward() + context.getString(R.string.ingot);
+						break;
+					case EconomicCircle.COIN_TYPE_INTEGRAL:
+						reward = item.getReward() + context.getString(R.string.integral);
+						break;
+				}
+
+				mBounty.setText(reward);
+				switch (item.getGameStatus()) {
+					//取消
+					case EconomicCircle.GAME_STATUS_CANCELED:
+						mStatus.setText(context.getString(R.string.versus_cancel));
+						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
+						mAgainstUserName.setText(context.getString(R.string.join_versus));
+						mVersus.setVisibility(View.VISIBLE);
+						mProgressBar.showScoreProgress(0, 0, true);
+						break;
+
+					//发起对战
+					case EconomicCircle.GAME_STATUS_CREATED:
+						mStatus.setText(DateUtil.getMinutes(item.getEndline()));
+						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
+						mAgainstUserName.setText(context.getString(R.string.join_versus));
+						mVersus.setVisibility(View.VISIBLE);
+						mProgressBar.showScoreProgress(0, 0, true);
+						break;
+
+					//对战中
+					case EconomicCircle.GAME_STATUS_STARTED:
+						mStatus.setText(context.getString(R.string.versusing));
+						Glide.with(context)
+								.load(item.getAgainstUserPortrait())
+								.placeholder(R.drawable.ic_default_avatar_big)
+								.transform(new GlideCircleTransform(context))
+								.into(mAgainstUserAvatar);
+						mAgainstUserName.setText(item.getAgainstUserName());
+						mVersus.setVisibility(View.GONE);
+						mProgressBar.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+						break;
+
+					//已结束
+					case EconomicCircle.GAME_STATUS_END:
+						mStatus.setText(context.getString(R.string.versus_end));
+						Glide.with(context)
+								.load(item.getAgainstUserPortrait())
+								.placeholder(R.drawable.ic_default_avatar)
+								.transform(new GlideCircleTransform(context))
+								.into(mAgainstUserAvatar);
+						mAgainstUserName.setText(item.getAgainstUserName());
+						mVersus.setVisibility(View.GONE);
+						mProgressBar.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+						break;
+				}
+
+				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
 			}
 		}
 	}

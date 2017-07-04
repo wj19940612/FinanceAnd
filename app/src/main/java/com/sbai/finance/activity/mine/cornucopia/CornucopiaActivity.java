@@ -23,9 +23,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.httplib.CookieManger;
@@ -105,8 +106,8 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
         if (userFundInfoModel != null) {
-            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, StrFormatter.getFormIngot(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
-            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, StrFormatter.getFormIngot(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }
 
@@ -126,19 +127,22 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                     }
 
                 })
-                .fireSync();
+                .fireFree();
     }
 
     @OnClick({R.id.coin, R.id.integrate, R.id.exchange_rule})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.coin:
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INGOT_DETAILS);
                 Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_COIN).execute();
                 break;
             case R.id.integrate:
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INTEGRAL_DETAILS);
                 Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INTEGRATE).execute();
                 break;
             case R.id.exchange_rule:
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_RULES);
                 openExchangeRulePage();
                 break;
         }

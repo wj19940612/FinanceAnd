@@ -111,7 +111,7 @@ public class EventDetailActivity extends BaseActivity {
                             initWebView();
                         }
                     })
-                    .fireSync();
+                    .fireFree();
         }
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override

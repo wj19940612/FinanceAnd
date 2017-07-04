@@ -150,7 +150,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                         requestStockMarketData(data);
                         startScheduleJob(5 * 1000);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestStockMarketData(List<Variety> data) {
@@ -166,7 +166,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     protected void onRespSuccessData(List<StockData> result) {
                         mStockListAdapter.addStockData(result);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestStockIndexMarketData(List<Variety> data) {
@@ -182,7 +182,7 @@ public class StockListActivity extends BaseActivity implements SwipeRefreshLayou
                     protected void onRespSuccessData(List<StockData> result) {
                         updateStockIndexMarketData(result);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestStockIndexData() {

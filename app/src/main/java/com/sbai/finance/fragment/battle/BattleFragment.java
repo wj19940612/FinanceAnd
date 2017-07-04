@@ -1,0 +1,622 @@
+package com.sbai.finance.fragment.battle;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.sbai.chart.KlineChart;
+import com.sbai.chart.KlineView;
+import com.sbai.chart.TrendView;
+import com.sbai.chart.domain.KlineViewData;
+import com.sbai.chart.domain.TrendViewData;
+import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
+import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.TradeOrder;
+import com.sbai.finance.model.battle.TradeOrderClosePosition;
+import com.sbai.finance.model.battle.TradeRecord;
+import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.netty.Netty;
+import com.sbai.finance.netty.NettyHandler;
+import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.view.BattleButtons;
+import com.sbai.finance.view.BattleTradeView;
+import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.slidingTab.HackTabLayout;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
+import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
+import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
+
+public class BattleFragment extends BaseFragment {
+
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+
+    @BindView(R.id.lastPrice)
+    TextView mLastPrice;
+    @BindView(R.id.priceChange)
+    TextView mPriceChange;
+    @BindView(R.id.todayOpen)
+    TextView mTodayOpen;
+    @BindView(R.id.preClose)
+    TextView mPreClose;
+    @BindView(R.id.highest)
+    TextView mHighest;
+    @BindView(R.id.lowest)
+    TextView mLowest;
+
+    @BindView(R.id.tabLayout)
+    HackTabLayout mTabLayout;
+    @BindView(R.id.trendView)
+    TrendView mTrendView;
+    @BindView(R.id.klineView)
+    KlineView mKlineView;
+
+    @BindView(R.id.battleButtons)
+    BattleButtons mBattleButtons;
+    @BindView(R.id.battleTradeView)
+    BattleTradeView mBattleTradeView;
+
+    Unbinder unbinder;
+
+    private Battle mBattle;
+    private Variety mVariety;
+    private FutureData mFutureData;
+    private boolean mIsObserver;
+    private int mGameStatus;
+
+    private TradeOrder mCurrentOrder;
+    private TradeOrder mCreatorOrder;
+    private TradeOrder mAgainstOrder;
+
+    private int mCount = 600;
+
+    public static BattleFragment newInstance(Battle battle) {
+        BattleFragment battleFragment = new BattleFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("battle", battle);
+        battleFragment.setArguments(bundle);
+        return battleFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mBattle = (Battle) getArguments().get("battle");
+            mIsObserver = checkUserIsObserver();
+            mGameStatus = mBattle.getGameStatus();
+        }
+    }
+
+    private boolean checkUserIsObserver() {
+        if (LocalUser.getUser().isLogin()) {
+            int userId = LocalUser.getUser().getUserInfo().getId();
+            if (mBattle.getLaunchUser() != userId
+                && mBattle.getAgainstUser() != userId) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_battle, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initTabLayout();
+
+        if (mIsObserver) {
+            showObserverView();
+            requestOrderHistory();
+            requestCurrentOrder();
+        } else {
+            if (mGameStatus == GAME_STATUS_CREATED) {
+                showBattleButtons();
+                updateRoomExistsTime();
+            } else if (mGameStatus == GAME_STATUS_STARTED) {
+                showBattleTradeView();
+                requestOrderHistory();
+                requestCurrentOrder();
+            }
+        }
+
+        initBattleViews();
+
+        requestVarietyData();
+    }
+
+    private void showObserverView() {
+        showBattleTradeView();
+        mBattleTradeView.setObserver(true);
+    }
+
+    public void showBattleButtons() {
+        //显示邀请等三个按钮 只针对游戏创建者
+        mBattleButtons.setVisibility(View.VISIBLE);
+        mBattleTradeView.setVisibility(View.GONE);
+    }
+
+    public void showBattleTradeView() {
+        //显示交易视图 区分游客和对战者 默认对战者
+        mBattleButtons.setVisibility(View.GONE);
+        mBattleTradeView.setVisibility(View.VISIBLE);
+    }
+
+    private void initTabLayout() {
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.day_k_line));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.sixty_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.thirty_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.fifteen_min_k));
+        mTabLayout.addOnTabSelectedListener(mOnTabSelectedListener);
+    }
+
+    private void initChartViews() {
+        TrendView.Settings settings = new TrendView.Settings();
+        settings.setBaseLines(5);
+        settings.setNumberScale(mVariety.getPriceScale());
+        settings.setOpenMarketTimes(mVariety.getOpenMarketTime());
+        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
+        settings.setCalculateXAxisFromOpenMarketTime(true);
+        settings.setGameMode(true);
+        mTrendView.setSettings(settings);
+
+        KlineChart.Settings settings2 = new KlineChart.Settings();
+        settings2.setBaseLines(5);
+        settings2.setNumberScale(mVariety.getPriceScale());
+        settings2.setXAxis(40);
+        settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        settings2.setGameMode(true);
+        mKlineView.setSettings(settings2);
+        mKlineView.setOnAchieveTheLastListener(null);
+    }
+
+    private void initBattleViews() {
+        mBattleButtons.setOnViewClickListener(new BattleButtons.OnViewClickListener() {
+            @Override
+            public void onInviteButtonClick() {
+                ((BattleActivity) getActivity()).onInviteButtonClick();
+            }
+
+            @Override
+            public void onMatchButtonClick() {
+                ((BattleActivity) getActivity()).onMatchButtonClick();
+            }
+
+            @Override
+            public void onCancelButtonClick() {
+                ((BattleActivity) getActivity()).onCancelButtonClick();
+            }
+        });
+        mBattleTradeView.setOnViewClickListener(new BattleTradeView.OnViewClickListener() {
+            @Override
+            public void onLongPurchaseButtonClick() {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_BULLISH);
+                requestCreateOrder(1);
+            }
+
+            @Override
+            public void onShortPurchaseButtonClick() {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_BEARISH);
+                requestCreateOrder(0);
+            }
+
+            @Override
+            public void onClosePositionButtonClick() {
+                umengEventCount(UmengCountEventIdUtils.BATTLE_CLOSE_POSITION);
+                requestClosePosition(mCurrentOrder.getId());
+            }
+        });
+        scrollToTop(mTitleBar, mBattleTradeView.getListView());
+    }
+
+    private void requestCreateOrder(int direction) {
+        Client.createOrder(mBattle.getId(), direction)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<TradeOrder>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TradeOrder> resp) {
+                        refreshTradeView();
+                    }
+                })
+                .fire();
+    }
+
+    private void requestClosePosition(int orderId) {
+        Client.closePosition(mBattle.getId(), orderId)
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                        refreshTradeView();
+                    }
+                })
+                .fire();
+    }
+
+    private void requestVarietyData() {
+        Client.requsetVarietyPrice(mBattle.getVarietyId()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                    @Override
+                    protected void onRespSuccessData(Variety variety) {
+                        mVariety = variety;
+                        initChartViews();
+                        showTrendView();
+                        startRefresh();
+                    }
+                }).fire();
+    }
+
+    public void requestOrderHistory() {
+        Client.getOrderHistory(mBattle.getId())
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TradeRecord> data) {
+                        updateTradeHistory(data);
+                    }
+                }).fire();
+    }
+
+    private void requestCurrentOrder() {
+        Client.requestCurrentOrder(mBattle.getId())
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TradeOrder>>, List<TradeOrder>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TradeOrder> data) {
+                        updateCurrentOrder(data);
+                    }
+                }).fire();
+    }
+
+    private void updateTradeHistory(List<TradeRecord> resp) {
+        mBattleTradeView.addTradeData(resp, mBattle.getLaunchUser(), mBattle.getAgainstUser());
+    }
+
+    private void updateCurrentOrder(List<TradeOrder> data) {
+        TradeOrder currentOrder = null;
+        TradeOrder creatorOrder = null;
+        TradeOrder againstOrder = null;
+        for (TradeOrder tradeOrder : data) {
+            if (tradeOrder.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                currentOrder = tradeOrder;
+            }
+            if (tradeOrder.getUserId() == mBattle.getLaunchUser()) {
+                creatorOrder = tradeOrder;
+            }
+            if (tradeOrder.getUserId() == mBattle.getAgainstUser()) {
+                againstOrder = tradeOrder;
+            }
+        }
+        if (currentOrder != null) {
+            mCurrentOrder = currentOrder;
+            setBattleTradeState(STATE_CLOSE_POSITION);
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), 0);
+        } else {
+            setBattleTradeState(STATE_TRADE);
+        }
+
+        if (creatorOrder != null) {
+            mCreatorOrder = creatorOrder;
+        } else {
+            mCreatorOrder = null;
+        }
+
+        if (againstOrder != null) {
+            mAgainstOrder = againstOrder;
+        } else {
+            mAgainstOrder = null;
+        }
+    }
+
+    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            String tabText = tab.getText().toString();
+            if (tabText.equals(getString(R.string.day_k_line))) {
+                requestKlineDataAndSet(null);
+                showKlineView();
+            } else if (tabText.equals(getString(R.string.sixty_min_k))) {
+                requestKlineDataAndSet("60");
+                showKlineView();
+            } else if (tabText.equals(getString(R.string.thirty_min_k))) {
+                requestKlineDataAndSet("30");
+                showKlineView();
+            } else if (tabText.equals(getString(R.string.fifteen_min_k))) {
+                requestKlineDataAndSet("15");
+                showKlineView();
+            } else {
+                showTrendView();
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
+
+    private void requestTrendDataAndSet() {
+        Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TrendViewData> data) {
+                        mTrendView.setDataList(data);
+                    }
+                }).fireFree();
+    }
+
+    private void requestKlineDataAndSet(final String type) {
+        mKlineView.clearData();
+        Client.getKlineData(mVariety.getContractsCode(), type, null)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<KlineViewData> data) {
+                        if (TextUtils.isEmpty(type)) { // dayK
+                            mKlineView.setDayLine(true);
+                        } else {
+                            mKlineView.setDayLine(false);
+                        }
+                        Collections.reverse(data);
+                        mKlineView.setDataList(data);
+                    }
+                }).fire();
+    }
+
+    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
+        @Override
+        public void onReceiveData(Resp<FutureData> data) {
+            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
+                mFutureData = data.getData();
+                updateMarketDataView(mFutureData);
+                updateChartView(mFutureData);
+                updateTradeProfit(mFutureData);
+
+                int exchangeStatus = mVariety.getExchangeStatus();
+                if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
+                    requestExchangeStatus();
+                }
+            }
+        }
+    };
+
+    private void updateChartView(FutureData futureData) {
+        List<TrendViewData> dataList = mTrendView.getDataList();
+        if (dataList != null && dataList.size() > 0) {
+            TrendViewData lastData = dataList.get(dataList.size() - 1);
+            String date = DateUtil.addOneMinute(lastData.getTime(), TrendViewData.DATE_FORMAT);
+            String hhmm = DateUtil.format(date, TrendViewData.DATE_FORMAT, "HH:mm");
+            TrendView.Settings settings = mTrendView.getSettings();
+            if (TrendView.Util.isValidDate(hhmm, settings.getOpenMarketTimes())) {
+                float lastPrice = (float) futureData.getLastPrice();
+                TrendViewData unstableData = new TrendViewData(lastPrice, date);
+                mTrendView.setUnstableData(unstableData);
+            }
+        }
+    }
+
+    private void updateMarketDataView(FutureData data) {
+        mLastPrice.setText(FinanceUtil.formatWithScale(data.getLastPrice(), mVariety.getPriceScale()));
+        double priceChange = FinanceUtil.subtraction(data.getLastPrice(), data.getPreSetPrice()).doubleValue();
+        double priceChangePercent = FinanceUtil.divide(priceChange, data.getPreSetPrice(), 4)
+                .multiply(new BigDecimal(100)).doubleValue();
+
+        mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.greenAssist));
+        String priceChangeStr = FinanceUtil.formatWithScale(priceChange, mVariety.getPriceScale());
+        String priceChangePercentStr = FinanceUtil.formatWithScale(priceChangePercent) + "%";
+        if (priceChange >= 0) {
+            priceChangeStr = "+" + priceChangeStr;
+            priceChangePercentStr = "+" + priceChangePercentStr;
+            mLastPrice.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPriceChange.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+        }
+        mPriceChange.setText(priceChangeStr + "     " + priceChangePercentStr);
+
+        mTodayOpen.setText(FinanceUtil.formatWithScale(data.getOpenPrice(), mVariety.getPriceScale()));
+        mHighest.setText(FinanceUtil.formatWithScale(data.getHighestPrice(), mVariety.getPriceScale()));
+        mLowest.setText(FinanceUtil.formatWithScale(data.getLowestPrice(), mVariety.getPriceScale()));
+        mPreClose.setText(FinanceUtil.formatWithScale(data.getPreClsPrice(), mVariety.getPriceScale()));
+    }
+
+    private void updateTradeProfit(FutureData futureData) {
+        double myProfit = 0;
+        double creatorProfit = 0;
+        double againstProfit = 0;
+        //这里只更新对战者的持仓信息
+        if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
+
+            if (mCurrentOrder.getDirection() == 1) {
+                myProfit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
+            } else {
+                myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+            myProfit = myProfit * mVariety.getEachPointMoney();
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(), mCurrentOrder.getOrderPrice(), myProfit);
+        }
+        //房主的累计收益
+        if (mCreatorOrder != null) {
+            if (mCreatorOrder.getDirection() == 1) {
+                creatorProfit = futureData.getLastPrice() - mCreatorOrder.getOrderPrice();
+            } else {
+                creatorProfit = mCreatorOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+            creatorProfit = creatorProfit * mVariety.getEachPointMoney();
+        }
+        //对抗者的累计收益
+        if (mAgainstOrder != null) {
+            if (mAgainstOrder.getDirection() == 1) {
+                againstProfit = futureData.getLastPrice() - mAgainstOrder.getOrderPrice();
+            } else {
+                againstProfit = mAgainstOrder.getOrderPrice() - futureData.getLastPrice();
+            }
+            againstProfit = againstProfit * mVariety.getEachPointMoney();
+        }
+        ((BattleActivity) getActivity()).updateBattleInfo(creatorProfit, againstProfit);
+
+    }
+
+    private void requestExchangeStatus() {
+        Client.getExchangeStatus(mVariety.getExchangeId()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Integer>, Integer>() {
+                    @Override
+                    protected void onRespSuccessData(Integer data) {
+                        int exchangeStatus = (data != null ?
+                                data.intValue() : mVariety.getExchangeStatus());
+                        mVariety.setExchangeStatus(exchangeStatus);
+                        updateExchangeStatusView();
+                    }
+                }).fireFree();
+    }
+
+    private void updateExchangeStatusView() {
+        int exchangeStatus = mVariety.getExchangeStatus();
+        if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
+            updateTitleBar(getString(R.string.market_close));
+        } else {
+            updateTitleBar(getString(R.string.market_trading));
+        }
+    }
+
+    private void updateTitleBar(String exchangeStatus) {
+        View customView = mTitleBar.getCustomView();
+        TextView productName = (TextView) customView.findViewById(R.id.productName);
+        TextView productType = (TextView) customView.findViewById(R.id.productType);
+        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getContractsCode() + ")");
+        String productTypeStr = getString(R.string.future_china);
+        if (mVariety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.FUTURE_FOREIGN)) {
+            productTypeStr = getString(R.string.future_foreign);
+        }
+        if (!TextUtils.isEmpty(exchangeStatus)) {
+            productTypeStr += "-" + exchangeStatus;
+        }
+        productType.setText(productTypeStr);
+    }
+
+    private void showTrendView() {
+        mTrendView.setVisibility(View.VISIBLE);
+        mKlineView.setVisibility(View.GONE);
+    }
+
+    private void showKlineView() {
+        mTrendView.setVisibility(View.GONE);
+        mKlineView.setVisibility(View.VISIBLE);
+    }
+
+    public void updateGameInfo(Battle battle) {
+        mBattle = battle;
+    }
+
+    public void updateRoomExistsTime() {
+        //更新房间存在倒计时
+        long currentTime = System.currentTimeMillis();
+        long createTime = mBattle.getCreateTime();
+        int diff = DateUtil.getDiffSeconds(currentTime, createTime);
+        if (mBattleButtons.getVisibility() == View.VISIBLE) {
+            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(mCount, diff));
+        }
+    }
+
+    public void setBattleTradeState(int state) {
+        //切换交易视图显示模式
+        mBattleTradeView.changeTradeState(state);
+    }
+
+    public void refreshTradeView() {
+        //每次点击交易或平仓后 刷新数据
+        requestOrderHistory();
+        requestCurrentOrder();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopRefresh();
+    }
+
+    private void stopRefresh() {
+        if (mVariety != null) {
+            stopScheduleJob();
+            Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
+            Netty.get().removeHandler(mNettyHandler);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startRefresh();
+    }
+
+    private void startRefresh() {
+        if (mVariety != null) {
+            startScheduleJob(1000);
+            Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
+            Netty.get().addHandler(mNettyHandler);
+
+            requestExchangeStatus();
+            requestTrendDataAndSet();
+        }
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
+            requestTrendDataAndSet();
+        }
+        if (mGameStatus == GAME_STATUS_CREATED) {
+            updateRoomExistsTime();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        unbinder.unbind();
+    }
+}

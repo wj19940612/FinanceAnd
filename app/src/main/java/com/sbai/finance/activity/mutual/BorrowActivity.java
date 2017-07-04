@@ -280,7 +280,7 @@ public class BorrowActivity extends BaseActivity {
                                     super.onFailure(volleyError);
                                     mPublish.setEnabled(true);
                                 }
-                            }).fireSync();
+                            }).fireFree();
                 } else {
                     requestPublishBorrow(content, picture, mBorrowTimeLimit.getText().toString(),
                             mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),

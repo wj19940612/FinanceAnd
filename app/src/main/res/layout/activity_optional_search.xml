@@ -30,11 +30,12 @@
             android:background="@drawable/bg_search_stock"
             android:drawableLeft="@drawable/ic_search"
             android:drawablePadding="5dp"
-            android:hint="股票名称、代码"
-            android:maxLines="1"
             android:padding="5dp"
             android:textColorHint="@color/unluckyText"
-            android:textSize="@dimen/list_title_size"/>
+            android:maxLines="1"
+            android:textSize="@dimen/list_title_size"
+            android:hint="股票名称、代码"/>
+
     </LinearLayout>
 
     <ListView

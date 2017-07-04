@@ -6,7 +6,6 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +15,6 @@
         android:orientation="horizontal"
         android:paddingLeft="24dp"
         android:paddingTop="24dp">
-
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/dialogIcon"
@@ -33,6 +31,7 @@
             android:layout_marginRight="24dp"
             android:gravity="center_vertical"
             android:lineSpacingExtra="3dp"
+            android:maxLines="2"
             android:textColor="@color/blackAssist"
             android:textSize="17sp"
             tools:text="啥地方噶进口飞机都是的撒娇开发环境撒打开了凤凰科技的撒都十分罕见的萨克"/>
@@ -46,17 +45,15 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:lineSpacingExtra="3dp"
-        android:maxLines="3"
+        android:maxLines="7"
         android:paddingBottom="17dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="12dp"
         android:textColor="@color/unluckyText"
-        tools:text="Message肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范f"/>
-
+        tools:text="Message肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范fMessage肯定撒交话费金卡戴珊副科级领导撒谎发空间的萨菲黄金客户端山东师范f"/>
 
     <LinearLayout
-        android:id="@+id/doubleButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_dialog_bottom"
@@ -83,7 +80,6 @@
             android:textColor="@color/redPrimary"
             android:textSize="14sp"/>
 
-
         <TextView
             android:id="@+id/position"
             android:layout_width="wrap_content"
@@ -96,5 +92,4 @@
             android:textColor="@color/redPrimary"
             android:textSize="14sp"/>
     </LinearLayout>
-
 </LinearLayout>

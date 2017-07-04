@@ -143,7 +143,7 @@ public class OptionalActivity extends BaseActivity implements
                     protected void onRespSuccessData(List<Variety> data) {
                         updateOptionInfo((ArrayList<Variety>) data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestDelOptionalData(final Variety variety) {
@@ -180,7 +180,7 @@ public class OptionalActivity extends BaseActivity implements
                     protected void onRespSuccessData(List<StockData> result) {
                         mSlideListAdapter.addStockData(result);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
 
@@ -198,7 +198,7 @@ public class OptionalActivity extends BaseActivity implements
                         mSlideListAdapter.addFutureData(data);
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
@@ -393,7 +393,7 @@ public class OptionalActivity extends BaseActivity implements
                     }
                 } else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(context.getString(R.string.future) + " " + item.getContractsCode());
+                    mFutureCode.setText(context.getString(R.string.futures) + " " + item.getContractsCode());
                     //              mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
                     FutureData futureData = futureMap.get(item.getContractsCode());
                     if (futureData != null) {

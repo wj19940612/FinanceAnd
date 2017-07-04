@@ -132,7 +132,7 @@ public class FinanceFragment extends BaseFragment {
                         mCompany.setText(data.getCompanyName());
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     public void requestCompanyAnnualReport(final int page) {

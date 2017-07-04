@@ -63,7 +63,7 @@ public class CreditActivity extends BaseActivity {
                         }
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     @OnClick(R.id.credit)

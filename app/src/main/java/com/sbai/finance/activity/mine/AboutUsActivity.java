@@ -83,7 +83,7 @@ public class AboutUsActivity extends BaseActivity {
                         UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void openUserProtocolPage() {

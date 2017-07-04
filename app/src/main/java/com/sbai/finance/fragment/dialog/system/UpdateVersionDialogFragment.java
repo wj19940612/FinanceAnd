@@ -62,7 +62,8 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     private BroadcastReceiver mDownloadBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            dismissAllowingStateLoss();
+            ToastUtil.curt(R.string.download_complete);
         }
     };
 
@@ -101,7 +102,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         initDialog();
         mUpdateVersionMsg.setText(mAppVersionModel.getUpdateLog());
         mTitle.setText(getString(R.string.check_new_version));
-        mVersionName.setText(mAppVersionModel.getLastVersion());
+        mVersionName.setText(getString(R.string.version, mAppVersionModel.getLastVersion()));
     }
 
     private void initDialog() {

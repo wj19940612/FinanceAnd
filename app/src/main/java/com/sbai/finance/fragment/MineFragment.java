@@ -159,7 +159,7 @@ public class MineFragment extends BaseFragment {
                         }
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void requestNoReadFeedbackNumber() {
@@ -175,7 +175,7 @@ public class MineFragment extends BaseFragment {
                         }
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     private void updateNoReadFeedbackCount(int count) {

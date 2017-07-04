@@ -17,8 +17,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.netty.Netty;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
+import com.sbai.finance.websocket.WSClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,19 +51,23 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     @Override
                     protected void onRespSuccessData(AppVersionModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        data.setLastVersion("1.0-dev");
+                        Log.d(TAG, "onRespSuccessData: " + AppInfo.getVersionName(getApplicationContext()));
                         if (data.isLatestVersion()) {
                             return;
                         }
+                        data.setForceUpdateAllPreVersions(0);
                         data.setDownloadUrl("http://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
                         UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     @Override
     protected void onDestroy() {
         Netty.get().shutdown();
+        WSClient.get().close();
         super.onDestroy();
     }
 

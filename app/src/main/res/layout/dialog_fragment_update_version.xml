@@ -45,14 +45,14 @@
             <TextView
                 android:id="@+id/versionName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="12dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="3dp"
                 android:layout_toRightOf="@+id/title"
                 android:background="@drawable/btn_dialog_update"
                 android:gravity="center"
                 android:minWidth="20dp"
-                android:padding="1dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
                 android:textColor="@android:color/white"
                 android:textSize="9sp"
                 tool:text="v1.52"/>
@@ -68,11 +68,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:lineSpacingExtra="8dp"
-                android:paddingLeft="@dimen/common_padding"
-                android:paddingRight="31dp"/>
+                android:paddingLeft="28dp"
+                android:paddingRight="31dp"
+                android:textColor="@color/luckyText"
+                android:textSize="12sp"/>
         </ScrollView>
 
-        <android.support.v7.widget.AppCompatButton
+        <TextView
             android:id="@+id/update"
             android:layout_width="112dp"
             android:layout_height="36dp"
@@ -80,6 +82,7 @@
             android:layout_marginBottom="24dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_dialog_update"
+            android:gravity="center"
             android:text="@string/now_update"
             android:textColor="@android:color/white"
             android:textSize="15sp"/>
