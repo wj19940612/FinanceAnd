@@ -67,6 +67,7 @@ public class BattleInfo {
     private String varietyName;
     private String varietyType;
     private int winResult;
+    private int commission;
 
     public String getAgainstFrom() {
         return againstFrom;
@@ -298,5 +299,43 @@ public class BattleInfo {
 
     public void setWinResult(int winResult) {
         this.winResult = winResult;
+    }
+
+    public int getCommission() {
+        return commission;
+    }
+
+    public void setCommission(int commission) {
+        this.commission = commission;
+    }
+
+    public static Battle getBattle(BattleInfo info){
+        Battle battle = new Battle();
+        battle.setAgainstFrom(info.getAgainstFrom());
+        battle.setAgainstUser(info.getAgainstUser());
+        battle.setAgainstUserName(info.getAgainstUserName());
+        battle.setAgainstUserPortrait(info.getAgainstUserPortrait());
+        battle.setBatchCode(info.getBatchCode());
+        battle.setCoinType(info.getCoinType());
+        battle.setCreateTime(info.getCreateTime());
+        battle.setEndTime(info.getEndTime());
+        battle.setEndline(info.getEndline());
+        battle.setGameStatus(info.getGameStatus());
+        battle.setId(info.getId());
+        battle.setLaunchUser(info.getLaunchUser());
+        battle.setLaunchUserName(info.getLaunchUserName());
+        battle.setLaunchUserPortrait(info.getLaunchUserPortrait());
+        battle.setModifyTime(info.getModifyTime());
+        battle.setReward(info.getReward());
+        battle.setStartTime(info.getStartTime());
+        battle.setVarietyId(info.getVarietyId());
+        battle.setVarietyName(info.getVarietyName());
+        battle.setVarietyType(info.getVarietyType());
+        battle.setWinResult(info.getWinResult());
+        battle.setLaunchScore(info.getLaunchScore());
+        battle.setAgainstScore(info.getAgainstScore());
+        battle.setAgainstPraise(info.getAgainstPraise());
+        battle.setLaunchPraise(info.getLaunchPraise());
+        return battle;
     }
 }

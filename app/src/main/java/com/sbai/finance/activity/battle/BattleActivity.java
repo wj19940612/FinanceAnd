@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
@@ -51,8 +54,10 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_END;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_START;
@@ -71,6 +76,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     LinearLayout mFutureArea;
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
+
+    @BindView(R.id.loading)
+    ImageView mLoading;
+    @BindView(R.id.loadingContent)
+    LinearLayout mLoadingContent;
 
     private BattleFragment mBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
@@ -94,6 +104,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         super.onBattlePushReceived(battleWSPush);
 
         if (BuildConfig.DEBUG) ToastUtil.show(battleWSPush.getContent().getType());
+
+        if (mBattleRoom == null) return;  //排除对战详情收到推送
 
         switch (battleWSPush.getContent().getType()) {
             case PushCode.BATTLE_JOINED:
@@ -167,7 +179,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         } else {
             mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
             initBattlePage();
-            mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
         }
     }
 
@@ -249,7 +260,34 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
-                    .initWithModel(mBattle);
+                    .initWithModel(mBattle)
+                    .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
+                        @Override
+                        public void onCreateAvatarClick() {
+                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
+                            if (LocalUser.getUser().isLogin()) {
+                                Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                        .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
+                                        .execute();
+                            } else {
+                                Launcher.with(getActivity(), LoginActivity.class).execute();
+                            }
+                        }
+
+                        @Override
+                        public void onAgainstAvatarClick() {
+                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
+                            if (LocalUser.getUser().isLogin()) {
+                                if (mBattle.getAgainstUser() != 0) {
+                                    Launcher.with(BattleActivity.this, UserDataActivity.class)
+                                            .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
+                                            .execute();
+                                }
+                            } else {
+                                Launcher.with(getActivity(), LoginActivity.class).execute();
+                            }
+                        }
+                    });
 
             //分两种状态  1.发起匹配  2.对战中
             if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
@@ -372,17 +410,46 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             //更新左右点赞数
                             updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
                             updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
+                            // TODO: 2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
+                            if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
+                                if (mBattleInfo.getGameStatus() == GAME_STATUS_STARTED) {
+                                    mBattleRoom.setRoomState(ROOM_STATE_START);
+                                    //切换状态
+                                    dismissAllDialog();
+                                    updateRoomState(ROOM_STATE_START, mBattleInfo);
+                                }
+                                if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
+                                    mBattleRoom.setRoomState(ROOM_STATE_END);
+                                    //切换状态
+                                    updateRoomState(ROOM_STATE_END, mBattleInfo);
+
+                                }
+                                if (mBattleInfo.getGameStatus() == GAME_STATUS_CANCELED) {
+                                    dismissAllDialog();
+                                    showRoomOvertimeDialog();
+                                }
+
+                            }
                             //游戏结束后
                             if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
                                 mBattleRoom.setRoomState(ROOM_STATE_END);
                             }
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END) {
+                                dismissCalculatingView();
                                 showGameOverDialog();
                             }
                         }
                     }
                 });
 
+    }
+
+    private void updateRoomState(int state, BattleInfo info) {
+        if (state == ROOM_STATE_END) {
+
+        } else if (state == ROOM_STATE_END) {
+
+        }
     }
 
     public void updateBattleInfo(double createProfit, double againstProfit) {
@@ -432,14 +499,14 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void showInviteDialog() {
         if (mShareDialogFragment == null) {
-            String shareTitle = getString(R.string.invite_you_join_future_battle
-                    , LocalUser.getUser().getUserInfo().getUserName());
+            String shareTitle = getString(R.string.invite_you_join_future_battle,
+                    LocalUser.getUser().getUserInfo().getUserName());
             String shareDescribe = getString(R.string.future_battle_desc);
             String url = "";
             mShareDialogFragment = ShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
-                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, url);
+                    .setShareContent(BattleActivity.this, shareTitle, shareDescribe, mBattle.getBatchCode());
         }
         mShareDialogFragment.show(getSupportFragmentManager());
     }
@@ -603,7 +670,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
             if (win) {
                 fragment = BattleResultDialogFragment
-                        .newInstance(GAME_RESULT_WIN, "+" + mBattleInfo.getReward() + coinType);
+                        .newInstance(GAME_RESULT_WIN, "+" + (mBattleInfo.getReward() - mBattleInfo.getCommission()) + coinType);
             } else {
                 fragment = BattleResultDialogFragment
                         .newInstance(GAME_RESULT_LOSE, "-" + mBattleInfo.getReward() + coinType);
@@ -664,7 +731,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 Intent intent = new Intent();
-                intent.putExtra(Launcher.EX_PAYLOAD, Battle.GAME_STATUS_CANCELED);
+                intent.putExtra(Launcher.EX_PAYLOAD, GAME_STATUS_CANCELED);
                 intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
                 setResult(RESULT_OK, intent);
                 finish();
@@ -690,7 +757,20 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         long currentTime = SysTime.getSysTime().getSystemTimestamp();
         long startTime = mBattle.getStartTime();
         int diff = mBattle.getEndline() - DateUtil.getDiffSeconds(currentTime, startTime);
+        if (diff == 0 && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
+            showCalculatingView();
+        }
         mBattleView.setDeadline(mBattle.getGameStatus(), diff);
+    }
+
+    private void showCalculatingView() {
+        mLoadingContent.setVisibility(View.VISIBLE);
+        mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
+    }
+
+    private void dismissCalculatingView() {
+        mLoading.clearAnimation();
+        mLoadingContent.setVisibility(View.GONE);
     }
 
     @Override

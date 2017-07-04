@@ -89,6 +89,7 @@ android {
             applicationId "com.sbai.finance.alpha"
             versionCode 44
             versionName "0.5.4"
+
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -102,8 +103,8 @@ android {
         }
 
         prod {
-            versionCode 21
-            versionName "1.0.1"
+            versionCode 22
+            versionName "1.1"
             buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
             buildConfigField('boolean', 'IS_PROD', 'true')
 

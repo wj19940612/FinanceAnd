@@ -335,23 +335,21 @@ public class DateUtil {
      * 格式化时间  如果是当天 则显示18:20
      * 如果是昨天 则 昨天 18:20
      * 其他的   12月12日 12:20
-     * 不是今年  则 2015年12月18日
+     * 不是今年  则 15年12月18日 18:20:20
      *
      * @param createTime
      * @return
      */
     public static String getBattleFormatTime(long createTime) {
-        long systemTime = System.currentTimeMillis();
-        if (DateUtil.isInThisYear(createTime)) {
-            if (DateUtil.isToday(createTime, systemTime)) {
-                return DateUtil.format(createTime, "HH:mm:ss");
-            } else if (DateUtil.isInThisYear(createTime)) {
-                return DateUtil.format(createTime, "MM/dd HH:mm:ss");
-            } else {
-                return DateUtil.format(createTime, "yy/MM/dd HH:mm:ss");
-            }
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (DateUtil.isToday(createTime, systemTime)) {
+            return DateUtil.format(createTime, "HH:mm:ss");
+        } else if (DateUtil.isYesterday(createTime, systemTime)) {
+            return DateUtil.format(createTime, "昨日" + "HH:mm:ss");
+        } else if (DateUtil.isInThisYear(createTime)) {
+            return DateUtil.format(createTime, "MM/dd HH:mm:ss");
         } else {
-            return DateUtil.format(createTime, DateUtil.FORMAT_YEAR_MONTH_DAY);
+            return DateUtil.format(createTime, "yy/MM/dd HH:mm:ss");
         }
     }
 

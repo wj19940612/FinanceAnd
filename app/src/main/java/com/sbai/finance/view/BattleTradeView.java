@@ -101,8 +101,7 @@ public class BattleTradeView extends LinearLayout {
     private void init() {
         setOrientation(VERTICAL);
         setGravity(Gravity.CENTER_HORIZONTAL);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_trade, null, false);
-        addView(view);
+        LayoutInflater.from(getContext()).inflate(R.layout.view_battle_trade, this, true);
         ButterKnife.bind(this);
 
         mBattleTradeAdapter = new BattleTradeAdapter(getContext());
@@ -143,7 +142,7 @@ public class BattleTradeView extends LinearLayout {
         mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
     }
 
-    public void setVisitor(boolean isVisitor) {
+    public void setObserver(boolean isVisitor) {
         //参观模式
         if (isVisitor) {
             updateViewHeight();

@@ -15,8 +15,8 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:paddingTop="@dimen/dp_10"
         android:layout_height="match_parent"
         android:divider="@null"
+        android:paddingTop="@dimen/dp_10"
         android:scrollbars="none"/>
 </LinearLayout>
