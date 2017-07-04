@@ -140,7 +140,6 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-
     <com.sbai.finance.view.BattleButtons
         android:id="@+id/battleButtons"
         android:layout_width="match_parent"
