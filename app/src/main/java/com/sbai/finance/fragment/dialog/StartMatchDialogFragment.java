@@ -129,6 +129,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     public void show(FragmentManager manager) {
+        if (manager == null) return;
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, this.getClass().getSimpleName());
         ft.commitAllowingStateLoss();

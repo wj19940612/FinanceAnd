@@ -256,6 +256,10 @@ public class BattleFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
                         refreshTradeView();
                     }
+
+                    @Override
+                    protected void onToastErrorMessage(String msg) {
+                    }
                 })
                 .fire();
     }
@@ -267,6 +271,10 @@ public class BattleFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
                         refreshTradeView();
+                    }
+
+                    @Override
+                    protected void onToastErrorMessage(String msg) {
                     }
                 })
                 .fire();
