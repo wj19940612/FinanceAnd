@@ -1,5 +1,8 @@
 package com.sbai.finance.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.sbai.finance.App;
 import com.sbai.finance.utils.AppInfo;
 
@@ -7,7 +10,7 @@ import com.sbai.finance.utils.AppInfo;
  * Created by ${wangJie} on 2017/7/4.
  */
 
-public class AppVersionModel {
+public class AppVersionModel implements Parcelable {
     private static final String TAG = "AppVersionModel";
 
     /**
@@ -166,4 +169,55 @@ public class AppVersionModel {
                 ", updateLog='" + updateLog + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.createTime);
+        dest.writeString(this.downloadUrl);
+        dest.writeInt(this.forceUpdateAllPreVersions);
+        dest.writeString(this.forceUpdatePreVersions);
+        dest.writeInt(this.id);
+        dest.writeString(this.lastVersion);
+        dest.writeLong(this.modifyTime);
+        dest.writeInt(this.modifyUser);
+        dest.writeInt(this.platform);
+        dest.writeString(this.remark);
+        dest.writeInt(this.updateAllPreVersions);
+        dest.writeString(this.updateLog);
+    }
+
+    public AppVersionModel() {
+    }
+
+    protected AppVersionModel(Parcel in) {
+        this.createTime = in.readLong();
+        this.downloadUrl = in.readString();
+        this.forceUpdateAllPreVersions = in.readInt();
+        this.forceUpdatePreVersions = in.readString();
+        this.id = in.readInt();
+        this.lastVersion = in.readString();
+        this.modifyTime = in.readLong();
+        this.modifyUser = in.readInt();
+        this.platform = in.readInt();
+        this.remark = in.readString();
+        this.updateAllPreVersions = in.readInt();
+        this.updateLog = in.readString();
+    }
+
+    public static final Creator<AppVersionModel> CREATOR = new Creator<AppVersionModel>() {
+        @Override
+        public AppVersionModel createFromParcel(Parcel source) {
+            return new AppVersionModel(source);
+        }
+
+        @Override
+        public AppVersionModel[] newArray(int size) {
+            return new AppVersionModel[size];
+        }
+    };
 }
