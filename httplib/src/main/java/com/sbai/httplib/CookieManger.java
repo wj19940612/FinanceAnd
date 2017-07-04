@@ -135,6 +135,10 @@ public class CookieManger {
     }
 
     public void clearRawCookies() {
-
+        mRawCookie = null;
+        File file = new File(mAppDataDir, FILE_NAME);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

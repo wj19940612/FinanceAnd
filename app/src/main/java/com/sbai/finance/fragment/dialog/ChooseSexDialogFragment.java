@@ -15,7 +15,6 @@ import com.sbai.finance.model.mine.UserInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/6/7.
@@ -29,7 +28,6 @@ public class ChooseSexDialogFragment extends BaseDialogFragment {
     AppCompatTextView mGirl;
     @BindView(R.id.takePhoneCancel)
     AppCompatTextView mTakePhoneCancel;
-    private Unbinder mBind;
 
     private OnUserSexListener mOnUserSexListener;
 

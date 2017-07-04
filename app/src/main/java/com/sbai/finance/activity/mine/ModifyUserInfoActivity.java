@@ -29,6 +29,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.autofit.AutofitTextView;
 import com.sbai.finance.websocket.WSClient;
+import com.sbai.httplib.CookieManger;
 
 import java.util.Calendar;
 
@@ -260,6 +261,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
                             LocalUser.getUser().logout();
+                            CookieManger.getInstance().clearRawCookies();
                             WSClient.get().close();
                             setResult(RESULT_OK);
                             finish();
