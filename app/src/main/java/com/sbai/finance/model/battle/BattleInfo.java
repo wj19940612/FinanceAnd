@@ -67,6 +67,7 @@ public class BattleInfo {
     private String varietyName;
     private String varietyType;
     private int winResult;
+    private int commission;
 
     public String getAgainstFrom() {
         return againstFrom;
@@ -298,5 +299,13 @@ public class BattleInfo {
 
     public void setWinResult(int winResult) {
         this.winResult = winResult;
+    }
+
+    public int getCommission() {
+        return commission;
+    }
+
+    public void setCommission(int commission) {
+        this.commission = commission;
     }
 }

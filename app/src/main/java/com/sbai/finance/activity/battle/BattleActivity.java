@@ -631,7 +631,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
             if (win) {
                 fragment = BattleResultDialogFragment
-                        .newInstance(GAME_RESULT_WIN, "+" + mBattleInfo.getReward() + coinType);
+                        .newInstance(GAME_RESULT_WIN, "+" + (mBattleInfo.getReward() - mBattleInfo.getCommission()) + coinType);
             } else {
                 fragment = BattleResultDialogFragment
                         .newInstance(GAME_RESULT_LOSE, "-" + mBattleInfo.getReward() + coinType);
