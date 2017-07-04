@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ import static com.sbai.finance.R.id.ingotWar;
 public class CreateFightActivity extends BaseActivity {
 
 	public static final int REQ_CODE_CHOOSE_FUTURES = 1001;
+	public static final String CREATE_SUCCESS_ACTION = "CREATE_SUCCESS_ACTION";
 	@BindView(R.id.chooseFutures)
 	TextView mChooseFutures;
 	@BindView(ingotWar)
@@ -340,6 +342,7 @@ public class CreateFightActivity extends BaseActivity {
 										.putExtra(Launcher.EX_PAYLOAD, battle)
 										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
+								LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
 								finish();
 							}
 
