@@ -523,7 +523,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             mStartGameDialogFragment = StartGameDialogFragment
                     .newInstance(mBattle.getAgainstUserPortrait());
         }
-        mStartGameDialogFragment.show(getSupportFragmentManager());
+        mStartGameDialogFragment.showAsync(getSupportFragmentManager());
     }
 
     //开始匹配弹窗

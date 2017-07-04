@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Window;
@@ -41,6 +42,12 @@ public class BaseDialogFragment extends DialogFragment {
 
     public void show(FragmentManager manager) {
         this.show(manager, this.getClass().getSimpleName());
+    }
+
+    public void showAsync(FragmentManager manager) {
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(this, this.getClass().getSimpleName());
+        ft.commitAllowingStateLoss();
     }
 
     @Override
