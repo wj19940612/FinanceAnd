@@ -50,6 +50,10 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     TextView mUpdate;
     @BindView(R.id.dialogDelete)
     AppCompatImageView mDialogDelete;
+    @BindView(R.id.title)
+    TextView mTitle;
+    @BindView(R.id.versionName)
+    TextView mVersionName;
     private Unbinder mBind;
     private AppVersionModel mAppVersionModel;
     private boolean mIsCanceledOnTouchOutside;
@@ -96,6 +100,8 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
         initDialog();
         mUpdateVersionMsg.setText(mAppVersionModel.getUpdateLog());
+        mTitle.setText(getString(R.string.check_new_version));
+        mVersionName.setText(mAppVersionModel.getLastVersion());
     }
 
     private void initDialog() {

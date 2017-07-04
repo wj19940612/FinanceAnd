@@ -15,35 +15,73 @@
         app:srcCompat="@drawable/ic_popup_delete"/>
 
     <LinearLayout
-        android:padding="@dimen/common_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white_rounded"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="版本更新"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_lemi_update_pic"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="19dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="20dp"
+                android:text="@string/check_new_version"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/versionName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@+id/title"
+                android:background="@drawable/btn_dialog_update"
+                android:gravity="center"
+                android:minWidth="20dp"
+                android:padding="1dp"
+                android:textColor="@android:color/white"
+                android:textSize="9sp"
+                tool:text="v1.52"/>
+        </RelativeLayout>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="72dp">
 
             <TextView
                 android:id="@+id/updateVersionMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:lineSpacingExtra="8dp"
+                android:paddingLeft="@dimen/common_padding"
+                android:paddingRight="31dp"/>
         </ScrollView>
 
-        <TextView
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="112dp"
+            android:layout_height="36dp"
             android:layout_gravity="center_horizontal"
-            android:padding="@dimen/common_padding"
-            android:text="立即更新"/>
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_dialog_update"
+            android:text="@string/now_update"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
     </LinearLayout>
 </LinearLayout>
