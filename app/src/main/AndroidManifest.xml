@@ -289,6 +289,7 @@
             android:exported="true"
             android:label="PushService"
             android:process=":pushservice"/>
+        <service android:name=".service.DownLoadService"/>
 
         <meta-data
             android:name="UMENG_APPKEY"

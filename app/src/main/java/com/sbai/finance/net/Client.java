@@ -315,7 +315,7 @@ public class Client {
      * 请求Url  user/user/updatePicLand.do 提交头像
      * 接口描述 修改头像
      *
-     * @param picPath  String 图片网址
+     * @param picPath String 图片网址
      * @return
      */
     public static API updateUserHeadImagePath(String picPath) {
@@ -1674,6 +1674,19 @@ public class Client {
                 .put("currencyType", currencyType)
                 .put("page", page)
                 .put("pageSize", Client.DEFAULT_PAGE_SIZE));
+    }
+
+    /**
+     * /user/appVersion/getUpdateVersion.do
+     * GET
+     * 获取App版本更新情况
+     * app版本情况
+     * platform  0 android
+     *
+     * @return
+     */
+    public static API updateVersion() {
+        return new API("/user/appVersion/getUpdateVersion.do", new ApiParams().put("platform", 0));
     }
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
