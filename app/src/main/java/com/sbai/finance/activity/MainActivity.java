@@ -17,7 +17,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.netty.Netty;
-import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.websocket.WSClient;
@@ -51,8 +50,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     @Override
                     protected void onRespSuccessData(AppVersionModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
-                        data.setLastVersion("1.0-dev");
-                        Log.d(TAG, "onRespSuccessData: " + AppInfo.getVersionName(getApplicationContext()));
                         if (data.isLatestVersion()) {
                             return;
                         }

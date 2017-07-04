@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:lineSpacingExtra="8dp"
+                android:lineSpacingExtra="5dp"
                 android:paddingLeft="28dp"
                 android:paddingRight="31dp"
                 android:textColor="@color/luckyText"

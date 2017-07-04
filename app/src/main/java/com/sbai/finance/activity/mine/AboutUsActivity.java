@@ -73,7 +73,7 @@ public class AboutUsActivity extends BaseActivity {
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
                     @Override
-                    protected void onRespSuccessData(AppVersionModel data) {
+                    protected void onRespSuccessData(final AppVersionModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
                         if (data.isLatestVersion()) {
                             return;
