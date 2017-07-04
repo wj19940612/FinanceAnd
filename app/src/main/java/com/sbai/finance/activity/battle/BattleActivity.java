@@ -54,8 +54,10 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
+import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_END;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_START;
@@ -408,6 +410,26 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             //更新左右点赞数
                             updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
                             updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
+                            // TODO: 2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
+                            if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
+                                if (mBattleInfo.getGameStatus() == GAME_STATUS_STARTED) {
+                                    mBattleRoom.setRoomState(ROOM_STATE_START);
+                                    //切换状态
+                                    dismissAllDialog();
+                                    updateRoomState(ROOM_STATE_START, mBattleInfo);
+                                }
+                                if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
+                                    mBattleRoom.setRoomState(ROOM_STATE_END);
+                                    //切换状态
+                                    updateRoomState(ROOM_STATE_END, mBattleInfo);
+
+                                }
+                                if (mBattleInfo.getGameStatus() == GAME_STATUS_CANCELED) {
+                                    dismissAllDialog();
+                                    showRoomOvertimeDialog();
+                                }
+
+                            }
                             //游戏结束后
                             if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
                                 mBattleRoom.setRoomState(ROOM_STATE_END);
@@ -420,6 +442,14 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                     }
                 });
 
+    }
+
+    private void updateRoomState(int state, BattleInfo info) {
+        if (state == ROOM_STATE_END) {
+
+        } else if (state == ROOM_STATE_END) {
+
+        }
     }
 
     public void updateBattleInfo(double createProfit, double againstProfit) {
@@ -701,7 +731,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 Intent intent = new Intent();
-                intent.putExtra(Launcher.EX_PAYLOAD, Battle.GAME_STATUS_CANCELED);
+                intent.putExtra(Launcher.EX_PAYLOAD, GAME_STATUS_CANCELED);
                 intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
                 setResult(RESULT_OK, intent);
                 finish();
