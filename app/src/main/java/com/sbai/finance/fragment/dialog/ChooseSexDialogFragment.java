@@ -15,6 +15,7 @@ import com.sbai.finance.model.mine.UserInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/6/7.
@@ -28,8 +29,15 @@ public class ChooseSexDialogFragment extends BaseDialogFragment {
     AppCompatTextView mGirl;
     @BindView(R.id.takePhoneCancel)
     AppCompatTextView mTakePhoneCancel;
+    Unbinder unbinder;
 
     private OnUserSexListener mOnUserSexListener;
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     public interface OnUserSexListener {
         void onUserSex(int userSex);
@@ -39,7 +47,7 @@ public class ChooseSexDialogFragment extends BaseDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_choose_sex_, container, false);
-        mBind = ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 

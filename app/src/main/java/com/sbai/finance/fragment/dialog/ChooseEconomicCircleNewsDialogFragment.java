@@ -14,6 +14,7 @@ import com.sbai.finance.utils.Launcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/6/8.
@@ -26,11 +27,13 @@ public class ChooseEconomicCircleNewsDialogFragment extends BaseDialogFragment {
     @BindView(R.id.cancel)
     AppCompatTextView mCancel;
 
+    Unbinder unbinder;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_ec_circle_news, container, false);
-        mBind = ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -46,5 +49,11 @@ public class ChooseEconomicCircleNewsDialogFragment extends BaseDialogFragment {
                 dismiss();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

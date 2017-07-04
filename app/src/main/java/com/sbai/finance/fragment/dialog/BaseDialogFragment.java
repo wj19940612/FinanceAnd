@@ -12,15 +12,11 @@ import android.view.WindowManager;
 
 import com.sbai.finance.R;
 
-import butterknife.Unbinder;
-
 /**
  * Created by ${wangJie} on 2017/6/7.
  */
 
 public class BaseDialogFragment extends DialogFragment {
-
-    protected Unbinder mBind;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -48,13 +44,5 @@ public class BaseDialogFragment extends DialogFragment {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, this.getClass().getSimpleName());
         ft.commitAllowingStateLoss();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mBind != null) {
-            mBind.unbind();
-        }
     }
 }
