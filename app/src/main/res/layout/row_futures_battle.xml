@@ -94,18 +94,20 @@
                 android:layout_height="14dp"
                 android:layout_marginTop="10dp">
 
-                <ProgressBar
+                <com.sbai.finance.view.BattleProgress
                     android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:max="100"
-                    android:progress="50"
-                    android:progressDrawable="@drawable/bg_battle_progress"
-                    android:secondaryProgress="100"/>
+                    app:leftLabelColor="@android:color/white"
+                    app:leftLabelSize="10sp"
+                    app:leftPadding="5dp"
+                    app:max="100"
+                    app:progress="50"
+                    app:progressDrawable="@drawable/bg_battle_progress"
+                    app:rightLabelColor="@android:color/white"
+                    app:rightLabelSize="10sp"
+                    app:rightPadding="5dp"
+                    app:secondaryProgress="100"/>
 
                 <ImageView
                     android:id="@+id/versus"
@@ -114,27 +116,6 @@
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_versus_vs"
                     android:visibility="invisible"/>
-
-                <TextView
-                    android:id="@+id/createProfit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    tools:text="+100"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"/>
-
-                <TextView
-                    android:id="@+id/againstProfit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:paddingRight="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    tools:text="+100"/>
             </RelativeLayout>
 
             <LinearLayout

@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
+import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CollapsedTextLayout;
 import com.sbai.finance.view.CollapsedTextView;
 import com.sbai.finance.view.SmartDialog;
@@ -61,6 +61,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sbai.finance.activity.battle.BattleListActivity.CANCEL_BATTLE;
 
 public class EconomicCircleFragment extends BaseFragment implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
@@ -88,8 +89,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	Unbinder unbinder;
 
 	private OnNoReadNewsListener mOnNoReadNewsListener;
-	private SmartDialog mJoinDialog;
-	private SmartDialog mJoinFailureDialog;
 	private Battle mBattle;
 
 	@Override
@@ -208,17 +207,14 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		setBattleData(item);
 		if (item != null) {
 			if (item.getType() == 1) {
-				//借钱
 				Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			} else if (item.getType() == 2) {
-				//观点
 				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
-			} else if (item.getType() == 3){
-				//游戏
+			} else if (item.getType() == 3) {
 				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
 					SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
 							.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
@@ -240,16 +236,35 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
 						showJoinBattleDialog(mBattle);
 					} else {
-						Launcher.with(getActivity(), BattleActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mBattle)
-								.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
-								.execute();
+						requestLastBattleInfo(mBattle);
 					}
 				} else {
 					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 			}
 		}
+	}
+
+	private void requestLastBattleInfo(final Battle item) {
+		Client.getBattleInfo(item.getId(), item.getBatchCode()).setTag(TAG)
+				.setCallback(new Callback2D<Resp<Battle>, Battle>() {
+					@Override
+					protected void onRespSuccessData(Battle data) {
+
+						int pageType;
+						if (data.getGameStatus() == Battle.GAME_STATUS_END) {
+							pageType = BattleActivity.PAGE_TYPE_RECORD;
+						} else {
+							pageType = BattleActivity.PAGE_TYPE_VERSUS;
+						}
+
+						Intent intent = new Intent(getContext(), BattleActivity.class);
+						intent.putExtra(Launcher.EX_PAYLOAD, data);
+						intent.putExtra(BattleActivity.PAGE_TYPE, pageType);
+						startActivityForResult(intent, CANCEL_BATTLE);
+
+					}
+				}).fire();
 	}
 
 	private void setBattleData(EconomicCircle item) {
@@ -317,7 +332,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							Battle battle = resp.getData();
 							if (battle != null) {
 								Launcher.with(getActivity(), BattleActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, data)
+										.putExtra(Launcher.EX_PAYLOAD, battle)
 										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
@@ -357,7 +372,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							requestCurrentBattle();
 						} else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-
 							Launcher.with(getActivity(), RechargeActivity.class).execute();
 						}
 					}
@@ -545,6 +559,25 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							}
 						}
 						mEconomicCircleAdapter.addAll(mEconomicCircleList);
+					}
+				}
+			}
+		}
+
+		if (requestCode == CANCEL_BATTLE && resultCode == RESULT_OK) {
+			if (data != null) {
+				int gameStatus = data.getIntExtra(Launcher.EX_PAYLOAD, -1);
+				int id = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				if (id != -1 && gameStatus == Battle.GAME_STATUS_CANCELED) {
+					if (mEconomicCircleAdapter != null) {
+						for (int i = 0; i < mEconomicCircleAdapter.getCount(); i++) {
+							EconomicCircle item = (EconomicCircle) mEconomicCircleAdapter.getItem(i);
+							if (item != null && item.getDataId() == id) {
+								item.setGameStatus(EconomicCircle.GAME_STATUS_CANCELED);
+								mEconomicCircleAdapter.notifyDataSetChanged();
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -865,7 +898,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			@BindView(R.id.varietyName)
 			TextView mVarietyName;
 			@BindView(R.id.progressBar)
-			ProgressBar mProgressBar;
+			BattleProgress mProgressBar;
 			@BindView(R.id.versus)
 			ImageView mVersus;
 			@BindView(R.id.bounty)
@@ -880,10 +913,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 			TextView mPublishTime;
 			@BindView(R.id.location)
 			TextView mLocation;
-			@BindView(R.id.createProfit)
-			TextView mCreateProfit;
-			@BindView(R.id.againstProfit)
-			TextView mAgainstProfit;
 
 			FuturesBattleViewHolder(View view) {
 				ButterKnife.bind(this, view);
@@ -916,6 +945,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 				mVarietyName.setText(item.getVarietyName());
 				mContent.setShowText(item.getContent().trim());
+				mProgressBar.setLeftText(String.valueOf(item.getLaunchScore()));
+				mProgressBar.setRightText(String.valueOf(item.getAgainstScore()));
 
 				String reward = "";
 				switch (item.getCoinType()) {
@@ -932,22 +963,25 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 				mBounty.setText(reward);
 				switch (item.getGameStatus()) {
+					//取消
 					case EconomicCircle.GAME_STATUS_CANCELED:
 						mStatus.setText(context.getString(R.string.versus_cancel));
 						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
 						mAgainstUserName.setText(context.getString(R.string.join_versus));
 						mVersus.setVisibility(View.VISIBLE);
-						showScoreProgress(0, 0, true);
+						mProgressBar.showScoreProgress(0, 0, true);
 						break;
 
+					//发起对战
 					case EconomicCircle.GAME_STATUS_CREATED:
 						mStatus.setText(DateUtil.getMinutes(item.getEndline()));
 						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
 						mAgainstUserName.setText(context.getString(R.string.join_versus));
 						mVersus.setVisibility(View.VISIBLE);
-						showScoreProgress(0, 0, true);
+						mProgressBar.showScoreProgress(0, 0, true);
 						break;
 
+					//对战中
 					case EconomicCircle.GAME_STATUS_STARTED:
 						mStatus.setText(context.getString(R.string.versusing));
 						Glide.with(context)
@@ -957,76 +991,24 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 								.into(mAgainstUserAvatar);
 						mAgainstUserName.setText(item.getAgainstUserName());
 						mVersus.setVisibility(View.GONE);
-						showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+						mProgressBar.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
 						break;
 
+					//已结束
 					case EconomicCircle.GAME_STATUS_END:
 						mStatus.setText(context.getString(R.string.versus_end));
 						Glide.with(context)
 								.load(item.getAgainstUserPortrait())
-								.placeholder(R.drawable.ic_default_avatar_big)
+								.placeholder(R.drawable.ic_default_avatar)
 								.transform(new GlideCircleTransform(context))
 								.into(mAgainstUserAvatar);
 						mAgainstUserName.setText(item.getAgainstUserName());
 						mVersus.setVisibility(View.GONE);
-						showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+						mProgressBar.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
 						break;
 				}
 
 				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-			}
-
-			/**
-			 * 显示对抗状态条
-			 *
-			 * @param createProfit  我的盈利状况
-			 * @param fighterProfit 对抗者盈利状况
-			 * @param isInviting    是否正在邀请中
-			 * @return
-			 */
-			private void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
-				String myFlag = "";
-				String fighterFlag = "";
-				if (isInviting) {
-					mProgressBar.setProgress(0);
-					mProgressBar.setSecondaryProgress(0);
-					mCreateProfit.setText(null);
-					mAgainstProfit.setText(null);
-				} else {
-					//正正
-					if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
-						int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
-						mProgressBar.setProgress(progress);
-					}
-					//正负
-					if (createProfit >= 0 && fighterProfit < 0) {
-						mProgressBar.setProgress(100);
-					}
-					//负正
-					if (createProfit < 0 && fighterProfit >= 0) {
-						mProgressBar.setProgress(0);
-					}
-					//负负
-					if (createProfit < 0 && fighterProfit < 0) {
-						int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
-						mProgressBar.setProgress(100 - progress);
-					}
-					//都为0
-					if (createProfit == 0 && fighterProfit == 0) {
-						mProgressBar.setProgress(50);
-					}
-					mProgressBar.setSecondaryProgress(100);
-
-					if (createProfit > 0) {
-						myFlag = "+";
-					}
-
-					if (fighterProfit > 0) {
-						fighterFlag = "+";
-					}
-					mCreateProfit.setText(myFlag + FinanceUtil.formatWithScale(createProfit));
-					mAgainstProfit.setText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
-				}
 			}
 		}
 	}

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -37,7 +38,7 @@ import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.ingotWar;
 
-public class CreateFightActivity extends BaseActivity {
+public class CreateBattleActivity extends BaseActivity {
 
 	public static final int REQ_CODE_CHOOSE_FUTURES = 1001;
 	@BindView(R.id.chooseFutures)
@@ -52,6 +53,8 @@ public class CreateFightActivity extends BaseActivity {
 	GridView mDurationGridView;
 	@BindView(R.id.launch_fight)
 	ImageView mLaunchFight;
+	@BindView(R.id.bountyArea)
+	LinearLayout mBountyArea;
 
 	private String mContractsCode = null;
 	private int mVarietyId;
@@ -75,7 +78,7 @@ public class CreateFightActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_fight);
 		ButterKnife.bind(this);
-
+		mLaunchFight.setEnabled(false);
 		requestFutureBattleConfig();
 
 		mBountyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,7 +97,7 @@ public class CreateFightActivity extends BaseActivity {
 					mBountyAdapter.notifyDataSetChanged();
 				}
 				mBountySelected = true;
-				whetherLaunchFight();
+				whetherLaunchBattle();
 				mReward = Double.parseDouble(item);
 			}
 		});
@@ -107,7 +110,7 @@ public class CreateFightActivity extends BaseActivity {
 				mDurationAdapter.setChecked(position);
 				mDurationAdapter.notifyDataSetChanged();
 				mDurationSelected = true;
-				whetherLaunchFight();
+				whetherLaunchBattle();
 				mEndTime = Integer.parseInt(item);
 			}
 		});
@@ -144,7 +147,6 @@ public class CreateFightActivity extends BaseActivity {
 
 		updateIngotConfig();
 		updateDurationConfig();
-		mLaunchFight.setEnabled(false);
 	}
 
 	private void updateIngotConfig() {
@@ -173,7 +175,7 @@ public class CreateFightActivity extends BaseActivity {
 				mVarietyId = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
 				mChooseFutures.setText(mFutureName);
 				mChooseFutures.setSelected(true);
-				whetherLaunchFight();
+				whetherLaunchBattle();
 			}
 		}
 	}
@@ -286,7 +288,7 @@ public class CreateFightActivity extends BaseActivity {
 		}
 	}
 
-	private void whetherLaunchFight() {
+	private void whetherLaunchBattle() {
 		if (mChooseFutures.isSelected()
 				&& (mIngotWar.isSelected() || mIntegralWar.isSelected())
 				&& (mBountySelected)
@@ -304,9 +306,10 @@ public class CreateFightActivity extends BaseActivity {
 				Launcher.with(getActivity(), ChooseFuturesActivity.class)
 						.putExtra(Launcher.EX_PAYLOAD, mContractsCode)
 						.executeForResult(REQ_CODE_CHOOSE_FUTURES);
-				whetherLaunchFight();
+				whetherLaunchBattle();
 				break;
 			case ingotWar:
+				mBountyArea.setVisibility(View.VISIBLE);
 				if (!mIngotWar.isSelected()) {
 					mBountyAdapter.setChecked(-1);
 					mBountySelected = false;
@@ -315,10 +318,11 @@ public class CreateFightActivity extends BaseActivity {
 				mIntegralWar.setSelected(false);
 				mBountyAdapter.setIngotList(mIngotList);
 				updateIngotConfig();
-				whetherLaunchFight();
+				whetherLaunchBattle();
 				mCoinType = 2;
 				break;
 			case R.id.integralWar:
+				mBountyArea.setVisibility(View.VISIBLE);
 				if (!mIntegralWar.isSelected()) {
 					mBountyAdapter.setChecked(-1);
 					mBountySelected = false;
@@ -327,7 +331,7 @@ public class CreateFightActivity extends BaseActivity {
 				mIngotWar.setSelected(false);
 				mBountyAdapter.setIntegralList(mIntegralList);
 				updateIntegralConfig();
-				whetherLaunchFight();
+				whetherLaunchBattle();
 				mCoinType = 3;
 				break;
 			case R.id.launch_fight:
