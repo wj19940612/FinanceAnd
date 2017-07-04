@@ -140,7 +140,7 @@ public class BattleListActivity extends BaseActivity implements
         mLoginBroadcastReceiver = new LoginBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
-        intentFilter.addAction(CreateFightActivity.CREATE_SUCCESS_ACTION);
+        intentFilter.addAction(CreateBattleActivity.CREATE_SUCCESS_ACTION);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mLoginBroadcastReceiver, intentFilter);
     }
@@ -832,7 +832,7 @@ public class BattleListActivity extends BaseActivity implements
                 requestUserFindInfo();
                 requestCurrentBattle();
             }
-            if (intent.getAction()==CreateFightActivity.CREATE_SUCCESS_ACTION){
+            if (intent.getAction()==CreateBattleActivity.CREATE_SUCCESS_ACTION){
                 reset();
                 requestBattleList();
                 if (LocalUser.getUser().isLogin()) {
