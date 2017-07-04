@@ -620,7 +620,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(BattleActivity.this, CreateFightActivity.class).execute();
+                        Launcher.with(BattleActivity.this, CreateBattleActivity.class).execute();
                         finish();
                     }
                 })
