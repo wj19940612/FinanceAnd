@@ -20,7 +20,7 @@ import butterknife.Unbinder;
 
 public class BaseDialogFragment extends DialogFragment {
 
-    private Unbinder mBind;
+    protected Unbinder mBind;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

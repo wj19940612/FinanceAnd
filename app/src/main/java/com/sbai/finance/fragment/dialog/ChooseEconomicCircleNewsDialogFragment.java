@@ -14,7 +14,6 @@ import com.sbai.finance.utils.Launcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/6/8.
@@ -26,7 +25,6 @@ public class ChooseEconomicCircleNewsDialogFragment extends BaseDialogFragment {
     AppCompatTextView mEconomicCircleNewsList;
     @BindView(R.id.cancel)
     AppCompatTextView mCancel;
-    private Unbinder mBind;
 
     @Nullable
     @Override
