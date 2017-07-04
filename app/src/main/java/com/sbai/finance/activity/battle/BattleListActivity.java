@@ -107,8 +107,6 @@ public class BattleListActivity extends BaseActivity implements
         super.onBattlePushReceived(battleWSPush);
         switch (battleWSPush.getContent().getType()) {
             case PushCode.QUICK_MATCH_TIMEOUT:
-                showMatchTimeoutDialog();
-                break;
             case PushCode.QUICK_MATCH_FAILURE:
                 showMatchTimeoutDialog();
                 break;
