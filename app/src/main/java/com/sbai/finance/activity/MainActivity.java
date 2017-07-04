@@ -53,8 +53,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                         if (data.isLatestVersion()) {
                             return;
                         }
-                        data.setForceUpdateAllPreVersions(0);
-                        data.setDownloadUrl("http://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
                         UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
