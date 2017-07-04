@@ -779,7 +779,7 @@ public class BattleListActivity extends BaseActivity implements
                 if (mVersusListAdapter != null) {
                     for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
                         Battle item = mVersusListAdapter.getItem(i);
-                        if (item != null) {
+                        if (item != null&&item.getId()==id) {
                             mVersusListAdapter.remove(item);
                             mVersusListAdapter.notifyDataSetChanged();
                             break;
