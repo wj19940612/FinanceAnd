@@ -181,7 +181,7 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             }
 
             private void bindDataWithView(final Battle item, Context context) {
-                if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
+//                if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
                     Glide.with(context)
                             .load(item.getLaunchUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
@@ -194,20 +194,21 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                             .into(mAgainstAvatar);
                     mMyName.setText(item.getLaunchUserName());
                     mAgainstName.setText(item.getAgainstUserName());
-                } else {
-                    Glide.with(context)
-                            .load(item.getAgainstUserPortrait())
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .transform(new GlideCircleTransform(context))
-                            .into(mMyAvatar);
-                    Glide.with(context)
-                            .load(item.getLaunchUserPortrait())
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .transform(new GlideCircleTransform(context))
-                            .into(mAgainstAvatar);
-                    mMyName.setText(item.getAgainstUserName());
-                    mAgainstName.setText(item.getLaunchUserName());
-                }
+//                }
+//                else {
+//                    Glide.with(context)
+//                            .load(item.getAgainstUserPortrait())
+//                            .placeholder(R.drawable.ic_default_avatar)
+//                            .transform(new GlideCircleTransform(context))
+//                            .into(mMyAvatar);
+//                    Glide.with(context)
+//                            .load(item.getLaunchUserPortrait())
+//                            .placeholder(R.drawable.ic_default_avatar)
+//                            .transform(new GlideCircleTransform(context))
+//                            .into(mAgainstAvatar);
+//                    mMyName.setText(item.getAgainstUserName());
+//                    mAgainstName.setText(item.getLaunchUserName());
+//                }
                 String reward="" ;
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
                     item.setReward(0);
