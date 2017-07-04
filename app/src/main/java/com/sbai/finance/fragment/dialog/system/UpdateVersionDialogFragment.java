@@ -1,11 +1,21 @@
 package com.sbai.finance.fragment.dialog.system;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -18,7 +28,10 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.AppVersionModel;
+import com.sbai.finance.service.DownloadService;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.PermissionUtil;
+import com.sbai.finance.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,13 +48,25 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     TextView mUpdateVersionMsg;
     @BindView(R.id.update)
     TextView mUpdate;
+    @BindView(R.id.dialogDelete)
+    AppCompatImageView mDialogDelete;
     private Unbinder mBind;
     private AppVersionModel mAppVersionModel;
+    private boolean mIsCanceledOnTouchOutside;
 
-    public static UpdateVersionDialogFragment newInstance(AppVersionModel appVersionModel) {
+
+    private BroadcastReceiver mDownloadBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
+
+    public static UpdateVersionDialogFragment newInstance(AppVersionModel appVersionModel, boolean isCanceledOnTouchOutside) {
         Bundle args = new Bundle();
         UpdateVersionDialogFragment fragment = new UpdateVersionDialogFragment();
         args.putParcelable(Launcher.EX_PAYLOAD, appVersionModel);
+        args.putBoolean(Launcher.EX_PAYLOAD_1, isCanceledOnTouchOutside);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +77,10 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
             mAppVersionModel = getArguments().getParcelable(Launcher.EX_PAYLOAD);
+            mIsCanceledOnTouchOutside = getArguments().getBoolean(Launcher.EX_PAYLOAD_1, true);
         }
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mDownloadBroadcastReceiver,
+                new IntentFilter(DownloadService.ACTION_DOWNLOAD_COMPLETE));
     }
 
     @Nullable
@@ -72,27 +100,48 @@ public class UpdateVersionDialogFragment extends DialogFragment {
 
     private void initDialog() {
         Dialog dialog = getDialog();
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(!mIsCanceledOnTouchOutside);
         Window window = getDialog().getWindow();
         if (window != null) {
             window.setGravity(Gravity.CENTER);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
         }
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    return true;
+                    return mIsCanceledOnTouchOutside;
                 }
                 return false;
             }
         });
+        mDialogDelete.setVisibility(mIsCanceledOnTouchOutside ? View.GONE : View.VISIBLE);
     }
 
     public void show(FragmentManager manager) {
         this.show(manager, this.getClass().getSimpleName());
+    }
+
+    private boolean isStoragePermissionGranted() {
+        return PermissionUtil.isStoragePermissionGranted(getActivity(), PermissionUtil.REQ_CODE_ASK_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionUtil.REQ_CODE_ASK_PERMISSION) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    mUpdate.performLongClick();
+                } else {
+                    ToastUtil.show(R.string.download_fail);
+                }
+            }
+        }
     }
 
     @Override
@@ -103,8 +152,38 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         }
     }
 
-    @OnClick(R.id.update)
-    public void onViewClicked() {
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            LocalBroadcastManager.getInstance(getActivity())
+                    .unregisterReceiver(mDownloadBroadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
+
+    @OnClick({R.id.dialogDelete, R.id.update})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.dialogDelete:
+                dismissAllowingStateLoss();
+                break;
+            case R.id.update:
+                updateApp();
+                break;
+        }
+    }
+
+    private void updateApp() {
+        if (mAppVersionModel == null || TextUtils.isEmpty(mAppVersionModel.getDownloadUrl())) {
+            return;
+        }
+        if (isStoragePermissionGranted()) {
+            Intent intent = new Intent(getActivity(), DownloadService.class);
+            intent.putExtra(DownloadService.KEY_DOWN_LOAD_URL, mAppVersionModel.getDownloadUrl());
+            getActivity().startService(intent);
+        }
+    }
+
 }

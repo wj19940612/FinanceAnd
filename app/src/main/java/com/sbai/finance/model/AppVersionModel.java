@@ -152,6 +152,10 @@ public class AppVersionModel implements Parcelable {
         return false;
     }
 
+    public boolean isLatestVersion() {
+        return AppInfo.getVersionName(App.getAppContext()).equalsIgnoreCase(getLastVersion());
+    }
+
     @Override
     public String toString() {
         return "AppVersionModel{" +

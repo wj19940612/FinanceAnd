@@ -2,12 +2,15 @@ package com.sbai.finance.activity.mine;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
+import com.sbai.finance.model.AppVersionModel;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -60,9 +63,27 @@ public class AboutUsActivity extends BaseActivity {
                 openUserProtocolPage();
                 break;
             case R.id.checkUpdate:
-                // TODO: 2017/6/7 用户更新
+                checkVersion();
                 break;
         }
+    }
+
+    private void checkVersion() {
+        Client.updateVersion()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
+                    @Override
+                    protected void onRespSuccessData(AppVersionModel data) {
+                        Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        if (data.isLatestVersion()) {
+                            return;
+                        }
+                        data.setUpdateLog("副科级第三方科技\n肯定是附近即可恢复快结婚肯定就是\n副科级大家看法和大家看好房价肯定撒谎\n卡进来打卡机了公开建档立卡给家里\n时快捷回复尽快哈是否看见的哈萨克金凤凰\nsfsjkhfkjdsahfkjdha\n开发商就开好房间卡活动是否健康");
+                        data.setDownloadUrl("http://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
+                        UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                    }
+                })
+                .fireSync();
     }
 
     private void openUserProtocolPage() {
@@ -73,7 +94,7 @@ public class AboutUsActivity extends BaseActivity {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
 //                                .putExtra(WebActivity.EX_HTML, data.getContent())
-                                .putExtra(WebActivity.EX_URL,Client.WEB_USER_PROTOCOL_PAGE_URL)
+                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
                     }

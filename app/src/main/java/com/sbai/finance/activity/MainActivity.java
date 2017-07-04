@@ -11,6 +11,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
+import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersionModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -48,7 +49,12 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     @Override
                     protected void onRespSuccessData(AppVersionModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
-
+                        if (data.isLatestVersion()) {
+                            return;
+                        }
+                        data.setUpdateLog("副科级第三方科技\n肯定是附近即可恢复快结婚肯定就是\n副科级大家看法和大家看好房价肯定撒谎\n卡进来打卡机了公开建档立卡给家里\n时快捷回复尽快哈是否看见的哈萨克金凤凰\nsfsjkhfkjdsahfkjdha\n开发商就开好房间卡活动是否健康");
+                        data.setDownloadUrl("http://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
+                        UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
                 .fireSync();
