@@ -41,340 +41,326 @@ import static com.sbai.finance.R.id.ingotWar;
 
 public class CreateBattleActivity extends BaseActivity {
 
-	public static final int REQ_CODE_CHOOSE_FUTURES = 1001;
-	public static final String CREATE_SUCCESS_ACTION = "CREATE_SUCCESS_ACTION";
-	@BindView(R.id.chooseFutures)
-	TextView mChooseFutures;
-	@BindView(ingotWar)
-	TextView mIngotWar;
-	@BindView(R.id.integralWar)
-	TextView mIntegralWar;
-	@BindView(R.id.bountyGridView)
-	GridView mBountyGridView;
-	@BindView(R.id.durationGridView)
-	GridView mDurationGridView;
-	@BindView(R.id.launch_fight)
-	ImageView mLaunchFight;
-	@BindView(R.id.bountyArea)
-	LinearLayout mBountyArea;
+    public static final int REQ_CODE_CHOOSE_FUTURES = 1001;
+    public static final String CREATE_SUCCESS_ACTION = "CREATE_SUCCESS_ACTION";
+    @BindView(R.id.chooseFutures)
+    TextView mChooseFutures;
+    @BindView(ingotWar)
+    TextView mIngotWar;
+    @BindView(R.id.integralWar)
+    TextView mIntegralWar;
+    @BindView(R.id.bountyGridView)
+    GridView mBountyGridView;
+    @BindView(R.id.durationGridView)
+    GridView mDurationGridView;
+    @BindView(R.id.launch_fight)
+    ImageView mLaunchFight;
+    @BindView(R.id.bountyArea)
+    LinearLayout mBountyArea;
 
-	private String mContractsCode = null;
-	private int mVarietyId;
-	private int mCoinType;
-	private double mReward;
-	private int mEndTime;
-	private String mFutureName;
-	private String[] mIngotArray;
-	private String[] mIntegralArray;
-	private String[] mDurationArray;
-	private List<String> mIngotList;//元宝赏金
-	private List<String> mIntegralList;//积分赏金
-	private List<String> mDurationList;//时长
-	private BountyAdapter mBountyAdapter;
-	private DurationAdapter mDurationAdapter;
-	private boolean mBountySelected = false;
-	private boolean mDurationSelected = false;
+    private String mContractsCode = null;
+    private int mVarietyId;
+    private int mCoinType;
+    private double mReward;
+    private int mEndTime;
+    private String mFutureName;
+    private List<String> mIngotList;//元宝赏金
+    private List<String> mIntegralList;//积分赏金
+    private List<String> mDurationList;//时长
+    private BountyAdapter mBountyAdapter;
+    private DurationAdapter mDurationAdapter;
+    private boolean mBountySelected = false;
+    private boolean mDurationSelected = false;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_create_fight);
-		ButterKnife.bind(this);
-		mLaunchFight.setEnabled(false);
-		requestFutureBattleConfig();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_fight);
+        ButterKnife.bind(this);
+        mLaunchFight.setEnabled(false);
 
-		mBountyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String item = (String) parent.getItemAtPosition(position);
-				if (mIntegralWar.isSelected()) {
-					mBountyAdapter.clear();
-					mBountyAdapter.addAll(mIntegralList);
-					mBountyAdapter.setChecked(position);
-					mBountyAdapter.notifyDataSetChanged();
-				} else {
-					mBountyAdapter.clear();
-					mBountyAdapter.addAll(mIngotList);
-					mBountyAdapter.setChecked(position);
-					mBountyAdapter.notifyDataSetChanged();
-				}
-				mBountySelected = true;
-				whetherLaunchBattle();
-				mReward = Double.parseDouble(item);
-			}
-		});
-		mDurationGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String item = (String) parent.getItemAtPosition(position);
-				mDurationAdapter.clear();
-				mDurationAdapter.addAll(mDurationList);
-				mDurationAdapter.setChecked(position);
-				mDurationAdapter.notifyDataSetChanged();
-				mDurationSelected = true;
-				whetherLaunchBattle();
-				mEndTime = Integer.parseInt(item);
-			}
-		});
-	}
+        mBountyAdapter = new BountyAdapter(this);
+        mDurationAdapter = new DurationAdapter(this);
+        mBountyGridView.setAdapter(mBountyAdapter);
+        mDurationGridView.setAdapter(mDurationAdapter);
+        requestFutureBattleConfig();
 
-	private void requestFutureBattleConfig() {
-		Client.getFutureBattleConfig().setTag(TAG).setIndeterminate(this)
-				.setCallback(new Callback2D<Resp<FutureBattleConfig>, FutureBattleConfig>() {
-					@Override
-					protected void onRespSuccessData(FutureBattleConfig futureBattleConfig) {
-						updateFutureBattleConfig(futureBattleConfig);
-					}
-				}).fire();
-	}
+        mBountyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) parent.getItemAtPosition(position);
+                if (mIntegralWar.isSelected()) {
+                    updateIntegralConfig();
+                    mBountyAdapter.setChecked(position);
+                    mBountyAdapter.notifyDataSetChanged();
+                } else {
+                    updateIngotConfig();
+                    mBountyAdapter.setChecked(position);
+                    mBountyAdapter.notifyDataSetChanged();
+                }
+                mBountySelected = true;
+                whetherLaunchBattle();
+                mReward = Double.parseDouble(item);
+            }
+        });
+        mDurationGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = (String) parent.getItemAtPosition(position);
+                updateDurationConfig();
+                mDurationAdapter.setChecked(position);
+                mDurationAdapter.notifyDataSetChanged();
+                mDurationSelected = true;
+                whetherLaunchBattle();
+                mEndTime = Integer.parseInt(item);
+            }
+        });
+    }
 
-	private void updateFutureBattleConfig(FutureBattleConfig futureBattleConfig) {
+    private void requestFutureBattleConfig() {
+        Client.getFutureBattleConfig().setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<FutureBattleConfig>, FutureBattleConfig>() {
+                    @Override
+                    protected void onRespSuccessData(FutureBattleConfig futureBattleConfig) {
+                        updateFutureBattleConfig(futureBattleConfig);
+                    }
+                }).fire();
+    }
 
-		mIngotArray = futureBattleConfig.getGold().split(",");
-		mIntegralArray = futureBattleConfig.getIntegral().split(",");
-		mDurationArray = futureBattleConfig.getTime().split(",");
+    private void updateFutureBattleConfig(FutureBattleConfig futureBattleConfig) {
+        mIngotList = Arrays.asList(futureBattleConfig.getGold().split(","));
+        mIntegralList = Arrays.asList(futureBattleConfig.getIntegral().split(","));
+        mDurationList = Arrays.asList(futureBattleConfig.getTime().split(","));
+        mIngotList = new ArrayList<>(mIngotList);
+        mIntegralList = new ArrayList<>(mIntegralList);
+        mDurationList = new ArrayList<>(mDurationList);
 
-		mIngotList = Arrays.asList(mIngotArray);
-		mIntegralList = Arrays.asList(mIntegralArray);
-		mDurationList = Arrays.asList(mDurationArray);
+        if (mIngotList != null && !mIngotList.isEmpty()) {
+            mBountyArea.setVisibility(View.VISIBLE);
+        }
 
-		mIngotList = new ArrayList<>(mIngotList);
-		mIntegralList = new ArrayList<>(mIntegralList);
-		mDurationList = new ArrayList<>(mDurationList);
+        updateIngotConfig();
+        updateDurationConfig();
+    }
 
-		mBountyAdapter = new BountyAdapter(this, mIngotList);
-		mDurationAdapter = new DurationAdapter(this, mDurationList);
-		mBountyGridView.setAdapter(mBountyAdapter);
-		mDurationGridView.setAdapter(mDurationAdapter);
+    private void updateIngotConfig() {
+        if (mIngotList == null || mIngotList.isEmpty()) return;
+        mBountyAdapter.clear();
+        mBountyAdapter.addAll(mIngotList);
+    }
 
-		updateIngotConfig();
-		updateDurationConfig();
-	}
-
-	private void updateIngotConfig() {
-		mBountyAdapter.clear();
-		mBountyAdapter.addAll(mIngotList);
-	}
-
-	private void updateIntegralConfig() {
-		mBountyAdapter.clear();
-		mBountyAdapter.addAll(mIntegralList);
-	}
+    private void updateIntegralConfig() {
+        if (mIntegralList == null || mIntegralList.isEmpty()) return;
+        mBountyAdapter.clear();
+        mBountyAdapter.addAll(mIntegralList);
+    }
 
 
-	private void updateDurationConfig() {
-		mDurationAdapter.clear();
-		mDurationAdapter.addAll(mDurationList);
-	}
+    private void updateDurationConfig() {
+        if (mDurationList == null || mDurationList.isEmpty()) return;
+        mDurationAdapter.clear();
+        mDurationAdapter.addAll(mDurationList);
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQ_CODE_CHOOSE_FUTURES && resultCode == RESULT_OK) {
-			if (data != null) {
-				mFutureName = data.getStringExtra(Launcher.EX_PAYLOAD);
-				mContractsCode = data.getStringExtra(Launcher.EX_PAYLOAD_1);
-				mVarietyId = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-				mChooseFutures.setText(mFutureName);
-				mChooseFutures.setSelected(true);
-				whetherLaunchBattle();
-			}
-		}
-	}
+    @OnClick({R.id.chooseFutures, ingotWar, R.id.integralWar, R.id.launch_fight})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.chooseFutures:
+                Launcher.with(getActivity(), ChooseFuturesActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, mContractsCode)
+                        .executeForResult(REQ_CODE_CHOOSE_FUTURES);
+                whetherLaunchBattle();
+                break;
+            case ingotWar:
+                mBountyArea.setVisibility(View.VISIBLE);
+                if (!mIngotWar.isSelected()) {
+                    mBountyAdapter.setChecked(-1);
+                    mBountySelected = false;
+                }
+                mIngotWar.setSelected(true);
+                mIntegralWar.setSelected(false);
+                updateIngotConfig();
+                whetherLaunchBattle();
+                mCoinType = 2;
+                break;
+            case R.id.integralWar:
+                mBountyArea.setVisibility(View.VISIBLE);
+                if (!mIntegralWar.isSelected()) {
+                    mBountyAdapter.setChecked(-1);
+                    mBountySelected = false;
+                }
+                mIntegralWar.setSelected(true);
+                mIngotWar.setSelected(false);
+                updateIntegralConfig();
+                whetherLaunchBattle();
+                mCoinType = 3;
+                break;
+            case R.id.launch_fight:
+                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
+                createBattleRoom();
+                break;
+        }
+    }
 
-	static class BountyAdapter extends ArrayAdapter<String> {
-		private Context mContext;
-		private List<String> mBountyAList;
-		private int mChecked = -1;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_CHOOSE_FUTURES && resultCode == RESULT_OK) {
+            if (data != null) {
+                mFutureName = data.getStringExtra(Launcher.EX_PAYLOAD);
+                mContractsCode = data.getStringExtra(Launcher.EX_PAYLOAD_1);
+                mVarietyId = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+                mChooseFutures.setText(mFutureName);
+                mChooseFutures.setSelected(true);
+                whetherLaunchBattle();
+            }
+        }
+    }
 
-		private BountyAdapter(Context context, List<String> ingotList) {
-			super(context, 0);
-			this.mContext = context;
-			this.mBountyAList = ingotList;
-		}
+    static class BountyAdapter extends ArrayAdapter<String> {
+        private Context mContext;
+        private int mChecked = -1;
 
-		public void setChecked(int checked) {
-			this.mChecked = checked;
-		}
+        public BountyAdapter(@NonNull Context context) {
+            super(context, 0);
+            mContext = context;
+        }
 
-		private void setIntegralList(List<String> integralList) {
-			this.mBountyAList = integralList;
-		}
+        public void setChecked(int checked) {
+            this.mChecked = checked;
+        }
 
-		private void setIngotList(List<String> ingotList) {
-			this.mBountyAList = ingotList;
-		}
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_create_fight, null);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.bindingData(getItem(position), position, mChecked);
+            return convertView;
+        }
 
-		@NonNull
-		@Override
-		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-			ViewHolder viewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.row_create_fight, null);
-				viewHolder = new ViewHolder(convertView);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			viewHolder.bindingData(mBountyAList, position, mChecked);
-			return convertView;
-		}
+        static class ViewHolder {
+            @BindView(R.id.choice)
+            TextView mChoice;
 
-		static class ViewHolder {
-			@BindView(R.id.choice)
-			TextView mChoice;
+            ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
 
-			ViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
+            public void bindingData(String bounty, int position, int checked) {
+                mChoice.setText(bounty);
+                mChoice.setSelected(false);
+                if (checked == position) {
+                    mChoice.setSelected(true);
+                } else {
+                    mChoice.setEnabled(false);
+                }
+            }
+        }
+    }
 
-			public void bindingData(List<String> bountyAList, int position, int checked) {
-				mChoice.setText(bountyAList.get(position));
-				mChoice.setSelected(false);
-				if (checked == position) {
-					mChoice.setSelected(true);
-				} else {
-					mChoice.setEnabled(false);
-				}
-			}
-		}
-	}
+    static class DurationAdapter extends ArrayAdapter<String> {
+        private Context mContext;
+        private int mChecked = -1;
 
-	static class DurationAdapter extends ArrayAdapter<String> {
-		private Context mContext;
-		private List<String> mDurationList;
-		private int mChecked = -1;
+        public DurationAdapter(@NonNull Context context) {
+            super(context, 0);
+            mContext = context;
+        }
 
-		private DurationAdapter(Context context, List<String> durationList) {
-			super(context, 0);
-			this.mContext = context;
-			this.mDurationList = durationList;
-		}
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_create_fight, null);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.bindingData(mContext, getItem(position), position, mChecked);
+            return convertView;
+        }
 
-		@NonNull
-		@Override
-		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-			ViewHolder viewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.row_create_fight, null);
-				viewHolder = new ViewHolder(convertView);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			viewHolder.bindingData(mContext, mDurationList, position, mChecked);
-			return convertView;
-		}
+        public void setChecked(int checked) {
+            this.mChecked = checked;
+        }
 
-		public void setChecked(int checked) {
-			this.mChecked = checked;
-		}
+        static class ViewHolder {
+            @BindView(R.id.choice)
+            TextView mChoice;
 
-		static class ViewHolder {
-			@BindView(R.id.choice)
-			TextView mChoice;
+            ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
 
-			ViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
+            public void bindingData(Context context, String duration, int position, int checked) {
+                mChoice.setText(context.getString(R.string.minute, duration));
+                mChoice.setSelected(false);
+                if (checked == position) {
+                    mChoice.setSelected(true);
+                } else {
+                    mChoice.setEnabled(false);
+                }
+            }
+        }
+    }
 
-			public void bindingData(Context context, List<String> durationList, int position, int checked) {
-				mChoice.setText(context.getString(R.string.minute, durationList.get(position)));
-				mChoice.setSelected(false);
-				if (checked == position) {
-					mChoice.setSelected(true);
-				} else {
-					mChoice.setEnabled(false);
-				}
-			}
-		}
-	}
+    private void whetherLaunchBattle() {
+        if (mChooseFutures.isSelected()
+                && (mIngotWar.isSelected() || mIntegralWar.isSelected())
+                && (mBountySelected)
+                && (mDurationSelected)) {
+            mLaunchFight.setEnabled(true);
+        } else {
+            mLaunchFight.setEnabled(false);
+        }
+    }
 
-	private void whetherLaunchBattle() {
-		if (mChooseFutures.isSelected()
-				&& (mIngotWar.isSelected() || mIntegralWar.isSelected())
-				&& (mBountySelected)
-				&& (mDurationSelected)) {
-			mLaunchFight.setEnabled(true);
-		} else {
-			mLaunchFight.setEnabled(false);
-		}
-	}
 
-	@OnClick({R.id.chooseFutures, ingotWar, R.id.integralWar, R.id.launch_fight})
-	public void onViewClicked(View view) {
-		switch (view.getId()) {
-			case R.id.chooseFutures:
-				Launcher.with(getActivity(), ChooseFuturesActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mContractsCode)
-						.executeForResult(REQ_CODE_CHOOSE_FUTURES);
-				whetherLaunchBattle();
-				break;
-			case ingotWar:
-				mBountyArea.setVisibility(View.VISIBLE);
-				if (!mIngotWar.isSelected()) {
-					mBountyAdapter.setChecked(-1);
-					mBountySelected = false;
-				}
-				mIngotWar.setSelected(true);
-				mIntegralWar.setSelected(false);
-				mBountyAdapter.setIngotList(mIngotList);
-				updateIngotConfig();
-				whetherLaunchBattle();
-				mCoinType = 2;
-				break;
-			case R.id.integralWar:
-				mBountyArea.setVisibility(View.VISIBLE);
-				if (!mIntegralWar.isSelected()) {
-					mBountyAdapter.setChecked(-1);
-					mBountySelected = false;
-				}
-				mIntegralWar.setSelected(true);
-				mIngotWar.setSelected(false);
-				mBountyAdapter.setIntegralList(mIntegralList);
-				updateIntegralConfig();
-				whetherLaunchBattle();
-				mCoinType = 3;
-				break;
-			case R.id.launch_fight:
-				umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
-				Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
-						.setCallback(new Callback2D<Resp<Battle>, Battle>(false) {
-							@Override
-							protected void onRespSuccessData(Battle battle) {
-								Launcher.with(getActivity(), BattleActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, battle)
-										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
-										.execute();
-								LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
-								finish();
-							}
+    private void createBattleRoom() {
+        Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Battle>, Battle>(false) {
+                    @Override
+                    protected void onRespSuccessData(Battle battle) {
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, battle)
+                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                .execute();
+                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
+                        finish();
+                    }
 
-							@Override
-							protected void onReceive(Resp<Battle> battleResp) {
-								super.onReceive(battleResp);
+                    @Override
+                    protected void onReceive(Resp<Battle> battleResp) {
+                        super.onReceive(battleResp);
+                        showCreateBattleMoneyIsNotEnoughDialog(battleResp);
 
-								if (battleResp.isSuccess()) {
+                    }
+                }).fire();
+    }
 
-								} else if (battleResp.getCode() == 2201) {
-									SmartDialog.with(getActivity()).setMessage("余额不足,创建失败")
-											.setMessageTextSize(15)
-											.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-												@Override
-												public void onClick(Dialog dialog) {
-													dialog.dismiss();
-												}
-											})
-											.setTitle("提示")
-											.setNegativeVisible(View.GONE)
-											.show();
-								} else {
-									ToastUtil.curt(battleResp.getMsg());
-								}
-
-							}
-						}).fire();
-				break;
-		}
-	}
+    private void showCreateBattleMoneyIsNotEnoughDialog(Resp<Battle> battleResp) {
+        if (battleResp.getCode() == 2201) {
+            SmartDialog.with(getActivity()).setMessage("余额不足,创建失败")
+                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setTitle("提示")
+                    .setNegativeVisible(View.GONE)
+                    .show();
+        } else {
+            ToastUtil.curt(battleResp.getMsg());
+        }
+    }
 }
