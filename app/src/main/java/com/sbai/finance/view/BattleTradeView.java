@@ -182,7 +182,7 @@ public class BattleTradeView extends LinearLayout {
         }
     }
 
-    public void setTradeData(int direction, double buyPrice, double profit) {
+    public void setTradeData(int direction, String buyPrice, double profit) {
         //设置方向  买入价格 盈利
         if (direction == DIRECTION_UP) {
             mDirection.setText(getContext().getString(R.string.take_more));
@@ -190,7 +190,7 @@ public class BattleTradeView extends LinearLayout {
             mDirection.setText(getContext().getString(R.string.take_short));
         }
 
-        mBuyPrice.setText(FinanceUtil.formatWithScale(buyPrice));
+        mBuyPrice.setText(buyPrice);
 
         if (profit >= 0) {
             mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
