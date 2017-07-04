@@ -142,6 +142,7 @@ public class BattleListActivity extends BaseActivity implements
         mLoginBroadcastReceiver = new LoginBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
+        intentFilter.addAction(CreateFightActivity.CREATE_SUCCESS_ACTION);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mLoginBroadcastReceiver, intentFilter);
     }
@@ -778,7 +779,7 @@ public class BattleListActivity extends BaseActivity implements
                 if (mVersusListAdapter != null) {
                     for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
                         Battle item = mVersusListAdapter.getItem(i);
-                        if (item != null) {
+                        if (item != null&&item.getId()==id) {
                             mVersusListAdapter.remove(item);
                             mVersusListAdapter.notifyDataSetChanged();
                             break;
@@ -832,6 +833,14 @@ public class BattleListActivity extends BaseActivity implements
                 updateAvatar();
                 requestUserFindInfo();
                 requestCurrentBattle();
+            }
+            if (intent.getAction()==CreateFightActivity.CREATE_SUCCESS_ACTION){
+                reset();
+                requestBattleList();
+                if (LocalUser.getUser().isLogin()) {
+                    requestCurrentBattle();
+                    requestUserFindInfo();
+                }
             }
         }
     }
