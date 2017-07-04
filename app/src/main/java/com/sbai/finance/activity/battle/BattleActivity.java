@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
@@ -71,6 +74,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     LinearLayout mFutureArea;
     @BindView(R.id.battleView)
     BattleFloatView mBattleView;
+
+    @BindView(R.id.loading)
+    ImageView mLoading;
+    @BindView(R.id.loadingContent)
+    LinearLayout mLoadingContent;
 
     private BattleFragment mBattleFragment;
     private FutureBattleDetailFragment mFutureBattleDetailFragment;
@@ -405,6 +413,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                                 mBattleRoom.setRoomState(ROOM_STATE_END);
                             }
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END) {
+                                dismissCalculatingView();
                                 showGameOverDialog();
                             }
                         }
@@ -718,7 +727,20 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         long currentTime = SysTime.getSysTime().getSystemTimestamp();
         long startTime = mBattle.getStartTime();
         int diff = mBattle.getEndline() - DateUtil.getDiffSeconds(currentTime, startTime);
+        if (diff == 0 && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
+            showCalculatingView();
+        }
         mBattleView.setDeadline(mBattle.getGameStatus(), diff);
+    }
+
+    private void showCalculatingView() {
+        mLoadingContent.setVisibility(View.VISIBLE);
+        mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
+    }
+
+    private void dismissCalculatingView() {
+        mLoading.clearAnimation();
+        mLoadingContent.setVisibility(View.GONE);
     }
 
     @Override
