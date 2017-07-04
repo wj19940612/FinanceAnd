@@ -149,6 +149,7 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void onClose() {
+        mWSClient = null;
         mStatus = Status.UNREGISTERED;
         if (mCloseAuto) { // if close automatically, reconnect
             connect();
@@ -157,6 +158,7 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void onError() {
+        mWSClient = null;
         mStatus = Status.UNREGISTERED;
     }
 
