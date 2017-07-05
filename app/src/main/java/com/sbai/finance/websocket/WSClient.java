@@ -11,7 +11,9 @@ import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.httplib.CookieManger;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -152,7 +154,7 @@ public class WSClient implements WSAbsClient {
         mWSClient = null;
         mStatus = Status.UNREGISTERED;
         if (mCloseAuto) { // if close automatically, reconnect
-            connect();
+            //connect();
         }
     }
 
@@ -267,7 +269,6 @@ public class WSClient implements WSAbsClient {
         if (mWSClient.isOpen()) {
             WSMessage heartMsg = new WSMessage(SocketCode.CODE_HEART, null);
             mWSClient.send(heartMsg.toJson());
-            Log.d(TAG, "sendHeart: " + heartMsg);
         }
     }
 
@@ -335,6 +336,18 @@ public class WSClient implements WSAbsClient {
             if (client != null) {
                 client.onError();
             }
+        }
+
+        @Override
+        public void onWebsocketPong(WebSocket conn, Framedata f) {
+            super.onWebsocketPong(conn, f);
+            Log.d(TAG, "onWebsocketPong: ");
+        }
+
+        @Override
+        public void onWebsocketPing(WebSocket conn, Framedata f) {
+            super.onWebsocketPing(conn, f);
+            Log.d(TAG, "onWebsocketPing: ");
         }
     }
 }
