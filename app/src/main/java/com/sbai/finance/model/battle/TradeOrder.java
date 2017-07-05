@@ -35,7 +35,6 @@ public class TradeOrder {
     private int handsNum;
     private int id;
     private long modifyTime;
-    private String orderMarket;
     private double orderPrice;
     private int orderStatus;
     private long orderTime;
@@ -114,14 +113,6 @@ public class TradeOrder {
 
     public void setModifyTime(long modifyTime) {
         this.modifyTime = modifyTime;
-    }
-
-    public String getOrderMarket() {
-        return orderMarket;
-    }
-
-    public void setOrderMarket(String orderMarket) {
-        this.orderMarket = orderMarket;
     }
 
     public double getOrderPrice() {
