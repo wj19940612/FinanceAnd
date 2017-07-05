@@ -213,6 +213,8 @@ public class WsClient implements AbsWsClient {
             e.printStackTrace();
         }
 
+        Log.d(TAG, "onMessage: " + message);
+
         if (resp == null) return;
 
         if (resp.getCode() == SocketCode.CODE_RESP_REGISTER_SUCCESS) {

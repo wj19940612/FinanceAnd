@@ -94,6 +94,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private SmartDialog mCancelMatchDialog;
     private SmartDialog mOvertimeMatchDialog;
     private SmartDialog mCancelBattleDialog;
+    private SmartDialog mMatchConfirmDialog;
 
     private Battle mBattle;
     private BattleInfo mBattleInfo;
@@ -157,7 +158,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
 
-        if (!LocalUser.getUser().isLogin()){
+        if (!LocalUser.getUser().isLogin()) {
             Launcher.with(BattleActivity.this, MainActivity.class).execute();
             finish();
             return;
@@ -324,6 +325,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         }
         if (mCancelBattleDialog != null) {
             mCancelBattleDialog.dismiss();
+        }
+        if (mMatchConfirmDialog != null) {
+            mMatchConfirmDialog.dismiss();
         }
     }
 
@@ -522,7 +526,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     public void onMatchButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
-        requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
+        showMatchConfirmDialog();
     }
 
     //初始化开始游戏弹窗
@@ -590,6 +594,27 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
 
         });
+    }
+
+    private void showMatchConfirmDialog() {
+        if (mMatchConfirmDialog == null) {
+            mMatchConfirmDialog = SmartDialog.with(getActivity(), getString(R.string.start_match_and_battle), getString(R.string.match_battle))
+                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
+                        }
+                    })
+                    .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+        }
+
+        mMatchConfirmDialog.show();
     }
 
     //匹配超时弹窗
