@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -49,6 +48,8 @@ import com.sbai.finance.websocket.cmd.SubscribeBattle;
 import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
 import com.sbai.httplib.BuildConfig;
+
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +101,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private BattleInfo mBattleInfo;
     private BattleRoom mBattleRoom;
     private int mPageType;
+    private HashSet<Long> mSet;
 
     private BattleResultDialogFragment mBattleResultDialogFragment = null;
 
@@ -218,6 +220,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattle == null && !TextUtils.isEmpty(batchCode)) {
             requestLastBattleInfo(battleId, batchCode);
         }
+        mSet = new HashSet<>();
     }
 
     private void initViews() {
@@ -499,8 +502,10 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END
                                     && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
-                                Log.d(TAG, "对战出现结果: ");
-                                showGameOverDialog();
+
+                                if (mSet.add(mBattleInfo.getEndTime())) {
+                                    showGameOverDialog();
+                                }
                             }
                         }
                     }
@@ -867,5 +872,12 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mPageType == PAGE_TYPE_VERSUS) {
             requestUnSubscribeBattle();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopScheduleJob();
+        mSet.clear();
     }
 }

@@ -338,4 +338,40 @@ public class BattleInfo {
         battle.setLaunchPraise(info.getLaunchPraise());
         return battle;
     }
+
+    @Override
+    public String toString() {
+        return "BattleInfo{" +
+                "againstFrom='" + againstFrom + '\'' +
+                ", againstPraise=" + againstPraise +
+                ", againstScore=" + againstScore +
+                ", againstUnwindScore=" + againstUnwindScore +
+                ", againstUser=" + againstUser +
+                ", againstUserName='" + againstUserName + '\'' +
+                ", againstUserPortrait='" + againstUserPortrait + '\'' +
+                ", batchCode='" + batchCode + '\'' +
+                ", bigVarietyType='" + bigVarietyType + '\'' +
+                ", coinType=" + coinType +
+                ", createTime=" + createTime +
+                ", endTime=" + endTime +
+                ", endline=" + endline +
+                ", gameStatus=" + gameStatus +
+                ", id=" + id +
+                ", launchPraise=" + launchPraise +
+                ", launchScore=" + launchScore +
+                ", launchUnwindScore=" + launchUnwindScore +
+                ", launchUser=" + launchUser +
+                ", launchUserName='" + launchUserName + '\'' +
+                ", launchUserPortrait='" + launchUserPortrait + '\'' +
+                ", loginUser=" + loginUser +
+                ", modifyTime=" + modifyTime +
+                ", reward=" + reward +
+                ", startTime=" + startTime +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                ", winResult=" + winResult +
+                ", commission=" + commission +
+                '}';
+    }
 }

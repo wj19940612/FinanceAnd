@@ -146,10 +146,10 @@ public class BattleResultDialogFragment extends BaseDialogFragment {
 
     public void show(FragmentManager manager) {
         if (manager == null) return;
-        if (!isAdded()) {
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.add(this, this.getClass().getSimpleName());
-            ft.commitAllowingStateLoss();
+        if (!isVisible()) {
+            FragmentTransaction fragmentTransaction = manager.beginTransaction();
+            fragmentTransaction.add(this, this.getClass().getSimpleName());
+            fragmentTransaction.commitNowAllowingStateLoss();
         }
     }
 
