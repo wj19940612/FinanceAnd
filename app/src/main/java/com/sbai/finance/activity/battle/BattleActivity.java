@@ -360,7 +360,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         }
 
-        requestSubscribeBattle();
         requestBattleInfo();
     }
 
@@ -860,12 +859,22 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattleRoom != null && mBattleRoom.getRoomState() != ROOM_STATE_END) {
             requestBattleInfo();
         }
+        if (mPageType == PAGE_TYPE_VERSUS) {
+            requestSubscribeBattle();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mPageType == PAGE_TYPE_VERSUS) {
+            requestUnSubscribeBattle();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopScheduleJob();
-        requestUnSubscribeBattle();
     }
 }
