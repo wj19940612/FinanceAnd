@@ -63,7 +63,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     private BroadcastReceiver mDownloadBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            dismissAllowingStateLoss();
+//            dismissAllowingStateLoss();
             ToastUtil.show(R.string.download_complete);
         }
     };
