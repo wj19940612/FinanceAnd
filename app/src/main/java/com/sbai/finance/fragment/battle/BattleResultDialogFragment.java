@@ -49,7 +49,7 @@ public class BattleResultDialogFragment extends BaseDialogFragment {
 
     private OnCloseListener mListener;
 
-    private int  mResult;
+    private int mResult;
     private String mContent;
 
     Unbinder unbinder;
@@ -75,7 +75,6 @@ public class BattleResultDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mResult = getArguments().getInt(EX_PAYLOAD);
             mContent = getArguments().getString(EX_PAYLOAD_1);
@@ -129,8 +128,17 @@ public class BattleResultDialogFragment extends BaseDialogFragment {
 
     }
 
+    public void setResult(int result) {
+        mResult = result;
+    }
+
+    public void setContent(String content) {
+        mContent = content;
+    }
+
     @OnClick(R.id.dialogDelete)
     public void onViewClicked() {
+        dismissAllowingStateLoss();
         if (mListener != null) {
             mListener.onClose();
         }
@@ -138,11 +146,12 @@ public class BattleResultDialogFragment extends BaseDialogFragment {
 
     public void show(FragmentManager manager) {
         if (manager == null) return;
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, this.getClass().getSimpleName());
-        ft.commitAllowingStateLoss();
+        if (!isAdded()) {
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, this.getClass().getSimpleName());
+            ft.commitAllowingStateLoss();
+        }
     }
-
 
 
     @Override

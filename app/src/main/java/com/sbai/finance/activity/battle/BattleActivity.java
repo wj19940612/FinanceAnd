@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -100,6 +101,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private BattleInfo mBattleInfo;
     private BattleRoom mBattleRoom;
     private int mPageType;
+
+    private BattleResultDialogFragment mBattleResultDialogFragment = null;
 
     @Override
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
@@ -258,7 +261,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattleFragment == null) {
             mBattleFragment = BattleFragment.newInstance(mBattle);
         }
-
+        if (mBattleResultDialogFragment == null) {
+            mBattleResultDialogFragment = new BattleResultDialogFragment();
+            mBattleResultDialogFragment.setOnCloseListener(new BattleResultDialogFragment.OnCloseListener() {
+                @Override
+                public void onClose() {
+                    finish();
+                }
+            });
+        }
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, mBattleFragment)
@@ -491,6 +502,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END
                                     && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
+                                Log.d(TAG, "对战出现结果: ");
                                 showGameOverDialog();
                             }
                         }
@@ -739,36 +751,26 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void showGameOverDialog() {
-        BattleResultDialogFragment fragment = null;
 
         if (mBattleInfo.getWinResult() == 0) {
             //平局
-            fragment = BattleResultDialogFragment
-                    .newInstance(GAME_RESULT_DRAW, getString(R.string.return_reward));
+            mBattleResultDialogFragment.setResult(GAME_RESULT_DRAW);
+            mBattleResultDialogFragment.setContent(getString(R.string.return_reward));
         } else {
             boolean win = getWinResult();
 
             String coinType = getCoinType(mBattleInfo);
 
             if (win) {
-                fragment = BattleResultDialogFragment
-                        .newInstance(GAME_RESULT_WIN, "+" + (mBattleInfo.getReward() - mBattleInfo.getCommission()) + coinType);
+                mBattleResultDialogFragment.setResult(GAME_RESULT_WIN);
+                mBattleResultDialogFragment.setContent("+" + (mBattleInfo.getReward() - mBattleInfo.getCommission()) + coinType);
             } else {
-                fragment = BattleResultDialogFragment
-                        .newInstance(GAME_RESULT_LOSE, "-" + mBattleInfo.getReward() + coinType);
+                mBattleResultDialogFragment.setResult(GAME_RESULT_LOSE);
+                mBattleResultDialogFragment.setContent("-" + mBattleInfo.getReward() + coinType);
             }
         }
 
-        final BattleResultDialogFragment finalFragment = fragment;
-        fragment.setOnCloseListener(new BattleResultDialogFragment.OnCloseListener() {
-            @Override
-            public void onClose() {
-                finalFragment.dismissAllowingStateLoss();
-                finish();
-            }
-        });
-
-        fragment.show(getSupportFragmentManager());
+        mBattleResultDialogFragment.show(getSupportFragmentManager());
 
     }
 
