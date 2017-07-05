@@ -2,6 +2,7 @@ package com.sbai.finance.websocket.callback;
 
 import com.google.gson.internal.$Gson$Types;
 import com.sbai.finance.BuildConfig;
+import com.sbai.finance.R;
 import com.sbai.finance.utils.ToastUtil;
 
 import java.lang.reflect.ParameterizedType;
@@ -10,10 +11,15 @@ import java.lang.reflect.Type;
 public abstract class WSCallback<T> {
 
     public abstract void onResponse(T t);
-    public void onError(int code){
+
+    public void onError(int code) {
         if (!BuildConfig.IS_PROD) {
             ToastUtil.show(String.valueOf(code));
         }
+    }
+
+    public void onTimeout() {
+        ToastUtil.show(R.string.http_lib_error_timeout);
     }
 
     public Type getGenericType() {

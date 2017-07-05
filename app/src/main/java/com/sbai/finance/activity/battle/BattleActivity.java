@@ -818,7 +818,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
             @Override
             public void onError(int code) {
-                ToastUtil.curt(getString(R.string.cancel_failed_game_start));
+                ToastUtil.show(getString(R.string.cancel_failed_game_start));
             }
 
         });

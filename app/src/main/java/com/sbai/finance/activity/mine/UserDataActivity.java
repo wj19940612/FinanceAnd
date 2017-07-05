@@ -224,7 +224,7 @@ public class UserDataActivity extends BaseActivity {
                                     protected void onRespSuccess(Resp<JsonPrimitive> resp) {
                                         if (resp.isSuccess()) {
                                             requestUserData();
-                                            ToastUtil.curt("已屏蔽" + mUserData.getUserName());
+                                            ToastUtil.show("已屏蔽" + mUserData.getUserName());
 											sendShieldBroadCast();
                                         }
                                     }
@@ -249,7 +249,7 @@ public class UserDataActivity extends BaseActivity {
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
 											requestUserData();
-											ToastUtil.curt("解除屏蔽" + mUserData.getUserName());
+											ToastUtil.show("解除屏蔽" + mUserData.getUserName());
 										}
 									}
 								}).fire();
@@ -272,7 +272,7 @@ public class UserDataActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<JsonPrimitive> resp) {
                         if (resp.isSuccess()) {
                             requestUserData();
-                            ToastUtil.curt("已关注" + mUserData.getUserName());
+                            ToastUtil.show("已关注" + mUserData.getUserName());
                         }
                     }
                 }).fire();
@@ -291,7 +291,7 @@ public class UserDataActivity extends BaseActivity {
 									protected void onRespSuccess(Resp<JsonPrimitive> resp) {
 										if (resp.isSuccess()) {
 											requestUserData();
-											ToastUtil.curt("取消关注" + mUserData.getUserName());
+											ToastUtil.show("取消关注" + mUserData.getUserName());
 										}
 									}
 								}).fire();

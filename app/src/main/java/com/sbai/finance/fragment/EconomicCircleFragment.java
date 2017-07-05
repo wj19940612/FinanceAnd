@@ -27,7 +27,7 @@ import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.activity.mine.wallet.RechargeActivity;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
@@ -380,7 +380,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							requestCurrentBattle();
 						} else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-							Launcher.with(getActivity(), RechargeActivity.class).execute();
+							Launcher.with(getActivity(), CornucopiaActivity.class).execute();
 						}
 					}
 				})
