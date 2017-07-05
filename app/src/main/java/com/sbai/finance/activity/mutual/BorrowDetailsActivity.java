@@ -666,7 +666,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 			isSelfLoadIn = borrowDetail.getUserId() == LocalUser.getUser().getUserInfo().getId();
 			isSelfLoadOut = borrowDetail.getSelectedUserId() == LocalUser.getUser().getUserInfo().getId();
 		}
-		if (!isSelfLoadIn) {
+		if (!isSelfLoadIn&&!isSelfLoadOut) {
 			mStatus.setVisibility(View.GONE);
 		} else {
 			mStatus.setVisibility(View.VISIBLE);
