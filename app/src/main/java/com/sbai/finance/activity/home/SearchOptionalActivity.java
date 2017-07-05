@@ -108,7 +108,7 @@ public class SearchOptionalActivity extends BaseActivity {
                                     if (resp.isSuccess()) {
                                         requestSearch(mSearch.getText().toString());
                                     } else {
-                                        ToastUtil.curt(resp.getMsg());
+                                        ToastUtil.show(resp.getMsg());
                                     }
                                 }
                             }).fireFree();

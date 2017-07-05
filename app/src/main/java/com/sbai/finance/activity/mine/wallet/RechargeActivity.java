@@ -255,7 +255,7 @@ public class RechargeActivity extends BaseActivity {
                         .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
             } else {
                 if (mUsablePlatform.isBankPay() && mBankLimit != null && mBankLimit.getLimitSingle() < Double.parseDouble(money)) {
-                    ToastUtil.curt(R.string.input_money_more_than_limit);
+                    ToastUtil.show(R.string.input_money_more_than_limit);
                     return;
                 }
                 confirmRecharge(money, bankId);
@@ -388,7 +388,7 @@ public class RechargeActivity extends BaseActivity {
                                             submitRechargeData();
                                         }
                                     } else {
-                                        ToastUtil.curt(resp.getMsg());
+                                        ToastUtil.show(resp.getMsg());
                                     }
                                 }
                             })

@@ -155,7 +155,7 @@ public class OptionalActivity extends BaseActivity implements
                             mSlideListAdapter.remove(variety);
                             mSlideListAdapter.notifyDataSetChanged();
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                             stopRefreshAnimation();
                         }
                     }

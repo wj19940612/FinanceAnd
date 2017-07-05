@@ -56,7 +56,7 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.appInfo:
                 if (BuildConfig.DEBUG) {
-                    ToastUtil.singleCurt(AppInfo.getVersionName(getActivity()) + ": "
+                    ToastUtil.show(AppInfo.getVersionName(getActivity()) + ": "
                             + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
                 }
                 break;

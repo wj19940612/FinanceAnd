@@ -408,7 +408,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 							mBorrowDetail.setStatus(BorrowMine.STATUS_END_REPAY);
 							sendStatusChangeBroadCast(BorrowDetail.STATUS_END_REPAY, id);
 						} else {
-							ToastUtil.curt(resp.getMsg());
+							ToastUtil.show(resp.getMsg());
 						}
 					}
 				}).fireFree();
@@ -419,7 +419,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 			Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
 			startActivity(intent);
 		} else {
-			ToastUtil.curt(getString(R.string.no_phone));
+			ToastUtil.show(getString(R.string.no_phone));
 		}
 	}
 
@@ -827,7 +827,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 			Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone.getSelectedPhone()));
 			startActivity(intent);
 		} else {
-			ToastUtil.curt(getString(R.string.no_phone));
+			ToastUtil.show(getString(R.string.no_phone));
 		}
 	}
 

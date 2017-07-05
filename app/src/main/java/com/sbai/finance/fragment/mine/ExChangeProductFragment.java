@@ -219,7 +219,7 @@ public class ExChangeProductFragment extends BaseFragment {
                             if (mOnUserFundChangeListener != null) {
                                 mOnUserFundChangeListener.onUserFundChange();
                             }
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
 
@@ -230,9 +230,9 @@ public class ExChangeProductFragment extends BaseFragment {
                             showExchangeFailDialog(item);
                         } else if (objectResp.isExchangeProductHasChange()) {
                             requestVcoinOrIntegrateList();
-                            ToastUtil.curt(objectResp.getMsg());
+                            ToastUtil.show(objectResp.getMsg());
                         } else {
-                            ToastUtil.curt(objectResp.getMsg());
+                            ToastUtil.show(objectResp.getMsg());
                         }
                     }
                 })

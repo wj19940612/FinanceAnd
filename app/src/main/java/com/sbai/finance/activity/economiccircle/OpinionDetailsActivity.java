@@ -542,7 +542,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				if (LocalUser.getUser().isLogin()) {
 					String commentContent = mCommentContent.getText().toString().trim();
 					if (TextUtils.isEmpty(commentContent)) {
-						ToastUtil.curt("评论内容不能为空");
+						ToastUtil.show("评论内容不能为空");
 						return;
 					}
 

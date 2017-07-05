@@ -324,7 +324,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                                 setViewEnable(false);
                             } else {
                                 mSubmit.setText(R.string.again_submit);
-                                ToastUtil.curt(resp.getMsg());
+                                ToastUtil.show(resp.getMsg());
                             }
                         }
                     })
@@ -359,7 +359,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                                 setViewEnable(false);
                             } else {
                                 mSubmit.setText(R.string.again_submit);
-                                ToastUtil.curt(resp.getMsg());
+                                ToastUtil.show(resp.getMsg());
                             }
                         }
                     })
