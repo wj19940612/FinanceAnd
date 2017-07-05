@@ -429,6 +429,7 @@ public class BattleFragment extends BaseFragment {
                 updateChartView(mFutureData);
                 updateTradeProfit(mFutureData);
 
+                if (mVariety == null) return;
                 int exchangeStatus = mVariety.getExchangeStatus();
                 if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
                     requestExchangeStatus();
