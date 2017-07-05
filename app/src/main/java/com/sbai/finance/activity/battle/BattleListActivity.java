@@ -52,7 +52,7 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.WSCallback;
@@ -124,6 +124,20 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
+
+        if (savedInstanceState == null){
+            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
+                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            mQuickMatchDialogFragment.dismiss();
+                            showCancelMatchDialog();
+                        }
+                    });
+        }else{
+            mQuickMatchDialogFragment = (StartMatchDialogFragment) getSupportFragmentManager()
+                                        .findFragmentByTag(StartMatchDialogFragment.TAG);
+        }
 
         initTitleBar();
         initListHeaderAndFooter();
@@ -286,8 +300,12 @@ public class BattleListActivity extends BaseActivity implements
             mIntegral.setText(FinanceUtil.formatWithScale(0));
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
-
         startScheduleJob(5 * 1000);
+        if (mQuickMatchDialogFragment!=null
+                &&mQuickMatchDialogFragment.getDialog()!=null
+                &&mQuickMatchDialogFragment.getDialog().isShowing()){
+            requestFastMatchResult();
+        }
     }
 
     @Override
@@ -373,6 +391,26 @@ public class BattleListActivity extends BaseActivity implements
                 }).fireFree();
     }
 
+    //快速匹配结果查询
+    private void requestFastMatchResult(){
+        Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH,null).setTag(TAG)
+                .setCallback(new ApiCallback<Resp<Battle>>() {
+                    @Override
+                    public void onSuccess(Resp<Battle> battleResp) {
+                        if (battleResp.isSuccess()&&battleResp.getData()!=null){
+                            showMatchSuccessDialog(battleResp.getData());
+                        }else if (battleResp.getCode()==Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT){
+                            showMatchTimeoutDialog();
+                        }
+                    }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+
+                    }
+
+                }).fireFree();
+    }
+
     private void requestMatchVersus(final int type, String refuseId) {
         String refuseIds = "";
         if (refuseId.isEmpty()) {
@@ -397,7 +435,7 @@ public class BattleListActivity extends BaseActivity implements
 
 
     private void requestQuickMatch() {
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
@@ -407,7 +445,7 @@ public class BattleListActivity extends BaseActivity implements
 
 
     private void requestCancelMatch() {
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 if (BuildConfig.DEBUG) {
@@ -646,17 +684,9 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showMatchDialog() {
-        if (mQuickMatchDialogFragment == null) {
-            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
-                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
-                        @Override
-                        public void onCancel() {
-                            mQuickMatchDialogFragment.dismiss();
-                            showCancelMatchDialog();
-                        }
-                    });
+        if (mQuickMatchDialogFragment!=null){
+            mQuickMatchDialogFragment.show(getSupportFragmentManager());
         }
-        mQuickMatchDialogFragment.show(getSupportFragmentManager());
     }
 
     private void showCancelMatchDialog() {
@@ -752,7 +782,7 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             mRefusedIds.append(",").append(filteredId);
         }
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CONTINUE, mRefusedIds.toString()), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_CONTINUE, mRefusedIds.toString()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
