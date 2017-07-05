@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleFragment;
@@ -93,6 +94,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private SmartDialog mCancelMatchDialog;
     private SmartDialog mOvertimeMatchDialog;
     private SmartDialog mCancelBattleDialog;
+    private SmartDialog mMatchConfirmDialog;
 
     private Battle mBattle;
     private BattleInfo mBattleInfo;
@@ -155,6 +157,12 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
+
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(BattleActivity.this, MainActivity.class).execute();
+            finish();
+            return;
+        }
 
         initData();
 
@@ -318,6 +326,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mCancelBattleDialog != null) {
             mCancelBattleDialog.dismiss();
         }
+        if (mMatchConfirmDialog != null) {
+            mMatchConfirmDialog.dismiss();
+        }
     }
 
     private void startGame(WSPush<Battle> objectWSPush) {
@@ -410,7 +421,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             //更新左右点赞数
                             updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
                             updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
-                            // TODO: 2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
+                            //2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
                             if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
                                 if (mBattleInfo.getGameStatus() == GAME_STATUS_STARTED) {
                                     mBattleRoom.setRoomState(ROOM_STATE_START);
@@ -434,7 +445,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
                                 mBattleRoom.setRoomState(ROOM_STATE_END);
                             }
-                            if (mBattleRoom.getRoomState() == ROOM_STATE_END) {
+                            if (mBattleRoom.getRoomState() == ROOM_STATE_END
+                                    && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
                                 showGameOverDialog();
                             }
@@ -445,9 +457,14 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void updateRoomState(int state, BattleInfo info) {
-        if (state == ROOM_STATE_END) {
-
-        } else if (state == ROOM_STATE_END) {
+        mBattle = BattleInfo.getBattle(info);
+        mBattleView.initWithModel(mBattle);
+        mBattleView.setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false);
+        mBattleFragment.showBattleTradeView();
+        mBattleFragment.updateGameInfo(mBattle);
+        mBattleFragment.refreshTradeView();
+        if (state == ROOM_STATE_START) {
+            startScheduleJob(1000);
 
         }
     }
@@ -514,7 +531,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     @Override
     public void onMatchButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
-        requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
+        showMatchConfirmDialog();
     }
 
     //初始化开始游戏弹窗
@@ -584,6 +601,27 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         });
     }
 
+    private void showMatchConfirmDialog() {
+        if (mMatchConfirmDialog == null) {
+            mMatchConfirmDialog = SmartDialog.with(getActivity(), getString(R.string.start_match_and_battle), getString(R.string.match_battle))
+                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
+                        }
+                    })
+                    .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    });
+        }
+
+        mMatchConfirmDialog.show();
+    }
+
     //匹配超时弹窗
     private void showOvertimeMatchDialog() {
         if (mOvertimeMatchDialog == null) {
@@ -624,8 +662,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         finish();
                     }
                 })
+                .setCancelableOnTouchOutside(false)
+                .setCancelableOnTouchOutside(false)
                 .show();
-
     }
 
     @Override
@@ -686,10 +725,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         });
 
-        // handle  java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-//        if (fragment.isResumed()) {
-//            fragment.show(getSupportFragmentManager());
-//        }
         fragment.show(getSupportFragmentManager());
 
     }

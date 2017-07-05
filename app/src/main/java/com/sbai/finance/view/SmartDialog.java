@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class SmartDialog {
     private int mNegativeVisible;
 
     private boolean mCancelableOnTouchOutside;
+    private boolean mCancelableOnBackPress;
 
     public interface OnClickListener {
         void onClick(Dialog dialog);
@@ -175,6 +177,8 @@ public class SmartDialog {
         mNegativeVisible = View.VISIBLE;
 
         mCancelableOnTouchOutside = true;
+        mCancelableOnBackPress = true;
+
     }
 
     private void scaleDialogWidth(double scale) {
@@ -235,6 +239,10 @@ public class SmartDialog {
     public SmartDialog setCancelableOnTouchOutside(boolean cancelable) {
         mCancelableOnTouchOutside = cancelable;
         return this;
+    }
+
+    public void setCancelableOnBackPress(boolean cancelableOnBackPress) {
+        this.mCancelableOnBackPress = cancelableOnBackPress;
     }
 
     public SmartDialog setCancelListener(OnCancelListener cancelListener) {
@@ -349,6 +357,19 @@ public class SmartDialog {
 
     private void setupDialog() {
         mDialog.setCanceledOnTouchOutside(mCancelableOnTouchOutside);
+
+
+        if (!mCancelableOnBackPress) {
+            mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
 
         if (TextUtils.isEmpty(mMessageText)) {
             mMessage.setVisibility(View.GONE);
