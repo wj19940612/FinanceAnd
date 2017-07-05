@@ -35,7 +35,7 @@ public class Battle implements Parcelable {
 
     // 1房主快速匹配  2应战者快速匹配
     public static final int CREATE_FAST_MATCH = 1;
-    public static final int AGAGINST_FAST_MATCH = 2;
+    public static final int AGAINST_FAST_MATCH = 2;
 
 
     public static final String SOURCE_COTERIE = "coterie";
@@ -45,6 +45,9 @@ public class Battle implements Parcelable {
 
     public static final int CODE_BATTLE_JOINED_OR_CREATED = 300;
     public static final int CODE_NO_ENOUGH_MONEY = 2201;
+   // 4641发起者匹配超时  4642应战者匹配超时
+    public static final int CODE_AGAINST_FAST_MATCH_TIMEOUT=4642;
+    public static final int CODE_CREATE_FAST_MATCH_TIMEOUT=4641;
 
     /**
      * againstFrom : 经济圈

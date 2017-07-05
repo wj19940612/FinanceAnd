@@ -125,6 +125,20 @@ public class BattleListActivity extends BaseActivity implements
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
 
+        if (savedInstanceState == null){
+            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
+                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
+                        @Override
+                        public void onCancel() {
+                            mQuickMatchDialogFragment.dismiss();
+                            showCancelMatchDialog();
+                        }
+                    });
+        }else{
+            mQuickMatchDialogFragment = (StartMatchDialogFragment) getSupportFragmentManager()
+                                        .findFragmentByTag(StartMatchDialogFragment.TAG);
+        }
+
         initTitleBar();
         initListHeaderAndFooter();
         initListView();
@@ -286,8 +300,12 @@ public class BattleListActivity extends BaseActivity implements
             mIntegral.setText(FinanceUtil.formatWithScale(0));
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
-
         startScheduleJob(5 * 1000);
+        if (mQuickMatchDialogFragment!=null
+                &&mQuickMatchDialogFragment.getDialog()!=null
+                &&mQuickMatchDialogFragment.getDialog().isShowing()){
+            requestFastMatchResult();
+        }
     }
 
     @Override
@@ -370,6 +388,26 @@ public class BattleListActivity extends BaseActivity implements
                     public void onFailure(VolleyError volleyError) {
 
                     }
+                }).fireFree();
+    }
+
+    //快速匹配结果查询
+    private void requestFastMatchResult(){
+        Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH,null).setTag(TAG)
+                .setCallback(new ApiCallback<Resp<Battle>>() {
+                    @Override
+                    public void onSuccess(Resp<Battle> battleResp) {
+                        if (battleResp.isSuccess()&&battleResp.getData()!=null){
+                            showMatchSuccessDialog(battleResp.getData());
+                        }else if (battleResp.getCode()==Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT){
+                            showMatchTimeoutDialog();
+                        }
+                    }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+
+                    }
+
                 }).fireFree();
     }
 
@@ -646,17 +684,9 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showMatchDialog() {
-        if (mQuickMatchDialogFragment == null) {
-            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
-                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
-                        @Override
-                        public void onCancel() {
-                            mQuickMatchDialogFragment.dismiss();
-                            showCancelMatchDialog();
-                        }
-                    });
+        if (mQuickMatchDialogFragment!=null){
+            mQuickMatchDialogFragment.show(getSupportFragmentManager());
         }
-        mQuickMatchDialogFragment.show(getSupportFragmentManager());
     }
 
     private void showCancelMatchDialog() {
