@@ -143,11 +143,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 break;
             case PushCode.ORDER_CREATED:
                 requestBattleInfo();
-                mBattleFragment.refreshTradeView();
+                if (mBattleFragment.isVisible()) {
+                    mBattleFragment.refreshTradeView();
+                }
                 break;
             case PushCode.ORDER_CLOSE:
                 requestBattleInfo();
-                mBattleFragment.refreshTradeView();
+                if (mBattleFragment.isVisible()) {
+                    mBattleFragment.refreshTradeView();
+                }
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
                 //和对战有人加入逻辑一样 多了个匹配头像
