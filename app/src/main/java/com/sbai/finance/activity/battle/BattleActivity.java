@@ -421,7 +421,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             //更新左右点赞数
                             updatePraiseView(mBattleInfo.getLaunchPraise(), mBattleInfo.getLaunchUser());
                             updatePraiseView(mBattleInfo.getAgainstPraise(), mBattleInfo.getAgainstUser());
-                            // TODO: 2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
+                            //2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
                             if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
                                 if (mBattleInfo.getGameStatus() == GAME_STATUS_STARTED) {
                                     mBattleRoom.setRoomState(ROOM_STATE_START);
@@ -662,8 +662,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                         finish();
                     }
                 })
+                .setCancelableOnTouchOutside(false)
+                .setCancelableOnTouchOutside(false)
                 .show();
-
     }
 
     @Override
