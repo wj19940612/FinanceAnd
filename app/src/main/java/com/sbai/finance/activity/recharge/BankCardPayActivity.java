@@ -251,7 +251,7 @@ public class BankCardPayActivity extends BaseActivity {
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                             finish();
                         }
                     })

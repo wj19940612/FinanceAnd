@@ -208,7 +208,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
                             isOptionalChanged = true;
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
                 }).fireFree();
@@ -226,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
                             isOptionalChanged = false;
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
 

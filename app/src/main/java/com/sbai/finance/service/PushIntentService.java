@@ -135,7 +135,7 @@ public class PushIntentService extends GTIntentService {
             intent = new Intent(context, BorrowDetailsActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         } else if (data.isBattleMatchSuccess()) {
-            ToastUtil.curt(Preference.get().isForeground() + "  ");
+            ToastUtil.show(Preference.get().isForeground() + "  ");
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, BattleActivity.class);
                 intent.putExtra(Launcher.EX_PAYLOAD_1, data.getData().getId());

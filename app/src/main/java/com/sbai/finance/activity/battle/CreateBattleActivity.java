@@ -356,7 +356,7 @@ public class CreateBattleActivity extends BaseActivity {
                     .setNegativeVisible(View.GONE)
                     .show();
         } else {
-            ToastUtil.curt(battleResp.getMsg());
+            ToastUtil.show(battleResp.getMsg());
         }
     }
 }

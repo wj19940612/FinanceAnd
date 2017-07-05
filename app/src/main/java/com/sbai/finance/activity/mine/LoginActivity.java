@@ -320,7 +320,7 @@ public class LoginActivity extends BaseActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                             mLoading.clearAnimation();
                         }
                     }

@@ -331,7 +331,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
                             isOptionalChanged = false;
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
 
@@ -364,7 +364,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
                                             isOptionalChanged = true;
                                         } else {
-                                            ToastUtil.curt(resp.getMsg());
+                                            ToastUtil.show(resp.getMsg());
                                         }
                                     }
                                 })

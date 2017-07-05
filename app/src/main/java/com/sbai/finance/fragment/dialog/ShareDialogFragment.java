@@ -111,7 +111,7 @@ public class ShareDialogFragment extends DialogFragment {
                     mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN);
                 } else {
-                    ToastUtil.curt(R.string.you_not_install_weixin);
+                    ToastUtil.show(R.string.you_not_install_weixin);
                 }
                 dismiss();
                 break;
@@ -120,7 +120,7 @@ public class ShareDialogFragment extends DialogFragment {
                     mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                 } else {
-                    ToastUtil.curt(R.string.you_not_install_weixin);
+                    ToastUtil.show(R.string.you_not_install_weixin);
                 }
                 dismiss();
                 break;
@@ -129,7 +129,7 @@ public class ShareDialogFragment extends DialogFragment {
                     mShareUrl += "&userFrom=" + "weibo";
                     shareToPlatform(SHARE_MEDIA.SINA);
                 } else {
-                    ToastUtil.curt(R.string.you_not_install_weibo);
+                    ToastUtil.show(R.string.you_not_install_weibo);
                 }
                 dismiss();
                 break;

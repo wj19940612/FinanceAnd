@@ -107,10 +107,26 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
         if (BuildConfig.DEBUG) ToastUtil.show(battleWSPush.getContent().getType());
 
-        if (mBattleRoom == null) return;  //排除对战详情收到推送
+        //对战详情只能收到有人加入推送
+        if (mBattleRoom == null) {
+            if (battleWSPush.getContent().getType() == PushCode.BATTLE_JOINED) {
+                if (battleWSPush.getContent() != null) {
+                    Battle data = (Battle) battleWSPush.getContent().getData();
+                    showQuickJoinBattleDialog(data);
+                }
+            }
+            return;
+        }
 
         switch (battleWSPush.getContent().getType()) {
             case PushCode.BATTLE_JOINED:
+                //观战中 也可以弹出有人加入
+                if (mBattleRoom.getUserState() == USER_STATE_OBSERVER) {
+                    if (battleWSPush.getContent() != null) {
+                        Battle data = (Battle) battleWSPush.getContent().getData();
+                        showQuickJoinBattleDialog(data);
+                    }
+                }
                 //初始化底部栏  取消一切弹窗 显示交易视图 开始计时
                 if (mBattleRoom.getRoomState() != ROOM_STATE_START) {
                     dismissAllDialog();
@@ -149,6 +165,30 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 updatePraiseView(temp.getCurrentPraise(), temp.getPraiseUserId());
                 break;
 
+        }
+    }
+
+    @Override
+    protected void showQuickJoinBattleDialog(final Battle battle) {
+        //只有在自己是房主的情况下才显示
+        if (LocalUser.getUser().isLogin()) {
+            boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
+            if (isRoomCreator) {
+                SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
+                        .setTitle(getString(R.string.join_battle))
+                        .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                Launcher.with(getActivity(), BattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, battle)
+                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                        .execute();
+                                finish();
+                            }
+                        }).setNegative(R.string.cancel)
+                        .show();
+            }
         }
     }
 
@@ -774,7 +814,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
             @Override
             public void onError(int code) {
-                ToastUtil.curt(getString(R.string.cancel_failed_game_start));
+                ToastUtil.show(getString(R.string.cancel_failed_game_start));
             }
 
         });
