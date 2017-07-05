@@ -205,6 +205,14 @@ public class IconTextRow extends LinearLayout {
         return mSubTextView;
     }
 
+    public void setRowSubText(CharSequence rowSubText) {
+        mRowSubTextView.setText(rowSubText);
+    }
+
+    public void setRowSubText(int resid) {
+        mRowSubTextView.setText(resid);
+    }
+
     public void setRightTextMargin(int margin) {
         LinearLayout.LayoutParams params = (LayoutParams) mSubTextView.getLayoutParams();
         params.setMargins(0, 0, margin, 0);

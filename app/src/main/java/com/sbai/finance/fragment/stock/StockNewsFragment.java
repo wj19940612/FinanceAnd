@@ -43,7 +43,7 @@ public class StockNewsFragment extends BaseFragment {
 
     private String mStockCode;
     private int mPage;
-    private int mPageSize = 10;
+    private int mPageSize = 15;
     private HashSet<String> mSet;
 
     private Unbinder mBind;
