@@ -52,7 +52,7 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.WSCallback;
@@ -397,7 +397,7 @@ public class BattleListActivity extends BaseActivity implements
 
 
     private void requestQuickMatch() {
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
@@ -407,7 +407,7 @@ public class BattleListActivity extends BaseActivity implements
 
 
     private void requestCancelMatch() {
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_CANCEL), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 if (BuildConfig.DEBUG) {
@@ -752,7 +752,7 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             mRefusedIds.append(",").append(filteredId);
         }
-        WSClient.get().send(new QuickMatch(QuickMatch.TYPE_CONTINUE, mRefusedIds.toString()), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_CONTINUE, mRefusedIds.toString()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
