@@ -28,6 +28,7 @@ import butterknife.Unbinder;
  */
 
 public class StartMatchDialogFragment extends BaseDialogFragment {
+    public static final String TAG="StartMatchDialogFragment";
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -130,9 +131,11 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
 
     public void show(FragmentManager manager) {
         if (manager == null) return;
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, this.getClass().getSimpleName());
-        ft.commitAllowingStateLoss();
+        if (!this.isAdded()){
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, TAG);
+            ft.commitAllowingStateLoss();
+        }
     }
 
     private CountDownTimer timer = new CountDownTimer(4000, 1000) {
