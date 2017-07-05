@@ -300,7 +300,7 @@ public class BindBankCardActivity extends BaseActivity {
                                     finish();
 
                                 } else {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })
@@ -322,7 +322,7 @@ public class BindBankCardActivity extends BaseActivity {
                                     setResult(RESULT_OK, intent);
                                     finish();
                                 } else {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })

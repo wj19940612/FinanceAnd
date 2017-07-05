@@ -77,7 +77,7 @@ public class AboutUsActivity extends BaseActivity {
                     protected void onRespSuccessData(final AppVersionModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
                         if (data.isLatestVersion()) {
-                            ToastUtil.curt(R.string.is_already_latest_version);
+                            ToastUtil.show(R.string.is_already_latest_version);
                             return;
                         }
                         UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());

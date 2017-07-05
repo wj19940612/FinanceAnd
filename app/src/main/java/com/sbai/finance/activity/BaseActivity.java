@@ -126,7 +126,7 @@ public class BaseActivity extends AppCompatActivity implements
                     if (!(getActivity() instanceof BattleActivity)) {
                         if (battleWSPush.getContent() != null) {
                             Battle data = (Battle) battleWSPush.getContent().getData();
-                            showJoinBattleDialog(data);
+                            showQuickJoinBattleDialog(data);
                         }
                     }
                     break;
@@ -138,7 +138,7 @@ public class BaseActivity extends AppCompatActivity implements
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
     }
 
-    private void showJoinBattleDialog(final Battle battle) {
+    protected void showQuickJoinBattleDialog(final Battle battle) {
         //只有在自己是房主的情况下才显示
         if (LocalUser.getUser().isLogin()) {
             boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();

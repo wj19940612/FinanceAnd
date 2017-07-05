@@ -22,6 +22,8 @@ import java.util.Queue;
 
 public class WsClient implements AbsWsClient {
 
+    private static final int TIMEOUT_REQ = 3000;
+
     private static final String TAG = "WebSocket";
 
     private static WsClient sInstance;
@@ -32,6 +34,7 @@ public class WsClient implements AbsWsClient {
     private Queue<WSMessage> mExecutedList;
 
     private Status mStatus;
+    private boolean mConnecting;
 
     private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
@@ -93,21 +96,58 @@ public class WsClient implements AbsWsClient {
             Log.d(TAG, "execute: " + message.toJson());
             mWebSocket.send(message.toJson());
             mExecutedList.offer(message);
+            mHandler.postDelayed(new RemoveTimeoutReqTask(message.getUuid()), TIMEOUT_REQ);
         } else {
             mPendingList.offer(message);
+
+            if (mConnecting) {
+                return;
+            }
+
+            if (isConnected() && mStatus == Status.REGISTERING) {
+                return;
+            }
 
             connect();
         }
     }
 
+    private class RemoveTimeoutReqTask implements Runnable {
+
+        private String uuid;
+
+        public RemoveTimeoutReqTask(String uuid) {
+            this.uuid = uuid;
+        }
+
+        @Override
+        public void run() {
+            Iterator iterator = mExecutedList.iterator();
+            while (iterator.hasNext()) {
+                WSMessage msg = (WSMessage) iterator.next();
+                if (msg.getUuid().equals(uuid)) {
+                    WSCallback callback = msg.getCallback();
+                    if (callback != null) {
+                        callback.onTimeout();
+                    }
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void connect() {
+        mConnecting = true;
         AsyncHttpClient.getDefaultInstance().websocket(createURI(), null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 mWebSocket = webSocket;
 
                 if (isConnected()) {
+
+                    mConnecting = false;
 
                     initWebSocket();
 
@@ -206,6 +246,7 @@ public class WsClient implements AbsWsClient {
 
     @Override
     public void onMessage(String message) {
+        Log.d(TAG, "onMessage: " + message);
         WSMessage resp = null;
         try {
             resp = new Gson().fromJson(message, WSMessage.class);
@@ -255,7 +296,7 @@ public class WsClient implements AbsWsClient {
         }
 
         WSMessage request = getRequest(resp);
-        if (request == null) return;
+        if (request == null) return; // Maybe timeout
 
         if (resp.getCode() == SocketCode.CODE_RESP_CMD_SUCCESS) {
             final WSCallback callback = request.getCallback();

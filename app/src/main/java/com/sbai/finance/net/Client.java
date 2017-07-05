@@ -1779,7 +1779,15 @@ public class Client {
         return new API("/game/battleconfig/findBattleConfig.do");
     }
 
-    public static API launchFight(int vartietyId, int coinType, double reward, int endtime) {
+    /**
+     * 发起对战
+     * @param vartietyId
+     * @param coinType
+     * @param reward
+     * @param endtime
+     * @return
+     */
+    public static API launchBattle(int vartietyId, int coinType, double reward, int endtime) {
         return new API(POST, "/game/battle/createBattle.do",
                 new ApiParams()
                         .put("vartietyId", vartietyId)

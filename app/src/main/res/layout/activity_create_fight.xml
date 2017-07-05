@@ -13,7 +13,7 @@
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
-        app:titleText="@string/create_fight"
+        app:titleText="@string/create_battle"
         app:titleTextColor="@color/blackAssist"/>
 
     <ScrollView
@@ -166,7 +166,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/launch_fight"
+                    android:id="@+id/launch_battle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

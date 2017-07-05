@@ -27,7 +27,7 @@ import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
-import com.sbai.finance.activity.mine.wallet.RechargeActivity;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
@@ -207,14 +207,17 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		setBattleData(item);
 		if (item != null) {
 			if (item.getType() == 1) {
+				//借钱
 				Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			} else if (item.getType() == 2) {
+				//观点
 				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			} else if (item.getType() == 3) {
+				//游戏
 				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
 					SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
 							.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
@@ -261,7 +264,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						Intent intent = new Intent(getContext(), BattleActivity.class);
 						intent.putExtra(Launcher.EX_PAYLOAD, data);
 						intent.putExtra(BattleActivity.PAGE_TYPE, pageType);
-						startActivityForResult(intent, CANCEL_BATTLE);
+						startActivityForResult(intent, REQ_CODE_USERDATA);
+
+						Launcher.with(getActivity(), BattleActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, data)
+								.putExtra(BattleActivity.PAGE_TYPE, pageType)
+								.executeForResult(CANCEL_BATTLE);
 
 					}
 				}).fire();
@@ -372,7 +380,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
 							requestCurrentBattle();
 						} else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-							Launcher.with(getActivity(), RechargeActivity.class).execute();
+							Launcher.with(getActivity(), CornucopiaActivity.class).execute();
 						}
 					}
 				})

@@ -53,8 +53,8 @@ public class CreateBattleActivity extends BaseActivity {
     GridView mBountyGridView;
     @BindView(R.id.durationGridView)
     GridView mDurationGridView;
-    @BindView(R.id.launch_fight)
-    ImageView mLaunchFight;
+    @BindView(R.id.launch_battle)
+    ImageView mLaunchBattle;
     @BindView(R.id.bountyArea)
     LinearLayout mBountyArea;
 
@@ -77,14 +77,11 @@ public class CreateBattleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_fight);
         ButterKnife.bind(this);
-        mLaunchFight.setEnabled(false);
-
+        mLaunchBattle.setEnabled(false);
         mBountyAdapter = new BountyAdapter(this);
         mDurationAdapter = new DurationAdapter(this);
         mBountyGridView.setAdapter(mBountyAdapter);
         mDurationGridView.setAdapter(mDurationAdapter);
-        requestFutureBattleConfig();
-
         mBountyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,6 +112,8 @@ public class CreateBattleActivity extends BaseActivity {
                 mEndTime = Integer.parseInt(item);
             }
         });
+
+        requestFutureBattleConfig();
     }
 
     private void requestFutureBattleConfig() {
@@ -134,10 +133,6 @@ public class CreateBattleActivity extends BaseActivity {
         mIngotList = new ArrayList<>(mIngotList);
         mIntegralList = new ArrayList<>(mIntegralList);
         mDurationList = new ArrayList<>(mDurationList);
-
-        if (mIngotList != null && !mIngotList.isEmpty()) {
-            mBountyArea.setVisibility(View.VISIBLE);
-        }
 
         updateIngotConfig();
         updateDurationConfig();
@@ -162,7 +157,7 @@ public class CreateBattleActivity extends BaseActivity {
         mDurationAdapter.addAll(mDurationList);
     }
 
-    @OnClick({R.id.chooseFutures, ingotWar, R.id.integralWar, R.id.launch_fight})
+    @OnClick({R.id.chooseFutures, ingotWar, R.id.integralWar, R.id.launch_battle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.chooseFutures:
@@ -195,9 +190,9 @@ public class CreateBattleActivity extends BaseActivity {
                 whetherLaunchBattle();
                 mCoinType = 3;
                 break;
-            case R.id.launch_fight:
+            case R.id.launch_battle:
                 umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
-                createBattleRoom();
+                launchBattle();
                 break;
         }
     }
@@ -221,7 +216,7 @@ public class CreateBattleActivity extends BaseActivity {
         private Context mContext;
         private int mChecked = -1;
 
-        public BountyAdapter(@NonNull Context context) {
+        private BountyAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
         }
@@ -269,7 +264,7 @@ public class CreateBattleActivity extends BaseActivity {
         private Context mContext;
         private int mChecked = -1;
 
-        public DurationAdapter(@NonNull Context context) {
+        private DurationAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
         }
@@ -318,15 +313,15 @@ public class CreateBattleActivity extends BaseActivity {
                 && (mIngotWar.isSelected() || mIntegralWar.isSelected())
                 && (mBountySelected)
                 && (mDurationSelected)) {
-            mLaunchFight.setEnabled(true);
+            mLaunchBattle.setEnabled(true);
         } else {
-            mLaunchFight.setEnabled(false);
+            mLaunchBattle.setEnabled(false);
         }
     }
 
 
-    private void createBattleRoom() {
-        Client.launchFight(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
+    private void launchBattle() {
+        Client.launchBattle(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Battle>, Battle>(false) {
                     @Override
                     protected void onRespSuccessData(Battle battle) {
@@ -342,13 +337,14 @@ public class CreateBattleActivity extends BaseActivity {
                     protected void onReceive(Resp<Battle> battleResp) {
                         super.onReceive(battleResp);
                         showCreateBattleMoneyIsNotEnoughDialog(battleResp);
-
                     }
                 }).fire();
     }
 
     private void showCreateBattleMoneyIsNotEnoughDialog(Resp<Battle> battleResp) {
-        if (battleResp.getCode() == 2201) {
+        if (battleResp.isSuccess()) {
+
+        } else if (battleResp.getCode() == 2201) {
             SmartDialog.with(getActivity()).setMessage("余额不足,创建失败")
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
@@ -356,11 +352,11 @@ public class CreateBattleActivity extends BaseActivity {
                             dialog.dismiss();
                         }
                     })
-                    .setTitle("提示")
+                    .setTitle(R.string.hint)
                     .setNegativeVisible(View.GONE)
                     .show();
         } else {
-            ToastUtil.curt(battleResp.getMsg());
+            ToastUtil.show(battleResp.getMsg());
         }
     }
 }

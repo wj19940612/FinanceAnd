@@ -119,7 +119,7 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                     openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
                     startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
                 } else {
-                    ToastUtil.curt(getString(R.string.please_open_camera_permission));
+                    ToastUtil.show(getString(R.string.please_open_camera_permission));
                 }
                 break;
             case R.id.takePhoneFromGallery:
@@ -129,7 +129,7 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                     openAlbumIntent.setType("image/*");
                     startActivityForResult(openAlbumIntent, REQ_CODE_TAKE_PHONE_FROM_PHONES);
                 } else {
-                    ToastUtil.curt(R.string.sd_is_not_useful);
+                    ToastUtil.show(R.string.sd_is_not_useful);
                 }
                 break;
             case R.id.takePhoneCancel:

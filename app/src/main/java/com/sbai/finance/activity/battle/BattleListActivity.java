@@ -52,9 +52,9 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.httplib.ApiCallback;
@@ -125,7 +125,7 @@ public class BattleListActivity extends BaseActivity implements
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
                     .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
                         @Override
@@ -134,9 +134,9 @@ public class BattleListActivity extends BaseActivity implements
                             showCancelMatchDialog();
                         }
                     });
-        }else{
+        } else {
             mQuickMatchDialogFragment = (StartMatchDialogFragment) getSupportFragmentManager()
-                                        .findFragmentByTag(StartMatchDialogFragment.TAG);
+                    .findFragmentByTag(StartMatchDialogFragment.TAG);
         }
 
         initTitleBar();
@@ -146,7 +146,7 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         updateAvatar();
         requestBattleList();
-        
+
         scrollToTop(mTitleBar, mListView);
     }
 
@@ -263,25 +263,25 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void requestLastBattleInfo(final Battle item) {
-        Client.getBattleInfo(item.getId(),item.getBatchCode()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<Battle>,Battle>() {
+        Client.getBattleInfo(item.getId(), item.getBatchCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
                     @Override
                     protected void onRespSuccessData(Battle data) {
-                        if (data.getGameStatus()!=item.getGameStatus()){
+                        if (data.getGameStatus() != item.getGameStatus()) {
                             item.setWinResult(data.getWinResult());
                             item.setGameStatus(data.getGameStatus());
                             item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
                         int pageType;
-                        if (data.getGameStatus()==Battle.GAME_STATUS_END){
+                        if (data.getGameStatus() == Battle.GAME_STATUS_END) {
                             pageType = BattleActivity.PAGE_TYPE_RECORD;
-                        }else{
+                        } else {
                             pageType = BattleActivity.PAGE_TYPE_VERSUS;
                         }
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
-                                .putExtra(BattleActivity.PAGE_TYPE,pageType)
+                                .putExtra(BattleActivity.PAGE_TYPE, pageType)
                                 .executeForResult(CANCEL_BATTLE);
 
                     }
@@ -301,9 +301,9 @@ public class BattleListActivity extends BaseActivity implements
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
         startScheduleJob(5 * 1000);
-        if (mQuickMatchDialogFragment!=null
-                &&mQuickMatchDialogFragment.getDialog()!=null
-                &&mQuickMatchDialogFragment.getDialog().isShowing()){
+        if (mQuickMatchDialogFragment != null
+                && mQuickMatchDialogFragment.getDialog() != null
+                && mQuickMatchDialogFragment.getDialog().isShowing()) {
             requestFastMatchResult();
         }
     }
@@ -392,47 +392,24 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     //快速匹配结果查询
-    private void requestFastMatchResult(){
-        Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH,null).setTag(TAG)
+    private void requestFastMatchResult() {
+        Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new ApiCallback<Resp<Battle>>() {
                     @Override
                     public void onSuccess(Resp<Battle> battleResp) {
-                        if (battleResp.isSuccess()&&battleResp.getData()!=null){
+                        if (battleResp.isSuccess() && battleResp.getData() != null) {
                             showMatchSuccessDialog(battleResp.getData());
-                        }else if (battleResp.getCode()==Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT){
+                        } else if (battleResp.getCode() == Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT) {
                             showMatchTimeoutDialog();
                         }
                     }
+
                     @Override
                     public void onFailure(VolleyError volleyError) {
 
                     }
-
                 }).fireFree();
     }
-
-    private void requestMatchVersus(final int type, String refuseId) {
-        String refuseIds = "";
-        if (refuseId.isEmpty()) {
-            mRefusedIds.delete(0, mRefusedIds.length());
-        } else {
-            mRefusedIds.append(refuseId).append(",");
-            refuseIds = mRefusedIds.substring(0, mRefusedIds.length() - 1);
-        }
-        Client.quickMatchForAgainst(type, refuseIds).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            updateMatchVersus(type);
-                        } else {
-                            ToastUtil.curt(resp.getMsg());
-                        }
-                    }
-                }).fireFree();
-    }
-
-
 
     private void requestQuickMatch() {
         WsClient.get().send(new QuickMatch(QuickMatch.TYPE_QUICK_MATCH), new WSCallback<WSMessage<Resp>>() {
@@ -491,24 +468,24 @@ public class BattleListActivity extends BaseActivity implements
         for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
             Battle item = mVersusListAdapter.getItem(i);
             for (Battle battle : data) {
-                if (item.getId() == battle.getId()&&item.getGameStatus()!=Battle.GAME_STATUS_END) {
+                if (item.getId() == battle.getId() && item.getGameStatus() != Battle.GAME_STATUS_END) {
 
-                    if (battle.getGameStatus()==Battle.GAME_STATUS_CANCELED){
+                    if (battle.getGameStatus() == Battle.GAME_STATUS_CANCELED) {
                         removeBattleList.add(item);
-                    }else {
+                    } else {
                         item.setGameStatus(battle.getGameStatus());
                         item.setLaunchPraise(battle.getLaunchPraise());
                         item.setLaunchScore(battle.getLaunchScore());
                         item.setAgainstPraise(battle.getAgainstPraise());
                         item.setAgainstScore(battle.getAgainstScore());
                         item.setWinResult(battle.getWinResult());
-                        if (battle.getGameStatus()==Battle.GAME_STATUS_STARTED
-                                ||battle.getGameStatus()==Battle.GAME_STATUS_END){
+                        if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED
+                                || battle.getGameStatus() == Battle.GAME_STATUS_END) {
                             item.setAgainstUser(battle.getAgainstUser());
                             item.setAgainstUserName(battle.getAgainstUserName());
                             item.setAgainstUserPortrait(battle.getAgainstUserPortrait());
                         }
-                        if (battle.getGameStatus()==Battle.GAME_STATUS_END){
+                        if (battle.getGameStatus() == Battle.GAME_STATUS_END) {
                             item.setWinResult(battle.getWinResult());
                         }
                     }
@@ -517,23 +494,10 @@ public class BattleListActivity extends BaseActivity implements
                 }
             }
         }
-        for (Battle battle:removeBattleList){
+        for (Battle battle : removeBattleList) {
             mVersusListAdapter.remove(battle);
         }
         mVersusListAdapter.notifyDataSetChanged();
-    }
-
-    private void updateMatchVersus(int type) {
-        switch (type) {
-            case Battle.MATCH_CANCEL:
-                break;
-            case Battle.MATCH_CONTINUE:
-                showMatchDialog();
-                break;
-            case Battle.MATCH_START:
-                showMatchDialog();
-                break;
-        }
     }
 
     private void updateUserFund(UserFundInfoModel data) {
@@ -541,7 +505,6 @@ public class BattleListActivity extends BaseActivity implements
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
         mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));
     }
-
 
     private void updateAvatar() {
         if (LocalUser.getUser().isLogin()) {
@@ -684,7 +647,7 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showMatchDialog() {
-        if (mQuickMatchDialogFragment!=null){
+        if (mQuickMatchDialogFragment != null) {
             mQuickMatchDialogFragment.show(getSupportFragmentManager());
         }
     }
@@ -807,7 +770,7 @@ public class BattleListActivity extends BaseActivity implements
                 if (mVersusListAdapter != null) {
                     for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
                         Battle item = mVersusListAdapter.getItem(i);
-                        if (item != null&&item.getId()==id) {
+                        if (item != null && item.getId() == id) {
                             mVersusListAdapter.remove(item);
                             mVersusListAdapter.notifyDataSetChanged();
                             break;
@@ -862,7 +825,7 @@ public class BattleListActivity extends BaseActivity implements
                 requestUserFindInfo();
                 requestCurrentBattle();
             }
-            if (intent.getAction()==CreateBattleActivity.CREATE_SUCCESS_ACTION){
+            if (intent.getAction() == CreateBattleActivity.CREATE_SUCCESS_ACTION) {
                 reset();
                 requestBattleList();
                 if (LocalUser.getUser().isLogin()) {

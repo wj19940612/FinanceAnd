@@ -64,7 +64,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             dismissAllowingStateLoss();
-            ToastUtil.curt(R.string.download_complete);
+            ToastUtil.show(R.string.download_complete);
         }
     };
 

@@ -146,7 +146,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
     }
 
     private void ToastMassage(Resp<Object> resp) {
-        ToastUtil.curt(resp.getMsg());
+        ToastUtil.show(resp.getMsg());
     }
 
     //设置新的安全密码流程
