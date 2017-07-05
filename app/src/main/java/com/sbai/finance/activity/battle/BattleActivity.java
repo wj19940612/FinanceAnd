@@ -270,6 +270,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 }
             });
         }
+
+
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, mBattleFragment)
