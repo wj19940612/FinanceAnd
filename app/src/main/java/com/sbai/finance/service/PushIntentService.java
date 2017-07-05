@@ -27,7 +27,6 @@ import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -135,7 +134,6 @@ public class PushIntentService extends GTIntentService {
             intent = new Intent(context, BorrowDetailsActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         } else if (data.isBattleMatchSuccess()) {
-            ToastUtil.show(Preference.get().isForeground() + "  ");
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, BattleActivity.class);
                 intent.putExtra(Launcher.EX_PAYLOAD_1, data.getData().getId());
