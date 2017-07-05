@@ -33,7 +33,7 @@ import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
@@ -235,7 +235,7 @@ public class BaseActivity extends AppCompatActivity implements
                 new IntentFilter(ACTION_TOKEN_EXPIRED));
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(this);
-        WSClient.get().setOnPushReceiveListener(mPushReceiveListener);
+        WsClient.get().setOnPushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -245,7 +245,7 @@ public class BaseActivity extends AppCompatActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         MobclickAgent.onPageEnd(TAG);
         MobclickAgent.onPause(this);
-        WSClient.get().removePushReceiveListener(mPushReceiveListener);
+        WsClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override

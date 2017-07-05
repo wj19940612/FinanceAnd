@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import butterknife.Unbinder;
  */
 
 public class StartMatchDialogFragment extends BaseDialogFragment {
+    public static final String TAG="StartMatchDialogFragment";
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -128,7 +130,12 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, StartMatchDialogFragment.class.getSimpleName());
+        if (manager == null) return;
+        if (!this.isAdded()){
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, TAG);
+            ft.commitAllowingStateLoss();
+        }
     }
 
     private CountDownTimer timer = new CountDownTimer(4000, 1000) {

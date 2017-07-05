@@ -37,7 +37,7 @@ import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSClient;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.callback.WSCallback;
@@ -379,7 +379,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestSubscribeBattle() {
-        WSClient.get().send(new SubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new SubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
 
@@ -394,7 +394,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void requestUnSubscribeBattle() {
         if (mBattle.getGameStatus() == GAME_STATUS_OBESERVE) {
-            WSClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+            WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
                 @Override
                 public void onResponse(WSMessage<Resp> respWSMessage) {
                 }
@@ -408,7 +408,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestBattleInfo() {
-        WSClient.get().send(new CurrentBattle(mBattle.getId(), mBattle.getBatchCode()),
+        WsClient.get().send(new CurrentBattle(mBattle.getId(), mBattle.getBatchCode()),
                 new WSCallback<WSMessage<Resp<BattleInfo>>>() {
                     @Override
                     public void onResponse(WSMessage<Resp<BattleInfo>> respWSMessage) {
@@ -475,7 +475,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
     private void requestAddBattlePraise(final int userId) {
         umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
-        WSClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
+        WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
                 setPraiseLight(userId);
@@ -531,7 +531,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             mStartGameDialogFragment = StartGameDialogFragment
                     .newInstance(mBattle.getAgainstUserPortrait());
         }
-        mStartGameDialogFragment.show(getSupportFragmentManager());
+        mStartGameDialogFragment.showAsync(getSupportFragmentManager());
     }
 
     //开始匹配弹窗
@@ -573,7 +573,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestQuickSearchForLaunch(final int type) {
-        WSClient.get().send(new QuickMatchLauncher(type, mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new QuickMatchLauncher(type, mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 if (type == TYPE_QUICK_MATCH) {
@@ -735,7 +735,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestCancelBattle() {
-        WSClient.get().send(new CancelBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+        WsClient.get().send(new CancelBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 Intent intent = new Intent();

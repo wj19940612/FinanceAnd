@@ -21,6 +21,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
 
+    <!--VISIBILITY_HIDDEN表示不显示任何通知栏提示的权限-->
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+    <!--DownloadManager-->
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -289,6 +294,7 @@
             android:exported="true"
             android:label="PushService"
             android:process=":pushservice"/>
+        <service android:name=".service.DownloadService"/>
 
         <meta-data
             android:name="UMENG_APPKEY"

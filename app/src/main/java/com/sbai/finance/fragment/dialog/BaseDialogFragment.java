@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Window;
@@ -11,15 +12,11 @@ import android.view.WindowManager;
 
 import com.sbai.finance.R;
 
-import butterknife.Unbinder;
-
 /**
  * Created by ${wangJie} on 2017/6/7.
  */
 
 public class BaseDialogFragment extends DialogFragment {
-
-    private Unbinder mBind;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,11 +40,9 @@ public class BaseDialogFragment extends DialogFragment {
         this.show(manager, this.getClass().getSimpleName());
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mBind != null) {
-            mBind.unbind();
-        }
+    public void showAsync(FragmentManager manager) {
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(this, this.getClass().getSimpleName());
+        ft.commitAllowingStateLoss();
     }
 }

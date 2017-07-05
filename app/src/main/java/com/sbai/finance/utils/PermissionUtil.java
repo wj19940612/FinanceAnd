@@ -1,10 +1,14 @@
 package com.sbai.finance.utils;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 
 import java.util.ArrayList;
@@ -15,6 +19,9 @@ import java.util.List;
  */
 
 public class PermissionUtil {
+
+    public static final int REQ_CODE_ASK_PERMISSION = 1;
+
     /**
      * 检测单项权限
      *
@@ -154,6 +161,17 @@ public class PermissionUtil {
 
         }
         return denyPermissions.toArray(new String[]{});
+    }
+
+    public static boolean isStoragePermissionGranted(Activity activity, int requestCode) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(activity,
+                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+            return false;
+        }
     }
 
 }
