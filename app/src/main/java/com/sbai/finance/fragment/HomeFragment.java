@@ -197,12 +197,12 @@ public class HomeFragment extends BaseFragment {
     private void updateBattleView(Battle battle) {
         if (battle != null) {
             if (battle.getGameStatus() == Battle.GAME_STATUS_CREATED) {
-                mBattle.setSubText(R.string.battle_status_pending);
+                mBattle.setRowSubText(R.string.battle_status_pending);
             } else if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED) {
-                mBattle.setSubText(R.string.battle_status_fighting);
+                mBattle.setRowSubText(R.string.battle_status_fighting);
             }
         } else {
-            mBattle.setSubText(null);
+            mBattle.setRowSubText(R.string.battle_hint);
         }
     }
 

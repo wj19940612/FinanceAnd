@@ -79,7 +79,7 @@
                 android:background="@drawable/bg_pressable"
                 app:leftIcon="@drawable/ic_futures_vs"
                 app:rightIcon="@drawable/ic_arrow_right_tint"
-                app:rowSubText="来一把紧张激烈的对战吧！"
+                app:rowSubText="@string/battle_hint"
                 app:rowSubTextColor="@color/unluckyText"
                 app:rowSubTextSize="10sp"
                 app:rowText="期货对战"
