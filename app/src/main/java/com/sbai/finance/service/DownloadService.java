@@ -91,7 +91,7 @@ public class DownloadService extends Service {
             mDownloadUri = downloadUri;
 
             DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setTitle(getString(R.string.downloading, appName));
+            request.setTitle(getString(R.string.downloading, getString(R.string.app_name)));
             if (FileUtils.isExternalStorageWriteable()) {
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, appName);
             } else {

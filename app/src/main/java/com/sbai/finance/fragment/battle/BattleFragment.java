@@ -138,7 +138,6 @@ public class BattleFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         initTabLayout();
 
         if (mIsObserver) {
@@ -337,8 +336,13 @@ public class BattleFragment extends BaseFragment {
         if (currentOrder != null) {
             mCurrentOrder = currentOrder;
             setBattleTradeState(STATE_CLOSE_POSITION);
-            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
-                    FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), 0);
+            if (mVariety != null) {
+                mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
+                        FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), 0);
+            } else {
+                mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
+                        String.valueOf(mCurrentOrder.getOrderPrice()), 0);
+            }
         } else {
             setBattleTradeState(STATE_TRADE);
         }

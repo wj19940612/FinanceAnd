@@ -5,33 +5,34 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.WebSocket;
 import com.sbai.finance.App;
 import com.sbai.finance.net.API;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.httplib.CookieManger;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class WSClient implements WSAbsClient {
+public class WsClient implements AbsWsClient {
 
     private static final String TAG = "WebSocket";
 
-    private static WSClient sInstance;
+    private static WsClient sInstance;
 
-    private InnerWSClient mWSClient;
+    private WebSocket mWebSocket;
+
     private Queue<WSMessage> mPendingList;
     private Queue<WSMessage> mExecutedList;
+
     private Status mStatus;
+
     private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
 
@@ -43,14 +44,14 @@ public class WSClient implements WSAbsClient {
         REGISTERED
     }
 
-    public static WSClient get() {
+    public static WsClient get() {
         if (sInstance == null) {
-            sInstance = new WSClient();
+            sInstance = new WsClient();
         }
         return sInstance;
     }
 
-    private WSClient() {
+    private WsClient() {
         mStatus = Status.UNREGISTERED;
         mHandler = new Handler(App.getAppContext().getMainLooper());
 
@@ -63,7 +64,7 @@ public class WSClient implements WSAbsClient {
         Log.d(TAG, "register: ");
         String tokens = CookieManger.getInstance().getCookies();
         WSMessage message = new WSMessage(SocketCode.CODE_REGISTER, new WSRegisterInfo(tokens));
-        mWSClient.send(message.toJson()); // do not add executed list
+        mWebSocket.send(message.toJson()); // do not add executed list
         mStatus = Status.REGISTERING;
     }
 
@@ -90,50 +91,82 @@ public class WSClient implements WSAbsClient {
     public void send(WSMessage message) {
         if (isConnected() && mStatus == Status.REGISTERED) {
             Log.d(TAG, "execute: " + message.toJson());
-            mWSClient.send(message.toJson());
+            mWebSocket.send(message.toJson());
             mExecutedList.offer(message);
         } else {
             mPendingList.offer(message);
-
-            if (isConnecting()) {
-                return;
-            }
-
-            if (isClosing()) {
-                return;
-            }
-
-            if (isConnected() && mStatus == Status.REGISTERING) {
-                return;
-            }
 
             connect();
         }
     }
 
-    private void connect() {
-        mWSClient = new InnerWSClient(createURI());
-        mWSClient.setClient(this);
-        mWSClient.connect();
+    @Override
+    public void connect() {
+        AsyncHttpClient.getDefaultInstance().websocket(createURI(), null, new AsyncHttpClient.WebSocketConnectCallback() {
+            @Override
+            public void onCompleted(Exception ex, WebSocket webSocket) {
+                mWebSocket = webSocket;
+
+                if (isConnected()) {
+
+                    initWebSocket();
+
+                    onOpen();
+                }
+            }
+        });
+    }
+
+    private void initWebSocket() {
+        mWebSocket.setStringCallback(new WebSocket.StringCallback() {
+            @Override
+            public void onStringAvailable(String s) {
+                onMessage(s);
+            }
+        });
+        mWebSocket.setClosedCallback(new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+                onClose();
+            }
+        });
+        mWebSocket.setEndCallback(new CompletedCallback() {
+            @Override
+            public void onCompleted(Exception ex) {
+                onError(ex);
+            }
+        });
+        mWebSocket.setPingCallback(new WebSocket.PingCallback() {
+            @Override
+            public void onPingReceived(String s) {
+                Log.d(TAG, "onPingReceived: " + s);
+                mWebSocket.pong(s);
+            }
+        });
     }
 
     @Override
     public boolean isConnecting() {
-        return mWSClient != null && mWSClient.isConnecting();
+        return false;
     }
 
     @Override
     public boolean isConnected() {
-        return mWSClient != null && mWSClient.isOpen() && !mWSClient.isClosing();
+        return mWebSocket != null && mWebSocket.isOpen();
     }
 
     @Override
     public boolean isClosing() {
-        return mWSClient != null && mWSClient.isClosing();
+        return false;
+    }
+
+    @Override
+    public boolean isClosed() {
+        return false;
     }
 
     private void executePendingList() {
-        if (mWSClient.isOpen()) {
+        if (mWebSocket.isOpen()) {
             while (!mPendingList.isEmpty()) {
                 WSMessage wsMessage = mPendingList.poll();
                 send(wsMessage);
@@ -143,33 +176,33 @@ public class WSClient implements WSAbsClient {
 
     @Override
     public void onOpen() {
-        mCloseAuto = true;
+        Log.d(TAG, "onOpen: ");
+        //mCloseAuto = true;
         register();
     }
 
     @Override
     public void onClose() {
-        mWSClient = null;
+        Log.d(TAG, "onClose: ");
         mStatus = Status.UNREGISTERED;
         if (mCloseAuto) { // if close automatically, reconnect
-            connect();
+            //connect();
         }
     }
 
     @Override
-    public void onError() {
-        mWSClient = null;
+    public void onError(Exception e) {
+        Log.d(TAG, "onError: " + e.getMessage());
         mStatus = Status.UNREGISTERED;
     }
 
     @Override
     public void close() {
         if (isConnected()) {
-            mWSClient.close();
-            mCloseAuto = false;
+            mWebSocket.close();
+            //mCloseAuto = false;
         }
     }
-
 
     @Override
     public void onMessage(String message) {
@@ -179,6 +212,8 @@ public class WSClient implements WSAbsClient {
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
+
+        Log.d(TAG, "onMessage: " + message);
 
         if (resp == null) return;
 
@@ -264,10 +299,9 @@ public class WSClient implements WSAbsClient {
     }
 
     private void sendHeart() {
-        if (mWSClient.isOpen()) {
+        if (isConnected()) {
             WSMessage heartMsg = new WSMessage(SocketCode.CODE_HEART, null);
-            mWSClient.send(heartMsg.toJson());
-            Log.d(TAG, "sendHeart: " + heartMsg);
+            mWebSocket.send(heartMsg.toJson());
         }
     }
 
@@ -284,57 +318,7 @@ public class WSClient implements WSAbsClient {
         return msg;
     }
 
-    public static URI createURI() {
-        try {
-            return new URI("ws://" + API.getDomain() + "/game/ws.do");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static class InnerWSClient extends WebSocketClient {
-
-        private WSAbsClient client;
-
-        public void setClient(WSAbsClient client) {
-            this.client = client;
-        }
-
-        public InnerWSClient(URI serverUri) {
-            super(serverUri);
-        }
-
-        @Override
-        public void onOpen(ServerHandshake handshakedata) {
-            Log.d(TAG, "onOpen: ");
-            if (client != null) {
-                client.onOpen();
-            }
-        }
-
-        @Override
-        public void onMessage(String message) {
-            Log.d(TAG, "onMessage: unprocessed message: " + message);
-            if (client != null) {
-                client.onMessage(message);
-            }
-        }
-
-        @Override
-        public void onClose(int code, String reason, boolean remote) {
-            Log.d(TAG, "onClose: code: " + code + ", reason: " + reason + ", remote: " + remote);
-            if (client != null) {
-                client.onClose();
-            }
-        }
-
-        @Override
-        public void onError(Exception ex) {
-            Log.d(TAG, "onError: " + ex.getMessage());
-            if (client != null) {
-                client.onError();
-            }
-        }
+    public String createURI() {
+        return "ws://" + API.getDomain() + "/game/ws.do";
     }
 }
