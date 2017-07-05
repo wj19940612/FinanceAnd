@@ -31,6 +31,8 @@ import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -134,8 +136,21 @@ public class CreateBattleActivity extends BaseActivity {
         mIntegralList = new ArrayList<>(mIntegralList);
         mDurationList = new ArrayList<>(mDurationList);
 
+        sortList(mIngotList);
+        sortList(mIntegralList);
+        sortList(mDurationList);
+
         updateIngotConfig();
         updateDurationConfig();
+    }
+
+    private void sortList(List<String> list) {
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Integer.parseInt(o1) - Integer.parseInt(o2);
+            }
+        });
     }
 
     private void updateIngotConfig() {
