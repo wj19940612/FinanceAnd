@@ -38,7 +38,5 @@
             android:text="+300元宝"
             android:textColor="@color/unluckyText"
             android:textSize="10sp"/>
-
-
     </RelativeLayout>
 </RelativeLayout>
