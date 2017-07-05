@@ -457,9 +457,14 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void updateRoomState(int state, BattleInfo info) {
-        if (state == ROOM_STATE_END) {
-
-        } else if (state == ROOM_STATE_END) {
+        mBattle = BattleInfo.getBattle(info);
+        mBattleView.initWithModel(mBattle);
+        mBattleView.setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false);
+        mBattleFragment.showBattleTradeView();
+        mBattleFragment.updateGameInfo(mBattle);
+        mBattleFragment.refreshTradeView();
+        if (state == ROOM_STATE_START) {
+            startScheduleJob(1000);
 
         }
     }
@@ -719,10 +724,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         });
 
-        // handle  java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-//        if (fragment.isResumed()) {
-//            fragment.show(getSupportFragmentManager());
-//        }
         fragment.show(getSupportFragmentManager());
 
     }
