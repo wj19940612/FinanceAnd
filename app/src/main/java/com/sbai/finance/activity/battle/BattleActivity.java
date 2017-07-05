@@ -37,9 +37,9 @@ import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.CancelBattle;
 import com.sbai.finance.websocket.cmd.CurrentBattle;
@@ -202,12 +202,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
 
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(BattleActivity.this, MainActivity.class).execute();
-            finish();
-            return;
-        }
-
         initData();
 
         initViews();
@@ -229,6 +223,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mPageType == PAGE_TYPE_RECORD) {
             initBattleRecordPage();
         } else {
+            if (!LocalUser.getUser().isLogin()) {
+                Launcher.with(BattleActivity.this, MainActivity.class).execute();
+                finish();
+                return;
+            }
             mBattleRoom = BattleRoom.getInstance(mBattle, LocalUser.getUser().getUserInfo().getId());
             initBattlePage();
         }
