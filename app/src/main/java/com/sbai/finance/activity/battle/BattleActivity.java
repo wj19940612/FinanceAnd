@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleFragment;
@@ -155,6 +156,12 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
+
+        if (!LocalUser.getUser().isLogin()){
+            Launcher.with(BattleActivity.this, MainActivity.class).execute();
+            finish();
+            return;
+        }
 
         initData();
 
@@ -434,7 +441,8 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
                                 mBattleRoom.setRoomState(ROOM_STATE_END);
                             }
-                            if (mBattleRoom.getRoomState() == ROOM_STATE_END) {
+                            if (mBattleRoom.getRoomState() == ROOM_STATE_END
+                                    && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
                                 showGameOverDialog();
                             }
