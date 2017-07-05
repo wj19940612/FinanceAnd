@@ -17,6 +17,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
@@ -76,10 +77,9 @@ public class AboutUsActivity extends BaseActivity {
                     protected void onRespSuccessData(final AppVersionModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
                         if (data.isLatestVersion()) {
+                            ToastUtil.curt(R.string.is_already_latest_version);
                             return;
                         }
-//                        data.setUpdateLog("副科级第三方科技\n肯定是附近即可恢复快结婚肯定就是\n副科级大家看法和大家看好房价肯定撒谎\n卡进来打卡机了公开建档立卡给家里\n时快捷回复尽快哈是否看见的哈萨克金凤凰\nsfsjkhfkjdsahfkjdha\n开发商就开好房间卡活动是否健康");
-//                        data.setDownloadUrl("http://ucan.25pp.com/Wandoujia_web_seo_baidu_homepage.apk");
                         UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
