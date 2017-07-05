@@ -68,8 +68,6 @@ public class ClipHeadImageActivity extends BaseActivity {
     }
 
     private void confirmUserNewHeadImage(String bitmapToBase64) {
-        Log.d(TAG, "confirmUserNewHeadImage: " + bitmapToBase64.length());
-        // TODO: 2017/6/29 使用直接上传图片
         Client.uploadImage(bitmapToBase64)
                 .setIndeterminate(this)
                 .setTag(TAG)
@@ -77,35 +75,14 @@ public class ClipHeadImageActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<String>, String>() {
                     @Override
                     protected void onRespSuccessData(String data) {
-                        Log.d(TAG, "结束时间 " + System.currentTimeMillis());
                         uploadUserHeadImageUrl(data);
                     }
                 })
                 .fire();
-
-
-//        Client.updateUserHeadImage(bitmapToBase64)
-//                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-//                .setIndeterminate(this)
-//                .setTag(TAG)
-//                .setCallback(new Callback2D<Resp<String>, String>() {
-//                    @Override
-//                    protected void onRespSuccessData(String data) {
-//                        if (!TextUtils.isEmpty(data)) {
-//                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-//                            userInfo.setUserPortrait(data);
-//                            LocalUser.getUser().setUserInfo(userInfo);
-//                        }
-//                        setResult(RESULT_OK);
-//                        finish();
-//                    }
-//                })
-//                .fire();
     }
 
     private void uploadUserHeadImageUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
-            Log.d(TAG, "uploadUserHeadImageUrl: " + url);
             Client.updateUserHeadImagePath(url)
                     .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
