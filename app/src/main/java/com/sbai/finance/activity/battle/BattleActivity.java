@@ -59,7 +59,6 @@ import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_R
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
-import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_END;
@@ -454,18 +453,16 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestUnSubscribeBattle() {
-        if (mBattle.getGameStatus() == GAME_STATUS_OBESERVE) {
-            WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-                @Override
-                public void onResponse(WSMessage<Resp> respWSMessage) {
-                }
+        WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+            }
 
-                @Override
-                public void onError(int code) {
-                }
+            @Override
+            public void onError(int code) {
+            }
 
-            });
-        }
+        });
     }
 
     private void requestBattleInfo() {
@@ -826,7 +823,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             public void onError(int code) {
                 ToastUtil.show(getString(R.string.cancel_failed_game_start));
             }
-
         });
     }
 
