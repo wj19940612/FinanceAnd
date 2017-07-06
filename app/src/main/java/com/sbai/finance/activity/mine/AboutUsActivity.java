@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mine;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.View;
 
 import com.android.volley.VolleyError;
@@ -75,12 +74,13 @@ public class AboutUsActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
                     @Override
                     protected void onRespSuccessData(final AppVersionModel data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
-                        if (data.isLatestVersion()) {
+                        if (data.isForceUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                        } else if (data.isNeedUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                        } else {
                             ToastUtil.show(R.string.is_already_latest_version);
-                            return;
                         }
-                        UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
                 .fireFree();

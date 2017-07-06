@@ -26,7 +26,7 @@
         android:paddingRight="@dimen/common_padding">
 
         <TextView
-            android:id="@+id/coin"
+            android:id="@+id/ingot"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

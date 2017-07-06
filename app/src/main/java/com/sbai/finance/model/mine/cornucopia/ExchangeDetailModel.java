@@ -7,7 +7,7 @@ package com.sbai.finance.model.mine.cornucopia;
 public class ExchangeDetailModel {
 
     //元宝
-    public static final int TYPE_COIN = 1;
+    public static final int TYPE_INGOT = 1;
     //积分
     public static final int TYPE_INTEGRATE = 2;
 
@@ -43,7 +43,7 @@ public class ExchangeDetailModel {
     private int flowType;
 
     public boolean isVcoin() {
-        return getCurrencyType() == TYPE_COIN;
+        return getCurrencyType() == TYPE_INGOT;
     }
 
     public int getCurrencyType() {

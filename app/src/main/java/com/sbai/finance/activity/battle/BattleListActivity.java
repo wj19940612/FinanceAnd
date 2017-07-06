@@ -812,7 +812,9 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void dismissQuickMatchDialog() {
-        if (mQuickMatchDialogFragment != null) {
+        if (mQuickMatchDialogFragment != null
+                && mQuickMatchDialogFragment.getDialog() != null
+                && mQuickMatchDialogFragment.getDialog().isShowing()) {
             mQuickMatchDialogFragment.dismiss();
         }
     }

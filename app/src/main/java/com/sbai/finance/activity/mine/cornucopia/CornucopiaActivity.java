@@ -38,8 +38,8 @@ import butterknife.OnClick;
 
 public class CornucopiaActivity extends BaseActivity implements ExChangeProductFragment.OnUserFundChangeListener {
 
-    @BindView(R.id.coin)
-    TextView mCoin;
+    @BindView(R.id.ingot)
+    TextView mIngot;
     @BindView(R.id.integrate)
     TextView mIntegrate;
     @BindView(R.id.exchange_rule)
@@ -106,7 +106,7 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
 
     private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
         if (userFundInfoModel != null) {
-            mCoin.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.coin_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mIngot.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.ingot_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
             mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }
@@ -130,12 +130,12 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
                 .fireFree();
     }
 
-    @OnClick({R.id.coin, R.id.integrate, R.id.exchange_rule})
+    @OnClick({R.id.ingot, R.id.integrate, R.id.exchange_rule})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.coin:
+            case R.id.ingot:
                 umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INGOT_DETAILS);
-                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_COIN).execute();
+                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INGOT).execute();
                 break;
             case R.id.integrate:
                 umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INTEGRAL_DETAILS);
@@ -208,7 +208,7 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return mContext.getString(R.string.exchange_coin);
+                    return mContext.getString(R.string.exchange_ingot);
                 case 1:
                     return mContext.getString(R.string.exchange_integrate);
             }
