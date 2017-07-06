@@ -338,7 +338,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
-						} else { 
+						} else {
 							showJoinVersusFailureDialog(resp);
 						}
 					}
