@@ -49,6 +49,8 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
 import com.sbai.httplib.BuildConfig;
 
+import java.util.HashSet;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -57,7 +59,6 @@ import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_R
 import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
-import static com.sbai.finance.model.battle.Battle.GAME_STATUS_OBESERVE;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_END;
@@ -100,6 +101,9 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     private BattleInfo mBattleInfo;
     private BattleRoom mBattleRoom;
     private int mPageType;
+    private HashSet<Long> mSet;
+
+    private BattleResultDialogFragment mBattleResultDialogFragment = null;
 
     @Override
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
@@ -216,6 +220,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattle == null && !TextUtils.isEmpty(batchCode)) {
             requestLastBattleInfo(battleId, batchCode);
         }
+        mSet = new HashSet<>();
     }
 
     private void initViews() {
@@ -257,6 +262,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     public void initBattlePage() {
         if (mBattleFragment == null) {
             mBattleFragment = BattleFragment.newInstance(mBattle);
+        }
+        if (mBattleResultDialogFragment == null) {
+            mBattleResultDialogFragment = new BattleResultDialogFragment();
+            mBattleResultDialogFragment.setOnCloseListener(new BattleResultDialogFragment.OnCloseListener() {
+                @Override
+                public void onClose() {
+                    finish();
+                }
+            });
         }
 
         getSupportFragmentManager()
@@ -349,7 +363,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             }
         }
 
-        requestSubscribeBattle();
         requestBattleInfo();
     }
 
@@ -440,18 +453,16 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void requestUnSubscribeBattle() {
-        if (mBattle.getGameStatus() == GAME_STATUS_OBESERVE) {
-            WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-                @Override
-                public void onResponse(WSMessage<Resp> respWSMessage) {
-                }
+        WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+            }
 
-                @Override
-                public void onError(int code) {
-                }
+            @Override
+            public void onError(int code) {
+            }
 
-            });
-        }
+        });
     }
 
     private void requestBattleInfo() {
@@ -491,7 +502,10 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END
                                     && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
-                                showGameOverDialog();
+
+                                if (mSet.add(mBattleInfo.getEndTime())) {
+                                    showGameOverDialog();
+                                }
                             }
                         }
                     }
@@ -508,7 +522,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattleFragment.refreshTradeView();
         if (state == ROOM_STATE_START) {
             startScheduleJob(1000);
-
         }
     }
 
@@ -530,7 +543,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
-                setPraiseLight(userId);
             }
         });
     }
@@ -545,10 +557,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattleView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
     }
 
-    private void setPraiseLight(int userId) {
-        boolean isLeft = userId == mBattle.getLaunchUser();
-        mBattleView.setPraiseLight(isLeft);
-    }
 
 
     @Override
@@ -739,36 +747,26 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void showGameOverDialog() {
-        BattleResultDialogFragment fragment = null;
 
         if (mBattleInfo.getWinResult() == 0) {
             //平局
-            fragment = BattleResultDialogFragment
-                    .newInstance(GAME_RESULT_DRAW, getString(R.string.return_reward));
+            mBattleResultDialogFragment.setResult(GAME_RESULT_DRAW);
+            mBattleResultDialogFragment.setContent(getString(R.string.return_reward));
         } else {
             boolean win = getWinResult();
 
             String coinType = getCoinType(mBattleInfo);
 
             if (win) {
-                fragment = BattleResultDialogFragment
-                        .newInstance(GAME_RESULT_WIN, "+" + (mBattleInfo.getReward() - mBattleInfo.getCommission()) + coinType);
+                mBattleResultDialogFragment.setResult(GAME_RESULT_WIN);
+                mBattleResultDialogFragment.setContent("+" + (mBattleInfo.getReward() - mBattleInfo.getCommission()) + coinType);
             } else {
-                fragment = BattleResultDialogFragment
-                        .newInstance(GAME_RESULT_LOSE, "-" + mBattleInfo.getReward() + coinType);
+                mBattleResultDialogFragment.setResult(GAME_RESULT_LOSE);
+                mBattleResultDialogFragment.setContent("-" + mBattleInfo.getReward() + coinType);
             }
         }
 
-        final BattleResultDialogFragment finalFragment = fragment;
-        fragment.setOnCloseListener(new BattleResultDialogFragment.OnCloseListener() {
-            @Override
-            public void onClose() {
-                finalFragment.dismissAllowingStateLoss();
-                finish();
-            }
-        });
-
-        fragment.show(getSupportFragmentManager());
+        mBattleResultDialogFragment.show(getSupportFragmentManager());
 
     }
 
@@ -819,7 +817,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             public void onError(int code) {
                 ToastUtil.show(getString(R.string.cancel_failed_game_start));
             }
-
         });
     }
 
@@ -858,12 +855,23 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattleRoom != null && mBattleRoom.getRoomState() != ROOM_STATE_END) {
             requestBattleInfo();
         }
+        if (mPageType == PAGE_TYPE_VERSUS) {
+            requestSubscribeBattle();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mPageType == PAGE_TYPE_VERSUS) {
+            requestUnSubscribeBattle();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopScheduleJob();
-        requestUnSubscribeBattle();
+        mSet.clear();
     }
 }
