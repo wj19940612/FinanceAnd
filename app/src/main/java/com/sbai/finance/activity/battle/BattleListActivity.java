@@ -371,11 +371,11 @@ public class BattleListActivity extends BaseActivity implements
 
     private void requestJoinBattle(final Battle data) {
         Client.joinBattle(data.getId(), Battle.SOURCE_HALL).setTag(TAG)
-                .setCallback(new ApiCallback<Resp<Battle>>() {
+                .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    public void onSuccess(Resp<Battle> resp) {
-                        if (resp.isSuccess()) {
-                            Battle battle = resp.getData();
+                    protected void onReceive(Resp<Battle> battleResp) {
+                        if (battleResp.isSuccess()) {
+                            Battle battle = battleResp.getData();
                             if (battle != null) {
                                 //更新列表对战信息
                                 data.setGameStatus(battle.getGameStatus());
@@ -389,12 +389,11 @@ public class BattleListActivity extends BaseActivity implements
                                         .executeForResult(CANCEL_BATTLE);
                             }
                         } else {
-                            showJoinBattleFailureDialog(resp);
+                            showJoinBattleFailureDialog(battleResp);
                         }
                     }
-
                     @Override
-                    public void onFailure(VolleyError volleyError) {
+                    protected void onRespSuccess(Resp<Battle> resp) {
 
                     }
                 }).fireFree();
@@ -403,18 +402,17 @@ public class BattleListActivity extends BaseActivity implements
     //快速匹配结果查询
     private void requestFastMatchResult() {
         Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH, null).setTag(TAG)
-                .setCallback(new ApiCallback<Resp<Battle>>() {
+                .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    public void onSuccess(Resp<Battle> battleResp) {
+                    protected void onReceive(Resp<Battle> battleResp) {
                         if (battleResp.isSuccess() && battleResp.getData() != null) {
                             showMatchSuccessDialog(battleResp.getData());
                         } else if (battleResp.getCode() == Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT) {
                             showMatchTimeoutDialog();
                         }
                     }
-
                     @Override
-                    public void onFailure(VolleyError volleyError) {
+                    protected void onRespSuccess(Resp<Battle> resp) {
 
                     }
                 }).fireFree();

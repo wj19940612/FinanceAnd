@@ -1697,7 +1697,7 @@ public class Client {
      * @return
      */
     public static API getQuickMatchResult(int type,Integer battleId){
-        return new API(POST,"/game/battle/quickSearchForResult.do", new ApiParams()
+        return new API("/game/battle/quickSearchForResult.do", new ApiParams()
                 .put("type", type)
                 .put("battleId", battleId));
     }
