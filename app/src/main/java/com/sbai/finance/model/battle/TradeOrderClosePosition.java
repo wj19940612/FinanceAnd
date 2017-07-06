@@ -57,7 +57,6 @@ public class TradeOrderClosePosition {
     private int varietyId;
     private String varietyName;
     private String varietyType;
-    private int winOrLoss;
 
     public String getBattleBatchCode() {
         return battleBatchCode;
@@ -243,11 +242,4 @@ public class TradeOrderClosePosition {
         this.varietyType = varietyType;
     }
 
-    public int getWinOrLoss() {
-        return winOrLoss;
-    }
-
-    public void setWinOrLoss(int winOrLoss) {
-        this.winOrLoss = winOrLoss;
-    }
 }
