@@ -62,13 +62,6 @@ public class WalletActivity extends BaseActivity {
         setContentView(R.layout.activity_wallet);
         ButterKnife.bind(this);
         updateUserFund(0);
-
-        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Launcher.with(getActivity(), WithDrawActivity.class).execute();
-            }
-        });
     }
 
 
