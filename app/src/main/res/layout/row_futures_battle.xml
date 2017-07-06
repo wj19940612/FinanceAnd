@@ -5,6 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@android:color/white"
+              android:descendantFocusability="blocksDescendants"
               android:orientation="vertical">
 
     <View
@@ -156,6 +157,7 @@
                 android:id="@+id/againstUserAvatar"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
+                android:clickable="false"
                 tools:src="@drawable/btn_join_versus"/>
 
             <TextView

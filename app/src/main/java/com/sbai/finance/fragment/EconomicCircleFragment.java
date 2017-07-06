@@ -264,13 +264,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						Intent intent = new Intent(getContext(), BattleActivity.class);
 						intent.putExtra(Launcher.EX_PAYLOAD, data);
 						intent.putExtra(BattleActivity.PAGE_TYPE, pageType);
-						startActivityForResult(intent, REQ_CODE_USERDATA);
-
-						Launcher.with(getActivity(), BattleActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, data)
-								.putExtra(BattleActivity.PAGE_TYPE, pageType)
-								.executeForResult(CANCEL_BATTLE);
-
+						startActivityForResult(intent, CANCEL_BATTLE);
 					}
 				}).fire();
 	}
@@ -344,7 +338,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
 										.execute();
 							}
-						} else {
+						} else { 
 							showJoinVersusFailureDialog(resp);
 						}
 					}
