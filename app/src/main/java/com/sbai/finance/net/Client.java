@@ -730,6 +730,15 @@ public class Client {
     }
 
     /**
+     * 品种-查询品种是否允许交易
+     * @return
+     */
+    public static API getFutureTradeStatus(){
+        return new API("/user/dictionary/findDictionaryForJson.do?type=variety_deal");
+    }
+
+
+    /**
      * 获取股票实时行情接口
      *
      * @param stockCode

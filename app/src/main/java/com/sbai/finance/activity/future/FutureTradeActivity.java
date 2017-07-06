@@ -37,6 +37,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.future.FutureTradeStatus;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -139,6 +140,26 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         requestOptionalStatus();
 
         requestTrendDataAndSet();
+        
+        requestTradeStatus();
+    }
+
+    private void requestTradeStatus() {
+        Client.getFutureTradeStatus().setTag(TAG)
+                .setCallback(new Callback2D<Resp<FutureTradeStatus>,FutureTradeStatus>() {
+                    @Override
+                    protected void onRespSuccessData(FutureTradeStatus data) {
+                        updateTradeStatus(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateTradeStatus(FutureTradeStatus data) {
+        if (data.getFurtureDealStatus()==FutureTradeStatus.ALLOW_TRADE){
+            mTradeFloatButtons.setHasTradeButton(true);
+        }else{
+            mTradeFloatButtons.setHasTradeButton(false);
+        }
     }
 
     @Override
