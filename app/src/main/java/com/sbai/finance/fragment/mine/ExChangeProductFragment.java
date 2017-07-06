@@ -103,11 +103,11 @@ public class ExChangeProductFragment extends BaseFragment {
         mListView.setEmptyView(mEmpty);
         mExchangeProductAdapter = new ExchangeProductAdapter(getActivity());
         mListView.setAdapter(mExchangeProductAdapter);
-        requestVcoinOrIntegrateList();
+        requestIngotOrIntegrateList();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestVcoinOrIntegrateList();
+                requestIngotOrIntegrateList();
             }
         });
 
@@ -115,13 +115,13 @@ public class ExChangeProductFragment extends BaseFragment {
             @Override
             public void exchange(CornucopiaProductModel item) {
                 if (item != null) {
-                    if (item.isVcoin()) {
+                    if (item.isIngot()) {
                         umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_BUY_INGOT);
                     } else {
                         umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_INTEGRAL);
                     }
                     if (mUserFundInfoModel != null) {
-                        if (item.isVcoin() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney()
+                        if (item.isIngot() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney()
                                 : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
                             showExchangeConfirmDialog(item);
                         } else {
@@ -141,9 +141,9 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     private void showExchangeConfirmDialog(final CornucopiaProductModel item) {
-        String msg = item.isVcoin() ? getString(R.string.confirm_use_money_buy_coin, FinanceUtil.formatWithScale(item.getFromRealMoney()), StrFormatter.getFormIngot(item.getToRealMoney())) :
-                getString(R.string.confirm_use_coin_buy_integrate, StrFormatter.getFormIngot(item.getFromRealMoney()), StrFormatter.getFormIntegrate(item.getToRealMoney()));
-        String title = item.isVcoin() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
+        String msg = item.isIngot() ? getString(R.string.confirm_use_money_buy_ingot, FinanceUtil.formatWithScale(item.getFromRealMoney()), StrFormatter.getFormIngot(item.getToRealMoney())) :
+                getString(R.string.confirm_use_ingot_buy_integrate, StrFormatter.getFormIngot(item.getFromRealMoney()), StrFormatter.getFormIntegrate(item.getToRealMoney()));
+        String title = item.isIngot() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
         SmartDialog.with(getActivity(), msg, title)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
@@ -192,9 +192,9 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     private void showInputSafetyPassDialog(final CornucopiaProductModel item) {
-        String content = item.isVcoin() ? getString(R.string.coin_number, StrFormatter.getFormIngot(item.getToRealMoney())) :
+        String content = item.isIngot() ? getString(R.string.ingot_number, StrFormatter.getFormIngot(item.getToRealMoney())) :
                 getString(R.string.integrate_number, StrFormatter.getFormIntegrate(item.getToRealMoney()));
-        String hintText = item.isVcoin() ? getString(R.string.buy) : getString(R.string.exchange);
+        String hintText = item.isIngot() ? getString(R.string.buy) : getString(R.string.exchange);
         InputSafetyPassDialogFragment.newInstance(content, hintText)
                 .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
                     @Override
@@ -229,7 +229,7 @@ public class ExChangeProductFragment extends BaseFragment {
                         if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
                             showExchangeFailDialog(item);
                         } else if (objectResp.isExchangeProductHasChange()) {
-                            requestVcoinOrIntegrateList();
+                            requestIngotOrIntegrateList();
                             ToastUtil.show(objectResp.getMsg());
                         } else {
                             ToastUtil.show(objectResp.getMsg());
@@ -240,7 +240,7 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     private void showExchangeFailDialog(CornucopiaProductModel item) {
-        if (item.isVcoin()) {
+        if (item.isIngot()) {
             SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough), getString(R.string.buy_fail))
                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                         @Override
@@ -250,7 +250,7 @@ public class ExChangeProductFragment extends BaseFragment {
                         }
                     }).show();
         } else {
-            SmartDialog.with(getActivity(), getString(R.string.coin_is_not_enough), getString(R.string.exchange_fail))
+            SmartDialog.with(getActivity(), getString(R.string.ingot_is_not_enough), getString(R.string.exchange_fail))
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
@@ -263,7 +263,7 @@ public class ExChangeProductFragment extends BaseFragment {
     }
 
     //请求元宝 积分 数据
-    private void requestVcoinOrIntegrateList() {
+    private void requestIngotOrIntegrateList() {
         Client.getExchangeProduct()
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -275,11 +275,11 @@ public class ExChangeProductFragment extends BaseFragment {
                         while (cornucopiaProductModelListIterator.hasNext()) {
                             CornucopiaProductModel productModel = cornucopiaProductModelListIterator.next();
                             if (mType == CornucopiaProductModel.TYPE_VCOIN) {
-                                if (!productModel.isVcoin()) {
+                                if (!productModel.isIngot()) {
                                     cornucopiaProductModelListIterator.remove();
                                 }
                             } else if (mType == CornucopiaProductModel.TYPE_INTEGRATION) {
-                                if (productModel.isVcoin()) {
+                                if (productModel.isIngot()) {
                                     cornucopiaProductModelListIterator.remove();
                                 }
                             }
@@ -364,18 +364,18 @@ public class ExChangeProductFragment extends BaseFragment {
             }
 
             public void bindDataWithView(Context context, final CornucopiaProductModel item, int position, final OnExchangeListener onExchangeListener) {
-                if (item.isVcoin()) {
-                    mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_vcoin_big, 0, 0, 0);
+                if (item.isIngot()) {
+                    mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_ingot_big, 0, 0, 0);
                     mProduct.setText(StrFormatter.getFormIngot(item.getToRealMoney()));
                     mPrice.setText(context.getString(R.string.yuan, FinanceUtil.formatWithScale(item.getFromRealMoney())));
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
                     mProduct.setText(StrFormatter.getFormIntegrate(item.getToRealMoney()));
-                    mPrice.setText(context.getString(R.string.coin_number, StrFormatter.getFormIngot(item.getFromRealMoney())));
+                    mPrice.setText(context.getString(R.string.ingot_number, StrFormatter.getFormIngot(item.getFromRealMoney())));
                 }
                 if (item.isDiscount()) {
                     mOldPrice.setVisibility(View.VISIBLE);
-                    if (item.isVcoin()) {
+                    if (item.isIngot()) {
                         mOldPrice.setText(context.getString(R.string.old_price, FinanceUtil.formatWithScale(item.getFromMoney())));
                     } else {
                         mOldPrice.setText(context.getString(R.string.old_price_exchange_integrate, StrFormatter.getFormIngot(item.getFromMoney())));

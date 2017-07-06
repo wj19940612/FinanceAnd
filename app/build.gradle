@@ -76,8 +76,8 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 19
-            versionNameSuffix '-dev'
+            minSdkVersion 21
+//            versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
