@@ -113,6 +113,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private FutureData mFutureData;
     private boolean isOptionalChanged;
     private int mPagePosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,13 +141,13 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         requestOptionalStatus();
 
         requestTrendDataAndSet();
-        
+
         requestTradeButtonVisible();
     }
 
     private void requestTradeButtonVisible() {
         Client.getFutureTradeStatus().setTag(TAG)
-                .setCallback(new Callback2D<Resp<FutureTradeStatus>,FutureTradeStatus>() {
+                .setCallback(new Callback2D<Resp<FutureTradeStatus>, FutureTradeStatus>() {
                     @Override
                     protected void onRespSuccessData(FutureTradeStatus data) {
                         updateTradeStatus(data);
@@ -155,9 +156,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     }
 
     private void updateTradeStatus(FutureTradeStatus data) {
-        if (data.getFurtureDealStatus()==FutureTradeStatus.ALLOW_TRADE){
+        if (data.getFurtureDealStatus() == FutureTradeStatus.ALLOW_TRADE) {
             mTradeFloatButtons.setHasTradeButton(true);
-        }else{
+        } else {
             mTradeFloatButtons.setHasTradeButton(false);
         }
     }
@@ -369,7 +370,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     }
 
     private void requestDeleteOptional() {
-        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional),getString(R.string.hint))
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional), getString(R.string.hint))
                 .setMessageTextSize(15)
                 .setPositive(R.string.yes, new SmartDialog.OnClickListener() {
                     @Override
@@ -399,10 +400,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .setNegative(R.string.no)
                 .show();
     }
-    private void setResult(){
+
+    private void setResult() {
         Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD,mVariety);
-        intent.putExtra(Launcher.EX_PAYLOAD_1,isOptionalChanged);
+        intent.putExtra(Launcher.EX_PAYLOAD, mVariety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, isOptionalChanged);
         setResult(RESULT_OK, intent);
     }
 
@@ -641,11 +643,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             @Override
             public void onClick(View v) {
                 Fragment fragment = mSubPageAdapter.getFragment(mPagePosition);
-                if(fragment!=null){
-                    if(fragment instanceof ViewpointFragment){
-                        ((ViewpointFragment)fragment).scrollToTop();
-                    }else if(fragment instanceof IntroduceFragment){
-                        ((IntroduceFragment)fragment).scrollToTop();
+                if (fragment != null) {
+                    if (fragment instanceof ViewpointFragment) {
+                        ((ViewpointFragment) fragment).scrollToTop();
+                    } else if (fragment instanceof IntroduceFragment) {
+                        ((IntroduceFragment) fragment).scrollToTop();
                     }
                 }
             }

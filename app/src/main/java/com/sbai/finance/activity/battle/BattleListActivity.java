@@ -310,6 +310,11 @@ public class BattleListActivity extends BaseActivity implements
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
         startScheduleJob(5 * 1000);
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
         if (mQuickMatchDialogFragment != null
                 && mQuickMatchDialogFragment.getDialog() != null
                 && mQuickMatchDialogFragment.getDialog().isShowing()) {
@@ -403,7 +408,7 @@ public class BattleListActivity extends BaseActivity implements
     //快速匹配结果查询
     private void requestFastMatchResult() {
         Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH, null).setTag(TAG)
-                .setCallback(new ApiCallback<Resp<Battle>>() {
+                .setCallback(new Callback<Resp<Battle>>() {
                     @Override
                     public void onSuccess(Resp<Battle> battleResp) {
                         if (battleResp.isSuccess() && battleResp.getData() != null) {
@@ -415,6 +420,11 @@ public class BattleListActivity extends BaseActivity implements
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
+
+                    }
+
+                    @Override
+                    protected void onRespSuccess(Resp<Battle> resp) {
 
                     }
                 }).fireFree();
