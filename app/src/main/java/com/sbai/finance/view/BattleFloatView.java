@@ -308,16 +308,6 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setPraiseLight(boolean isLeft) {
-        Drawable left = ContextCompat.getDrawable(getContext(), R.drawable.ic_battle_praise);
-        if (isLeft) {
-            mMyPraiseButton.setSelected(true);
-        } else {
-            mUserPraiseButton.setSelected(true);
-        }
-        return this;
-    }
-
     /**
      * 设置输赢
      * 设置此局游戏是否胜利

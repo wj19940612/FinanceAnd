@@ -522,7 +522,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattleFragment.refreshTradeView();
         if (state == ROOM_STATE_START) {
             startScheduleJob(1000);
-
         }
     }
 
@@ -544,7 +543,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
-                setPraiseLight(userId);
             }
         });
     }
@@ -559,10 +557,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         mBattleView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
     }
 
-    private void setPraiseLight(int userId) {
-        boolean isLeft = userId == mBattle.getLaunchUser();
-        mBattleView.setPraiseLight(isLeft);
-    }
 
 
     @Override
