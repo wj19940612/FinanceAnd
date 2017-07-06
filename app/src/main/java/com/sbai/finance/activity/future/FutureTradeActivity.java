@@ -141,10 +141,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         requestTrendDataAndSet();
         
-        requestTradeStatus();
+        requestTradeButtonVisible();
     }
 
-    private void requestTradeStatus() {
+    private void requestTradeButtonVisible() {
         Client.getFutureTradeStatus().setTag(TAG)
                 .setCallback(new Callback2D<Resp<FutureTradeStatus>,FutureTradeStatus>() {
                     @Override
