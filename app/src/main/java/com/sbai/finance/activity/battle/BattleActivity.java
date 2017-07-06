@@ -162,7 +162,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 break;
             case PushCode.QUICK_MATCH_TIMEOUT:
                 //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
-                mStartMatchDialogFragment.dismiss();
+                dismissQuickMatchDialog();
                 showOvertimeMatchDialog();
                 break;
             case PushCode.ROOM_CREATE_TIMEOUT:
@@ -367,9 +367,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     private void dismissAllDialog() {
-        if (mStartMatchDialogFragment != null) {
-            mStartMatchDialogFragment.dismiss();
-        }
+        dismissQuickMatchDialog();
         if (mShareDialogFragment != null) {
             mShareDialogFragment.dismiss();
         }
@@ -384,6 +382,14 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         }
         if (mMatchConfirmDialog != null) {
             mMatchConfirmDialog.dismiss();
+        }
+    }
+
+    private void dismissQuickMatchDialog() {
+        if (mStartMatchDialogFragment != null
+                && mStartMatchDialogFragment.getDialog() != null
+                && mStartMatchDialogFragment.getDialog().isShowing()) {
+            mStartMatchDialogFragment.dismiss();
         }
     }
 
