@@ -382,6 +382,7 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUser(battle.getAgainstUser());
                                 data.setAgainstUserPortrait(battle.getAgainstUserPortrait());
                                 data.setAgainstUserName(battle.getAgainstUserName());
+                                mVersusListAdapter.notifyDataSetChanged();
 
                                 Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, battle)
