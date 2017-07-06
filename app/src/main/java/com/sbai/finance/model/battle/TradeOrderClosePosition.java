@@ -49,7 +49,6 @@ public class TradeOrderClosePosition {
     private long orderTime;
     private double ratio;
     private String sign;
-    private int unwindMarket;
     private double unwindPrice;
     private long unwindTime;
     private int unwindType;
@@ -176,14 +175,6 @@ public class TradeOrderClosePosition {
 
     public void setSign(String sign) {
         this.sign = sign;
-    }
-
-    public int getUnwindMarket() {
-        return unwindMarket;
-    }
-
-    public void setUnwindMarket(int unwindMarket) {
-        this.unwindMarket = unwindMarket;
     }
 
     public double getUnwindPrice() {
