@@ -96,6 +96,7 @@ public class BattleListActivity extends BaseActivity implements
     private VersusListAdapter mVersusListAdapter;
     private Long mLocation;
     private LoginBroadcastReceiver mLoginBroadcastReceiver;
+    private ScreenOnBroadcastReceiver mScreenOnBroadcastReceiver;
 
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
@@ -144,10 +145,18 @@ public class BattleListActivity extends BaseActivity implements
         initListView();
 
         initLoginReceiver();
+        initScreenOnReceiver();
         updateAvatar();
         requestBattleList();
 
         scrollToTop(mTitleBar, mListView);
+    }
+
+    private void initScreenOnReceiver() {
+        mScreenOnBroadcastReceiver = new ScreenOnBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        getActivity().registerReceiver(mScreenOnBroadcastReceiver,intentFilter);
     }
 
     private void initLoginReceiver() {
@@ -756,8 +765,8 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(getActivity())
-                .unregisterReceiver(mLoginBroadcastReceiver);
+        getActivity().unregisterReceiver(mScreenOnBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
     }
 
     @Override
@@ -808,24 +817,16 @@ public class BattleListActivity extends BaseActivity implements
         }
     }
 
-    private void stopRefreshAnimation() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-        if (mSwipeRefreshLayout.isLoading()) {
-            mSwipeRefreshLayout.setLoading(false);
-        }
-    }
-
     class LoginBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == LoginActivity.LOGIN_SUCCESS_ACTION) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION) ) {
                 updateAvatar();
                 requestUserFindInfo();
                 requestCurrentBattle();
             }
-            if (intent.getAction() == CreateBattleActivity.CREATE_SUCCESS_ACTION) {
+            if (intent.getAction().equalsIgnoreCase(CreateBattleActivity.CREATE_SUCCESS_ACTION)
+                    ||intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
                 reset();
                 requestBattleList();
                 if (LocalUser.getUser().isLogin()) {
@@ -835,6 +836,30 @@ public class BattleListActivity extends BaseActivity implements
             }
         }
     }
+
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    class ScreenOnBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent!=null&&intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
+                reset();
+                requestBattleList();
+                if (LocalUser.getUser().isLogin()) {
+                    requestCurrentBattle();
+                    requestUserFindInfo();
+                }
+            }
+        }
+    }
+
 
     static class VersusListAdapter extends ArrayAdapter<Battle> {
         interface Callback {
@@ -898,9 +923,7 @@ public class BattleListActivity extends BaseActivity implements
                         .transform(new GlideCircleTransform(context))
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
-                mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_BAO:
