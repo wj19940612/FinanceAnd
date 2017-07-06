@@ -835,6 +835,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (diff == 0 && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
             showCalculatingView();
         }
+        if (diff == 0 && mBattleRoom.getUserState() == USER_STATE_OBSERVER) {
+            if (mBattleFragment.isVisible()) {
+                mBattleFragment.refreshTradeView();
+            }
+        }
         //5秒没收到结果自动结算
         if (diff == -5 && mBattleRoom.getUserState() != USER_STATE_OBSERVER
                 && mBattleRoom.getRoomState() != ROOM_STATE_END) {

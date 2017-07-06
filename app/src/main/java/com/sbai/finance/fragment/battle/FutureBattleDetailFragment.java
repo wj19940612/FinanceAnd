@@ -91,7 +91,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     private void updateTradeHistory(List<TradeRecord> resp) {
         mBattleTradeAdapter.setUserId(mBattle.getLaunchUser(), mBattle.getAgainstUser());
-        mBattleTradeAdapter.addAll(resp);
+        mBattleTradeAdapter.setRecordList(resp);
         mListView.setSelection(View.FOCUS_DOWN);
     }
 
