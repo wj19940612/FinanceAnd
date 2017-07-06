@@ -502,11 +502,11 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
 
                             }
                             //正在对战中
-//                            if (mBattleRoom.getRoomState() == ROOM_STATE_START) {
-//                                if (mBattleFragment.isVisible()) {
-//                                    mBattleFragment.refreshTradeView();
-//                                }
-//                            }
+                            if (mBattleRoom.getRoomState() == ROOM_STATE_START) {
+                                if (mBattleFragment.isVisible()) {
+                                    mBattleFragment.refreshTradeView();
+                                }
+                            }
                             //游戏结束后
                             if (mBattleInfo.getGameStatus() == GAME_STATUS_END) {
                                 mBattleRoom.setRoomState(ROOM_STATE_END);
