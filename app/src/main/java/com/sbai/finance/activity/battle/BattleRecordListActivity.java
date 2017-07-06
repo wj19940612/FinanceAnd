@@ -181,7 +181,6 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             }
 
             private void bindDataWithView(final Battle item, Context context) {
-//                if (item.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
                     Glide.with(context)
                             .load(item.getLaunchUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
@@ -194,26 +193,21 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                             .into(mAgainstAvatar);
                     mMyName.setText(item.getLaunchUserName());
                     mAgainstName.setText(item.getAgainstUserName());
-//                }
-//                else {
-//                    Glide.with(context)
-//                            .load(item.getAgainstUserPortrait())
-//                            .placeholder(R.drawable.ic_default_avatar)
-//                            .transform(new GlideCircleTransform(context))
-//                            .into(mMyAvatar);
-//                    Glide.with(context)
-//                            .load(item.getLaunchUserPortrait())
-//                            .placeholder(R.drawable.ic_default_avatar)
-//                            .transform(new GlideCircleTransform(context))
-//                            .into(mAgainstAvatar);
-//                    mMyName.setText(item.getAgainstUserName());
-//                    mAgainstName.setText(item.getLaunchUserName());
-//                }
                 String reward="" ;
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
-                    item.setReward(0);
-                }
-                if ((LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()
+                    switch (item.getCoinType()) {
+                        case Battle.COIN_TYPE_BAO:
+                            reward = 0 + context.getString(R.string.ingot);
+                            break;
+                        case Battle.COIN_TYPE_CASH:
+                            reward = 0 + context.getString(R.string.cash);
+                            break;
+                        case Battle.COIN_TYPE_INTEGRAL:
+                            reward = 0 + context.getString(R.string.integral);
+                            break;
+                    }
+
+                }else if ((LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN)
                         ||(LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN)) {

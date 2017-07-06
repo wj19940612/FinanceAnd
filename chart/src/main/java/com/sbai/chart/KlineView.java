@@ -145,6 +145,25 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
 
     public void setSettings(ChartSettings settings) {
         mKlineChart.setSettings(settings);
+        if (settings instanceof KlineChart.Settings) {
+            if (((KlineChart.Settings) settings).isGameMode()) {
+                scaleSideBarText(mLeftSideBar, 0.7f);
+                scaleSideBarText(mRightSideBar, 0.7f);
+            }
+        }
+    }
+
+    private void scaleSideBarText(View sideBar, float v) {
+        if (sideBar != null && sideBar instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) sideBar;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View child = group.getChildAt(i);
+                if (child instanceof TextView) {
+                    float textSize = ((TextView) child).getTextSize();
+                    ((TextView) child).setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize * v);
+                }
+            }
+        }
     }
 
     @Override
