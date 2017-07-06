@@ -12,7 +12,7 @@
         android:id="@+id/product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_cell_vcoin_big"
+        android:drawableLeft="@drawable/ic_cell_ingot_big"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:minWidth="100dp"

@@ -44,8 +44,8 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (mType == ExchangeDetailModel.TYPE_COIN) {
-            mTitleBar.setTitle(R.string.coin_detail);
+        if (mType == ExchangeDetailModel.TYPE_INGOT) {
+            mTitleBar.setTitle(R.string.ingot_detail);
         } else {
             mTitleBar.setTitle(R.string.integrate_detail);
         }

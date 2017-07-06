@@ -76,7 +76,6 @@ android {
 
     productFlavors {
         dev {
-            minSdkVersion 19
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
@@ -87,8 +86,8 @@ android {
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-            versionCode 50
-            versionName "0.6.0"
+            versionCode 52
+            versionName "0.6.2"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 

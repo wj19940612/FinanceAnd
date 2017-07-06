@@ -144,16 +144,26 @@ public class AppVersionModel implements Parcelable {
     //是否强制更新
     public boolean isForceUpdate() {
         String versionName = AppInfo.getVersionName(App.getAppContext());
-        if (getForceUpdateAllPreVersions() == 1) {
+        if (getForceUpdateAllPreVersions() == 1 && isLastVersionLawful()) {
             return true;
-        } else if (getForceUpdatePreVersions().contains(versionName)) {
-            return true;
+        } else if (isLastVersionLawful()) {
+            String[] split = getForceUpdatePreVersions().split(",");
+            for (String data : split) {
+                if (data.equalsIgnoreCase(versionName)) {
+                    return true;
+                }
+            }
+            return false;
         }
         return false;
     }
 
-    public boolean isLatestVersion() {
-        return AppInfo.getVersionName(App.getAppContext()).equalsIgnoreCase(getLastVersion());
+    public boolean isNeedUpdate() {
+        return updateAllPreVersions == 1 && isLastVersionLawful();
+    }
+
+    public boolean isLastVersionLawful() {
+        return AppInfo.getVersionName(App.getAppContext()).compareToIgnoreCase(getLastVersion()) < 0;
     }
 
     @Override

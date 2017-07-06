@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.EconomicCircleFragment;
@@ -48,11 +47,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
                     @Override
                     protected void onRespSuccessData(AppVersionModel data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
-                        if (data.isLatestVersion()) {
-                            return;
+                        if (data.isForceUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                        } else if (data.isNeedUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                         }
-                        UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                     }
                 })
                 .fireFree();

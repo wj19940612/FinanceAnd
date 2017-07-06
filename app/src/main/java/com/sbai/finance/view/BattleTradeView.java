@@ -8,7 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +21,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -137,8 +138,8 @@ public class BattleTradeView extends LinearLayout {
 
     public void addTradeData(List<TradeRecord> list, int creatorId, int againstId) {
         mBattleTradeAdapter.setUserId(creatorId, againstId);
-        mBattleTradeAdapter.clear();
-        mBattleTradeAdapter.addAll(list);
+        mBattleTradeAdapter.setRecordList(list);
+        mBattleTradeAdapter.notifyDataSetChanged();
         mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
     }
 
@@ -210,19 +211,52 @@ public class BattleTradeView extends LinearLayout {
     }
 
 
-    public static class BattleTradeAdapter extends ArrayAdapter<TradeRecord> {
+    public static class BattleTradeAdapter extends BaseAdapter {
         private int mCreatorId;
         private int mAgainstId;
         private Context mContext;
 
+        private List<TradeRecord> mRecordList;
+
         public BattleTradeAdapter(Context context) {
-            super(context, 0);
             mContext = context;
+            mRecordList = new ArrayList<>();
         }
 
         public void setUserId(int creatorId, int againstId) {
             mCreatorId = creatorId;
             mAgainstId = againstId;
+        }
+
+        public void setRecordList(List<TradeRecord> list){
+            boolean isChange = checkIfChange(list);
+            if (isChange) {
+                mRecordList.clear();
+                mRecordList.addAll(list);
+            }
+        }
+
+        private boolean checkIfChange(List<TradeRecord> list) {
+            if (list.size() != mRecordList.size()) {
+                return true;
+            }
+            return false;
+        }
+
+
+        @Override
+        public int getCount() {
+            return mRecordList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mRecordList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
         }
 
         @Override
@@ -235,7 +269,7 @@ public class BattleTradeView extends LinearLayout {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), isLeft(getItem(position)), mContext);
+            viewHolder.bindDataWithView(mRecordList.get(position), isLeft(mRecordList.get(position)), mContext);
             return convertView;
         }
 

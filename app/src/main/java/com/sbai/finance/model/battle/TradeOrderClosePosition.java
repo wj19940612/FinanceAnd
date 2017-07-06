@@ -49,7 +49,6 @@ public class TradeOrderClosePosition {
     private long orderTime;
     private double ratio;
     private String sign;
-    private int unwindMarket;
     private double unwindPrice;
     private long unwindTime;
     private int unwindType;
@@ -57,7 +56,6 @@ public class TradeOrderClosePosition {
     private int varietyId;
     private String varietyName;
     private String varietyType;
-    private int winOrLoss;
 
     public String getBattleBatchCode() {
         return battleBatchCode;
@@ -179,14 +177,6 @@ public class TradeOrderClosePosition {
         this.sign = sign;
     }
 
-    public int getUnwindMarket() {
-        return unwindMarket;
-    }
-
-    public void setUnwindMarket(int unwindMarket) {
-        this.unwindMarket = unwindMarket;
-    }
-
     public double getUnwindPrice() {
         return unwindPrice;
     }
@@ -243,11 +233,4 @@ public class TradeOrderClosePosition {
         this.varietyType = varietyType;
     }
 
-    public int getWinOrLoss() {
-        return winOrLoss;
-    }
-
-    public void setWinOrLoss(int winOrLoss) {
-        this.winOrLoss = winOrLoss;
-    }
 }
