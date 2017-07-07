@@ -316,7 +316,7 @@ public class BorrowDetailsActivity extends BaseActivity {
         public void OnKeyBoardClose(int oldKeyboardHeight) {
             mLeaveMessageArea.setVisibility(View.GONE);
             if (mBorrowDetail.getStatus()== BorrowMine.STATUS_GIVE_HELP
-              ||mBorrowDetail.getStatus()== BorrowMine.STATUS_NO_CHECKED
+              ||mBorrowDetail.getStatus()== BorrowMine.STATUS_ACCEPTY
               ||mBorrowDetail.getStatus()== BorrowMine.STATUS_NO_CHECKED){
 
                 mBorrowStatus.setVisibility(View.VISIBLE);
