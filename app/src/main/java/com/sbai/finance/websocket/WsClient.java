@@ -254,8 +254,6 @@ public class WsClient implements AbsWsClient {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "onMessage: " + message);
-
         if (resp == null) return;
 
         if (resp.getCode() == SocketCode.CODE_RESP_REGISTER_SUCCESS) {
@@ -272,6 +270,7 @@ public class WsClient implements AbsWsClient {
         }
 
         if (resp.getCode() == SocketCode.CODE_RESP_PUSH) {
+            Log.d(TAG, "onPush: " + resp.getContent());
             if (mOnPushReceiveListeners != null) {
                 for (int i = 0; i < mOnPushReceiveListeners.size(); i++) {
                     final OnPushReceiveListener listener = mOnPushReceiveListeners.get(i);

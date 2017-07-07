@@ -327,11 +327,11 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 
 	private void requestJoinBattle(final Battle data) {
 		Client.joinBattle(data.getId(), Battle.SOURCE_COTERIE).setTag(TAG)
-				.setCallback(new ApiCallback<Resp<Battle>>() {
+				.setCallback(new Callback<Resp<Battle>>() {
 					@Override
-					public void onSuccess(Resp<Battle> resp) {
-						if (resp.isSuccess()) {
-							Battle battle = resp.getData();
+					protected void onReceive(Resp<Battle> battleResp) {
+						if (battleResp.isSuccess()) {
+							Battle battle = battleResp.getData();
 							if (battle != null) {
 								Launcher.with(getActivity(), BattleActivity.class)
 										.putExtra(Launcher.EX_PAYLOAD, battle)
@@ -339,12 +339,12 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 										.execute();
 							}
 						} else {
-							showJoinVersusFailureDialog(resp);
+							showJoinVersusFailureDialog(battleResp);
 						}
 					}
-
+					
 					@Override
-					public void onFailure(VolleyError volleyError) {
+					protected void onRespSuccess(Resp<Battle> resp) {
 
 					}
 				}).fireFree();

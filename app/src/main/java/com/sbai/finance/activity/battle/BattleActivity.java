@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
@@ -47,6 +48,7 @@ import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
 import com.sbai.finance.websocket.cmd.SubscribeBattle;
 import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
+import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.BuildConfig;
 
 import java.util.HashSet;
@@ -514,7 +516,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END
                                     && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
-
+                                updateBattleInfo();
                                 if (mSet.add(mBattleInfo.getEndTime())) {
                                     showGameOverDialog();
                                 }
@@ -548,6 +550,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattleRoom.getRoomState() != ROOM_STATE_END) {
             mBattleView.setProgress(leftProfit, rightProfit, isInviting);
         }
+    }
+
+    //结束比赛后调用
+    private void updateBattleInfo() {
+        boolean isInviting = mBattleRoom.getRoomState() == ROOM_STATE_CREATE;
+        if (mBattleInfo != null) {
+            mBattleView.setProgress(mBattleInfo.getLaunchScore(), mBattleInfo.getAgainstScore(), isInviting);
+        }
+        mBattleView.setDeadline(mBattleInfo.getGameStatus(), -1);
     }
 
     private void requestAddBattlePraise(final int userId) {
@@ -832,6 +843,24 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         });
     }
 
+    //快速匹配结果查询
+    private void requestFastMatchResult() {
+        Client.getQuickMatchResult(Battle.CREATE_FAST_MATCH, mBattle.getId()).setTag(TAG)
+                .setCallback(new ApiCallback<Resp<Battle>>() {
+                    @Override
+                    public void onSuccess(Resp<Battle> battleResp) {
+                        if (battleResp.getCode() == Battle.CODE_CREATE_FAST_MATCH_TIMEOUT) {
+                            dismissQuickMatchDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+
+                    }
+                }).fireFree();
+    }
+
     @Override
     public void onTimeUp(int count) {
         if (mBattleRoom.getUserState() == USER_STATE_OBSERVER
@@ -876,6 +905,12 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         //判断游戏是否结束
         if (mBattleRoom != null && mBattleRoom.getRoomState() != ROOM_STATE_END) {
             requestBattleInfo();
+        }
+        //正在快速匹配的要检测快速匹配结果
+        if (mStartMatchDialogFragment != null
+                && mStartMatchDialogFragment.getDialog() != null
+                && mStartMatchDialogFragment.getDialog().isShowing()) {
+            requestFastMatchResult();
         }
         if (mPageType == PAGE_TYPE_VERSUS) {
             requestSubscribeBattle();
