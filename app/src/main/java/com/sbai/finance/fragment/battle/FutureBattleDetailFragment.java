@@ -8,12 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.battle.TradeRecord;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 
@@ -33,6 +38,8 @@ public class FutureBattleDetailFragment extends BaseFragment {
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
+    @BindView(R.id.battleView)
+    BattleFloatView mBattleView;
 
     Unbinder unbinder;
 
@@ -74,13 +81,42 @@ public class FutureBattleDetailFragment extends BaseFragment {
         scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
+        mBattleView.setMode(BattleFloatView.Mode.MINE)
+                .initWithModel(mBattle)
+                .setDeadline(mBattle.getGameStatus(), 0)
+                .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
+                .setWinResult(mBattle.getWinResult())
+                .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
+                    @Override
+                    public void onCreateAvatarClick() {
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
+                                    .execute();
+                        } else {
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }
+                    }
+
+                    @Override
+                    public void onAgainstAvatarClick() {
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
+                                    .execute();
+                        } else {
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }
+                    }
+                });
+
         requestOrderHistory();
     }
 
     private void requestOrderHistory() {
         Client.getOrderHistory(mBattle.getId())
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
+                .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {
                         updateTradeHistory(data);
