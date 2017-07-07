@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -57,7 +56,6 @@ import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
-import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.BuildConfig;
 
 import java.util.ArrayList;
@@ -310,6 +308,11 @@ public class BattleListActivity extends BaseActivity implements
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
         startScheduleJob(5 * 1000);
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
         if (mQuickMatchDialogFragment != null
                 && mQuickMatchDialogFragment.getDialog() != null
                 && mQuickMatchDialogFragment.getDialog().isShowing()) {
@@ -382,6 +385,7 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUser(battle.getAgainstUser());
                                 data.setAgainstUserPortrait(battle.getAgainstUserPortrait());
                                 data.setAgainstUserName(battle.getAgainstUserName());
+                                mVersusListAdapter.notifyDataSetChanged();
 
                                 Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, battle)

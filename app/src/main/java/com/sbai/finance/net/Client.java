@@ -640,7 +640,7 @@ public class Client {
     }
 
     public static API updateUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
-        return new API( "/user/user/updateUserCertification.do", new ApiParams()
+        return new API("/user/user/updateUserCertification.do", new ApiParams()
                 .put("Back", Back)
                 .put("Positive", Positive)
                 .put("certCode", certCode)
@@ -731,9 +731,10 @@ public class Client {
 
     /**
      * 品种-查询品种是否允许交易
+     *
      * @return
      */
-    public static API getFutureTradeStatus(){
+    public static API getFutureTradeStatus() {
         return new API("/user/dictionary/findDictionaryForJson.do?type=variety_deal");
     }
 
@@ -1634,7 +1635,8 @@ public class Client {
     public static API getBankLimit(int bankId) {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
-    public static API getVersusGaming(Long location){
+
+    public static API getVersusGaming(Long location) {
         return new API("/game/battle/selectBattleGaming.do", new ApiParams()
                 .put("location", location)
                 .put("pageSize", 15));
@@ -1642,20 +1644,23 @@ public class Client {
 
     /**
      * 我的对战历史
+     *
      * @param location
      * @return
      */
-    public static API getMyVersusRecord(Long location){
+    public static API getMyVersusRecord(Long location) {
         return new API("/game/battle/myBattleGamed.do", new ApiParams()
                 .put("location", location)
                 .put("pageSize", 15));
     }
+
     /**
      * 所有对战历史
+     *
      * @param location
      * @return
      */
-    public static API getBattleHisRecord(Long location){
+    public static API getBattleHisRecord(Long location) {
         return new API("/game/battle/allBattleGamed.do", new ApiParams()
                 .put("location", location)
                 .put("pageSize", 15));
@@ -1663,44 +1668,48 @@ public class Client {
 
     /**
      * 加入对战
-     * @param battleId  对战ID
-     * @param userFrom  用户来源
+     *
+     * @param battleId 对战ID
+     * @param userFrom 用户来源
      * @return
      */
-    public static API joinBattle(int battleId, String userFrom){
-        return new API(POST,"/game/battle/joinBattle.do", new ApiParams()
+    public static API joinBattle(int battleId, String userFrom) {
+        return new API(POST, "/game/battle/joinBattle.do", new ApiParams()
                 .put("battleId", battleId)
                 .put("userFrom", userFrom));
     }
 
     /**
      * 用户当前对战
+     *
      * @return
      */
-    public static API getCurrentBattle(){
+    public static API getCurrentBattle() {
         return new API("/game/battle/userBattle.do");
     }
 
     /**
      * 应战者快速匹配
      */
-    public static API quickMatchForAgainst(int type,String refuseIds){
-        return new API(POST,"/game/battle/quickSearchForAgainst.do", new ApiParams()
+    public static API quickMatchForAgainst(int type, String refuseIds) {
+        return new API(POST, "/game/battle/quickSearchForAgainst.do", new ApiParams()
                 .put("type", type)
                 .put("refuseIds", refuseIds));
     }
 
     /**
      * 快速匹配结果查询
-     * @param type  1 查询房主 2查询应战者
+     *
+     * @param type     1 查询房主 2查询应战者
      * @param battleId
      * @return
      */
-    public static API getQuickMatchResult(int type,Integer battleId){
+    public static API getQuickMatchResult(int type, Integer battleId) {
         return new API("/game/battle/quickSearchForResult.do", new ApiParams()
                 .put("type", type)
                 .put("battleId", battleId));
     }
+
     /**
      * /user/userAccount/getExchangeConfig.do
      * GET
@@ -1774,6 +1783,7 @@ public class Client {
 
     /**
      * 获取期货对战品种列表
+     *
      * @return
      */
     public static API getFutureBattleVarietyList() {
@@ -1782,6 +1792,7 @@ public class Client {
 
     /**
      * 获取期货对战配置
+     *
      * @return
      */
     public static API getFutureBattleConfig() {
@@ -1790,6 +1801,7 @@ public class Client {
 
     /**
      * 发起对战
+     *
      * @param vartietyId
      * @param coinType
      * @param reward
@@ -1807,6 +1819,7 @@ public class Client {
 
     /**
      * 对战-游戏点赞
+     *
      * @param battleId
      * @param praiseId
      * @return
@@ -1819,7 +1832,8 @@ public class Client {
 
     /**
      * 房主快速匹配
-     * @param type 1 开始快速匹配 0 取消匹配 2 继续匹配
+     *
+     * @param type     1 开始快速匹配 0 取消匹配 2 继续匹配
      * @param battleId
      * @return
      */
@@ -1831,6 +1845,7 @@ public class Client {
 
     /**
      * 取消对战
+     *
      * @param battleId
      * @return
      */
@@ -1841,6 +1856,7 @@ public class Client {
 
     /**
      * 下单记录
+     *
      * @param battleId
      * @return
      */
@@ -1851,18 +1867,20 @@ public class Client {
 
     /**
      * 创建订单
+     *
      * @param battleId
      * @param direction 方向 0跌 1涨
      * @return
      */
-    public static API createOrder(int battleId,int direction) {
-        return new API(POST,"/game/battleorder/createOrder.do", new ApiParams()
-                .put("direction",direction)
+    public static API createOrder(int battleId, int direction) {
+        return new API(POST, "/game/battleorder/createOrder.do", new ApiParams()
+                .put("direction", direction)
                 .put("battleId", battleId));
     }
 
     /**
      * 平仓
+     *
      * @param battleId
      * @param orderId
      * @return
@@ -1876,6 +1894,7 @@ public class Client {
 
     /**
      * 根据ID查询对战信息
+     *
      * @param battleId
      * @param batchCode
      * @return
@@ -1887,9 +1906,9 @@ public class Client {
     }
 
 
-
     /**
      * 游戏大厅列表实时数据
+     *
      * @param battleIds
      * @return
      */
@@ -1900,6 +1919,7 @@ public class Client {
 
     /**
      * 订阅对战
+     *
      * @param battleId
      * @return
      */
@@ -1910,6 +1930,7 @@ public class Client {
 
     /**
      * 取消订阅对战
+     *
      * @param battleId
      * @return
      */
@@ -1920,10 +1941,11 @@ public class Client {
 
     /**
      * 查询房间交易中的订单
+     *
      * @param battleId
      * @return
      */
-    public static API requestCurrentOrder(int battleId){
+    public static API requestCurrentOrder(int battleId) {
         return new API("/game/battleorder/orders.do", new ApiParams()
                 .put("battleId", battleId));
     }
