@@ -76,6 +76,7 @@ android {
 
     productFlavors {
         dev {
+            minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
@@ -101,9 +102,9 @@ android {
         }
 
         prod {
-            versionCode 22
-            versionName "1.1"
-            buildConfigField('String', 'HOST', '\"http://lemi.esongbai.com\"')
+            versionCode 23
+            versionName "1.2"
+            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
             buildConfigField('boolean', 'IS_PROD', 'true')
 
             manifestPlaceholders = [

@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -141,6 +140,7 @@ public class RechargeActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<List<UsablePlatform>>, List<UsablePlatform>>() {
                     @Override
                     protected void onRespSuccessData(List<UsablePlatform> usablePlatformList) {
+                        if (usablePlatformList == null || usablePlatformList.isEmpty()) return;
                         mPayData = new String[usablePlatformList.size()];
                         mUsablePlatformList = usablePlatformList;
                         requestBankLimit();
@@ -167,10 +167,12 @@ public class RechargeActivity extends BaseActivity {
                 } else {
                     mSelectPayWayName = mUsablePlatform.getName();
                 }
-                mRechargeWay.setText(mSelectPayWayName);
-                Log.d(TAG, "onRespSuccessData: " + mSelectPayWayName);
+            } else {
+                mUsablePlatform = usablePlatformList.get(0);
+                mSelectPayWayName = usablePlatformList.get(0).getName();
             }
         }
+        mRechargeWay.setText(mSelectPayWayName);
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {

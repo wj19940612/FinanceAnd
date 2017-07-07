@@ -161,6 +161,7 @@ public class API extends RequestManager {
         }
 
         enqueue(request);
+        //Log.d(TAG, request.toString());
     }
 
     private static class RequestFinishedListener implements ApiCallback.onFinishedListener {

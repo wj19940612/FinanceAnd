@@ -73,7 +73,7 @@ public class ShareDialogFragment extends DialogFragment {
         mShareTitle = shareTitle;
         mShareDescription = shareDescription;
         mBatchCode = batchCode;
-        mShareUrl = SHARE_URL + batchCode;
+        mShareUrl = isFutureGame ? SHARE_URL + batchCode : batchCode;
         return this;
     }
 
@@ -108,7 +108,7 @@ public class ShareDialogFragment extends DialogFragment {
         switch (view.getId()) {
             case R.id.weChatFriend:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
-                    mShareUrl += "&userFrom=" + "friend";
+                    if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN);
                 } else {
                     ToastUtil.show(R.string.you_not_install_weixin);
@@ -117,7 +117,7 @@ public class ShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weChatFriendCircle:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE)) {
-                    mShareUrl += "&userFrom=" + "friend";
+                    if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                 } else {
                     ToastUtil.show(R.string.you_not_install_weixin);
@@ -126,7 +126,7 @@ public class ShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weibo:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.SINA)) {
-                    mShareUrl += "&userFrom=" + "weibo";
+                    if (isFutureGame) mShareUrl += "&userFrom=" + "weibo";
                     shareToPlatform(SHARE_MEDIA.SINA);
                 } else {
                     ToastUtil.show(R.string.you_not_install_weibo);
