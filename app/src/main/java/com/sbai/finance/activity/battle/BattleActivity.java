@@ -516,7 +516,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                             if (mBattleRoom.getRoomState() == ROOM_STATE_END
                                     && mBattleRoom.getUserState() != USER_STATE_OBSERVER) {
                                 dismissCalculatingView();
-
+                                updateBattleInfo();
                                 if (mSet.add(mBattleInfo.getEndTime())) {
                                     showGameOverDialog();
                                 }
@@ -550,6 +550,15 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         if (mBattleRoom.getRoomState() != ROOM_STATE_END) {
             mBattleView.setProgress(leftProfit, rightProfit, isInviting);
         }
+    }
+
+    //结束比赛后调用
+    private void updateBattleInfo() {
+        boolean isInviting = mBattleRoom.getRoomState() == ROOM_STATE_CREATE;
+        if (mBattleInfo != null) {
+            mBattleView.setProgress(mBattleInfo.getLaunchScore(), mBattleInfo.getAgainstScore(), isInviting);
+        }
+        mBattleView.setDeadline(mBattleInfo.getGameStatus(), -1);
     }
 
     private void requestAddBattlePraise(final int userId) {
