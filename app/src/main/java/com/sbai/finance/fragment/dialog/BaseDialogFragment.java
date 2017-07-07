@@ -41,8 +41,10 @@ public class BaseDialogFragment extends DialogFragment {
     }
 
     public void showAsync(FragmentManager manager) {
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, this.getClass().getSimpleName());
-        ft.commitAllowingStateLoss();
+        if (!isAdded()) {
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, this.getClass().getSimpleName());
+            ft.commitAllowingStateLoss();
+        }
     }
 }
