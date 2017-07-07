@@ -71,6 +71,7 @@ public class AboutUsActivity extends BaseActivity {
     private void checkVersion() {
         Client.updateVersion()
                 .setTag(TAG)
+                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
                     @Override
                     protected void onRespSuccessData(final AppVersionModel data) {
