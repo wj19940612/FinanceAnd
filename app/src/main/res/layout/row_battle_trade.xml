@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="43dp">
+
+        <View
+            android:id="@+id/centerLine"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="#362d4d"/>
+
+        <TextView
+            android:id="@+id/myInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/centerLine"
+            android:background="@drawable/bg_battle_trade_text"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="88.88买多建仓"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/myInfoTime"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_alignLeft="@id/myInfo"
+            android:layout_below="@id/myInfo"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/luckyText"
+            android:textSize="10sp"/>
+
+
+        <TextView
+            android:id="@+id/userInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/centerLine"
+            android:background="@drawable/bg_battle_trade_text"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/userInfoTime"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_alignRight="@id/userInfo"
+            android:layout_below="@id/userInfo"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/luckyText"
+            android:textSize="10sp"/>
+
+        <ImageView
+            android:id="@+id/point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

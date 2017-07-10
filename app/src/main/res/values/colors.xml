@@ -6,6 +6,7 @@
 
     <color name="redPrimary">#cd4a47</color>
     <color name="background">#F5F5F5</color>
+    <color name="gameBackground">#564F68</color>
     <color name="split">#ddd</color>
     <color name="white">#ffffff</color>
 

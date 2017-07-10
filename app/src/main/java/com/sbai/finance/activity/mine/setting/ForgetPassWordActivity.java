@@ -97,16 +97,16 @@ public class ForgetPassWordActivity extends BaseActivity {
                             @Override
                             protected void onRespSuccess(Resp<Object> resp) {
                                 if (resp.isSuccess()) {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                     restartGetAuthCode();
                                     Launcher.with(getActivity(), ModifySafetyPassActivity.class)
                                             .putExtra(Launcher.EX_PAYLOAD_3, true)
                                             .putExtra(Launcher.EX_PAYLOAD_1, 1)
                                             .putExtra(Launcher.EX_PAYLOAD_2, authCode)
                                             .executeForResult(REQ_CODE_MODIFY_PASS);
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                 } else {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })
@@ -128,7 +128,7 @@ public class ForgetPassWordActivity extends BaseActivity {
                             mGetAuthCode.setEnabled(false);
                             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
                 })

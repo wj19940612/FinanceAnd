@@ -168,7 +168,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                                 mTradeFloatButtons.setHasAddInOption(hasAddInOption);
                             }
                         }
-                    }).fireSync();
+                    }).fireFree();
         }
     }
 
@@ -208,10 +208,10 @@ public abstract class StockTradeActivity extends BaseActivity {
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
                             isOptionalChanged = true;
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void requestAddOptional() {
@@ -226,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
                             isOptionalChanged = false;
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
 
@@ -259,7 +259,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         mVariety.setExchangeStatus(exchangeStatus);
                         updateExchangeStatusView();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateExchangeStatusView() {
@@ -348,7 +348,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         updateMarketDataView();
                         requestExchangeStatus();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void updateStockTrendView() {
@@ -410,12 +410,14 @@ public abstract class StockTradeActivity extends BaseActivity {
     public void setUpTitleBar(TitleBar titleBar) {
         final String shareUrl = String.format(Client.STOCK_SHARE_URL,
                 mVariety.getVarietyType(), mVariety.getVarietyId());
+        final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
+        final String shareDescribe = getString(R.string.share_desc);
         titleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(StockTradeActivity.this, mVariety.getVarietyName(), shareUrl)
+                        .setShareContent(StockTradeActivity.this, shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });
@@ -466,7 +468,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                             mStockTrendView.setDataList(result);
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
     private void setResult(){
         Intent intent = new Intent();

@@ -1,6 +1,7 @@
 package com.sbai.finance.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,17 +18,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ListView;
+import android.widget.AbsListView;
+import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
+import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.websocket.PushCode;
+import com.sbai.finance.websocket.WsClient;
+import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -51,7 +59,6 @@ public class BaseActivity extends AppCompatActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             LocalUser.getUser().logout();
-
 //            String expiredMessage = intent.getStringExtra(EX_TOKEN_EXPIRED_MESSAGE);
 //            SmartDialog.single(getActivity(), expiredMessage)
 //                    .setCancelableOnTouchOutside(false)
@@ -111,26 +118,69 @@ public class BaseActivity extends AppCompatActivity implements
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
-    protected void scrollToTop(TitleBar titleBar, final ListView listView) {
-        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listView.smoothScrollToPosition(0);
+    private OnPushReceiveListener<WSPush<Battle>> mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
+        @Override
+        public void onPushReceive(WSPush<Battle> battleWSPush) {
+            switch (battleWSPush.getContent().getType()) {
+                case PushCode.BATTLE_JOINED:
+                    if (!(getActivity() instanceof BattleActivity)) {
+                        if (battleWSPush.getContent() != null) {
+                            Battle data = (Battle) battleWSPush.getContent().getData();
+                            showQuickJoinBattleDialog(data);
+                        }
+                    }
+                    break;
             }
-        });
+            onBattlePushReceived(battleWSPush);
+        }
+    };
+
+    protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
     }
 
-    protected void scrollToTop(TitleBar titleBar, final RecyclerView recyclerView) {
-        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+    protected void showQuickJoinBattleDialog(final Battle battle) {
+        //只有在自己是房主的情况下才显示
+        if (LocalUser.getUser().isLogin()) {
+            boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
+            if (isRoomCreator) {
+                SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
+                        .setTitle(getString(R.string.join_battle))
+                        .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                Launcher.with(getActivity(), BattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, battle)
+                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                        .execute();
+                            }
+                        }).setNegative(R.string.cancel)
+                        .show();
+            }
+        }
+    }
+
+    private void scrollToTop(View view) {
+        if (view instanceof AbsListView) {
+            ((AbsListView) view).smoothScrollToPositionFromTop(0, 0);
+        } else if (view instanceof RecyclerView) {
+            ((RecyclerView) view).smoothScrollToPosition(0);
+        } else if (view instanceof ScrollView) {
+            ((ScrollView) view).smoothScrollTo(0, 0);
+        }
+    }
+
+    protected void scrollToTop(View anchor, final View view) {
+        anchor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.smoothScrollToPosition(0);
+                scrollToTop(view);
             }
         });
     }
 
     protected void translucentStatusBar() {
-//        make full transparent statusBar
+        //make full transparent statusBar
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
         }
@@ -169,7 +219,8 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     /**
-     *  友盟统计埋点
+     * 友盟统计埋点
+     *
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {
@@ -184,6 +235,7 @@ public class BaseActivity extends AppCompatActivity implements
                 new IntentFilter(ACTION_TOKEN_EXPIRED));
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(this);
+        WsClient.get().setOnPushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -193,6 +245,7 @@ public class BaseActivity extends AppCompatActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         MobclickAgent.onPageEnd(TAG);
         MobclickAgent.onPause(this);
+        WsClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
     @Override
@@ -243,5 +296,6 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void onTimeUp(int count) {
+
     }
 }

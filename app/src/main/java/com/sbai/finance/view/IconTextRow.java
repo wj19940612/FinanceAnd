@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -26,17 +27,26 @@ public class IconTextRow extends LinearLayout {
     private Drawable mRightIcon;
     private Drawable mSubTextViewBg;
     private int mRightIconVisibility;
+
     private CharSequence mText;
     private int mTextSize;
     private ColorStateList mTextColor;
+
+    private CharSequence mRowSubText;
+    private int mRowSubTextSize;
+    private ColorStateList mRowSubTextColor;
+
     private CharSequence mSubText;
     private int mSubTextSize;
     private ColorStateList mSubTextColor;
+
     private int mVerticalPaddingTop;
+    private int mRowTextSpaceExtra;
     private boolean mHasBottomSplitLine;
     private ColorStateList mSplitLineColor;
 
     private TextView mTextView;
+    private TextView mRowSubTextView;
     private TextView mSubTextView;
 
     private Paint mPaint;
@@ -65,6 +75,10 @@ public class IconTextRow extends LinearLayout {
         mText = typedArray.getText(R.styleable.IconTextRow_rowText);
         mTextSize = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowTextSize, defaultFontSize);
         mTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_rowTextColor);
+        mRowSubText = typedArray.getText(R.styleable.IconTextRow_rowSubText);
+        mRowSubTextSize = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowSubTextSize, defaultFontSize);
+        mRowSubTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_rowSubTextColor);
+        mRowTextSpaceExtra = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowTextSpaceExtra, 0);
         mSubText = typedArray.getText(R.styleable.IconTextRow_subText);
         mSubTextSize = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_subTextSize, defaultFontSize);
         mSubTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_subTextColor);
@@ -87,7 +101,7 @@ public class IconTextRow extends LinearLayout {
             mPaint.setColor(mSplitLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mSplitLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
             canvas.drawLine(padding, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
         }
     }
@@ -95,7 +109,7 @@ public class IconTextRow extends LinearLayout {
     private void init() {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
         setPadding(padding, padding, padding, padding);
         if (mVerticalPaddingTop != 0) {
             setPadding(padding, mVerticalPaddingTop, padding, mVerticalPaddingTop);
@@ -118,7 +132,22 @@ public class IconTextRow extends LinearLayout {
         mTextView.setText(mText);
         mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
         mTextView.setTextColor(mTextColor != null ? mTextColor : ColorStateList.valueOf(Color.BLACK));
-        addView(mTextView, params);
+        mRowSubTextView = new TextView(getContext());
+        mRowSubTextView.setText(mRowSubText);
+        mRowSubTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mRowSubTextSize);
+        mRowSubTextView.setTextColor(mRowSubTextColor != null ? mRowSubTextColor : ColorStateList.valueOf(Color.GRAY));
+        LinearLayout rowTextParent = new LinearLayout(getContext());
+        rowTextParent.setOrientation(VERTICAL);
+        rowTextParent.addView(mTextView);
+        addView(rowTextParent, params);
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, mRowTextSpaceExtra, 0, 0);
+        rowTextParent.addView(mRowSubTextView, params);
+
+        if (mRowSubText == null) mRowSubText = "";
+        if (TextUtils.isEmpty(mRowSubText)) {
+            mRowSubTextView.setVisibility(GONE);
+        }
 
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, padding, 0);
@@ -176,13 +205,21 @@ public class IconTextRow extends LinearLayout {
         return mSubTextView;
     }
 
-    public void setRightTextMargin(int margin){
+    public void setRowSubText(CharSequence rowSubText) {
+        mRowSubTextView.setText(rowSubText);
+    }
+
+    public void setRowSubText(int resid) {
+        mRowSubTextView.setText(resid);
+    }
+
+    public void setRightTextMargin(int margin) {
         LinearLayout.LayoutParams params = (LayoutParams) mSubTextView.getLayoutParams();
         params.setMargins(0, 0, margin, 0);
         mSubTextView.setLayoutParams(params);
     }
 
-    public void setRightTextDrawable(int res){
+    public void setRightTextDrawable(int res) {
         mSubTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, res, 0);
     }
 

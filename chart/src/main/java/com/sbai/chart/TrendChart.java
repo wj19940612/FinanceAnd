@@ -22,6 +22,15 @@ import java.util.List;
 
 public class TrendChart extends ChartView {
 
+    private static final String DASH_LINE = "dashLine";
+    private static final String UNSTABLE_PRICE = "unstablePrice";
+    private static final String UNSTABLE_PRICE_BG = "unstablePriceBg";
+    private static final String REAL_TIME_LINE = "realTimeLine";
+    private static final String TOUCH_LINE_EXT = "touchLineText";
+    private static final String RED_RECT_BG = "redRectBg";
+    private static final String RED_TOUCH_LINE = "redTouchLine";
+    private static final String BASE_LINE = "baseLine";
+
     private List<TrendViewData> mDataList;
     private TrendViewData mUnstableData;
     private SparseArray<TrendViewData> mVisibleList;
@@ -50,18 +59,58 @@ public class TrendChart extends ChartView {
         paint.setColor(Color.parseColor(ChartColor.DASH.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(new DashPathEffect(new float[]{8, 3}, 1));
+        checkGameMode(paint, DASH_LINE);
+    }
+
+    private void checkGameMode(Paint paint, String tag) {
+        if (!mSettings.isGameMode()) return;
+
+        if (tag.equals(DASH_LINE)) {
+            paint.setColor(Color.WHITE);
+        }
+
+        if (tag.equals(UNSTABLE_PRICE)) {
+            paint.setColor(Color.BLACK);
+        }
+
+        if (tag.equals(UNSTABLE_PRICE_BG)) {
+            paint.setColor(Color.WHITE);
+        }
+
+        if (tag.equals(REAL_TIME_LINE)) {
+            paint.setColor(Color.WHITE);
+        }
+
+        if (tag.equals(TOUCH_LINE_EXT)) {
+            paint.setColor(Color.BLACK);
+        }
+
+        if (tag.equals(RED_RECT_BG)) {
+            paint.setColor(Color.WHITE);
+        }
+
+        if (tag.equals(RED_TOUCH_LINE)) {
+            paint.setColor(Color.WHITE);
+        }
+
+        if (tag.equals(BASE_LINE)) {
+            paint.setColor(Color.parseColor("#362d4d"));
+        }
+
     }
 
     protected void setUnstablePricePaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
         paint.setTextSize(mBigFontSize);
         paint.setPathEffect(null);
+        checkGameMode(paint, UNSTABLE_PRICE);
     }
 
     protected void setUnstablePriceBgPaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartView.ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
+        checkGameMode(paint, UNSTABLE_PRICE_BG);
     }
 
     protected void setRealTimeLinePaint(Paint paint) {
@@ -69,6 +118,7 @@ public class TrendChart extends ChartView {
         paint.setStrokeWidth(1);
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
+        checkGameMode(paint, REAL_TIME_LINE);
     }
 
     protected void setRealTimeFillPaint(Paint paint) {
@@ -83,18 +133,27 @@ public class TrendChart extends ChartView {
         paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
         paint.setTextSize(mBigFontSize);
         paint.setPathEffect(null);
+        checkGameMode(paint, TOUCH_LINE_EXT);
     }
 
     protected void setRedRectBgPaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
+        checkGameMode(paint, RED_RECT_BG);
     }
 
     protected void setRedTouchLinePaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
+        checkGameMode(paint, RED_TOUCH_LINE);
+    }
+
+    @Override
+    protected void setBaseLinePaint(Paint paint) {
+        super.setBaseLinePaint(paint);
+        checkGameMode(paint, BASE_LINE);
     }
 
     public void clearData() {

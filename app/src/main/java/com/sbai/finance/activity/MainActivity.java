@@ -10,9 +10,15 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
+import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
+import com.sbai.finance.model.AppVersionModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
+import com.sbai.finance.websocket.WsClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,11 +38,29 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
+        checkVersion();
+    }
+
+    private void checkVersion() {
+        Client.updateVersion()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
+                    @Override
+                    protected void onRespSuccessData(AppVersionModel data) {
+                        if (data.isForceUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                        } else if (data.isNeedUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                        }
+                    }
+                })
+                .fireFree();
     }
 
     @Override
     protected void onDestroy() {
         Netty.get().shutdown();
+        WsClient.get().close();
         super.onDestroy();
     }
 

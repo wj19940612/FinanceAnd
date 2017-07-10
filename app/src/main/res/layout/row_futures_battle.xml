@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/white"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:background="@color/background"/>
+
+    <RelativeLayout
+        android:id="@+id/hotArea"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_default_avatar"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/avatar"
+            android:textColor="@color/blackAssist"
+            android:textSize="16sp"
+            tools:text="反方向的钟"/>
+
+        <TextView
+            android:id="@+id/isAttention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/userName"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/userName"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"
+            tools:text="@string/is_attention"/>
+    </RelativeLayout>
+
+    <com.sbai.finance.view.CollapsedTextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="14dp"
+        android:lineSpacingExtra="6dp"
+        android:maxLines="2"
+        android:textColor="@color/blackAssist"
+        android:textSize="14sp"
+        android:visibility="visible"
+        tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/gameBackground"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/varietyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tools:text="美原油"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginTop="10dp">
+
+                <com.sbai.finance.view.BattleProgress
+                    android:id="@+id/progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:leftLabelColor="@android:color/white"
+                    app:leftLabelSize="10sp"
+                    app:leftPadding="5dp"
+                    app:max="100"
+                    app:progress="50"
+                    app:progressDrawable="@drawable/bg_battle_progress"
+                    app:rightLabelColor="@android:color/white"
+                    app:rightLabelSize="10sp"
+                    app:rightPadding="5dp"
+                    app:secondaryProgress="100"/>
+
+                <ImageView
+                    android:id="@+id/versus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_versus_vs"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/bounty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#9c9c9c"
+                    android:textSize="10sp"
+                    tools:text="200元宝"/>
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="#9c9c9c"
+                    android:textSize="10sp"
+                    tools:text="20分钟"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/againstUserAvatar"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:clickable="false"
+                tools:src="@drawable/btn_join_versus"/>
+
+            <TextView
+                android:id="@+id/againstUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tools:text="在座的各位都是辣鸡"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/publishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"
+            tools:text="10:00"/>
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"
+            tools:text="杭州 滨江"/>
+    </LinearLayout>
+</LinearLayout>

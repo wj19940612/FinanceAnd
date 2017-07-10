@@ -182,13 +182,13 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                             if (PermissionUtil.checkPermission(getContext(), Manifest.permission.CAMERA)) {
                                 startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
                             } else {
-                                ToastUtil.curt(getString(R.string.please_open_camera_permission));
+                                ToastUtil.show(getString(R.string.please_open_camera_permission));
                             }
                         } else {
                             if (PermissionUtil.cameraIsCanUse()) {
                                 startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
                             } else {
-                                ToastUtil.curt(getString(R.string.please_open_camera_permission));
+                                ToastUtil.show(getString(R.string.please_open_camera_permission));
                             }
                         }
 
@@ -204,7 +204,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                         startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
                     }
                 } else {
-                    ToastUtil.curt(getString(R.string.please_open_camera_permission));
+                    ToastUtil.show(getString(R.string.please_open_camera_permission));
                 }
                 break;
             case R.id.takePhoneFromGallery:
@@ -214,7 +214,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                     openAlbumIntent.setType("image/*");
                     startActivityForResult(openAlbumIntent, REQ_CODE_TAKE_PHONE_FROM_PHONES);
                 } else {
-                    ToastUtil.curt(R.string.sd_is_not_useful);
+                    ToastUtil.show(R.string.sd_is_not_useful);
                 }
                 break;
             case R.id.takePhoneCancel:

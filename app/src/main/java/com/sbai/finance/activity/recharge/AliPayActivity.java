@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -21,6 +22,9 @@ import com.sbai.finance.utils.Launcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 
 
 public class AliPayActivity extends BaseActivity {
@@ -76,6 +80,7 @@ public class AliPayActivity extends BaseActivity {
                             .fire();
                 } else {
                     Client.getPaymentPath(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
+                            .setRetryPolicy(new DefaultRetryPolicy(10000, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT))
                             .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                                 @Override
                                 protected void onRespSuccessData(PaymentPath paymentPath) {

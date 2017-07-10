@@ -1,5 +1,7 @@
 package com.sbai.httplib;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.internal.$Gson$Types;
@@ -73,6 +75,8 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
 
     @Override
     public void onResponse(T t) {
+        Log.d(RequestManager.TAG, getUrl() + " onResponse: " + t.toString());
+
         onFinish();
         if (t != null) {
             onSuccess(t);

@@ -369,12 +369,13 @@ public class BorrowMineFragment extends BaseFragment implements
                 } else {
                     mIsAttention.setText("");
                 }
+
                 if (TextUtils.isEmpty(item.getContent())){
                     mBorrowMoneyContent.setVisibility(View.GONE);
                 }else{
                     mBorrowMoneyContent.setVisibility(View.VISIBLE);
-                    mBorrowMoneyContent.setContentText(item.getContent().trim());
 
+                    mBorrowMoneyContent.setContentText(item.getContent().trim());
                 }
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));

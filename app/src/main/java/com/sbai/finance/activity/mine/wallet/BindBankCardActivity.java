@@ -30,6 +30,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -192,15 +193,17 @@ public class BindBankCardActivity extends BaseActivity {
                 new BindBankHintDialogFragment().show(getSupportFragmentManager());
                 break;
             case R.id.bank:
-                showBankCardPicker();
+                showCanUserBankList();
                 break;
             case R.id.bankChoose:
-                showBankCardPicker();
+                showCanUserBankList();
                 break;
             case R.id.submitBankCardInfo:
+                umengEventCount(UmengCountEventIdUtils.BANK_CARD_FILL_NEXT_STEP);
                 submitBankCardInfo();
                 break;
             case R.id.unBind:
+                umengEventCount(UmengCountEventIdUtils.BANK_CARD_LIST_UNBUNDLED);
                 unbindBankCard();
                 break;
         }
@@ -241,7 +244,37 @@ public class BindBankCardActivity extends BaseActivity {
     }
 
     private void showBankCardPicker() {
-        requestCanUseBankList();
+        OptionPicker picker = new OptionPicker(this, mBankNameList);
+        picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+        picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
+        picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
+        picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
+        picker.setTopHeight(50);
+        picker.setAnimationStyle(R.style.BottomDialogAnimation);
+        picker.setOffset(2);
+        if (mCanUseBankListModel != null && mCanUseBankListModel.getName() != null) {
+            picker.setSelectedItem(mCanUseBankListModel.getName());
+        }
+        picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
+        WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
+        lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));
+        picker.setLineConfig(lineConfig);
+        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
+            @Override
+            public void onOptionPicked(int index, String item) {
+                if (!TextUtils.isEmpty(item)) {
+                    mBank.setText(item);
+                    for (CanUseBankListModel data : mCanUseBankListModels) {
+                        if (data.getName().equalsIgnoreCase(item)) {
+                            mCanUseBankListModel = data;
+                            mUserBankCardInfoModel.setBankId(mCanUseBankListModel.getId());
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        picker.show();
     }
 
     private void submitBankCardInfo() {
@@ -267,7 +300,7 @@ public class BindBankCardActivity extends BaseActivity {
                                     finish();
 
                                 } else {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })
@@ -289,7 +322,7 @@ public class BindBankCardActivity extends BaseActivity {
                                     setResult(RESULT_OK, intent);
                                     finish();
                                 } else {
-                                    ToastUtil.curt(resp.getMsg());
+                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })
@@ -299,56 +332,30 @@ public class BindBankCardActivity extends BaseActivity {
 
     }
 
-    private void requestCanUseBankList() {
+    private void showCanUserBankList() {
         if (mCanUseBankListModels != null && !mCanUseBankListModels.isEmpty() && mBankNameList != null) {
-            OptionPicker picker = new OptionPicker(this, mBankNameList);
-            picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
-            picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
-            picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
-            picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
-            picker.setTopHeight(50);
-            picker.setAnimationStyle(R.style.BottomDialogAnimation);
-            picker.setOffset(2);
-            if (mCanUseBankListModel != null && mCanUseBankListModel.getName() != null) {
-                picker.setSelectedItem(mCanUseBankListModel.getName());
-            }
-            picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
-            WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
-            lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.split));
-            picker.setLineConfig(lineConfig);
-            picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
-                @Override
-                public void onOptionPicked(int index, String item) {
-                    if (!TextUtils.isEmpty(item)) {
-                        mBank.setText(item);
-                        for (CanUseBankListModel data : mCanUseBankListModels) {
-                            if (data.getName().equalsIgnoreCase(item)) {
-                                mCanUseBankListModel = data;
-                                mUserBankCardInfoModel.setBankId(mCanUseBankListModel.getId());
-                                break;
-                            }
-                        }
-                    }
-                }
-            });
-            picker.show();
+            showBankCardPicker();
         } else {
-            Client.requestCanUseBankList()
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<List<CanUseBankListModel>>, List<CanUseBankListModel>>() {
-                        @Override
-                        protected void onRespSuccessData(List<CanUseBankListModel> canUseBankListModelList) {
-                            mCanUseBankListModels = canUseBankListModelList;
-                            mBankNameList = new String[canUseBankListModelList.size()];
-                            for (int i = 0; i < canUseBankListModelList.size(); i++) {
-                                mBankNameList[i] = canUseBankListModelList.get(i).getName();
-                            }
-                            showBankCardPicker();
-                        }
-                    })
-                    .fire();
+            requestCanUserBankList();
         }
 
+    }
+
+    private void requestCanUserBankList() {
+        Client.requestCanUseBankList()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<CanUseBankListModel>>, List<CanUseBankListModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<CanUseBankListModel> canUseBankListModelList) {
+                        mCanUseBankListModels = canUseBankListModelList;
+                        mBankNameList = new String[canUseBankListModelList.size()];
+                        for (int i = 0; i < canUseBankListModelList.size(); i++) {
+                            mBankNameList[i] = canUseBankListModelList.get(i).getName();
+                        }
+                        showBankCardPicker();
+                    }
+                })
+                .fire();
     }
 }
