@@ -101,10 +101,14 @@ public class Battle implements Parcelable {
     //手续费
     private double commission;
 
-    //临时数据
+    //点赞
     private int battleId;
     private int currentPraise;
     private int praiseUserId;
+
+    //平仓数据
+    private double launchUnwindScore;
+    private double againstUnwindScore;
 
     public boolean isBattleStop() {
         return getGameStatus() == GAME_STATUS_END;
@@ -342,90 +346,24 @@ public class Battle implements Parcelable {
         this.praiseUserId = praiseUserId;
     }
 
+    public double getLaunchUnwindScore() {
+        return launchUnwindScore;
+    }
+
+    public void setLaunchUnwindScore(double launchUnwindScore) {
+        this.launchUnwindScore = launchUnwindScore;
+    }
+
+    public double getAgainstUnwindScore() {
+        return againstUnwindScore;
+    }
+
+    public void setAgainstUnwindScore(double againstUnwindScore) {
+        this.againstUnwindScore = againstUnwindScore;
+    }
+
     public Battle() {
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.againstFrom);
-        dest.writeInt(this.againstUser);
-        dest.writeString(this.againstUserName);
-        dest.writeString(this.againstUserPortrait);
-        dest.writeString(this.batchCode);
-        dest.writeInt(this.coinType);
-        dest.writeLong(this.createTime);
-        dest.writeLong(this.endTime);
-        dest.writeInt(this.endline);
-        dest.writeInt(this.gameStatus);
-        dest.writeInt(this.id);
-        dest.writeInt(this.launchUser);
-        dest.writeString(this.launchUserName);
-        dest.writeString(this.launchUserPortrait);
-        dest.writeLong(this.modifyTime);
-        dest.writeInt(this.reward);
-        dest.writeLong(this.startTime);
-        dest.writeInt(this.varietyId);
-        dest.writeString(this.varietyName);
-        dest.writeString(this.varietyType);
-        dest.writeInt(this.winResult);
-        dest.writeDouble(this.launchScore);
-        dest.writeDouble(this.againstScore);
-        dest.writeInt(this.againstPraise);
-        dest.writeInt(this.launchPraise);
-        dest.writeInt(this.battleId);
-        dest.writeInt(this.currentPraise);
-        dest.writeInt(this.praiseUserId);
-        dest.writeDouble(this.getCommission());
-    }
-
-    protected Battle(Parcel in) {
-        this.againstFrom = in.readString();
-        this.againstUser = in.readInt();
-        this.againstUserName = in.readString();
-        this.againstUserPortrait = in.readString();
-        this.batchCode = in.readString();
-        this.coinType = in.readInt();
-        this.createTime = in.readLong();
-        this.endTime = in.readLong();
-        this.endline = in.readInt();
-        this.gameStatus = in.readInt();
-        this.id = in.readInt();
-        this.launchUser = in.readInt();
-        this.launchUserName = in.readString();
-        this.launchUserPortrait = in.readString();
-        this.modifyTime = in.readLong();
-        this.reward = in.readInt();
-        this.startTime = in.readLong();
-        this.varietyId = in.readInt();
-        this.varietyName = in.readString();
-        this.varietyType = in.readString();
-        this.winResult = in.readInt();
-        this.launchScore = in.readDouble();
-        this.againstScore = in.readDouble();
-        this.againstPraise = in.readInt();
-        this.launchPraise = in.readInt();
-        this.battleId = in.readInt();
-        this.currentPraise = in.readInt();
-        this.praiseUserId = in.readInt();
-        this.commission = in.readDouble();
-    }
-
-    public static final Creator<Battle> CREATOR = new Creator<Battle>() {
-        @Override
-        public Battle createFromParcel(Parcel source) {
-            return new Battle(source);
-        }
-
-        @Override
-        public Battle[] newArray(int size) {
-            return new Battle[size];
-        }
-    };
 
     @Override
     public String toString() {
@@ -460,4 +398,90 @@ public class Battle implements Parcelable {
                 ", praiseUserId=" + praiseUserId +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.againstFrom);
+        dest.writeInt(this.againstUser);
+        dest.writeString(this.againstUserName);
+        dest.writeString(this.againstUserPortrait);
+        dest.writeString(this.batchCode);
+        dest.writeInt(this.coinType);
+        dest.writeLong(this.createTime);
+        dest.writeLong(this.endTime);
+        dest.writeInt(this.endline);
+        dest.writeInt(this.gameStatus);
+        dest.writeInt(this.id);
+        dest.writeInt(this.launchUser);
+        dest.writeString(this.launchUserName);
+        dest.writeString(this.launchUserPortrait);
+        dest.writeLong(this.modifyTime);
+        dest.writeInt(this.reward);
+        dest.writeLong(this.startTime);
+        dest.writeInt(this.varietyId);
+        dest.writeString(this.varietyName);
+        dest.writeString(this.varietyType);
+        dest.writeInt(this.winResult);
+        dest.writeDouble(this.launchScore);
+        dest.writeDouble(this.againstScore);
+        dest.writeInt(this.againstPraise);
+        dest.writeInt(this.launchPraise);
+        dest.writeDouble(this.commission);
+        dest.writeInt(this.battleId);
+        dest.writeInt(this.currentPraise);
+        dest.writeInt(this.praiseUserId);
+        dest.writeDouble(this.launchUnwindScore);
+        dest.writeDouble(this.againstUnwindScore);
+    }
+
+    protected Battle(Parcel in) {
+        this.againstFrom = in.readString();
+        this.againstUser = in.readInt();
+        this.againstUserName = in.readString();
+        this.againstUserPortrait = in.readString();
+        this.batchCode = in.readString();
+        this.coinType = in.readInt();
+        this.createTime = in.readLong();
+        this.endTime = in.readLong();
+        this.endline = in.readInt();
+        this.gameStatus = in.readInt();
+        this.id = in.readInt();
+        this.launchUser = in.readInt();
+        this.launchUserName = in.readString();
+        this.launchUserPortrait = in.readString();
+        this.modifyTime = in.readLong();
+        this.reward = in.readInt();
+        this.startTime = in.readLong();
+        this.varietyId = in.readInt();
+        this.varietyName = in.readString();
+        this.varietyType = in.readString();
+        this.winResult = in.readInt();
+        this.launchScore = in.readDouble();
+        this.againstScore = in.readDouble();
+        this.againstPraise = in.readInt();
+        this.launchPraise = in.readInt();
+        this.commission = in.readDouble();
+        this.battleId = in.readInt();
+        this.currentPraise = in.readInt();
+        this.praiseUserId = in.readInt();
+        this.launchUnwindScore = in.readDouble();
+        this.againstUnwindScore = in.readDouble();
+    }
+
+    public static final Creator<Battle> CREATOR = new Creator<Battle>() {
+        @Override
+        public Battle createFromParcel(Parcel source) {
+            return new Battle(source);
+        }
+
+        @Override
+        public Battle[] newArray(int size) {
+            return new Battle[size];
+        }
+    };
 }

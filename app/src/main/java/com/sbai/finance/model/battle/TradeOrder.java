@@ -6,6 +6,9 @@ package com.sbai.finance.model.battle;
 
 public class TradeOrder {
 
+    public static final int DIRECTION_LONG_PURCHASE = 1;
+    public static final int DIRECTION_SHORT_PURCHASE = 0;
+
     /**
      * battleBatchCode : g4QvWXFI
      * battleId : 30

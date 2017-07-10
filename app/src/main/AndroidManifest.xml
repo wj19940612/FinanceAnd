@@ -319,6 +319,8 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".activity.battle.BattleHisRecordActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".activity.battle.FutureBattleActivity"
+                  android:screenOrientation="portrait"/>
 
     </application>
 
