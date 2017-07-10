@@ -14,8 +14,6 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.battle.BattleFragment;
 import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
 import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
@@ -285,31 +283,6 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
             mBattleView.setMode(BattleFloatView.Mode.VISITOR)
                     .initWithModel(mBattle)
                     .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
-                    .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
-                        @Override
-                        public void onCreateAvatarClick() {
-                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            if (LocalUser.getUser().isLogin()) {
-                                Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                        .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                        .execute();
-                            } else {
-                                Launcher.with(getActivity(), LoginActivity.class).execute();
-                            }
-                        }
-
-                        @Override
-                        public void onAgainstAvatarClick() {
-                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            if (LocalUser.getUser().isLogin()) {
-                                Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                        .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                        .execute();
-                            } else {
-                                Launcher.with(getActivity(), LoginActivity.class).execute();
-                            }
-                        }
-                    })
                     .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
                         @Override
                         public void addCreatePraiseCount() {
@@ -327,34 +300,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
-                    .initWithModel(mBattle)
-                    .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
-                        @Override
-                        public void onCreateAvatarClick() {
-                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            if (LocalUser.getUser().isLogin()) {
-                                Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                        .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                        .execute();
-                            } else {
-                                Launcher.with(getActivity(), LoginActivity.class).execute();
-                            }
-                        }
-
-                        @Override
-                        public void onAgainstAvatarClick() {
-                            umengEventCount(UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                            if (LocalUser.getUser().isLogin()) {
-                                if (mBattle.getAgainstUser() != 0) {
-                                    Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                            .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                            .execute();
-                                }
-                            } else {
-                                Launcher.with(getActivity(), LoginActivity.class).execute();
-                            }
-                        }
-                    });
+                    .initWithModel(mBattle);
 
             //分两种状态  1.发起匹配  2.对战中
             if (mBattleRoom.getRoomState() == ROOM_STATE_CREATE) {
@@ -420,30 +366,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                 .initWithModel(mBattle)
                 .setDeadline(mBattle.getGameStatus(), 0)
                 .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
-                .setWinResult(mBattle.getWinResult())
-                .setOnAvatarClickListener(new BattleFloatView.onAvatarClickListener() {
-                    @Override
-                    public void onCreateAvatarClick() {
-                        if (LocalUser.getUser().isLogin()) {
-                            Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                    .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                    .execute();
-                        } else {
-                            Launcher.with(getActivity(), LoginActivity.class).execute();
-                        }
-                    }
-
-                    @Override
-                    public void onAgainstAvatarClick() {
-                        if (LocalUser.getUser().isLogin()) {
-                            Launcher.with(BattleActivity.this, UserDataActivity.class)
-                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                    .execute();
-                        } else {
-                            Launcher.with(getActivity(), LoginActivity.class).execute();
-                        }
-                    }
-                });
+                .setWinResult(mBattle.getWinResult());
     }
 
     private void requestSubscribeBattle() {
