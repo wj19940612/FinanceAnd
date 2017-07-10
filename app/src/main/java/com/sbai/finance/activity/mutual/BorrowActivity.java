@@ -113,7 +113,7 @@ public class BorrowActivity extends BaseActivity {
         SpannableString ss = new SpannableString(getString(R.string.borrow_remark_hint));//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12, true);//设置字体大小 true表示单位是sp
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mInputMethodManager=(InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mBorrowRemark.setHint(new SpannedString(ss));
         mPhotoGridAdapter = new PhotoGridAdapter(this);
         mPhotoGridAdapter.add("");
@@ -289,10 +289,13 @@ public class BorrowActivity extends BaseActivity {
                 break;
             case R.id.location:
                 String location = null;
-                if (mAddress!=null){
-                    location = mAddress.getAdminArea()+" "+mAddress.getLocality()+" "+mAddress.getSubLocality();
+                if (mAddress != null) {
+                    location = mAddress.getAdminArea() + "-" + mAddress.getLocality() + "-" + mAddress.getSubLocality();
                 }
-                Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD_1, true).putExtra(Launcher.EX_PAYLOAD_2,location).executeForResult(REQ_CODE_ADDRESS);
+                Launcher.with(getActivity(), LocationActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD_1, true)
+                        .putExtra(Launcher.EX_PAYLOAD_2, location)
+                        .executeForResult(REQ_CODE_ADDRESS);
                 break;
             case R.id.protocol:
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BORROW).setTag(TAG)
@@ -348,7 +351,6 @@ public class BorrowActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.show(getString(R.string.publish_success));
-//                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
                             Intent intent = new Intent(getActivity(), MutualActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -423,18 +425,21 @@ public class BorrowActivity extends BaseActivity {
             mPhotoGridAdapter.insert(helpImagePath, mPhotoGridAdapter.getCount() - 1);
         }
     }
-    private void showSoftWare(EditText editText){
+
+    private void showSoftWare(EditText editText) {
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
-        mInputMethodManager.showSoftInput(editText,InputMethodManager.SHOW_FORCED);//强制显示
+        mInputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_FORCED);//强制显示
     }
-    private void hideSoftWare(){
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowLimit.getWindowToken(),0);
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowInterest.getWindowToken(),0);
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowTimeLimit.getWindowToken(),0);
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowRemark.getWindowToken(),0);
+
+    private void hideSoftWare() {
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowLimit.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowInterest.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowTimeLimit.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowRemark.getWindowToken(), 0);
     }
+
     private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {

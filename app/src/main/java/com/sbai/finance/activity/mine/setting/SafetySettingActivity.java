@@ -56,13 +56,18 @@ public class SafetySettingActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.modify_safety_password:
-                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).executeForResult(REQ_CODE_MODIFY_PASS);
+                Launcher.with(getActivity(), ModifySafetyPassActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, isUserHasPassword)
+                        .executeForResult(REQ_CODE_MODIFY_PASS);
                 break;
             case R.id.forget_safety_password:
-                Launcher.with(getActivity(), ForgetPassWordActivity.class).executeForResult(REQ_CODE_MODIFY_PASS);
+                Launcher.with(getActivity(), ForgetPassWordActivity.class)
+                        .executeForResult(REQ_CODE_MODIFY_PASS);
                 break;
             case R.id.setting_safety_password:
-                Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, isUserHasPassword).executeForResult(REQ_CODE_MODIFY_PASS);
+                Launcher.with(getActivity(), ModifySafetyPassActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, isUserHasPassword)
+                        .executeForResult(REQ_CODE_MODIFY_PASS);
                 break;
             case R.id.modifySafetyLL:
                 break;

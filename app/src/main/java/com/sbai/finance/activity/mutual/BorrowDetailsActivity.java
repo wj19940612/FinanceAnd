@@ -70,8 +70,6 @@ import butterknife.OnClick;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class BorrowDetailsActivity extends BaseActivity {
-	private static final int REQ_BORROW_MONEY_DETAILS = 1001;
-	private static final int REQ_WANT_HELP_HIM_OR_YOU = 1002;
 	public static final String STATUS_CHANAGE = "xxx";
 	public static final String DATA_ID = "id";
 	public static final String DATA_STATUS = "status";
@@ -619,7 +617,7 @@ public class BorrowDetailsActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				if (!LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_BORROW_MONEY_DETAILS);
+					Launcher.with(getActivity(), LoginActivity.class).execute();
 				} else {
 					SmartDialog.with(getActivity(),
 							getString(R.string.give_help_dialog_content)
