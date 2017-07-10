@@ -49,8 +49,6 @@ public class LocationActivity extends BaseActivity {
 
     //从修改用户信息界面来
     private boolean mIsFromModifyUserInfoPage;
-    //是否更新最新的地址
-    private boolean isUpdateLand = false;
     //是否使用gps定位地址作为picker 历史选择地址
     private boolean isSelectGpsLocation;
     //
@@ -118,48 +116,44 @@ public class LocationActivity extends BaseActivity {
 
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
-        addressInitTask.setmIsNeedUpdateLocation(mIsFromModifyUserInfoPage);
+        addressInitTask.setIsNeedUpdateLocation(mIsFromModifyUserInfoPage);
         String province = "";
         String city = "";
         String country = "";
         String[] split;
-        if (!TextUtils.isEmpty(mLocation.getText()) && isSelectGpsLocation) {
+        if (isSelectGpsLocation) {
             String location;
             if (!TextUtils.isEmpty(mPublishLocation)) {
                 location = mPublishLocation;
             } else {
                 location = mLocation.getText().toString();
             }
-            split = location.split(" ");
+            split = location.split("-");
             if (split.length == 3) {
                 province = split[0];
                 city = split[1];
                 country = split[2];
+            } else {
+                split = location.split(" ");
+                if (split.length == 3) {
+                    province = split[0];
+                    city = split[1];
+                    country = split[2];
+                }
             }
         } else {
-            String land = LocalUser.getUser().getUserInfo().getLand();
+            String land = "";
+            if (!TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getLand())) {
+                land = LocalUser.getUser().getUserInfo().getLand();
+            } else {
+                land = mLocation.getText().toString();
+            }
             if (!TextUtils.isEmpty(land)) {
                 split = land.split("-");
                 if (split.length == 3) {
                     province = split[0];
                     city = split[1];
                     country = split[2];
-                } else {
-                    split = land.split(" ");
-                    if (split.length == 3) {
-                        province = split[0];
-                        city = split[1];
-                        country = split[2];
-                    }
-                }
-            } else {
-                if (!TextUtils.isEmpty(mLocation.getText())) {
-                    split = mLocation.getText().toString().split(" ");
-                    if (split.length == 3) {
-                        province = split[0];
-                        city = split[1];
-                        country = split[2];
-                    }
                 }
             }
 
@@ -180,14 +174,6 @@ public class LocationActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    /**
-     * GPS设置
-     * <p>
-     * || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-     *
-     * @param
-     */
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,14 +182,6 @@ public class LocationActivity extends BaseActivity {
             requestLocation();
         }
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            requestLocation();
-//        }
-//    }
 
 
     private class AddressInitTask extends AsyncTask<String, Void, ArrayList<Province>> {
@@ -229,7 +207,7 @@ public class LocationActivity extends BaseActivity {
         }
 
 
-        public void setmIsNeedUpdateLocation(boolean isNeedUpdateLocation) {
+        public void setIsNeedUpdateLocation(boolean isNeedUpdateLocation) {
             this.mIsNeedUpdateLand = isNeedUpdateLocation;
         }
 
@@ -270,7 +248,6 @@ public class LocationActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Province> result) {
-//        dialog.dismiss();
             if (result.size() > 0) {
                 AddressPicker picker = new AddressPicker(mActivity, result);
                 picker.setHideCounty(mHideCounty);

@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -145,9 +144,6 @@ public class FinanceFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<ArrayList<CompanyAnnualReportModel>>, ArrayList<CompanyAnnualReportModel>>() {
                     @Override
                     protected void onRespSuccessData(ArrayList<CompanyAnnualReportModel> data) {
-                        for (CompanyAnnualReportModel a : data) {
-                            Log.d("wangjie222", "onRespSuccessData: 财务 " + a.toString());
-                        }
                         updateCompanyAnnualReportList(data);
                     }
 
@@ -217,31 +213,6 @@ public class FinanceFragment extends BaseFragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-//            @BindView(R.id.companyFinancePublishTime)
-//            AppCompatTextView mCompanyFinancePublishTime;
-//            @BindView(R.id.oneStockNetAsset)
-//            AutoCompleteTextView mOneStockNetAsset;
-//            @BindView(R.id.one_stock_earnings)
-//            AutoCompleteTextView mOneStockEarnings;
-//            @BindView(R.id.one_stock_cash_content)
-//            AutoCompleteTextView mOneStockCashContent;
-//            @BindView(R.id.one_stock_capital_accumulation_fund)
-//            AutoCompleteTextView mOneStockCapitalAccumulationFund;
-//            @BindView(R.id.fixation_capital_count)
-//            AutoCompleteTextView mFixationCapitalCount;
-//            @BindView(R.id.flow_capital_count)
-//            AutoCompleteTextView mFlowCapitalCount;
-//            @BindView(R.id.capital_count)
-//            AutoCompleteTextView mCapitalCount;
-//            @BindView(R.id.long_liabilities_count)
-//            AutoCompleteTextView mLongLiabilitiesCount;
-//            @BindView(R.id.normal_business_earnings)
-//            AutoCompleteTextView mNormalBusinessEarnings;
-//            @BindView(R.id.finance_charge)
-//            AutoCompleteTextView mFinanceCharge;
-//            @BindView(R.id.earn_profit)
-//            AutoCompleteTextView mEarnProfit;
-
             @BindView(R.id.companyFinancePublishTime)
             AppCompatTextView mCompanyFinancePublishTime;
             @BindView(R.id.oneStockNetAsset)

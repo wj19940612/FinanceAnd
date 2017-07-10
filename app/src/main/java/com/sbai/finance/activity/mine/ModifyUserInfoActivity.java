@@ -66,7 +66,6 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     private String[] mAgeList;
 
     private int mSelectAgeListIndex;
-    private int mUserSex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +84,6 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
 
     private void updateUserInfo() {
         UserInfo userInfo = LocalUser.getUser().getUserInfo();
-        mUserSex = userInfo.getUserSex();
         mNickName.setSubText(userInfo.getUserName());
         if (userInfo.getUserSex() == UserInfo.SEX_GIRL) {
             mSex.setSubText(getString(R.string.girl));
@@ -154,9 +152,6 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                         @Override
                         protected void onRespSuccess(Resp<JsonObject> resp) {
                             setResult(RESULT_OK);
-                            if (resp.hasData()) {
-                                Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
-                            }
                         }
                     })
                     .fireFree();
@@ -188,7 +183,9 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                 showAgePicker();
                 break;
             case R.id.location:
-                Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD, true).executeForResult(REQ_CODE_LOCATION);
+                Launcher.with(getActivity(), LocationActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, true)
+                        .executeForResult(REQ_CODE_LOCATION);
                 break;
             case R.id.credit:
                 Launcher.with(getActivity(), CreditActivity.class).execute();
