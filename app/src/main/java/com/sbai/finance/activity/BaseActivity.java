@@ -33,8 +33,8 @@ import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.WSPush;
+import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
@@ -87,6 +87,13 @@ public class BaseActivity extends AppCompatActivity implements
         }
     };
 
+    private BroadcastReceiver mLoginSuccessReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            onLoginSuccess(context, intent);
+        }
+    };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -117,6 +124,10 @@ public class BaseActivity extends AppCompatActivity implements
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
+
+//    protected void onLoginSuccess(Context context, Intent intent) {
+//
+//    }
 
     private OnPushReceiveListener<WSPush<Battle>> mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
         @Override
