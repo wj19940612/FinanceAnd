@@ -39,13 +39,14 @@
     <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
-    <item name="tag_opinion" type="id">1</item>
-    <item name="tag_borrow_money" type="id">2</item>
+    <item name="tag_opinion" type="id">0</item>
+    <item name="tag_borrow_money" type="id">1</item>
+    <item name="tag_futures_battle" type="id">2</item>
     <string name="amount">借%1$s元</string>
     <string name="limit">期限%1$s天</string>
     <string name="interest">利息%1$s元</string>
 
-    <!--login   page-->
+    <!--Login page-->
     <string name="phone_number">手机号</string>
     <string name="please_input_phone_number">手机号码</string>
     <string name="auth_code">验证码</string>
@@ -60,11 +61,12 @@
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
 
     <!--Home-->
-    <string name="future">期货</string>
+    <string name="futures">期货</string>
     <string name="stock">股票</string>
     <string name="forex">外汇</string>
     <string name="help">互助借款</string>
     <string name="self_choice">自选</string>
+    <string name="battle_hint">来一把紧张激烈的对战吧！</string>
 
     <string name="banner_detail">活动详情</string>
     <string name="recommend">推荐</string>
@@ -90,7 +92,7 @@
     <string name="borrow_title">借款有道</string>
     <string name="borrow_mine">我的借款</string>
     <string name="borrow_detail">帮助他人，赚些小慧</string>
-    <string name="idea_title">观点大神</string>
+    <string name="opinion_master">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
     <string name="choose_trade_type">选择交易类型</string>
@@ -493,6 +495,8 @@
     <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <string name="share_desc">乐米金融，金融小白的第一战!</string>
+    <string name="invite_you_join_future_battle">%1$s邀请你进行一场【美黄金】期货对战，我敢邀，你敢来吗？</string>
+    <string name="future_battle_desc">乐米期货对战，紧张激烈的金融游戏，勇者无所畏惧，还有更多元宝好礼等你领取，快来加入吧！</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
@@ -538,19 +542,25 @@
     <string name="phone_number_hint">请输入银行预留手机号码</string>
 
     <!--对战-->
-    <string name="create_fight">创建对战</string>
+    <string name="create_battle">创建对战</string>
     <string name="choose_futures">选择期货</string>
     <string name="pattern">模式</string>
     <string name="integral_war">积分战</string>
     <string name="ingot_war">元宝战</string>
+    <string name="integral">积分</string>
+    <string name="ingot">元宝</string>
+    <string name="cash">现金</string>
     <string name="bounty">赏金</string>
+    <string name="versusing">对战中</string>
+    <string name="versus_end">已结束</string>
+    <string name="versus_cancel">已取消</string>
+    <string name="tie">平局</string>
     <string name="duration">时长</string>
-    <string name="five_minutes">5分钟</string>
-    <string name="ten_minutes">10分钟</string>
-    <string name="fifteen_minutes">15分钟</string>
-    <string name="twenty_minutes">20分钟</string>
+    <string name="minute">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
+    <string name="battle_status_pending">等待中...</string>
+    <string name="battle_status_fighting">对战中...</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
@@ -602,13 +612,13 @@
     <!--  聚宝盆  -->
     <string name="cornucopia">聚宝盆</string>
     <string name="exchange_rule">兑换规则</string>
-    <string name="exchange_coin">购买元宝</string>
-    <string name="coin_detail">元宝明细</string>
+    <string name="exchange_ingot">购买元宝</string>
+    <string name="ingot_detail">元宝明细</string>
     <string name="integrate_detail">积分明细</string>
     <string name="exchange_integrate">兑换积分</string>
-    <string name="coin_number">%1$s  元宝</string>
-    <string name="add_coin">+%1$s  元宝</string>
-    <string name="minus_coin">-%1$s  元宝</string>
+    <string name="ingot_number">%1$s  元宝</string>
+    <string name="add_ingot">+%1$s  元宝</string>
+    <string name="minus_ingot">-%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
     <string name="add_integrate_number">+%1$s  积分</string>
     <string name="minus_integrate_number">-%1$s  积分</string>
@@ -619,14 +629,14 @@
     <string name="buy">购买</string>
     <string name="exchange_confirm">确认兑换</string>
     <string name="buy_confirm">确认购买</string>
-    <string name="confirm_use_coin_buy_integrate">确认使用%1$s元宝兑换%2$s积分?</string>
-    <string name="confirm_use_money_buy_coin">确认使用%1$s元购买%2$s元宝?</string>
+    <string name="confirm_use_ingot_buy_integrate">确认使用%1$s元宝兑换%2$s积分?</string>
+    <string name="confirm_use_money_buy_ingot">确认使用%1$s元购买%2$s元宝?</string>
     <string name="earnings">收入</string>
     <string name="extend">支出</string>
     <string name="go_recharge">去充值</string>
     <string name="exchange_fail">兑换失败</string>
     <string name="buy_fail">购买失败</string>
-    <string name="coin_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
+    <string name="ingot_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
     <string name="money_is_not_enough">现金余额不足，请充值或降低购买数量</string>
     <string name="is_not_set_safety_pass">未设置安全密码</string>
     <string name="full_text">...全文</string>
@@ -634,10 +644,97 @@
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
+    <string name="versus_record">期货对战-战绩</string>
+    <string name="battle_his_record">历史对战</string>
+    <string name="battle_his_record_launch">历史对战></string>
+    <string name="see_his_battle">查看更早对战</string>
+    <string name="go_battle">前往对战</string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
-
-
+    <string name="position_direction">持仓方向</string>
+    <string name="buy_price">买入价</string>
+    <string name="position_profit">持仓盈亏(元)</string>
+    <string name="no_position">暂无持仓</string>
+    <string name="versus_rule_title">决斗规则</string>
+    <string name="join_versus_failure">加入失败</string>
+    <string name="join_battle_balance_not_enough">余额不足，请充值或选择其他赏金较低的对战</string>
+    <string name="join_versus_title">确认加入对战？</string>
+    <string name="join_versus_tip">加入对战将暂时冻结%1$s作为对战奖金，胜利时返还，失败扣除</string>
+    <string name="battle_joined_or_created">已存在进行中的对战，对战结束后可加入新的对战</string>
+    <string name="continue_match">继续匹配</string>
+    <string name="no_waiting">不等了</string>
+    <string name="cancel_matching">取消匹配</string>
+    <string name="cancel_tip">对手正在来的路上，是否要取消匹配？</string>
+    <string name="matching">匹配中</string>
+    <string name="matching_tip">正在进行匹配，请稍后</string>
+    <string name="match_battle_confirm">确认匹配对战？</string>
+    <string name="match_battle_tip">匹配对战将随机选择赏金在余额范围内的对局。</string>
+    <string name="versus_rule_tip">1、对战中下注金额进行冻结\n2、按照最后盈利情况进行结算，胜者获得对方赌注百分之九十的奖励\n3、平局不扣赌注，对局时间结束时用户将被清仓后进行结算\n4、对战无操盘记录将自动判负</string>
+    <string name="battle_detail">对战详情</string>
+    <string name="cancel_match">取消匹配</string>
+    <string name="desc_matching">正在进行匹配，请稍后…</string>
+    <string name="title_matching">正在匹配</string>
+    <string name="title_match_success">匹配成功</string>
+    <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>
+    <string name="cancel_battle">取消对战</string>
+    <string name="cancel_battle_tip">是否要取消对战？</string>
+    <string name="continue_to_battle">继续对战</string>
+    <string name="match_failed">匹配失败</string>
+    <string name="match_overtime">匹配超时，请重新匹配或稍后重试</string>
+    <string name="later_try_again">稍后重试</string>
+    <string name="rematch">重新匹配</string>
+    <string name="take_more">买多</string>
+    <string name="take_short">卖空</string>
+    <string name="take_more_position">买多建仓</string>
+    <string name="take_short_position">卖空建仓</string>
+    <string name="take_more_close_position">买多平仓</string>
+    <string name="take_short_close_position">卖空平仓</string>
+    <string name="join_self_versus_tip">不能加入自己创建的房间</string>
+    <string name="battle_variety_name">对战品种 : </string>
+    <string name="battle_time">对战时长 : </string>
+    <string name="battle_reward">对战赏金 : </string>
+    <string name="versus_tip">(加入对战后,赏金将会暂时冻结,对战胜利后返还,失败扣除)</string>
+    <string name="launch_battle_hint">发布对战成功后,赏金将会暂时冻结,\n对战胜利后返还,失败扣除</string>
+    <string name="join_versus">加入对战</string>
+    <string name="wait_to_join">等待加入</string>
+    <string name="wait_overtime">等待超时</string>
+    <string name="wait_to_overtime">等待时间过长，房间已超时</string>
+    <string name="recreate_room">重新创建</string>
+    <string name="invite_invalid">对战邀请已失效</string>
+    <string name="cancel_failed_game_start">取消失败，对战已开始</string>
+    <string name="remaining_time">剩余%1$s</string>
+    <string name="support">%1$s赞</string>
+    <string name="game_over">游戏结束</string>
+    <string name="game_result_win">神操作！真是羡煞旁人</string>
+    <string name="game_result_lose">别气馁，下一站大神</string>
+    <string name="game_result_draw">英雄所见略同</string>
+    <string name="return_reward">赏金退还</string>
+    <string name="join_battle">进入对战</string>
+    <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
+    <string name="title_quick_join_battle">即将进入游戏</string>
+    <string name="quick_battle">立即对战</string>
+    <string name="in_calculating">结算中</string>
+    <string name="match_battle">匹配对战</string>
+    <string name="start_match_and_battle">进行匹配对战，系统将进行撮合对战</string>
     <string name="you_not_install_weixin">您尚未安装微信</string>
     <string name="you_not_install_weibo">您尚未安装微博</string>
+
+    <!--     版本更新             -->
+    <string name="download_fail">下载失败</string>
+    <string name="check_new_version">发现了新版本</string>
+    <string name="upgrade_now">立即升级</string>
+    <string name="download_failure">下载失败!</string>
+    <string name="downloading">正在下载: %1$s</string>
+    <string name="button_downloading">下载中</string>
+    <string name="download_start">开始下载</string>
+    <string name="download_stop">下载停止</string>
+    <string name="please_not_download_again">请勿重复下载</string>
+    <string name="download_complete">下载完成</string>
+    <string name="permission_granted_success">权限授予成功</string>
+    <string name="now_update">立即更新</string>
+    <string name="version">v%1$s</string>
+    <string name="is_already_latest_version">已经是最新版本了</string>
+
+
+    <string name="number_ge">%1$s个</string>
 </resources>

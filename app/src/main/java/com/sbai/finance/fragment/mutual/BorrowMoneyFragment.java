@@ -287,7 +287,6 @@ public class BorrowMoneyFragment extends BaseFragment implements
                 }else{
                     mBorrowMoneyContent.setVisibility(View.VISIBLE);
                     mBorrowMoneyContent.setContentText(item.getContent().trim());
-
                 }
                 mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
                 mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));

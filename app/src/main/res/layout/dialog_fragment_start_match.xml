@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/bg_white_rounded"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="36dp"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="24dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/title_matching"
+                android:textColor="@color/blackAssist"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/matchLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/matchHead"
+                android:layout_width="60dp"
+                android:scaleType="centerCrop"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="3dp"
+            android:maxLines="3"
+            android:paddingBottom="17dp"
+            android:paddingTop="12dp"
+            android:text="@string/desc_matching"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_cancel_match"
+            android:clickable="true"
+            android:gravity="center"
+            android:minWidth="75dp"
+            android:padding="12dp"
+            android:text="@string/cancel_match"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+</LinearLayout>

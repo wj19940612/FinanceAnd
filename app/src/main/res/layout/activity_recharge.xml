@@ -43,7 +43,6 @@
             android:layout_weight="1"
             android:drawableRight="@drawable/ic_arrow_right_tint"
             android:gravity="center_vertical"
-            android:text="@string/ali_pay"
             android:textColor="@color/blackAssist"
             android:textSize="15sp"/>
     </LinearLayout>

@@ -48,7 +48,7 @@ public class CornucopiaProductModel {
         return getFromMoney() != getFromRealMoney();
     }
 
-    public boolean isVcoin() {
+    public boolean isIngot() {
         return getToType() == 1;
     }
 

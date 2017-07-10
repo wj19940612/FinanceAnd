@@ -80,7 +80,7 @@ public class ModifyUserNameActivity extends BaseActivity {
     private void submitNickName() {
         final String userName = mUserName.getText().toString().trim();
         if (!ValidityDecideUtil.isLegalNickName(userName)) {
-            ToastUtil.curt(R.string.is_only_a_chinese_name);
+            ToastUtil.show(R.string.is_only_a_chinese_name);
             return;
         }
 

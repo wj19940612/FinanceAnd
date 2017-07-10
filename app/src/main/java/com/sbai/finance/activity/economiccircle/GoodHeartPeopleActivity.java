@@ -275,11 +275,14 @@ public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClic
 					} else {
 						//不是自己
 						mCheckboxClick.setVisibility(View.INVISIBLE);
-						if (selectedUserId == item.getUserId()) {
-							mCheckboxClick.setVisibility(View.VISIBLE);
-							mCheckboxClick.setImageResource(R.drawable.ic_checkbox_checked);
-						} else {
-							mCheckboxClick.setVisibility(View.INVISIBLE);
+						if (status == BorrowDetail.STATUS_INTENTION || status == BorrowDetail.STATUS_END_REPAY
+								|| status == BorrowDetail.STATUS_INTENTION_OVER_TIME ) {
+							if (selectedUserId == item.getUserId()) {
+								mCheckboxClick.setVisibility(View.VISIBLE);
+								mCheckboxClick.setImageResource(R.drawable.ic_checkbox_checked);
+							} else {
+								mCheckboxClick.setVisibility(View.INVISIBLE);
+							}
 						}
 					}
 				} else {

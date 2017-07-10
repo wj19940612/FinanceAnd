@@ -25,7 +25,12 @@ public class KlineChart extends ChartView {
     private static final String MA_PURPLE = "#dc6aef";
     private static final String MA_YELLOW = "#efc86a";
 
+    private static final String GAME_BASELINE = "#362d4d";
+
     public static final String DATE_FORMAT_DAY_MIN = "HH:mm";
+
+    private static final String BASE_LINE = "baseLine";
+    private static final String TOUCH_LINE = "touchLine";
 
     private List<KlineViewData> mDataList;
     private SparseArray<KlineViewData> mVisibleList;
@@ -175,12 +180,31 @@ public class KlineChart extends ChartView {
         paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
+        checkGameMode(paint, TOUCH_LINE);
     }
 
     protected void setRedRectBgPaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
+    }
+
+    @Override
+    protected void setBaseLinePaint(Paint paint) {
+        super.setBaseLinePaint(paint);
+        checkGameMode(paint, BASE_LINE);
+    }
+
+    private void checkGameMode(Paint paint, String tag) {
+        if (!mSettings.isGameMode()) return;
+
+        if (tag.equals(BASE_LINE)) {
+            paint.setColor(Color.parseColor(GAME_BASELINE));
+        }
+
+        if (tag.equals(TOUCH_LINE)) {
+            paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
+        }
     }
 
     @Override
@@ -654,6 +678,7 @@ public class KlineChart extends ChartView {
         public static final int INDEXES_VOL = 1;
 
         private int indexesType;
+        private boolean mGameMode;
 
         public Settings() {
             super();
@@ -666,6 +691,14 @@ public class KlineChart extends ChartView {
 
         public void setIndexesType(int indexesType) {
             this.indexesType = indexesType;
+        }
+
+        public boolean isGameMode() {
+            return mGameMode;
+        }
+
+        public void setGameMode(boolean gameMode) {
+            mGameMode = gameMode;
         }
     }
 

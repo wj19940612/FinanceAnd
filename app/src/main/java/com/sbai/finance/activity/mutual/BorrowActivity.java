@@ -187,13 +187,13 @@ public class BorrowActivity extends BaseActivity {
                 mPublish.setEnabled(false);
                 String borrowMoney = mBorrowLimit.getText().toString().trim();
                 if (borrowMoney.length() > 4 || Integer.parseInt(borrowMoney) > 2000) {
-                    ToastUtil.curt(getString(R.string.money_more_2000));
+                    ToastUtil.show(getString(R.string.money_more_2000));
                     showSoftWare(mBorrowLimit);
                     mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 } else if (Integer.parseInt(borrowMoney) < 500) {
-                    ToastUtil.curt(getString(R.string.money_less_500));
+                    ToastUtil.show(getString(R.string.money_less_500));
                     showSoftWare(mBorrowLimit);
                     mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
@@ -201,13 +201,13 @@ public class BorrowActivity extends BaseActivity {
                 }
                 String borrowInterest = mBorrowInterest.getText().toString().trim();
                 if (borrowInterest.length() > 3 || Integer.valueOf(borrowInterest) > 200) {
-                    ToastUtil.curt(getString(R.string.interest_more_200));
+                    ToastUtil.show(getString(R.string.interest_more_200));
                     showSoftWare(mBorrowInterest);
                     mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 } else if (Integer.valueOf(borrowInterest) < 1) {
-                    ToastUtil.curt(getString(R.string.interest_less_1));
+                    ToastUtil.show(getString(R.string.interest_less_1));
                     showSoftWare(mBorrowInterest);
                     mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
@@ -216,20 +216,20 @@ public class BorrowActivity extends BaseActivity {
 
                 String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
                 if (borrowTimeLimit.length() > 3 || Integer.parseInt(borrowTimeLimit) > 60) {
-                    ToastUtil.curt(getString(R.string.days_more_60));
+                    ToastUtil.show(getString(R.string.days_more_60));
                     showSoftWare(mBorrowTimeLimit);
                     mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 } else if (Integer.parseInt(borrowTimeLimit) < 1) {
-                    ToastUtil.curt(getString(R.string.days_less_1));
+                    ToastUtil.show(getString(R.string.days_less_1));
                     showSoftWare(mBorrowTimeLimit);
                     mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
                     mPublish.setEnabled(true);
                     return;
                 }
                 if (TextUtils.isEmpty(mLocation.getSubText())) {
-                    ToastUtil.curt(getString(R.string.no_address));
+                    ToastUtil.show(getString(R.string.no_address));
                     mPublish.setEnabled(true);
                     return;
                 }
@@ -280,7 +280,7 @@ public class BorrowActivity extends BaseActivity {
                                     super.onFailure(volleyError);
                                     mPublish.setEnabled(true);
                                 }
-                            }).fireSync();
+                            }).fireFree();
                 } else {
                     requestPublishBorrow(content, picture, mBorrowTimeLimit.getText().toString(),
                             mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),
@@ -347,7 +347,7 @@ public class BorrowActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            ToastUtil.curt(getString(R.string.publish_success));
+                            ToastUtil.show(getString(R.string.publish_success));
 //                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
                             Intent intent = new Intent(getActivity(), MutualActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -355,7 +355,7 @@ public class BorrowActivity extends BaseActivity {
                             finish();
                         } else {
                             mPublish.setEnabled(true);
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
 

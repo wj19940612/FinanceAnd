@@ -48,6 +48,7 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity {
 
     public static final String LOGIN_SUCCESS_ACTION = "LOGIN_SUCCESS_ACTION";
+
     @BindView(R.id.deletePage)
     AppCompatImageView mDeletePage;
     @BindView(R.id.phoneNumber)
@@ -319,11 +320,10 @@ public class LoginActivity extends BaseActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                             mLoading.clearAnimation();
                         }
                     }
-
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);

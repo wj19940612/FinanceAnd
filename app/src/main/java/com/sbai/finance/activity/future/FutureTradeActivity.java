@@ -37,6 +37,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.economiccircle.OpinionDetails;
 import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.future.FutureTradeStatus;
 import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -112,6 +113,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private FutureData mFutureData;
     private boolean isOptionalChanged;
     private int mPagePosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +141,26 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         requestOptionalStatus();
 
         requestTrendDataAndSet();
+
+        requestTradeButtonVisible();
+    }
+
+    private void requestTradeButtonVisible() {
+        Client.getFutureTradeStatus().setTag(TAG)
+                .setCallback(new Callback2D<Resp<FutureTradeStatus>, FutureTradeStatus>() {
+                    @Override
+                    protected void onRespSuccessData(FutureTradeStatus data) {
+                        updateTradeStatus(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateTradeStatus(FutureTradeStatus data) {
+        if (data.getFurtureDealStatus() == FutureTradeStatus.ALLOW_TRADE) {
+            mTradeFloatButtons.setHasTradeButton(true);
+        } else {
+            mTradeFloatButtons.setHasTradeButton(false);
+        }
     }
 
     @Override
@@ -165,7 +187,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         mVariety.setExchangeStatus(exchangeStatus);
                         updateExchangeStatusView();
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void initData() {
@@ -208,7 +230,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     protected void onRespSuccessData(List<TrendViewData> data) {
                         mTrendView.setDataList(data);
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void initSlidingTab() {
@@ -331,7 +353,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
                             isOptionalChanged = false;
                         } else {
-                            ToastUtil.curt(resp.getMsg());
+                            ToastUtil.show(resp.getMsg());
                         }
                     }
 
@@ -348,7 +370,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     }
 
     private void requestDeleteOptional() {
-        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional),getString(R.string.hint))
+        SmartDialog.with(getActivity(), getString(R.string.whether_to_cancel_optional), getString(R.string.hint))
                 .setMessageTextSize(15)
                 .setPositive(R.string.yes, new SmartDialog.OnClickListener() {
                     @Override
@@ -364,7 +386,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
                                             isOptionalChanged = true;
                                         } else {
-                                            ToastUtil.curt(resp.getMsg());
+                                            ToastUtil.show(resp.getMsg());
                                         }
                                     }
                                 })
@@ -378,10 +400,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .setNegative(R.string.no)
                 .show();
     }
-    private void setResult(){
+
+    private void setResult() {
         Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD,mVariety);
-        intent.putExtra(Launcher.EX_PAYLOAD_1,isOptionalChanged);
+        intent.putExtra(Launcher.EX_PAYLOAD, mVariety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, isOptionalChanged);
         setResult(RESULT_OK, intent);
     }
 
@@ -605,12 +628,14 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void initTitleBar() {
         final String shareUrl = String.format(Client.FUTURE_SHARE_URL, mVariety.getVarietyId());
+        final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
+        final String shareDescribe = getString(R.string.share_desc);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, mVariety.getVarietyName(), shareUrl)
+                        .setShareContent(FutureTradeActivity.this, shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });
@@ -618,11 +643,11 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             @Override
             public void onClick(View v) {
                 Fragment fragment = mSubPageAdapter.getFragment(mPagePosition);
-                if(fragment!=null){
-                    if(fragment instanceof ViewpointFragment){
-                        ((ViewpointFragment)fragment).scrollToTop();
-                    }else if(fragment instanceof IntroduceFragment){
-                        ((IntroduceFragment)fragment).scrollToTop();
+                if (fragment != null) {
+                    if (fragment instanceof ViewpointFragment) {
+                        ((ViewpointFragment) fragment).scrollToTop();
+                    } else if (fragment instanceof IntroduceFragment) {
+                        ((IntroduceFragment) fragment).scrollToTop();
                     }
                 }
             }

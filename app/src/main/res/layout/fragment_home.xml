@@ -72,7 +72,38 @@
                     tool:text="雄安燃情资本市场 概念股连续疯长"/>
             </LinearLayout>
 
-            <include layout="@layout/home_function"/>
+            <com.sbai.finance.view.IconTextRow
+                android:id="@+id/battle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pressable"
+                app:leftIcon="@drawable/ic_futures_vs"
+                app:rightIcon="@drawable/ic_arrow_right_tint"
+                app:rowSubText="@string/battle_hint"
+                app:rowSubTextColor="@color/unluckyText"
+                app:rowSubTextSize="10sp"
+                app:rowText="期货对战"
+                app:rowTextColor="@color/primaryText"
+                app:rowTextSize="15sp"
+                app:rowTextSpaceExtra="4dp"
+                app:rowVerticalPadding="12dp"
+                app:subTextSize="12sp"/>
+
+            <com.sbai.finance.view.IconTextRow
+                android:id="@+id/opinionMaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pressable"
+                app:leftIcon="@drawable/ic_opinion_master"
+                app:rightIcon="@drawable/ic_arrow_right_tint"
+                app:rowSubText="@string/idea_detail"
+                app:rowSubTextColor="@color/unluckyText"
+                app:rowSubTextSize="10sp"
+                app:rowText="@string/opinion_master"
+                app:rowTextColor="@color/primaryText"
+                app:rowTextSize="15sp"
+                app:rowTextSpaceExtra="4dp"
+                app:rowVerticalPadding="12dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,7 +115,6 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/common_padding"
                     android:paddingLeft="@dimen/common_padding"

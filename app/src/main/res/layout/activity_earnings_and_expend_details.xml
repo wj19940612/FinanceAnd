@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/coin_detail"/>
+        app:titleText="@string/ingot_detail"/>
 
     <include layout="@layout/split_line_grey_light"/>
 

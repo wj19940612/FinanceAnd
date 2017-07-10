@@ -7,7 +7,7 @@ package com.sbai.finance.model.mine.cornucopia;
 public class ExchangeDetailModel {
 
     //元宝
-    public static final int TYPE_COIN = 1;
+    public static final int TYPE_INGOT = 1;
     //积分
     public static final int TYPE_INTEGRATE = 2;
 
@@ -29,7 +29,7 @@ public class ExchangeDetailModel {
 
     //流水类型
     private int currencyType;
-    private int money;
+    private double money;
     private long createTime;
     //流水说明
     private String remark;
@@ -38,12 +38,12 @@ public class ExchangeDetailModel {
     private int typeDetail;
     private int userId;
     //流水后的金额
-    private int moneyLeft;
+    private double moneyLeft;
     //流水类型
     private int flowType;
 
     public boolean isVcoin() {
-        return getCurrencyType() == TYPE_COIN;
+        return getCurrencyType() == TYPE_INGOT;
     }
 
     public int getCurrencyType() {
@@ -54,11 +54,11 @@ public class ExchangeDetailModel {
         this.currencyType = currencyType;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
@@ -102,11 +102,11 @@ public class ExchangeDetailModel {
         this.userId = userId;
     }
 
-    public int getMoneyLeft() {
+    public double getMoneyLeft() {
         return moneyLeft;
     }
 
-    public void setMoneyLeft(int moneyLeft) {
+    public void setMoneyLeft(double moneyLeft) {
         this.moneyLeft = moneyLeft;
     }
 

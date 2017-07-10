@@ -542,7 +542,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 				if (LocalUser.getUser().isLogin()) {
 					String commentContent = mCommentContent.getText().toString().trim();
 					if (TextUtils.isEmpty(commentContent)) {
-						ToastUtil.curt("评论内容不能为空");
+						ToastUtil.show("评论内容不能为空");
 						return;
 					}
 
@@ -589,14 +589,20 @@ public class OpinionDetailsActivity extends BaseActivity {
 								@Override
 								protected void onRespSuccessData(Variety variety) {
 									Log.d(TAG, "onRespSuccessData: " + variety.toString());
-									if (Variety.VAR_FUTURE.equals(mOpinionDetails.getBigVarietyTypeCode())) {
+									if (Variety.VAR_FUTURE.equalsIgnoreCase(variety.getBigVarietyTypeCode())) {
 										Launcher.with(OpinionDetailsActivity.this, FutureTradeActivity.class)
 												.putExtra(Launcher.EX_PAYLOAD, variety)
 												.execute();
 									} else {
-										Launcher.with(OpinionDetailsActivity.this, StockDetailActivity.class)
-												.putExtra(Launcher.EX_PAYLOAD, variety)
-												.execute();
+										if (Variety.STOCK_EXPONENT.equalsIgnoreCase(variety.getSmallVarietyTypeCode())) {
+											Launcher.with(OpinionDetailsActivity.this, StockIndexActivity.class)
+													.putExtra(Launcher.EX_PAYLOAD, variety)
+													.execute();
+										} else {
+											Launcher.with(OpinionDetailsActivity.this, StockDetailActivity.class)
+													.putExtra(Launcher.EX_PAYLOAD, variety)
+													.execute();
+										}
 									}
 								}
 							}).fire();

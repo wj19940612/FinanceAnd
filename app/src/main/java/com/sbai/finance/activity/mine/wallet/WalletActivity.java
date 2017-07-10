@@ -20,6 +20,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -61,13 +62,6 @@ public class WalletActivity extends BaseActivity {
         setContentView(R.layout.activity_wallet);
         ButterKnife.bind(this);
         updateUserFund(0);
-
-        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Launcher.with(getActivity(), WithDrawActivity.class).execute();
-            }
-        });
     }
 
 
@@ -95,7 +89,7 @@ public class WalletActivity extends BaseActivity {
                         updateUserFund(data.getMoney());
                     }
                 })
-                .fireSync();
+                .fireFree();
     }
 
     @OnClick({R.id.balance, R.id.recharge, R.id.withdraw, R.id.market_detail, R.id.bankCard})
@@ -104,30 +98,20 @@ public class WalletActivity extends BaseActivity {
             case R.id.balance:
                 break;
             case R.id.recharge:
+                umengEventCount(UmengCountEventIdUtils.WALLET_RECHARGE);
                 Launcher.with(getActivity(), RechargeActivity.class)
                         .execute();
                 break;
             case R.id.withdraw:
-                Client.getUserHasPassWord()
-                        .setTag(TAG)
-                        .setIndeterminate(this)
-                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                            @Override
-                            protected void onRespSuccessData(Boolean data) {
-                                if (!data) {
-                                    Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).executeForResult(REQ_CODE_ADD_SAFETY_PASS);
-                                } else {
-                                    openWithDrawPage();
-                                }
-                            }
-                        })
-                        .fire();
-
+                umengEventCount(UmengCountEventIdUtils.WALLET_WITHDRAW);
+                requestUserHasPassWord();
                 break;
             case R.id.market_detail:
+                umengEventCount(UmengCountEventIdUtils.WALLET_DETAILS);
                 Launcher.with(getActivity(), FundDetailActivity.class).execute();
                 break;
             case R.id.bankCard:
+                umengEventCount(UmengCountEventIdUtils.WALLET_BANK_CARD);
                 Client.requestUserBankCardInfo()
                         .setTag(TAG)
                         .setIndeterminate(this)
@@ -147,6 +131,23 @@ public class WalletActivity extends BaseActivity {
                         .fire();
                 break;
         }
+    }
+
+    private void requestUserHasPassWord() {
+        Client.getUserHasPassWord()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        if (!data) {
+                            Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).executeForResult(REQ_CODE_ADD_SAFETY_PASS);
+                        } else {
+                            openWithDrawPage();
+                        }
+                    }
+                })
+                .fire();
     }
 
     private void showOpenBindCardDialog() {
@@ -212,7 +213,7 @@ public class WalletActivity extends BaseActivity {
                                         dialog.dismiss();
                                     }
                                 })
-                                .setNegativeVisable(View.GONE)
+                                .setNegativeVisible(View.GONE)
                                 .show();
                     }
                     break;

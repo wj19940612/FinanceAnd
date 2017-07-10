@@ -1,6 +1,7 @@
 package com.sbai.httplib;
 
 import android.text.TextUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +31,7 @@ public class CookieManger {
 
     /**
      * rawCookie:
-     *
+     * <p>
      * token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; Version=1; Path=/
      * token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="; Version=1; Path=/
      */
@@ -131,5 +132,13 @@ public class CookieManger {
             }
         }
         return "";
+    }
+
+    public void clearRawCookies() {
+        mRawCookie = null;
+        File file = new File(mAppDataDir, FILE_NAME);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

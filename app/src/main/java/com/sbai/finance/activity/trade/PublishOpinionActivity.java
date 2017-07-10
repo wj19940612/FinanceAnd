@@ -159,7 +159,7 @@ public class PublishOpinionActivity extends BaseActivity {
 
 //    private void requestStockRTData(final String content, final String calcuId) {
 //        Client.getStockRealtimeData(mVariety.getVarietyType())
-//                .setCallback(new StockCallback<StockResp, List<StockRTData>>(false) {
+//                .setClient(new StockCallback<StockResp, List<StockRTData>>(false) {
 //                    @Override
 //                    public void onDataMsg(List<StockRTData> result, StockResp.Msg msg) {
 //                        if (!result.isEmpty()) {
@@ -178,7 +178,7 @@ public class PublishOpinionActivity extends BaseActivity {
 //
 //                        }
 //                    }
-//                }).fireSync();
+//                }).fireFree();
 //    }
 
     /**
@@ -207,7 +207,7 @@ public class PublishOpinionActivity extends BaseActivity {
 
                         }
                     }
-                }).fireSync();
+                }).fireFree();
     }
 
     private void submitViewpoint(String content, String calcuId, String lastPriceStr, String risePriceStr, String risePercentStr) {

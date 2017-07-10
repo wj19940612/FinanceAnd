@@ -11,7 +11,6 @@ public class Client {
     private static final int POST = Request.Method.POST;
     public static final int DEFAULT_PAGE_SIZE = 15;
 
-
     /**
      * 获取期货品种
      *
@@ -315,7 +314,7 @@ public class Client {
      * 请求Url  user/user/updatePicLand.do 提交头像
      * 接口描述 修改头像
      *
-     * @param picPath  String 图片网址
+     * @param picPath String 图片网址
      * @return
      */
     public static API updateUserHeadImagePath(String picPath) {
@@ -641,7 +640,7 @@ public class Client {
     }
 
     public static API updateUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
-        return new API(POST, "/user/user/updateUserCertification.do", new ApiParams()
+        return new API("/user/user/updateUserCertification.do", new ApiParams()
                 .put("Back", Back)
                 .put("Positive", Positive)
                 .put("certCode", certCode)
@@ -729,6 +728,16 @@ public class Client {
                 new ApiParams()
                         .put("codes", codes));
     }
+
+    /**
+     * 品种-查询品种是否允许交易
+     *
+     * @return
+     */
+    public static API getFutureTradeStatus() {
+        return new API("/user/dictionary/findDictionaryForJson.do?type=variety_deal");
+    }
+
 
     /**
      * 获取股票实时行情接口
@@ -994,7 +1003,6 @@ public class Client {
      * @param money
      * @return
      */
-
     public static API borrowIn(String content, String contentImg, String days, String interest, String money,
                                String location, double locationLng, double locationLat) {
 
@@ -1628,6 +1636,80 @@ public class Client {
         return new API(POST, "/user/bankCard/getPayRule.do", new ApiParams().put("bankId", bankId));
     }
 
+    public static API getVersusGaming(Long location) {
+        return new API("/game/battle/selectBattleGaming.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 我的对战历史
+     *
+     * @param location
+     * @return
+     */
+    public static API getMyVersusRecord(Long location) {
+        return new API("/game/battle/myBattleGamed.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 所有对战历史
+     *
+     * @param location
+     * @return
+     */
+    public static API getBattleHisRecord(Long location) {
+        return new API("/game/battle/allBattleGamed.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", 15));
+    }
+
+    /**
+     * 加入对战
+     *
+     * @param battleId 对战ID
+     * @param userFrom 用户来源
+     * @return
+     */
+    public static API joinBattle(int battleId, String userFrom) {
+        return new API(POST, "/game/battle/joinBattle.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("userFrom", userFrom));
+    }
+
+    /**
+     * 用户当前对战
+     *
+     * @return
+     */
+    public static API getCurrentBattle() {
+        return new API("/game/battle/userBattle.do");
+    }
+
+    /**
+     * 应战者快速匹配
+     */
+    public static API quickMatchForAgainst(int type, String refuseIds) {
+        return new API(POST, "/game/battle/quickSearchForAgainst.do", new ApiParams()
+                .put("type", type)
+                .put("refuseIds", refuseIds));
+    }
+
+    /**
+     * 快速匹配结果查询
+     *
+     * @param type     1 查询房主 2查询应战者
+     * @param battleId
+     * @return
+     */
+    public static API getQuickMatchResult(int type, Integer battleId) {
+        return new API("/game/battle/quickSearchForResult.do", new ApiParams()
+                .put("type", type)
+                .put("battleId", battleId));
+    }
+
     /**
      * /user/userAccount/getExchangeConfig.do
      * GET
@@ -1676,6 +1758,19 @@ public class Client {
                 .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
+    /**
+     * /user/appVersion/getUpdateVersion.do
+     * GET
+     * 获取App版本更新情况
+     * app版本情况
+     * platform  0 android
+     *
+     * @return
+     */
+    public static API updateVersion() {
+        return new API("/user/appVersion/getUpdateVersion.do", new ApiParams().put("platform", 0));
+    }
+
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
@@ -1684,5 +1779,181 @@ public class Client {
     public static final String FUTURE_SHARE_URL = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
     //股票分享地址
     public static final String STOCK_SHARE_URL = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
+
+
+    /**
+     * 获取期货对战品种列表
+     *
+     * @return
+     */
+    public static API getFutureBattleVarietyList() {
+        return new API("/game/battleconfig/selectBattleVariety.do");
+    }
+
+    /**
+     * 获取期货对战配置
+     *
+     * @return
+     */
+    public static API getFutureBattleConfig() {
+        return new API("/game/battleconfig/findBattleConfig.do");
+    }
+
+    /**
+     * 发起对战
+     *
+     * @param vartietyId
+     * @param coinType
+     * @param reward
+     * @param endtime
+     * @return
+     */
+    public static API launchBattle(int vartietyId, int coinType, double reward, int endtime) {
+        return new API(POST, "/game/battle/createBattle.do",
+                new ApiParams()
+                        .put("vartietyId", vartietyId)
+                        .put("coinType", coinType)
+                        .put("reward", reward)
+                        .put("endtime", endtime));
+    }
+
+    /**
+     * 对战-游戏点赞
+     *
+     * @param battleId
+     * @param praiseId
+     * @return
+     */
+    public static API addBattlePraise(int battleId, int praiseId) {
+        return new API(POST, "/game/battle/userPraise.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("praiseId", praiseId));
+    }
+
+    /**
+     * 房主快速匹配
+     *
+     * @param type     1 开始快速匹配 0 取消匹配 2 继续匹配
+     * @param battleId
+     * @return
+     */
+    public static API quickSearchForLaunch(int type, int battleId) {
+        return new API(POST, "/game/battle/quickSearchForLaunch.do", new ApiParams()
+                .put("type", type)
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 取消对战
+     *
+     * @param battleId
+     * @return
+     */
+    public static API cancelBattle(int battleId) {
+        return new API(POST, "/game/battle/cancelBattle.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 下单记录
+     *
+     * @param battleId
+     * @return
+     */
+    public static API getOrderHistory(int battleId) {
+        return new API("/game/battleorder/optLog.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 创建订单
+     *
+     * @param battleId
+     * @param direction 方向 0跌 1涨
+     * @return
+     */
+    public static API createOrder(int battleId, int direction) {
+        return new API(POST, "/game/battleorder/createOrder.do", new ApiParams()
+                .put("direction", direction)
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 平仓
+     *
+     * @param battleId
+     * @param orderId
+     * @return
+     */
+    public static API closePosition(int battleId, int orderId) {
+        return new API(POST, "/game/battleorder/unwind.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("orderId", orderId));
+    }
+
+
+    /**
+     * 根据ID查询对战信息
+     *
+     * @param battleId
+     * @param batchCode
+     * @return
+     */
+    public static API getBattleInfo(int battleId, String batchCode) {
+        return new API("/game/battle/findBattle.do", new ApiParams()
+                .put("battleId", battleId)
+                .put("batchCode", batchCode));
+    }
+
+
+    /**
+     * 游戏大厅列表实时数据
+     *
+     * @param battleIds
+     * @return
+     */
+    public static API getBattleGamingData(String battleIds) {
+        return new API("/game/battle/selectBattleGamingData.do", new ApiParams()
+                .put("battleIds", battleIds));
+    }
+
+    /**
+     * 订阅对战
+     *
+     * @param battleId
+     * @return
+     */
+    public static API requestSubscribeBattle(int battleId) {
+        return new API("/game/battle/subscribeBattle.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 取消订阅对战
+     *
+     * @param battleId
+     * @return
+     */
+    public static API requestUnsubscribeBattle(int battleId) {
+        return new API("/game/battle/unsubscribeBattle.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+    /**
+     * 查询房间交易中的订单
+     *
+     * @param battleId
+     * @return
+     */
+    public static API requestCurrentOrder(int battleId) {
+        return new API("/game/battleorder/orders.do", new ApiParams()
+                .put("battleId", battleId));
+    }
+
+
+    public static API requsetVarietyPrice(int varietyId) {
+        return new API("/order/future/query/infoPrice.do", new ApiParams()
+                .put("varietyId", varietyId));
+    }
 
 }

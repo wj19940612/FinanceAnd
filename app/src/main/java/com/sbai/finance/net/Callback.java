@@ -33,8 +33,6 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     @Override
     public void onSuccess(T t) {
-        Log.d(RequestManager.TAG, getUrl() + " onSuccess: " + t.toString());
-
         if (t instanceof Resp) {
             Resp resp = (Resp) t;
             if (resp.isTokenExpired()) {
