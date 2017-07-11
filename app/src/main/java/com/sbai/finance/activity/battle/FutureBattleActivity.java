@@ -93,9 +93,31 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
 
 
 /**
- * Created by linrongfang on 2017/7/7.
+ * As requirement the battle room has 7 status with STATUS_ROLE format:
+ *
+ * 0. CREATED_OWNER
+ * 1. STARTED_OWNER
+ * 2. STARTED_CHALLENGER
+ * 3. STARTED_OBSERVER
+ * 4. OVER_OWNER
+ * 5. OVER_CHALLENGER
+ * 6. OVER_OBSERVER
+ *
+ * For now, they can be merged to:
+ * 0. CREATED_OWNER
+ * 1. STARTED_PLAYERS (1 & 2)
+ * 2. STARTED_OBSERVER
+ * 3. OVER_PLAYERS (4 & 5)
+ * 4. OVER_OBSERVER
+ *
+ * In code:
+ * 0 -> GAME_STATUS_CREATED
+ * 1 -> GAME_STATUS_STARTED
+ * 2 -> GAME_STATUS_STARTED && mIsObserver
+ * 3 -> GAME_STATUS_END
+ * 4 -> GAME_STATUS_END && mIsObserver
+ *
  */
-
 public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.content)
@@ -543,8 +565,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     protected void onBattlePushReceived(WSPush<Battle> push) {
         super.onBattlePushReceived(push);
-        //对战详情只能收到有人加入推送
-        if (mBattle.isBattleOver()) {
+        // 对战详情只能收到有人加入推送
+        if (mBattle.isBattleOver()) { // OVER_PLAYERS + OVER_OBSERVER
             if (push.getContent().getType() == PushCode.BATTLE_JOINED) {
                 if (push.getContent() != null) {
                     Battle battle = (Battle) push.getContent().getData();
