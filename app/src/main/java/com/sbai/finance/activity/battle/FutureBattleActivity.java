@@ -3,6 +3,7 @@ package com.sbai.finance.activity.battle;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +23,7 @@ import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
+import com.sbai.finance.fragment.battle.BattleRecordsFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
@@ -107,9 +108,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @BindView(R.id.content)
     LinearLayout mContent;
 
-    @BindView(R.id.battleContent)
-    LinearLayout mBattleContent;
-
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -163,8 +161,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private TradeOrder mAgainstOrder;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
         setContentView(R.layout.activity_future_battle);
         ButterKnife.bind(this);
         initData();
@@ -182,16 +180,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback2D<Resp<Battle>, Battle>() {
                     @Override
                     protected void onRespSuccessData(Battle data) {
-                        if (data != null) {
-                            mBattle = data;
-                            if (data.isBattleStop()) {
-                                mPageType = PAGE_TYPE_RECORD;
-                                initBattleRecordPage();
-                            } else {
-                                mPageType = PAGE_TYPE_BATTLE;
-                                initBattlePage();
-                            }
-
+                        mBattle = data;
+                        if (data.isBattleOver()) {
+                            mPageType = PAGE_TYPE_RECORD;
+                            initBattleRecordPage();
+                        } else {
+                            mPageType = PAGE_TYPE_BATTLE;
+                            initBattlePage();
                         }
                     }
                 }).fire();
@@ -200,11 +195,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void initBattleRecordPage() {
         //只加载一个详情的Fragment
         mContent.removeAllViews();
-        FutureBattleDetailFragment fragment = FutureBattleDetailFragment.newInstance(mBattle);
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content, fragment)
+                .add(R.id.content, BattleRecordsFragment.newInstance(mBattle))
                 .commitAllowingStateLoss();
 
         mBattleView.setMode(MINE)
@@ -217,11 +210,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void initBattlePage() {
         //处理从通知栏点进来的
         if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(FutureBattleActivity.this, MainActivity.class).execute();
+            Launcher.with(getActivity(), MainActivity.class).execute();
             finish();
         }
-
-        showBattleContent();
 
         initTabLayout();
 
@@ -250,13 +241,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         initBattleViews();
 
         requestVarietyData();
-
-        requestSubscribeBattle();
-
-    }
-
-    private void showBattleContent() {
-        mBattleContent.setVisibility(View.VISIBLE);
     }
 
     private void initTabLayout() {
@@ -328,7 +312,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     });
 
             startScheduleJob(1000);
-
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
@@ -603,26 +586,29 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 if (!mIsObserver && mBattle.getGameStatus() != GAME_STATUS_END) {
                     if (push.getContent() != null) {
                         mBattle = (Battle) push.getContent().getData();
-                        updateBattleInfo();
                         showGameOverDialog();
                     }
                 }
                 break;
+
             case PushCode.ORDER_CREATED:
                 requestBattleInfo();
                 break;
             case PushCode.ORDER_CLOSE:
                 requestBattleInfo();
                 break;
+
             case PushCode.QUICK_MATCH_TIMEOUT:
                 //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
                 dismissAllDialog();
                 showOvertimeMatchDialog();
                 break;
+
             case PushCode.ROOM_CREATE_TIMEOUT:
                 //房间创建超时
                 showRoomOvertimeDialog();
                 break;
+
             case PushCode.USER_PRAISE:
                 Battle temp = (Battle) push.getContent().getData();
                 updatePraiseView(temp.getCurrentPraise(), temp.getPraiseUserId());
@@ -647,7 +633,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mBattle = (Battle) push.getContent().getData();
         mBattleView.initWithModel(mBattle);
         mBattleView.setProgress(0, 0, false);
-        showBattleTradeView();
         showStartGameDialog();
         startScheduleJob(1000);
     }
@@ -664,7 +649,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
                                         .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
                                         .execute();
@@ -1261,10 +1246,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     protected void onPause() {
         super.onPause();
         stopSubscribeFutureData();
-        if (mBattle != null) {
-            if (mPageType == PAGE_TYPE_BATTLE) {
-                requestUnSubscribeBattle();
-            }
+        if (mPageType == PAGE_TYPE_BATTLE) {
+            requestUnSubscribeBattle();
         }
     }
 
@@ -1272,18 +1255,16 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     protected void onPostResume() {
         super.onPostResume();
         startSubscribeFutureData();
-        if (mBattle != null) {
-            //判断游戏是否结束
-            if (mBattle.getGameStatus() != GAME_STATUS_END) {
-                requestBattleInfo();
-            }
-            //正在快速匹配的要检测快速匹配结果
-            if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
-                requestFastMatchResult();
-            }
-            if (mPageType == PAGE_TYPE_BATTLE) {
-                requestSubscribeBattle();
-            }
+        //判断游戏是否结束
+        if (mBattle.getGameStatus() != GAME_STATUS_END) {
+            requestBattleInfo();
+        }
+        //正在快速匹配的要检测快速匹配结果
+        if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
+            requestFastMatchResult();
+        }
+        if (mPageType == PAGE_TYPE_BATTLE) {
+            requestSubscribeBattle();
         }
     }
 
@@ -1291,8 +1272,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     protected void onDestroy() {
         super.onDestroy();
         BaseDialog.dismiss(this);
-        if (mTabLayout != null) {
-            mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        }
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 }
