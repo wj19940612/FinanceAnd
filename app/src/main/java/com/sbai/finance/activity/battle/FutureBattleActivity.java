@@ -85,7 +85,6 @@ import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
 import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_START;
 import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_LONG_PURCHASE;
 import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_SHORT_PURCHASE;
-import static com.sbai.finance.view.BattleFloatView.Mode.MINE;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
@@ -201,12 +200,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .beginTransaction()
                 .add(R.id.content, BattleRecordsFragment.newInstance(mBattle))
                 .commitAllowingStateLoss();
-
-        mBattleView.setMode(MINE)
-                .initWithModel(mBattle)
-                .setDeadline(mBattle.getGameStatus(), 0)
-                .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
-                .setWinResult(mBattle.getWinResult());
     }
 
     private void initBattlePage() {
