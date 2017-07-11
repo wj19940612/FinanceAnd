@@ -110,8 +110,8 @@ public class BaseDialog {
         }
 
         if (!mActivity.isFinishing()) {
-            mDialog.show();
             scaleDialogWidth(1);
+            mDialog.show();
         }
     }
 

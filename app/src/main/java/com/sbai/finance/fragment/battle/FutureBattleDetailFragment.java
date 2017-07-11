@@ -62,7 +62,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_future_battle_detail, null, false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_future_battle_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

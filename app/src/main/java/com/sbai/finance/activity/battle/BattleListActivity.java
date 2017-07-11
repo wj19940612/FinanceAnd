@@ -249,9 +249,9 @@ public class BattleListActivity extends BaseActivity implements
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
-                        Launcher.with(getActivity(), BattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item)
-                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
                                 .executeForResult(CANCEL_BATTLE);
                     } else if (LocalUser.getUser().isLogin()) {
                         if (item.getGameStatus() == Battle.GAME_STATUS_CREATED
@@ -280,15 +280,9 @@ public class BattleListActivity extends BaseActivity implements
                             item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
-                        int pageType;
-                        if (data.getGameStatus() == Battle.GAME_STATUS_END) {
-                            pageType = BattleActivity.PAGE_TYPE_RECORD;
-                        } else {
-                            pageType = BattleActivity.PAGE_TYPE_VERSUS;
-                        }
-                        Launcher.with(getActivity(), BattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
-                                .putExtra(BattleActivity.PAGE_TYPE, pageType)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
                                 .executeForResult(CANCEL_BATTLE);
 
                     }
@@ -387,9 +381,9 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUserName(battle.getAgainstUserName());
                                 mVersusListAdapter.notifyDataSetChanged();
 
-                                Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, battle)
-                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
                                         .executeForResult(CANCEL_BATTLE);
                             }
                         } else {
@@ -627,9 +621,9 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
-                                Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
-                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD_1, mCurrentBattle.getId())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, mCurrentBattle.getBatchCode())
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
