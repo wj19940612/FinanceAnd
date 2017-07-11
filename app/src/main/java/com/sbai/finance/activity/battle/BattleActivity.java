@@ -245,7 +245,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
                     protected void onRespSuccessData(Battle data) {
                         if (data != null) {
                             mBattle = data;
-                            if (data.isBattleStop()) {
+                            if (data.isBattleOver()) {
                                 mPageType = PAGE_TYPE_RECORD;
                             } else {
                                 mPageType = data.getGameStatus();

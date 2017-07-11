@@ -20,23 +20,14 @@ public class Battle implements Parcelable {
     public static final int GAME_STATUS_STARTED = 2;
     public static final int GAME_STATUS_END = 3;
 
-    public static final int GAME_STATUS_OBESERVE = 4;
-    public static final int GAME_STATUS_CANCELING = 5;
-
     //0平手 1发起者赢 2应战者赢
     public static final int WIN_RESULT_TIE = 0;
     public static final int WIN_RESULT_CREATOR_WIN = 1;
     public static final int WIN_RESULT_CHALLENGER_WIN = 2;
 
-    //1开始快速匹配  0取消匹配 1 继续匹配
-    public static final int MATCH_START = 1;
-    public static final int MATCH_CANCEL = 0;
-    public static final int MATCH_CONTINUE = 2;
-
     // 1房主快速匹配  2应战者快速匹配
     public static final int CREATE_FAST_MATCH = 1;
     public static final int AGAINST_FAST_MATCH = 2;
-
 
     public static final String SOURCE_COTERIE = "coterie";
     public static final String SOURCE_HALL = "hall";
@@ -45,9 +36,10 @@ public class Battle implements Parcelable {
 
     public static final int CODE_BATTLE_JOINED_OR_CREATED = 300;
     public static final int CODE_NO_ENOUGH_MONEY = 2201;
-   // 4641发起者匹配超时  4642应战者匹配超时
-    public static final int CODE_AGAINST_FAST_MATCH_TIMEOUT=4642;
-    public static final int CODE_CREATE_FAST_MATCH_TIMEOUT=4641;
+
+    // 4641发起者匹配超时  4642应战者匹配超时
+    public static final int CODE_AGAINST_FAST_MATCH_TIMEOUT = 4642;
+    public static final int CODE_CREATE_FAST_MATCH_TIMEOUT = 4641;
 
     /**
      * againstFrom : 经济圈
@@ -110,7 +102,7 @@ public class Battle implements Parcelable {
     private double launchUnwindScore;
     private double againstUnwindScore;
 
-    public boolean isBattleStop() {
+    public boolean isBattleOver() {
         return getGameStatus() == GAME_STATUS_END;
     }
 

@@ -166,7 +166,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         setContentView(R.layout.activity_future_battle);
         ButterKnife.bind(this);
         initData();
-
     }
 
     private void initData() {
@@ -182,7 +181,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     protected void onRespSuccessData(Battle data) {
                         mBattle = data;
-                        if (data.isBattleStop()) {
+                        if (data.isBattleOver()) {
                             mPageType = PAGE_TYPE_RECORD;
                             initBattleRecordPage();
                         } else {
@@ -211,7 +210,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void initBattlePage() {
         //处理从通知栏点进来的
         if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(FutureBattleActivity.this, MainActivity.class).execute();
+            Launcher.with(getActivity(), MainActivity.class).execute();
             finish();
         }
 
@@ -242,7 +241,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         initBattleViews();
 
         requestVarietyData();
-
     }
 
     private void initTabLayout() {
@@ -314,7 +312,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     });
 
             startScheduleJob(1000);
-
         } else {
             //初始化
             mBattleView.setMode(BattleFloatView.Mode.MINE)
@@ -593,21 +590,25 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     }
                 }
                 break;
+
             case PushCode.ORDER_CREATED:
                 requestBattleInfo();
                 break;
             case PushCode.ORDER_CLOSE:
                 requestBattleInfo();
                 break;
+
             case PushCode.QUICK_MATCH_TIMEOUT:
                 //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
                 dismissAllDialog();
                 showOvertimeMatchDialog();
                 break;
+
             case PushCode.ROOM_CREATE_TIMEOUT:
                 //房间创建超时
                 showRoomOvertimeDialog();
                 break;
+
             case PushCode.USER_PRAISE:
                 Battle temp = (Battle) push.getContent().getData();
                 updatePraiseView(temp.getCurrentPraise(), temp.getPraiseUserId());
