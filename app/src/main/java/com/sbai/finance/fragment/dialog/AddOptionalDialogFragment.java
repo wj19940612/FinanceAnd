@@ -1,14 +1,9 @@
 package com.sbai.finance.fragment.dialog;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -20,12 +15,8 @@ import android.view.WindowManager;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.home.SearchOptionalActivity;
-import com.sbai.finance.activity.mine.ImageSelectActivity;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
-
-import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
