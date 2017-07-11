@@ -76,9 +76,10 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
-                            .putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+                            .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
+                            .execute();
                 }
             }
         });

@@ -340,9 +340,9 @@ public class CreateBattleActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<Battle>, Battle>(false) {
                     @Override
                     protected void onRespSuccessData(Battle battle) {
-                        Launcher.with(getActivity(), BattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, battle)
-                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
                                 .execute();
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
                         finish();
