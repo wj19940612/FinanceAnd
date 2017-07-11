@@ -230,7 +230,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							.show();
 				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
 					Launcher.with(getActivity(), FutureBattleActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+							.putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())
 							.putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
 							.execute();
 				} else if (LocalUser.getUser().isLogin()) {
