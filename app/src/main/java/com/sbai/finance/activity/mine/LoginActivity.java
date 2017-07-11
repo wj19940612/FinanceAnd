@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -92,6 +91,21 @@ public class LoginActivity extends BaseActivity {
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPhoneNumber.setText(LocalUser.getUser().getPhone());
         setKeyboardHelper();
+        initListener();
+        getDisplayMetrics();
+    }
+
+    private void getDisplayMetrics() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+        } else {
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        }
+        mHeightPixels = displayMetrics.heightPixels;
+    }
+
+    private void initListener() {
         mAuthCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,8 +113,6 @@ public class LoginActivity extends BaseActivity {
                 mAuthCode.requestFocus();
             }
         });
-
-
         mAuthCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -117,15 +129,6 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
-        } else {
-            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        }
-        mHeightPixels = displayMetrics.heightPixels;
-
     }
 
     @Override
@@ -182,7 +185,6 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             mValidationWatcher.afterTextChanged(s);
-
             mPhoneNumberClear.setVisibility(checkClearPhoneNumButtonVisible() ? View.VISIBLE : View.INVISIBLE);
             if (s.toString().replaceAll(" ", "").length() == 11) {
                 mPhoneNumber.clearFocus();
@@ -314,10 +316,9 @@ public class LoginActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             if (resp.hasData()) {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
-                                Log.d(TAG, "onRespSuccess: " + resp.getData().toString());
                             }
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
-                            setResult(RESULT_OK);
+//                            setResult(RESULT_OK);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

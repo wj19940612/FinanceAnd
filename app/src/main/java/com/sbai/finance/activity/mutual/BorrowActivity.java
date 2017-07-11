@@ -56,9 +56,11 @@ import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 public class BorrowActivity extends BaseActivity {
     public static final int REQ_CODE_ADDRESS = 100;
     @BindView(R.id.photoGv)
@@ -134,7 +136,7 @@ public class BorrowActivity extends BaseActivity {
                 if (mPhotoGridAdapter.getCount() > 4) {
                     return;
                 }
-                UploadFeedbackImageDialogFragment.newInstance(5-mPhotoGridAdapter.getCount())
+                UploadFeedbackImageDialogFragment.newInstance(5 - mPhotoGridAdapter.getCount())
                         .setOnDismissListener(new UploadFeedbackImageDialogFragment.OnDismissListener() {
                             @Override
                             public void onGetImagePath(String path) {
@@ -185,7 +187,7 @@ public class BorrowActivity extends BaseActivity {
             case R.id.location:
                 String location = null;
                 if (mAddress != null) {
-                    location = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
+                    location = mAddress.getAdminArea() + "-" + mAddress.getLocality() + "-" + mAddress.getSubLocality();
                 }
                 Launcher.with(getActivity(), LocationActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD_1, true)
@@ -410,7 +412,7 @@ public class BorrowActivity extends BaseActivity {
     private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)) {
             String[] photos = helpImagePath.split(",");
-            for (String photo:photos){
+            for (String photo : photos) {
                 mPhotoGridAdapter.insert(photo, mPhotoGridAdapter.getCount() - 1);
             }
             mPhotoGridAdapter.notifyDataSetChanged();

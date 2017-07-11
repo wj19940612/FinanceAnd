@@ -141,7 +141,9 @@ public class WalletActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Boolean data) {
                         if (!data) {
-                            Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, data.booleanValue()).executeForResult(REQ_CODE_ADD_SAFETY_PASS);
+                            Launcher.with(getActivity(), ModifySafetyPassActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, data.booleanValue())
+                                    .executeForResult(REQ_CODE_ADD_SAFETY_PASS);
                         } else {
                             openWithDrawPage();
                         }
