@@ -21,7 +21,7 @@ import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
+import com.sbai.finance.fragment.battle.BattleRecordsFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
@@ -168,16 +168,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback2D<Resp<Battle>, Battle>() {
                     @Override
                     protected void onRespSuccessData(Battle data) {
-                        if (data != null) {
-                            mBattle = data;
-                            if (data.isBattleStop()) {
-                                mPageType = PAGE_TYPE_RECORD;
-                                initBattleRecordPage();
-                            } else {
-                                mPageType = PAGE_TYPE_BATTLE;
-                                initBattlePage();
-                            }
-
+                        mBattle = data;
+                        if (data.isBattleStop()) {
+                            mPageType = PAGE_TYPE_RECORD;
+                            initBattleRecordPage();
+                        } else {
+                            mPageType = PAGE_TYPE_BATTLE;
+                            initBattlePage();
                         }
                     }
                 }).fire();
@@ -186,11 +183,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void initBattleRecordPage() {
         //只加载一个详情的Fragment
         mContent.removeAllViews();
-        FutureBattleDetailFragment fragment = FutureBattleDetailFragment.newInstance(mBattle);
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content, fragment)
+                .add(R.id.content, BattleRecordsFragment.newInstance(mBattle))
                 .commitAllowingStateLoss();
 
         mBattleView.setMode(MINE)

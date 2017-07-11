@@ -28,7 +28,7 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/6/20.
  */
 
-public class FutureBattleDetailFragment extends BaseFragment {
+public class BattleRecordsFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -43,8 +43,8 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     private Battle mBattle;
 
-    public static FutureBattleDetailFragment newInstance(Battle battle) {
-        FutureBattleDetailFragment detailFragment = new FutureBattleDetailFragment();
+    public static BattleRecordsFragment newInstance(Battle battle) {
+        BattleRecordsFragment detailFragment = new BattleRecordsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("battle", battle);
         detailFragment.setArguments(bundle);
@@ -62,7 +62,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_future_battle_detail, null, false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_battle_records, null, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

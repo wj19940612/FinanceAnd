@@ -347,7 +347,7 @@ public class BattleFloatView extends RelativeLayout {
     public enum Mode {
         HALL,
         VISITOR,
-        MINE;
+        MINE
     }
 
     public BattleFloatView setOnPraiseListener(OnPraiseListener listener) {

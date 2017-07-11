@@ -16,7 +16,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.fragment.battle.BattleFragment;
 import com.sbai.finance.fragment.battle.BattleResultDialogFragment;
-import com.sbai.finance.fragment.battle.FutureBattleDetailFragment;
+import com.sbai.finance.fragment.battle.BattleRecordsFragment;
 import com.sbai.finance.fragment.battle.StartGameDialogFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
@@ -85,7 +85,7 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     LinearLayout mLoadingContent;
 
     private BattleFragment mBattleFragment;
-    private FutureBattleDetailFragment mFutureBattleDetailFragment;
+    private BattleRecordsFragment mBattleRecordsFragment;
 
     private StartMatchDialogFragment mStartMatchDialogFragment;
     private StartGameDialogFragment mStartGameDialogFragment;
@@ -353,13 +353,13 @@ public class BattleActivity extends BaseActivity implements BattleButtons.OnView
     }
 
     public void initBattleRecordPage() {
-        if (mFutureBattleDetailFragment == null) {
-            mFutureBattleDetailFragment = FutureBattleDetailFragment.newInstance(mBattle);
+        if (mBattleRecordsFragment == null) {
+            mBattleRecordsFragment = BattleRecordsFragment.newInstance(mBattle);
         }
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content, mFutureBattleDetailFragment)
+                .add(R.id.content, mBattleRecordsFragment)
                 .commitAllowingStateLoss();
 
         mBattleView.setMode(BattleFloatView.Mode.MINE)

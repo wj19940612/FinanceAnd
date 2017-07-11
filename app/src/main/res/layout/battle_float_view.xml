@@ -45,7 +45,6 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_versus_ko"
                         android:visibility="gone"/>
-
                 </FrameLayout>
 
                 <TextView
@@ -55,8 +54,6 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/white"
                     android:textSize="12sp"/>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -109,7 +106,6 @@
                         android:paddingRight="5dp"
                         android:textColor="@color/white"
                         android:textSize="10sp"/>
-
                 </RelativeLayout>
 
                 <LinearLayout
@@ -135,9 +131,7 @@
                         android:gravity="center"
                         android:textColor="#9c9c9c"
                         android:textSize="10sp"/>
-
                 </LinearLayout>
-
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -167,7 +161,6 @@
                             android:paddingBottom="12dp"
                             android:textColor="#9c9c9c"
                             android:textSize="10sp"/>
-
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -211,11 +204,8 @@
                             android:paddingTop="2dp"
                             android:textColor="@color/white"
                             android:textSize="10sp"/>
-
                     </RelativeLayout>
-
                 </RelativeLayout>
-
             </LinearLayout>
 
             <LinearLayout
@@ -254,11 +244,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/white"
                     android:textSize="12sp"/>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </RelativeLayout>
-
 </RelativeLayout>
