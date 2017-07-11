@@ -38,9 +38,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.setting.LocationActivity;
+import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.mutual.ArticleProtocol;
-import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -54,12 +54,11 @@ import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 public class BorrowActivity extends BaseActivity {
     public static final int REQ_CODE_ADDRESS = 100;
     @BindView(R.id.photoGv)
@@ -92,13 +91,9 @@ public class BorrowActivity extends BaseActivity {
     TextView mDays;
     @BindView(R.id.protocol)
     TextView mProtocol;
-    private LocalBroadcastManager mLocalBroadcastManager;
     private DelPhotoBroadcastReceiver mDelPhotoBroadcastReceiver;
-    private IntentFilter mIntentFilter;
     private PhotoGridAdapter mPhotoGridAdapter;
-    private String mImagePath;
     private Address mAddress;
-    private String mProtocolUrl = API.getHost() + "/mobi/mutual/rules?nohead=1";
     private InputMethodManager mInputMethodManager;
 
     @Override
@@ -106,15 +101,31 @@ public class BorrowActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_borrow);
         ButterKnife.bind(this);
-        initView();
+        initEditView();
+        initGridView();
+        initDelPhotoReceiver();
     }
 
-    private void initView() {
+    private void initEditView() {
         SpannableString ss = new SpannableString(getString(R.string.borrow_remark_hint));//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12, true);//设置字体大小 true表示单位是sp
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mInputMethodManager=(InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mBorrowRemark.setHint(new SpannedString(ss));
+        mBorrowLimit.requestFocus();
+        mBorrowLimit.setFocusable(true);
+        mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
+        mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
+        mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
+        mAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setPublishStatus();
+            }
+        });
+    }
+
+    private void initGridView() {
         mPhotoGridAdapter = new PhotoGridAdapter(this);
         mPhotoGridAdapter.add("");
         mPhotoGridAdapter.setOnItemClickListener(new PhotoGridAdapter.OnItemClickListener() {
@@ -123,16 +134,17 @@ public class BorrowActivity extends BaseActivity {
                 if (mPhotoGridAdapter.getCount() > 4) {
                     return;
                 }
-                UploadHelpImageDialogFragment.newInstance()
-                        .setOnDismissListener(new UploadHelpImageDialogFragment.OnDismissListener() {
+                UploadFeedbackImageDialogFragment.newInstance(5-mPhotoGridAdapter.getCount())
+                        .setOnDismissListener(new UploadFeedbackImageDialogFragment.OnDismissListener() {
                             @Override
                             public void onGetImagePath(String path) {
-                                mImagePath = path;
-                                updateHelpImage(mImagePath);
+                                updateHelpImage(path);
                             }
                         })
                         .show(getSupportFragmentManager());
             }
+
+
         });
         mPhotoGv.setFocusable(false);
         mPhotoGv.setAdapter(mPhotoGridAdapter);
@@ -154,168 +166,34 @@ public class BorrowActivity extends BaseActivity {
                 }
             }
         });
-        mBorrowLimit.requestFocus();
-        mBorrowLimit.setFocusable(true);
-        mBorrowLimit.addTextChangedListener(mBorrowMoneyValidationWatcher);
-        mBorrowInterest.addTextChangedListener(mBorrowInterestValidationWatcher);
-        mBorrowTimeLimit.addTextChangedListener(mBorrowTimeLimitValidationWatcher);
-        mBorrowRemark.addTextChangedListener(mBorrowRemarkValidationWatcher);
-        mAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setPublishStatus();
-            }
-        });
 
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+    }
+
+    private void initDelPhotoReceiver() {
         mDelPhotoBroadcastReceiver = new DelPhotoBroadcastReceiver();
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(ContentImgActivity.DEL_IMAGE);
-        mLocalBroadcastManager.registerReceiver(mDelPhotoBroadcastReceiver, mIntentFilter);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ContentImgActivity.DEL_IMAGE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mDelPhotoBroadcastReceiver, intentFilter);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
 
     @OnClick({R.id.publish, R.id.contentDays, R.id.protocol, R.id.location, R.id.titleBar, R.id.money, R.id.interest, R.id.days})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.publish:
-                mPublish.setEnabled(false);
-                String borrowMoney = mBorrowLimit.getText().toString().trim();
-                if (borrowMoney.length() > 4 || Integer.parseInt(borrowMoney) > 2000) {
-                    ToastUtil.show(getString(R.string.money_more_2000));
-                    showSoftWare(mBorrowLimit);
-                    mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                    mPublish.setEnabled(true);
-                    return;
-                } else if (Integer.parseInt(borrowMoney) < 500) {
-                    ToastUtil.show(getString(R.string.money_less_500));
-                    showSoftWare(mBorrowLimit);
-                    mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                    mPublish.setEnabled(true);
-                    return;
-                }
-                String borrowInterest = mBorrowInterest.getText().toString().trim();
-                if (borrowInterest.length() > 3 || Integer.valueOf(borrowInterest) > 200) {
-                    ToastUtil.show(getString(R.string.interest_more_200));
-                    showSoftWare(mBorrowInterest);
-                    mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                    mPublish.setEnabled(true);
-                    return;
-                } else if (Integer.valueOf(borrowInterest) < 1) {
-                    ToastUtil.show(getString(R.string.interest_less_1));
-                    showSoftWare(mBorrowInterest);
-                    mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                    mPublish.setEnabled(true);
-                    return;
-                }
-
-                String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
-                if (borrowTimeLimit.length() > 3 || Integer.parseInt(borrowTimeLimit) > 60) {
-                    ToastUtil.show(getString(R.string.days_more_60));
-                    showSoftWare(mBorrowTimeLimit);
-                    mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                    mPublish.setEnabled(true);
-                    return;
-                } else if (Integer.parseInt(borrowTimeLimit) < 1) {
-                    ToastUtil.show(getString(R.string.days_less_1));
-                    showSoftWare(mBorrowTimeLimit);
-                    mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
-                    mPublish.setEnabled(true);
-                    return;
-                }
-                if (TextUtils.isEmpty(mLocation.getSubText())) {
-                    ToastUtil.show(getString(R.string.no_address));
-                    mPublish.setEnabled(true);
-                    return;
-                }
-                String content = mBorrowRemark.getText().toString();
-                if (content.length() >= 300) {
-                    content = content.substring(0, 300);
-                }
-                while (content.startsWith("\n")) {
-                    content = content.substring(1, content.length());
-                }
-                while (content.endsWith("\n")) {
-                    content = content.substring(0, content.length() - 1);
-                }
-                StringBuilder contentImg = new StringBuilder();
-                int photoAmount = mPhotoGridAdapter.getCount();
-                for (int i = 0; i < photoAmount - 1; i++) {
-                    String image = ImageUtils.compressImageToBase64(mPhotoGridAdapter.getItem(i), 400f);
-                    Log.d(TAG, "image: " + image.length());
-                    contentImg.append(image + ",");
-                }
-                if (contentImg.length() > 0) {
-                    contentImg.deleteCharAt(contentImg.length() - 1);
-                }
-                if (mAddress == null) {
-                    mPublish.setEnabled(true);
-                    return;
-                }
-                String picture = contentImg.toString();
-                if (!TextUtils.isEmpty(picture)) {
-                    Client.uploadPicture(picture).setTag(TAG).setIndeterminate(this)
-                            .setCallback(new Callback2D<Resp<List<String>>, List<String>>() {
-                                @Override
-                                protected void onRespSuccessData(List<String> data) {
-                                    StringBuilder sb = new StringBuilder();
-                                    for (int i = 0; i < data.size(); i++) {
-                                        sb.append(data.get(i)).append(",");
-                                    }
-                                    if (sb.length() > 0) {
-                                        sb.deleteCharAt(sb.length() - 1);
-                                    }
-                                    requestPublishBorrow(mBorrowRemark.getText().toString(), sb.toString(), mBorrowTimeLimit.getText().toString(),
-                                            mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),
-                                            mLocation.getSubText(), mAddress.getLongitude(), mAddress.getLatitude());
-                                }
-
-                                @Override
-                                public void onFailure(VolleyError volleyError) {
-                                    super.onFailure(volleyError);
-                                    mPublish.setEnabled(true);
-                                }
-                            }).fireFree();
-                } else {
-                    requestPublishBorrow(content, picture, mBorrowTimeLimit.getText().toString(),
-                            mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),
-                            mLocation.getSubText(), mAddress.getLongitude(), mAddress.getLatitude());
-                }
+                requestBorrow();
                 break;
             case R.id.location:
                 String location = null;
-                if (mAddress!=null){
-                    location = mAddress.getAdminArea()+" "+mAddress.getLocality()+" "+mAddress.getSubLocality();
+                if (mAddress != null) {
+                    location = mAddress.getAdminArea() + " " + mAddress.getLocality() + " " + mAddress.getSubLocality();
                 }
-                Launcher.with(getActivity(), LocationActivity.class).putExtra(Launcher.EX_PAYLOAD_1, true).putExtra(Launcher.EX_PAYLOAD_2,location).executeForResult(REQ_CODE_ADDRESS);
+                Launcher.with(getActivity(), LocationActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD_1, true)
+                        .putExtra(Launcher.EX_PAYLOAD_2, location)
+                        .executeForResult(REQ_CODE_ADDRESS);
                 break;
             case R.id.protocol:
-                Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BORROW).setTag(TAG)
-                        .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
-                            @Override
-                            protected void onRespSuccessData(ArticleProtocol data) {
-                                Launcher.with(getActivity(), WebActivity.class)
-                                        .putExtra(WebActivity.EX_TITLE, getString(R.string.protocol))
-                                        .putExtra(WebActivity.EX_HTML, data.getContent())
-                                        .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                        .execute();
-                            }
-
-                            @Override
-                            public void onFailure(VolleyError volleyError) {
-                                super.onFailure(volleyError);
-                                Launcher.with(getActivity(), WebActivity.class)
-                                        .putExtra(WebActivity.EX_TITLE, getString(R.string.protocol))
-                                        .putExtra(WebActivity.EX_URL, mProtocolUrl)
-                                        .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                        .execute();
-                            }
-                        }).fire();
+                requestBorrowProtocol();
                 break;
             case R.id.titleBar:
                 mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
@@ -339,6 +217,119 @@ public class BorrowActivity extends BaseActivity {
         }
     }
 
+    private void requestBorrow() {
+        mPublish.setEnabled(false);
+        String borrowMoney = mBorrowLimit.getText().toString().trim();
+        if (borrowMoney.length() > 4 || Integer.parseInt(borrowMoney) > 2000) {
+            ToastUtil.show(getString(R.string.money_more_2000));
+            showSoftWare(mBorrowLimit);
+            mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPublish.setEnabled(true);
+            return;
+        } else if (Integer.parseInt(borrowMoney) < 500) {
+            ToastUtil.show(getString(R.string.money_less_500));
+            showSoftWare(mBorrowLimit);
+            mBorrowLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPublish.setEnabled(true);
+            return;
+        }
+        String borrowInterest = mBorrowInterest.getText().toString().trim();
+        if (borrowInterest.length() > 3 || Integer.valueOf(borrowInterest) > 200) {
+            ToastUtil.show(getString(R.string.interest_more_200));
+            showSoftWare(mBorrowInterest);
+            mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPublish.setEnabled(true);
+            return;
+        } else if (Integer.valueOf(borrowInterest) < 1) {
+            ToastUtil.show(getString(R.string.interest_less_1));
+            showSoftWare(mBorrowInterest);
+            mBorrowInterest.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPublish.setEnabled(true);
+            return;
+        }
+
+        String borrowTimeLimit = mBorrowTimeLimit.getText().toString().trim();
+        if (borrowTimeLimit.length() > 3 || Integer.parseInt(borrowTimeLimit) > 60) {
+            ToastUtil.show(getString(R.string.days_more_60));
+            showSoftWare(mBorrowTimeLimit);
+            mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPublish.setEnabled(true);
+            return;
+        } else if (Integer.parseInt(borrowTimeLimit) < 1) {
+            ToastUtil.show(getString(R.string.days_less_1));
+            showSoftWare(mBorrowTimeLimit);
+            mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.redPrimary));
+            mPublish.setEnabled(true);
+            return;
+        }
+        if (TextUtils.isEmpty(mLocation.getSubText())) {
+            ToastUtil.show(getString(R.string.no_address));
+            mPublish.setEnabled(true);
+            return;
+        }
+        String content = mBorrowRemark.getText().toString().trim();
+        if (content.length() >= 300) {
+            content = content.substring(0, 300);
+        }
+        StringBuilder contentImg = new StringBuilder();
+        int photoAmount = mPhotoGridAdapter.getCount();
+        for (int i = 0; i < photoAmount - 1; i++) {
+            String image = ImageUtils.compressImageToBase64(mPhotoGridAdapter.getItem(i), 400f);
+            Log.d(TAG, "image: " + image.length());
+            contentImg.append(image + ",");
+        }
+        if (contentImg.length() > 0) {
+            contentImg.deleteCharAt(contentImg.length() - 1);
+        }
+        if (mAddress == null) {
+            mPublish.setEnabled(true);
+            return;
+        }
+        String picture = contentImg.toString();
+        if (!TextUtils.isEmpty(picture)) {
+            Client.uploadPicture(picture).setTag(TAG).setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<List<String>>, List<String>>() {
+                        @Override
+                        protected void onRespSuccessData(List<String> data) {
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < data.size(); i++) {
+                                sb.append(data.get(i)).append(",");
+                            }
+                            if (sb.length() > 0) {
+                                sb.deleteCharAt(sb.length() - 1);
+                            }
+                            requestPublishBorrow(mBorrowRemark.getText().toString(), sb.toString(), mBorrowTimeLimit.getText().toString(),
+                                    mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),
+                                    mLocation.getSubText(), mAddress.getLongitude(), mAddress.getLatitude());
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            mPublish.setEnabled(true);
+                        }
+                    }).fireFree();
+        } else {
+            requestPublishBorrow(content, picture, mBorrowTimeLimit.getText().toString(),
+                    mBorrowInterest.getText().toString(), mBorrowLimit.getText().toString(),
+                    mLocation.getSubText(), mAddress.getLongitude(), mAddress.getLatitude());
+        }
+    }
+
+    private void requestBorrowProtocol() {
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BORROW).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.protocol))
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+                }).fire();
+    }
+
     private void requestPublishBorrow(String content, String contentImg, String days, String interest, String money,
                                       String location, double locationLng, double locationLat) {
         Client.borrowIn(content, contentImg, days, interest, money, location, locationLng, locationLat).setTag(TAG)
@@ -348,7 +339,6 @@ public class BorrowActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.show(getString(R.string.publish_success));
-//                            CustomToast.getInstance().showText(getActivity(), getString(R.string.publish_success));
                             Intent intent = new Intent(getActivity(), MutualActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -396,8 +386,7 @@ public class BorrowActivity extends BaseActivity {
         mBorrowLimit.removeTextChangedListener(mBorrowMoneyValidationWatcher);
         mBorrowInterest.removeTextChangedListener(mBorrowInterestValidationWatcher);
         mBorrowTimeLimit.removeTextChangedListener(mBorrowTimeLimitValidationWatcher);
-        mBorrowRemark.removeTextChangedListener(mBorrowRemarkValidationWatcher);
-        mLocalBroadcastManager.unregisterReceiver(mDelPhotoBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mDelPhotoBroadcastReceiver);
     }
 
     @Override
@@ -420,21 +409,28 @@ public class BorrowActivity extends BaseActivity {
 
     private void updateHelpImage(String helpImagePath) {
         if (!TextUtils.isEmpty(helpImagePath)) {
-            mPhotoGridAdapter.insert(helpImagePath, mPhotoGridAdapter.getCount() - 1);
+            String[] photos = helpImagePath.split(",");
+            for (String photo:photos){
+                mPhotoGridAdapter.insert(photo, mPhotoGridAdapter.getCount() - 1);
+            }
+            mPhotoGridAdapter.notifyDataSetChanged();
         }
     }
-    private void showSoftWare(EditText editText){
+
+    private void showSoftWare(EditText editText) {
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
         editText.setSelection(editText.getText().length());
-        mInputMethodManager.showSoftInput(editText,InputMethodManager.SHOW_FORCED);//强制显示
+        mInputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_FORCED);//强制显示
     }
-    private void hideSoftWare(){
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowLimit.getWindowToken(),0);
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowInterest.getWindowToken(),0);
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowTimeLimit.getWindowToken(),0);
-        mInputMethodManager.hideSoftInputFromWindow(mBorrowRemark.getWindowToken(),0);
+
+    private void hideSoftWare() {
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowLimit.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowInterest.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowTimeLimit.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mBorrowRemark.getWindowToken(), 0);
     }
+
     private ValidationWatcher mBorrowMoneyValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
@@ -442,6 +438,7 @@ public class BorrowActivity extends BaseActivity {
             setPublishStatus();
         }
     };
+
     private ValidationWatcher mBorrowInterestValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
@@ -449,17 +446,12 @@ public class BorrowActivity extends BaseActivity {
             setPublishStatus();
         }
     };
+
     private ValidationWatcher mBorrowTimeLimitValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             mBorrowTimeLimit.setTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist));
             setPublishStatus();
-        }
-    };
-    private ValidationWatcher mBorrowRemarkValidationWatcher = new ValidationWatcher() {
-        @Override
-        public void afterTextChanged(Editable s) {
-            //setPublishStatus();
         }
     };
 
