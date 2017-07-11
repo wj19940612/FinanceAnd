@@ -98,11 +98,6 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
 
 public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
-    public static final String PAGE_TYPE = "page_type";
-    //0 对战记录 1 对战中
-    public static final int PAGE_TYPE_RECORD = 0;
-    public static final int PAGE_TYPE_BATTLE = 1;
-
     @BindView(R.id.content)
     LinearLayout mContent;
 
@@ -153,7 +148,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private Battle mBattle;
     private Variety mVariety;
     private FutureData mFutureData;
-    private int mPageType = -1;
     private boolean mIsObserver;
     private int mGameStatus;
 
@@ -166,14 +160,21 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_future_battle);
         ButterKnife.bind(this);
+
         initData();
+
+        requestLastBattleInfo(mBattleId, mBatchCode);
+
+        //处理从通知栏点进来的
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), MainActivity.class).execute();
+            finish();
+        }
     }
 
     private void initData() {
         mBattleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
         mBatchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
-
-        requestLastBattleInfo(mBattleId, mBatchCode);
     }
 
     private void requestLastBattleInfo(int battleId, String batchCode) {
@@ -182,19 +183,22 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     protected void onRespSuccessData(Battle data) {
                         mBattle = data;
-                        if (data.isBattleOver()) {
-                            mPageType = PAGE_TYPE_RECORD;
+                        mGameStatus = mBattle.getGameStatus();
+                        mIsObserver = checkUserIsObserver();
+
+                        if (mBattle.isBattleOver()) {
                             initBattleRecordPage();
                         } else {
-                            mPageType = PAGE_TYPE_BATTLE;
                             initBattlePage();
                         }
                     }
                 }).fire();
     }
 
+    /**
+     * 只加载一个对战记录的 Fragment
+     */
     private void initBattleRecordPage() {
-        //只加载一个详情的Fragment
         mContent.removeAllViews();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -203,48 +207,28 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void initBattlePage() {
-        //处理从通知栏点进来的
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(getActivity(), MainActivity.class).execute();
-            finish();
-        }
-
-        showBattleContent();
+        mBattleContent.setVisibility(View.VISIBLE);
 
         initTabLayout();
-
-        //判断是否是观战
-        mIsObserver = checkUserIsObserver();
-        //获取游戏状态
-        mGameStatus = mBattle.getGameStatus();
-
+        initBattleViews();
         initBottomFloatView();
 
         if (mIsObserver) {
             showObserverView();
             requestOrderHistory();
             requestCurrentOrder();
-        } else {
-            if (mGameStatus == GAME_STATUS_CREATED) {
-                showBattleButtons();
-                updateRoomExistsTime();
-            } else if (mGameStatus == GAME_STATUS_STARTED) {
-                showBattleTradeView();
-                requestOrderHistory();
-                requestCurrentOrder();
-            }
+        } else if (mGameStatus == GAME_STATUS_CREATED) {
+            showBattleButtons();
+            updateRoomExistsTime();
+        } else if (mGameStatus == GAME_STATUS_STARTED) {
+            showBattleTradeView();
+            requestOrderHistory();
+            requestCurrentOrder();
         }
-
-        initBattleViews();
 
         requestVarietyData();
 
-        requestSubscribeBattle();
-
-    }
-
-    private void showBattleContent() {
-        mBattleContent.setVisibility(View.VISIBLE);
+        subscribeBattle();
     }
 
     private void initTabLayout() {
@@ -454,7 +438,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         mVariety = variety;
                         initChartViews();
                         showTrendView();
-                        startSubscribeFutureData();
+                        subscribeFutureData();
                     }
                 }).fire();
     }
@@ -560,7 +544,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     protected void onBattlePushReceived(WSPush<Battle> push) {
         super.onBattlePushReceived(push);
         //对战详情只能收到有人加入推送
-        if (mPageType == PAGE_TYPE_RECORD) {
+        if (mBattle.isBattleOver()) {
             if (push.getContent().getType() == PushCode.BATTLE_JOINED) {
                 if (push.getContent() != null) {
                     Battle battle = (Battle) push.getContent().getData();
@@ -1015,7 +999,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .fire();
     }
 
-    private void startSubscribeFutureData() {
+    private void subscribeFutureData() {
         if (mVariety != null) {
             startScheduleJob(1000);
             Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
@@ -1026,7 +1010,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
     }
 
-    private void stopSubscribeFutureData() {
+    private void UnSubscribeFutureData() {
         if (mVariety != null) {
             stopScheduleJob();
             Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
@@ -1081,31 +1065,24 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         requestCurrentOrder();
     }
 
-    private void requestSubscribeBattle() {
-        WsClient.get().send(new SubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-            @Override
-            public void onResponse(WSMessage<Resp> respWSMessage) {
-
-            }
-
-            @Override
-            public void onError(int code) {
-            }
-
-        });
+    private void subscribeBattle() {
+        if (mBattle != null && !mBattle.isBattleOver()) {
+            WsClient.get().send(new SubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+                @Override
+                public void onResponse(WSMessage<Resp> respWSMessage) {
+                }
+            });
+        }
     }
 
-    private void requestUnSubscribeBattle() {
-        WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-            @Override
-            public void onResponse(WSMessage<Resp> respWSMessage) {
-            }
-
-            @Override
-            public void onError(int code) {
-            }
-
-        });
+    private void unSubscribeBattle() {
+        if (mBattle != null && !mBattle.isBattleOver()) {
+            WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+                @Override
+                public void onResponse(WSMessage<Resp> respWSMessage) {
+                }
+            });
+        }
     }
 
     //快速匹配结果查询
@@ -1137,6 +1114,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             //更新左右点赞数
                             updatePraiseView(mBattle.getLaunchPraise(), mBattle.getLaunchUser());
                             updatePraiseView(mBattle.getAgainstPraise(), mBattle.getAgainstUser());
+
                             //2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
                             if (gameStatus == ROOM_STATE_CREATE) {
                                 if (mBattle.getGameStatus() == GAME_STATUS_STARTED) {
@@ -1147,7 +1125,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                                 if (mBattle.getGameStatus() == GAME_STATUS_END) {
                                     //切换状态
                                     updateRoomState();
-
                                 }
                                 if (mBattle.getGameStatus() == GAME_STATUS_CANCELED) {
                                     dismissAllDialog();
@@ -1251,29 +1228,23 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     protected void onPause() {
         super.onPause();
-        stopSubscribeFutureData();
-        if (mBattle != null) {
-            if (mPageType == PAGE_TYPE_BATTLE) {
-                requestUnSubscribeBattle();
-            }
-        }
+        UnSubscribeFutureData();
+        unSubscribeBattle();
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        startSubscribeFutureData();
+        subscribeFutureData();
+        subscribeBattle();
+
         if (mBattle != null) {
-            //判断游戏是否结束
-            if (mBattle.getGameStatus() != GAME_STATUS_END) {
+            if (!mBattle.isBattleOver()) {
                 requestBattleInfo();
             }
             //正在快速匹配的要检测快速匹配结果
             if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
                 requestFastMatchResult();
-            }
-            if (mPageType == PAGE_TYPE_BATTLE) {
-                requestSubscribeBattle();
             }
         }
     }
