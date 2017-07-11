@@ -26,6 +26,9 @@ public class StartMatchDialog extends BaseDialog {
     }
 
     public static void get(final Activity activity, final OnCancelListener listener) {
+
+        setCurrentDialog(DIALOG_START_MATCH);
+
         View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_start_match, null);
 
         customView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {

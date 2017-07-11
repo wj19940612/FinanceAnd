@@ -27,6 +27,9 @@ public class BattleResultDialog extends BaseDialog {
     }
 
     public static void get(final Activity activity, final OnCloseListener listener, int result, String content) {
+
+        setCurrentDialog(DIALOG_BATTLE_RESULT);
+
         View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_win_result, null);
 
         customView.findViewById(R.id.dialogDelete).setOnClickListener(new View.OnClickListener() {
