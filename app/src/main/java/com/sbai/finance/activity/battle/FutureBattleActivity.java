@@ -645,6 +645,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mBattle = (Battle) push.getContent().getData();
         mBattleView.initWithModel(mBattle);
         mBattleView.setProgress(0, 0, false);
+        showBattleTradeView();
         showStartGameDialog();
         startScheduleJob(1000);
     }
