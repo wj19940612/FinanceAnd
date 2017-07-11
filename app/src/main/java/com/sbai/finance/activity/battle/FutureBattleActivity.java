@@ -9,10 +9,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -49,6 +51,7 @@ import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.BaseDialog;
+import com.sbai.finance.view.dialog.BattleResultDialog;
 import com.sbai.finance.view.dialog.StartGameDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
@@ -58,8 +61,12 @@ import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.CancelBattle;
+import com.sbai.finance.websocket.cmd.CurrentBattle;
 import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
+import com.sbai.finance.websocket.cmd.SubscribeBattle;
+import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
+import com.sbai.httplib.ApiCallback;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -68,15 +75,21 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
+import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
+import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_STARTED;
+import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_CREATE;
+import static com.sbai.finance.model.battle.BattleRoom.ROOM_STATE_START;
 import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_LONG_PURCHASE;
 import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_SHORT_PURCHASE;
 import static com.sbai.finance.view.BattleFloatView.Mode.MINE;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
+import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH;
 
@@ -578,10 +591,18 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
+                if (!mIsObserver && mBattle.getGameStatus() != GAME_STATUS_END) {
+                    if (push.getContent() != null) {
+                        mBattle = (Battle) push.getContent().getData();
+                        showGameOverDialog();
+                    }
+                }
                 break;
             case PushCode.ORDER_CREATED:
+                requestBattleInfo();
                 break;
             case PushCode.ORDER_CLOSE:
+                requestBattleInfo();
                 break;
             case PushCode.QUICK_MATCH_TIMEOUT:
                 //匹配超时逻辑 只有在快速匹配的情况下才会匹配超时
@@ -749,6 +770,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         if (mBattle.getGameStatus() != GAME_STATUS_END) {
             mBattleView.setProgress(leftProfit, rightProfit, isInviting);
         }
+    }
+
+    //结束比赛后调用
+    private void updateBattleInfo() {
+        boolean isInviting = mBattle.getGameStatus() == GAME_STATUS_CREATED;
+        if (mBattle != null) {
+            mBattleView.setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), isInviting);
+        }
+        mBattleView.setDeadline(mBattle.getGameStatus(), -1);
     }
 
     //初始化开始游戏弹窗
@@ -1010,6 +1040,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         if (mGameStatus == GAME_STATUS_CREATED) {
             updateRoomExistsTime();
         }
+        if (mIsObserver || mBattle.getGameStatus() == GAME_STATUS_STARTED) {
+            showDeadlineTime();
+        }
     }
 
     public void updateRoomExistsTime() {
@@ -1022,21 +1055,227 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
     }
 
+    private void showDeadlineTime() {
+        long currentTime = SysTime.getSysTime().getSystemTimestamp();
+        long startTime = mBattle.getStartTime();
+        int diff = mBattle.getEndline() - DateUtil.getDiffSeconds(currentTime, startTime);
+        if (diff == 0 && !mIsObserver) {
+            showCalculatingView();
+        }
+        if (diff == 0 && mIsObserver) {
+            refreshTradeView();
+        }
+        //5秒没收到结果自动结算
+        if (diff == -5 && !mIsObserver
+                && mBattle.getGameStatus() != GAME_STATUS_END) {
+            requestBattleInfo();
+        }
+        mBattleView.setDeadline(mBattle.getGameStatus(), diff);
+    }
+
+    public void refreshTradeView() {
+        //刷新交易数据
+        requestOrderHistory();
+        requestCurrentOrder();
+    }
+
+    private void requestSubscribeBattle() {
+        WsClient.get().send(new SubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+
+            }
+
+            @Override
+            public void onError(int code) {
+            }
+
+        });
+    }
+
+    private void requestUnSubscribeBattle() {
+        WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
+            @Override
+            public void onResponse(WSMessage<Resp> respWSMessage) {
+            }
+
+            @Override
+            public void onError(int code) {
+            }
+
+        });
+    }
+
+    //快速匹配结果查询
+    private void requestFastMatchResult() {
+        Client.getQuickMatchResult(Battle.CREATE_FAST_MATCH, mBattle.getId()).setTag(TAG)
+                .setCallback(new ApiCallback<Resp<Battle>>() {
+                    @Override
+                    public void onSuccess(Resp<Battle> battleResp) {
+                        if (battleResp.getCode() == Battle.CODE_CREATE_FAST_MATCH_TIMEOUT) {
+                            StartMatchDialog.dismiss(FutureBattleActivity.this);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+
+                    }
+                }).fireFree();
+    }
+
+    private void requestBattleInfo() {
+        WsClient.get().send(new CurrentBattle(mBattle.getId(), mBattle.getBatchCode()),
+                new WSCallback<WSMessage<Resp<Battle>>>() {
+                    @Override
+                    public void onResponse(WSMessage<Resp<Battle>> resp) {
+                        if (resp.getContent().isSuccess()) {
+                            int gameStatus = mBattle.getGameStatus();
+                            mBattle = resp.getContent().getData();
+                            //更新左右点赞数
+                            updatePraiseView(mBattle.getLaunchPraise(), mBattle.getLaunchUser());
+                            updatePraiseView(mBattle.getAgainstPraise(), mBattle.getAgainstUser());
+                            //2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
+                            if (gameStatus == ROOM_STATE_CREATE) {
+                                if (mBattle.getGameStatus() == GAME_STATUS_STARTED) {
+                                    //切换状态
+                                    dismissAllDialog();
+                                    updateRoomState();
+                                }
+                                if (mBattle.getGameStatus() == GAME_STATUS_END) {
+                                    //切换状态
+                                    updateRoomState();
+
+                                }
+                                if (mBattle.getGameStatus() == GAME_STATUS_CANCELED) {
+                                    dismissAllDialog();
+                                    showRoomOvertimeDialog();
+                                }
+
+                            }
+                            //正在对战中
+                            if (gameStatus == ROOM_STATE_START) {
+                                refreshTradeView();
+                            }
+                            //游戏结束后
+                            if (mBattle.getGameStatus() == GAME_STATUS_END
+                                    && !mIsObserver) {
+                                dismissCalculatingView();
+                                updateBattleInfo();
+                                showGameOverDialog();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void updateRoomState() {
+        mBattleView.initWithModel(mBattle);
+        mBattleView.setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false);
+        showBattleTradeView();
+        refreshTradeView();
+    }
+
+    private void showGameOverDialog() {
+        int result;
+        String content;
+        if (mBattle.getWinResult() == 0) {
+            //平局
+            result = GAME_RESULT_DRAW;
+            content = getString(R.string.return_reward);
+        } else {
+            boolean win = getWinResult();
+
+            String coinType = getCoinType();
+
+            if (win) {
+                result = GAME_RESULT_WIN;
+                content = "+" + (mBattle.getReward() - mBattle.getCommission()) + coinType;
+            } else {
+                result = GAME_RESULT_LOSE;
+                content = "-" + mBattle.getReward() + coinType;
+            }
+        }
+        BattleResultDialog.get(this, new BattleResultDialog.OnCloseListener() {
+            @Override
+            public void onClose() {
+                finish();
+            }
+        }, result, content);
+    }
+
+    private boolean getWinResult() {
+        boolean win = false;
+        //我是房主
+        if (mBattle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
+            //result ==1为房主赢
+            if (mBattle.getWinResult() == 1) {
+                //我赢了
+                win = true;
+            } else {
+                //我输了
+                win = false;
+            }
+        } else {
+            //我不是房主
+            if (mBattle.getWinResult() == 2) {
+                //我赢了
+                win = true;
+            } else {
+                //我输了
+                win = false;
+            }
+        }
+        return win;
+    }
+
+    private String getCoinType() {
+        if (mBattle.getCoinType() == 2) {
+            return getString(R.string.ingot);
+        }
+        return getString(R.string.integral);
+    }
+
+    private void showCalculatingView() {
+        mLoadingContent.setVisibility(View.VISIBLE);
+        mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
+    }
+
+    private void dismissCalculatingView() {
+        mLoading.clearAnimation();
+        mLoadingContent.setVisibility(View.GONE);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         stopSubscribeFutureData();
+        if (mPageType == PAGE_TYPE_BATTLE) {
+            requestUnSubscribeBattle();
+        }
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         startSubscribeFutureData();
+        //判断游戏是否结束
+        if (mBattle.getGameStatus() != GAME_STATUS_END) {
+            requestBattleInfo();
+        }
+        //正在快速匹配的要检测快速匹配结果
+        if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
+            requestFastMatchResult();
+        }
+        if (mPageType == PAGE_TYPE_BATTLE) {
+            requestSubscribeBattle();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BaseDialog.dismiss(this);
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 }

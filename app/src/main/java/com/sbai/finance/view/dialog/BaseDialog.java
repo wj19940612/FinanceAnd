@@ -21,6 +21,11 @@ import java.util.Map;
 
 public class BaseDialog {
 
+    public static final int DIALOG_DISMISS = 111;
+    public static final int DIALOG_START_GAME = 222;
+    public static final int DIALOG_START_MATCH = 333;
+    public static final int DIALOG_BATTLE_RESULT = 444;
+
     private Activity mActivity;
 
     private View mCustomView;
@@ -30,7 +35,17 @@ public class BaseDialog {
     private boolean mCancelableOnTouchOutside;
     private boolean mCancelableOnBackPress;
 
+    private static int sCurrentDialog;
+
     private static Map<String, List<BaseDialog>> mListMap = new HashMap<>();
+
+    public static void setCurrentDialog(int dialogType) {
+        sCurrentDialog = dialogType;
+    }
+
+    public static int getCurrentDialog() {
+        return sCurrentDialog;
+    }
 
     public static BaseDialog single(Activity activity) {
         String key = activity.getClass().getSimpleName();
@@ -104,6 +119,7 @@ public class BaseDialog {
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
+        sCurrentDialog = DIALOG_DISMISS;
     }
 
     public static void dismiss(Activity activity) {
@@ -115,6 +131,7 @@ public class BaseDialog {
             }
             mListMap.remove(key);
         }
+        sCurrentDialog = DIALOG_DISMISS;
     }
 
     private void scaleDialogWidth(double scale) {

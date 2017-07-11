@@ -21,6 +21,9 @@ public class StartGameDialog extends BaseDialog{
     }
 
     public static void get(Activity activity,String url){
+
+        setCurrentDialog(DIALOG_START_GAME);
+
         View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_start_match, null);
 
         TextView title = (TextView) customView.findViewById(R.id.title);
