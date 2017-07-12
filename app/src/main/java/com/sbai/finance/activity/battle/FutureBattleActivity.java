@@ -187,12 +187,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         initData();
 
         requestLastBattleInfo(mBattleId, mBatchCode);
-
-        //处理从通知栏点进来的
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(getActivity(), MainActivity.class).execute();
-            finish();
-        }
     }
 
     private void initData() {
@@ -581,12 +575,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private boolean checkUserIsObserver() {
-        int userId = LocalUser.getUser().getUserInfo().getId();
-        if (mBattle.getLaunchUser() != userId
-                && mBattle.getAgainstUser() != userId) {
-            return true;
+        if (LocalUser.getUser().isLogin()){
+            int userId = LocalUser.getUser().getUserInfo().getId();
+            if (mBattle.getLaunchUser() != userId
+                    && mBattle.getAgainstUser() != userId) {
+                return true;
+             }
+             return false;
         }
-        return false;
+        return true;
     }
 
 
