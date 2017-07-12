@@ -2,6 +2,8 @@ package com.sbai.finance.model.battle;
 
 import com.sbai.finance.model.Variety;
 
+import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
+
 /**
  * Created by linrongfang on 2017/6/23.
  */
@@ -98,17 +100,38 @@ public class TradeRecord {
         this.varietyType = varietyType;
     }
 
-    public static TradeRecord getRecord(Battle battle, Variety variety) {
+    public static TradeRecord getRecord(Battle battle, Variety variety,int type) {
         TradeRecord record = new TradeRecord();
         record.setContractsCode(battle.getContractsCode());
         record.setHandsNum(battle.getHandsNum());
         record.setMarketPoint(variety.getPriceScale());
-        record.setOptPrice(battle.getOrderPrice());
-        record.setOptStatus(battle.getOrderStatus());
-        record.setOptTime(battle.getOrderTime());
         record.setUserId(battle.getUserId());
         record.setVarietyName(battle.getVarietyName());
         record.setVarietyType(battle.getVarietyType());
+        if (type == ORDER_CREATED) {
+            record.setOptPrice(battle.getOrderPrice());
+            record.setOptTime(battle.getOrderTime());
+        }else {
+            record.setOptPrice(battle.getUnwindPrice());
+            record.setOptTime(battle.getUnwindTime());
+        }
+        int orderStatus = 0;
+        if (battle.getDirection() == 1) {
+            //买涨
+            if (battle.getOrderStatus() == 2) {
+                orderStatus = 1;
+            } else if (battle.getOrderStatus() == 4) {
+                orderStatus = 3;
+            }
+        } else if (battle.getDirection() == 0) {
+            //买跌
+            if (battle.getOrderStatus() == 2) {
+                orderStatus = 2;
+            } else if (battle.getOrderStatus() == 4) {
+                orderStatus = 4;
+            }
+        }
+        record.setOptStatus(orderStatus);
         return record;
     }
 }

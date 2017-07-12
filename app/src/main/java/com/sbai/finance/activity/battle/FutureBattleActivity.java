@@ -670,7 +670,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             int optCount = mBattleTradeView.getListView().getAdapter().getCount();
             if (optCount == battle.getOptLogCount() - 1) {
                 //更新本次数据
-                TradeRecord record = TradeRecord.getRecord(battle, mVariety);
+                TradeRecord record = TradeRecord.getRecord(battle, mVariety, type);
                 TradeOrder order = TradeOrder.getTradeOrder(battle);
                 updateCurrentOrder(order, type);
                 updateTradeHistory(record);
