@@ -135,6 +135,9 @@
     <string name="trade">交易</string>
     <string name="trend_chart">分时图</string>
     <string name="day_k_line">日K</string>
+    <string name="one_min_k">1分钟</string>
+    <string name="three_min_k">3分钟</string>
+    <string name="five_min_k">5分钟</string>
     <string name="fifteen_min_k">15分钟</string>
     <string name="thirty_min_k">30分钟</string>
     <string name="sixty_min_k">60分钟</string>

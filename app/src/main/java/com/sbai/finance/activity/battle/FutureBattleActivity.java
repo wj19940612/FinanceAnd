@@ -256,10 +256,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void initTabLayout() {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.day_k_line));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.sixty_min_k));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.thirty_min_k));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.fifteen_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.one_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.three_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.five_min_k));
         mTabLayout.addOnTabSelectedListener(mOnTabSelectedListener);
     }
 
@@ -267,17 +266,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             String tabText = tab.getText().toString();
-            if (tabText.equals(getString(R.string.day_k_line))) {
-                requestKlineDataAndSet(null);
+            if (tabText.equals(getString(R.string.one_min_k))) {
+                requestKlineDataAndSet("1");
                 showKlineView();
-            } else if (tabText.equals(getString(R.string.sixty_min_k))) {
-                requestKlineDataAndSet("60");
+            } else if (tabText.equals(getString(R.string.three_min_k))) {
+                requestKlineDataAndSet("3");
                 showKlineView();
-            } else if (tabText.equals(getString(R.string.thirty_min_k))) {
-                requestKlineDataAndSet("30");
-                showKlineView();
-            } else if (tabText.equals(getString(R.string.fifteen_min_k))) {
-                requestKlineDataAndSet("15");
+            } else if (tabText.equals(getString(R.string.five_min_k))) {
+                requestKlineDataAndSet("5");
                 showKlineView();
             } else {
                 showTrendView();
