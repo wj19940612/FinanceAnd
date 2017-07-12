@@ -593,7 +593,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
-                if (!mIsObserver && mBattle.getGameStatus() != GAME_STATUS_END) {
+                if (!mIsObserver && !mBattle.isBattleOver()) {
                     if (push.getContent() != null) {
                         mBattle = (Battle) push.getContent().getData();
                         updateBattleInfo();
