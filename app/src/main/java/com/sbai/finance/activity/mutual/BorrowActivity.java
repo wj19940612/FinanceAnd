@@ -39,7 +39,6 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
 import com.sbai.finance.activity.mine.setting.LocationActivity;
 import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
-import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -54,7 +53,6 @@ import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
