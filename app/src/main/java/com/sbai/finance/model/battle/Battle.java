@@ -102,6 +102,134 @@ public class Battle implements Parcelable {
     private double launchUnwindScore;
     private double againstUnwindScore;
 
+    //下单和平仓推送数据
+    private String battleBatchCode;
+    private String contractsCode;
+    private int contractsId;
+    private String currencyUnit;
+    private int direction;
+    private int handsNum;
+    private int optLogCount;
+    private double orderMarket;
+    private double orderPrice;
+    private int orderStatus;
+    private long orderTime;
+    private double ratio;
+    private String sign;
+    private int userId;
+
+    public String getBattleBatchCode() {
+        return battleBatchCode;
+    }
+
+    public void setBattleBatchCode(String battleBatchCode) {
+        this.battleBatchCode = battleBatchCode;
+    }
+
+    public String getContractsCode() {
+        return contractsCode;
+    }
+
+    public void setContractsCode(String contractsCode) {
+        this.contractsCode = contractsCode;
+    }
+
+    public int getContractsId() {
+        return contractsId;
+    }
+
+    public void setContractsId(int contractsId) {
+        this.contractsId = contractsId;
+    }
+
+    public String getCurrencyUnit() {
+        return currencyUnit;
+    }
+
+    public void setCurrencyUnit(String currencyUnit) {
+        this.currencyUnit = currencyUnit;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public int getHandsNum() {
+        return handsNum;
+    }
+
+    public void setHandsNum(int handsNum) {
+        this.handsNum = handsNum;
+    }
+
+    public int getOptLogCount() {
+        return optLogCount;
+    }
+
+    public void setOptLogCount(int optLogCount) {
+        this.optLogCount = optLogCount;
+    }
+
+    public double getOrderMarket() {
+        return orderMarket;
+    }
+
+    public void setOrderMarket(double orderMarket) {
+        this.orderMarket = orderMarket;
+    }
+
+    public double getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    public int getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public long getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(long orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public boolean isBattleOver() {
         return getGameStatus() == GAME_STATUS_END;
     }
@@ -429,6 +557,20 @@ public class Battle implements Parcelable {
         dest.writeInt(this.praiseUserId);
         dest.writeDouble(this.launchUnwindScore);
         dest.writeDouble(this.againstUnwindScore);
+        dest.writeString(this.battleBatchCode);
+        dest.writeString(this.contractsCode);
+        dest.writeInt(this.contractsId);
+        dest.writeString(this.currencyUnit);
+        dest.writeInt(this.direction);
+        dest.writeInt(this.handsNum);
+        dest.writeInt(this.optLogCount);
+        dest.writeDouble(this.orderMarket);
+        dest.writeDouble(this.orderPrice);
+        dest.writeInt(this.orderStatus);
+        dest.writeLong(this.orderTime);
+        dest.writeDouble(this.ratio);
+        dest.writeString(this.sign);
+        dest.writeInt(this.userId);
     }
 
     protected Battle(Parcel in) {
@@ -463,6 +605,20 @@ public class Battle implements Parcelable {
         this.praiseUserId = in.readInt();
         this.launchUnwindScore = in.readDouble();
         this.againstUnwindScore = in.readDouble();
+        this.battleBatchCode = in.readString();
+        this.contractsCode = in.readString();
+        this.contractsId = in.readInt();
+        this.currencyUnit = in.readString();
+        this.direction = in.readInt();
+        this.handsNum = in.readInt();
+        this.optLogCount = in.readInt();
+        this.orderMarket = in.readDouble();
+        this.orderPrice = in.readDouble();
+        this.orderStatus = in.readInt();
+        this.orderTime = in.readLong();
+        this.ratio = in.readDouble();
+        this.sign = in.readString();
+        this.userId = in.readInt();
     }
 
     public static final Creator<Battle> CREATOR = new Creator<Battle>() {
