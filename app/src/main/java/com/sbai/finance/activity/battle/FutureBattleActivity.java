@@ -224,6 +224,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void initBattlePage() {
+        //处理从通知栏点进来的
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), MainActivity.class).execute();
+            finish();
+        }
+
         mBattleContent.setVisibility(View.VISIBLE);
 
         initTabLayout();
