@@ -13,7 +13,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.android.volley.DefaultRetryPolicy;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -73,6 +75,13 @@ public class RechargeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //用于切换沙箱环境与生产环境；
+        //如果不使用此方法，默认使用生产环境；
+        //在钱包不存在的情况下，会唤起h5支付；
+        //注：在生产环境，必须将此代码注释！
+        if (!BuildConfig.IS_PROD) {
+            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+        }
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
         mRechargeCount.addTextChangedListener(mValidationWatcher);
