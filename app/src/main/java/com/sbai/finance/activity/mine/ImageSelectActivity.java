@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.zxing.common.StringUtils;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.ImageData;
@@ -73,6 +74,8 @@ public class ImageSelectActivity extends BaseActivity {
     //所选择的图片路径集合
     private ArrayList<String> listSelectedPath = new ArrayList<>();
 
+    private int  mCanSelectedAmount;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -92,7 +95,7 @@ public class ImageSelectActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_select);
         ButterKnife.bind(this);
-
+        mCanSelectedAmount = getIntent().getIntExtra(Launcher.EX_PAYLOAD,0);
         init();
     }
 
@@ -108,6 +111,11 @@ public class ImageSelectActivity extends BaseActivity {
                 notifyRefresh();
             }
         });
+        if (mCanSelectedAmount!=0){
+            mPreview.setVisibility(View.GONE);
+            mTitleBar.setRightText(getString(R.string.select_photo_amount,0,mCanSelectedAmount));
+            mTitleBar.setRightVisible(true);
+        }
     }
 
     //选择图片变化的监听
@@ -116,11 +124,20 @@ public class ImageSelectActivity extends BaseActivity {
         public void onChanged(boolean isChecked, String path, CheckBox cb, int position) {
             if (isChecked) {
                 //选中
-                if (listSelectedPath.size() == 1) {
-                    //把点击变为checked的图片变为没有checked
-                    cb.setChecked(false);
-                    mImageSelectAdapter.setCheckedBoxFalse(position);
-                    return;
+                if(mCanSelectedAmount==0){
+                    if (listSelectedPath.size() == 1) {
+                        //把点击变为checked的图片变为没有checked
+                        cb.setChecked(false);
+                        mImageSelectAdapter.setCheckedBoxFalse(position);
+                        return;
+                    }
+                }else {
+                    if (listSelectedPath.size()==mCanSelectedAmount){
+                        //把点击变为checked的图片变为没有checked
+                        cb.setChecked(false);
+                        mImageSelectAdapter.setCheckedBoxFalse(position);
+                        return;
+                    }
                 }
                 //选中的图片路径加入集合
                 listSelectedPath.add(path);
@@ -135,6 +152,9 @@ public class ImageSelectActivity extends BaseActivity {
                 setRightButtonEnable(false);
             } else {
                 setRightButtonEnable(true);
+            }
+            if (mCanSelectedAmount!=0){
+                mTitleBar.setRightText(getString(R.string.select_photo_amount,listSelectedPath.size(),mCanSelectedAmount));
             }
         }
     };
@@ -264,7 +284,19 @@ public class ImageSelectActivity extends BaseActivity {
     //通知前一个页面刷新
     private void notifyRefresh() {
         Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD, listSelectedPath.get(0));
+        if (mCanSelectedAmount==0){
+            intent.putExtra(Launcher.EX_PAYLOAD, listSelectedPath.get(0));
+        }else{
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < listSelectedPath.size(); i++) {
+                sb.append(listSelectedPath.get(i)).append(",");
+            }
+            String paths=sb.toString();
+            if (paths.length()>0){
+                intent.putExtra(Launcher.EX_PAYLOAD, paths.substring(0,paths.length()-1));
+            }
+
+        }
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -48,6 +48,7 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
     private Unbinder mBind;
     private File mFile;
     private OnDismissListener mOnDismissListener;
+    private int mPhotoAmount;
 
     public interface OnDismissListener {
         void onGetImagePath(String path);
@@ -69,10 +70,19 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    public static UploadFeedbackImageDialogFragment newInstance(int amount) {
+        Bundle args = new Bundle();
+        args.putInt("amount",amount);
+        UploadFeedbackImageDialogFragment fragment = new UploadFeedbackImageDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.UpLoadHeadImageDialog);
+        mPhotoAmount = getArguments().getInt("amount");
     }
 
     @Override
@@ -121,6 +131,7 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
                     Intent openGalleryIntent = new Intent(getContext(), ImageSelectActivity.class);
+                    openGalleryIntent.putExtra(Launcher.EX_PAYLOAD,mPhotoAmount);
                     startActivityForResult(openGalleryIntent, REQ_CODE_TAKE_PHONE_FROM_GALLERY);
                 } else {
                     ToastUtil.show(R.string.sd_is_not_useful);

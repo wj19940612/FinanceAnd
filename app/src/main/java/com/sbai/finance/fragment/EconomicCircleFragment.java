@@ -7,20 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
@@ -29,6 +25,9 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
+import com.sbai.finance.holder.BorrowMoneyViewHolder;
+import com.sbai.finance.holder.FuturesBattleViewHolder;
+import com.sbai.finance.holder.OpinionViewHolder;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.economiccircle.EconomicCircle;
@@ -39,14 +38,8 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
-import com.sbai.finance.view.BattleProgress;
-import com.sbai.finance.view.CollapsedTextLayout;
-import com.sbai.finance.view.CollapsedTextView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
@@ -203,7 +196,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		EconomicCircle item = (EconomicCircle) parent.getItemAtPosition(position);
-		setBattleData(item);
 		if (item != null) {
 			if (item.getType() == 1) {
 				//借钱
@@ -217,6 +209,7 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				startActivityForResult(intent, REQ_CODE_USERDATA);
 			} else if (item.getType() == 3) {
 				//游戏
+				setBattleData(item);
 				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
 					SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
 							.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
@@ -300,6 +293,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				break;
 			case EconomicCircle.COIN_TYPE_INTEGRAL:
 				reward = item.getReward() + getActivity().getString(R.string.integral);
+				break;
+			default:
 				break;
 		}
 
@@ -585,10 +580,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 		unbinder.unbind();
 	}
 
-	static class EconomicCircleAdapter extends BaseAdapter {
+	public static class EconomicCircleAdapter extends BaseAdapter {
 
-		interface Callback {
-
+		public interface Callback {
 			void HotAreaClick(EconomicCircle economicCircle);
 		}
 
@@ -678,6 +672,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						futuresBattleViewHolder = new FuturesBattleViewHolder(convertView);
 						convertView.setTag(R.id.tag_futures_battle, futuresBattleViewHolder);
 						break;
+
+					default:
+						break;
 				}
 			} else {
 				switch (type) {
@@ -689,6 +686,8 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						break;
 					case TYPE_FUTURES_BATTLE:
 						futuresBattleViewHolder = (FuturesBattleViewHolder) convertView.getTag(R.id.tag_futures_battle);
+						break;
+					default:
 						break;
 				}
 			}
@@ -703,308 +702,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				case TYPE_FUTURES_BATTLE:
 					futuresBattleViewHolder.bindingData(mContext, (EconomicCircle) getItem(position), mCallback, position);
 					break;
+				default:
+					break;
 			}
-
 			return convertView;
-		}
-
-		static class OpinionViewHolder {
-
-			@BindView(R.id.hotArea)
-			RelativeLayout mHotArea;
-			@BindView(R.id.avatar)
-			ImageView mAvatar;
-			@BindView(R.id.userName)
-			TextView mUserName;
-			@BindView(R.id.isAttention)
-			TextView mIsAttention;
-			@BindView(R.id.publishTime)
-			TextView mPublishTime;
-			@BindView(R.id.opinionContent)
-			CollapsedTextLayout mOpinionContent;
-			@BindView(R.id.label)
-			ImageView mLabel;
-			@BindView(R.id.bigVarietyName)
-			TextView mBigVarietyName;
-			@BindView(R.id.varietyName)
-			TextView mVarietyName;
-
-			OpinionViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
-
-			private void bindingData(Context context, final EconomicCircle item, final Callback callback) {
-				if (item == null) return;
-
-				Glide.with(context).load(item.getUserPortrait())
-						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
-						.into(mAvatar);
-
-				mHotArea.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							callback.HotAreaClick(item);
-						}
-					}
-				});
-
-				mUserName.setText(item.getUserName());
-
-				if (item.getIsAttention() == 2) {
-					mIsAttention.setText(R.string.is_attention);
-				} else {
-					mIsAttention.setText("");
-				}
-
-
-				mOpinionContent.setContentText(item.getContent());
-
-				if (item.getDirection() == 1) {
-					if (item.getGuessPass() == 1) {
-						mLabel.setBackgroundResource(R.drawable.ic_opinion_up_succeed);
-					} else if (item.getGuessPass() == 2) {
-						mLabel.setBackgroundResource(R.drawable.ic_opinion_up_failed);
-					} else {
-						mLabel.setBackgroundResource(R.drawable.ic_opinion_up);
-					}
-				} else {
-					if (item.getGuessPass() == 1) {
-						mLabel.setBackgroundResource(R.drawable.ic_opinion_down_succeed);
-					} else if (item.getGuessPass() == 2) {
-						mLabel.setBackgroundResource(R.drawable.ic_opinion_down_failed);
-					} else {
-						mLabel.setBackgroundResource(R.drawable.ic_opinion_down);
-					}
-				}
-
-				mBigVarietyName.setText(context.getString(R.string.big_variety_name, item.getBigVarietyTypeName()));
-				mVarietyName.setText(item.getVarietyName());
-				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-			}
-		}
-
-		class BorrowMoneyViewHolder {
-
-			@BindView(R.id.hotArea)
-			RelativeLayout mHotArea;
-			@BindView(R.id.avatar)
-			ImageView mAvatar;
-			@BindView(R.id.userName)
-			TextView mUserName;
-			@BindView(R.id.publishTime)
-			TextView mPublishTime;
-			@BindView(R.id.location)
-			TextView mLocation;
-			@BindView(R.id.borrowMoneyContent)
-			CollapsedTextLayout mBorrowMoneyContent;
-			@BindView(R.id.needAmount)
-			TextView mNeedAmount;
-			@BindView(R.id.borrowDeadline)
-			TextView mBorrowDeadline;
-			@BindView(R.id.borrowInterest)
-			TextView mBorrowInterest;
-			@BindView(R.id.isAttention)
-			TextView mIsAttention;
-			@BindView(R.id.borrowingImg)
-			ImageView mBorrowingImg;
-			@BindView(R.id.circleMoreIcon)
-			ImageView mCircleMoreIcon;
-
-
-			BorrowMoneyViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
-
-			private void bindingData(Context context, final EconomicCircle item, final Callback callback, int position) {
-				if (item == null) return;
-
-				Glide.with(context).load(item.getUserPortrait())
-						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
-						.into(mAvatar);
-
-				mHotArea.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							callback.HotAreaClick(item);
-						}
-					}
-				});
-
-				mUserName.setText(item.getUserName());
-
-				if (item.getIsAttention() == 2) {
-					mIsAttention.setText(R.string.is_attention);
-				} else {
-					mIsAttention.setText("");
-				}
-
-				if (TextUtils.isEmpty(item.getContent())) {
-					mBorrowMoneyContent.setVisibility(View.GONE);
-				} else {
-					mBorrowMoneyContent.setVisibility(View.VISIBLE);
-					mBorrowMoneyContent.setContentText(item.getContent().trim());
-				}
-
-				mNeedAmount.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getMoney())));
-				mBorrowDeadline.setText(context.getString(R.string.day, FinanceUtil.formatWithScaleNoZero(item.getDays())));
-				mBorrowInterest.setText(context.getString(R.string.RMB, FinanceUtil.formatWithScaleNoZero(item.getInterest())));
-
-				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-				if (TextUtils.isEmpty(item.getLocation())) {
-					mLocation.setText(R.string.no_location_information);
-				} else {
-					mLocation.setText(item.getLocation());
-				}
-
-				if (!TextUtils.isEmpty(item.getContentImg())) {
-					String[] images = item.getContentImg().split(",");
-					if (images.length >= 2) {
-						mBorrowingImg.setVisibility(View.VISIBLE);
-						mCircleMoreIcon.setVisibility(View.VISIBLE);
-					} else {
-						mBorrowingImg.setVisibility(View.VISIBLE);
-						mCircleMoreIcon.setVisibility(View.GONE);
-					}
-					Glide.with(context).load(images[0])
-							.placeholder(R.drawable.ic_loading_pic)
-							.into(mBorrowingImg);
-				} else {
-					mBorrowingImg.setVisibility(View.GONE);
-					mCircleMoreIcon.setVisibility(View.GONE);
-				}
-			}
-		}
-
-		static class FuturesBattleViewHolder {
-			@BindView(R.id.avatar)
-			ImageView mAvatar;
-			@BindView(R.id.userName)
-			TextView mUserName;
-			@BindView(R.id.isAttention)
-			TextView mIsAttention;
-			@BindView(R.id.hotArea)
-			RelativeLayout mHotArea;
-			@BindView(R.id.content)
-			CollapsedTextView mContent;
-			@BindView(R.id.varietyName)
-			TextView mVarietyName;
-			@BindView(R.id.progressBar)
-			BattleProgress mProgressBar;
-			@BindView(R.id.versus)
-			ImageView mVersus;
-			@BindView(R.id.bounty)
-			TextView mBounty;
-			@BindView(R.id.status)
-			TextView mStatus;
-			@BindView(R.id.againstUserAvatar)
-			ImageView mAgainstUserAvatar;
-			@BindView(R.id.againstUserName)
-			TextView mAgainstUserName;
-			@BindView(R.id.publishTime)
-			TextView mPublishTime;
-			@BindView(R.id.location)
-			TextView mLocation;
-
-			FuturesBattleViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
-
-			public void bindingData(Context context, final EconomicCircle item, final Callback callback, int position) {
-				if (item == null) return;
-
-				Glide.with(context).load(item.getUserPortrait())
-						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
-						.into(mAvatar);
-
-				mHotArea.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							callback.HotAreaClick(item);
-						}
-					}
-				});
-
-				mUserName.setText(item.getUserName());
-
-				if (item.getIsAttention() == 2) {
-					mIsAttention.setText(R.string.is_attention);
-				} else {
-					mIsAttention.setText("");
-				}
-
-				mVarietyName.setText(item.getVarietyName());
-				mContent.setShowText(item.getContent().trim());
-				mProgressBar.setLeftText(String.valueOf(item.getLaunchScore()));
-				mProgressBar.setRightText(String.valueOf(item.getAgainstScore()));
-
-				String reward = "";
-				switch (item.getCoinType()) {
-					case EconomicCircle.COIN_TYPE_CASH:
-						reward = item.getReward() + context.getString(R.string.cash);
-						break;
-					case EconomicCircle.COIN_TYPE_INGOT:
-						reward = item.getReward() + context.getString(R.string.ingot);
-						break;
-					case EconomicCircle.COIN_TYPE_INTEGRAL:
-						reward = item.getReward() + context.getString(R.string.integral);
-						break;
-				}
-
-				mBounty.setText(reward);
-				switch (item.getGameStatus()) {
-					//取消
-					case EconomicCircle.GAME_STATUS_CANCELED:
-						mStatus.setText(context.getString(R.string.versus_cancel));
-						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
-						mAgainstUserName.setText(context.getString(R.string.join_versus));
-						mVersus.setVisibility(View.VISIBLE);
-						mProgressBar.showScoreProgress(0, 0, true);
-						break;
-
-					//发起对战
-					case EconomicCircle.GAME_STATUS_CREATED:
-						mStatus.setText(DateUtil.getMinutes(item.getEndline()));
-						mAgainstUserAvatar.setImageResource(R.drawable.btn_join_versus);
-						mAgainstUserName.setText(context.getString(R.string.join_versus));
-						mVersus.setVisibility(View.VISIBLE);
-						mProgressBar.showScoreProgress(0, 0, true);
-						break;
-
-					//对战中
-					case EconomicCircle.GAME_STATUS_STARTED:
-						mStatus.setText(context.getString(R.string.versusing));
-						Glide.with(context)
-								.load(item.getAgainstUserPortrait())
-								.placeholder(R.drawable.ic_default_avatar_big)
-								.transform(new GlideCircleTransform(context))
-								.into(mAgainstUserAvatar);
-						mAgainstUserName.setText(item.getAgainstUserName());
-						mVersus.setVisibility(View.GONE);
-						mProgressBar.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
-						break;
-
-					//已结束
-					case EconomicCircle.GAME_STATUS_END:
-						mStatus.setText(context.getString(R.string.versus_end));
-						Glide.with(context)
-								.load(item.getAgainstUserPortrait())
-								.placeholder(R.drawable.ic_default_avatar)
-								.transform(new GlideCircleTransform(context))
-								.into(mAgainstUserAvatar);
-						mAgainstUserName.setText(item.getAgainstUserName());
-						mVersus.setVisibility(View.GONE);
-						mProgressBar.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
-						break;
-				}
-
-				mPublishTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
-			}
 		}
 	}
 }

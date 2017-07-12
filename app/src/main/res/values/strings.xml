@@ -46,7 +46,7 @@
     <string name="limit">期限%1$s天</string>
     <string name="interest">利息%1$s元</string>
 
-    <!--login   page-->
+    <!--Login page-->
     <string name="phone_number">手机号</string>
     <string name="please_input_phone_number">手机号码</string>
     <string name="auth_code">验证码</string>
@@ -388,6 +388,7 @@
     <string name="borrow_in_over_time">已借入 逾期</string>
     <string name="borrow_out_over_time">已借出 逾期</string>
     <!--mutual-->
+    <string name="select_photo_amount">完成(%1$d/%2$d)</string>
     <string name="good_heart_people">好心人</string>
     <string name="load_person">借款人</string>
     <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
@@ -719,8 +720,6 @@
     <string name="in_calculating">结算中</string>
     <string name="match_battle">匹配对战</string>
     <string name="start_match_and_battle">进行匹配对战，系统将进行撮合对战</string>
-
-
     <string name="you_not_install_weixin">您尚未安装微信</string>
     <string name="you_not_install_weibo">您尚未安装微博</string>
 
