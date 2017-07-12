@@ -12,8 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +23,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleProgress;
@@ -77,9 +74,10 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
-                            .putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+                            .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
+                            .execute();
                 }
             }
         });

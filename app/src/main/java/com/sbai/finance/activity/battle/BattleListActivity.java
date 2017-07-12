@@ -23,13 +23,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.gifdecoder.GifDecoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
-import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
@@ -50,6 +55,7 @@ import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.websocket.PushCode;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
@@ -65,6 +71,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 
 public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
@@ -98,7 +106,6 @@ public class BattleListActivity extends BaseActivity implements
 
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
-    private StartMatchDialogFragment mQuickMatchDialogFragment;
     private StringBuilder mRefusedIds;
 
     @Override
@@ -123,20 +130,6 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
-
-        if (savedInstanceState == null) {
-            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
-                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
-                        @Override
-                        public void onCancel() {
-                            mQuickMatchDialogFragment.dismiss();
-                            showCancelMatchDialog();
-                        }
-                    });
-        } else {
-            mQuickMatchDialogFragment = (StartMatchDialogFragment) getSupportFragmentManager()
-                    .findFragmentByTag(StartMatchDialogFragment.TAG);
-        }
 
         initTitleBar();
         initListHeaderAndFooter();
@@ -192,9 +185,10 @@ public class BattleListActivity extends BaseActivity implements
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
         Glide.with(getActivity())
                 .load(R.drawable.battle_banner)
-                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE )
                 .priority(Priority.HIGH)
-                .into(battleBanner);
+                .fitCenter()
+                .into(new GlideDrawableImageViewTarget(battleBanner, 1));
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,9 +243,9 @@ public class BattleListActivity extends BaseActivity implements
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
-                        Launcher.with(getActivity(), BattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item)
-                                .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
                                 .executeForResult(CANCEL_BATTLE);
                     } else if (LocalUser.getUser().isLogin()) {
                         if (item.getGameStatus() == Battle.GAME_STATUS_CREATED
@@ -280,15 +274,9 @@ public class BattleListActivity extends BaseActivity implements
                             item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
-                        int pageType;
-                        if (data.getGameStatus() == Battle.GAME_STATUS_END) {
-                            pageType = BattleActivity.PAGE_TYPE_RECORD;
-                        } else {
-                            pageType = BattleActivity.PAGE_TYPE_VERSUS;
-                        }
-                        Launcher.with(getActivity(), BattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
-                                .putExtra(BattleActivity.PAGE_TYPE, pageType)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
+                                .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
                                 .executeForResult(CANCEL_BATTLE);
 
                     }
@@ -313,9 +301,7 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if (mQuickMatchDialogFragment != null
-                && mQuickMatchDialogFragment.getDialog() != null
-                && mQuickMatchDialogFragment.getDialog().isShowing()) {
+        if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
             requestFastMatchResult();
         }
     }
@@ -387,9 +373,9 @@ public class BattleListActivity extends BaseActivity implements
                                 data.setAgainstUserName(battle.getAgainstUserName());
                                 mVersusListAdapter.notifyDataSetChanged();
 
-                                Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, battle)
-                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
                                         .executeForResult(CANCEL_BATTLE);
                             }
                         } else {
@@ -627,9 +613,9 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
-                                Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, mCurrentBattle)
-                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD_1, mCurrentBattle.getId())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, mCurrentBattle.getBatchCode())
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
@@ -658,9 +644,13 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showMatchDialog() {
-        if (mQuickMatchDialogFragment != null) {
-            mQuickMatchDialogFragment.show(getSupportFragmentManager());
-        }
+        StartMatchDialog.get(this, new StartMatchDialog.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                StartMatchDialog.dismiss(BattleListActivity.this);
+                showCancelMatchDialog();
+            }
+        });
     }
 
     private void showCancelMatchDialog() {
@@ -814,11 +804,7 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void dismissQuickMatchDialog() {
-        if (mQuickMatchDialogFragment != null
-                && mQuickMatchDialogFragment.getDialog() != null
-                && mQuickMatchDialogFragment.getDialog().isShowing()) {
-            mQuickMatchDialogFragment.dismiss();
-        }
+        StartMatchDialog.dismiss(BattleListActivity.this);
     }
 
     class LoginBroadcastReceiver extends BroadcastReceiver {

@@ -23,7 +23,7 @@ import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.BattleActivity;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
@@ -134,7 +134,7 @@ public class BaseActivity extends AppCompatActivity implements
         public void onPushReceive(WSPush<Battle> battleWSPush) {
             switch (battleWSPush.getContent().getType()) {
                 case PushCode.BATTLE_JOINED:
-                    if (!(getActivity() instanceof BattleActivity)) {
+                    if (!(getActivity() instanceof FutureBattleActivity)) {
                         if (battleWSPush.getContent() != null) {
                             Battle data = (Battle) battleWSPush.getContent().getData();
                             showQuickJoinBattleDialog(data);
@@ -160,9 +160,9 @@ public class BaseActivity extends AppCompatActivity implements
                             @Override
                             public void onClick(Dialog dialog) {
                                 dialog.dismiss();
-                                Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, battle)
-                                        .putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+                                        .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
                                         .execute();
                             }
                         }).setNegative(R.string.cancel)

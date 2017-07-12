@@ -66,7 +66,7 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
 
     }
 
-    public static UploadHelpImageDialogFragment newInstance() {
+    public static UploadHelpImageDialogFragment newInstance()  {
         Bundle args = new Bundle();
         UploadHelpImageDialogFragment fragment = new UploadHelpImageDialogFragment();
         fragment.setArguments(args);

@@ -143,6 +143,13 @@ public class BattleTradeView extends LinearLayout {
         mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
     }
 
+    public void addTradeData(TradeRecord record, int creatorId, int againstId) {
+        mBattleTradeAdapter.setUserId(creatorId, againstId);
+        mBattleTradeAdapter.addRecord(record);
+        mBattleTradeAdapter.notifyDataSetChanged();
+        mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
+    }
+
     public void setObserver(boolean isVisitor) {
         //参观模式
         if (isVisitor) {
@@ -228,12 +235,20 @@ public class BattleTradeView extends LinearLayout {
             mAgainstId = againstId;
         }
 
-        public void setRecordList(List<TradeRecord> list){
+        public void setRecordList(List<TradeRecord> list) {
             boolean isChange = checkIfChange(list);
             if (isChange) {
                 mRecordList.clear();
                 mRecordList.addAll(list);
             }
+        }
+
+        public void addRecord(TradeRecord record) {
+            mRecordList.add(record);
+        }
+
+        public List<TradeRecord> getRecordList() {
+            return mRecordList;
         }
 
         private boolean checkIfChange(List<TradeRecord> list) {
