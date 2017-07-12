@@ -74,9 +74,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_DRAW;
-import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_LOSE;
-import static com.sbai.finance.fragment.battle.BattleResultDialogFragment.GAME_RESULT_WIN;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CANCELED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_CREATED;
 import static com.sbai.finance.model.battle.Battle.GAME_STATUS_END;
@@ -88,6 +85,9 @@ import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_SHORT_PURCHASE;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
+import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_DRAW;
+import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_LOSE;
+import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_WIN;
 import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
 import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
@@ -666,7 +666,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             int optCount = mBattleTradeView.getListView().getAdapter().getCount();
             if (optCount == battle.getOptLogCount() - 1) {
                 //更新本次数据
-                TradeRecord record = TradeRecord.getRecord(battle, mVariety);
+                TradeRecord record = TradeRecord.getRecord(battle, mVariety, type);
                 TradeOrder order = TradeOrder.getTradeOrder(battle);
                 updateCurrentOrder(order, type);
                 updateTradeHistory(record);

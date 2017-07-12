@@ -117,6 +117,24 @@ public class Battle implements Parcelable {
     private double ratio;
     private String sign;
     private int userId;
+    private double unwindPrice;
+    private long unwindTime;
+
+    public double getUnwindPrice() {
+        return unwindPrice;
+    }
+
+    public void setUnwindPrice(double unwindPrice) {
+        this.unwindPrice = unwindPrice;
+    }
+
+    public long getUnwindTime() {
+        return unwindTime;
+    }
+
+    public void setUnwindTime(long unwindTime) {
+        this.unwindTime = unwindTime;
+    }
 
     public String getBattleBatchCode() {
         return battleBatchCode;
@@ -571,6 +589,8 @@ public class Battle implements Parcelable {
         dest.writeDouble(this.ratio);
         dest.writeString(this.sign);
         dest.writeInt(this.userId);
+        dest.writeDouble(this.unwindPrice);
+        dest.writeLong(this.unwindTime);
     }
 
     protected Battle(Parcel in) {
@@ -619,6 +639,8 @@ public class Battle implements Parcelable {
         this.ratio = in.readDouble();
         this.sign = in.readString();
         this.userId = in.readInt();
+        this.unwindPrice = in.readDouble();
+        this.unwindTime = in.readLong();
     }
 
     public static final Creator<Battle> CREATOR = new Creator<Battle>() {
