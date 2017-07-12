@@ -173,4 +173,17 @@ public class TradeOrder {
     public void setVarietyType(String varietyType) {
         this.varietyType = varietyType;
     }
+    
+    public static TradeOrder getTradeOrder(Battle battle){
+        TradeOrder order = new TradeOrder();
+        order.setContractsCode(battle.getContractsCode());
+        order.setHandsNum(battle.getHandsNum());
+        order.setUserId(battle.getUserId());
+        order.setVarietyName(battle.getVarietyName());
+        order.setVarietyType(battle.getVarietyType());
+        order.setOrderPrice(battle.getOrderPrice());
+        order.setDirection(battle.getDirection());
+        order.setId(battle.getId());
+        return order;
+    }
 }

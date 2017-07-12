@@ -88,13 +88,15 @@ import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_SHORT_PURCHASE;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
+import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
+import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH;
 
 
 /**
  * As requirement the battle room has 7 status with STATUS_ROLE format:
- *
+ * <p>
  * 0. CREATED_OWNER
  * 1. STARTED_OWNER
  * 2. STARTED_CHALLENGER
@@ -102,21 +104,20 @@ import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH
  * 4. OVER_OWNER
  * 5. OVER_CHALLENGER
  * 6. OVER_OBSERVER
- *
+ * <p>
  * For now, they can be merged to:
  * 0. CREATED_OWNER
  * 1. STARTED_PLAYERS (1 & 2)
  * 2. STARTED_OBSERVER
  * 3. OVER_PLAYERS (4 & 5)
  * 4. OVER_OBSERVER
- *
+ * <p>
  * In code:
  * 0 -> GAME_STATUS_CREATED
  * 1 -> GAME_STATUS_STARTED
  * 2 -> GAME_STATUS_STARTED && mIsObserver
  * 3 -> GAME_STATUS_END
  * 4 -> GAME_STATUS_END && mIsObserver
- *
  */
 public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
@@ -388,6 +389,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mBattleTradeView.addTradeData(resp, mBattle.getLaunchUser(), mBattle.getAgainstUser());
     }
 
+    private void updateTradeHistory(TradeRecord record) {
+        mBattleTradeView.addTradeData(record, mBattle.getLaunchUser(), mBattle.getAgainstUser());
+    }
+
     private void requestCurrentOrder() {
         Client.requestCurrentOrder(mBattle.getId())
                 .setTag(TAG)
@@ -399,6 +404,33 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 }).fire();
     }
 
+    //根据推送的数据更新订单
+    private void updateCurrentOrder(TradeOrder order, int type) {
+        if (order.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+            mCurrentOrder = type == ORDER_CREATED ? order : null;
+        }
+        if (order.getUserId() == mBattle.getLaunchUser()) {
+            mCreatorOrder = type == ORDER_CREATED ? order : null;
+        }
+        if (order.getUserId() == mBattle.getAgainstUser()) {
+            mAgainstOrder = type == ORDER_CREATED ? order : null;
+        }
+
+        if (mCurrentOrder != null) {
+            setBattleTradeState(STATE_CLOSE_POSITION);
+            if (mVariety != null) {
+                mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
+                        FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), 0);
+            } else {
+                mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
+                        String.valueOf(mCurrentOrder.getOrderPrice()), 0);
+            }
+        } else {
+            setBattleTradeState(STATE_TRADE);
+        }
+    }
+
+    //根据请求的数据更新订单
     private void updateCurrentOrder(List<TradeOrder> data) {
         TradeOrder currentOrder = null;
         TradeOrder creatorOrder = null;
@@ -603,10 +635,11 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 break;
 
             case PushCode.ORDER_CREATED:
-                requestBattleInfo();
+                //对比订单房间操作次数 对不上就刷新
+                updateOrderStatus(push, ORDER_CREATED);
                 break;
             case PushCode.ORDER_CLOSE:
-                requestBattleInfo();
+                updateOrderStatus(push, ORDER_CLOSE);
                 break;
 
             case PushCode.QUICK_MATCH_TIMEOUT:
@@ -627,6 +660,36 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
         }
 
+    }
+
+    //根据推送更新订单状态
+    private void updateOrderStatus(WSPush<Battle> push, int type) {
+        requestBattleScore();
+        if (push.getContent() != null) {
+            Battle battle = (Battle) push.getContent().getData();
+            int optCount = mBattleTradeView.getListView().getAdapter().getCount();
+            if (optCount == battle.getOptLogCount() - 1) {
+                //更新本次数据
+                TradeRecord record = TradeRecord.getRecord(battle, mVariety);
+                TradeOrder order = TradeOrder.getTradeOrder(battle);
+                updateCurrentOrder(order, type);
+                updateTradeHistory(record);
+            } else {
+                requestBattleInfo();
+            }
+        }
+    }
+
+    private void requestBattleScore() {
+        WsClient.get().send(new CurrentBattle(mBattle.getId(), mBattle.getBatchCode()),
+                new WSCallback<WSMessage<Resp<Battle>>>() {
+                    @Override
+                    public void onResponse(WSMessage<Resp<Battle>> resp) {
+                        if (resp.getContent().isSuccess()) {
+                            mBattle = resp.getContent().getData();
+                        }
+                    }
+                });
     }
 
     private void dismissAllDialog() {

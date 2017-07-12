@@ -1,5 +1,7 @@
 package com.sbai.finance.model.battle;
 
+import com.sbai.finance.model.Variety;
+
 /**
  * Created by linrongfang on 2017/6/23.
  */
@@ -94,5 +96,19 @@ public class TradeRecord {
 
     public void setVarietyType(String varietyType) {
         this.varietyType = varietyType;
+    }
+
+    public static TradeRecord getRecord(Battle battle, Variety variety) {
+        TradeRecord record = new TradeRecord();
+        record.setContractsCode(battle.getContractsCode());
+        record.setHandsNum(battle.getHandsNum());
+        record.setMarketPoint(variety.getPriceScale());
+        record.setOptPrice(battle.getOrderPrice());
+        record.setOptStatus(battle.getOrderStatus());
+        record.setOptTime(battle.getOrderTime());
+        record.setUserId(battle.getUserId());
+        record.setVarietyName(battle.getVarietyName());
+        record.setVarietyType(battle.getVarietyType());
+        return record;
     }
 }

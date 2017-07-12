@@ -29,7 +29,6 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
-import com.sbai.finance.fragment.dialog.StartMatchDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
@@ -50,6 +49,7 @@ import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.websocket.PushCode;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
@@ -65,6 +65,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 
 public class BattleListActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
@@ -98,7 +100,6 @@ public class BattleListActivity extends BaseActivity implements
 
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
-    private StartMatchDialogFragment mQuickMatchDialogFragment;
     private StringBuilder mRefusedIds;
 
     @Override
@@ -123,20 +124,6 @@ public class BattleListActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_list);
         ButterKnife.bind(this);
-
-        if (savedInstanceState == null) {
-            mQuickMatchDialogFragment = StartMatchDialogFragment.newInstance()
-                    .setOnCancelListener(new StartMatchDialogFragment.OnCancelListener() {
-                        @Override
-                        public void onCancel() {
-                            mQuickMatchDialogFragment.dismiss();
-                            showCancelMatchDialog();
-                        }
-                    });
-        } else {
-            mQuickMatchDialogFragment = (StartMatchDialogFragment) getSupportFragmentManager()
-                    .findFragmentByTag(StartMatchDialogFragment.TAG);
-        }
 
         initTitleBar();
         initListHeaderAndFooter();
@@ -307,9 +294,7 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if (mQuickMatchDialogFragment != null
-                && mQuickMatchDialogFragment.getDialog() != null
-                && mQuickMatchDialogFragment.getDialog().isShowing()) {
+        if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
             requestFastMatchResult();
         }
     }
@@ -652,9 +637,13 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void showMatchDialog() {
-        if (mQuickMatchDialogFragment != null) {
-            mQuickMatchDialogFragment.show(getSupportFragmentManager());
-        }
+        StartMatchDialog.get(this, new StartMatchDialog.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                StartMatchDialog.dismiss(BattleListActivity.this);
+                showCancelMatchDialog();
+            }
+        });
     }
 
     private void showCancelMatchDialog() {
@@ -808,11 +797,7 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void dismissQuickMatchDialog() {
-        if (mQuickMatchDialogFragment != null
-                && mQuickMatchDialogFragment.getDialog() != null
-                && mQuickMatchDialogFragment.getDialog().isShowing()) {
-            mQuickMatchDialogFragment.dismiss();
-        }
+        StartMatchDialog.dismiss(BattleListActivity.this);
     }
 
     class LoginBroadcastReceiver extends BroadcastReceiver {
