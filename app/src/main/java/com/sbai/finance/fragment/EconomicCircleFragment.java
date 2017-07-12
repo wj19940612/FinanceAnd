@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.BattleActivity;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.EconomicCircleNewMessageActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -222,9 +222,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 							.setNegativeVisible(View.GONE)
 							.show();
 				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-					Launcher.with(getActivity(), BattleActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, mBattle)
-							.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_RECORD)
+					Launcher.with(getActivity(), FutureBattleActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())
+							.putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
 							.execute();
 				} else if (LocalUser.getUser().isLogin()) {
 					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
@@ -246,16 +246,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					@Override
 					protected void onRespSuccessData(Battle data) {
 
-						int pageType;
-						if (data.getGameStatus() == Battle.GAME_STATUS_END) {
-							pageType = BattleActivity.PAGE_TYPE_RECORD;
-						} else {
-							pageType = BattleActivity.PAGE_TYPE_VERSUS;
-						}
-
-						Intent intent = new Intent(getContext(), BattleActivity.class);
-						intent.putExtra(Launcher.EX_PAYLOAD, data);
-						intent.putExtra(BattleActivity.PAGE_TYPE, pageType);
+						Intent intent = new Intent(getContext(), FutureBattleActivity.class);
+						intent.putExtra(Launcher.EX_PAYLOAD_1, data.getId());
+						intent.putExtra(Launcher.EX_PAYLOAD_2, data.getBatchCode());
 						startActivityForResult(intent, CANCEL_BATTLE);
 					}
 				}).fire();
@@ -327,9 +320,9 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 						if (battleResp.isSuccess()) {
 							Battle battle = battleResp.getData();
 							if (battle != null) {
-								Launcher.with(getActivity(), BattleActivity.class)
-										.putExtra(Launcher.EX_PAYLOAD, battle)
-										.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+								Launcher.with(getActivity(), FutureBattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+										.putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
 										.execute();
 							}
 						} else {
@@ -384,9 +377,10 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 					@Override
 					protected void onRespSuccess(Resp<Battle> resp) {
 						if (resp.getData() != null) {
-							Launcher.with(getActivity(), BattleActivity.class)
-									.putExtra(Launcher.EX_PAYLOAD, resp.getData())
-									.putExtra(BattleActivity.PAGE_TYPE, BattleActivity.PAGE_TYPE_VERSUS)
+							Battle battle  = resp.getData();
+							Launcher.with(getActivity(), FutureBattleActivity.class)
+									.putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+									.putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
 									.execute();
 						}
 					}

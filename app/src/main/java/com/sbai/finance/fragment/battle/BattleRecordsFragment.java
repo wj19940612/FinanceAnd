@@ -9,11 +9,12 @@ import android.widget.ListView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 
@@ -27,12 +28,14 @@ import butterknife.Unbinder;
  * Created by linrongfang on 2017/6/20.
  */
 
-public class FutureBattleDetailFragment extends BaseFragment {
+public class BattleRecordsFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
+    @BindView(R.id.battleView)
+    BattleFloatView mBattleView;
 
     Unbinder unbinder;
 
@@ -40,8 +43,8 @@ public class FutureBattleDetailFragment extends BaseFragment {
 
     private Battle mBattle;
 
-    public static FutureBattleDetailFragment newInstance(Battle battle) {
-        FutureBattleDetailFragment detailFragment = new FutureBattleDetailFragment();
+    public static BattleRecordsFragment newInstance(Battle battle) {
+        BattleRecordsFragment detailFragment = new BattleRecordsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("battle", battle);
         detailFragment.setArguments(bundle);
@@ -59,7 +62,7 @@ public class FutureBattleDetailFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_future_battle_detail, null, false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_battle_records, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -74,13 +77,19 @@ public class FutureBattleDetailFragment extends BaseFragment {
         scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
+        mBattleView.setMode(BattleFloatView.Mode.MINE)
+                .initWithModel(mBattle)
+                .setDeadline(mBattle.getGameStatus(), 0)
+                .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
+                .setWinResult(mBattle.getWinResult());
+
         requestOrderHistory();
     }
 
     private void requestOrderHistory() {
         Client.getOrderHistory(mBattle.getId())
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TradeRecord>>,List<TradeRecord>>() {
+                .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {
                         updateTradeHistory(data);

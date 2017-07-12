@@ -22,7 +22,7 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.battle.BattleActivity;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
@@ -135,7 +135,7 @@ public class PushIntentService extends GTIntentService {
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         } else if (data.isBattleMatchSuccess()) {
             if (!Preference.get().isForeground() && data.getData() != null) {
-                intent = new Intent(context, BattleActivity.class);
+                intent = new Intent(context, FutureBattleActivity.class);
                 intent.putExtra(Launcher.EX_PAYLOAD_1, data.getData().getId());
                 intent.putExtra(Launcher.EX_PAYLOAD_2, data.getData().getBatchCode());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

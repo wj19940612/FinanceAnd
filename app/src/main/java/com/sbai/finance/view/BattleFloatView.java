@@ -1,8 +1,6 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -15,10 +13,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.UserDataActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +74,8 @@ public class BattleFloatView extends RelativeLayout {
 
     private Mode mMode;
     private OnPraiseListener mOnPraiseListener;
-    private onAvatarClickListener mOnAvatarClickListener;
+
+    private Battle mBattle;
 
     public BattleFloatView(Context context) {
         this(context, null);
@@ -125,8 +128,12 @@ public class BattleFloatView extends RelativeLayout {
             mCreateAvatar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mOnAvatarClickListener != null) {
-                        mOnAvatarClickListener.onCreateAvatarClick();
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getContext(), UserDataActivity.class)
+                                .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
+                                .execute();
+                    } else {
+                        Launcher.with(getContext(), LoginActivity.class).execute();
                     }
                 }
             });
@@ -134,8 +141,14 @@ public class BattleFloatView extends RelativeLayout {
             mAgainstAvatar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mOnAvatarClickListener != null) {
-                        mOnAvatarClickListener.onAgainstAvatarClick();
+                    if (LocalUser.getUser().isLogin()) {
+                        if (mBattle.getAgainstUser() != 0) {
+                            Launcher.with(getContext(), UserDataActivity.class)
+                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
+                                    .execute();
+                        }
+                    } else {
+                        Launcher.with(getContext(), LoginActivity.class).execute();
                     }
                 }
             });
@@ -149,6 +162,7 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public BattleFloatView initWithModel(Battle model) {
+        this.mBattle = model;
         this.setCreateAvatar(model.getLaunchUserPortrait())
                 .setCreateName(model.getLaunchUserName())
                 .setAgainstAvatar(model.getAgainstUserPortrait())
@@ -333,16 +347,11 @@ public class BattleFloatView extends RelativeLayout {
     public enum Mode {
         HALL,
         VISITOR,
-        MINE;
+        MINE
     }
 
     public BattleFloatView setOnPraiseListener(OnPraiseListener listener) {
         mOnPraiseListener = listener;
-        return this;
-    }
-
-    public BattleFloatView setOnAvatarClickListener(onAvatarClickListener listener) {
-        mOnAvatarClickListener = listener;
         return this;
     }
 
@@ -352,10 +361,6 @@ public class BattleFloatView extends RelativeLayout {
         void addAgainstPraiseCount();
     }
 
-    public interface onAvatarClickListener{
-        void onCreateAvatarClick();
-        void onAgainstAvatarClick();
-    }
 
     public int dp2px(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
