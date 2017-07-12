@@ -1103,6 +1103,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     public void onTimeUp(int count) {
         if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
             requestTrendDataAndSet();
+            if (mTabLayout.getSelectedTabPosition() == 1) {
+                requestKlineDataAndSet("1");
+            } else if (mTabLayout.getSelectedTabPosition() == 2){
+                requestKlineDataAndSet("3");
+            } else if (mTabLayout.getSelectedTabPosition() == 3){
+                requestKlineDataAndSet("5");
+            }
         }
         if (mGameStatus == GAME_STATUS_CREATED) {
             updateRoomExistsTime();
