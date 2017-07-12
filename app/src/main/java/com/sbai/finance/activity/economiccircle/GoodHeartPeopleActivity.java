@@ -265,12 +265,12 @@ public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClic
 							|| status == BorrowDetail.STATUS_NO_CHECKED || status == BorrowDetail.STATUS_NO_ALLOW)) {
 						//如果是自己
 						mCheckboxClick.setVisibility(View.VISIBLE);
-						mCheckboxClick.setImageResource(R.drawable.ic_checkbox_checked);
+						mCheckboxClick.setImageResource(R.drawable.ic_pay_way_checkbox_checked);
 
 						if (checked == position) {
-							mCheckboxClick.setImageResource(R.drawable.ic_checkbox_checked);
+							mCheckboxClick.setImageResource(R.drawable.ic_pay_way_checkbox_checked);
 						} else {
-							mCheckboxClick.setImageResource(R.drawable.ic_checkbox_unchecked);
+							mCheckboxClick.setImageResource(R.drawable.ic_pay_way_checkbox_unchecked);
 						}
 					} else {
 						//不是自己
@@ -279,7 +279,7 @@ public class GoodHeartPeopleActivity extends BaseActivity implements View.OnClic
 								|| status == BorrowDetail.STATUS_INTENTION_OVER_TIME ) {
 							if (selectedUserId == item.getUserId()) {
 								mCheckboxClick.setVisibility(View.VISIBLE);
-								mCheckboxClick.setImageResource(R.drawable.ic_checkbox_checked);
+								mCheckboxClick.setImageResource(R.drawable.ic_pay_way_checkbox_checked);
 							} else {
 								mCheckboxClick.setVisibility(View.INVISIBLE);
 							}

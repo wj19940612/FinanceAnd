@@ -519,7 +519,6 @@
     <string name="recharge">充值</string>
     <string name="withdraw">提现</string>
     <string name="bank_card">银行卡</string>
-    <string name="recharge_way">充值方式</string>
     <string name="bank_card_pay">%1$s(%2$d)</string>
     <string name="bank_card_recharge_limit">单笔限额￥%1$d元</string>
     <string name="recharge_count">充值金额</string>

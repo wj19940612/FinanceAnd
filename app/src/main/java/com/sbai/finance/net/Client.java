@@ -1330,25 +1330,6 @@ public class Client {
                         .put("orderId", orderId));
     }
 
-//    /**
-//     * 接口名称 个股资讯
-//     * 请求类型 get
-//     * 请求Url  /crawler/crawler/selectData.do
-//     *
-//     * @param code
-//     * @param page
-//     * @param pageSize
-//     * @param type
-//     * @return
-//     */
-//    public static API getInfoStock(String code, int page, int pageSize, String type) {
-//        return new API("/crawler/crawler/selectData.do", new ApiParams()
-//                .put("code", code)
-//                .put("page", page)
-//                .put("pageSize", pageSize)
-//                .put("type", type));
-//    }
-
     /**
      * 接口名称 公司简介，公告，报告
      * 请求类型 get

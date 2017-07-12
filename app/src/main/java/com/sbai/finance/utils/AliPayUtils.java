@@ -1,13 +1,14 @@
 package com.sbai.finance.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
+import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.payment.AliPayResult;
 
 import java.lang.ref.WeakReference;
@@ -23,10 +24,12 @@ public class AliPayUtils {
     private static final int ALI_PAY_FLAG = 55000;
 
     private FragmentActivity mFragmentActivity;
+    private boolean mIsIntentionMoney;
 
-    public AliPayUtils(FragmentActivity activity) {
+    public AliPayUtils(FragmentActivity activity, boolean isIntentionMoney) {
         WeakReference<FragmentActivity> fragmentActivityWeakReference = new WeakReference<>(activity);
         mFragmentActivity = fragmentActivityWeakReference.get();
+        mIsIntentionMoney = isIntentionMoney;
     }
 
     @SuppressLint("HandlerLeak")
@@ -43,14 +46,23 @@ public class AliPayUtils {
                     String resultInfo = aliPayResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = aliPayResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        ToastUtil.show("支付成功");
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        ToastUtil.show("支付失败");
+//                    if (TextUtils.equals(resultStatus, "9000")) {
+//                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        ToastUtil.show("支付成功");
+//                    } else {
+//                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//                        ToastUtil.show("支付失败");
+//                    }
+                    Log.d(TAG, "客户端 resultStatus: " + resultStatus);
+                    // TODO: 2017/7/12 异步查询服务端信息
+                    if (mIsIntentionMoney) {
+                        Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        mFragmentActivity.startActivity(intent);
                     }
                     mFragmentActivity.finish();
+
                     break;
                 default:
                     break;
@@ -64,7 +76,7 @@ public class AliPayUtils {
             public void run() {
                 PayTask payTask = new PayTask(mFragmentActivity);
                 Map<String, String> result = payTask.payV2(orderInfo, true);
-                Log.i("msp", result.toString());
+                Log.d(TAG, result.toString());
                 Message message = mHandler.obtainMessage();
                 message.what = ALI_PAY_FLAG;
                 message.obj = result;

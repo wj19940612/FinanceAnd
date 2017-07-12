@@ -206,9 +206,6 @@
             android:name=".activity.recharge.WeChatPayActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.recharge.AliPayActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".WBShareActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait">

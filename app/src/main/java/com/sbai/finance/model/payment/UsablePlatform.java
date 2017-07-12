@@ -43,7 +43,7 @@ public class UsablePlatform implements Parcelable{
     private int type;
 
     //目前是支付宝
-    public boolean isDeafultPay() {
+    public boolean isAliPay() {
         return TYPE_AIL_PAY == getType();
     }
 

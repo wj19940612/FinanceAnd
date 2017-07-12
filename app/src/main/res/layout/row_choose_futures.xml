@@ -43,7 +43,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            android:src="@drawable/ic_checkbox_checked"
+            android:src="@drawable/ic_pay_way_checkbox_checked"
             android:visibility="gone"/>
 
         <View
