@@ -630,6 +630,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         mBattle = (Battle) push.getContent().getData();
                         updateBattleInfo();
                         showGameOverDialog();
+                        refreshTradeView();
                     }
                 } else if (mIsObserver) {
                     mBattleView.setPraiseEnable(false);
@@ -1238,6 +1239,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                                 dismissCalculatingView();
                                 updateBattleInfo();
                                 showGameOverDialog();
+                                refreshTradeView();
                             }
 
                             if (mBattle.getGameStatus() == GAME_STATUS_END
