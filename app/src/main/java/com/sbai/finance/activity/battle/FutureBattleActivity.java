@@ -339,6 +339,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
+
             }
         });
     }
@@ -581,13 +582,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private boolean checkUserIsObserver() {
-        if (LocalUser.getUser().isLogin()){
+        if (LocalUser.getUser().isLogin()) {
             int userId = LocalUser.getUser().getUserInfo().getId();
             if (mBattle.getLaunchUser() != userId
                     && mBattle.getAgainstUser() != userId) {
                 return true;
-             }
-             return false;
+            }
+            return false;
         }
         return true;
     }
@@ -630,6 +631,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         updateBattleInfo();
                         showGameOverDialog();
                     }
+                } else if (mIsObserver) {
+                    mBattleView.setPraiseEnable(false);
                 }
                 break;
 
@@ -1108,9 +1111,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             requestTrendDataAndSet();
             if (mTabLayout.getSelectedTabPosition() == 1) {
                 requestKlineDataAndSet("1");
-            } else if (mTabLayout.getSelectedTabPosition() == 2){
+            } else if (mTabLayout.getSelectedTabPosition() == 2) {
                 requestKlineDataAndSet("3");
-            } else if (mTabLayout.getSelectedTabPosition() == 3){
+            } else if (mTabLayout.getSelectedTabPosition() == 3) {
                 requestKlineDataAndSet("5");
             }
         }
@@ -1234,6 +1237,11 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                                 updateBattleInfo();
                                 showGameOverDialog();
                             }
+
+                            if (mBattle.getGameStatus() == GAME_STATUS_END
+                                    && mIsObserver) {
+                                mBattleView.setPraiseEnable(false);
+                            }
                         }
                     }
                 });
@@ -1260,7 +1268,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
             if (win) {
                 result = GAME_RESULT_WIN;
-                content = "+" + (mBattle.getReward() - mBattle.getCommission()) + coinType;
+                content = "+" + (mBattle.getReward() - (int) mBattle.getCommission()) + coinType;
             } else {
                 result = GAME_RESULT_LOSE;
                 content = "-" + mBattle.getReward() + coinType;
@@ -1272,6 +1280,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 finish();
             }
         }, result, content);
+
+        dismissCalculatingView();
+
+        mBattleView.setWinResult(mBattle.getWinResult());
     }
 
     private boolean getWinResult() {
