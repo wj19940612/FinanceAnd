@@ -337,6 +337,17 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
+    /**
+     * 设置点赞按钮是否可用
+     * @param enable
+     * @return
+     */
+    public BattleFloatView setPraiseEnable(boolean enable){
+        mMyPraiseButton.setEnabled(enable);
+        mUserPraiseButton.setEnabled(enable);
+        return this;
+    }
+
 
     public BattleFloatView setMode(Mode mode) {
         mMode = mode;
