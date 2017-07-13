@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
@@ -67,6 +69,7 @@ import butterknife.ButterKnife;
 
 import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
+import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
     //打开观点详情页
@@ -111,7 +114,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     private Variety mVariety;
     private Prediction mPrediction;
     private FutureData mFutureData;
-    private boolean isOptionalChanged;
     private int mPagePosition;
 
     @Override
@@ -351,7 +353,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
-                            isOptionalChanged = false;
+                            sendAddOptionalBroadCast(null,true);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -384,7 +386,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                         if (resp.isSuccess()) {
                                             mTradeFloatButtons.setHasAddInOption(false);
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
-                                            isOptionalChanged = true;
+                                            sendAddOptionalBroadCast(mVariety,false);
                                         } else {
                                             ToastUtil.show(resp.getMsg());
                                         }
@@ -401,17 +403,12 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .show();
     }
 
-    private void setResult() {
+    private void sendAddOptionalBroadCast(Variety variety,Boolean isAddOptional) {
         Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD, mVariety);
-        intent.putExtra(Launcher.EX_PAYLOAD_1, isOptionalChanged);
-        setResult(RESULT_OK, intent);
-    }
-
-    @Override
-    public void onBackPressed() {
-        setResult();
-        super.onBackPressed();
+        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.putExtra(Launcher.EX_PAYLOAD,variety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }
 
     private ViewpointFragment getViewpointFragment() {

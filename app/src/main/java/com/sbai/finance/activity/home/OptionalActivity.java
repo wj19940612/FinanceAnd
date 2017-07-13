@@ -1,11 +1,14 @@
 package com.sbai.finance.activity.home;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +51,8 @@ import butterknife.OnClick;
 
 public class OptionalActivity extends BaseActivity implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
-    public static final int OPTIONAL_CHANGEE=222;
+    public static final int OPTIONAL_CHANGE = 222;
+    public static final String OPTIONAL_CHANGE_ACTION = "222";
 
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -64,6 +68,28 @@ public class OptionalActivity extends BaseActivity implements
     private int mPage = 0;
     private int mPageSize = 200;
     private HashSet<String> mSet;
+    private BroadcastReceiver mOptionalChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == OPTIONAL_CHANGE_ACTION) {
+                Variety variety = intent.getExtras().getParcelable(Launcher.EX_PAYLOAD);
+                boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1,false);
+                if (variety != null) {
+                    for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
+                        if (variety.getVarietyId() == mSlideListAdapter.getItem(i).getVarietyId()) {
+                            variety = mSlideListAdapter.getItem(i);
+                            requestDelOptionalData(variety);
+                            break;
+                        }
+                    }
+                }
+                if (isAddOptional){
+                    reset();
+                    requestOptionalData();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +97,14 @@ public class OptionalActivity extends BaseActivity implements
         setContentView(R.layout.activity_optional);
         ButterKnife.bind(this);
         initView();
+        initBroadcastReceiver();
         requestOptionalData();
+    }
+
+    private void initBroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(OPTIONAL_CHANGE_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mOptionalChangeReceiver, intentFilter);
     }
 
     private void initView() {
@@ -94,15 +127,15 @@ public class OptionalActivity extends BaseActivity implements
                 Variety variety = (Variety) parent.getItemAtPosition(position);
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                     Launcher.with(getActivity(), FutureTradeActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGEE);
+                            .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGE);
                 }
                 if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
                     if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGEE);
+                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGE);
                     } else {
                         Launcher.with(getActivity(), StockDetailActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGEE);
+                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGE);
                     }
                 }
             }
@@ -117,6 +150,12 @@ public class OptionalActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mOptionalChangeReceiver);
     }
 
     @OnClick({R.id.addOptional, R.id.titleBar})
@@ -268,18 +307,18 @@ public class OptionalActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==OPTIONAL_CHANGEE&&resultCode==RESULT_OK){
-             Variety variety = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-             boolean isOptionalChanged = data.getBooleanExtra(Launcher.EX_PAYLOAD_1,false);
-             if (variety!=null&&isOptionalChanged){
-                 for (int i=0;i<mSlideListAdapter.getCount();i++){
-                     if (variety.getVarietyId()==mSlideListAdapter.getItem(i).getVarietyId()){
-                         variety = mSlideListAdapter.getItem(i);
-                         requestDelOptionalData(variety);
-                         break;
-                     }
-                 }
-              }
+        if (requestCode == OPTIONAL_CHANGE && resultCode == RESULT_OK) {
+            Variety variety = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+            boolean isOptionalChanged = data.getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
+            if (variety != null && isOptionalChanged) {
+                for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
+                    if (variety.getVarietyId() == mSlideListAdapter.getItem(i).getVarietyId()) {
+                        variety = mSlideListAdapter.getItem(i);
+                        requestDelOptionalData(variety);
+                        break;
+                    }
+                }
+            }
         }
     }
 

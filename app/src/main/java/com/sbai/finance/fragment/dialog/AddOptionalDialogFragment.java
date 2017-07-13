@@ -26,7 +26,7 @@ import butterknife.Unbinder;
 public class AddOptionalDialogFragment extends DialogFragment {
 
     private Unbinder mBind;
-
+    
     public AddOptionalDialogFragment() {
 
     }
