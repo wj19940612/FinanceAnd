@@ -20,9 +20,11 @@ import java.util.List;
 
 public class KlineView extends RelativeLayout implements KlineChart.OnTouchLinesAppearListener {
 
-    public interface OnAchieveTheLastListener {
+    public interface OnReachBorderListener {
 
-        void onAchieveTheLast(KlineViewData data, List<KlineViewData> dataList);
+        void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList);
+
+        void onReachRightBorder(KlineViewData theRight, List<KlineViewData> dataList);
     }
 
     private KlineChart mKlineChart;
@@ -32,7 +34,7 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
 
     private SimpleDateFormat mDateFormat;
 
-    private OnAchieveTheLastListener mOnAchieveTheLastListener;
+    private OnReachBorderListener mOnReachBorderListener;
 
     public KlineView(Context context) {
         super(context);
@@ -49,9 +51,9 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
         mKlineChart.setOnTouchLinesAppearListener(this);
         int padding = (int) mKlineChart.dp2Px(14);
         RelativeLayout.LayoutParams params = new LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
-        mKlineChart.setPadding(padding, 0 , padding, 0);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        mKlineChart.setPadding(padding, 0, padding, 0);
         addView(mKlineChart, params);
 
         mLeftSideBar = LayoutInflater.from(getContext()).inflate(R.layout.kline_side_bar, null);
@@ -79,10 +81,10 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
 
-    public void setOnAchieveTheLastListener(OnAchieveTheLastListener onAchieveTheLastListener) {
-        mOnAchieveTheLastListener = onAchieveTheLastListener;
+    public void setOnReachBorderListener(OnReachBorderListener onReachBorderListener) {
+        mOnReachBorderListener = onReachBorderListener;
         if (mKlineChart != null) {
-            mKlineChart.setOnAchieveTheLastListener(mOnAchieveTheLastListener);
+            mKlineChart.setOnReachBorderListener(mOnReachBorderListener);
         }
     }
 
@@ -130,8 +132,8 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
         mKlineChart.setDataList(dataList);
     }
 
-    public void appendDataList(List<KlineViewData> dataList) {
-        mKlineChart.appendDataList(dataList);
+    public void addHistoryData(List<KlineViewData> dataList) {
+        mKlineChart.addHistoryData(dataList);
     }
 
     public void setDayLine(boolean dayLine) {
@@ -141,6 +143,10 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
 
     public void clearData() {
         mKlineChart.clearData();
+    }
+
+    public boolean isLastDataVisible() {
+        return mKlineChart.isLastDataVisible();
     }
 
     public void setSettings(ChartSettings settings) {

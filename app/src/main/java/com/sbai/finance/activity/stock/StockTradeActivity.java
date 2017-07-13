@@ -461,7 +461,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         settings2.setIndexesBaseLines(2);
         mStockKlineView.setDayLine(true);
         mStockKlineView.setSettings(settings2);
-        mStockKlineView.setOnAchieveTheLastListener(null);
+        mStockKlineView.setOnReachBorderListener(null);
     }
 
     private void requestStockTrendDataAndSet() {

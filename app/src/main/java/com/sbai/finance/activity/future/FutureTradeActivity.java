@@ -3,6 +3,7 @@ package com.sbai.finance.activity.future;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -67,11 +68,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.R.id.klineView;
 import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
+
     //打开观点详情页
     public static final int REQ_CODE_PUBLISH = 5439;
 
@@ -93,7 +96,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     TabLayout mTabLayout;
     @BindView(R.id.trendView)
     TrendView mTrendView;
-    @BindView(R.id.klineView)
+    @BindView(klineView)
     KlineView mKlineView;
 
     @BindView(R.id.tradeFloatButtons)
@@ -222,7 +225,35 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);
-        mKlineView.setOnAchieveTheLastListener(null);
+        mKlineView.setOnReachBorderListener(new KlineView.OnReachBorderListener() {
+            @Override
+            public void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList) {
+                requestKlineDataAndAdd(theLeft);
+            }
+
+            @Override
+            public void onReachRightBorder(KlineViewData theRight, List<KlineViewData> dataList) {
+
+            }
+        });
+    }
+
+    private void requestKlineDataAndAdd(KlineViewData data) {
+        String endTime = Uri.encode(data.getTime());
+        String type = (String) mKlineView.getTag();
+        Client.getKlineData(mVariety.getContractsCode(), type, endTime)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<KlineViewData> data) {
+                        if (data != null && !data.isEmpty()) {
+                            Collections.reverse(data);
+                            mKlineView.addHistoryData(data);
+                        } else {
+                            ToastUtil.show(R.string.there_is_no_more_data);
+                        }
+                    }
+                }).fireFree();
     }
 
     private void requestTrendDataAndSet() {
@@ -542,6 +573,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     }
 
     private void requestKlineDataAndSet(final String type) {
+        mKlineView.setTag(type);
         mKlineView.clearData();
         Client.getKlineData(mVariety.getContractsCode(), type, null)
                 .setTag(TAG).setIndeterminate(this)
