@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,18 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.android.volley.DefaultRetryPolicy;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.payment.AliPayOrderInfo;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AliPayUtils;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.MyListView;
@@ -41,6 +46,8 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 
 public class PayIntentionActivity extends BaseActivity implements View.OnClickListener {
+
+    private static final String INTENTION_MONEY = "0.01";
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -64,6 +71,13 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //用于切换沙箱环境与生产环境；
+        //如果不使用此方法，默认使用生产环境；
+        //在钱包不存在的情况下，会唤起h5支付；
+        //注：在生产环境，必须将此代码注释！
+        if (BuildConfig.DEBUG) {
+            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+        }
         setContentView(R.layout.activity_pay_intention);
         ButterKnife.bind(this);
 
@@ -203,8 +217,6 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
 
                 if (checked == position) {
                     mCheckboxClick.setImageResource(R.drawable.ic_pay_way_checkbox_checked);
-//                    mPlatform = item.getPlatform();
-//                    mType = item.getType();
                     if (onPayWayListener != null) {
                         onPayWayListener.onPayWay(item.getPlatform(), item.getType());
                     }
@@ -217,16 +229,18 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
 
     @OnClick(R.id.confirmPayment)
     public void onViewClicked() {
+        if (mType == 1) {
+            requestAliPaySign();
+            return;
+        }
+        Log.d(TAG, "onViewClicked: " + mDataId);
         Client.getPaymentPath(mDataId, mPlatform).setTag(TAG).setIndeterminate(this)
                 .setRetryPolicy(new DefaultRetryPolicy(10000, DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_MULT))
                 .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                     @Override
                     protected void onRespSuccessData(PaymentPath paymentPath) {
                         mPaymentPath = paymentPath.getCodeUrl();
-                        if (mType == 1) {
-                            // TODO: 2017/7/12 支付宝支付
-                            requestAliPaySign();
-                        } else if (mType == 2) {
+                        if (mType == 2) {
                             Launcher.with(getActivity(), WeChatPayActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, mPaymentPath)
                                     .putExtra(Launcher.EX_PAYLOAD_1, mDataId)
@@ -238,6 +252,17 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void requestAliPaySign() {
-
+        Log.d(TAG, "requestAliPaySign: " + mDataId);
+        Client.requestAliPayOrderInfo(INTENTION_MONEY, mDataId)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
+                    @Override
+                    protected void onRespSuccessData(AliPayOrderInfo data) {
+                        Log.d(TAG, "onRespSuccessData: " + data.getOrderString());
+                        new AliPayUtils(PayIntentionActivity.this, true).aliPay(data.getOrderString());
+                    }
+                })
+                .setTag(TAG)
+                .fire();
     }
 }

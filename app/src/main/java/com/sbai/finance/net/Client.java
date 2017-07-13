@@ -1563,6 +1563,23 @@ public class Client {
     }
 
     /**
+     * /user/userPay/alipayTrade.do
+     * POST
+     * app生成订单信息（wms）
+     * 借款ID 充值传0
+     *
+     * @param money 订单金额
+     * @param orderId 借款ID 充值传0
+     * @return
+     */
+    public static API requestAliPayOrderInfo(String money, int orderId) {
+        return new API(POST, "/user/userPay/alipayTrade.do", new ApiParams()
+                .put("money", money)
+                .put("orderId", orderId));
+    }
+
+
+    /**
      * /user/bankCard/hasBindBankCard.do
      * GET
      * 是否绑定过银行卡（wms）

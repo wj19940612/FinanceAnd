@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,6 +25,7 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.recharge.BankCardPayActivity;
 import com.sbai.finance.activity.recharge.WeChatPayActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.payment.AliPayOrderInfo;
 import com.sbai.finance.model.payment.BankLimit;
 import com.sbai.finance.model.payment.PaymentPath;
 import com.sbai.finance.model.payment.UsablePlatform;
@@ -78,7 +80,7 @@ public class RechargeActivity extends BaseActivity {
     //银行卡已经绑定
     private String mBankPay;
 
-    private int mSelectPayWay = UsablePlatform.TYPE_AIL_PAY;
+    private int mSelectPayWay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,18 +89,13 @@ public class RechargeActivity extends BaseActivity {
         //如果不使用此方法，默认使用生产环境；
         //在钱包不存在的情况下，会唤起h5支付；
         //注：在生产环境，必须将此代码注释！
-        if (!BuildConfig.IS_PROD) {
+        if (BuildConfig.DEBUG) {
             EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
         }
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
         mRechargeCount.addTextChangedListener(mValidationWatcher);
         formatBankPay();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
         requestUserBankInfo();
     }
 
@@ -165,9 +162,12 @@ public class RechargeActivity extends BaseActivity {
     private void handleUserPayPlatform(List<UsablePlatform> usablePlatformList) {
         for (int i = 0; i < usablePlatformList.size(); i++) {
             UsablePlatform usablePlatform = usablePlatformList.get(i);
-            if (usablePlatform.getPlatform().equalsIgnoreCase(Preference.get().getRechargeWay(LocalUser.getUser().getPhone()))) {
+
+            showPayView(usablePlatform);
+            if (usablePlatform.getType() == Preference.get().getRechargeWay(LocalUser.getUser().getPhone())) {
                 mUsablePlatform = usablePlatform;
                 mSelectPayWay = mUsablePlatform.getType();
+                break;
             } else {
                 mUsablePlatform = usablePlatformList.get(0);
                 mSelectPayWay = usablePlatformList.get(0).getType();
@@ -186,6 +186,26 @@ public class RechargeActivity extends BaseActivity {
             default:
                 setSelectPayWay(mAliPay);
                 break;
+        }
+    }
+
+    private void showPayView(UsablePlatform usablePlatform) {
+        if (usablePlatform.isBankPay()) {
+            mBankPayRl.setVisibility(View.VISIBLE);
+        } else {
+            mBankPayRl.setVisibility(View.GONE);
+        }
+
+        if (usablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
+            mAliPayRl.setVisibility(View.VISIBLE);
+        } else {
+            mAliPayRl.setVisibility(View.GONE);
+        }
+
+        if (usablePlatform.getType() == UsablePlatform.TYPE_WECHAT_PAY) {
+            mWeChatPayRl.setVisibility(View.VISIBLE);
+        } else {
+            mWeChatPayRl.setVisibility(View.GONE);
         }
     }
 
@@ -253,14 +273,15 @@ public class RechargeActivity extends BaseActivity {
         }
     }
 
-    private void getSelectPayWayUsablePlatform(int typeAilPay) {
+    private void getSelectPayWayUsablePlatform(int payType) {
         if (mUsablePlatformList != null && !mUsablePlatformList.isEmpty()) {
             for (UsablePlatform data : mUsablePlatformList) {
-                if (data.getType() == typeAilPay) {
+                if (data.getType() == payType) {
                     mUsablePlatform = data;
                     break;
                 }
             }
+            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), payType);
             changeRechargeBtnStatus();
         }
     }
@@ -333,10 +354,17 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void requestAilPaySign(String money) {
-        // TODO: 2017/7/12  支付宝支付
-        // TODO: 2017/7/12 支付宝支付
-        new AliPayUtils(this, false).aliPay("");
-//        return;
+        Client.requestAliPayOrderInfo(money, 0)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
+                    @Override
+                    protected void onRespSuccessData(AliPayOrderInfo data) {
+                        Log.d(TAG, "onRespSuccessData: " + data.getOrderString());
+                        new AliPayUtils(RechargeActivity.this, false).aliPay(data.getOrderString());
+                    }
+                })
+                .setTag(TAG)
+                .fire();
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
+import com.google.gson.Gson;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.payment.AliPayResult;
 
@@ -53,8 +54,12 @@ public class AliPayUtils {
 //                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 //                        ToastUtil.show("支付失败");
 //                    }
-                    Log.d(TAG, "客户端 resultStatus: " + resultStatus);
-                    // TODO: 2017/7/12 异步查询服务端信息
+                    Log.d(TAG, "客户端 aliPayResult: " + aliPayResult.toString());
+                    String toJson = new Gson().toJson(aliPayResult);
+                    Log.d(TAG, "handleMessage: " + toJson);
+                    // TODO: 2017/7/13  服务端进行校验
+
+
                     if (mIsIntentionMoney) {
                         Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -62,7 +67,6 @@ public class AliPayUtils {
                         mFragmentActivity.startActivity(intent);
                     }
                     mFragmentActivity.finish();
-
                     break;
                 default:
                     break;
@@ -76,7 +80,6 @@ public class AliPayUtils {
             public void run() {
                 PayTask payTask = new PayTask(mFragmentActivity);
                 Map<String, String> result = payTask.payV2(orderInfo, true);
-                Log.d(TAG, result.toString());
                 Message message = mHandler.obtainMessage();
                 message.what = ALI_PAY_FLAG;
                 message.obj = result;

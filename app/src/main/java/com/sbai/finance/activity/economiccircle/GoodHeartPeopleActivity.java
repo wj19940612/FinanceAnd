@@ -45,7 +45,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.activity.mine.LoginActivity.LOGIN_SUCCESS_ACTION;
 
 public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -60,7 +59,7 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
     TextView mPayIntention;
 
     private int mDataId;
-    private static int mUserId;
+    private int mUserId;
     private int mStatus;
     private int mSelectedUserId;
     private static int status;

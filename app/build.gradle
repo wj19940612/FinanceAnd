@@ -23,6 +23,8 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
         }
+
+        multiDexEnabled true
     }
 
     java.util.Properties properties = new Properties();
@@ -149,4 +151,5 @@ dependencies {
     compile 'com.koushikdutta.async:androidasync:2.+'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    compile 'com.android.support:multidex:1.0.1'
 }
