@@ -223,15 +223,20 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         mKlineView.setSettings(settings2);
-        mKlineView.setOnAchieveTheLastListener(new KlineView.OnAchieveTheLastListener() {
+        mKlineView.setOnReachBorderListener(new KlineView.OnReachBorderListener() {
             @Override
-            public void onAchieveTheLast(KlineViewData data, List<KlineViewData> dataList) {
-                requestKlineDataAndAppend(data);
+            public void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList) {
+                requestKlineDataAndAdd(theLeft);
+            }
+
+            @Override
+            public void onReachRightBorder(KlineViewData theRight, List<KlineViewData> dataList) {
+
             }
         });
     }
 
-    private void requestKlineDataAndAppend(KlineViewData data) {
+    private void requestKlineDataAndAdd(KlineViewData data) {
         String endTime = Uri.encode(data.getTime());
         String type = (String) mKlineView.getTag();
         Client.getKlineData(mVariety.getContractsCode(), type, endTime)
@@ -241,7 +246,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     protected void onRespSuccessData(List<KlineViewData> data) {
                         if (data != null && !data.isEmpty()) {
                             Collections.reverse(data);
-                            mKlineView.appendDataList(data);
+                            mKlineView.addHistoryData(data);
                         } else {
                             ToastUtil.show(R.string.there_is_no_more_data);
                         }

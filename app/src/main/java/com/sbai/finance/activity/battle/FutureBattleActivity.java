@@ -2,6 +2,7 @@ package com.sbai.finance.activity.battle;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -513,7 +514,35 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         settings2.setGameMode(true);
         mKlineView.setSettings(settings2);
-        mKlineView.setOnAchieveTheLastListener(null);
+        mKlineView.setOnReachBorderListener(new KlineView.OnReachBorderListener() {
+            @Override
+            public void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList) {
+                requestKlineDataAndAdd(theLeft);
+            }
+
+            @Override
+            public void onReachRightBorder(KlineViewData theRight, List<KlineViewData> dataList) {
+                
+            }
+        });
+    }
+
+    private void requestKlineDataAndAdd(KlineViewData data) {
+        String endTime = Uri.encode(data.getTime());
+        String type = (String) mKlineView.getTag();
+        Client.getKlineData(mVariety.getContractsCode(), type, endTime)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<KlineViewData> data) {
+                        if (data != null && !data.isEmpty()) {
+                            Collections.reverse(data);
+                            mKlineView.addHistoryData(data);
+                        } else {
+                            ToastUtil.show(R.string.there_is_no_more_data);
+                        }
+                    }
+                }).fireFree();
     }
 
     private void requestTrendDataAndSet() {
@@ -528,8 +557,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void requestKlineDataAndSet(final String type) {
         mKlineView.clearData();
-        Client.getKlineData(mVariety.getContractsCode(), type, null)
-                .setTag(TAG).setIndeterminate(this)
+        mKlineView.setTag(type);
+        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<KlineViewData> data) {
@@ -1109,12 +1138,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     public void onTimeUp(int count) {
         if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
             requestTrendDataAndSet();
-            if (mTabLayout.getSelectedTabPosition() == 1) {
-                requestKlineDataAndSet("1");
-            } else if (mTabLayout.getSelectedTabPosition() == 2) {
-                requestKlineDataAndSet("3");
-            } else if (mTabLayout.getSelectedTabPosition() == 3) {
-                requestKlineDataAndSet("5");
+
+            if (mKlineView.isLastDataVisible()) {
+                if (mTabLayout.getSelectedTabPosition() == 1) {
+                    requestKlineDataAndSet("1");
+                } else if (mTabLayout.getSelectedTabPosition() == 2) {
+                    requestKlineDataAndSet("3");
+                } else if (mTabLayout.getSelectedTabPosition() == 3) {
+                    requestKlineDataAndSet("5");
+                }
             }
         }
         if (mGameStatus == GAME_STATUS_CREATED) {
