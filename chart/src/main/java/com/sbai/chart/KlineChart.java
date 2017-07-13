@@ -60,7 +60,7 @@ public class KlineChart extends ChartView {
 
     @Override
     protected boolean enableDragChart() {
-        return false;
+        return true;
     }
 
     @Override
