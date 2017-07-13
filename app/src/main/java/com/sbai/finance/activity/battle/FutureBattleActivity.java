@@ -1052,7 +1052,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onClosePositionButtonClick() {
-        requestClosePosition(mCurrentOrder.getId());
+        if (mCreatorOrder != null) {
+            requestClosePosition(mCurrentOrder.getId());
+        }
     }
 
     private void requestCreateOrder(int direction) {
