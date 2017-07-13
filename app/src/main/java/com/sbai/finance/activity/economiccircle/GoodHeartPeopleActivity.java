@@ -59,12 +59,9 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 	TextView mPayIntention;
 
 	private int mDataId;
-	private static int mUserId;
+	private int mUserId;
 	private int mStatus;
 	private int mSelectedUserId;
-	private static int status;
-	private static int userId;
-	private static int selectedUserId;
 	private List<GoodHeartPeople> mGoodHeartPeopleList;
 	private GoodHeartPeopleAdapter mGoodHeartPeopleAdapter;
 	private RefreshReceiver mRefreshReceiver;
@@ -100,7 +97,7 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 		}
 
 		scrollToTop(mTitleBar, mListView);
-		mGoodHeartPeopleAdapter = new GoodHeartPeopleAdapter(this);
+		mGoodHeartPeopleAdapter = new GoodHeartPeopleAdapter(this, mUserId, mStatus, mSelectedUserId);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mGoodHeartPeopleAdapter);
 		mListView.setOnItemClickListener(this);
@@ -161,9 +158,6 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 		mUserId = intent.getIntExtra(Launcher.USER_ID, -1);
 		mStatus = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 		mSelectedUserId = intent.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-		userId = mUserId;
-		status = mStatus;
-		selectedUserId = mSelectedUserId;
 	}
 
 	private void requestGoodHeartPeopleList() {
@@ -193,10 +187,16 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 
 		private Context mContext;
 		private int mChecked = -1;
+		private int mUserId;
+		private int mStatus;
+		private int mSelectedUserId;
 
-		private GoodHeartPeopleAdapter(Context context) {
+		private GoodHeartPeopleAdapter(Context context, int userId, int status, int selectedUserId) {
 			super(context, 0);
-			mContext = context;
+			this.mContext = context;
+			this.mUserId = userId;
+			this.mStatus = status;
+			this.mSelectedUserId = selectedUserId;
 		}
 
 		private void setChecked(int checked) {
@@ -214,7 +214,7 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position), mChecked, position);
+			viewHolder.bindingData(mContext, getItem(position), mChecked, position, mUserId, mStatus, mSelectedUserId);
 			return convertView;
 		}
 
@@ -234,7 +234,8 @@ public class GoodHeartPeopleActivity extends BaseActivity implements AdapterView
 				ButterKnife.bind(this, view);
 			}
 
-			private void bindingData(final Context context, final GoodHeartPeople item, int checked, int position) {
+			private void bindingData(final Context context, final GoodHeartPeople item, int checked,
+			                         int position, int userId, int status, int selectedUserId) {
 				if (item == null) return;
 
 				Glide.with(context).load(item.getPortrait())

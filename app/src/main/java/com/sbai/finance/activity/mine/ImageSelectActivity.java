@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -148,7 +149,7 @@ public class ImageSelectActivity extends BaseActivity {
                     listSelectedPath.remove(path);
             }
             //如果没有选中的按钮不可点击
-            if (listSelectedPath.size() == 0) {
+            if (listSelectedPath.size() == 0&&mCanSelectedAmount==0) {
                 setRightButtonEnable(false);
             } else {
                 setRightButtonEnable(true);
@@ -363,7 +364,6 @@ public class ImageSelectActivity extends BaseActivity {
             Glide.with(context).load("file://" + list.get(position)).into(holder.iv);
             holder.cb.setChecked(listChecked.get(position));
             //不能手动选
-            holder.cb.setEnabled(false);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

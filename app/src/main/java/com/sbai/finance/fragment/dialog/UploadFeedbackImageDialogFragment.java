@@ -167,7 +167,9 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
                     break;
                 case REQ_CODE_TAKE_PHONE_FROM_GALLERY:
                     String mImagePath = data.getStringExtra(Launcher.EX_PAYLOAD);
-                    saveImagePage(mImagePath);
+                    if (!TextUtils.isEmpty(mImagePath)){
+                        saveImagePage(mImagePath);
+                    }
                     break;
             }
         }

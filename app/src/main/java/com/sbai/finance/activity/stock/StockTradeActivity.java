@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import com.sbai.chart.KlineView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.trade.PublishOpinionActivity;
 import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
@@ -59,6 +61,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
+import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public abstract class StockTradeActivity extends BaseActivity {
 
@@ -110,7 +113,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private PredictionDialogFragment mPredictionFragment;
     protected Variety mVariety;
-    private boolean isOptionalChanged;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,7 +209,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(false);
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
-                            isOptionalChanged = true;
+                            sendAddOptionalBroadCast(mVariety, false);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -224,7 +227,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
-                            isOptionalChanged = false;
+                            sendAddOptionalBroadCast(null, true);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -273,6 +276,14 @@ public abstract class StockTradeActivity extends BaseActivity {
         }
     }
 
+    private void sendAddOptionalBroadCast(Variety variety, Boolean isAddOptional) {
+        Intent intent = new Intent();
+        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.putExtra(Launcher.EX_PAYLOAD, variety);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -284,12 +295,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onDestroy();
         UMShareAPI.get(this).release();
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-    }
-
-    @Override
-    public void onBackPressed() {
-        setResult();
-        super.onBackPressed();
     }
 
     @Override
@@ -469,12 +474,6 @@ public abstract class StockTradeActivity extends BaseActivity {
                         }
                     }
                 }).fireFree();
-    }
-    private void setResult(){
-        Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD,mVariety);
-        intent.putExtra(Launcher.EX_PAYLOAD_1,isOptionalChanged);
-        setResult(RESULT_OK, intent);
     }
 
     private void initSlidingTab() {

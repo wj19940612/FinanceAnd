@@ -1,9 +1,11 @@
 package com.sbai.finance.activity.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,6 +44,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 /**
  * Created by Administrator on 2017-06-0.
@@ -107,6 +111,7 @@ public class SearchOptionalActivity extends BaseActivity {
                                 protected void onRespSuccess(Resp<JsonObject> resp) {
                                     if (resp.isSuccess()) {
                                         requestSearch(mSearch.getText().toString());
+                                        sendAddOptionalBroadCast();
                                     } else {
                                         ToastUtil.show(resp.getMsg());
                                     }
@@ -172,6 +177,13 @@ public class SearchOptionalActivity extends BaseActivity {
         mOptionalAdapter.clear();
         mOptionalAdapter.addAll(data);
         mOptionalAdapter.notifyDataSetChanged();
+    }
+
+    private void sendAddOptionalBroadCast() {
+        Intent intent = new Intent();
+        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, true);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }
 
     @Override
