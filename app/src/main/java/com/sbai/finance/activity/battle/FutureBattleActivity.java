@@ -654,15 +654,18 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
-                if (!mIsObserver && !mBattle.isBattleOver()) {
+                if (!mBattle.isBattleOver()) {
                     if (push.getContent() != null) {
                         mBattle = (Battle) push.getContent().getData();
-                        updateBattleInfo();
-                        showGameOverDialog();
-                        refreshTradeView();
+                        if (!mIsObserver ) {
+                            updateBattleInfo();
+                            showGameOverDialog();
+                            refreshTradeView();
+                        }else {
+                            mBattleView.setWinResult(mBattle.getWinResult());
+                            mBattleView.setPraiseEnable(false);
+                        }
                     }
-                } else if (mIsObserver) {
-                    mBattleView.setPraiseEnable(false);
                 }
                 break;
 
@@ -1279,6 +1282,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
                             if (mBattle.getGameStatus() == GAME_STATUS_END
                                     && mIsObserver) {
+                                mBattleView.setWinResult(mBattle.getWinResult());
                                 mBattleView.setPraiseEnable(false);
                             }
                         }
