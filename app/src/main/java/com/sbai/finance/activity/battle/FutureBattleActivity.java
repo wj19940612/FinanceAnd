@@ -908,7 +908,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         dialog.dismiss();
                         requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
                     }
-                });
+                }).show();
     }
 
     //房间超时弹窗
