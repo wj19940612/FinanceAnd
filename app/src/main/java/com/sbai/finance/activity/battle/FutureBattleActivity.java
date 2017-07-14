@@ -1072,17 +1072,20 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onLongPurchaseButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.BATTLE_BULLISH);
         requestCreateOrder(DIRECTION_LONG_PURCHASE);
     }
 
     @Override
     public void onShortPurchaseButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.BATTLE_BEARISH);
         requestCreateOrder(DIRECTION_SHORT_PURCHASE);
     }
 
     @Override
     public void onClosePositionButtonClick() {
-        if (mCreatorOrder != null) {
+        umengEventCount(UmengCountEventIdUtils.BATTLE_CLOSE_POSITION);
+        if (mCurrentOrder != null) {
             requestClosePosition(mCurrentOrder.getId());
         }
     }
