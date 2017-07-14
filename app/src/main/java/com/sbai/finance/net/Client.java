@@ -1568,7 +1568,7 @@ public class Client {
      * app生成订单信息（wms）
      * 借款ID 充值传0
      *
-     * @param money 订单金额
+     * @param money   订单金额
      * @param orderId 借款ID 充值传0
      * @return
      */
@@ -1576,6 +1576,18 @@ public class Client {
         return new API(POST, "/user/userPay/alipayTrade.do", new ApiParams()
                 .put("money", money)
                 .put("orderId", orderId));
+    }
+
+    /**
+     * /user/userPay/alipayCheckSign.do
+     * POST
+     * 同步验签（wms）
+     *
+     * @param jsonStr
+     * @return
+     */
+    public static API requestAliPayWebSign(String jsonStr) {
+        return new API(POST, "/user/userPay/alipayCheckSign.do", new ApiParams().put("jsonStr", jsonStr));
     }
 
 

@@ -29,8 +29,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            tools:src="@drawable/ic_pay_way_checkbox_unchecked"/>
-        
+            android:src="@drawable/checkbox_pay_way"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"

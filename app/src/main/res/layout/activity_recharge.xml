@@ -49,88 +49,95 @@
             android:textSize="15sp"/>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/weChatPayRl"
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/weChatPayRl"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:layout_marginTop="12sp"-->
+    <!--android:background="@drawable/bg_white"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:padding="@dimen/common_padding">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:drawableLeft="@drawable/ic_we_chat_pay"-->
+    <!--android:drawablePadding="8dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/we_chat_pay"-->
+    <!--android:textColor="@color/primaryText"-->
+    <!--android:textSize="15sp"/>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/weChatPay"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:src="@drawable/checkbox_pay_way"/>-->
+    <!--</RelativeLayout>-->
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/aliPayRl"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:layout_marginTop="0.5dp"-->
+    <!--android:background="@drawable/bg_white"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:padding="@dimen/common_padding">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:drawableLeft="@drawable/ic_ali_pay"-->
+    <!--android:drawablePadding="8dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/ali_pay"-->
+    <!--android:textColor="@color/primaryText"-->
+    <!--android:textSize="15sp"/>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/aliPay"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:src="@drawable/checkbox_pay_way"/>-->
+    <!--</RelativeLayout>-->
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/bankPayRl"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:layout_marginTop="0.5dp"-->
+    <!--android:background="@drawable/bg_white"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="@dimen/common_padding"-->
+    <!--android:paddingRight="@dimen/common_padding">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/bankCardInfo"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:drawableLeft="@drawable/ic_bank_pay"-->
+    <!--android:drawablePadding="8dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/bank_card"-->
+    <!--android:textColor="@color/primaryText"-->
+    <!--android:textSize="15sp"/>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/bankPay"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:src="@drawable/checkbox_pay_way"/>-->
+    <!--</RelativeLayout>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="12sp"
-        android:background="@drawable/bg_white"
-        android:gravity="center_vertical"
-        android:padding="@dimen/common_padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_we_chat_pay"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/we_chat_pay"
-            android:textColor="@color/primaryText"
-            android:textSize="15sp"/>
-
-        <ImageView
-            android:id="@+id/weChatPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/checkbox_pay_way"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/aliPayRl"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="0.5dp"
-        android:background="@drawable/bg_white"
-        android:gravity="center_vertical"
-        android:padding="@dimen/common_padding">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_ali_pay"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/ali_pay"
-            android:textColor="@color/primaryText"
-            android:textSize="15sp"/>
-
-        <ImageView
-            android:id="@+id/aliPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/checkbox_pay_way"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/bankPayRl"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="0.5dp"
-        android:background="@drawable/bg_white"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding">
-
-        <TextView
-            android:id="@+id/bankCardInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_bank_pay"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/bank_card"
-            android:textColor="@color/primaryText"
-            android:textSize="15sp"/>
-
-        <ImageView
-            android:id="@+id/bankPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/checkbox_pay_way"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:divider="@null"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/recharge"

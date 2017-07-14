@@ -7,13 +7,13 @@ import android.os.Parcelable;
  * Created by lixiaokuan0819 on 2017/5/16.
  */
 
-public class UsablePlatform implements Parcelable{
+public class UsablePlatform implements Parcelable {
 
     public static final int TYPE_AIL_PAY = 1;
     public static final int TYPE_WECHAT_PAY = 2;
     public static final int TYPE_BANK_PAY = 3;
 
-    public static final String  PLATFORM_AIL_PAY= "qtalipay";
+    public static final String PLATFORM_AIL_PAY = "qtalipay";
 
     /**
      * createTime : 1494402852000
@@ -41,10 +41,22 @@ public class UsablePlatform implements Parcelable{
     private long updateTime;
     //1 支付宝
     private int type;
+    private boolean isSelectPayWay;
 
-    //目前是支付宝
+    public boolean isSelectPayWay() {
+        return isSelectPayWay;
+    }
+
+    public void setSelectPayWay(boolean selectPayWay) {
+        isSelectPayWay = selectPayWay;
+    }
+
+    public boolean isWeChatPay() {
+        return getType() == TYPE_WECHAT_PAY;
+    }
+
     public boolean isAliPay() {
-        return TYPE_AIL_PAY == getType();
+        return getType() == TYPE_AIL_PAY;
     }
 
     public boolean isBankPay() {
@@ -135,7 +147,11 @@ public class UsablePlatform implements Parcelable{
                 ", transfer=" + transfer +
                 ", updateTime=" + updateTime +
                 ", type=" + type +
+                ", isSelectPayWay=" + isSelectPayWay +
                 '}';
+    }
+
+    public UsablePlatform() {
     }
 
     @Override
@@ -154,9 +170,7 @@ public class UsablePlatform implements Parcelable{
         dest.writeInt(this.transfer);
         dest.writeLong(this.updateTime);
         dest.writeInt(this.type);
-    }
-
-    public UsablePlatform() {
+        dest.writeByte(this.isSelectPayWay ? (byte) 1 : (byte) 0);
     }
 
     protected UsablePlatform(Parcel in) {
@@ -169,6 +183,7 @@ public class UsablePlatform implements Parcelable{
         this.transfer = in.readInt();
         this.updateTime = in.readLong();
         this.type = in.readInt();
+        this.isSelectPayWay = in.readByte() != 0;
     }
 
     public static final Creator<UsablePlatform> CREATOR = new Creator<UsablePlatform>() {

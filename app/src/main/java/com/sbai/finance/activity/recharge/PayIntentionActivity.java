@@ -47,8 +47,6 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
 
 public class PayIntentionActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String INTENTION_MONEY = "0.01";
-
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.intentionAmount)
@@ -66,6 +64,8 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
     private String mPaymentPath;
     private List<UsablePlatform> mUsablePlatformList;
     private PayIntentionAdapter mPayIntentionAdapter;
+
+    private double mIntentionMoney = 0.01;
 
 
     @Override
@@ -122,6 +122,7 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
                 .setCallback(new Callback2D<Resp<Double>, Double>() {
                     @Override
                     protected void onRespSuccessData(Double amount) {
+                        mIntentionMoney = amount;
                         updateIntentionAmount(amount);
                     }
                 }).fire();
@@ -252,8 +253,7 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void requestAliPaySign() {
-        Log.d(TAG, "requestAliPaySign: " + mDataId);
-        Client.requestAliPayOrderInfo(INTENTION_MONEY, mDataId)
+        Client.requestAliPayOrderInfo(String.valueOf(mIntentionMoney), mDataId)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override

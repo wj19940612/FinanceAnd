@@ -6,11 +6,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,45 +46,37 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
 public class RechargeActivity extends BaseActivity {
 
 
-    @BindView(R.id.rechargeCount)
-    AppCompatEditText mRechargeCount;
-    @BindView(R.id.weChatPay)
-    ImageView mWeChatPay;
-    @BindView(R.id.weChatPayRl)
-    RelativeLayout mWeChatPayRl;
-    @BindView(R.id.aliPay)
-    ImageView mAliPay;
-    @BindView(R.id.aliPayRl)
-    RelativeLayout mAliPayRl;
-    @BindView(R.id.bankPay)
-    ImageView mBankCardPay;
-    @BindView(R.id.bankPayRl)
-    RelativeLayout mBankPayRl;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     @BindView(R.id.recharge)
     AppCompatButton mRecharge;
     @BindView(R.id.connect_service)
     AppCompatTextView mConnectService;
-    @BindView(R.id.bankCardInfo)
-    TextView mBankCardInfo;
+    @BindView(R.id.rechargeCount)
+    AppCompatEditText mRechargeCount;
 
     private List<UsablePlatform> mUsablePlatformList;
     private UsablePlatform mUsablePlatform;
     private UserBankCardInfoModel mUserBankCardInfoModel;
     private BankLimit mBankLimit;
-    //银行卡已经绑定
-    private String mBankPay;
 
     private int mSelectPayWay;
+    private RechargeWayAdapter mRechargeWayAdapter;
+
+
+    public interface OnPayWayListener {
+        void onPayWay(UsablePlatform usablePlatform, int position);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,15 +90,46 @@ public class RechargeActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
+        initListView();
         mRechargeCount.addTextChangedListener(mValidationWatcher);
         formatBankPay();
         requestUserBankInfo();
     }
 
-    private void formatBankPay() {
+    private void initListView() {
+        mRechargeWayAdapter = new RechargeWayAdapter(new ArrayList<UsablePlatform>());
+        mRecyclerView.setAdapter(mRechargeWayAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRechargeWayAdapter.setOnPayWayListener(new OnPayWayListener() {
+            @Override
+            public void onPayWay(UsablePlatform usablePlatform, int position) {
+                if (usablePlatform != null) {
+                    if (position == mSelectPayWay) return;
+                    updateSelectPayWay(usablePlatform, position);
+                }
+            }
+
+        });
+    }
+
+    private void updateSelectPayWay(UsablePlatform usablePlatform, int position) {
+        Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), usablePlatform.getPlatform());
+        UsablePlatform oldUsablePlatform = mUsablePlatformList.get(mSelectPayWay);
+        oldUsablePlatform.setSelectPayWay(false);
+        mRechargeWayAdapter.notifyItemChanged(mSelectPayWay, oldUsablePlatform);
+
+        usablePlatform.setSelectPayWay(true);
+        mRechargeWayAdapter.notifyItemChanged(position, position);
+        mSelectPayWay = position;
+        mUsablePlatform = usablePlatform;
+        changeRechargeBtnStatus();
+    }
+
+    private String formatBankPay() {
         if (mUserBankCardInfoModel != null && !TextUtils.isEmpty(mUserBankCardInfoModel.getCardNumber())) {
-            mBankPay = mUserBankCardInfoModel.getIssuingBankName() + "(" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
+            return mUserBankCardInfoModel.getIssuingBankName() + "(" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
         }
+        return "";
     }
 
     private void requestUserBankInfo() {
@@ -114,7 +141,6 @@ public class RechargeActivity extends BaseActivity {
                     protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
                         if (data != null && !data.isEmpty()) {
                             mUserBankCardInfoModel = data.get(0);
-                            formatBankPay();
                             requestUsablePlatformList();
                         }
                     }
@@ -132,10 +158,24 @@ public class RechargeActivity extends BaseActivity {
                         protected void onRespSuccessData(List<BankLimit> data) {
                             if (data != null && !data.isEmpty()) {
                                 mBankLimit = data.get(0);
-                                if (mUsablePlatform != null && !TextUtils.isEmpty(mBankPay)) {
-                                    SpannableString payBank = StrUtil.mergeTextWithRatioColor(mBankPay, "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
+                                String bankPay = formatBankPay();
+                                if (mUsablePlatform != null && !TextUtils.isEmpty(bankPay)) {
+                                    SpannableString payBank = StrUtil.mergeTextWithRatioColor(bankPay,
+                                            "\n" + getString(R.string.bank_card_recharge_limit, mBankLimit.getLimitSingle()), 0.98f,
                                             ContextCompat.getColor(RechargeActivity.this, R.color.unluckyText));
-                                    mBankCardInfo.setText(payBank);
+                                    if (mUsablePlatformList != null &&
+                                            !mUsablePlatformList.isEmpty()) {
+                                        for (int i = 0; i < mUsablePlatformList.size(); i++) {
+                                            UsablePlatform usablePlatform = mUsablePlatformList.get(i);
+                                            if (usablePlatform.isBankPay()) {
+                                                usablePlatform.setName(payBank.toString());
+                                                mRechargeWayAdapter.notifyItemChanged(i, usablePlatform);
+                                                break;
+                                            }
+                                        }
+
+                                    }
+
                                 }
                             }
 
@@ -153,8 +193,9 @@ public class RechargeActivity extends BaseActivity {
                     protected void onRespSuccessData(List<UsablePlatform> usablePlatformList) {
                         if (usablePlatformList == null || usablePlatformList.isEmpty()) return;
                         mUsablePlatformList = usablePlatformList;
-                        requestBankLimit();
+                        mRechargeWayAdapter.addAll(mUsablePlatformList);
                         handleUserPayPlatform(usablePlatformList);
+                        requestBankLimit();
                     }
                 }).fire();
     }
@@ -162,51 +203,17 @@ public class RechargeActivity extends BaseActivity {
     private void handleUserPayPlatform(List<UsablePlatform> usablePlatformList) {
         for (int i = 0; i < usablePlatformList.size(); i++) {
             UsablePlatform usablePlatform = usablePlatformList.get(i);
-
-            showPayView(usablePlatform);
-            if (usablePlatform.getType() == Preference.get().getRechargeWay(LocalUser.getUser().getPhone())) {
+            if (usablePlatform.getPlatform().equalsIgnoreCase(Preference.get().getRechargeWay(LocalUser.getUser().getPhone()))) {
                 mUsablePlatform = usablePlatform;
-                mSelectPayWay = mUsablePlatform.getType();
+                mSelectPayWay = i;
                 break;
             } else {
                 mUsablePlatform = usablePlatformList.get(0);
-                mSelectPayWay = usablePlatformList.get(0).getType();
+                mSelectPayWay = 0;
             }
         }
-        switch (mSelectPayWay) {
-            case UsablePlatform.TYPE_AIL_PAY:
-                setSelectPayWay(mAliPay);
-                break;
-            case UsablePlatform.TYPE_WECHAT_PAY:
-                setSelectPayWay(mWeChatPay);
-                break;
-            case UsablePlatform.TYPE_BANK_PAY:
-                setSelectPayWay(mBankCardPay);
-                break;
-            default:
-                setSelectPayWay(mAliPay);
-                break;
-        }
-    }
-
-    private void showPayView(UsablePlatform usablePlatform) {
-        if (usablePlatform.isBankPay()) {
-            mBankPayRl.setVisibility(View.VISIBLE);
-        } else {
-            mBankPayRl.setVisibility(View.GONE);
-        }
-
-        if (usablePlatform.getType() == UsablePlatform.TYPE_AIL_PAY) {
-            mAliPayRl.setVisibility(View.VISIBLE);
-        } else {
-            mAliPayRl.setVisibility(View.GONE);
-        }
-
-        if (usablePlatform.getType() == UsablePlatform.TYPE_WECHAT_PAY) {
-            mWeChatPayRl.setVisibility(View.VISIBLE);
-        } else {
-            mWeChatPayRl.setVisibility(View.GONE);
-        }
+        mUsablePlatform.setSelectPayWay(true);
+        mRechargeWayAdapter.notifyItemChanged(mSelectPayWay, mUsablePlatform);
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -247,7 +254,7 @@ public class RechargeActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.recharge, R.id.connect_service, R.id.weChatPayRl, R.id.aliPayRl, R.id.bankPayRl})
+    @OnClick({R.id.recharge, R.id.connect_service})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recharge:
@@ -258,43 +265,7 @@ public class RechargeActivity extends BaseActivity {
                 umengEventCount(UmengCountEventIdUtils.RECHARGE_CONTACT_CUSTOMER_SERVICE);
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
-            case R.id.weChatPayRl:
-                setSelectPayWay(mWeChatPay);
-                getSelectPayWayUsablePlatform(UsablePlatform.TYPE_WECHAT_PAY);
-                break;
-            case R.id.aliPayRl:
-                setSelectPayWay(mAliPay);
-                getSelectPayWayUsablePlatform(UsablePlatform.TYPE_AIL_PAY);
-                break;
-            case R.id.bankPayRl:
-                setSelectPayWay(mBankCardPay);
-                getSelectPayWayUsablePlatform(UsablePlatform.TYPE_BANK_PAY);
-                break;
         }
-    }
-
-    private void getSelectPayWayUsablePlatform(int payType) {
-        if (mUsablePlatformList != null && !mUsablePlatformList.isEmpty()) {
-            for (UsablePlatform data : mUsablePlatformList) {
-                if (data.getType() == payType) {
-                    mUsablePlatform = data;
-                    break;
-                }
-            }
-            Preference.get().setRechargeWay(LocalUser.getUser().getPhone(), payType);
-            changeRechargeBtnStatus();
-        }
-    }
-
-    private void unPayWayAllNotChecked() {
-        mWeChatPay.setSelected(false);
-        mAliPay.setSelected(false);
-        mBankCardPay.setSelected(false);
-    }
-
-    private void setSelectPayWay(ImageView image) {
-        unPayWayAllNotChecked();
-        image.setSelected(true);
     }
 
     private void submitRechargeData() {
@@ -367,6 +338,7 @@ public class RechargeActivity extends BaseActivity {
                 .fire();
     }
 
+
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -403,6 +375,86 @@ public class RechargeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mRechargeCount.removeTextChangedListener(mValidationWatcher);
+    }
+
+
+    class RechargeWayAdapter extends RecyclerView.Adapter<RechargeWayAdapter.ViewHolder> {
+
+        private ArrayList<UsablePlatform> mUsablePlatformArrayList;
+        private OnPayWayListener mOnPayWayListener;
+
+        public RechargeWayAdapter(ArrayList<UsablePlatform> mUsablePlatformList) {
+            this.mUsablePlatformArrayList = mUsablePlatformList;
+        }
+
+        public void setOnPayWayListener(OnPayWayListener onPayWayListener) {
+            this.mOnPayWayListener = onPayWayListener;
+        }
+
+        public void addAll(List<UsablePlatform> usablePlatformList) {
+            mUsablePlatformArrayList.clear();
+            mUsablePlatformArrayList.addAll(usablePlatformList);
+            notifyItemRangeChanged(0, usablePlatformList.size());
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_recharge, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mUsablePlatformArrayList.get(position), position, mOnPayWayListener);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mUsablePlatformArrayList != null ? mUsablePlatformArrayList.size() : 0;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.payName)
+            TextView mPayName;
+            @BindView(R.id.checkboxClick)
+            ImageView mCheckboxClick;
+            @BindView(R.id.recharge)
+            RelativeLayout mRecharge;
+
+            ViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(final UsablePlatform item, final int position, final OnPayWayListener onPayWayListener) {
+                if (item == null) return;
+                if (!item.isBankPay()) {
+                    mPayName.setText(item.getName());
+                    if (item.isAliPay()) {
+                        mPayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_ali_pay, 0, 0, 0);
+                    } else if (item.isWeChatPay()) {
+                        mPayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_we_chat_pay, 0, 0, 0);
+                    }
+                } else {
+                    mPayName.setText(item.getName());
+                    mPayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_bank_pay, 0, 0, 0);
+                }
+                if (item.isSelectPayWay()) {
+                    mCheckboxClick.setSelected(true);
+                } else {
+                    mCheckboxClick.setSelected(false);
+                }
+
+                mRecharge.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onPayWayListener != null) {
+                            onPayWayListener.onPayWay(item, position);
+                        }
+                    }
+                });
+            }
+        }
     }
 
 }

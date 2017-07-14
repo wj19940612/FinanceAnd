@@ -320,6 +320,7 @@ public class BindBankCardActivity extends BaseActivity {
                                     Intent intent = new Intent();
                                     intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
                                     setResult(RESULT_OK, intent);
+                                    ToastUtil.show(resp.getMsg());
                                     finish();
                                 } else {
                                     ToastUtil.show(resp.getMsg());

@@ -11,6 +11,8 @@ import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.payment.AliPayResult;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -57,16 +59,29 @@ public class AliPayUtils {
                     Log.d(TAG, "客户端 aliPayResult: " + aliPayResult.toString());
                     String toJson = new Gson().toJson(aliPayResult);
                     Log.d(TAG, "handleMessage: " + toJson);
-                    // TODO: 2017/7/13  服务端进行校验
 
+                    Client.requestAliPayWebSign(toJson)
+                            .setTag(TAG)
+                            .setCallback(new com.sbai.finance.net.Callback<Resp<Object>>() {
+                                @Override
+                                protected void onRespSuccess(Resp<Object> resp) {
+                                    Log.d(TAG, "onRespSuccess: " + resp.toString());
+                                    if (resp.isSuccess()) {
+                                        ToastUtil.show(resp.getMsg());
+                                        if (mIsIntentionMoney) {
+                                            Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                            mFragmentActivity.startActivity(intent);
+                                        }
+                                        mFragmentActivity.finish();
+                                    } else {
+                                        ToastUtil.show(resp.getMsg());
+                                    }
+                                }
+                            })
+                            .fire();
 
-                    if (mIsIntentionMoney) {
-                        Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        mFragmentActivity.startActivity(intent);
-                    }
-                    mFragmentActivity.finish();
                     break;
                 default:
                     break;
@@ -80,6 +95,8 @@ public class AliPayUtils {
             public void run() {
                 PayTask payTask = new PayTask(mFragmentActivity);
                 Map<String, String> result = payTask.payV2(orderInfo, true);
+//                String result2 = payTask.pay(orderInfo, true);
+//                Log.d(TAG, "run: " + "  \n" + result2);
                 Message message = mHandler.obtainMessage();
                 message.what = ALI_PAY_FLAG;
                 message.obj = result;
