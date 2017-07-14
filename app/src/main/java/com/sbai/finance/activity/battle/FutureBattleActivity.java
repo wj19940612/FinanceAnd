@@ -2,6 +2,7 @@ package com.sbai.finance.activity.battle;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -339,6 +340,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
+
             }
         });
     }
@@ -512,7 +514,35 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         settings2.setGameMode(true);
         mKlineView.setSettings(settings2);
-        mKlineView.setOnAchieveTheLastListener(null);
+        mKlineView.setOnReachBorderListener(new KlineView.OnReachBorderListener() {
+            @Override
+            public void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList) {
+                requestKlineDataAndAdd(theLeft);
+            }
+
+            @Override
+            public void onReachRightBorder(KlineViewData theRight, List<KlineViewData> dataList) {
+                
+            }
+        });
+    }
+
+    private void requestKlineDataAndAdd(KlineViewData data) {
+        String endTime = Uri.encode(data.getTime());
+        String type = (String) mKlineView.getTag();
+        Client.getKlineData(mVariety.getContractsCode(), type, endTime)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<KlineViewData> data) {
+                        if (data != null && !data.isEmpty()) {
+                            Collections.reverse(data);
+                            mKlineView.addHistoryData(data);
+                        } else {
+                            ToastUtil.show(R.string.there_is_no_more_data);
+                        }
+                    }
+                }).fireFree();
     }
 
     private void requestTrendDataAndSet() {
@@ -527,8 +557,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void requestKlineDataAndSet(final String type) {
         mKlineView.clearData();
-        Client.getKlineData(mVariety.getContractsCode(), type, null)
-                .setTag(TAG).setIndeterminate(this)
+        mKlineView.setTag(type);
+        Client.getKlineData(mVariety.getContractsCode(), type, null).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<KlineViewData>>, List<KlineViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<KlineViewData> data) {
@@ -581,13 +611,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private boolean checkUserIsObserver() {
-        if (LocalUser.getUser().isLogin()){
+        if (LocalUser.getUser().isLogin()) {
             int userId = LocalUser.getUser().getUserInfo().getId();
             if (mBattle.getLaunchUser() != userId
                     && mBattle.getAgainstUser() != userId) {
                 return true;
-             }
-             return false;
+            }
+            return false;
         }
         return true;
     }
@@ -624,11 +654,17 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
-                if (!mIsObserver && !mBattle.isBattleOver()) {
+                if (!mBattle.isBattleOver()) {
                     if (push.getContent() != null) {
                         mBattle = (Battle) push.getContent().getData();
-                        updateBattleInfo();
-                        showGameOverDialog();
+                        if (!mIsObserver ) {
+                            updateBattleInfo();
+                            showGameOverDialog();
+                            refreshTradeView();
+                        }else {
+                            mBattleView.setWinResult(mBattle.getWinResult());
+                            mBattleView.setPraiseEnable(false);
+                        }
                     }
                 }
                 break;
@@ -872,7 +908,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         dialog.dismiss();
                         requestQuickSearchForLaunch(TYPE_QUICK_MATCH);
                     }
-                });
+                }).show();
     }
 
     //房间超时弹窗
@@ -882,14 +918,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
-                        dialog.dismiss();
+                        dismissAllDialog();
                         finish();
                     }
                 })
                 .setNegative(R.string.recreate_room, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
-                        dialog.dismiss();
+                        dismissAllDialog();
                         Launcher.with(FutureBattleActivity.this, CreateBattleActivity.class).execute();
                         finish();
                     }
@@ -1039,17 +1075,22 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     @Override
     public void onLongPurchaseButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.BATTLE_BULLISH);
         requestCreateOrder(DIRECTION_LONG_PURCHASE);
     }
 
     @Override
     public void onShortPurchaseButtonClick() {
+        umengEventCount(UmengCountEventIdUtils.BATTLE_BEARISH);
         requestCreateOrder(DIRECTION_SHORT_PURCHASE);
     }
 
     @Override
     public void onClosePositionButtonClick() {
-        requestClosePosition(mCurrentOrder.getId());
+        umengEventCount(UmengCountEventIdUtils.BATTLE_CLOSE_POSITION);
+        if (mCurrentOrder != null) {
+            requestClosePosition(mCurrentOrder.getId());
+        }
     }
 
     private void requestCreateOrder(int direction) {
@@ -1106,12 +1147,15 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     public void onTimeUp(int count) {
         if (count % TimerHandler.TREND_REFRESH_TIME == 0) {
             requestTrendDataAndSet();
-            if (mTabLayout.getSelectedTabPosition() == 1) {
-                requestKlineDataAndSet("1");
-            } else if (mTabLayout.getSelectedTabPosition() == 2){
-                requestKlineDataAndSet("3");
-            } else if (mTabLayout.getSelectedTabPosition() == 3){
-                requestKlineDataAndSet("5");
+
+            if (mKlineView.isLastDataVisible()) {
+                if (mTabLayout.getSelectedTabPosition() == 1) {
+                    requestKlineDataAndSet("1");
+                } else if (mTabLayout.getSelectedTabPosition() == 2) {
+                    requestKlineDataAndSet("3");
+                } else if (mTabLayout.getSelectedTabPosition() == 3) {
+                    requestKlineDataAndSet("5");
+                }
             }
         }
         if (mGameStatus == GAME_STATUS_CREATED) {
@@ -1233,6 +1277,13 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                                 dismissCalculatingView();
                                 updateBattleInfo();
                                 showGameOverDialog();
+                                refreshTradeView();
+                            }
+
+                            if (mBattle.getGameStatus() == GAME_STATUS_END
+                                    && mIsObserver) {
+                                mBattleView.setWinResult(mBattle.getWinResult());
+                                mBattleView.setPraiseEnable(false);
                             }
                         }
                     }
@@ -1260,7 +1311,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
             if (win) {
                 result = GAME_RESULT_WIN;
-                content = "+" + (mBattle.getReward() - mBattle.getCommission()) + coinType;
+                content = "+" + (mBattle.getReward() - (int) mBattle.getCommission()) + coinType;
             } else {
                 result = GAME_RESULT_LOSE;
                 content = "-" + mBattle.getReward() + coinType;
@@ -1272,6 +1323,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 finish();
             }
         }, result, content);
+
+        dismissCalculatingView();
+
+        mBattleView.setWinResult(mBattle.getWinResult());
     }
 
     private boolean getWinResult() {

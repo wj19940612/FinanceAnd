@@ -143,6 +143,7 @@
     <string name="sixty_min_k">60分钟</string>
     <string name="week_k_line">周K</string>
     <string name="month_k_line">月K</string>
+    <string name="there_is_no_more_data">没有更多数据了</string>
     <string name="point">观点</string>
     <string name="introduce">简介</string>
     <string name="stock_news">新闻</string>

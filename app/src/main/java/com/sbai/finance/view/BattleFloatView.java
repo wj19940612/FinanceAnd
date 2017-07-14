@@ -21,6 +21,8 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -128,6 +130,7 @@ public class BattleFloatView extends RelativeLayout {
             mCreateAvatar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
                     if (LocalUser.getUser().isLogin()) {
                         Launcher.with(getContext(), UserDataActivity.class)
                                 .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
@@ -141,6 +144,7 @@ public class BattleFloatView extends RelativeLayout {
             mAgainstAvatar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
                     if (LocalUser.getUser().isLogin()) {
                         if (mBattle.getAgainstUser() != 0) {
                             Launcher.with(getContext(), UserDataActivity.class)
@@ -334,6 +338,17 @@ public class BattleFloatView extends RelativeLayout {
         } else if (result == 2) {
             mCreateKo.setVisibility(VISIBLE);
         }
+        return this;
+    }
+
+    /**
+     * 设置点赞按钮是否可用
+     * @param enable
+     * @return
+     */
+    public BattleFloatView setPraiseEnable(boolean enable){
+        mMyPraiseButton.setEnabled(enable);
+        mUserPraiseButton.setEnabled(enable);
         return this;
     }
 

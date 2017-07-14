@@ -352,14 +352,7 @@ public class BorrowDetailsActivity extends BaseActivity {
                 }).fire();
     }
     private void requestSendMessage(){
-        String content = mLeaveMessage.getText().toString();
-
-		while (content.startsWith("\n")) {
-			content = content.substring(1, content.length());
-		}
-		while (content.endsWith("\n")) {
-			content = content.substring(0, content.length() - 1);
-		}
+        String content = mLeaveMessage.getText().toString().trim();
 		if (content.length() >= 100) {
 			content = content.substring(0, 100);
 		}
