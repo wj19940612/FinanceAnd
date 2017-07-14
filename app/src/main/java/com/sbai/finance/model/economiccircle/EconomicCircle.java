@@ -5,6 +5,12 @@ import android.os.Parcelable;
 
 public class EconomicCircle implements Parcelable {
 
+	//1借钱 2观点 3期货对战
+
+	public static final int TYPE_BORROW_MONEY = 1;
+	public static final int TYPE_OPINION = 2;
+	public static final int TYPE_FUTURES_BATTLE = 3;
+
 	//赏金类型 0现金 1元宝 2积分
 	public static final int COIN_TYPE_CASH = 1;
 	public static final int COIN_TYPE_INGOT = 2;
