@@ -918,14 +918,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
-                        dialog.dismiss();
+                        dismissAllDialog();
                         finish();
                     }
                 })
                 .setNegative(R.string.recreate_room, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
-                        dialog.dismiss();
+                        dismissAllDialog();
                         Launcher.with(FutureBattleActivity.this, CreateBattleActivity.class).execute();
                         finish();
                     }
