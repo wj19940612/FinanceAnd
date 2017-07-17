@@ -312,6 +312,7 @@ public class BindBankCardActivity extends BaseActivity {
                         .setCallback(new Callback<Resp<Integer>>() {
                             @Override
                             protected void onRespSuccess(Resp<Integer> resp) {
+                                ToastUtil.show(resp.getMsg());
                                 if (resp.isSuccess()) {
                                     mUserBankCardInfoModel.setBindStatus(1);
                                     if (resp.hasData()) {
@@ -322,8 +323,6 @@ public class BindBankCardActivity extends BaseActivity {
                                     setResult(RESULT_OK, intent);
                                     ToastUtil.show(resp.getMsg());
                                     finish();
-                                } else {
-                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })

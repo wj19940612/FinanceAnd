@@ -640,7 +640,7 @@ public class Client {
     }
 
     public static API updateUserCreditApproveInfo(String Back, String Positive, String certCode, String realName) {
-        return new API("/user/user/updateUserCertification.do", new ApiParams()
+        return new API(POST, "/user/user/updateUserCertification.do", new ApiParams()
                 .put("Back", Back)
                 .put("Positive", Positive)
                 .put("certCode", certCode)
