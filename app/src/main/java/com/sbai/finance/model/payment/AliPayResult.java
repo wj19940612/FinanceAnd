@@ -58,4 +58,8 @@ public class AliPayResult {
         return result;
     }
 
+    public boolean isUserCancelPay() {
+        return getResultStatus().equalsIgnoreCase("6001");
+    }
+
 }

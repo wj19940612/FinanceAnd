@@ -39,6 +39,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AliPayUtils;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
@@ -85,7 +86,7 @@ public class RechargeActivity extends BaseActivity {
         //如果不使用此方法，默认使用生产环境；
         //在钱包不存在的情况下，会唤起h5支付；
         //注：在生产环境，必须将此代码注释！
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG | !BuildConfig.IS_PROD) {
             EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
         }
         setContentView(R.layout.activity_recharge);
@@ -244,13 +245,12 @@ public class RechargeActivity extends BaseActivity {
         String count = mRechargeCount.getText().toString();
         if (count.startsWith(".")) return false;
         if (mUsablePlatform != null && mUsablePlatform.isBankPay() && mBankLimit != null) {
-            // TODO: 2017/7/12 先将限额改为0.01元
             return !TextUtils.isEmpty(count)
-                    && Double.parseDouble(count) >= 0.01
+                    && Double.parseDouble(count) >= 5
                     && mBankLimit.getLimitSingle() >= Double.parseDouble(count);
         } else {
             return !TextUtils.isEmpty(count)
-                    && Double.parseDouble(count) >= 0.01;
+                    && Double.parseDouble(count) >= 5;
         }
     }
 
@@ -294,6 +294,7 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void confirmRecharge(final String money, Integer bankId) {
+        KeyBoardUtils.closeOrOpenKeyBoard();
         if (mUsablePlatform.isBankPay()) {
             Launcher.with(getActivity(), BankCardPayActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, money)

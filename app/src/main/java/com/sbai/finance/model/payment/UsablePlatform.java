@@ -13,7 +13,7 @@ public class UsablePlatform implements Parcelable {
     public static final int TYPE_WECHAT_PAY = 2;
     public static final int TYPE_BANK_PAY = 3;
 
-    public static final String PLATFORM_AIL_PAY = "qtalipay";
+    public static final String PLATFORM_AIL_PAY = "alipay";
 
     /**
      * createTime : 1494402852000

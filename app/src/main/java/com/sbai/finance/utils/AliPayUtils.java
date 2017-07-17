@@ -59,7 +59,9 @@ public class AliPayUtils {
                     Log.d(TAG, "客户端 aliPayResult: " + aliPayResult.toString());
                     String toJson = new Gson().toJson(aliPayResult);
                     Log.d(TAG, "handleMessage: " + toJson);
-
+                    if (aliPayResult.isUserCancelPay()) {
+                        return;
+                    }
                     Client.requestAliPayWebSign(toJson)
                             .setTag(TAG)
                             .setCallback(new com.sbai.finance.net.Callback<Resp<Object>>() {

@@ -75,7 +75,7 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
         //如果不使用此方法，默认使用生产环境；
         //在钱包不存在的情况下，会唤起h5支付；
         //注：在生产环境，必须将此代码注释！
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG | !BuildConfig.IS_PROD) {
             EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
         }
         setContentView(R.layout.activity_pay_intention);
