@@ -18,9 +18,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.alipay.sdk.app.EnvUtils;
 import com.android.volley.DefaultRetryPolicy;
-import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.payment.AliPayOrderInfo;
@@ -75,9 +73,9 @@ public class PayIntentionActivity extends BaseActivity implements View.OnClickLi
         //如果不使用此方法，默认使用生产环境；
         //在钱包不存在的情况下，会唤起h5支付；
         //注：在生产环境，必须将此代码注释！
-        if (BuildConfig.DEBUG | !BuildConfig.IS_PROD) {
-            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
-        }
+//        if (BuildConfig.DEBUG | !BuildConfig.IS_PROD) {
+//            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+//        }
         setContentView(R.layout.activity_pay_intention);
         ButterKnife.bind(this);
 

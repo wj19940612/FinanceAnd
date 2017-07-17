@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alipay.sdk.app.EnvUtils;
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.Preference;
@@ -86,9 +85,9 @@ public class RechargeActivity extends BaseActivity {
         //如果不使用此方法，默认使用生产环境；
         //在钱包不存在的情况下，会唤起h5支付；
         //注：在生产环境，必须将此代码注释！
-        if (BuildConfig.DEBUG | !BuildConfig.IS_PROD) {
-            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
-        }
+//        if (BuildConfig.DEBUG | !BuildConfig.IS_PROD) {
+//            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+//        }
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
         initListView();
@@ -243,14 +242,20 @@ public class RechargeActivity extends BaseActivity {
 
     private boolean checkRechargeBtnEnable() {
         String count = mRechargeCount.getText().toString();
+        double limitMoney;
+        if (BuildConfig.DEBUG) {
+            limitMoney = 0.01;
+        } else {
+            limitMoney = 5;
+        }
         if (count.startsWith(".")) return false;
         if (mUsablePlatform != null && mUsablePlatform.isBankPay() && mBankLimit != null) {
             return !TextUtils.isEmpty(count)
-                    && Double.parseDouble(count) >= 5
+                    && Double.parseDouble(count) >= limitMoney
                     && mBankLimit.getLimitSingle() >= Double.parseDouble(count);
         } else {
             return !TextUtils.isEmpty(count)
-                    && Double.parseDouble(count) >= 5;
+                    && Double.parseDouble(count) >= limitMoney;
         }
     }
 
