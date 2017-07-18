@@ -13,14 +13,11 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureListFragment;
-import com.sbai.finance.fragment.stock.FinanceFragment;
-import com.sbai.finance.fragment.stock.StockNewsFragment;
-import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+import com.sbai.finance.websocket.market.MarketSubscriber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,13 +44,13 @@ public class FutureListActivity extends BaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Netty.get().subscribe(Netty.REQ_SUB_ALL);
+        MarketSubscriber.get().subscribeAll();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Netty.get().subscribe(Netty.REQ_UNSUB_ALL);
+        MarketSubscriber.get().unSubscribeAll();
     }
 
     private void initView() {

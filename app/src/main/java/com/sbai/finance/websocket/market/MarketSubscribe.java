@@ -1,9 +1,10 @@
-package com.sbai.finance.socket;
+package com.sbai.finance.websocket.market;
 
-public interface Subscriber {
+public interface MarketSubscribe {
 
     int REQ_QUOTA = 100;
-    int REQ_HEART = 200;
+    int REQ_HEART = 201;
+    int REQ_HEART_UP = 202;
 
     int REQ_SUB = 101;
     int REQ_UNSUB = 102;
@@ -19,11 +20,5 @@ public interface Subscriber {
 
     void unSubscribe(String varietyType);
 
-    void shutdown();
-
-    boolean isConnected();
-
-    void connect();
-
-    boolean isConnecting();
+    void onMessage(String message);
 }
