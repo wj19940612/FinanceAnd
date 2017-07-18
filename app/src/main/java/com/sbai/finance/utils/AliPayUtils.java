@@ -96,7 +96,7 @@ public class AliPayUtils {
             @Override
             public void run() {
                 PayTask payTask = new PayTask(mFragmentActivity);
-                Map<String, String> result = payTask.payV2(orderInfo, true);
+                Map<String, String> result = payTask.payV2(orderInfo, false);
 //                String result2 = payTask.pay(orderInfo, true);
 //                Log.d(TAG, "run: " + "  \n" + result2);
                 Message message = mHandler.obtainMessage();
