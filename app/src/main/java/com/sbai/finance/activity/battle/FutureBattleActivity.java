@@ -656,14 +656,17 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 //对战结束 一个弹窗
                 if (!mBattle.isBattleOver()) {
                     if (push.getContent() != null) {
-                        mBattle = (Battle) push.getContent().getData();
-                        if (!mIsObserver ) {
-                            updateBattleInfo();
-                            showGameOverDialog();
-                            refreshTradeView();
-                        }else {
-                            mBattleView.setWinResult(mBattle.getWinResult());
-                            mBattleView.setPraiseEnable(false);
+                        Battle battle = (Battle) push.getContent().getData();
+                        if (battle.getId() == mBattle.getId()) {
+                            mBattle = (Battle) push.getContent().getData();
+                            if (!mIsObserver) {
+                                updateBattleInfo();
+                                showGameOverDialog();
+                                refreshTradeView();
+                            } else {
+                                mBattleView.setWinResult(mBattle.getWinResult());
+                                mBattleView.setPraiseEnable(false);
+                            }
                         }
                     }
                 }
@@ -835,9 +838,11 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
 
             if (mCurrentOrder.getDirection() == 1) {
-                myProfit = futureData.getLastPrice() - mCurrentOrder.getOrderPrice();
+                myProfit = FinanceUtil.subtraction(futureData.getLastPrice()
+                        , mCurrentOrder.getOrderPrice()).doubleValue();
             } else {
-                myProfit = mCurrentOrder.getOrderPrice() - futureData.getLastPrice();
+                myProfit = FinanceUtil.subtraction(mCurrentOrder.getOrderPrice()
+                        , futureData.getLastPrice()).doubleValue();
             }
             myProfit = myProfit * mVariety.getEachPointMoney();
             mBattleTradeView.setTradeData(mCurrentOrder.getDirection()
@@ -846,18 +851,22 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         //房主的累计收益
         if (mCreatorOrder != null) {
             if (mCreatorOrder.getDirection() == 1) {
-                creatorProfit = futureData.getLastPrice() - mCreatorOrder.getOrderPrice();
+                creatorProfit = FinanceUtil.subtraction(futureData.getLastPrice()
+                        , mCreatorOrder.getOrderPrice()).doubleValue();
             } else {
-                creatorProfit = mCreatorOrder.getOrderPrice() - futureData.getLastPrice();
+                creatorProfit = FinanceUtil.subtraction(mCreatorOrder.getOrderPrice()
+                        , futureData.getLastPrice()).doubleValue();
             }
             creatorProfit = creatorProfit * mVariety.getEachPointMoney();
         }
         //对抗者的累计收益
         if (mAgainstOrder != null) {
             if (mAgainstOrder.getDirection() == 1) {
-                againstProfit = futureData.getLastPrice() - mAgainstOrder.getOrderPrice();
+                againstProfit = FinanceUtil.subtraction(futureData.getLastPrice()
+                        , mAgainstOrder.getOrderPrice()).doubleValue();
             } else {
-                againstProfit = mAgainstOrder.getOrderPrice() - futureData.getLastPrice();
+                againstProfit = FinanceUtil.subtraction(mAgainstOrder.getOrderPrice()
+                        , futureData.getLastPrice()).doubleValue();
             }
             againstProfit = againstProfit * mVariety.getEachPointMoney();
         }
