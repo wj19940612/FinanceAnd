@@ -197,89 +197,86 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		EconomicCircle item = (EconomicCircle) parent.getItemAtPosition(position);
 		if (item != null) {
-			if (item.getType() == 1) {
-				//借钱
+			if (item.getType() == EconomicCircle.TYPE_BORROW_MONEY) {
 				Intent intent = new Intent(getContext(), BorrowDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
-			} else if (item.getType() == 2) {
-				//观点
+			} else if (item.getType() == EconomicCircle.TYPE_OPINION) {
 				Intent intent = new Intent(getContext(), OpinionDetailsActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, item.getDataId());
 				startActivityForResult(intent, REQ_CODE_USERDATA);
-			} else if (item.getType() == 3) {
-				//游戏
-				setBattleData(item);
-				if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CANCELED) {
-					SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
-							.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-								@Override
-								public void onClick(Dialog dialog) {
-									dialog.dismiss();
-								}
-							})
-							.setTitle(getString(R.string.join_versus_failure))
-							.setNegativeVisible(View.GONE)
-							.show();
-				} else if (item.getGameStatus() == EconomicCircle.GAME_STATUS_END) {
-					Launcher.with(getActivity(), FutureBattleActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())
-							.putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
-							.execute();
-				} else if (LocalUser.getUser().isLogin()) {
-					if (item.getGameStatus() == EconomicCircle.GAME_STATUS_CREATED
-							&& LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
-						showJoinBattleDialog(mBattle);
+			} else if (item.getType() == EconomicCircle.TYPE_FUTURES_BATTLE) {
+				int status = item.getGameStatus();
+				if (status == EconomicCircle.GAME_STATUS_CREATED || status == EconomicCircle.GAME_STATUS_STARTED
+						||status == EconomicCircle.GAME_STATUS_END) {
+					if (LocalUser.getUser().isLogin()) {
+						requestLastBattleInfo(item);
 					} else {
-						requestLastBattleInfo(mBattle);
+						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
+				} else if (status == EconomicCircle.GAME_STATUS_CANCELED) {
+					showBattleInvalidDialog();
 				}
 			}
 		}
 	}
 
-	private void requestLastBattleInfo(final Battle item) {
-		Client.getBattleInfo(item.getId(), item.getBatchCode()).setTag(TAG)
-				.setCallback(new Callback2D<Resp<Battle>, Battle>() {
+	private void showBattleInvalidDialog() {
+		SmartDialog.with(getActivity()).setMessage(getString(R.string.invite_invalid))
+				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
 					@Override
-					protected void onRespSuccessData(Battle data) {
-
-						Intent intent = new Intent(getContext(), FutureBattleActivity.class);
-						intent.putExtra(Launcher.EX_PAYLOAD_1, data.getId());
-						intent.putExtra(Launcher.EX_PAYLOAD_2, data.getBatchCode());
-						startActivityForResult(intent, CANCEL_BATTLE);
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
 					}
-				}).fire();
+				})
+				.setTitle(getString(R.string.join_versus_failure))
+				.setNegativeVisible(View.GONE)
+				.show();
 	}
 
-	private void setBattleData(EconomicCircle item) {
-		mBattle.setAgainstFrom(item.getAgainstFrom());
-		mBattle.setAgainstPraise(item.getAgainstPraise());
-		mBattle.setAgainstScore(item.getAgainstScore());
-		mBattle.setAgainstUser(item.getAgainstUser());
-		mBattle.setAgainstUserName(item.getAgainstUserName());
-		mBattle.setAgainstUserPortrait(item.getAgainstUserPortrait());
-		mBattle.setBatchCode(item.getBatchCode());
-		mBattle.setBattleId(item.getDataId());
-		mBattle.setCoinType(item.getCoinType());
-		mBattle.setCreateTime(item.getCreateTime());
-		mBattle.setEndline(item.getEndline());
-		mBattle.setEndTime(item.getEndTime());
-		mBattle.setGameStatus(item.getGameStatus());
-		mBattle.setLaunchUser(item.getLaunchUser());
-		mBattle.setLaunchUserName(item.getUserName());
-		mBattle.setLaunchPraise(item.getLaunchPraise());
-		mBattle.setLaunchUserPortrait(item.getUserPortrait());
-		mBattle.setLaunchScore(item.getLaunchScore());
-		mBattle.setReward(item.getReward());
-		mBattle.setStartTime(item.getStartTime());
-		mBattle.setVarietyId(item.getVarietyId());
-		mBattle.setVarietyName(item.getVarietyName());
-		mBattle.setVarietyType(item.getVarietyType());
-		mBattle.setWinResult(item.getWinResult());
-		mBattle.setId(item.getDataId());
+	private void requestLastBattleInfo(final EconomicCircle item) {
+		Client.getBattleInfo(item.getDataId(), item.getBatchCode()).setTag(TAG)
+				.setCallback(new Callback2D<Resp<Battle>, Battle>() {
+					@Override
+					protected void onRespSuccessData(Battle battle) {
+						int status = battle.getGameStatus();
+						switch (status) {
+							//对战取消
+							case Battle.GAME_STATUS_CANCELED:
+								showBattleInvalidDialog();
+								break;
+							//对战发起
+							case Battle.GAME_STATUS_CREATED:
+								if (LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()) {
+									//对战发起者是自己
+									Intent intent = new Intent(getContext(), FutureBattleActivity.class);
+									intent.putExtra(Launcher.EX_PAYLOAD_1, battle.getId());
+									intent.putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode());
+									startActivityForResult(intent, CANCEL_BATTLE);
+								} else {
+									//对战发起者不是自己
+									showJoinBattleDialog(battle);
+								}
+								break;
+							//对战中
+							case Battle.GAME_STATUS_STARTED:
+								Launcher.with(getActivity(), FutureBattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+										.putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
+										.execute();
+								break;
+							//对战结束
+							case Battle.GAME_STATUS_END:
+								Launcher.with(getActivity(), FutureBattleActivity.class)
+										.putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+										.putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
+										.execute();
+								break;
+							default:
+								break;
+						}
+					}
+				}).fire();
 	}
 
 	private void showJoinBattleDialog(final Battle item) {
@@ -368,7 +365,6 @@ public class EconomicCircleFragment extends BaseFragment implements AbsListView.
 				.setTitle(getString(R.string.join_versus_failure))
 				.setNegative(R.string.cancel)
 				.show();
-
 	}
 
 	private void requestCurrentBattle() {
