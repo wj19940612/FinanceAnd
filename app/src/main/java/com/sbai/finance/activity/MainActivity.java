@@ -15,7 +15,6 @@ import com.sbai.finance.model.AppVersionModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.netty.Netty;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.websocket.WsClient;
@@ -60,7 +59,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     @Override
     protected void onDestroy() {
-        Netty.get().shutdown();
+
         WsClient.get().close();
 
         MarketSubscriber.get().disconnect();

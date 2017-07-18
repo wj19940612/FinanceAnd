@@ -37,8 +37,6 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.netty.Netty;
-import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
@@ -66,6 +64,8 @@ import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
 import com.sbai.finance.websocket.cmd.SubscribeBattle;
 import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
+import com.sbai.finance.websocket.market.DataReceiveListener;
+import com.sbai.finance.websocket.market.MarketSubscriber;
 import com.sbai.httplib.ApiCallback;
 
 import java.math.BigDecimal;
@@ -93,6 +93,7 @@ import static com.sbai.finance.websocket.PushCode.ORDER_CLOSE;
 import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_CANCEL;
 import static com.sbai.finance.websocket.cmd.QuickMatchLauncher.TYPE_QUICK_MATCH;
+import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
 
 
 /**
@@ -771,10 +772,10 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
     }
 
-    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
+    private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
         @Override
-        public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
+        public void onDataReceive(Resp<FutureData> data) {
+            if (data.getCode() == REQ_QUOTA && data.hasData()) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
@@ -785,6 +786,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     requestExchangeStatus();
                 }
             }
+
         }
     };
 
@@ -1127,8 +1129,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void subscribeFutureData() {
         if (mVariety != null) {
             startScheduleJob(1000);
-            Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
-            Netty.get().addHandler(mNettyHandler);
+            MarketSubscriber.get().subscribe(mVariety.getContractsCode());
+            MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
 
             requestExchangeStatus();
             requestTrendDataAndSet();
@@ -1138,8 +1140,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private void UnSubscribeFutureData() {
         if (mVariety != null) {
             stopScheduleJob();
-            Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
-            Netty.get().removeHandler(mNettyHandler);
+            MarketSubscriber.get().unSubscribe(mVariety.getContractsCode());
+            MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
         }
     }
 

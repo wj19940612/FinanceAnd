@@ -1,5 +1,7 @@
 package com.sbai.finance.websocket.market;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -42,10 +44,6 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
             this.data = data;
         }
 
-        public String toJson() {
-            return new Gson().toJson(this);
-        }
-
         public int getCode() {
             return code;
         }
@@ -63,18 +61,20 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
     private ConnectStatus mStatus;
     private List<DataReceiveListener> mDataReceiveListeners;
     private Gson mGson;
+    private Handler mHandler;
 
     public MarketSubscriber() {
         mPendingList = new LinkedList<>();
         mStatus = ConnectStatus.DISCONNECT;
         mDataReceiveListeners = new ArrayList<>();
         mGson = new Gson();
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     private void subscribe(Command command) {
         if (isConnected()) {
-            mWebSocket.send(command.toJson());
-            Log.d(TAG, "subscribe: " + command.toJson());
+            mWebSocket.send(mGson.toJson(command));
+            Log.d(TAG, "subscribe: " + mGson.toJson(command));
         } else {
             mPendingList.offer(command);
 
@@ -113,14 +113,19 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
     }
 
     @Override
-    public void onMessage(String message) {
+    public void onMessage(final String message) {
         Command command = mGson.fromJson(message, Command.class);
         if (command != null && command.getCode() == REQ_HEART) {
-            mWebSocket.send(new Command(REQ_HEART_UP).toJson());
+            mWebSocket.send(mGson.toJson(new Command(REQ_HEART_UP)));
             return;
         }
 
-        onDataReceive(message);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                onDataReceive(message);
+            }
+        });
     }
 
     private void onDataReceive(String message) {

@@ -119,8 +119,6 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onResume() {
         super.onResume();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
-        //Netty.get().addHandler(mNettyHandler);
-        //reset();
         requestVarietyList();
     }
 
@@ -128,18 +126,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onPause() {
         super.onPause();
         MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
-        // Netty.get().removeHandler(mNettyHandler);
     }
-
-//    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
-//        @Override
-//        public void onReceiveData(Resp<FutureData> data) {
-//            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
-//                updateListViewVisibleItem(data.getData());
-//                mFutureListAdapter.addFutureData(data.getData());
-//            }
-//        }
-//    };
 
     private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
         @Override
