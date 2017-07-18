@@ -437,13 +437,13 @@ public class RechargeActivity extends BaseActivity {
                 if (!item.isBankPay()) {
                     mPayName.setText(item.getName());
                     if (item.isAliPay()) {
-                        mPayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_ali_pay, 0, 0, 0);
+                        mPayName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_ali_pay, 0, 0, 0);
                     } else if (item.isWeChatPay()) {
-                        mPayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_we_chat_pay, 0, 0, 0);
+                        mPayName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_we_chat_pay, 0, 0, 0);
                     }
                 } else {
                     mPayName.setText(item.getName());
-                    mPayName.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_bank_pay, 0, 0, 0);
+                    mPayName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bank_pay, 0, 0, 0);
                 }
                 if (item.isSelectPayWay()) {
                     mCheckboxClick.setSelected(true);
