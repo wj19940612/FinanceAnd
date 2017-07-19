@@ -46,8 +46,6 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.netty.Netty;
-import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
@@ -59,6 +57,8 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
+import com.sbai.finance.websocket.market.DataReceiveListener;
+import com.sbai.finance.websocket.market.MarketSubscriber;
 import com.umeng.socialize.UMShareAPI;
 
 import java.math.BigDecimal;
@@ -71,6 +71,7 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.R.id.klineView;
 import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
+import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
@@ -139,8 +140,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
-        Netty.get().addHandler(mNettyHandler);
+        MarketSubscriber.get().subscribe(mVariety.getContractsCode());
+        MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
 
         requestExchangeStatus();
         requestOptionalStatus();
@@ -171,8 +172,8 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @Override
     protected void onPause() {
         super.onPause();
-        Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
-        Netty.get().removeHandler(mNettyHandler);
+        MarketSubscriber.get().unSubscribe(mVariety.getContractsCode());
+        MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
     }
 
     @Override
@@ -591,10 +592,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 }).fire();
     }
 
-    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
+    private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
         @Override
-        public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
+        public void onDataReceive(Resp<FutureData> data) {
+            if (data.getCode() == REQ_QUOTA && data.hasData()) {
                 mFutureData = data.getData();
                 updateMarketDataView(mFutureData);
                 updateChartView(mFutureData);
@@ -664,7 +665,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, shareTitle, shareDescribe, shareUrl)
+                        .setShareContent(shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });

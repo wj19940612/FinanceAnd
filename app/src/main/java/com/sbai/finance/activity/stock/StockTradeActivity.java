@@ -422,7 +422,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(StockTradeActivity.this, shareTitle, shareDescribe, shareUrl)
+                        .setShareContent(shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });

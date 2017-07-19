@@ -21,18 +21,20 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.netty.Netty;
-import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.websocket.market.DataReceiveListener;
+import com.sbai.finance.websocket.market.MarketSubscriber;
 
 import java.math.BigDecimal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
 
 public class PublishOpinionActivity extends BaseActivity {
 
@@ -66,21 +68,21 @@ public class PublishOpinionActivity extends BaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Netty.get().subscribe(Netty.REQ_SUB, mVariety.getContractsCode());
-        Netty.get().addHandler(mNettyHandler);
+        MarketSubscriber.get().subscribe(mVariety.getContractsCode());
+        MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Netty.get().subscribe(Netty.REQ_UNSUB, mVariety.getContractsCode());
-        Netty.get().removeHandler(mNettyHandler);
+        MarketSubscriber.get().unSubscribe(mVariety.getContractsCode());
+        MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
     }
 
-    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
+    private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
         @Override
-        public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA) {
+        public void onDataReceive(Resp<FutureData> data) {
+            if (data.getCode() == REQ_QUOTA) {
                 mFutureData = data.getData();
             }
         }
@@ -183,10 +185,11 @@ public class PublishOpinionActivity extends BaseActivity {
 
     /**
      * 新实时行情接口
+     *
      * @param content
      * @param calcuId
      */
-    private void requestStockRTData(final String content, final String calcuId){
+    private void requestStockRTData(final String content, final String calcuId) {
         Client.getStockRealtimeData(mVariety.getVarietyType())
                 .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override

@@ -248,6 +248,12 @@ public class KlineChart extends ChartView {
     }
 
     @Override
+    protected float calculateOneXAxisWidth() {
+        float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
+        return width / mSettings.getXAxis();
+    }
+
+    @Override
     protected void calculateBaseLines(float[] baselines) {
         if (mDataList != null && mDataList.size() > 0) {
             float max = mMaxBaseLine;
