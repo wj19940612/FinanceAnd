@@ -1,8 +1,8 @@
 package com.sbai.finance;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.support.multidex.MultiDexApplication;
 
 import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
@@ -12,7 +12,7 @@ import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
-public class App extends MultiDexApplication {
+public class App extends Application {
 
     private static Context sContext;
 
@@ -26,7 +26,7 @@ public class App extends MultiDexApplication {
         if (!BuildConfig.IS_PROD) {
             handleUncaughtException();
         }
-        
+
         if (BuildConfig.DEBUG) {
             handleUncaughtException();
             Config.DEBUG = true;
