@@ -133,7 +133,7 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         initScreenOnReceiver();
         updateAvatar();
-        requestBattleList();
+     //   requestBattleList();
 
         scrollToTop(mTitleBar, mListView);
     }
@@ -142,7 +142,7 @@ public class BattleListActivity extends BaseActivity implements
         mScreenOnBroadcastReceiver = new ScreenOnBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        getActivity().registerReceiver(mScreenOnBroadcastReceiver,intentFilter);
+        getActivity().registerReceiver(mScreenOnBroadcastReceiver, intentFilter);
     }
 
     private void initLoginReceiver() {
@@ -180,7 +180,7 @@ public class BattleListActivity extends BaseActivity implements
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
         Glide.with(getActivity())
                 .load(R.drawable.battle_banner)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE )
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .priority(Priority.HIGH)
                 .fitCenter()
                 .into(new GlideDrawableImageViewTarget(battleBanner, 1));
@@ -291,6 +291,9 @@ public class BattleListActivity extends BaseActivity implements
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
         startScheduleJob(5 * 1000);
+
+        reset();
+        requestBattleList();
     }
 
     @Override
@@ -377,6 +380,7 @@ public class BattleListActivity extends BaseActivity implements
                             showJoinBattleFailureDialog(battleResp);
                         }
                     }
+
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
 
@@ -396,6 +400,7 @@ public class BattleListActivity extends BaseActivity implements
                             showMatchTimeoutDialog();
                         }
                     }
+
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
 
@@ -442,6 +447,7 @@ public class BattleListActivity extends BaseActivity implements
                 requestVisibleBattleData(stringBuilder.toString());
             }
         }
+
     }
 
     private void requestVisibleBattleData(String battleIds) {
@@ -509,6 +515,7 @@ public class BattleListActivity extends BaseActivity implements
             mAvatar.setImageResource(R.drawable.ic_default_avatar);
         }
     }
+
 
     private void updateVersusData(FutureVersus futureVersus) {
         stopRefreshAnimation();
@@ -805,13 +812,13 @@ public class BattleListActivity extends BaseActivity implements
     class LoginBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION) ) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
                 updateAvatar();
                 requestUserFindInfo();
                 requestCurrentBattle();
             }
             if (intent.getAction().equalsIgnoreCase(CreateBattleActivity.CREATE_SUCCESS_ACTION)
-                    ||intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
+                    || intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
                 reset();
                 requestBattleList();
                 if (LocalUser.getUser().isLogin()) {
@@ -834,7 +841,7 @@ public class BattleListActivity extends BaseActivity implements
     class ScreenOnBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent!=null&&intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
+            if (intent != null && intent.getAction().equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
                 reset();
                 requestBattleList();
                 if (LocalUser.getUser().isLogin()) {
