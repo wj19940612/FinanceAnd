@@ -88,7 +88,7 @@ android {
         alpha {
             applicationId "com.sbai.finance.alpha"
             versionCode 57
-            versionName "1.2.0714"
+            versionName "1.2.0719"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -145,3 +145,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }
+
+

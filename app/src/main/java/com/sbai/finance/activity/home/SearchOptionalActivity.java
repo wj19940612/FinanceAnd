@@ -48,7 +48,7 @@ import butterknife.OnClick;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 /**
- * Created by Administrator on 2017-06-0.
+ * Created by houcc on 2017-06-0.
  */
 
 public class SearchOptionalActivity extends BaseActivity {
