@@ -949,7 +949,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             mShareDialogFragment = ShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
-                    .setShareContent(FutureBattleActivity.this, shareTitle, shareDescribe, mBattle.getBatchCode());
+                    .setShareContent(shareTitle, shareDescribe, mBattle.getBatchCode());
         }
         mShareDialogFragment.showAsync(getSupportFragmentManager());
     }

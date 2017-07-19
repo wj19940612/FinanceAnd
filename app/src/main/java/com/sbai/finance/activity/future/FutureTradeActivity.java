@@ -664,7 +664,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             public void onClick(View v) {
                 ShareDialogFragment
                         .newInstance()
-                        .setShareContent(FutureTradeActivity.this, shareTitle, shareDescribe, shareUrl)
+                        .setShareContent(shareTitle, shareDescribe, shareUrl)
                         .show(getSupportFragmentManager());
             }
         });

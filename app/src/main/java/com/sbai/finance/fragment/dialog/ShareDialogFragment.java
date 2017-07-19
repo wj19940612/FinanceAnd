@@ -1,6 +1,6 @@
 package com.sbai.finance.fragment.dialog;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.ToastUtil;
@@ -50,11 +51,10 @@ public class ShareDialogFragment extends DialogFragment {
     ImageButton mCancel;
 
     private Unbinder mBind;
-    private Activity mActivity;
+    private Context mActivity;
 
     private String mShareTitle;  //分享标题
     private String mShareUrl;  //链接地址
-    private String mBatchCode;
     private String mShareDescription; //分享描述
 
     private boolean isFutureGame = false;//默认分享不是游戏
@@ -69,11 +69,9 @@ public class ShareDialogFragment extends DialogFragment {
         return this;
     }
 
-    public ShareDialogFragment setShareContent(Activity activity, String shareTitle, String shareDescription, String batchCode) {
-        mActivity = activity;
+    public ShareDialogFragment setShareContent(String shareTitle, String shareDescription, String batchCode) {
         mShareTitle = shareTitle;
         mShareDescription = shareDescription;
-        mBatchCode = batchCode;
         mShareUrl = isFutureGame ? SHARE_URL + batchCode : batchCode;
         return this;
     }
@@ -102,6 +100,7 @@ public class ShareDialogFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
         }
+        mActivity = App.getAppContext();
     }
 
     @OnClick({R.id.weChatFriend, R.id.weChatFriendCircle, R.id.weibo, R.id.cancel})
@@ -154,12 +153,13 @@ public class ShareDialogFragment extends DialogFragment {
                 thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
             }
             mWeb.setThumb(thumb);
-
-            new ShareAction(mActivity)
-                    .withMedia(mWeb)
-                    .setPlatform(platform)
-                    .setCallback(mUMShareListener)
-                    .share();
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                new ShareAction(getActivity())
+                        .withMedia(mWeb)
+                        .setPlatform(platform)
+                        .setCallback(mUMShareListener)
+                        .share();
+            }
         } else {
             String text = mShareTitle + mShareUrl;
             UMImage image = null;
@@ -170,12 +170,14 @@ public class ShareDialogFragment extends DialogFragment {
                 image = new UMImage(mActivity, R.drawable.ic_share_logo);
                 image.setThumb(new UMImage(mActivity, R.drawable.ic_share_logo));
             }
-            new ShareAction(mActivity)
-                    .withText(text)
-                    .withMedia(image)
-                    .setPlatform(platform)
-                    .setCallback(mUMShareListener)
-                    .share();
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                new ShareAction(getActivity())
+                        .withText(text)
+                        .withMedia(image)
+                        .setPlatform(platform)
+                        .setCallback(mUMShareListener)
+                        .share();
+            }
         }
     }
 
