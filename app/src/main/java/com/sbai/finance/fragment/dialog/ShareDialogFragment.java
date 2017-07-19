@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.ToastUtil;
@@ -100,7 +99,7 @@ public class ShareDialogFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
         }
-        mActivity = App.getAppContext();
+        mActivity = getActivity();
     }
 
     @OnClick({R.id.weChatFriend, R.id.weChatFriendCircle, R.id.weibo, R.id.cancel})
