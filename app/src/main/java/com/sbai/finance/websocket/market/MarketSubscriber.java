@@ -19,7 +19,7 @@ import java.util.Queue;
 public class MarketSubscriber implements MarketSubscribe, Connector {
 
     private static final String TAG = "MarketSubscriber";
-    private static final String WS_URI = "ws://" + API.getDomain() + "/ws.do";
+    private static final String URI = "ws://" + API.getDomain() + "/ws.do";
 
     private static MarketSubscriber sSubscriber;
 
@@ -62,6 +62,7 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
     private List<DataReceiveListener> mDataReceiveListeners;
     private Gson mGson;
     private Handler mHandler;
+    private boolean mNormalClosed;
 
     public MarketSubscriber() {
         mPendingList = new LinkedList<>();
@@ -69,12 +70,13 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
         mDataReceiveListeners = new ArrayList<>();
         mGson = new Gson();
         mHandler = new Handler(Looper.getMainLooper());
+        mNormalClosed = false;
     }
 
     private void subscribe(Command command) {
         if (isConnected()) {
             mWebSocket.send(mGson.toJson(command));
-            Log.d(TAG, "subscribe: " + mGson.toJson(command));
+            Log.d(TAG, "execute: " + mGson.toJson(command));
         } else {
             mPendingList.offer(command);
 
@@ -129,7 +131,6 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
     }
 
     private void onDataReceive(String message) {
-        Log.d(TAG, "onDataReceive: " + message);
         for (DataReceiveListener listener : mDataReceiveListeners) {
             Object o = mGson.fromJson(message, listener.getGenericType());
             listener.onDataReceive(o);
@@ -139,7 +140,7 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
     @Override
     public void connect() {
         mStatus = ConnectStatus.CONNECTING;
-        AsyncHttpClient.getDefaultInstance().websocket(WS_URI, null, new AsyncHttpClient.WebSocketConnectCallback() {
+        AsyncHttpClient.getDefaultInstance().websocket(URI, null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 mStatus = ConnectStatus.CONNECTED;
@@ -182,8 +183,10 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
                     onError(ex.getMessage());
                 }
 
-                Log.d(TAG, "onCompleted: setClosedCallback");
+                Log.d(TAG, "onCompleted: ClosedCallback");
                 onDisconnected();
+
+                checkIfReconnect();
             }
         });
         mWebSocket.setEndCallback(new CompletedCallback() {
@@ -195,8 +198,10 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
                     onError(ex.getMessage());
                 }
 
-                Log.d(TAG, "onCompleted: setEndCallback");
+                Log.d(TAG, "onCompleted: EndCallback");
                 onDisconnected();
+
+                checkIfReconnect();
             }
         });
         mWebSocket.setPingCallback(new WebSocket.PingCallback() {
@@ -205,6 +210,12 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
                 mWebSocket.pong(s);
             }
         });
+    }
+
+    private void checkIfReconnect() {
+        if (!mNormalClosed) {
+            connect();
+        }
     }
 
     @Override
@@ -220,6 +231,7 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
     @Override
     public void disconnect() {
         if (isConnected()) {
+            mNormalClosed = true;
             mWebSocket.close();
         }
     }
