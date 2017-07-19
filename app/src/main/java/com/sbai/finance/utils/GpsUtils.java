@@ -217,6 +217,7 @@ public class GpsUtils {
     }
 
     private void showGpsPermission() {
+        if (mContext == null || mContext.isFinishing()) return;
         SmartDialog.with(mContext, mContext.getString(R.string.open_gps_permission))
                 .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
                     @Override
