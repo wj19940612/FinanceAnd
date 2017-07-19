@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatDialog;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +137,6 @@ public class BaseDialog {
     private void scaleDialogWidth(double scale) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Log.d("jumy", "scaleDialogWidth: " + displayMetrics.widthPixels * scale);
         mDialog.getWindow().setLayout((int) (displayMetrics.widthPixels * scale),
                 ViewGroup.LayoutParams.WRAP_CONTENT);
     }

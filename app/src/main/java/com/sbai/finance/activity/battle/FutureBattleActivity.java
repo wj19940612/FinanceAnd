@@ -341,7 +341,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
             @Override
             public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
-
+                //等待推送过来数据,防止出现数据错误
             }
         });
     }
@@ -523,7 +523,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
             @Override
             public void onReachRightBorder(KlineViewData theRight, List<KlineViewData> dataList) {
-                
+
             }
         });
     }
@@ -580,7 +580,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     protected void onRespSuccessData(Integer data) {
                         int exchangeStatus = (data != null ?
-                                data.intValue() : mVariety.getExchangeStatus());
+                                data : mVariety.getExchangeStatus());
                         mVariety.setExchangeStatus(exchangeStatus);
                         updateExchangeStatusView();
                     }
@@ -689,7 +689,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
             case PushCode.ROOM_CREATE_TIMEOUT:
                 //房间创建超时
-                showRoomOvertimeDialog();
+                if (push.getContent() != null && (push.getContent().getData() != null)) {
+                    Battle battle = (Battle) push.getContent().getData();
+                    if (battle.getId() == mBattle.getId()) {
+                        showRoomOvertimeDialog();
+                    }
+                }
                 break;
 
             case PushCode.USER_PRAISE:
