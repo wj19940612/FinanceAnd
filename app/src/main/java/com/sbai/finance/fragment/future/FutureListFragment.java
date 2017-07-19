@@ -24,11 +24,12 @@ import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.netty.Netty;
-import com.sbai.finance.netty.NettyHandler;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.websocket.market.DataReceiveListener;
+import com.sbai.finance.websocket.market.MarketSubscribe;
+import com.sbai.finance.websocket.market.MarketSubscriber;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -117,21 +118,20 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     @Override
     public void onResume() {
         super.onResume();
-        Netty.get().addHandler(mNettyHandler);
-        //reset();
+        MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
         requestVarietyList();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Netty.get().removeHandler(mNettyHandler);
+        MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
     }
 
-    private NettyHandler mNettyHandler = new NettyHandler<Resp<FutureData>>() {
+    private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
         @Override
-        public void onReceiveData(Resp<FutureData> data) {
-            if (data.getCode() == Netty.REQ_QUOTA && data.hasData()) {
+        public void onDataReceive(Resp<FutureData> data) {
+            if (data.getCode() == MarketSubscribe.REQ_QUOTA && data.hasData()) {
                 updateListViewVisibleItem(data.getData());
                 mFutureListAdapter.addFutureData(data.getData());
             }
