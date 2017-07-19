@@ -169,7 +169,7 @@ public class ViewpointFragment extends BaseFragment {
                 mPage++;
             }
             mOpinionAdapter.notifyDataSetChanged();
-            if (needScrollToTop) {
+            if (needScrollToTop && mRecyclerView != null) {
                 mRecyclerView.scrollToPosition(0);
             }
         }
