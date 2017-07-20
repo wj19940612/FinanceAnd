@@ -31,8 +31,8 @@ public class Logger {
     private static final char WARN = 'w';
     private static final char ERROR = 'e';
 
-    private static String logPath;
-    private static SimpleDateFormat dateFormat;
+    private static String mLogPath;
+    private static SimpleDateFormat mDateFormat;
     private static ExecutorService mWorkPool;
 
     public static void init(Context context) {
@@ -40,8 +40,8 @@ public class Logger {
     }
 
     public static void init(Context context, boolean clearLogs) {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        logPath = getFilePath(context) + File.separator + "Logs";
+        mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        mLogPath = getFilePath(context) + File.separator + "Logs";
         mWorkPool = Executors.newSingleThreadExecutor();
         if (clearLogs) {
             clearLogs();
@@ -49,14 +49,14 @@ public class Logger {
     }
 
     public static void clearLogs() {
-        if (null == logPath || null == mWorkPool) {
+        if (null == mLogPath || null == mWorkPool) {
             Log.d(TAG, "未初始化logger");
             return;
         }
         mWorkPool.execute(new Runnable() {
             @Override
             public void run() {
-                File file = new File(logPath);
+                File file = new File(mLogPath);
                 deleteFile(file);
             }
         });
@@ -111,7 +111,7 @@ public class Logger {
         if (BuildConfig.IS_PROD) {
             return;
         }
-        if (null == logPath || null == mWorkPool) {
+        if (null == mLogPath || null == mWorkPool) {
             Log.e(TAG, "未初始化logger");
             return;
         }
@@ -124,10 +124,10 @@ public class Logger {
     }
 
     private static void writeToFile(char type, String tag, String msg, boolean covered) {
-        String fileName = logPath + File.separator + tag + ".log";
-        String log = dateFormat.format(new Date()) + " " + type + "/" + tag + ": " + msg + "\n";
+        String fileName = mLogPath + File.separator + tag + ".log";
+        String log = mDateFormat.format(new Date()) + " " + type + "/" + tag + ": " + msg + "\n";
 
-        File file = new File(logPath);
+        File file = new File(mLogPath);
         if (!file.exists()) {
             file.mkdirs();
         }
