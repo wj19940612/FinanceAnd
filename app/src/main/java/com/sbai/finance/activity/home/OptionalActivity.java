@@ -23,6 +23,7 @@ import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.fragment.dialog.AddOptionalDialogFragment;
+import com.sbai.finance.logger.Logger;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.stock.StockData;

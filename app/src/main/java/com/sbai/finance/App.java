@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sbai.finance.activity.CatchCrashActivity;
+import com.sbai.finance.logger.Logger;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.httplib.CookieManger;
@@ -25,6 +26,7 @@ public class App extends Application {
 
         if (!BuildConfig.IS_PROD) {
             handleUncaughtException();
+            Logger.init(this);
         }
 
         if (BuildConfig.DEBUG) {
@@ -33,15 +35,14 @@ public class App extends Application {
         }
         //友盟
         UMShareAPI.get(this);
-
     }
 
     private void handleUncaughtException() {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
+            public void uncaughtException(Thread t, Throwable e) {
                 Intent intent = new Intent(sContext, CatchCrashActivity.class);
-                intent.putExtra(Launcher.EX_PAYLOAD, ex);
+                intent.putExtra(Launcher.EX_PAYLOAD, e);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
