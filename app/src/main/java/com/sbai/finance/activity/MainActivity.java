@@ -11,7 +11,6 @@ import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
-import com.sbai.finance.logger.Logger;
 import com.sbai.finance.model.AppVersionModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;

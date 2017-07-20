@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sbai.finance.activity.CatchCrashActivity;
-import com.sbai.finance.logger.Logger;
+import com.sbai.finance.utils.Logger;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.httplib.CookieManger;

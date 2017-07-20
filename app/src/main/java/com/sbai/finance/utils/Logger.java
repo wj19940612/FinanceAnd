@@ -1,4 +1,4 @@
-package com.sbai.finance.logger;
+package com.sbai.finance.utils;
 
 import android.content.Context;
 import android.os.Environment;
