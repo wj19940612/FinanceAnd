@@ -22,7 +22,6 @@ import com.sbai.finance.activity.home.EventActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.home.TopicActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mutual.MutualActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
@@ -152,11 +151,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onHelpClick() {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), MutualActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+
             }
 
             @Override

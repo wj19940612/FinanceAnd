@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
-import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -122,9 +121,6 @@ public class EconomicCircleNewsActivity extends BaseActivity implements AdapterV
 						.execute();
 			}
 		} else if (item.getClassify() == 2) {
-			Launcher.with(this, BorrowDetailsActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getDataId())
-					.execute();
 		}
 	}
 

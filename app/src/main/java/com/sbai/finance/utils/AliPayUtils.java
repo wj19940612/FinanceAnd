@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
-import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.model.payment.AliPayResult;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -71,10 +70,10 @@ public class AliPayUtils {
                                     if (resp.isSuccess()) {
                                         ToastUtil.show(resp.getMsg());
                                         if (mIsIntentionMoney) {
-                                            Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                            mFragmentActivity.startActivity(intent);
+//                                            Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
+//                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                                            mFragmentActivity.startActivity(intent);
                                         }
                                         mFragmentActivity.finish();
                                     } else {

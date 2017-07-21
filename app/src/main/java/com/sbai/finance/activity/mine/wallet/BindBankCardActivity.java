@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -214,12 +215,20 @@ public class BindBankCardActivity extends BaseActivity {
         if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.isNotConfirmBankInfo()) {
             showGiveUpBindBankDialog();
         } else {
-            super.onBackPressed();
+            try {
+                // IllegalStateException: Can not perform this action after onSaveInstanceState
+                // onBackPressed 出现抛出这个异常 。。。 禅道6733
+                super.onBackPressed();
+            } catch (RuntimeException e) {
+                Log.e(TAG, "onBackPressed: " + e.toString());
+                finish();
+            }
         }
 
     }
 
     private void showGiveUpBindBankDialog() {
+        if (isFinishing()) return;
         SmartDialog.with(this, R.string.is_give_up_bind_bank_card)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
