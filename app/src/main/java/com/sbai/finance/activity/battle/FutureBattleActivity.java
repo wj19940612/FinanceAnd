@@ -53,6 +53,7 @@ import com.sbai.finance.view.dialog.BattleResultDialog;
 import com.sbai.finance.view.dialog.StartGameDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
+import com.sbai.finance.websocket.GameCode;
 import com.sbai.finance.websocket.PushCode;
 import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
@@ -1116,6 +1117,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
+                        if (resp.getCode() == GameCode.ORDER_EXISIT){
+                            refreshTradeView();
+                        }
                     }
 
                     @Override
@@ -1131,6 +1135,9 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                        if (resp.getCode() == GameCode.ORDER_CLOSE){
+                            refreshTradeView();
+                        }
                     }
 
                     @Override
