@@ -64,13 +64,7 @@
             android:name=".activity.future.FutureListActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mutual.MutualActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.home.EventActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.home.BorrowMoneyActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.OptionalActivity"
@@ -98,13 +92,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.web.TopicDetailActivity"
-            android:screenOrientation="portrait"/>
-        <!-- 互助 -->
-        <activity
-            android:name=".activity.mutual.BorrowActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mutual.BorrowDetailsActivity"
             android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
         <activity
@@ -172,9 +159,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.web.StockNewsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.economiccircle.GoodHeartPeopleActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.recharge.PayIntentionActivity"

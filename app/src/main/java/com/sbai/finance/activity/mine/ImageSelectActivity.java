@@ -114,7 +114,7 @@ public class ImageSelectActivity extends BaseActivity {
         });
         if (mCanSelectedAmount!=0){
             mPreview.setVisibility(View.GONE);
-            mTitleBar.setRightText(getString(R.string.select_photo_amount,0,mCanSelectedAmount));
+//            mTitleBar.setRightText(getString(R.string.select_photo_amount,0,mCanSelectedAmount));
             mTitleBar.setRightVisible(true);
         }
     }
@@ -153,9 +153,6 @@ public class ImageSelectActivity extends BaseActivity {
                 setRightButtonEnable(false);
             } else {
                 setRightButtonEnable(true);
-            }
-            if (mCanSelectedAmount!=0){
-                mTitleBar.setRightText(getString(R.string.select_photo_amount,listSelectedPath.size(),mCanSelectedAmount));
             }
         }
     };

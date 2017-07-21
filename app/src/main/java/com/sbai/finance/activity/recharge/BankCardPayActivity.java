@@ -234,7 +234,7 @@ public class BankCardPayActivity extends BaseActivity {
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
                         Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.protocol))
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
                                 .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
