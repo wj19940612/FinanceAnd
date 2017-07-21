@@ -70,7 +70,6 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
         mDataReceiveListeners = new ArrayList<>();
         mGson = new Gson();
         mHandler = new Handler(Looper.getMainLooper());
-        mNormalClosed = false;
     }
 
     private void subscribe(Command command) {
@@ -147,6 +146,8 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
                 mWebSocket = webSocket;
 
                 if (isConnected()) {
+
+                    mNormalClosed = false;
 
                     onConnected();
 
