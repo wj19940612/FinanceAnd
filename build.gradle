@@ -25,9 +25,6 @@ allprojects {
         maven {
             url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
         }
-        flatDir{
-            dirs 'aars'
-        }
     }
 }
 

@@ -35,13 +35,13 @@ public class Logger {
     private static SimpleDateFormat mDateFormat;
     private static ExecutorService mWorkPool;
 
-    public static void init(Context context) {
-        init(context, false);
+    public static void init() {
+        init(false);
     }
 
-    public static void init(Context context, boolean clearLogs) {
+    public static void init(boolean clearLogs) {
         mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        mLogPath = getFilePath(context) + File.separator + "Logs";
+        mLogPath = getRootPath() + File.separator + "lemi_logs";
         mWorkPool = Executors.newSingleThreadExecutor();
         if (clearLogs) {
             clearLogs();
@@ -62,49 +62,44 @@ public class Logger {
         });
     }
 
-    public static void v(String tag, String msg) {
-        v(tag, msg, false);
+    public static void clearLog(final String tag) {
+        if (null == mLogPath || null == mWorkPool) {
+            Log.d(TAG, "未初始化logger");
+            return;
+        }
+        mWorkPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                deleteFile(mLogPath + File.separator + tag + ".log");
+            }
+        });
     }
 
-    public static void v(String tag, String msg, boolean covered) {
+    public static void v(String tag, String msg) {
         Log.v(tag, msg);
-        enqueueToWrite(VERBOSE, tag, msg, covered);
+        enqueueToWrite(VERBOSE, tag, msg, false);
     }
 
     public static void d(String tag, String msg) {
-        d(tag, msg, false);
+        Log.d(tag, msg);
+        enqueueToWrite(DEBUG, tag, msg, false);
     }
 
-    public static void d(String tag, String msg, boolean covered) {
-        Log.d(tag, msg);
-        enqueueToWrite(DEBUG, tag, msg, covered);
-    }
 
     public static void i(String tag, String msg) {
-        i(tag, msg, false);
-    }
-
-    public static void i(String tag, String msg, boolean covered) {
         Log.i(tag, msg);
-        enqueueToWrite(INFO, tag, msg, covered);
+        enqueueToWrite(INFO, tag, msg, false);
     }
 
     public static void w(String tag, String msg) {
-        w(tag, msg, false);
+        Log.w(tag, msg);
+        enqueueToWrite(WARN, tag, msg, false);
     }
 
-    public static void w(String tag, String msg, boolean covered) {
-        Log.w(tag, msg);
-        enqueueToWrite(WARN, tag, msg, covered);
-    }
 
     public static void e(String tag, String msg) {
-        e(tag, msg, false);
-    }
-
-    public static void e(String tag, String msg, boolean covered) {
         Log.e(tag, msg);
-        enqueueToWrite(ERROR, tag, msg, covered);
+        enqueueToWrite(ERROR, tag, msg, false);
     }
 
     private static void enqueueToWrite(final char type, final String tag, final String msg, final boolean covered) {
@@ -170,11 +165,26 @@ public class Logger {
         }
     }
 
+    private static void deleteFile(String filePath) {
+        File file = new File(filePath);
+        if (file.isFile()) {
+            file.delete();
+        }
+    }
+
     private static String getFilePath(Context context) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED) || !Environment.isExternalStorageRemovable()) {
             return context.getExternalFilesDir(null).getPath();
         } else {
             return context.getFilesDir().getPath();
+        }
+    }
+
+    private static String getRootPath() {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED) || !Environment.isExternalStorageRemovable()) {
+            return Environment.getExternalStorageDirectory().getPath();
+        } else {
+            return Environment.getRootDirectory().getPath();
         }
     }
 }

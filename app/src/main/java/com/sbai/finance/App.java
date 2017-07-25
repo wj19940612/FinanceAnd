@@ -26,7 +26,7 @@ public class App extends Application {
 
         if (!BuildConfig.IS_PROD) {
             handleUncaughtException();
-            Logger.init(this);
+            Logger.init();
         }
 
         if (BuildConfig.DEBUG) {
