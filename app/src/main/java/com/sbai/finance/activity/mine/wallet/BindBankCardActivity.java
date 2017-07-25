@@ -228,6 +228,7 @@ public class BindBankCardActivity extends BaseActivity {
     }
 
     private void showGiveUpBindBankDialog() {
+        if (isFinishing()) return;
         SmartDialog.with(this, R.string.is_give_up_bind_bank_card)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override

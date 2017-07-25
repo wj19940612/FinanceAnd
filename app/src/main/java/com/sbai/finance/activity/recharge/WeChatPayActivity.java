@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mutual.BorrowDetailsActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -173,12 +172,6 @@ public class WeChatPayActivity extends BaseActivity {
                     .setCallback(new Callback<Resp<JsonPrimitive>>() {
                         @Override
                         protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                            Intent intent = new Intent(getActivity(), BorrowDetailsActivity.class);
-//									intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//								    intent.putExtra(Launcher.EX_PAYLOAD, mDataId);
-                            startActivity(intent);
                         }
                     }).fire();
         }

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
-import com.sbai.finance.fragment.EconomicCircleFragment;
 import com.sbai.finance.fragment.HomeFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
@@ -117,7 +116,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 0:
                     return new HomeFragment();
                 case 1:
-                    return new EconomicCircleFragment();
+//                    return new EconomicCircleFragment();
                 case 2:
                     return new MineFragment();
             }

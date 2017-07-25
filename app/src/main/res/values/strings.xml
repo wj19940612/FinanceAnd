@@ -15,28 +15,13 @@
 
     <!-- EconomicCircle -->
     <string name="big_variety_name">%1$s:  </string>
-    <string name="no_data">暂无数据</string>
-    <string name="need_amount">需要金额:</string>
-    <string name="RMB">%1$s元</string>
-    <string name="borrow_deadline">借款期限:</string>
-    <string name="day">%1$s天</string>
-    <string name="borrow_interest">回报利息:</string>
-    <string name="will_interest">愿付利息</string>
+
     <string name="details">详情</string>
     <string name="comment_number">评论(%1$d)</string>
     <string name="no_comment">暂无评论~快来发表您的评论吧</string>
     <string name="share">分享</string>
-    <string name="borrow_money">借款</string>
     <string name="comment">发表评论&#8230;</string>
-    <string name="leave_message">留言&#8230;</string>
     <string name="new_message_count">%1$d条消息</string>
-    <string name="people_want_help_him">想要帮助他的人</string>
-    <string name="people_want_help_her">想要帮助她的人</string>
-    <string name="people_want_help_you">想要帮助你的人</string>
-    <string name="people_want_help_him_number">(%1$d)</string>
-    <string name="leave_message_number">留言(%1$d)</string>
-    <string name="write_message">写留言</string>
-    <string name="give_help">给予帮助</string>
     <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
     <item name="tag_opinion" type="id">0</item>
@@ -89,9 +74,6 @@
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
     <string name="rate">涨跌幅</string>
-    <string name="borrow_title">借款有道</string>
-    <string name="borrow_mine">我的借款</string>
-    <string name="borrow_detail">帮助他人，赚些小慧</string>
     <string name="opinion_master">观点大神</string>
     <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
@@ -108,13 +90,6 @@
     <string name="ShenzhenStockExchange">深证指数</string>
     <string name="GrowthEnterpriseMarket">创业板指</string>
     <string name="delist">停牌</string>
-
-
-    <!--help-->
-    <string name="borrow_in">我的借入</string>
-    <string name="borrow_out">我的借出</string>
-    <string name="borrow">我要借款</string>
-    <string name="help_borrow">互助借款</string>
 
     <!--event-->
     <string name="no_event_record">还没有大事发生!</string>
@@ -226,6 +201,7 @@
     <string name="gps_is_close">定位服务已关闭</string>
     <string name="please_open_gps_service">请到设置中开启开启[%1$s]定位服务</string>
     <string name="restart_get_location">点击重新获取位置</string>
+    <string name="RMB">%1$S元</string>
 
     <!--   消息 -->
     <string name="system_news">系统消息</string>
@@ -348,89 +324,8 @@
     <string name="please_enter_the_text">请输入文字...</string>
     <string name="describe_your_opinion">描述一下你的观点吧</string>
 
-    <!--mutual-->
-    <string name="warn">平台只做信息发布,一切用户行为与本平台无关，请谨慎借款</string>
-    <string name="borrow_limit">借款金额</string>
-    <string name="borrow_amount">500~2000</string>
-    <string name="borrow_interest_amount">1~200</string>
-    <string name="borrow_day_limit">借款期限</string>
-    <string name="borrow_location">所在地址</string>
-    <string name="borrow_day_limit_hint">1~60</string>
-    <string name="borrow_remark">备注</string>
-    <string name="borrow_remark_hint">简单描述一下您的借款需求，有助快速达成借款</string>
-    <string name="borrow_photo_tips">添加照片：最多可以上传4张</string>
-    <string name="borrow_add_photo">添加照片</string>
-    <string name="borrow_day">天</string>
-    <string name="money">元</string>
-    <string name="borrow_publish">确认发布</string>
-    <string name="publish">我要发布</string>
-    <string name="want_borrow">发布借款</string>
-    <string name="borrow_overdue">超出借款期限</string>
-    <string name="no_remark">备注信息不能为空</string>
-    <string name="borrow_over_money">借款金额不符合要求</string>
-    <string name="money_less_500">借款金额少于500元</string>
-    <string name="money_more_2000">借款金额超过2000元</string>
-    <string name="interest_less_1">借款利息少于1元</string>
-    <string name="interest_more_200">借款利息超过200元</string>
-    <string name="days_less_1">借款期限少于1天</string>
-    <string name="days_more_60">借款期限超过60天</string>
-    <string name="no_address">请选择地址</string>
-    <string name="borrow_over_interest">愿付利息不符合要求</string>
-    <string name="borrow_agree">发布即同意</string>
-    <string name="borrow_agreement">《乐米借款规则与用户须知》</string>
-    <string name="publish_success">发布成功</string>
-    <string name="protocol">借款规则与用户须知</string>
-    <string name="no_record">暂无借款</string>
-    <string name="commit">已提交</string>
-    <string name="wait_help">等待互助</string>
     <string name="end">已结束</string>
-    <string name="borrow_in_days">已借入 %1$d天</string>
-    <string name="borrow_out_days">已借出 %1$d天</string>
-    <string name="borrow_in_over_time">已借入 逾期</string>
-    <string name="borrow_out_over_time">已借出 逾期</string>
-    <!--mutual-->
-    <string name="select_photo_amount">完成(%1$d/%2$d)</string>
-    <string name="good_heart_people">好心人</string>
-    <string name="load_person">借款人</string>
-    <string name="mutual_no_borrow_in">您暂无向他人借入款项哦~</string>
-    <string name="mutual_no_borrow_out">您暂无向他人借出款项哦~</string>
-    <string name="borrow_in_his">历史借入</string>
-    <string name="borrow_out_his">历史借出</string>
-    <string name="borrow_in_mine">我的借入</string>
-    <string name="borrow_in_mine_detail">借入详情</string>
-    <string name="borrow_in_mine_his_detail">历史借入详情</string>
-    <string name="borrow_out_mine_detail">借出详情</string>
-    <string name="borrow_out_mine_his_detail">历史借出详情</string>
-    <string name="borrow_out_mine">我的借出</string>
-    <string name="borrow_in__mine_his">历史借入</string>
-    <string name="borrow_out_mine_his">历史借出</string>
-    <string name="publish_time">发布于 %1$s</string>
-    <string name="end_line_time">正在寻求帮助\n 倒计时 11:59</string>
-    <string name="call_helper">正在寻求帮助</string>
-    <string name="on_checking">审核中</string>
-    <string name="end_line">倒计时</string>
-    <string name="cancel_borrow_in">取消借款</string>
-    <string name="helper">想要帮助你的人 (%1$d)</string>
-    <string name="helper_her">想要帮助她的人 (%1$d)</string>
-    <string name="helper_his">想要帮助他的人 (%1$d)</string>
-    <string name="borrow_in_time">%1$s时间\n%2$s</string>
-    <string name="borrow_out_time">借出时间\n%1$s</string>
-    <string name="intention_time">发起意向\n%1$s</string>
-    <string name="borrow_in_time_success">借入</string>
-    <string name="borrow_in_time_failure">失败</string>
-    <string name="call">联系对方</string>
-    <string name="already_repay">确认还款</string>
-    <string name="already_repayment">已还款</string>
-    <string name="is_pay_intention">已支付意向金</string>
-    <string name="not_allow">审核失败</string>
-    <string name="user_address">这里是用户名\n杭州 萧山</string>
-    <string name="wait_confirm">等待确认中</string>
-    <string name="end_time">倒计时</string>
-    <string name="no_location">暂无位置信息</string>
-    <string name="no_phone">暂无联系电话</string>
-    <string name="borrow_failure">借款失败</string>
-    <string name="cancel_confirm">是否要取消借款?</string>
-    <string name="repay_confirm">是否确认对方已还款?</string>
+
     <string name="open_gps">请在设置中开启[乐米金融] 定位服务，以便发布借款</string>
     <string name="open_gps_permission">请在设置中开启[乐米金融] 定位服务权限</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
@@ -444,25 +339,16 @@
     <string name="all_image">所有图片</string>
 
     <!--借款有道-->
-    <string name="give_help_dialog_title">确认帮助?</string>
-    <string name="give_help_dialog_content">资金往来,请谨慎操作</string>
-    <string name="submitted">已提交</string>
-    <string name="want_help_him">想要帮助TA的人</string>
     <string name="pay_intention">支付意向金</string>
-    <string name="intention">意向金</string>
     <string name="confirm_payment">确认支付</string>
     <string name="pay_intention_hint1">意向金为平台服务费</string>
     <string name="pay_intention_hint2">无论用户是否成功借款都不予退还,请谅解</string>
     <string name="we_chat_pay">微信支付</string>
     <string name="ali_pay">支付宝支付</string>
-    <string name="select_help">是否选择%1$s帮助你并支付意向金?</string>
     <string name="intention_amount">￥0.01</string>
     <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
-    <string name="ali_pay_hint_1">1.如果未打开支付宝或未完成付款,请点击“继续支付”。</string>
     <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
-    <string name="ali_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
     <string name="complete_payment">已完成支付</string>
-    <string name="continue_to_pay">继续支付</string>
     <string name="save_picture">保存图片</string>
     <string name="save_picture_failed">保存失败</string>
     <string name="save_picture_success">图片成功保存至%1$s目录</string>

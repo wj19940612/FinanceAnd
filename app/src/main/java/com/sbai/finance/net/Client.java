@@ -61,46 +61,6 @@ public class Client {
                         .put("search", search));
     }
 
-    public static API getMyLoad() {
-        return new API("/coterie/help/loan/myLoan.do");
-    }
-
-    /**
-     * 获取借款详情
-     *
-     * @param id
-     * @return
-     */
-    public static API getBorrowMoneyDetail(int id) {
-        return new API(POST, "/coterie/help/loan/showDetail.do",
-                new ApiParams()
-                        .put("id", id));
-    }
-
-    /**
-     * 给予帮助
-     *
-     * @param id
-     * @return
-     */
-    public static API giveHelp(int id) {
-        return new API(POST, "/coterie/help/loan/intention.do",
-                new ApiParams()
-                        .put("id", id));
-    }
-
-    /**
-     * 想要帮助他/我的人列表
-     *
-     * @param id
-     * @return
-     */
-    public static API getGoodHeartPeopleList(int id) {
-        return new API(POST, "/coterie/help/loan/intentionCount.do",
-                new ApiParams()
-                        .put("id", id));
-    }
-
     /**
      * 获取服务器系统时间
      *
@@ -894,21 +854,6 @@ public class Client {
                         .put("createTime", createTime)
                         .put("pageSize", pageSize));
     }
-
-    /**
-     * 获取借款有道列表
-     *
-     * @param page
-     * @param pageSize
-     * @return
-     */
-    public static API getBorrowMoneyList(int page, int pageSize) {
-        return new API(POST, "/coterie/help/loan/showList.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize));
-    }
-
     /**
      * 获取观点详情
      *
@@ -993,133 +938,7 @@ public class Client {
                         .put("objId", objId));
     }
 
-    /**
-     * 发布借款
-     *
-     * @param content
-     * @param contentImg
-     * @param days
-     * @param interest
-     * @param money
-     * @return
-     */
-    public static API borrowIn(String content, String contentImg, String days, String interest, String money,
-                               String location, double locationLng, double locationLat) {
 
-        return new API(POST, "/coterie/help/loan/addLoan.do",
-                new ApiParams()
-                        .put("content", content)
-                        .put("contentImg", contentImg)
-                        .put("days", days)
-                        .put("interest", interest)
-                        .put("money", money)
-                        .put("location", location)
-                        .put("locationLng", locationLng)
-                        .put("locationLat", locationLat));
-    }
-
-    /**
-     * 我的借入
-     *
-     * @return
-     */
-    public static API getBorrowInList() {
-        return new API("/coterie/help/loan/myLoanIn.do");
-    }
-
-    /**
-     * 我的历史借入
-     *
-     * @return
-     */
-    public static API getBorrowInHisList() {
-        return new API("/coterie/help/loan/historyLoan.do");
-    }
-
-    /**
-     * 取消借款
-     *
-     * @param id
-     * @return
-     */
-    public static API cancelBorrowIn(int id) {
-        return new API("/coterie/help/loan/cancelLoan.do",
-                new ApiParams()
-                        .put("id", id));
-    }
-
-    /**
-     * 已经还款
-     *
-     * @param id
-     * @return
-     */
-    public static API repayed(int id) {
-        return new API("/coterie/help/loan/repayed.do",
-                new ApiParams()
-                        .put("id", id));
-    }
-
-    /**
-     * 查看帮助的人
-     *
-     * @param id
-     * @return
-     */
-    public static API getHelper(int id) {
-        return new API("/coterie/help/loan/intentionCount.do",
-                new ApiParams()
-                        .put("id", id));
-    }
-
-    /**
-     * 选择借款人
-     *
-     * @param id
-     * @return
-     */
-    public static API selectHelper(int id, String userId) {
-        return new API("/coterie/help/loan/intentionCount.do",
-                new ApiParams()
-                        .put("userId", userId)
-                        .put("id", id));
-    }
-
-    /**
-     * 我的借出
-     *
-     * @return
-     */
-    public static API getBorrowOutList() {
-        return new API("/coterie/help/loan/myLoanOut.do");
-    }
-
-    /**
-     * 我的历史借出
-     *
-     * @return
-     */
-    public static API getBorrowOutHisList() {
-        return new API("/coterie/help/loan/historyLoanOut.do");
-    }
-
-    public static API getPhone(int loanId) {
-        return new API("/coterie/help/loan/callPhone.do",
-                new ApiParams()
-                        .put("loanId", loanId));
-    }
-
-    /**
-     * 借单详情（含性别）
-     *
-     * @param id
-     * @return
-     */
-    public static API getBorrowDetails(int id) {
-        return new API("/coterie/help/loan/showDetails.do",
-                new ApiParams()
-                        .put("id", id));
-    }
 
     //乐米协议
 
@@ -1132,28 +951,6 @@ public class Client {
                 new ApiParams().put("id", id));
     }
 
-    /**
-     * 借款留言
-     */
-    public static API getBorrowMessage(int loanId) {
-        return new API("/coterie/help/loanNote/showNotes.do",
-                new ApiParams()
-                        .put("loanId", loanId));
-    }
-
-    /**
-     * 发送借款留言
-     *
-     * @param loanId
-     * @param content
-     * @return
-     */
-    public static API sendBorrowMessage(int loanId, String content) {
-        return new API(POST, "/coterie/help/loanNote/addNote.do",
-                new ApiParams()
-                        .put("loanId", loanId)
-                        .put("content", content));
-    }
 
     /**
      * 发表观点
