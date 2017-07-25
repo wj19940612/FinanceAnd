@@ -1118,7 +1118,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     protected void onReceive(Resp<TradeOrder> resp) {
                         super.onReceive(resp);
-                        if (resp.getCode() == GameCode.ORDER_EXISIT){
+                        if (resp.getCode() == GameCode.ORDER_EXISIT) {
                             refreshTradeView();
                         }
                     }
@@ -1127,9 +1127,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
                     }
 
-                    @Override
-                    protected void onToastErrorMessage(String msg) {
-                    }
                 })
                 .fire();
     }
@@ -1141,7 +1138,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     @Override
                     protected void onReceive(Resp<TradeOrderClosePosition> resp) {
                         super.onReceive(resp);
-                        if (resp.getCode() == GameCode.ORDER_CLOSE){
+                        if (resp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
                         }
                     }
