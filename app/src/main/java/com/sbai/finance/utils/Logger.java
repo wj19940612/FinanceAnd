@@ -172,19 +172,11 @@ public class Logger {
         }
     }
 
-    private static String getFilePath(Context context) {
-        if (Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED) || !Environment.isExternalStorageRemovable()) {
-            return context.getExternalFilesDir(null).getPath();
-        } else {
-            return context.getFilesDir().getPath();
-        }
-    }
-
     private static String getRootPath() {
         if (Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED) || !Environment.isExternalStorageRemovable()) {
             return Environment.getExternalStorageDirectory().getPath();
         } else {
-            return Environment.getRootDirectory().getPath();
+            return Environment.getDataDirectory().getPath();
         }
     }
 }
