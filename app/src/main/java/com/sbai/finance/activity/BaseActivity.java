@@ -102,6 +102,7 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    
     private void onTokenExpiredCancel() {
         //LocalUser.getUser().logout();
         ///Netty.get().keepALive();
