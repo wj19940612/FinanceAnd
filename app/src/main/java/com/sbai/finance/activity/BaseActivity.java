@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,6 +39,8 @@ import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.logging.Logger;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
