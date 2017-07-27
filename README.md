@@ -36,4 +36,4 @@
 - 期货：Futures
 - 自选：Optional
 - 消息：Message
-
+- 赞赏、打赏：Reward
