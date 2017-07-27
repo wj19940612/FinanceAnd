@@ -23,6 +23,7 @@ public class Preference {
         String RECHARGE_WAY = "recharge_way_string";
         String IS_FIRST_WITH_DRAW = "is_first_with_draw";
         String USER_HAS_SafePass = "user_has_safe_pass";
+        String MISS_TALK_ANSWERS = "miss_talk_answers";
     }
 
     private static Preference sInstance;
@@ -150,5 +151,13 @@ public class Preference {
 
     public void setUserSetSafePass(String key, boolean userHasSetPass) {
         apply(key + Key.USER_HAS_SafePass, userHasSetPass);
+    }
+
+    public void setAnswerIds(String answerIds) {
+        apply(Key.MISS_TALK_ANSWERS, answerIds);
+    }
+
+    public String getAnswerIds() {
+        return mPrefs.getString(Key.MISS_TALK_ANSWERS, null);
     }
 }
