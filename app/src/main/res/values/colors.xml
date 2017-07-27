@@ -38,7 +38,7 @@
     <color name="picker_press">#999999</color>
 
     <!--gradient-->
-    <color name="yellowGradientStart">55adff</color>
+    <color name="yellowGradientStart">#55adff</color>
     <color name="backgroundGradientStart">#69b2ff</color>
     <color name="backgroundGradientEnd">#8687f9</color>
 </resources>
