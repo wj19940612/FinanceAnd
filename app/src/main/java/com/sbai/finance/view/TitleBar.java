@@ -92,7 +92,7 @@ public class TitleBar extends RelativeLayout {
         if (customViewResId != -1) {
             mCustomView = LayoutInflater.from(getContext()).inflate(customViewResId, null);
         }
-        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, R.color.white);
+        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, android.R.color.white);
 
 
         mHasBottomSplitLine = typedArray.getBoolean(R.styleable.TitleBar_bottomHasSplitLine, false);
