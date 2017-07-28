@@ -60,9 +60,9 @@ public class MessagesActivity extends BaseActivity implements
     }
 
     private void initHeaderView() {
-        View view = new View(getActivity());
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(1,getResources()));
-        view.setLayoutParams(params);
+        View view =getLayoutInflater().inflate(R.layout.view_header_messages,null,false);
+        TextView mNoReadMessage= (TextView) view.findViewById(R.id.noReadMessage);
+        TextView mAllHasRead= (TextView) view.findViewById(R.id.allHasRead);
         mListView.addHeaderView(view);
     }
 

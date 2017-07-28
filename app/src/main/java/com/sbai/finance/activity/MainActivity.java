@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.miss.MessagesActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
@@ -42,7 +43,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         ButterKnife.bind(this);
         initView();
         checkVersion();
-        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+        Launcher.with(getActivity(), MessagesActivity.class).execute();
     }
 
     private void checkVersion() {
