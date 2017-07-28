@@ -632,4 +632,19 @@
 
 
     <string name="number_ge">%1$s个</string>
+    <!--姐说-->
+    <string name="question">提问</string>
+    <string name="write_your_question_wait_miss_answer">写下你的问题，等待小姐姐们的回音哦~</string>
+    <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
+    <string name="commit">提交</string>
+    <string name="words_number">%1$d/140</string>
+    <string name="miss_comment">评论</string>
+    <string name="publish_your_comment">发表你的评论吧~</string>
+    <string name="publish">发布</string>
+    <string name="reply">回复</string>
+    <string name="reward">打赏</string>
+    <string name="message_remind">消息提醒</string>
+    <string name="reply_your_comment">回复了你的评论</string>
+    <string name="comment_your_question">评论了你的提问</string>
+    <string name="answer_your_question">解答了你的提问</string>
 </resources>

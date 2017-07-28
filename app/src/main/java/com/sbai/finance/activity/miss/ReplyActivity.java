@@ -14,9 +14,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 对小姐姐的提问的评论页面
+ * 回复页面
  */
-public class CommentActivity extends BaseActivity {
+public class ReplyActivity extends BaseActivity {
 
     @BindView(R.id.questionComment)
     EditText mQuestionComment;
@@ -28,7 +28,7 @@ public class CommentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+        setContentView(R.layout.activity_reply);
         ButterKnife.bind(this);
         initView();
     }
