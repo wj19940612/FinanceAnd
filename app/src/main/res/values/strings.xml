@@ -55,7 +55,8 @@
     <string name="stock">股票</string>
     <string name="forex">外汇</string>
     <string name="help">互助借款</string>
-    <string name="self_choice">自选</string>
+    <string name="optional">自选</string>
+    <string name="leaderboard">排行榜</string>
     <string name="battle_hint">来一把紧张激烈的对战吧！</string>
 
     <string name="banner_detail">活动详情</string>
@@ -273,20 +274,6 @@
     <string name="report">举报</string>
     <string name="reply_number">回复(%1$d)</string>
     <string name="love_number">喜欢(%1$d)</string>
-    <string name="title_activity_login_test">Sign in</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="number">%1$d</string>
     <string name="number999">999+</string>
     <string name="comment_number999">(999+)</string>

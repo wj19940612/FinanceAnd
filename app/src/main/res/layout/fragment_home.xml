@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <com.sbai.finance.view.HomeHeader
+            <com.sbai.finance.view.FeaturesNavigation
                 android:id="@+id/homeHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

@@ -37,3 +37,5 @@
 - 自选：Optional
 - 消息：Message
 - 赞赏、打赏：Reward
+- 元宝：Ingot
+- 积分：Score

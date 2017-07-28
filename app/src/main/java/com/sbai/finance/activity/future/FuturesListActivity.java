@@ -22,7 +22,7 @@ import com.sbai.finance.websocket.market.MarketSubscriber;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FutureListActivity extends BaseActivity {
+public class FuturesListActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -36,7 +36,7 @@ public class FutureListActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_list);
+        setContentView(R.layout.activity_futures_list);
         ButterKnife.bind(this);
         initView();
     }
