@@ -28,8 +28,6 @@ public class BottomTabs extends LinearLayout {
 
 	private OnTabClickListener mOnTabClickListener;
 
-	public static final int TAB_INDEX_LIVE = 1;
-
 	public interface OnTabClickListener {
 		void onTabClick(int position);
 	}
@@ -54,8 +52,8 @@ public class BottomTabs extends LinearLayout {
 	}
 
 	private void init() {
-		mIcons = new int[]{R.drawable.tab_diamond, R.drawable.tab_economic_circle, R.drawable.tab_mine};
-		mTexts = new int[]{R.string.home, R.string.economic_circle, R.string.mine};
+		mIcons = new int[]{R.drawable.tab_diamond, R.drawable.tab_economic_circle, R.drawable.tab_mine, R.drawable.tab_mine};
+		mTexts = new int[]{R.string.training, R.string.miss_talk, R.string.discovery, R.string.mine};
 
 		setOrientation(HORIZONTAL);
 		if (mIcons != null && mTexts != null) {

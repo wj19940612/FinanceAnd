@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
-import com.sbai.finance.fragment.HomeFragment;
+import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
+import com.sbai.finance.fragment.MissTalkFragment;
+import com.sbai.finance.fragment.TrainingFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersionModel;
 import com.sbai.finance.net.Callback2D;
@@ -58,7 +60,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     @Override
     protected void onDestroy() {
-
         WsClient.get().close();
 
         MarketSubscriber.get().disconnect();
@@ -114,10 +115,12 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new HomeFragment();
-                case 1:
-//                    return new EconomicCircleFragment();
+                    return new TrainingFragment();
                 case 2:
+                    return new MissTalkFragment();
+                case 1:
+                    return new DiscoveryFragment();
+                case 3:
                     return new MineFragment();
             }
             return null;
@@ -125,7 +128,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         public Fragment getFragment(int position) {

@@ -25,3 +25,15 @@
 - 创建了 release 分支后，dev 分支可以继续进行开发工作，暂时不去理会 release 分支。
 - release 分支修复的问题可以随时合并到 dev 分支上。待完成发布后，分别 merge 到 dev 分支和 master 分支，并对 master 分支打上 tag
 - 对于已经发布的稳定版本，如果需要紧急修复 bug，基于 master 创建新的 hotFix 分支，修复完成后合并到 dev 以及 master 并对 master 打上新 tag
+
+# 统一命名
+- 训练：Training
+- 发现：Discovery
+- 小姐姐：Miss
+- 姐说：MissTalk
+- 对战：Battle
+- 股票：Stock
+- 期货：Futures
+- 自选：Optional
+- 消息：Message
+- 赞赏、打赏：Reward

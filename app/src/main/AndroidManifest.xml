@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
-
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -16,19 +15,18 @@
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
-    <!--定位 -->
+    <!-- 定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
 
-    <!--VISIBILITY_HIDDEN表示不显示任何通知栏提示的权限-->
+    <!-- VISIBILITY_HIDDEN表示不显示任何通知栏提示的权限 -->
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-    <!--DownloadManager-->
+    <!-- DownloadManager -->
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
-    <!--支付宝支付需要5种权限 -->
+    <!-- 支付宝支付需要5种权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
 
     <application
         android:name=".App"
@@ -38,6 +36,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- service -->
+        <service android:name=".service.PushIntentService"/>
+        <service
+            android:name=".service.PushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice"/>
+        <service android:name=".service.DownloadService"/>
+
+        <!-- meta-data -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="${UMENG_APP_KEY}"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL}"/>
+
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait">
@@ -264,7 +280,6 @@
         <activity
             android:name=".activity.mine.wallet.WithDrawDetailsActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.mine.cornucopia.CornucopiaActivity"
             android:screenOrientation="portrait"/>
@@ -272,11 +287,13 @@
             android:name=".activity.mine.cornucopia.EarningsAndExpendDetailsActivity"
             android:screenOrientation="portrait"/>
 
-        <!-- 期货大战-->
+        <!-- 期货大战 -->
 
-        <!-- 期货大战-->
-        <activity android:name=".activity.battle.FutureBattleActivity"
-                  android:screenOrientation="portrait"/>
+
+        <!-- 期货大战 -->
+        <activity
+            android:name=".activity.battle.FutureBattleActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.battle.BattleListActivity"
             android:screenOrientation="portrait"/>
@@ -293,7 +310,7 @@
             android:name=".activity.battle.BattleHisRecordActivity"
             android:screenOrientation="portrait"/>
 
-        <!--alipay-->
+        <!-- alipay -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
@@ -307,22 +324,30 @@
             android:screenOrientation="behind">
         </activity>
 
-        <!-- service -->
-        <service android:name=".service.PushIntentService"/>
-        <service
-            android:name=".service.PushService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":pushservice"/>
-        <service android:name=".service.DownloadService"/>
+        <!-- 排行榜 -->
+        <activity
+            android:name=".activity.leaderboard.LeaderBoardsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.LeaderBoardDetailActivity"
+            android:screenOrientation="portrait"/>
 
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="${UMENG_APP_KEY}">
-        </meta-data>
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL}"/>
+        <!-- 小姐姐 -->
+        <activity
+            android:name=".activity.miss.MissProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.miss.MyQuestionsActivity">
+        </activity>
+        <activity android:name=".activity.miss.QuestionDetailActivity">
+        </activity>
+        <activity android:name=".activity.miss.SubmitQuestionActivity">
+        </activity>
+        <activity android:name=".activity.miss.CommentActivity">
+        </activity>
+        <activity android:name=".activity.miss.RewardActivity">
+        </activity>
+        <activity android:name=".activity.miss.MessagesActivity">
+        </activity>
     </application>
 
 </manifest>
