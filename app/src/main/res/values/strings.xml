@@ -634,7 +634,10 @@
     <string name="reply_your_comment">回复了你的评论</string>
     <string name="comment_your_question">评论了你的提问</string>
     <string name="answer_your_question">解答了你的提问</string>
-    <string name="give_up_question_no_restore_comment"> 现在放弃提问，已输入的内容将不会保存</string>
+    <string name="give_up_question_no_restore_comment"> 现在放弃提问,已输入的内容将不会保存</string>
+    <string name="give_up_no_restore_comment"> 现在放弃,已输入的内容将不会保存</string>
     <string name="give_up_question">放弃提问</string>
     <string name="continue_question">继续提问</string>
+    <string name="give_up">放弃</string>
+    <string name="continue_comment">继续</string>
 </resources>

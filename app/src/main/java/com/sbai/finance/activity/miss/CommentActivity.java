@@ -42,16 +42,16 @@ public class CommentActivity extends BaseActivity {
         if (TextUtils.isEmpty(mQuestionComment.getText())) {
             super.onBackPressed();
         }
-        SmartDialog.single(getActivity(), getString(R.string.give_up_question_no_restore_comment))
+        SmartDialog.single(getActivity(), getString(R.string.give_up_no_restore_comment))
                 .setTitle(getString(R.string.hint))
-                .setNegative(R.string.give_up_question, new SmartDialog.OnClickListener() {
+                .setNegative(R.string.give_up, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         finish();
                     }
                 })
-                .setPositive(R.string.continue_question, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.continue_comment, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
