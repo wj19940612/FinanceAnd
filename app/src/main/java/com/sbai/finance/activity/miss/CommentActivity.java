@@ -12,6 +12,7 @@ import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 对小姐姐的提问的评论页面
@@ -54,4 +55,9 @@ public class CommentActivity extends BaseActivity {
             mWordsNumber.setText(getString(R.string.words_number, mQuestionComment.getText().length()));
         }
     };
+
+    @OnClick(R.id.publish)
+    public void onViewClicked() {
+        // TODO: 28/07/2017 发送发布 request
+    }
 }
