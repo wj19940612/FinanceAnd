@@ -17,14 +17,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.BattleListActivity;
-import com.sbai.finance.activity.future.FutureListActivity;
 import com.sbai.finance.activity.home.EventActivity;
-import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.home.TopicActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
-import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.web.BannerActivity;
 import com.sbai.finance.activity.web.HideTitleWebActivity;
 import com.sbai.finance.activity.web.TopicDetailActivity;
@@ -37,8 +32,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.FeaturesNavigation;
 import com.sbai.finance.view.HomeBanner;
-import com.sbai.finance.view.HomeHeader;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.TitleBar;
@@ -59,7 +54,7 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.homeBanner)
     HomeBanner mHomeBanner;
     @BindView(R.id.homeHeader)
-    HomeHeader mHomeHeader;
+    FeaturesNavigation mFeaturesNavigation;
     @BindView(R.id.topicGv)
     MyGridView mTopicGv;
     @BindView(R.id.nestedScrollView)
@@ -136,31 +131,6 @@ public class HomeFragment extends BaseFragment {
                             .putExtra(BannerActivity.EX_TITLE, information.getTitle())
                             .putExtra(BannerActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                             .execute();
-                }
-            }
-        });
-        mHomeHeader.setOnViewClickListener(new HomeHeader.OnViewClickListener() {
-            @Override
-            public void onFutureClick() {
-                Launcher.with(getActivity(), FutureListActivity.class).execute();
-            }
-
-            @Override
-            public void onStockClick() {
-                Launcher.with(getActivity(), StockListActivity.class).execute();
-            }
-
-            @Override
-            public void onHelpClick() {
-
-            }
-
-            @Override
-            public void onSelfChoiceClick() {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), OptionalActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
         });
