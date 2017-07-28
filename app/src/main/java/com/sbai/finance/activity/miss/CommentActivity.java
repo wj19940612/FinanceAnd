@@ -15,6 +15,7 @@ import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 对小姐姐的提问的评论页面
@@ -84,4 +85,16 @@ public class CommentActivity extends BaseActivity {
             mWordsNumber.setText(getString(R.string.words_number, mQuestionComment.getText().length()));
         }
     };
+
+    @OnClick(R.id.publish)
+    public void onViewClicked() {
+        // TODO: 28/07/2017 发送发布
+        /*发布：
+1.点击发布传图片慢的时候可视情况加loading效果
+2.服务端也校验，然后经过敏感词处理，没问题的直接可在前台展示
+3.成功以后出现toast（发布成功），然后返回上级页面
+4.校验失败给出toast（输入内容有误），然后停留在此页面
+        * */
+
+    }
 }
