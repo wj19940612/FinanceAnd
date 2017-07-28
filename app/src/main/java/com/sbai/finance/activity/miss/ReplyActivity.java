@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.miss;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -48,8 +49,13 @@ public class ReplyActivity extends BaseActivity {
         public void afterTextChanged(Editable s) {
             if (TextUtils.isEmpty(mQuestionComment.getText())) {
                 mPublish.setEnabled(false);
+                mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+            } else if (mQuestionComment.getText().length() > 140) {
+                mPublish.setEnabled(false);
+                mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.redAssist));
             } else {
                 mPublish.setEnabled(true);
+                mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
             }
             mWordsNumber.setText(getString(R.string.words_number, mQuestionComment.getText().length()));
         }
