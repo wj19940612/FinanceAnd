@@ -1,9 +1,8 @@
 package com.sbai.finance.model.miss;
 
 /**
- * Created by houcc on 2017-07-27.
+ * 姐说的消息
  */
-
 public class MissMessage {
     private String question;
     private String userName;
