@@ -121,11 +121,11 @@ public class StockDetailActivity extends StockTradeActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+//                case 0:
+//                    return mContext.getString(R.string.point);
                 case 0:
-                    return mContext.getString(R.string.point);
-                case 1:
                     return mContext.getString(R.string.stock_news);
-                case 2:
+                case 1:
                     return mContext.getString(R.string.stock_finance);
             }
             return super.getPageTitle(position);
@@ -134,11 +134,11 @@ public class StockDetailActivity extends StockTradeActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
+//                case 0:
+//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
-                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
-                case 1:
                     return StockNewsFragment.newInstance(mVariety.getVarietyType());
-                case 2:
+                case 1:
                     return FinanceFragment.newInstance(mVariety.getVarietyType());
             }
             return null;
@@ -146,7 +146,7 @@ public class StockDetailActivity extends StockTradeActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         public Fragment getFragment(int position) {

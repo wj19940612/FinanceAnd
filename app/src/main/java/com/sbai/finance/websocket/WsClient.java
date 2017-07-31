@@ -1,6 +1,7 @@
 package com.sbai.finance.websocket;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -8,7 +9,6 @@ import com.google.gson.JsonSyntaxException;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
-import com.sbai.finance.App;
 import com.sbai.finance.net.API;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
@@ -22,9 +22,9 @@ import java.util.Queue;
 
 public class WsClient implements AbsWsClient {
 
-    private static final int TIMEOUT_REQ = 3000;
-
     private static final String TAG = "WebSocket";
+
+    private static final int TIMEOUT_REQ = 3000;
 
     private static WsClient sInstance;
 
@@ -38,8 +38,7 @@ public class WsClient implements AbsWsClient {
 
     private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
-
-    private boolean mCloseAuto; // websocket will be closed automatically
+    private boolean mNormalClosed;
 
     enum Status {
         UNREGISTERED,
@@ -56,11 +55,10 @@ public class WsClient implements AbsWsClient {
 
     private WsClient() {
         mStatus = Status.UNREGISTERED;
-        mHandler = new Handler(App.getAppContext().getMainLooper());
+        mHandler = new Handler(Looper.getMainLooper());
 
         mPendingList = new LinkedList<>();
         mExecutedList = new LinkedList<>();
-        mCloseAuto = false;
     }
 
     private void register() {
@@ -146,6 +144,7 @@ public class WsClient implements AbsWsClient {
                 mWebSocket = webSocket;
 
                 if (isConnected()) {
+                    mNormalClosed = false;
 
                     mConnecting = false;
 
@@ -225,8 +224,8 @@ public class WsClient implements AbsWsClient {
     public void onClose() {
         Log.d(TAG, "onClose: ");
         mStatus = Status.UNREGISTERED;
-        if (mCloseAuto) { // if close automatically, reconnect
-            //connect();
+        if (!mNormalClosed) { // if close automatically, reconnect
+            connect();
         }
     }
 
@@ -240,7 +239,7 @@ public class WsClient implements AbsWsClient {
     public void close() {
         if (isConnected()) {
             mWebSocket.close();
-            //mCloseAuto = false;
+            mNormalClosed = true;
         }
     }
 

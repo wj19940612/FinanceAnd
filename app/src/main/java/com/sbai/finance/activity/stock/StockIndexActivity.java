@@ -65,11 +65,11 @@ public class StockIndexActivity extends StockTradeActivity {
             @Override
             public void onClick(View v) {
                 Fragment fragment = mSubPageAdapter.getFragment(pagePosition);
-                if(fragment!=null){
-                    if(fragment instanceof ViewpointFragment){
-                        ((ViewpointFragment)fragment).scrollToTop();
-                    }else if(fragment instanceof PriceLimitRankingFragment){
-                        ((PriceLimitRankingFragment)fragment).scrollToTop();
+                if (fragment != null) {
+                    if (fragment instanceof ViewpointFragment) {
+                        ((ViewpointFragment) fragment).scrollToTop();
+                    } else if (fragment instanceof PriceLimitRankingFragment) {
+                        ((PriceLimitRankingFragment) fragment).scrollToTop();
                     }
                 }
             }
@@ -105,11 +105,11 @@ public class StockIndexActivity extends StockTradeActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+//                case 0:
+//                    return mContext.getString(R.string.point);
                 case 0:
-                    return mContext.getString(R.string.point);
-                case 1:
                     return mContext.getString(R.string.rise_list);
-                case 2:
+                case 1:
                     return mContext.getString(R.string.fail_list);
             }
             return super.getPageTitle(position);
@@ -118,11 +118,11 @@ public class StockIndexActivity extends StockTradeActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
+//                case 0:
+//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
-                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
-                case 1:
                     return PriceLimitRankingFragment.newInstance(0, mExchangeCode);
-                case 2:
+                case 1:
                     return PriceLimitRankingFragment.newInstance(1, mExchangeCode);
             }
             return null;
@@ -130,7 +130,7 @@ public class StockIndexActivity extends StockTradeActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         public Fragment getFragment(int position) {
