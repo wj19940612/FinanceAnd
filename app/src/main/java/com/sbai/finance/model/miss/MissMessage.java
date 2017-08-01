@@ -8,6 +8,15 @@ public class MissMessage {
     private String userName;
     private int messageType;
     private String content;
+    private boolean isRead;
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
 
     public String getQuestion() {
         return question;

@@ -9,11 +9,16 @@
     tools:context="com.sbai.finance.activity.miss.MessagesActivity">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:bottomHasSplitLine="true"
-        app:titleText="@string/message_remind"/>
+        app:titleText="@string/message_remind"
+        app:rightText="@string/all_read"
+        app:rightVisible="true"
+        app:rightTextColor="@color/blueAssist"
+        app:rightTextSize="15sp"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

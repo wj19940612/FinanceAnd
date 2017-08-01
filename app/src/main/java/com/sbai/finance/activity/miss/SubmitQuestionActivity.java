@@ -17,11 +17,21 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
+import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
 import com.sbai.finance.model.miss.Miss;
+import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.miss.RewardMoney;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.HorizontalGridView;
 import com.sbai.finance.view.MissInfoView;
 import com.sbai.finance.view.SmartDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +52,15 @@ public class SubmitQuestionActivity extends BaseActivity {
     TextView mCommit;
     private GirdViewAdapter mGirdViewAdapter;
     private int mSelectedIndex = -1;
+    private RewardInfo mRewardInfo;
+
+    public RewardInfo getRewardInfo() {
+        return mRewardInfo;
+    }
+
+    public void setRewardInfo(RewardInfo rewardInfo) {
+        mRewardInfo = rewardInfo;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +72,18 @@ public class SubmitQuestionActivity extends BaseActivity {
     }
 
     private void requestMissData() {
+        Client.getMissList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Miss>>,List<Miss>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Miss> data) {
+                       updateMissData(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateMissData(List<Miss> data) {
         mGirdViewAdapter.clear();
-        for (int i = 0; i < 10; i++) {
-            Miss miss = new Miss();
-            miss.setAvatar(R.drawable.ic_default_avatar);
-            miss.setUserName("小米");
-            mGirdViewAdapter.add(miss);
-        }
+        mGirdViewAdapter.addAll(data);
         mGirdViewAdapter.notifyDataSetChanged();
     }
 
@@ -139,6 +163,19 @@ public class SubmitQuestionActivity extends BaseActivity {
     @OnClick(R.id.commit)
     public void onViewClicked() {
         // TODO: 2017-07-28 提交接口
+        mRewardInfo=new RewardInfo();
+        mRewardInfo.setId(6);
+        mRewardInfo.setMoney(0);
+        mRewardInfo.setIndex(-1);
+        List<RewardMoney> list = new ArrayList<>();
+        for (int i=1;i<4;i++){
+            RewardMoney rewardMoney = new RewardMoney();
+            rewardMoney.setMoney(i*10);
+            list.add(rewardMoney);
+        }
+        mRewardInfo.setMoneyList(list);
+        RewardMissDialogFragment.newInstance()
+                .show(getSupportFragmentManager(),TAG);
     }
 
 
@@ -182,7 +219,7 @@ public class SubmitQuestionActivity extends BaseActivity {
             }
 
             private void bindDataWithView(Miss item, final int position, final OnSelectedCallback callBack) {
-                mMissInfo.setImgRes(item.getAvatar()).setUserName(item.getUserName());
+                mMissInfo.setImgRes(item.getPortrait()).setUserName(item.getName());
                 mMissInfo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

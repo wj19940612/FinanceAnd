@@ -9,9 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,8 +20,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.miss.MissMessage;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +36,8 @@ public class MessagesActivity extends BaseActivity implements
     ListView mListView;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.title)
+    TitleBar mTitle;
 
     private MessageAdapter mMessageAdapter;
 
@@ -52,18 +52,24 @@ public class MessagesActivity extends BaseActivity implements
 
     private void initView() {
         mMessageAdapter = new MessageAdapter(getActivity());
-        initHeaderView();
         mListView.setAdapter(mMessageAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setAdapter(mListView, mMessageAdapter);
-    }
-
-    private void initHeaderView() {
-        View view =getLayoutInflater().inflate(R.layout.view_header_messages,null,false);
-        TextView mNoReadMessage= (TextView) view.findViewById(R.id.noReadMessage);
-        TextView mAllHasRead= (TextView) view.findViewById(R.id.allHasRead);
-        mListView.addHeaderView(view);
+        mTitle.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
+                for (int i = 0; i < mMessageAdapter.getCount(); i++) {
+                    MissMessage missMessage = mMessageAdapter.getItem(i);
+                    if (missMessage != null && !missMessage.isRead()) {
+                        missMessage.setRead(true);
+                    }
+                }
+                mMessageAdapter.notifyDataSetChanged();
+                mTitle.setTitle(R.string.message_remind);
+            }
+        });
     }
 
 
@@ -138,7 +144,7 @@ public class MessagesActivity extends BaseActivity implements
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(MissMessage item, final Context context) {
+            private void bindDataWithView(final MissMessage item, final Context context) {
                 mQuestion.setText(item.getQuestion());
                 Glide.with(context).load(R.drawable.ic_default_avatar).into(mAvatar);
                 mUserName.setText(item.getUserName());
@@ -156,10 +162,16 @@ public class MessagesActivity extends BaseActivity implements
                         break;
                 }
                 mTime.setText(DateUtil.getFormatTime(System.currentTimeMillis()));
+                if (item.isRead()) {
+                    mRedDot.setVisibility(View.GONE);
+                } else {
+                    mRedDot.setVisibility(View.VISIBLE);
+                }
                 mContent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mRedDot.setVisibility(View.GONE);
+                        item.setRead(true);
                         mQuestion.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
                     }
                 });

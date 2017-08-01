@@ -27,6 +27,7 @@ public class MissInfoView extends LinearLayout {
     @BindView(R.id.userName)
     TextView mUserName;
     private boolean mSelected;
+
     public MissInfoView(Context context) {
         super(context);
         init();
@@ -46,14 +47,16 @@ public class MissInfoView extends LinearLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_miss_info, this, true);
         ButterKnife.bind(this);
     }
-    public MissInfoView setImgRes(String url){
+
+    public MissInfoView setImgRes(String url) {
         Glide.with(getContext())
                 .load(url).placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getContext()))
                 .into(mAvatar);
         return this;
     }
-    public MissInfoView setImgRes(Integer resourceId){
+
+    public MissInfoView setImgRes(Integer resourceId) {
         Glide.with(getContext())
                 .load(resourceId).placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getContext()))
@@ -70,9 +73,9 @@ public class MissInfoView extends LinearLayout {
     @Override
     public void setSelected(boolean selected) {
         mSelected = selected;
-        if (mSelected){
+        if (mSelected) {
             mSelectImg.setVisibility(VISIBLE);
-        }else{
+        } else {
             mSelectImg.setVisibility(GONE);
         }
     }

@@ -641,4 +641,13 @@
     <string name="give_up">放弃</string>
     <string name="continue_comment">继续</string>
     <string name="all_has_read">全部标记为已读</string>
+    <string name="other">其他</string>
+    <string name="confirm_reward">确认打赏</string>
+    <string name="other_money_ingot">其他金额(元宝)</string>
+    <string name="at_least_ten_ingot">最少10元宝哦～</string>
+    <string name="most_reward_ten_million_ingot">最高打赏金额1000万元宝</string>
+    <string name="at_least_reward_ten_ingot">最低打赏金额10元宝</string>
+    <string name="all_read">全部已读</string>
+    <string name="success_reward">成功打赏</string>
+    <string name="deduct">扣除</string>
 </resources>

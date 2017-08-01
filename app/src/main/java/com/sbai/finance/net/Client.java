@@ -854,6 +854,7 @@ public class Client {
                         .put("createTime", createTime)
                         .put("pageSize", pageSize));
     }
+
     /**
      * 获取观点详情
      *
@@ -937,7 +938,6 @@ public class Client {
                 new ApiParams()
                         .put("objId", objId));
     }
-
 
 
     //乐米协议
@@ -1763,4 +1763,27 @@ public class Client {
                 .put("varietyId", varietyId));
     }
 
+    /**
+     * 获取小姐姐列表
+     *
+     * @return
+     */
+    public static API getMissList() {
+        return new API("/explain/customInfo/getCustomList.do");
+    }
+
+    /**
+     * 打赏小姐姐
+     * @param customId
+     * @param money
+     * @param type
+     * @return
+     */
+    public static API rewardMiss(int customId,double money,int type,String password) {
+        return new API(POST,"/explain/question/award.do",new ApiParams()
+                      .put("quesionId",customId)
+                      .put("money",money)
+                      .put("type",type)
+                      .put("password", password));
+    }
 }
