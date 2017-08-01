@@ -1780,8 +1780,8 @@ public class Client {
      * @return
      */
     public static API rewardMiss(int customId,double money,int type,String password) {
-        return new API(POST,"/explain/question/award.do",new ApiParams()
-                      .put("quesionId",customId)
+        return new API(POST,"/explain/customInfo/award.do",new ApiParams()
+                      .put("customId",customId)
                       .put("money",money)
                       .put("type",type)
                       .put("password", password));
