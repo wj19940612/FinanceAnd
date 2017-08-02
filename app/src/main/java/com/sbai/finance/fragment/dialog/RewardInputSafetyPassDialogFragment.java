@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -39,8 +40,11 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
 
     private static final String KEY_MONEY = "MONEY";
     private static final String KEY_HINT = "hint";
-    public static final String KEY_REWARD = "reward";
+    private static final String KEY_REWARD = "reward";
     private static final String KEY_ID = "ID";
+    private static final String KEY_TYPE = "type";
+
+
     @BindView(R.id.title)
     TextView mTitle;
     @BindView(R.id.money)
@@ -55,6 +59,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     private String mTitleHint;
     private int mId;
     private boolean mIsSuccess;
+    private int mType;
 
     public static RewardInputSafetyPassDialogFragment newInstance(String money) {
         Bundle args = new Bundle();
@@ -64,13 +69,14 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public static RewardInputSafetyPassDialogFragment newInstance(int id, String money, String hint, long rewardMoney) {
+    public static RewardInputSafetyPassDialogFragment newInstance(int id, String money, String hint, long rewardMoney, int type) {
         Bundle args = new Bundle();
         RewardInputSafetyPassDialogFragment fragment = new RewardInputSafetyPassDialogFragment();
         args.putString(KEY_MONEY, money);
         args.putString(KEY_HINT, hint);
         args.putInt(KEY_ID, id);
-        args.putLong(KEY_REWARD,rewardMoney);
+        args.putLong(KEY_REWARD, rewardMoney);
+        args.putInt(KEY_TYPE, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -123,8 +129,9 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
             mRechargeMoney = getArguments().getString(KEY_MONEY);
-            mRewardMoney=getArguments().getLong(KEY_REWARD);
+            mRewardMoney = getArguments().getLong(KEY_REWARD);
             mTitleHint = getArguments().getString(KEY_HINT);
+            mType= getArguments().getInt(KEY_TYPE);
             mId = getArguments().getInt(KEY_ID);
         }
     }
@@ -152,20 +159,39 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
 
     private void requestRewardMiss(String password) {
         mIsSuccess = false;
-        Client.rewardMiss(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            ToastUtil.show(getString(R.string.success_reward));
-                            mIsSuccess = true;
-                        } else {
-                            ToastUtil.show(resp.getMsg());
+        if (mType == RewardInfo.TYPE_MISS) {
+            Client.rewardMiss(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<Object>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            if (resp.isSuccess()) {
+                                ToastUtil.show(getString(R.string.success_reward));
+                                mIsSuccess = true;
+                            } else {
+                                ToastUtil.show(resp.getMsg());
+                            }
+                            dismissAllowingStateLoss();
                         }
-                        dismissAllowingStateLoss();
-                    }
-                }).fire();
+                    }).fire();
 
+        }
+        if (mType == RewardInfo.TYPE_QUESTION) {
+            Client.rewardQuestion(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<Object>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            if (resp.isSuccess()) {
+                                ToastUtil.show(getString(R.string.success_reward));
+                                mIsSuccess = true;
+                            } else {
+                                ToastUtil.show(resp.getMsg());
+                            }
+                            dismissAllowingStateLoss();
+                        }
+                    }).fire();
+
+        }
     }
 }

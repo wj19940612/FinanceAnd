@@ -1779,7 +1779,6 @@ public class Client {
     }
 
     /**
-     * <<<<<<< HEAD
      * 打赏小姐姐
      *
      * @param customId
@@ -1790,6 +1789,22 @@ public class Client {
     public static API rewardMiss(int customId, double money, int type, String password) {
         return new API(POST, "/explain/customInfo/award.do", new ApiParams()
                 .put("customId", customId)
+                .put("money", money)
+                .put("type", type)
+                .put("password", password));
+    }
+
+    /**
+     * 打赏问题
+     *
+     * @param quesionId
+     * @param money
+     * @param type
+     * @return
+     */
+    public static API rewardQuestion(int quesionId, double money, int type, String password) {
+        return new API(POST, "/explain/question/award.do", new ApiParams()
+                .put("questionId", quesionId)
                 .put("money", money)
                 .put("type", type)
                 .put("password", password));

@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.miss.MissProfileActivity;
+import com.sbai.finance.activity.miss.MyQuestionsActivity;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.utils.FinanceUtil;
@@ -54,8 +57,16 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
-        if (getActivity() instanceof SubmitQuestionActivity) {
-            SubmitQuestionActivity activity = (SubmitQuestionActivity) getActivity();
+        if (getActivity() instanceof QuestionDetailActivity) {
+            QuestionDetailActivity activity = (QuestionDetailActivity) getActivity();
+            mRewardInfo = activity.getRewardInfo();
+        }
+        if (getActivity() instanceof MyQuestionsActivity) {
+            MyQuestionsActivity activity = (MyQuestionsActivity) getActivity();
+            mRewardInfo = activity.getRewardInfo();
+        }
+        if (getActivity() instanceof MissProfileActivity) {
+            MissProfileActivity activity = (MissProfileActivity) getActivity();
             mRewardInfo = activity.getRewardInfo();
         }
     }
@@ -108,7 +119,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
                 return;
             }
             if (mContent.equalsIgnoreCase(content)) return;
-            if (content.length()>15){
+            if (content.length() > 15) {
                 rewardOverMost();
                 return;
             }

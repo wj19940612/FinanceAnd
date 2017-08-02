@@ -54,15 +54,6 @@ public class SubmitQuestionActivity extends BaseActivity {
     TextView mCommit;
     private GirdViewAdapter mGirdViewAdapter;
     private int mSelectedIndex = -1;
-    private RewardInfo mRewardInfo;
-
-    public RewardInfo getRewardInfo() {
-        return mRewardInfo;
-    }
-
-    public void setRewardInfo(RewardInfo rewardInfo) {
-        mRewardInfo = rewardInfo;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,32 +66,34 @@ public class SubmitQuestionActivity extends BaseActivity {
 
     private void requestMissData() {
         Client.getMissList().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Miss>>,List<Miss>>() {
+                .setCallback(new Callback2D<Resp<List<Miss>>, List<Miss>>() {
                     @Override
                     protected void onRespSuccessData(List<Miss> data) {
-                       updateMissData(data);
+                        updateMissData(data);
                     }
                 }).fireFree();
     }
+
     private void requestCommitQuestion() {
-        Integer missId =null;
-        if (mSelectedIndex!=-1){
-            missId=mGirdViewAdapter.getItem(mSelectedIndex).getId();
+        Integer missId = null;
+        if (mSelectedIndex != -1) {
+            missId = mGirdViewAdapter.getItem(mSelectedIndex).getId();
         }
-        Client.addQuestion(mQuestionComment.getText().toString().trim(),missId).setTag(TAG)
+        Client.addQuestion(mQuestionComment.getText().toString().trim(), missId).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()){
+                        if (resp.isSuccess()) {
                             ToastUtil.show(R.string.question_commit_and_please_wait_miss_answer);
                             finish();
-                        }else {
+                        } else {
                             ToastUtil.show(resp.getMsg());
                         }
                     }
                 }).fire();
     }
+
     private void updateMissData(List<Miss> data) {
         mGirdViewAdapter.clear();
         mGirdViewAdapter.addAll(data);
@@ -183,22 +176,8 @@ public class SubmitQuestionActivity extends BaseActivity {
     @OnClick(R.id.commit)
     public void onViewClicked() {
         // TODO: 2017-07-28 提交接口
-    //    requestCommitQuestion();
-        mRewardInfo=new RewardInfo();
-        mRewardInfo.setId(6);
-        mRewardInfo.setMoney(0);
-        mRewardInfo.setIndex(-1);
-        List<RewardMoney> list = new ArrayList<>();
-        for (int i=1;i<4;i++){
-            RewardMoney rewardMoney = new RewardMoney();
-            rewardMoney.setMoney(i*10);
-            list.add(rewardMoney);
-        }
-        mRewardInfo.setMoneyList(list);
-        RewardMissDialogFragment.newInstance()
-                .show(getSupportFragmentManager(),TAG);
+        requestCommitQuestion();
     }
-
 
 
     static class GirdViewAdapter extends ArrayAdapter<Miss> {

@@ -7,10 +7,21 @@ import java.util.List;
  */
 
 public class RewardInfo {
+    public static final int TYPE_MISS=1;
+    public static final int TYPE_QUESTION=2;
     private int id;
     private int index;
+    private int type;
     private long money;
     private List<RewardMoney> mMoneyList;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public int getId() {
         return id;
