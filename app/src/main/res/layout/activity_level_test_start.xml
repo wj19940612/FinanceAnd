@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_level_test_start"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.leveltest.LevelTestStartActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:fitsSystemWindows="true"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:barBackground="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/level_test_title"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/joinPeopleNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/number_people_join"
+        android:textColor="@color/hint_white_color"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:lineSpacingExtra="3dp"
+        android:text="@string/level_test_info_hint"
+        android:textColor="@color/hint_white_color"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/startTest"
+        android:layout_width="180dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/btn_auth_code_rounded"
+        android:gravity="center"
+        android:text="@string/start_test"
+        android:textColor="@color/yellowGradientStart"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/historyResult"
+        android:layout_width="180dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_white_out_ring"
+        android:gravity="center"
+        android:text="@string/history_result"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+</LinearLayout>

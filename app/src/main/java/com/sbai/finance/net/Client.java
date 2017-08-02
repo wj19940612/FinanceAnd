@@ -854,6 +854,7 @@ public class Client {
                         .put("createTime", createTime)
                         .put("pageSize", pageSize));
     }
+
     /**
      * 获取观点详情
      *
@@ -937,7 +938,6 @@ public class Client {
                 new ApiParams()
                         .put("objId", objId));
     }
-
 
 
     //乐米协议
@@ -1763,4 +1763,27 @@ public class Client {
                 .put("varietyId", varietyId));
     }
 
+    //请求参加水平测试人数
+    public static API requestJoinTestedNumber() {
+        return new API("");
+    }
+
+    //请求测试题库
+    public static API requestExamQuestions() {
+        return new API("");
+    }
+
+    //提交水平测试答案接口
+    public static API confirmLevelTestResult() {
+        return new API("");
+    }
+
+    //请求用户的测试成绩
+    public static API requestUserTestResult() {
+        return new API("");
+    }
+
+    public static API requestHistoryTestResultList() {
+        return new API("");
+    }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:id="@+id/card"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/exam"
+                                    android:layout_marginBottom="20dp"
+                                    android:layout_marginLeft="@dimen/common_padding"
+                                    android:layout_marginRight="@dimen/common_padding"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:minHeight="80dp"
+                                    android:orientation="vertical"
+                                    app:cardCornerRadius="8dp"
+                                    app:cardElevation="3dp"
+                                    app:contentPaddingBottom="16dp"
+                                    app:contentPaddingLeft="40dp"
+                                    app:contentPaddingRight="34dp"
+                                    app:contentPaddingTop="16dp">
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textColor="@color/love_text"
+        android:textSize="17sp"
+        tools:text="A  这是我的答案"/>
+
+</android.support.v7.widget.CardView>

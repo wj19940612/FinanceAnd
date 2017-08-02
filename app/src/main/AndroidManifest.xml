@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sbai.finance"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -347,6 +347,14 @@
         <activity android:name=".activity.miss.RewardActivity">
         </activity>
         <activity android:name=".activity.miss.MessagesActivity">
+        </activity>
+        <activity android:name=".activity.leveltest.LevelTestStartActivity">
+        </activity>
+        <activity android:name=".activity.leveltest.LevelExamQuestionsActivity">
+        </activity>
+        <activity android:name=".activity.leveltest.ExamResultActivity">
+        </activity>
+        <activity android:name=".activity.leveltest.HistoryTestResultActivity">
         </activity>
     </application>
 

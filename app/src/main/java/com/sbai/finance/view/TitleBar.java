@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -72,10 +73,8 @@ public class TitleBar extends RelativeLayout {
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TitleBar);
 
-        int defaultTitleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18,
-                getResources().getDisplayMetrics());
-        int defaultFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
-                getResources().getDisplayMetrics());
+        int defaultTitleSize = 18;
+        int defaultFontSize = 12;
 
         mTitle = typedArray.getText(R.styleable.TitleBar_titleText);
         mTitleSize = typedArray.getDimensionPixelOffset(R.styleable.TitleBar_titleTextSize, defaultTitleSize);
@@ -103,6 +102,7 @@ public class TitleBar extends RelativeLayout {
         mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
                 getResources().getDisplayMetrics());
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Log.d("wangjie", "processAttrs: " + defaultTitleSize);
         typedArray.recycle();
     }
 
@@ -206,7 +206,7 @@ public class TitleBar extends RelativeLayout {
         if (mTitleView == null) return;
 
         mTitleSize = titleSize;
-        mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize);
+        mTitleView.setTextSize(titleSize);
     }
 
     public void setRightText(int resid) {
@@ -217,6 +217,20 @@ public class TitleBar extends RelativeLayout {
     public void setRightText(CharSequence rightText) {
         mRightText = rightText;
         mRightView.setText(rightText);
+    }
+
+    public void setLeftText(String text) {
+        mLeftView.setText(text);
+        mLeftView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+    }
+
+    public void setLeftText(int textResId) {
+        mLeftView.setText(textResId);
+        mLeftView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+    }
+
+    public void setLeftTextColor(int color) {
+        mLeftView.setTextColor(color);
     }
 
     public void setRightTextSize(int rightTextSize) {

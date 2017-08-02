@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.leveltest.ExamResultActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:background="@drawable/bg_white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_level_exam_questions_title"/>
+
+        <com.sbai.finance.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fitsSystemWindows="true"
+            app:backFeature="true"
+            app:backIcon="@drawable/ic_close"
+            app:barBackground="@android:color/transparent"
+            app:titleTextColor="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/accuracy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleBar"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/white"
+            android:textSize="50sp"
+            tools:text="50.78%"/>
+
+        <TextView
+            android:id="@+id/accuracyHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/accuracy"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:text="正确率\n19.6%.超过20%的同学"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/accuracyHint"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="@dimen/common_padding"
+            android:layout_marginRight="@dimen/common_padding"
+            android:layout_marginTop="45dp"
+            android:background="@android:color/white"
+            android:minHeight="90dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="5dp"
+            app:contentPaddingBottom="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/common_padding">
+
+                <TextView
+                    android:id="@+id/accidence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="6dp"
+                    android:drawableTop="@drawable/ic_level_accidence_not_pass"
+                    android:gravity="center"
+                    android:text="@string/accidence"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="6dp"
+                    android:drawableTop="@drawable/ic_level_primary_not_pass"
+                    android:gravity="center"
+                    android:text="@string/primary"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/intermediate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="6dp"
+                    android:drawableTop="@drawable/ic_level_intermediate_not_pass"
+                    android:gravity="center"
+                    android:text="@string/intermediate"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/expert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="6dp"
+                    android:drawableTop="@drawable/ic_level_expert_not_pass"
+                    android:gravity="center"
+                    android:text="@string/expert"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/master"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="6dp"
+                    android:drawableTop="@drawable/ic_level_master_not_pass"
+                    android:gravity="center"
+                    android:text="@string/master"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+
+    <com.sbai.finance.view.leveltest.CreditScoreView
+        android:id="@+id/resultImage"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/going_train"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_color_primary_big_rounded"
+        android:gravity="center"
+        android:text="@string/going_train"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
+</LinearLayout>
