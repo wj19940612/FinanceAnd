@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.miss;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -10,6 +11,11 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -21,21 +27,29 @@ import butterknife.OnClick;
  * 对小姐姐的提问的评论页面
  */
 public class CommentActivity extends BaseActivity {
-
     @BindView(R.id.questionComment)
     EditText mQuestionComment;
     @BindView(R.id.wordsNumber)
     TextView mWordsNumber;
     @BindView(R.id.publish)
     TextView mPublish;
+    private int mInvitationUserId;
+    private int mDataId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         ButterKnife.bind(this);
+        initData();
         initView();
     }
+
+    private void initData() {
+        mInvitationUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mDataId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -88,13 +102,25 @@ public class CommentActivity extends BaseActivity {
 
     @OnClick(R.id.publish)
     public void onViewClicked() {
-        // TODO: 28/07/2017 发送发布
-        /*发布：
-1.点击发布传图片慢的时候可视情况加loading效果
-2.服务端也校验，然后经过敏感词处理，没问题的直接可在前台展示
-3.成功以后出现toast（发布成功），然后返回上级页面
-4.校验失败给出toast（输入内容有误），然后停留在此页面
-        * */
+        // TODO: 28/07/2017 发送评论
+        requestPublishComment();
 
+    }
+
+    private void requestPublishComment() {
+        Client.addComment(mInvitationUserId, null, mQuestionComment.getText().toString().trim(), mDataId)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            ToastUtil.show(R.string.publish_success);
+                            finish();
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fireFree();
     }
 }

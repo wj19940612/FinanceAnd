@@ -107,18 +107,16 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
                 mOtherMoneyContent.setText(content.subSequence(0, content.length() - 1));
                 return;
             }
-            long money = Long.valueOf(content.replace(",", ""));
             if (mContent.equalsIgnoreCase(content)) return;
+            if (content.length()>15){
+                rewardOverMost();
+                return;
+            }
+            long money = Long.valueOf(content.replace(",", ""));
             if (money < 10) {
-                mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
-                mWarnTip.setText(getString(R.string.at_least_reward_ten_ingot));
-                mWarnTip.setVisibility(View.VISIBLE);
-                mConfirm.setEnabled(false);
+                rewardLowLeast();
             } else if (money > 10000000) {
-                mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
-                mWarnTip.setText(getString(R.string.most_reward_ten_million_ingot));
-                mWarnTip.setVisibility(View.VISIBLE);
-                mConfirm.setEnabled(false);
+                rewardOverMost();
             } else {
                 mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryText));
                 mWarnTip.setVisibility(View.INVISIBLE);
@@ -134,6 +132,20 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
             mContent = charSequence.toString();
         }
     };
+
+    private void rewardLowLeast() {
+        mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
+        mWarnTip.setText(getString(R.string.at_least_reward_ten_ingot));
+        mWarnTip.setVisibility(View.VISIBLE);
+        mConfirm.setEnabled(false);
+    }
+
+    private void rewardOverMost() {
+        mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
+        mWarnTip.setText(getString(R.string.most_reward_ten_million_ingot));
+        mWarnTip.setVisibility(View.VISIBLE);
+        mConfirm.setEnabled(false);
+    }
 
     public void show(FragmentManager manager) {
         super.show(manager, getClass().getSimpleName());

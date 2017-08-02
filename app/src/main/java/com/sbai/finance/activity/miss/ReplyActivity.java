@@ -9,10 +9,16 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 回复页面
@@ -25,13 +31,22 @@ public class ReplyActivity extends BaseActivity {
     TextView mWordsNumber;
     @BindView(R.id.publish)
     TextView mPublish;
-
+    private int mInvitationUserId;
+    private int mDataId;
+    private int mReplyParentId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply);
         ButterKnife.bind(this);
+        initData();
         initView();
+    }
+
+    private void initData() {
+        mInvitationUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mDataId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        mReplyParentId= getIntent().getIntExtra(Launcher.EX_PAYLOAD_2, -1);
     }
 
     @Override
@@ -60,4 +75,25 @@ public class ReplyActivity extends BaseActivity {
             mWordsNumber.setText(getString(R.string.words_number, mQuestionComment.getText().length()));
         }
     };
+
+    @OnClick(R.id.publish)
+    public void onViewClicked() {
+        requestReplyComment();
+    }
+    private void requestReplyComment() {
+        Client.addComment(mInvitationUserId, mReplyParentId, mQuestionComment.getText().toString().trim(), mDataId)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            ToastUtil.show(R.string.publish_success);
+                            finish();
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fireFree();
+    }
 }

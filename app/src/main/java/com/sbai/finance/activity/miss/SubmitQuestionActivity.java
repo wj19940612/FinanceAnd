@@ -22,9 +22,11 @@ import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.HorizontalGridView;
 import com.sbai.finance.view.MissInfoView;
@@ -80,7 +82,25 @@ public class SubmitQuestionActivity extends BaseActivity {
                     }
                 }).fireFree();
     }
-
+    private void requestCommitQuestion() {
+        Integer missId =null;
+        if (mSelectedIndex!=-1){
+            missId=mGirdViewAdapter.getItem(mSelectedIndex).getId();
+        }
+        Client.addQuestion(mQuestionComment.getText().toString().trim(),missId).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()){
+                            ToastUtil.show(R.string.question_commit_and_please_wait_miss_answer);
+                            finish();
+                        }else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fire();
+    }
     private void updateMissData(List<Miss> data) {
         mGirdViewAdapter.clear();
         mGirdViewAdapter.addAll(data);
@@ -163,6 +183,7 @@ public class SubmitQuestionActivity extends BaseActivity {
     @OnClick(R.id.commit)
     public void onViewClicked() {
         // TODO: 2017-07-28 提交接口
+    //    requestCommitQuestion();
         mRewardInfo=new RewardInfo();
         mRewardInfo.setId(6);
         mRewardInfo.setMoney(0);
@@ -177,6 +198,7 @@ public class SubmitQuestionActivity extends BaseActivity {
         RewardMissDialogFragment.newInstance()
                 .show(getSupportFragmentManager(),TAG);
     }
+
 
 
     static class GirdViewAdapter extends ArrayAdapter<Miss> {

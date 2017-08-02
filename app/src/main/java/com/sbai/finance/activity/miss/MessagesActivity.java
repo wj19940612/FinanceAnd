@@ -9,6 +9,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,9 +21,19 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.miss.MissMessage;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,49 +52,139 @@ public class MessagesActivity extends BaseActivity implements
     TitleBar mTitle;
 
     private MessageAdapter mMessageAdapter;
+    private Set<Integer> mSet;
+    private int mNoReadCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         ButterKnife.bind(this);
+        initHeaderView();
+        initFooterView();
         initView();
+        initTitle();
         requestMessageData();
     }
 
-    private void initView() {
-        mMessageAdapter = new MessageAdapter(getActivity());
-        mListView.setAdapter(mMessageAdapter);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setAdapter(mListView, mMessageAdapter);
+    private void initHeaderView() {
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(1, getResources()));
+        view.setLayoutParams(params);
+        mListView.addHeaderView(view);
+    }
+
+    private void initFooterView() {
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(1, getResources()));
+        view.setLayoutParams(params);
+        mListView.addFooterView(view);
+    }
+
+    private void initTitle() {
         mTitle.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
                 for (int i = 0; i < mMessageAdapter.getCount(); i++) {
                     MissMessage missMessage = mMessageAdapter.getItem(i);
-                    if (missMessage != null && !missMessage.isRead()) {
-                        missMessage.setRead(true);
+                    if (missMessage != null && missMessage.getStatus() == MissMessage.NO_READ) {
+                        requestReadMessage(missMessage.getId());
                     }
                 }
-                mMessageAdapter.notifyDataSetChanged();
-                mTitle.setTitle(R.string.message_remind);
             }
         });
     }
 
+    private void initView() {
+        scrollToTop(mTitle, mListView);
+        mSet = new HashSet<>();
+        mMessageAdapter = new MessageAdapter(getActivity());
+        mListView.setAdapter(mMessageAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
+        mSwipeRefreshLayout.setAdapter(mListView, mMessageAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MissMessage missMessage = (MissMessage) parent.getItemAtPosition(position);
+                TextView mQuestion = (TextView) view.findViewById(R.id.question);
+                if (mQuestion != null) {
+                    mQuestion.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+                }
+                if (missMessage != null) {
+                    if (missMessage.isNoRead()) {
+                        requestReadMessage(missMessage.getId());
+                    }
+                    // TODO: 2017-08-02 跳转到消息详情页
+                }
+            }
+        });
+    }
 
     private void requestMessageData() {
-        for (int i = 0; i < 10; i++) {
-            MissMessage missMessage = new MissMessage();
-            missMessage.setContent("我是级时候i试试");
-            missMessage.setMessageType(i % 3);
-            missMessage.setQuestion("哈哈哈哈啊哈哈哈哈哈");
-            missMessage.setUserName("理想");
-            mMessageAdapter.add(missMessage);
+        Client.getQuestionMessageList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<MissMessage>>, List<MissMessage>>() {
+                    @Override
+                    protected void onRespSuccessData(List<MissMessage> data) {
+                        updateMessage(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateMessage(List<MissMessage> data) {
+        stopRefreshAnimation();
+        mNoReadCount = 0;
+        for (MissMessage missMessage : data) {
+            if (mSet.add(missMessage.getId())) {
+                if (missMessage.getStatus() == MissMessage.NO_READ) {
+                    mNoReadCount++;
+                }
+                mMessageAdapter.add(missMessage);
+            }
         }
         mMessageAdapter.notifyDataSetChanged();
+        if (mNoReadCount == 0) {
+            mTitle.setTitle(getString(R.string.message_remind));
+            mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
+        } else {
+            mTitle.setTitle(getString(R.string.message_remind_count, mNoReadCount));
+            mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.blueAssist));
+        }
+    }
+
+    private void requestReadMessage(final int msgId) {
+        Client.readMessage(msgId).setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            updateMessageStatus(msgId);
+                        }
+                    }
+                }).fireFree();
+    }
+
+    private void updateMessageStatus(int msgId) {
+        if (mNoReadCount > 0) {
+            mNoReadCount--;
+        }
+        if (mNoReadCount == 0) {
+            mTitle.setTitle(R.string.message_remind);
+            mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
+        } else {
+            mTitle.setTitle(getString(R.string.message_remind_count, mNoReadCount));
+        }
+        if (mMessageAdapter != null) {
+            for (int i = 0; i < mMessageAdapter.getCount(); i++) {
+                MissMessage missMessage = mMessageAdapter.getItem(i);
+                if (missMessage != null && missMessage.getId() == msgId) {
+                    missMessage.setStatus(MissMessage.READ);
+                    mMessageAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -92,14 +194,21 @@ public class MessagesActivity extends BaseActivity implements
     }
 
     private void reset() {
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
+        mSet.clear();
     }
 
     @Override
     public void onLoadMore() {
-        requestMessageData();
     }
 
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
+    }
 
     static class MessageAdapter extends ArrayAdapter<MissMessage> {
 
@@ -145,36 +254,42 @@ public class MessagesActivity extends BaseActivity implements
             }
 
             private void bindDataWithView(final MissMessage item, final Context context) {
-                mQuestion.setText(item.getQuestion());
+                if (item.getSourceUser() != null) {
+                    mUserName.setText(item.getSourceUser().getUserName());
+                    Glide.with(context)
+                            .load(item.getSourceUser().getUserPhone())
+                            .transform(new GlideCircleTransform(context))
+                            .into(mAvatar);
+                }
+                mQuestion.setText(item.getMsg());
                 Glide.with(context).load(R.drawable.ic_default_avatar).into(mAvatar);
-                mUserName.setText(item.getUserName());
-                mReplyContent.setText(item.getContent());
-                switch (item.getMessageType()) {
-                    case 0:
+                if (item.getData() != null) {
+                    mReplyContent.setText(item.getData().getQuestion());
+                }
+                switch (item.getType()) {
+                    case MissMessage.TYPE_MISS_ANSWER:
                         mMessageType.setText(context.getString(R.string.answer_your_question));
-                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.drawable.ic_bounty), null, null, null);
+                        if (item.getData() != null) {
+                            mQuestion.setText(item.getData().getQuestion());
+                        }
+                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.drawable.ic_miss_message), null, null, null);
+                        mReplyContent.setVisibility(View.GONE);
                         break;
-                    case 1:
+                    case MissMessage.TYPE_COMMENT:
                         mMessageType.setText(context.getString(R.string.comment_your_question));
+                        mReplyContent.setVisibility(View.VISIBLE);
                         break;
-                    case 2:
+                    case MissMessage.TYPE_REPLY:
                         mMessageType.setText(context.getString(R.string.reply_your_comment));
+                        mReplyContent.setVisibility(View.VISIBLE);
                         break;
                 }
-                mTime.setText(DateUtil.getFormatTime(System.currentTimeMillis()));
-                if (item.isRead()) {
-                    mRedDot.setVisibility(View.GONE);
-                } else {
+                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+                if (item.isNoRead()) {
                     mRedDot.setVisibility(View.VISIBLE);
+                } else {
+                    mRedDot.setVisibility(View.GONE);
                 }
-                mContent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mRedDot.setVisibility(View.GONE);
-                        item.setRead(true);
-                        mQuestion.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
-                    }
-                });
             }
         }
     }

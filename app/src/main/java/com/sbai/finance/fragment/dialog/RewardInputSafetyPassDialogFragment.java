@@ -39,6 +39,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
 
     private static final String KEY_MONEY = "MONEY";
     private static final String KEY_HINT = "hint";
+    public static final String KEY_REWARD = "reward";
     private static final String KEY_ID = "ID";
     @BindView(R.id.title)
     TextView mTitle;
@@ -50,6 +51,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     TextView mHint;
     private Unbinder mBind;
     private String mRechargeMoney;
+    private long mRewardMoney;
     private String mTitleHint;
     private int mId;
     private boolean mIsSuccess;
@@ -62,12 +64,13 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public static RewardInputSafetyPassDialogFragment newInstance(int id, String money, String hint) {
+    public static RewardInputSafetyPassDialogFragment newInstance(int id, String money, String hint, long rewardMoney) {
         Bundle args = new Bundle();
         RewardInputSafetyPassDialogFragment fragment = new RewardInputSafetyPassDialogFragment();
         args.putString(KEY_MONEY, money);
         args.putString(KEY_HINT, hint);
         args.putInt(KEY_ID, id);
+        args.putLong(KEY_REWARD,rewardMoney);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,6 +123,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
             mRechargeMoney = getArguments().getString(KEY_MONEY);
+            mRewardMoney=getArguments().getLong(KEY_REWARD);
             mTitleHint = getArguments().getString(KEY_HINT);
             mId = getArguments().getInt(KEY_ID);
         }
@@ -148,7 +152,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
 
     private void requestRewardMiss(String password) {
         mIsSuccess = false;
-        Client.rewardMiss(mId, Double.valueOf(mRechargeMoney.split(" ")[0]), ExchangeDetailModel.TYPE_INGOT, password)
+        Client.rewardMiss(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override

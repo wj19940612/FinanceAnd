@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sbai.finance"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -338,16 +338,30 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.miss.MyQuestionsActivity">
         </activity>
-        <activity android:name=".activity.miss.QuestionDetailActivity">
+        <activity
+            android:name=".activity.miss.QuestionDetailActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.SubmitQuestionActivity">
+        <activity
+            android:name=".activity.miss.SubmitQuestionActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.CommentActivity">
+        <activity
+            android:name=".activity.miss.CommentActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.RewardActivity">
+        <activity
+            android:name=".activity.miss.RewardActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.MessagesActivity">
+        <activity
+            android:name=".activity.miss.MessagesActivity"
+            android:screenOrientation="portrait">
         </activity>
+
+        <activity
+            android:name=".activity.daily.DailyReportActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

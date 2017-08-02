@@ -17,7 +17,7 @@
         app:titleText="@string/message_remind"
         app:rightText="@string/all_read"
         app:rightVisible="true"
-        app:rightTextColor="@color/blueAssist"
+        app:rightTextColor="@color/unluckyText"
         app:rightTextSize="15sp"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout

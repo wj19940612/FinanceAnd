@@ -1774,16 +1774,103 @@ public class Client {
 
     /**
      * 打赏小姐姐
+     *
      * @param customId
      * @param money
      * @param type
      * @return
      */
-    public static API rewardMiss(int customId,double money,int type,String password) {
-        return new API(POST,"/explain/customInfo/award.do",new ApiParams()
-                      .put("customId",customId)
-                      .put("money",money)
-                      .put("type",type)
-                      .put("password", password));
+    public static API rewardMiss(int customId, double money, int type, String password) {
+        return new API(POST, "/explain/customInfo/award.do", new ApiParams()
+                .put("customId", customId)
+                .put("money", money)
+                .put("type", type)
+                .put("password", password));
+    }
+
+    /**
+     * 添加评论/回复
+     *
+     * @param invitationUserId
+     * @param replyParentId
+     * @param content
+     * @param dataId
+     * @return
+     */
+    public static API addComment(int invitationUserId, Integer replyParentId, String content, int dataId) {
+        return new API(POST, "/user/comment/insertComment.do", new ApiParams()
+                .put("invitationUserId", invitationUserId)
+                .put("replyParentId", replyParentId)
+                .put("type", 1)
+                .put("content", content)
+                .put("dataId", dataId));
+    }
+
+    /**
+     * 发布提问
+     *
+     * @param questionContext
+     * @param appointCustomId
+     * @return
+     */
+    public static API addQuestion(String questionContext, Integer appointCustomId) {
+        return new API(POST, "/explain/question/addQuestion.do", new ApiParams()
+                .put("questionContext", questionContext)
+                .put("appointCustomId", appointCustomId));
+    }
+
+    /**
+     * 姐说消息列表
+     *
+     * @return
+     */
+
+    public static API getQuestionMessageList() {
+        return new API("/msg/msg/history.do", new ApiParams()
+                .put("classify",4)
+                .put("size", 200)
+                .put("autoRead",false));
+    }
+
+    /**
+     * 读消息
+     *
+     * @param msgId
+     * @return
+     */
+    public static API readMessage(int msgId) {
+        return new API(POST, "/msg/msg/read.do", new ApiParams()
+                .put("msgId", msgId));
+    }
+
+    /**
+     * 乐米日报精选
+     *
+     * @return
+     */
+    public static API getDailyReport() {
+        return new API("/user/dailyReport/findRecencyReport.do");
+    }
+
+    /**
+     * 日报列表
+     *
+     * @param page
+     * @return
+     */
+    public static API getDailyReportList(int page) {
+        return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", 20));
+    }
+
+    /**
+     * 日报详情
+     *
+     * @return
+     */
+    public static API getDailyReportDetail(int id) {
+        return new API(POST, "/user/dailyReport/showDetail.do", new ApiParams()
+                .put("id", id));
     }
 }
