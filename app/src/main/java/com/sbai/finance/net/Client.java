@@ -1765,6 +1765,12 @@ public class Client {
 
     /**
      * 获取小姐姐列表
+     * <p>
+     * =======
+     * <p>
+     * /**
+     * 获取小姐姐列表
+     * >>>>>>> dev
      *
      * @return
      */
@@ -1773,6 +1779,7 @@ public class Client {
     }
 
     /**
+     * <<<<<<< HEAD
      * 打赏小姐姐
      *
      * @param customId
@@ -1827,9 +1834,9 @@ public class Client {
 
     public static API getQuestionMessageList() {
         return new API("/msg/msg/history.do", new ApiParams()
-                .put("classify",4)
+                .put("classify", 4)
                 .put("size", 200)
-                .put("autoRead",false));
+                .put("autoRead", false));
     }
 
     /**
@@ -1872,5 +1879,106 @@ public class Client {
     public static API getDailyReportDetail(int id) {
         return new API(POST, "/user/dailyReport/showDetail.do", new ApiParams()
                 .put("id", id));
+    }
+
+    /**
+     * 获取热门提问列表
+     *
+     * @return
+     */
+    public static API getHotQuestionList() {
+        return new API("/explain/question/hotQuestionList.do");
+    }
+
+    /**
+     * 获取最新提问列表
+     *
+     * @return
+     */
+    public static API getLatestQuestionList() {
+        return new API("/explain/question/questionList.do");
+    }
+
+    /**
+     * 小姐姐点赞
+     *
+     * @param questionId
+     * @return
+     */
+    public static API prise(int questionId) {
+        return new API("/explain/question/prise.do", new ApiParams()
+                .put("questionId", questionId));
+    }
+
+    /**
+     * 关注小姐姐
+     *
+     * @param customId
+     * @return
+     */
+    public static API attention(int customId) {
+        return new API("/explain/customInfo/attention.do", new ApiParams()
+                .put("customId", customId));
+    }
+
+    /**
+     * 获取小姐姐详情
+     *
+     * @param customId
+     * @return
+     */
+    public static API getMissDetail(int customId) {
+        return new API("/explain/customInfo/getCustomInfo.do", new ApiParams()
+                .put("customId", customId));
+    }
+
+    /**
+     * 获取小姐姐她的回答列表
+     *
+     * @param customId
+     * @param createTime
+     * @param pageSize
+     * @return
+     */
+    public static API getHerAnswerList(int customId, Long createTime, int pageSize) {
+        return new API("/explain/question/questionListByCustom.do",
+                new ApiParams()
+                        .put("customId", customId)
+                        .put("createTime", createTime)
+                        .put("pageSize", pageSize));
+    }
+
+
+    /**
+     * 获取我的提问列表
+     *
+     * @param createTime
+     * @param pageSize
+     * @return
+     */
+    public static API getMyQuestionList(Long createTime, int pageSize) {
+        return new API("/explain/question/myQuestionList.do",
+                new ApiParams()
+                        .put("createTime", createTime)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * 获取回复列表
+     *
+     * @param type
+     * @param dataId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getQuestionReplyList(int type, int dataId, int page, int pageSize) {
+        return new API("/user/comment/replyList.do",
+                new ApiParams()
+                        .put("type", type)
+                        .put("dataId", dataId)
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+        );
     }
 }

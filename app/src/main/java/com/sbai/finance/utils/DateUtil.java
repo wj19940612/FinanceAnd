@@ -203,6 +203,12 @@ public class DateUtil {
         return dateFormat.format(date);
     }
 
+    public static String getFormatSpecialSlashNoHour(long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH_NO_HOUR);
+        Date date = new Date(timestamp);
+        return dateFormat.format(date);
+    }
+
     /**
      * 将日期格式转化为时间(秒数)
      *

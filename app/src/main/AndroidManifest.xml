@@ -344,8 +344,7 @@
         </activity>
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.CommentActivity"
             android:screenOrientation="portrait">

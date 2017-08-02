@@ -23,9 +23,10 @@
 
     <string name="details">详情</string>
     <string name="comment_number">评论(%1$d)</string>
+    <string name="comment_number_string">评论(%1$s)</string>
     <string name="no_comment">暂无评论~快来发表您的评论吧</string>
     <string name="share">分享</string>
-    <string name="comment">发表评论&#8230;</string>
+    <string name="publish_comment">发表评论&#8230;</string>
     <string name="new_message_count">%1$d条消息</string>
     <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
@@ -661,4 +662,19 @@
     <string name="train_count">完成 %1$d 次</string>
     <string name="read_count">%1$d 次阅读</string>
     <string name="back">返回</string>
+
+    <!--miss_talk-->
+    <string name="her_answer">她的回答</string>
+    <string name="hot_question">热门提问</string>
+    <string name="latest_question">最新提问</string>
+    <string name="ask_her_question">向她提问</string>
+    <string name="listener_number">%1$s人听过</string>
+    <string name="my_question">我的提问</string>
+    <string name="love_miss">%1$s人喜欢了小姐姐</string>
+    <string name="reward_miss">%1$s人打赏了小姐姐</string>
+    <string name="love">喜欢</string>
+    <string name="comment">评论</string>
+    <string name="voice_time">%1$d秒</string>
+    <string name="love_people_number">%1$d人喜欢</string>
+    <string name="count">(%1$s)</string>
 </resources>
