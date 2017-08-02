@@ -385,7 +385,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                         if (resp.isSuccess()) {
                             mTradeFloatButtons.setHasAddInOption(true);
                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
-                            sendAddOptionalBroadCast(null,true);
+                            sendAddOptionalBroadCast(null, true);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -418,7 +418,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                                         if (resp.isSuccess()) {
                                             mTradeFloatButtons.setHasAddInOption(false);
                                             CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.delete_option_succeed);
-                                            sendAddOptionalBroadCast(mVariety,false);
+                                            sendAddOptionalBroadCast(mVariety, false);
                                         } else {
                                             ToastUtil.show(resp.getMsg());
                                         }
@@ -435,10 +435,10 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                 .show();
     }
 
-    private void sendAddOptionalBroadCast(Variety variety,Boolean isAddOptional) {
+    private void sendAddOptionalBroadCast(Variety variety, Boolean isAddOptional) {
         Intent intent = new Intent();
         intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
-        intent.putExtra(Launcher.EX_PAYLOAD,variety);
+        intent.putExtra(Launcher.EX_PAYLOAD, variety);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }
@@ -473,9 +473,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
+//                case 0:
+//                    return mContext.getString(R.string.point);
                 case 0:
-                    return mContext.getString(R.string.point);
-                case 1:
                     return mContext.getString(R.string.introduce);
             }
             return super.getPageTitle(position);
@@ -484,9 +484,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         @Override
         public Fragment getItem(int position) {
             switch (position) {
+//                case 0:
+//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
-                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
-                case 1:
                     return IntroduceFragment.newInstance(mVariety);
             }
             return null;
@@ -494,7 +494,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
         @Override
         public int getCount() {
-            return 2;
+            return 1;
         }
 
         public Fragment getFragment(int position) {

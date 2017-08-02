@@ -16,7 +16,7 @@ import com.sbai.finance.R;
 
 public class TradeFloatButtons extends LinearLayout {
 
-    public static final int HAS_ADD_OPITION =  1;//添加自选 1 已添加  0 未添加
+    public static final int HAS_ADD_OPITION = 1;//添加自选 1 已添加  0 未添加
 
     private LinearLayout mPublishPoint;
     private LinearLayout mAddOptional;
@@ -74,6 +74,8 @@ public class TradeFloatButtons extends LinearLayout {
 
         mPublishPoint = createChildView(true, R.string.publish_point);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //发表观点不能直接去掉
+        mPublishPoint.setVisibility(GONE);
         params.weight = 1f;
         addView(mPublishPoint, params);
 
