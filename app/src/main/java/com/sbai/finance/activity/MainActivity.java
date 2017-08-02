@@ -43,7 +43,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         ButterKnife.bind(this);
         initView();
         checkVersion();
-        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
     }
 
     private void checkVersion() {
