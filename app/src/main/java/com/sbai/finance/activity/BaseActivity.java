@@ -79,7 +79,7 @@ public class BaseActivity extends AppCompatActivity implements
 //                            onTokenExpiredCancel();
 //                        }
 //                    })
-//                    .setPositive(R.string.login, new SmartDialog.OnClickListener() {
+//                    .setPositive(R.string.authCodeLogin, new SmartDialog.OnClickListener() {
 //                        @Override
 //                        public void onClick(Dialog dialog) {
 //                            dialog.dismiss();

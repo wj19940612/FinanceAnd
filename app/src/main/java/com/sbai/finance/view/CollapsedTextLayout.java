@@ -38,7 +38,7 @@ public class CollapsedTextLayout extends RelativeLayout {
 
     private void init(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_collapsed, null);
-        mContentTextView = (AppCompatTextView) view.findViewById(R.id.content);
+        mContentTextView = (AppCompatTextView) view.findViewById(R.id.rootView);
         mHintTextView = (AppCompatTextView) view.findViewById(R.id.hint);
         mHintTextView.setVisibility(GONE);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

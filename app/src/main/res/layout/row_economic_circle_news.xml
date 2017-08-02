@@ -63,7 +63,7 @@
         android:layout_marginTop="14dp">
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/rootView"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:ellipsize="end"

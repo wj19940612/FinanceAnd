@@ -36,9 +36,9 @@
     <string name="limit">期限%1$s天</string>
     <string name="interest">利息%1$s元</string>
 
-    <!--Login page-->
+    <!--Login & Register-->
     <string name="phone_number">手机号</string>
-    <string name="please_input_phone_number">手机号码</string>
+    <string name="please_input_phone_number">手机号</string>
     <string name="auth_code">验证码</string>
     <string name="get_auth_code">获取验证码</string>
     <string name="login">登录</string>
@@ -51,6 +51,10 @@
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
     <string name="auth_code_login">验证码登录</string>
     <string name="password_login">密码登录</string>
+    <string name="password">密码</string>
+    <string name="register_free">免费注册</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="please_input_phone">请输入手机号</string>
 
     <!--Home-->
     <string name="futures">期货</string>

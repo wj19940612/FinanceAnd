@@ -124,7 +124,7 @@ import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
  */
 public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
-    @BindView(R.id.content)
+    @BindView(R.id.rootView)
     LinearLayout mContent;
 
     @BindView(R.id.battleContent)
@@ -222,7 +222,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mContent.removeAllViews();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content, BattleRecordsFragment.newInstance(mBattle))
+                .add(R.id.rootView, BattleRecordsFragment.newInstance(mBattle))
                 .commitAllowingStateLoss();
     }
 

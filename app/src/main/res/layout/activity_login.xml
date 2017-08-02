@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +10,7 @@
     tools:context="com.sbai.finance.activity.mine.LoginActivity">
 
     <ImageView
-        android:id="@+id/deletePage"
+        android:id="@+id/closePage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -22,26 +22,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
+        android:layout_marginTop="90dp"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/pageTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textSize="30sp"
-            android:textColor="@color/primaryText"
-            android:text="@string/auth_code_login"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="center_vertical">
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pageTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/auth_code_login"
+                android:textColor="@color/primaryText"
+                android:textSize="30sp"/>
+
+            <TextView
+                android:id="@+id/loginSwitchTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_login_switch"
+                android:drawablePadding="4dp"
+                android:text="@string/password_login"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="50dp">
 
             <EditText
                 android:id="@+id/phoneNumber"
@@ -55,25 +70,25 @@
                 android:id="@+id/phoneNumberClear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="2dp"
+                android:layout_marginTop="5dp"
                 android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_data_clear"/>
+                android:src="@drawable/ic_data_clear"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.3dp"
+            android:layout_marginTop="3dp"
             android:background="@color/split"/>
 
         <LinearLayout
+            android:id="@+id/authCodeArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:gravity="center_vertical"
-            android:minHeight="60dp">
+            android:minHeight="50dp"
+            android:visibility="visible">
 
             <EditText
                 android:id="@+id/authCode"
@@ -89,7 +104,7 @@
             <TextView
                 android:id="@+id/getAuthCode"
                 android:layout_width="93dp"
-                android:layout_height="30dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/btn_auth_code_rounded"
                 android:enabled="false"
@@ -98,15 +113,39 @@
                 android:textColor="@color/login_get_auth_code_color"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/passwordArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:minHeight="50dp">
+
+            <EditText
+                android:id="@+id/password"
+                style="@style/SignEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:maxLength="18"/>
+
+            <ImageView
+                android:id="@+id/showPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_show_password"/>
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.3dp"
             android:background="@color/split"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_height"
-            android:layout_marginBottom="24dp"
             android:layout_marginTop="30dp"
             android:background="@android:color/transparent">
 
@@ -114,7 +153,7 @@
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_height"
-                android:background="@drawable/btn_login_rounded"
+                android:background="@drawable/btn_primary_rounded"
                 android:enabled="false"
                 android:gravity="center"
                 android:text="@string/login"
@@ -129,30 +168,48 @@
                 android:src="@drawable/ic_loading"
                 android:visibility="gone"/>
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/passwordLoginOperations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_free"
+                android:textColor="@color/luckyText"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/luckyText"/>
+
+            <TextView
+                android:id="@+id/forgetPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forget_password"
+                android:textColor="@color/luckyText"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/hideLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:paddingBottom="24dp"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_hint"
-            android:textColor="@color/luckyText"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/finance_protocol"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lemi_finance_protocol"
-            android:textColor="@color/blueAssist"
-            android:textSize="12sp"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/loginSwitch"
+        android:layout_width="160dp"
+        android:layout_height="@dimen/common_height"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_login_switch"
+        android:gravity="center"
+        android:text="@string/password_login"
+        android:textColor="@color/primaryText"/>
 </RelativeLayout>

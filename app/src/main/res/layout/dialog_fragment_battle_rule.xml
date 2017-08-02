@@ -37,7 +37,7 @@
             android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/rootView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="5dp"

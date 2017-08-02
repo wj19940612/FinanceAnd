@@ -6,9 +6,8 @@ import android.os.Parcelable;
 import com.sbai.finance.model.LocalUser;
 
 /**
- * Created by ${wangJie} on 2017/4/17.
+ * 登录后的用户信息数据
  */
-
 public class UserInfo implements Parcelable {
     //	待审核0、审核通过1、审核未通过 2
     public static final int CREDIT_IS_APPROVE_ING = 0;

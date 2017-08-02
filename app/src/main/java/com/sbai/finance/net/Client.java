@@ -230,16 +230,48 @@ public class Client {
      * 请求类型 post
      * 请求Url  /registerLogin/quickLogin.do
      *
-     * @param msgCode 短信验证码
-     * @param phone   手机
-     *                deviceId 设备id
-     *                platform 平台 0安卓 1ios
+     * @param authCode 短信验证码
+     * @param phone    手机
+     *                 deviceId 设备id
+     *                 platform 平台 0-安卓 1-ios
      * @return
      */
-    public static API login(String msgCode, String phone) {
+    public static API authCodeLogin(String phone, String authCode) {
         return new API("/user/registerLogin/quickLogin.do", new ApiParams()
-                .put("msgCode", msgCode)
                 .put("phone", phone)
+                .put("msgCode", authCode)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0));
+    }
+
+    /**
+     * 常规登录
+     *
+     * @param phone
+     * @param password
+     * @return
+     */
+    public static API login(String phone, String password) {
+        return new API("/user/registerLogin/login.do", new ApiParams()
+                .put("phone", phone)
+                .put("password", password)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0));
+    }
+
+    /**
+     * 注册
+     *
+     * @param phone
+     * @param password
+     * @param code
+     * @return
+     */
+    public static API register(String phone, String password, String code) {
+        return new API("/user/registerLogin/reigster.do", new ApiParams()
+                .put("phone", phone)
+                .put("password", password)
+                .put("code", code)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0));
     }
@@ -854,6 +886,7 @@ public class Client {
                         .put("createTime", createTime)
                         .put("pageSize", pageSize));
     }
+
     /**
      * 获取观点详情
      *
@@ -937,7 +970,6 @@ public class Client {
                 new ApiParams()
                         .put("objId", objId));
     }
-
 
 
     //乐米协议
@@ -1581,7 +1613,7 @@ public class Client {
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
-    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
     //期货分享地址
     public static final String FUTURE_SHARE_URL = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
     //股票分享地址
