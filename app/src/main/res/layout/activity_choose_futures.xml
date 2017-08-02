@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/choose_futures"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout
         android:id="@+id/tabLayout"

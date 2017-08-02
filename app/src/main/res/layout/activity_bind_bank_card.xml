@@ -48,7 +48,7 @@
                 android:layout_marginRight="28dp"
                 android:minWidth="60dp"
                 android:text="@string/real_name"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -60,7 +60,7 @@
                 android:hint="@string/card_holder_name_hint"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textColorHint="@color/bank_card_hint"
                 android:textSize="15sp"/>
 
@@ -91,7 +91,7 @@
                 android:layout_marginRight="28dp"
                 android:minWidth="60dp"
                 android:text="@string/identity_card"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -103,7 +103,7 @@
                 android:hint="@string/card_holder_identity_card_hint"
                 android:maxLength="18"
                 android:maxLines="1"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textColorHint="@color/bank_card_hint"
                 android:textSize="15sp"/>
         </LinearLayout>
@@ -122,7 +122,7 @@
                 android:layout_marginRight="28dp"
                 android:minWidth="60dp"
                 android:text="@string/bank_card_number"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -134,7 +134,7 @@
                 android:inputType="number"
                 android:maxLength="26"
                 android:maxLines="1"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textColorHint="@color/bank_card_hint"
                 android:textSize="15sp"/>
         </LinearLayout>
@@ -156,7 +156,7 @@
                 android:layout_marginRight="28dp"
                 android:minWidth="60dp"
                 android:text="@string/bank"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatTextView
@@ -167,7 +167,7 @@
                 android:background="@null"
                 android:hint="@string/bank_choose"
                 android:maxLines="1"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textColorHint="@color/bank_card_hint"
                 android:textSize="15sp"/>
 
@@ -196,7 +196,7 @@
                 android:layout_marginRight="28dp"
                 android:minWidth="60dp"
                 android:text="@string/phone_number"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.AppCompatEditText
@@ -209,7 +209,7 @@
                 android:inputType="phone"
                 android:maxLength="11"
                 android:maxLines="1"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textColorHint="@color/bank_card_hint"
                 android:textSize="15sp"/>
         </LinearLayout>

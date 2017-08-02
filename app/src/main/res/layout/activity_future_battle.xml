@@ -28,13 +28,13 @@
                 android:layout_height="wrap_content"
                 app:backFeature="true"
                 app:backIcon="@drawable/ic_tb_back_white"
-                app:barBackground="@color/blackAssist"
+                app:barBackground="@color/primaryText"
                 app:customView="@layout/tb_product_name"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:background="@color/blackAssist"
+                android:background="@color/primaryText"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -136,12 +136,12 @@
                 style="@style/BattleTab"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
-                android:background="@color/blackAssist"/>
+                android:background="@color/primaryText"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:background="@color/blackAssist">
+                android:background="@color/primaryText">
 
                 <com.sbai.chart.TrendView
                     android:id="@+id/trendView"

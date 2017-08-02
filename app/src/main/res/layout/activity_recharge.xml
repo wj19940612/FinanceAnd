@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="24dp"
             android:text="@string/recharge_count"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"/>
 
         <android.support.v7.widget.AppCompatEditText
@@ -44,7 +44,7 @@
             android:hint="@string/recharge_hint"
             android:inputType="numberDecimal"
             android:maxLength="9"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textColorHint="#bfbfbf"
             android:textSize="15sp"/>
     </LinearLayout>

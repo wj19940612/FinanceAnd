@@ -14,7 +14,7 @@
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
         app:titleText="@string/create_battle"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <ScrollView
         android:layout_width="match_parent"

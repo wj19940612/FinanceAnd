@@ -429,7 +429,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     }
                 })
                 .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.primaryText))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(R.string.no)
                 .show();

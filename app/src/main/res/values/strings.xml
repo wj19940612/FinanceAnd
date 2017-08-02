@@ -49,6 +49,8 @@
     <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
     <string name="confirm_agree">确认即同意</string>
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
+    <string name="auth_code_login">验证码登录</string>
+    <string name="password_login">密码登录</string>
 
     <!--Home-->
     <string name="futures">期货</string>

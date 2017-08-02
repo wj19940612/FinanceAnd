@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/shield_setting"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <include layout="@layout/split_line_grey_light"/>
 

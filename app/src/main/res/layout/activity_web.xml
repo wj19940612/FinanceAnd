@@ -11,7 +11,7 @@
         app:backFeature="true"
         app:bottomHasSplitLine="true"
         app:bottomSplitLineColor="@color/split"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <WebView
         android:id="@+id/webView"

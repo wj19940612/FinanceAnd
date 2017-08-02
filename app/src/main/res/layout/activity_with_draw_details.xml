@@ -25,7 +25,7 @@
         android:drawableTop="@drawable/bg_mine_submit_withdrawal"
         android:gravity="center"
         android:text="@string/with_draw_check_is_submit"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="16sp"/>
 
     <LinearLayout
@@ -47,7 +47,7 @@
             android:id="@+id/bankCardAndName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"
             tools:text="招商银行(0242)"/>
     </LinearLayout>
@@ -71,7 +71,7 @@
             android:id="@+id/with_draw_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"
             tools:text="￥20000"/>
     </LinearLayout>
@@ -95,7 +95,7 @@
             android:id="@+id/poundage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"
             tools:text="￥20000"/>
     </LinearLayout>

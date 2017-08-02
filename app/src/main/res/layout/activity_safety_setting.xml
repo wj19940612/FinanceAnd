@@ -18,7 +18,7 @@
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
         android:layout_marginBottom="@dimen/common_split_height"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/setting_safety_password"

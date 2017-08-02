@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/attention"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <include layout="@layout/split_line_grey_light"/>
 

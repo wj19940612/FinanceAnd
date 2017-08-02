@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/stock"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
     <include layout="@layout/layout_search_stock"/>
     <ListView
         android:id="@+id/listView"

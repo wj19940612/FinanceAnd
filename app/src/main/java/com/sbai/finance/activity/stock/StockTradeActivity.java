@@ -194,7 +194,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     }
                 })
                 .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.primaryText))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(R.string.no)
                 .show();
