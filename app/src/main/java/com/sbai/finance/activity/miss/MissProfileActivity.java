@@ -23,7 +23,9 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Attention;
@@ -141,12 +143,26 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
         mReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRewardInfo != null) {
-                    mRewardInfo.setMoney(0);
-                    mRewardInfo.setIndex(-1);
+                if (LocalUser.getUser().isLogin()) {
+                    if (mRewardInfo != null) {
+                        mRewardInfo.setMoney(0);
+                        mRewardInfo.setIndex(-1);
+                    }
+                    RewardMissDialogFragment.newInstance()
+                            .show(getSupportFragmentManager());
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
-                RewardMissDialogFragment.newInstance()
-                        .show(getSupportFragmentManager());
+            }
+        });
+        mAttention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    // TODO: 2017-08-03 添加关注
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         mListView.addHeaderView(header);
@@ -326,7 +342,13 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
 
     @OnClick(R.id.askHerQuestion)
     public void onViewClicked() {
-        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+        if (LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 
     static class HerAnswerAdapter extends ArrayAdapter<Question> {

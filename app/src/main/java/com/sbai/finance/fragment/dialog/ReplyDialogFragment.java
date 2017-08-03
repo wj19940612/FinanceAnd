@@ -29,6 +29,7 @@ public class ReplyDialogFragment extends BaseDialogFragment{
 	TextView mReply;
 	@BindView(R.id.cancel)
 	TextView mCancel;
+
 	Unbinder unbinder;
 
 	private QuestionReply.DataBean mQuestionReply;

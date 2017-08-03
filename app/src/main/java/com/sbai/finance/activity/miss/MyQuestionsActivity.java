@@ -106,8 +106,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
         rewardMoney.setMoney(1000);
         list.add(rewardMoney);
         mRewardInfo.setMoneyList(list);
-        RewardMissDialogFragment.newInstance()
-                .show(getSupportFragmentManager());
     }
 
     private void initSwipeRefreshLayout() {

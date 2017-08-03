@@ -23,7 +23,9 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Question;
@@ -119,7 +121,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mQuestionReplyListAdapter);
         mListView.setOnScrollListener(this);
-	    mListView.setOnItemClickListener(this);
+        mListView.setOnItemClickListener(this);
 
         requestQuestionReplyList();
         initSwipeRefreshLayout();
@@ -262,12 +264,21 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.comment:
+                if (LocalUser.getUser().isLogin()) {
+
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.reward:
-                mRewardInfo.setMoney(0);
-                mRewardInfo.setIndex(-1);
-                RewardMissDialogFragment.newInstance()
-                        .show(getSupportFragmentManager());
+                if (LocalUser.getUser().isLogin()) {
+                    mRewardInfo.setMoney(0);
+                    mRewardInfo.setIndex(-1);
+                    RewardMissDialogFragment.newInstance()
+                            .show(getSupportFragmentManager());
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
     }
@@ -278,7 +289,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
 		ReplyDialogFragment.newInstance(item, mQuestionDetail.getQuestionUserId()).show(getSupportFragmentManager());
 	}
 
-	static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
+    static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
         private Context mContext;
 
         private QuestionReplyListAdapter(@NonNull Context context) {

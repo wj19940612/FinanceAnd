@@ -1999,4 +1999,17 @@ public class Client {
                         .put("pageSize", pageSize)
         );
     }
+
+    /**
+     * 提问详情
+     *
+     * @param questionId
+     * @return
+     */
+    public static API getQuestionDetails(int questionId) {
+        return new API("/explain/question/questionInfo.do",
+                new ApiParams()
+                        .put("questionId", questionId)
+        );
+    }
 }

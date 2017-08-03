@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.miss.MissMessage;
+import com.sbai.finance.model.missTalk.Question;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -28,6 +29,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -50,6 +52,8 @@ public class MessagesActivity extends BaseActivity implements
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.title)
     TitleBar mTitle;
+    @BindView(R.id.empty)
+    TextView mEmpty;
 
     private MessageAdapter mMessageAdapter;
     private Set<Integer> mSet;
@@ -100,6 +104,7 @@ public class MessagesActivity extends BaseActivity implements
         mSet = new HashSet<>();
         mMessageAdapter = new MessageAdapter(getActivity());
         mListView.setAdapter(mMessageAdapter);
+        mListView.setEmptyView(mEmpty);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setLoadMoreEnable(false);
@@ -116,10 +121,24 @@ public class MessagesActivity extends BaseActivity implements
                     if (missMessage.isNoRead()) {
                         requestReadMessage(missMessage.getId());
                     }
+                    requestMessageDetail(missMessage.getDataId());
                     // TODO: 2017-08-02 跳转到消息详情页
                 }
             }
         });
+    }
+
+    private void requestMessageDetail(int dataId) {
+        Client.getQuestionDetails(dataId).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Question>, Question>() {
+                    @Override
+                    protected void onRespSuccessData(Question data) {
+                        Launcher.with(getActivity(), QuestionDetailActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, data)
+                                .execute();
+
+                    }
+                }).fireFree();
     }
 
     private void requestMessageData() {
