@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.sbai.finance.activity.miss.MessagesActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:bottomHasSplitLine="true"
+        app:titleText="@string/message_remind"
+        app:rightText="@string/all_read"
+        app:rightVisible="true"
+        app:rightTextColor="@color/unluckyText"
+        app:rightTextSize="15sp"/>
+
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:divider="@null"
+            android:dividerHeight="@dimen/common_padding"
+            android:paddingLeft="@dimen/common_padding"
+            android:paddingRight="@dimen/common_padding"
+            android:scrollbars="none"/>
+
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
+</LinearLayout>

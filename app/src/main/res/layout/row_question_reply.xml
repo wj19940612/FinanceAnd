@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/hotArea"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_default_avatar"/>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/avatar"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp"
+            tools:text="反方向的钟"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/opinionContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="8dp"
+        android:lineSpacingExtra="6dp"
+        android:textColor="@color/primaryText"
+        android:textSize="14sp"
+        tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
+
+    <LinearLayout
+        android:id="@+id/replyArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_questions"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/replyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="小金"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/replyContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="有没有好的选股方法啊"
+            android:textColor="@color/luckyText"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/publishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"
+            tools:text="10:00"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/split"/>
+</LinearLayout>

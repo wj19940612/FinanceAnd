@@ -1,10 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.sbai.finance.activity.miss.QuestionDetailActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="提问详情"
+        app:titleTextColor="@color/blackAssist"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/hotArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="14dp">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginRight="8dp"
+                        android:src="@drawable/ic_default_avatar"/>
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/avatar"
+                        android:textColor="@color/primaryText"
+                        android:textSize="14sp"
+                        tools:text="反方向的钟"/>
+
+                    <TextView
+                        android:id="@+id/askTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@+id/avatar"
+                        android:textColor="@color/unluckyText"
+                        android:textSize="10sp"
+                        tools:text="2017/07/07"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="38dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_question">
+
+                    <TextView
+                        android:id="@+id/question"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/primaryText"
+                        android:textSize="16sp"
+                        tools:text="有没有什么好的选股方法?"/>
+
+                    <ImageView
+                        android:id="@+id/missAvatar"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/question"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/ic_default_avatar"/>
+
+                    <TextView
+                        android:id="@+id/voice"
+                        android:layout_width="98dp"
+                        android:layout_height="32dp"
+                        android:layout_alignTop="@+id/missAvatar"
+                        android:layout_toLeftOf="@+id/missAvatar"
+                        android:background="@drawable/bg_voice_answer"
+                        android:gravity="center"
+                        android:text="500秒"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/listenerNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/voice"
+                        android:layout_below="@+id/missAvatar"
+                        android:layout_marginTop="5dp"
+                        android:text="3.6万人听过"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="10sp"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginLeft="54dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/loveNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/love_miss"
+                        android:textColor="@color/unluckyText"
+                        android:textSize="10sp"/>
+
+                    <TextView
+                        android:id="@+id/rewardNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/reward_miss"
+                        android:textColor="@color/unluckyText"
+                        android:textSize="10sp"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/split"/>
+
+                <View
+                    android:id="@+id/split"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:background="@color/background"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="20dp">
+
+                    <View
+                        android:layout_width="3dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="14dp"
+                        android:background="#ef6d6a"/>
+
+                    <TextView
+                        android:id="@+id/commentNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/primaryText"
+                        android:textSize="15sp"
+                        tools:text="@string/comment_number"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/commentArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.sbai.finance.view.MyListView
+                        android:id="@+id/listView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@null"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@android:id/empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="暂无评论"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/tab_background"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/love"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/loveImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_miss_love"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/love"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/split"/>
+
+        <LinearLayout
+            android:id="@+id/comment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_miss_comment"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/comment"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/split"/>
+
+        <LinearLayout
+            android:id="@+id/reward"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_miss_ingot"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/reward"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

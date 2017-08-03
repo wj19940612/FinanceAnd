@@ -338,24 +338,42 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.miss.MyQuestionsActivity">
         </activity>
-        <activity android:name=".activity.miss.QuestionDetailActivity">
+        <activity
+            android:name=".activity.miss.QuestionDetailActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.SubmitQuestionActivity">
+        <activity
+            android:name=".activity.miss.SubmitQuestionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.miss.CommentActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.CommentActivity">
+        <activity
+            android:name=".activity.miss.RewardActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.RewardActivity">
+        <activity
+            android:name=".activity.miss.MessagesActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.miss.MessagesActivity">
-        </activity>
-        <activity android:name=".activity.leveltest.LevelTestStartActivity">
-        </activity>
-        <activity android:name=".activity.leveltest.LevelExamQuestionsActivity">
-        </activity>
-        <activity android:name=".activity.leveltest.ExamResultActivity">
-        </activity>
-        <activity android:name=".activity.leveltest.HistoryTestResultActivity">
-        </activity>
+
+        <activity
+            android:name=".activity.daily.DailyReportActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.leveltest.LevelTestStartActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.LevelExamQuestionsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.ExamResultActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.HistoryTestResultActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
