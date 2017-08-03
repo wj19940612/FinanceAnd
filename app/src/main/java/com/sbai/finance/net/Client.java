@@ -1784,8 +1784,11 @@ public class Client {
      * 获取最新提问列表
      * @return
      */
-    public static API getLatestQuestionList() {
-        return new API("/explain/question/questionList.do");
+    public static API getLatestQuestionList(Long createTime, int pageSize) {
+        return new API("/explain/question/questionList.do",
+                new ApiParams()
+                        .put("createTime", createTime)
+                        .put("pageSize", pageSize));
     }
 
     /**

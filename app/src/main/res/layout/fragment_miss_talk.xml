@@ -65,6 +65,10 @@
         android:layout_height="0.5dp"
         android:background="@color/split"/>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -75,6 +79,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/white"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/split"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -110,4 +127,5 @@
 
             </LinearLayout>
         </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
