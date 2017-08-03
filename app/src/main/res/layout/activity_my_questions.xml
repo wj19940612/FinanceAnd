@@ -33,18 +33,41 @@
                 android:divider="@null"
                 android:visibility="visible"/>
 
-            <TextView
+            <RelativeLayout
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:drawablePadding="25dp"
-                android:drawableTop="@drawable/img_no_message"
-                android:gravity="center_horizontal"
-                android:paddingTop="150dp"
-                android:text="没有提问"
-                android:textColor="@color/assistText"
-                android:textSize="@dimen/navigate_size"/>
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/emptyContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:adjustViewBounds="true"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@drawable/img_no_message"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="120dp"
+                    android:text="@string/no_question"
+                    android:textColor="@color/assistText"
+                    android:textSize="@dimen/navigate_size"/>
+
+                <TextView
+                    android:id="@+id/askQuestion"
+                    android:layout_width="130dp"
+                    android:layout_height="44dp"
+                    android:layout_below="@+id/emptyContent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="@dimen/common_padding"
+                    android:background="@drawable/btn_ask_her_question"
+                    android:gravity="center"
+                    android:text="@string/ask_question_to_miss"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    />
+            </RelativeLayout>
 
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

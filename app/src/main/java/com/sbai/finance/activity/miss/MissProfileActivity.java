@@ -347,14 +347,21 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
         }
     }
 
-    @OnClick(R.id.askHerQuestion)
-    public void onViewClicked() {
-        if (LocalUser.getUser().isLogin()) {
-            Launcher.with(getActivity(), SubmitQuestionActivity.class)
-                    .putExtra(Launcher.EX_PAYLOAD, mCustomId)
-                    .execute();
-        } else {
-            Launcher.with(getActivity(), LoginActivity.class).execute();
+    @OnClick({R.id.askHerQuestion, R.id.back})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.askHerQuestion:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.back:
+                finish();
+                break;
         }
     }
 

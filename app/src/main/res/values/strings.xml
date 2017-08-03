@@ -622,7 +622,7 @@
     <string name="number_ge">%1$s个</string>
     <!--姐说-->
     <string name="question">提问</string>
-    <string name="write_your_question_wait_miss_answer">写下你的问题，等待小姐姐们的回音哦~</string>
+    <string name="question_reward_will_gain_money">每次问题被打打赏,可以获得一半的赏金哦~</string>
     <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
@@ -679,4 +679,6 @@
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
     <string name="no_miss_reply">还没有小姐姐的回答哦~</string>
+    <string name="no_question">你还没提问过哦</string>
+    <string name="ask_question_to_miss">向小姐姐提问</string>
 </resources>
