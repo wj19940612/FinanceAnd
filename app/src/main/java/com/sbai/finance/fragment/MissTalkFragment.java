@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -71,6 +72,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	RecyclerView mRecyclerView;
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
+	@BindView(R.id.scrollView)
+	ScrollView mScrollView;
 
 	private List<Miss> mMissList;
 	private MissListAdapter mMissListAdapter;
@@ -128,6 +131,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		requestHotQuestionList();
 		requestLatestQuestionList();
 		initSwipeRefreshLayout();
+		mScrollView.smoothScrollTo(0, 0);
 	}
 
 	private void initPopupWindow() {

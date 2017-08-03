@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,11 +45,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.commentNumber;
 import static com.sbai.finance.R.id.question;
 
 
-public class QuestionDetailActivity extends BaseActivity implements AbsListView.OnScrollListener {
+public class QuestionDetailActivity extends BaseActivity implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -118,6 +118,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mQuestionReplyListAdapter);
         mListView.setOnScrollListener(this);
+	    mListView.setOnItemClickListener(this);
 
         requestQuestionReplyList();
         initSwipeRefreshLayout();
@@ -270,7 +271,12 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
         }
     }
 
-    static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+	}
+
+	static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
         private Context mContext;
 
         private QuestionReplyListAdapter(@NonNull Context context) {
