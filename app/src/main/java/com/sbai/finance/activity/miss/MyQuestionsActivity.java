@@ -40,8 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 我的提问页面
@@ -53,9 +52,11 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.empty)
-    TextView mEmpty;
+    RelativeLayout mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.askQuestion)
+    TextView mAskQuestion;
 
     private MyQuestionAdapter mMyQuestionAdapter;
     private Long mCreateTime;
@@ -200,6 +201,11 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
+    @OnClick(R.id.askQuestion)
+    public void onViewClicked() {
+        Launcher.with(getActivity(),SubmitQuestionActivity.class).execute();
     }
 
     static class MyQuestionAdapter extends ArrayAdapter<Question> {

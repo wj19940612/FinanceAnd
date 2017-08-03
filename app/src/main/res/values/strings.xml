@@ -678,4 +678,6 @@
     <string name="love_people_number">%1$d人喜欢</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
+    <string name="no_question">你还没提问过哦</string>
+    <string name="ask_question_to_miss">向小姐姐提问</string>
 </resources>
