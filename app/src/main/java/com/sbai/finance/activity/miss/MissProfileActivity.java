@@ -3,6 +3,7 @@ package com.sbai.finance.activity.miss;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,9 +22,12 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Attention;
@@ -37,6 +41,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.mediaPlayerUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -141,16 +146,36 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
         mReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRewardInfo != null) {
-                    mRewardInfo.setMoney(0);
-                    mRewardInfo.setIndex(-1);
+                if (LocalUser.getUser().isLogin()) {
+                    if (mRewardInfo != null) {
+                        mRewardInfo.setMoney(0);
+                        mRewardInfo.setIndex(-1);
+                    }
+                    RewardMissDialogFragment.newInstance()
+                            .show(getSupportFragmentManager());
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
-                RewardMissDialogFragment.newInstance()
-                        .show(getSupportFragmentManager());
+            }
+        });
+        mAttention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    // TODO: 2017-08-03 添加关注
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         mListView.addHeaderView(header);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayerUtil.release();
     }
 
     private void requestMissDetail() {
@@ -324,9 +349,22 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
         }
     }
 
-    @OnClick(R.id.askHerQuestion)
-    public void onViewClicked() {
-        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+    @OnClick({R.id.askHerQuestion, R.id.back})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.askHerQuestion:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.back:
+                finish();
+                break;
+        }
     }
 
     static class HerAnswerAdapter extends ArrayAdapter<Question> {
@@ -394,13 +432,6 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
 
-                mAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Launcher.with(context, MyQuestionsActivity.class).execute();
-                    }
-                });
-
                 Glide.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
@@ -415,11 +446,26 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                 mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
                 mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
+                if (Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
+                    mVoice.setTextColor(Color.parseColor("#999999"));
+                } else {
+                    mVoice.setTextColor(Color.parseColor("#55adff"));
+                }
+
                 if (item.getIsPrise() == 0) {
                     mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
                 } else {
                     mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
                 }
+
+                mMissAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, MissProfileActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
+                                .execute();
+                    }
+                });
 
                 mLoveNumber.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -436,6 +482,22 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                                 mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
                             }
                         }).fire();
+                    }
+                });
+
+                mVoice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (item.getIsPlaying() == false) {
+                            mediaPlayerUtil.play(item.getAnswerContext());
+                            item.setIsPlaying(true);
+                        } else {
+                            mediaPlayerUtil.release();
+                            item.setIsPlaying(false);
+                        }
+
+                        Preference.get().setAnswerIds(item.getId() + "");
+                        mVoice.setTextColor(Color.parseColor("#999999"));
                     }
                 });
             }

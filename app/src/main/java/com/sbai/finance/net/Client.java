@@ -1819,7 +1819,7 @@ public class Client {
      * @param dataId
      * @return
      */
-    public static API addComment(int invitationUserId, Integer replyParentId, String content, int dataId) {
+    public static API addComment(int invitationUserId, String replyParentId, String content, int dataId) {
         return new API(POST, "/user/comment/insertComment.do", new ApiParams()
                 .put("invitationUserId", invitationUserId)
                 .put("replyParentId", replyParentId)
@@ -1997,6 +1997,19 @@ public class Client {
                         .put("dataId", dataId)
                         .put("page", page)
                         .put("pageSize", pageSize)
+        );
+    }
+
+    /**
+     * 提问详情
+     *
+     * @param questionId
+     * @return
+     */
+    public static API getQuestionDetails(int questionId) {
+        return new API("/explain/question/questionInfo.do",
+                new ApiParams()
+                        .put("questionId", questionId)
         );
     }
 }

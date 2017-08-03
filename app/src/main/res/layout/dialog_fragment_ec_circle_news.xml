@@ -1,43 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/background"
               android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
-        <TextView
-            android:id="@+id/replyContent"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/bg_white"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textColor="#8F8E94"
-            android:textSize="13sp"
-            tools:text="上善若水:阿萨德发生范德萨的凤飞飞飞洒的发生的方式的飞洒的方式打法"/>
-    </LinearLayout>
-    
-    <TextView
-        android:id="@+id/reply"
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/economic_circle_news_list"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:adjustViewBounds="true"
         android:background="@drawable/bg_white"
         android:clickable="true"
         android:gravity="center"
-        android:text="@string/reply"
-        android:textColor="#0076ff"
+        android:text="@string/economic_circle_news_list"
+        android:textColor="@color/redPrimary"
         android:textSize="17sp"/>
 
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/cancel"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -46,6 +27,6 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/take_phone_cancel"
-        android:textColor="#0076ff"
+        android:textColor="@color/blackAssist"
         android:textSize="17sp"/>
 </LinearLayout>

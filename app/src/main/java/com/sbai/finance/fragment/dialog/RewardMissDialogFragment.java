@@ -163,7 +163,7 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
         String content = getString(R.string.ingot_number, StrFormatter.getFormIngot(rewardMoney));
         if (mRewardInfo != null) {
             RewardInputSafetyPassDialogFragment.newInstance(mRewardInfo.getId(),
-                    content, getString(R.string.deduct), rewardMoney, mRewardInfo.getType())
+                    content, getString(R.string.reward), rewardMoney, mRewardInfo.getType())
                     .show(getActivity().getSupportFragmentManager());
             dismiss();
         }

@@ -22,7 +22,7 @@
         android:layout_height="100dp"
         android:background="@android:color/white"
         android:gravity="top"
-        android:hint="@string/write_your_question_wait_miss_answer"
+        android:hint="@string/question_reward_will_gain_money"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:paddingTop="12dp"

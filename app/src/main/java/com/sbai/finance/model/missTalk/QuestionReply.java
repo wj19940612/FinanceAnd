@@ -1,5 +1,6 @@
 package com.sbai.finance.model.missTalk;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public class QuestionReply {
 		this.data = data;
 	}
 
-	public static class DataBean {
+	public static class DataBean implements Serializable{
 		/**
 		 * content : 发表一个评论yoyoyoyoyoyo333333!
 		 * createDate : 1501664354913
