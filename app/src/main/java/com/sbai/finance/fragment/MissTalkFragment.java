@@ -1,9 +1,11 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +15,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.miss.MessagesActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
+import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.missTalk.Miss;
@@ -38,6 +44,7 @@ import com.sbai.finance.utils.mediaPlayerUtil;
 import com.sbai.finance.view.MyListView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,8 +53,9 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.sbai.finance.R.id.missAvatar;
+import static com.sbai.finance.R.id.recyclerView;
 
-public class MissTalkFragment extends BaseFragment {
+public class MissTalkFragment extends BaseFragment implements View.OnClickListener {
 
 	@BindView(R.id.more)
 	ImageView mMore;
@@ -60,11 +68,22 @@ public class MissTalkFragment extends BaseFragment {
 	MyListView mHotListView;
 	@BindView(R.id.LatestListView)
 	MyListView mLatestListView;
+	@BindView(recyclerView)
+	RecyclerView mRecyclerView;
+	@BindView(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
+	@BindView(R.id.scrollView)
+	ScrollView mScrollView;
 
 	private List<Miss> mMissList;
 	private MissListAdapter mMissListAdapter;
 	private HotQuestionListAdapter mHotQuestionListAdapter;
 	private LatestQuestionListAdapter mLatestQuestionListAdapter;
+	private Long mCreateTime;
+	private int mPageSize = 20;
+	private HashSet<Integer> mSet;
+	private View mFootView;
+	private PopupWindow mPopupWindow;
 
 	@Nullable
 	@Override
@@ -77,12 +96,13 @@ public class MissTalkFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
+		initPopupWindow();
+		mSet = new HashSet<>();
 		mMissList = new ArrayList<>();
 		mMissListAdapter = new MissListAdapter(getActivity(), mMissList);
 		mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity());
 		mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity());
-		//initHeaderView();
+		initHeaderView();
 		mHotListView.setAdapter(mHotQuestionListAdapter);
 		mLatestListView.setAdapter(mLatestQuestionListAdapter);
 		mHotListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -90,7 +110,7 @@ public class MissTalkFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Question item = (Question) parent.getItemAtPosition(position);
 				if (item != null) {
-					Launcher.with(getActivity(),QuestionDetailActivity.class)
+					Launcher.with(getActivity(), QuestionDetailActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, item).execute();
 				}
 			}
@@ -101,7 +121,7 @@ public class MissTalkFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Question item = (Question) parent.getItemAtPosition(position);
 				if (item != null) {
-					Launcher.with(getActivity(),QuestionDetailActivity.class)
+					Launcher.with(getActivity(), QuestionDetailActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, item).execute();
 				}
 			}
@@ -110,6 +130,36 @@ public class MissTalkFragment extends BaseFragment {
 		requestMissList();
 		requestHotQuestionList();
 		requestLatestQuestionList();
+		initSwipeRefreshLayout();
+		mScrollView.smoothScrollTo(0, 0);
+	}
+
+	private void initPopupWindow() {
+		View contentView = LayoutInflater.from(getActivity()).inflate(R.layout.view_popup_window, null);
+		mPopupWindow = new PopupWindow(contentView);
+		mPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+		mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+		mPopupWindow.setFocusable(true);
+		mPopupWindow.setOutsideTouchable(true);
+		mPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), ""));
+		mPopupWindow.setClippingEnabled(true);
+		TextView tv1 = (TextView) contentView.findViewById(R.id.askHerQuestion);
+		TextView tv2 = (TextView) contentView.findViewById(R.id.myQuestion);
+
+		tv1.setOnClickListener(this);
+		tv2.setOnClickListener(this);
+	}
+
+	private void initSwipeRefreshLayout() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mSet.clear();
+				mCreateTime = null;
+				requestHotQuestionList();
+				requestLatestQuestionList();
+			}
+		});
 	}
 
 	@Override
@@ -168,17 +218,36 @@ public class MissTalkFragment extends BaseFragment {
 					protected void onRespSuccessData(List<Question> questionList) {
 						updateHotQuestionList(questionList);
 					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
+
 				}).fire();
 	}
 
 	private void requestLatestQuestionList() {
-		Client.getLatestQuestionList().setTag(TAG)
+		Client.getLatestQuestionList(mCreateTime, mPageSize).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
 						updateLatestQuestionList(questionList);
 					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
 				}).fire();
+	}
+
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
 	}
 
 	private void updateMissList(List<Miss> missList) {
@@ -186,23 +255,55 @@ public class MissTalkFragment extends BaseFragment {
 		mMissListAdapter.addAll(missList);
 	}
 
-	private void updateHotQuestionList(List<Question> questionList) {
+	private void updateHotQuestionList(final List<Question> questionList) {
 		mHotQuestionListAdapter.clear();
 		mHotQuestionListAdapter.addAll(questionList);
 	}
 
-	private void updateLatestQuestionList(List<Question> questionList) {
-		mLatestQuestionListAdapter.clear();
-		mLatestQuestionListAdapter.addAll(questionList);
+	private void updateLatestQuestionList(final List<Question> questionList) {
+		if (questionList == null) {
+			stopRefreshAnimation();
+			return;
+		}
+
+		if (mFootView == null) {
+			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
+			mFootView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mSwipeRefreshLayout.isRefreshing()) return;
+					mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
+					requestLatestQuestionList();
+				}
+			});
+			mLatestListView.addFooterView(mFootView, null, true);
+		}
+
+		if (questionList.size() < mPageSize) {
+			mLatestListView.removeFooterView(mFootView);
+			mFootView = null;
+		}
+
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			if (mLatestQuestionListAdapter != null) {
+				mLatestQuestionListAdapter.clear();
+				mLatestQuestionListAdapter.notifyDataSetChanged();
+			}
+			stopRefreshAnimation();
+		}
+
+		for (Question question : questionList) {
+			if (mSet.add(question.getId())) {
+				mLatestQuestionListAdapter.add(question);
+			}
+		}
 	}
 
 	private void initHeaderView() {
-		LinearLayout header = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.view_header_miss_talk, null);
-		RecyclerView recyclerView = (RecyclerView) header.findViewById(R.id.recyclerView);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
 		gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		recyclerView.setLayoutManager(gridLayoutManager);
-		recyclerView.setAdapter(mMissListAdapter);
+		mRecyclerView.setLayoutManager(gridLayoutManager);
+		mRecyclerView.setAdapter(mMissListAdapter);
 		mMissListAdapter.setOnItemClickListener(new MissListAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClick(Miss item) {
@@ -210,7 +311,6 @@ public class MissTalkFragment extends BaseFragment {
 						.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
 			}
 		});
-		mHotListView.addHeaderView(header);
 	}
 
 
@@ -559,11 +659,41 @@ public class MissTalkFragment extends BaseFragment {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.more:
+				showPopupWindow();
 				break;
 			case R.id.message:
 				Launcher.with(getActivity(), MessagesActivity.class).execute();
 				mRedPoint.setVisibility(View.INVISIBLE);
 				break;
+		}
+	}
+
+	private void showPopupWindow() {
+		if (mPopupWindow != null) {
+			if (!mPopupWindow.isShowing()) {
+				mPopupWindow.showAsDropDown(mMore, -30, 50);
+			} else {
+				mPopupWindow.dismiss();
+			}
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.askHerQuestion: {
+				if (mPopupWindow.isShowing()) {
+					mPopupWindow.dismiss();
+				}
+				Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+			}
+			break;
+			case R.id.myQuestion: {
+				if (mPopupWindow.isShowing()) {
+					mPopupWindow.dismiss();
+				}
+				Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
+			}
 		}
 	}
 }
