@@ -326,7 +326,9 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
 
     @OnClick(R.id.askHerQuestion)
     public void onViewClicked() {
-        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+        Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                .putExtra(Launcher.EX_PAYLOAD,mCustomId)
+                .execute();
     }
 
     static class HerAnswerAdapter extends ArrayAdapter<Question> {

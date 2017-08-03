@@ -2,6 +2,7 @@ package com.sbai.finance.activity.miss;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.HorizontalGridView;
@@ -54,14 +56,20 @@ public class SubmitQuestionActivity extends BaseActivity {
     TextView mCommit;
     private GirdViewAdapter mGirdViewAdapter;
     private int mSelectedIndex = -1;
+    private int mDefaultMissId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit_question);
         ButterKnife.bind(this);
+        initData(getIntent());
         initView();
         requestMissData();
+    }
+
+    private void initData(Intent intent) {
+        mDefaultMissId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
     }
 
     private void requestMissData() {
@@ -130,7 +138,7 @@ public class SubmitQuestionActivity extends BaseActivity {
 
     private void initView() {
         mQuestionComment.addTextChangedListener(mValidationWatcher);
-        mGirdViewAdapter = new GirdViewAdapter(getActivity());
+        mGirdViewAdapter = new GirdViewAdapter(getActivity(), mDefaultMissId);
         mGirdViewAdapter.setOnSelectedCallback(new GirdViewAdapter.OnSelectedCallback() {
             @Override
             public void onClick(int oldIndex, int index) {
@@ -185,12 +193,14 @@ public class SubmitQuestionActivity extends BaseActivity {
             void onClick(int oldIndex, int index);
         }
 
-        public GirdViewAdapter(@NonNull Context context) {
+        public GirdViewAdapter(@NonNull Context context, int defaultMissId) {
             super(context, 0);
+            mDefaultMissId = defaultMissId;
         }
 
         private OnSelectedCallback mOnSelectedCallback;
         private int mSelectedIndex;
+        private int mDefaultMissId;
 
         public void setOnSelectedCallback(OnSelectedCallback onSelectedListener) {
             mOnSelectedCallback = onSelectedListener;
@@ -221,21 +231,34 @@ public class SubmitQuestionActivity extends BaseActivity {
 
             private void bindDataWithView(Miss item, final int position, final OnSelectedCallback callBack) {
                 mMissInfo.setImgRes(item.getPortrait()).setUserName(item.getName());
+                if (mDefaultMissId == item.getId()) {
+                    setSelected(position, callBack);
+                    mDefaultMissId = -1;
+                }
                 mMissInfo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mMissInfo.isSelected()) {
-                            mMissInfo.setSelected(false);
-                            callBack.onClick(-1, -1);
-                            mSelectedIndex = -1;
+                            setUnSelected(callBack);
                         } else {
-                            mMissInfo.setSelected(true);
-                            callBack.onClick(mSelectedIndex, position);
-                            mSelectedIndex = position;
+                            setSelected(position, callBack);
                         }
                     }
                 });
             }
+
+            private void setUnSelected(OnSelectedCallback callBack) {
+                mMissInfo.setSelected(false);
+                callBack.onClick(-1, -1);
+                mSelectedIndex = -1;
+            }
+
+            private void setSelected(int position, OnSelectedCallback callBack) {
+                mMissInfo.setSelected(true);
+                callBack.onClick(mSelectedIndex, position);
+                mSelectedIndex = position;
+            }
+
         }
     }
 }
