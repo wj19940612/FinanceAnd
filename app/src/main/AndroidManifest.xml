@@ -336,7 +336,8 @@
         <activity
             android:name=".activity.miss.MissProfileActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.MyQuestionsActivity"
+        <activity
+            android:name=".activity.miss.MyQuestionsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -365,6 +366,12 @@
 
         <activity
             android:name=".activity.miss.ReplyActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.daily.DailyReportDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"/>
     </application>
 
