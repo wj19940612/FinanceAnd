@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
@@ -273,7 +274,8 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+		QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
+		ReplyDialogFragment.newInstance(item, mQuestionDetail.getQuestionUserId()).show(getSupportFragmentManager());
 	}
 
 	static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
