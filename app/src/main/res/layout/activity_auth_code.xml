@@ -32,7 +32,6 @@
             android:textSize="20sp"/>
 
         <LinearLayout
-            android:id="@+id/authCodeArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -68,7 +67,6 @@
             android:background="@color/split"/>
 
         <LinearLayout
-            android:id="@+id/passwordArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

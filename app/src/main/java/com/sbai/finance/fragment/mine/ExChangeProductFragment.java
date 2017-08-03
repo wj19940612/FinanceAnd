@@ -224,8 +224,8 @@ public class ExChangeProductFragment extends BaseFragment {
                     }
 
                     @Override
-                    protected void onReceive(Resp<Object> objectResp) {
-                        super.onReceive(objectResp);
+                    protected void onReceiveResponse(Resp<Object> objectResp) {
+                        super.onReceiveResponse(objectResp);
                         if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
                             showExchangeFailDialog(item);
                         } else if (objectResp.isExchangeProductHasChange()) {

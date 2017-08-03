@@ -277,6 +277,21 @@ public class Client {
     }
 
     /**
+     * 忘记密码：更新新密码
+     *
+     * @param phone
+     * @param password
+     * @param code
+     * @return
+     */
+    public static API updateNewPassword(String phone, String password, String code) {
+        return new API("/user/user/forgetPassword.do", new ApiParams()
+                .put("phone", phone)
+                .put("password", password)
+                .put("code", code));
+    }
+
+    /**
      * 接口名称 获取验证码
      * 请求类型 get
      * 请求Url  /registerLogin/sendMsgCode.do
@@ -972,9 +987,9 @@ public class Client {
     }
 
 
-    //乐米协议
-
     /**
+     * 乐米协议
+     *
      * @param id 2 借款协议  3 用户协议  4 兑换规则
      * @return
      */

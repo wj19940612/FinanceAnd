@@ -139,7 +139,7 @@ public class API extends RequestManager {
             mCallback = new ApiCallback<Object>() {
                 @Override
                 public void onSuccess(Object o) {
-                    Log.d(TAG, "onReceive: result(default): " + o);
+                    Log.d(TAG, "onReceiveResponse: result(default): " + o);
                 }
 
                 @Override

@@ -168,8 +168,8 @@ public class ModifySafetyPassActivity extends BaseActivity {
                             }
 
                             @Override
-                            protected void onReceive(Resp<Object> objectResp) {
-                                super.onReceive(objectResp);
+                            protected void onReceiveResponse(Resp<Object> objectResp) {
+                                super.onReceiveResponse(objectResp);
                                 if (objectResp.getCode() == 600) {
                                     mSafetyPasswordNumber.clearSafetyNumber();
                                 }

@@ -19,6 +19,17 @@ import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.NullResponseError;
 import com.sbai.httplib.RequestManager;
 
+/**
+ * <p>Implement onFailure() with error toast. Handle token expired in onSuccess()<p/>
+ *
+ * Two main callbacks to handle our custom reponse: Resp
+ * <ul>
+ *     <li>onRespSuccess() when Resp.code == 200</li>
+ *     <li>onRespFailureWitMsg() when Resp.code != 200</li>
+ * </ul>
+ *
+ * @param <T>
+ */
 public abstract class Callback<T> extends ApiCallback<T> {
 
     private boolean mErrorToast;
@@ -38,7 +49,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
             if (resp.isTokenExpired()) {
                 processTokenExpiredError(resp);
             } else {
-                onReceive(t);
+                onReceiveResponse(t);
             }
         } else if (t instanceof String) {
             if (((String) t).indexOf("code") != -1) {
@@ -48,13 +59,13 @@ public abstract class Callback<T> extends ApiCallback<T> {
                         processTokenExpiredError(resp);
                     }
                 } catch (JsonSyntaxException e) {
-                    onReceive(t);
+                    onReceiveResponse(t);
                 }
             } else {
-                onReceive(t);
+                onReceiveResponse(t);
             }
         } else {
-            onReceive(t);
+            onReceiveResponse(t);
         }
     }
 
@@ -93,14 +104,14 @@ public abstract class Callback<T> extends ApiCallback<T> {
         }
     }
 
-    protected void onReceive(T t) {
+    protected void onReceiveResponse(T t) {
         if (t instanceof Resp) {
             Resp resp = (Resp) t;
             if (resp.isSuccess()) {
                 onRespSuccess(t);
             } else {
                 onFailure(null);
-                onToastErrorMessage(resp.getMsg());
+                onRespFailureWitMsg(resp.getMsg());
             }
         } else {
             onRespSuccess(t);
@@ -109,7 +120,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     protected abstract void onRespSuccess(T resp);
 
-    protected void onToastErrorMessage(String msg) {
+    protected void onRespFailureWitMsg(String msg) {
         if (mErrorToast) {
             ToastUtil.show(msg);
         }

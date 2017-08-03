@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
@@ -36,6 +37,11 @@ public class InputPhoneActivity extends BaseActivity {
 
     public static final int PAGE_TYPE_REGISTER = 801;
     public static final int PAGE_TYPE_FORGET_PSD = 108;
+
+    /**
+     * 子操作 请求码
+     */
+    private static final int REQ_CODE_SUB_OPERATION = 999;
 
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
@@ -67,6 +73,7 @@ public class InputPhoneActivity extends BaseActivity {
             mProtocolArea.setVisibility(View.GONE);
         }
 
+        mPhoneNumber.requestFocus();
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
 
         mPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -77,10 +84,17 @@ public class InputPhoneActivity extends BaseActivity {
                 }
             }
         });
+
+        mPhoneNumber.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                KeyBoardUtils.openKeyBoard(mPhoneNumber);
+            }
+        }, 200);
     }
 
     private void initData(Intent intent) {
-        mPageType = intent.getIntExtra(Launcher.EX_PAYLOAD, 0);
+        mPageType = intent.getIntExtra(ExtraKeys.PAGE_TYPE, 0);
     }
 
     private ValidationWatcher mPhoneValidationWatcher = new ValidationWatcher() {
@@ -90,8 +104,21 @@ public class InputPhoneActivity extends BaseActivity {
             formatPhoneNumber();
 
             mPhoneNumberClear.setVisibility(checkClearBtnVisible() ? View.VISIBLE : View.INVISIBLE);
+
+            boolean enable = checkNextButtonEnable();
+            if (enable != mNext.isEnabled()) {
+                mNext.setEnabled(enable);
+            }
         }
     };
+
+    private boolean checkNextButtonEnable() {
+        String phone = getPhoneNumber();
+        if (TextUtils.isEmpty(phone) || phone.length() < 11) {
+            return false;
+        }
+        return true;
+    }
 
     private boolean checkClearBtnVisible() {
         String phone = mPhoneNumber.getText().toString();
@@ -117,16 +144,36 @@ public class InputPhoneActivity extends BaseActivity {
         mPhoneNumber.removeTextChangedListener(mPhoneValidationWatcher);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_SUB_OPERATION && resultCode == RESULT_OK) {
+            if (mPageType == PAGE_TYPE_REGISTER) {
+                // 注册成功 设置回调ok 关闭页面
+                setResult(RESULT_OK);
+                finish();
+            } else if (mPageType == PAGE_TYPE_FORGET_PSD) {
+                // 更新密码成功 关闭页面
+                finish();
+            }
+        }
+    }
+
+    private String getPhoneNumber() {
+        return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
+    }
+
     @OnClick({R.id.next, R.id.rootView, R.id.financeUserProtocol})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.next:
                 Launcher.with(getActivity(), AuthCodeActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mPageType)
-                        .execute();
+                        .putExtra(ExtraKeys.PAGE_TYPE, mPageType)
+                        .putExtra(ExtraKeys.PHONE, getPhoneNumber())
+                        .executeForResult(REQ_CODE_SUB_OPERATION);
                 break;
             case R.id.rootView:
-                KeyBoardUtils.closeKeyboard(this, mRootView);
+                KeyBoardUtils.closeKeyboard(mRootView);
                 break;
             case R.id.financeUserProtocol:
                 openUserProtocolPage();

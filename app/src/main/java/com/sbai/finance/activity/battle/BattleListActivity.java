@@ -360,7 +360,7 @@ public class BattleListActivity extends BaseActivity implements
         Client.joinBattle(data.getId(), Battle.SOURCE_HALL).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    protected void onReceive(Resp<Battle> battleResp) {
+                    protected void onReceiveResponse(Resp<Battle> battleResp) {
                         if (battleResp.isSuccess()) {
                             Battle battle = battleResp.getData();
                             if (battle != null) {
@@ -393,7 +393,7 @@ public class BattleListActivity extends BaseActivity implements
         Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    protected void onReceive(Resp<Battle> battleResp) {
+                    protected void onReceiveResponse(Resp<Battle> battleResp) {
                         if (battleResp.isSuccess() && battleResp.getData() != null) {
                             showMatchSuccessDialog(battleResp.getData());
                         } else if (battleResp.getCode() == Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT) {

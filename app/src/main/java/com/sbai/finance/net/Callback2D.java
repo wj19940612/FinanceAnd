@@ -20,7 +20,7 @@ public abstract class Callback2D<T, D> extends Callback<T> {
     }
 
     @Override
-    protected void onRespSuccess(T t) {
+    protected final void onRespSuccess(T t) {
         if (t instanceof Resp) {
             Resp resp = (Resp) t;
             D data = (D) resp.getData();
@@ -29,7 +29,7 @@ public abstract class Callback2D<T, D> extends Callback<T> {
             } else {
                 onFailure(null);
                 if (BuildConfig.DEBUG) {
-                    onToastErrorMessage("Fuck! Response's data is null.");
+                    onRespFailureWitMsg("Fuck! Response's data is null.");
                 }
             }
         }

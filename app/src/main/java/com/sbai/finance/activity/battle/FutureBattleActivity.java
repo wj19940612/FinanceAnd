@@ -1116,8 +1116,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
-                    protected void onReceive(Resp<TradeOrder> resp) {
-                        super.onReceive(resp);
+                    protected void onReceiveResponse(Resp<TradeOrder> resp) {
+                        super.onReceiveResponse(resp);
                         if (resp.getCode() == GameCode.ORDER_EXISIT) {
                             refreshTradeView();
                         }
@@ -1136,8 +1136,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
-                    protected void onReceive(Resp<TradeOrderClosePosition> resp) {
-                        super.onReceive(resp);
+                    protected void onReceiveResponse(Resp<TradeOrderClosePosition> resp) {
+                        super.onReceiveResponse(resp);
                         if (resp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
                         }
@@ -1149,7 +1149,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     }
 
                     @Override
-                    protected void onToastErrorMessage(String msg) {
+                    protected void onRespFailureWitMsg(String msg) {
                     }
                 })
                 .fire();

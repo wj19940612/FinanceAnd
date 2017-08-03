@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -17,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -29,8 +30,8 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.PasswordInputFilter;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -42,6 +43,8 @@ import static com.sbai.finance.R.id.authCode;
 public class LoginActivity extends BaseActivity {
 
     public static final String LOGIN_SUCCESS_ACTION = "LOGIN_SUCCESS_ACTION";
+
+    private static final int REQ_CODE_REGISTER = 888;
 
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
@@ -97,6 +100,7 @@ public class LoginActivity extends BaseActivity {
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
+        mPassword.setFilters(new InputFilter[] {new PasswordInputFilter()});
         mPhoneNumber.setText(LocalUser.getUser().getPhone());
 
         initListener();
@@ -153,6 +157,17 @@ public class LoginActivity extends BaseActivity {
         mPassword.removeTextChangedListener(mValidationWatcher);
         mKeyBoardHelper.onDestroy();
         mLoading.clearAnimation();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) {
+            // 注册成功 发送广播 以及 关闭页面
+            LocalBroadcastManager.getInstance(getActivity())
+                    .sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
+            finish();
+        }
     }
 
     private void setKeyboardHelper() {
@@ -282,7 +297,7 @@ public class LoginActivity extends BaseActivity {
                 login();
                 break;
             case R.id.rootView:
-                KeyBoardUtils.closeKeyboard(this, mRootView);
+                KeyBoardUtils.closeKeyboard(mRootView);
                 break;
             case R.id.showPassword:
                 togglePasswordVisible();
@@ -290,12 +305,12 @@ public class LoginActivity extends BaseActivity {
 
             case R.id.register:
                 Launcher.with(getActivity(), InputPhoneActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, InputPhoneActivity.PAGE_TYPE_REGISTER)
-                        .execute();
+                        .putExtra(ExtraKeys.PAGE_TYPE, InputPhoneActivity.PAGE_TYPE_REGISTER)
+                        .executeForResult(REQ_CODE_REGISTER);
                 break;
             case R.id.forgetPassword:
                 Launcher.with(getActivity(), InputPhoneActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, InputPhoneActivity.PAGE_TYPE_FORGET_PSD)
+                        .putExtra(ExtraKeys.PAGE_TYPE, InputPhoneActivity.PAGE_TYPE_FORGET_PSD)
                         .execute();
                 break;
 
@@ -352,7 +367,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-        KeyBoardUtils.closeKeyboard(this, mLogin);
+        KeyBoardUtils.closeKeyboard(mLogin);
 
         final String phoneNumber = getPhoneNumber();
         final String authCode = mAuthCode.getText().toString().trim();
@@ -366,46 +381,51 @@ public class LoginActivity extends BaseActivity {
             Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
                     .setCallback(new Callback<Resp<UserInfo>>() {
                         @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            resetLoginButton();
+                        }
+
+                        @Override
                         protected void onRespSuccess(Resp<UserInfo> resp) {
                             postLogin(resp, phoneNumber);
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            resetLoginButton();
+                        protected void onRespFailureWitMsg(String msg) {
+                            super.onRespFailureWitMsg(msg);
+                            mLoading.clearAnimation();
                         }
                     }).fire();
         } else {
             Client.login(phoneNumber, password).setTag(TAG)
                     .setCallback(new Callback<Resp<UserInfo>>() {
                         @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            resetLoginButton();
+                        }
+
+                        @Override
                         protected void onRespSuccess(Resp<UserInfo> resp) {
                             postLogin(resp, phoneNumber);
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            resetLoginButton();
+                        protected void onRespFailureWitMsg(String msg) {
+                            super.onRespFailureWitMsg(msg);
+                            mLoading.clearAnimation();
                         }
                     }).fire();
         }
     }
 
     private void postLogin(Resp<UserInfo> resp, String phoneNumber) {
-        resetLoginButton();
-        if (resp.isSuccess()) {
-            if (resp.hasData()) {
-                LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
-            }
-
+        if (resp.hasData()) {
+            LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
             LocalBroadcastManager.getInstance(getActivity())
                     .sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
             finish();
-        } else {
-            ToastUtil.show(resp.getMsg());
-            mLoading.clearAnimation();
         }
     }
 
