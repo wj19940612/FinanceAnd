@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.miss;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
@@ -49,285 +51,324 @@ import butterknife.OnClick;
  */
 public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
 
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
-    @BindView(R.id.listView)
-    ListView mListView;
-    @BindView(R.id.empty)
-    RelativeLayout mEmpty;
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.askQuestion)
-    TextView mAskQuestion;
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
+	@BindView(R.id.listView)
+	ListView mListView;
+	@BindView(R.id.empty)
+	RelativeLayout mEmpty;
+	@BindView(R.id.swipeRefreshLayout)
+	SwipeRefreshLayout mSwipeRefreshLayout;
+	@BindView(R.id.askQuestion)
+	TextView mAskQuestion;
 
-    private MyQuestionAdapter mMyQuestionAdapter;
-    private Long mCreateTime;
-    private int mPageSize = 20;
-    private HashSet<Integer> mSet;
-    private View mFootView;
-    private RewardInfo mRewardInfo;
+	private MyQuestionAdapter mMyQuestionAdapter;
+	private Long mCreateTime;
+	private int mPageSize = 20;
+	private HashSet<Integer> mSet;
+	private View mFootView;
+	private RewardInfo mRewardInfo;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_questions);
-        ButterKnife.bind(this);
-        initRewardInfo();
-        mSet = new HashSet<>();
-        mMyQuestionAdapter = new MyQuestionAdapter(this);
-        mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
-            @Override
-            public void onRewardClick(Question item) {
-                if (mRewardInfo != null) {
-                    mRewardInfo.setId(item.getId());
-                    mRewardInfo.setType(RewardInfo.TYPE_QUESTION);
-                    mRewardInfo.setMoney(0);
-                    mRewardInfo.setIndex(-1);
-                    RewardMissDialogFragment.newInstance()
-                            .show(getSupportFragmentManager());
-                }
-            }
-        });
-        mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mMyQuestionAdapter);
-        mListView.setOnItemClickListener(this);
-        mListView.setOnScrollListener(this);
-        initSwipeRefreshLayout();
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_my_questions);
+		ButterKnife.bind(this);
+		initRewardInfo();
+		mSet = new HashSet<>();
+		mMyQuestionAdapter = new MyQuestionAdapter(this);
+		mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
+			@Override
+			public void onRewardClick(Question item) {
+				if (mRewardInfo != null) {
+					mRewardInfo.setId(item.getId());
+					mRewardInfo.setType(RewardInfo.TYPE_QUESTION);
+					mRewardInfo.setMoney(0);
+					mRewardInfo.setIndex(-1);
+					RewardMissDialogFragment.newInstance()
+							.show(getSupportFragmentManager());
+				}
+			}
+		});
+		mListView.setEmptyView(mEmpty);
+		mListView.setAdapter(mMyQuestionAdapter);
+		mListView.setOnItemClickListener(this);
+		mListView.setOnScrollListener(this);
+		initSwipeRefreshLayout();
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		requestMyQuestionList();
+
 	}
 
 	private void initRewardInfo() {
-        mRewardInfo = new RewardInfo();
-        List<RewardMoney> list = new ArrayList<>();
-        RewardMoney rewardMoney = new RewardMoney();
-        rewardMoney.setMoney(10);
-        list.add(rewardMoney);
-        rewardMoney = new RewardMoney();
-        rewardMoney.setMoney(100);
-        list.add(rewardMoney);
-        rewardMoney = new RewardMoney();
-        rewardMoney.setMoney(1000);
-        list.add(rewardMoney);
-        mRewardInfo.setMoneyList(list);
-    }
+		mRewardInfo = new RewardInfo();
+		List<RewardMoney> list = new ArrayList<>();
+		RewardMoney rewardMoney = new RewardMoney();
+		rewardMoney.setMoney(10);
+		list.add(rewardMoney);
+		rewardMoney = new RewardMoney();
+		rewardMoney.setMoney(100);
+		list.add(rewardMoney);
+		rewardMoney = new RewardMoney();
+		rewardMoney.setMoney(1000);
+		list.add(rewardMoney);
+		mRewardInfo.setMoneyList(list);
+	}
 
-    private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSet.clear();
-                mCreateTime = null;
-                requestMyQuestionList();
-            }
-        });
-    }
+	private void initSwipeRefreshLayout() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mSet.clear();
+				mCreateTime = null;
+				requestMyQuestionList();
+			}
+		});
+	}
 
-    public RewardInfo getRewardInfo() {
-        return mRewardInfo;
-    }
+	public RewardInfo getRewardInfo() {
+		return mRewardInfo;
+	}
 
 
-    private void requestMyQuestionList() {
-        Client.getMyQuestionList(mCreateTime, mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Question> questionList) {
-                        updateMyQuestionList(questionList);
-                    }
+	private void requestMyQuestionList() {
+		Client.getMyQuestionList(mCreateTime, mPageSize).setTag(TAG)
+				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
+					@Override
+					protected void onRespSuccessData(List<Question> questionList) {
+						updateMyQuestionList(questionList);
+					}
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        stopRefreshAnimation();
-                    }
-                }).fire();
-    }
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
+				}).fire();
+	}
 
-    private void updateMyQuestionList(final List<Question> questionList) {
-        if (questionList == null) {
-            stopRefreshAnimation();
-            return;
-        }
+	private void updateMyQuestionList(final List<Question> questionList) {
+		if (questionList == null) {
+			stopRefreshAnimation();
+			return;
+		}
 
-        if (mFootView == null) {
-            mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
-            mFootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mSwipeRefreshLayout.isRefreshing()) return;
-                    mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
-                    requestMyQuestionList();
-                }
-            });
-            mListView.addFooterView(mFootView, null, true);
-        }
+		if (mFootView == null) {
+			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
+			mFootView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mSwipeRefreshLayout.isRefreshing()) return;
+					mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
+					requestMyQuestionList();
+				}
+			});
+			mListView.addFooterView(mFootView, null, true);
+		}
 
-        if (questionList.size() < mPageSize) {
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
-        }
+		if (questionList.size() < mPageSize) {
+			mListView.removeFooterView(mFootView);
+			mFootView = null;
+		}
 
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            if (mMyQuestionAdapter != null) {
-                mMyQuestionAdapter.clear();
-                mMyQuestionAdapter.notifyDataSetChanged();
-            }
-            stopRefreshAnimation();
-        }
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			if (mMyQuestionAdapter != null) {
+				mMyQuestionAdapter.clear();
+				mMyQuestionAdapter.notifyDataSetChanged();
+			}
+			stopRefreshAnimation();
+		}
 
-        for (Question question : questionList) {
-            if (mSet.add(question.getId())) {
-                mMyQuestionAdapter.add(question);
-            }
-        }
-    }
+		for (Question question : questionList) {
+			if (mSet.add(question.getId())) {
+				mMyQuestionAdapter.add(question);
+			}
+		}
+	}
 
-    private void stopRefreshAnimation() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
+	}
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-    }
+	}
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-    }
+	}
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-    }
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int topRowVerticalPosition =
+				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+	}
 
-    @OnClick(R.id.askQuestion)
-    public void onViewClicked() {
-        Launcher.with(getActivity(),SubmitQuestionActivity.class).execute();
-    }
+	@OnClick(R.id.askQuestion)
+	public void onViewClicked() {
+		Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+	}
 
-    static class MyQuestionAdapter extends ArrayAdapter<Question> {
-        private Context mContext;
-        private OnClickCallback mOnClickCallback;
+	static class MyQuestionAdapter extends ArrayAdapter<Question> {
+		private Context mContext;
+		private OnClickCallback mOnClickCallback;
 
-        public void setOnClickCallback(OnClickCallback onClickCallback) {
-            mOnClickCallback = onClickCallback;
-        }
+		public void setOnClickCallback(OnClickCallback onClickCallback) {
+			mOnClickCallback = onClickCallback;
+		}
 
-        interface OnClickCallback {
-            void onRewardClick(Question item);
-        }
+		interface OnClickCallback {
+			void onRewardClick(Question item);
+		}
 
-        private MyQuestionAdapter(@NonNull Context context) {
-            super(context, 0);
-            this.mContext = context;
-        }
+		private MyQuestionAdapter(@NonNull Context context) {
+			super(context, 0);
+			this.mContext = context;
+		}
 
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_misstalk_answer, null);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_misstalk_answer, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
 
-            viewHolder.bindingData(mContext, getItem(position), mOnClickCallback);
-            return convertView;
-        }
+			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback);
+			return convertView;
+		}
 
-        static class ViewHolder {
-            @BindView(R.id.avatar)
-            ImageView mAvatar;
-            @BindView(R.id.name)
-            TextView mName;
-            @BindView(R.id.askTime)
-            TextView mAskTime;
-            @BindView(R.id.hotArea)
-            RelativeLayout mHotArea;
-            @BindView(R.id.question)
-            TextView mQuestion;
-            @BindView(R.id.missAvatar)
-            ImageView mMissAvatar;
-            @BindView(R.id.voice)
-            TextView mVoice;
-            @BindView(R.id.listenerNumber)
-            TextView mListenerNumber;
-            @BindView(R.id.loveNumber)
-            TextView mLoveNumber;
-            @BindView(R.id.commentNumber)
-            TextView mCommentNumber;
-            @BindView(R.id.ingotNumber)
-            TextView mIngotNumber;
-            @BindView(R.id.split)
-            View mSplit;
+		static class ViewHolder {
+			@BindView(R.id.avatar)
+			ImageView mAvatar;
+			@BindView(R.id.name)
+			TextView mName;
+			@BindView(R.id.askTime)
+			TextView mAskTime;
+			@BindView(R.id.hotArea)
+			RelativeLayout mHotArea;
+			@BindView(R.id.question)
+			TextView mQuestion;
+			@BindView(R.id.missAvatar)
+			ImageView mMissAvatar;
+			@BindView(R.id.voice)
+			TextView mVoice;
+			@BindView(R.id.listenerNumber)
+			TextView mListenerNumber;
+			@BindView(R.id.loveNumber)
+			TextView mLoveNumber;
+			@BindView(R.id.commentNumber)
+			TextView mCommentNumber;
+			@BindView(R.id.ingotNumber)
+			TextView mIngotNumber;
+			@BindView(R.id.split)
+			View mSplit;
+			@BindView(R.id.label)
+			LinearLayout mLabel;
+			@BindView(R.id.noMissReply)
+			TextView mNoMissReply;
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
-            }
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
 
-            public void bindingData(final Context context, final Question item, final OnClickCallback onClickCallback) {
-                if (item == null) return;
+			public void bindingData(final Context context, final Question item, final OnClickCallback onClickCallback) {
+				if (item == null) return;
 
-                Glide.with(context).load(item.getUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
-                        .into(mAvatar);
+				Glide.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mAvatar);
 
-                Glide.with(context).load(item.getCustomPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
-                        .into(mMissAvatar);
+				Glide.with(context).load(item.getCustomPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.transform(new GlideCircleTransform(context))
+						.into(mMissAvatar);
 
-                mName.setText(item.getUserName());
-                mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
-                mQuestion.setText(item.getQuestionContext());
-                mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-                mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
-                mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
-                mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
-                mIngotNumber.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onClickCallback.onRewardClick(item);
-                    }
-                });
-                if (item.getIsPrise() == 0) {
-                    mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
-                } else {
-                    mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
-                }
+				if (item.getSolve() == 0) {
+					mLabel.setVisibility(View.GONE);
+					mVoice.setVisibility(View.GONE);
+					mMissAvatar.setVisibility(View.GONE);
+					mListenerNumber.setVisibility(View.GONE);
+					mNoMissReply.setVisibility(View.VISIBLE);
+				}
 
-                mLoveNumber.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
-                            @Override
-                            protected void onRespSuccessData(Prise prise) {
-                                if (prise.getIsPrise() == 0) {
-                                    mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
-                                } else {
-                                    mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
-                                }
-                                mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
-                            }
-                        }).fire();
-                    }
-                });
-            }
-        }
-    }
+				mName.setText(item.getUserName());
+				mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
+				mQuestion.setText(item.getQuestionContext());
+				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
+				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
+				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
+				mIngotNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						onClickCallback.onRewardClick(item);
+					}
+				});
+
+				if (item.getIsPrise() == 0) {
+					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
+				} else {
+					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
+				}
+
+				mMissAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(context, MissProfileActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
+								.execute();
+					}
+				});
+
+				mLoveNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+
+							@Override
+							protected void onRespSuccessData(Prise prise) {
+								if (prise.getIsPrise() == 0) {
+									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
+								} else {
+									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
+								}
+								mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
+							}
+						}).fire();
+					}
+				});
+
+
+				mVoice.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (item.getIsPlaying() == false) {
+							mediaPlayerUtil.play(item.getAnswerContext());
+							item.setIsPlaying(true);
+						} else {
+							mediaPlayerUtil.release();
+							item.setIsPlaying(false);
+						}
+						Preference.get().setAnswerIds(item.getId() + "");
+						mVoice.setTextColor(Color.parseColor("#999999"));
+					}
+				});
+			}
+		}
+	}
 }

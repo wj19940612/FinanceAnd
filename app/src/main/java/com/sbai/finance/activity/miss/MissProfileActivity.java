@@ -3,6 +3,7 @@ package com.sbai.finance.activity.miss;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -444,6 +446,12 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                 mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
                 mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
+                if (Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
+                    mVoice.setTextColor(Color.parseColor("#999999"));
+                } else {
+                    mVoice.setTextColor(Color.parseColor("#55adff"));
+                }
+
                 if (item.getIsPrise() == 0) {
                     mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
                 } else {
@@ -487,6 +495,9 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                             mediaPlayerUtil.release();
                             item.setIsPlaying(false);
                         }
+
+                        Preference.get().setAnswerIds(item.getId() + "");
+                        mVoice.setTextColor(Color.parseColor("#999999"));
                     }
                 });
             }

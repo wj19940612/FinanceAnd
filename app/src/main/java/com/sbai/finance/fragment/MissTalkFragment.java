@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MessagesActivity;
@@ -618,6 +620,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
                 mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
+                if (Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
+                    mVoice.setTextColor(Color.parseColor("#999999"));
+                } else {
+                    mVoice.setTextColor(Color.parseColor("#55adff"));
+                }
+
                 if (item.getIsPrise() == 0) {
                     mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
                 } else {
@@ -662,6 +670,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                             mediaPlayerUtil.release();
                             item.setIsPlaying(false);
                         }
+                        Preference.get().setAnswerIds(item.getId() + "");
+                        mVoice.setTextColor(Color.parseColor("#999999"));
                     }
                 });
             }

@@ -58,7 +58,10 @@ public class ReplyDialogFragment extends BaseDialogFragment{
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.dialog_fragment_reply, container, false);
 		unbinder = ButterKnife.bind(this, view);
-		mReplyContent.setText(mQuestionReply.getUserModel().getUserName() + ":" + mQuestionReply.getContent());
+		if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
+			mReplyContent.setText(mQuestionReply.getUserModel().getUserName() + ":" + mQuestionReply.getContent());
+		}
+
 		return view;
 	}
 
@@ -69,13 +72,16 @@ public class ReplyDialogFragment extends BaseDialogFragment{
 			case R.id.replyContent:
 				break;
 			case R.id.reply:
-				Launcher.with(getActivity(), ReplyActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mInvitationUserId)
-						.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId())
-						.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getReplyParentId())
-						.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName())
-						.execute();
-				dismissAllowingStateLoss();
+				if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
+					Launcher.with(getActivity(), ReplyActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mInvitationUserId)
+							.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId())
+							.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getReplyParentId())
+							.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName())
+							.execute();
+					dismissAllowingStateLoss();
+				}
+
 				break;
 			case R.id.cancel:
 				dismiss();

@@ -381,6 +381,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
 
             public void bindingData(Context context, QuestionReply.DataBean item) {
                 if (item == null) return;
+                if (item.getUserModel() == null) return;
 
                 Glide.with(context).load(item.getUserModel().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
