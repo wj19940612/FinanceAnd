@@ -622,7 +622,7 @@
     <string name="number_ge">%1$s个</string>
     <!--姐说-->
     <string name="question">提问</string>
-    <string name="question_reward_will_gain_money">每次问题被打打赏,可以获得一半的赏金哦~</string>
+    <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
     <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
