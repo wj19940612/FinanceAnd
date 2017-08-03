@@ -22,12 +22,13 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
+import com.sbai.finance.model.missTalk.Prise;
 import com.sbai.finance.model.missTalk.Question;
 import com.sbai.finance.model.missTalk.QuestionReply;
 import com.sbai.finance.net.Callback2D;
@@ -37,6 +38,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.mediaPlayerUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
 
@@ -156,6 +158,12 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayerUtil.release();
+    }
+
     public RewardInfo getRewardInfo() {
         return mRewardInfo;
     }
@@ -175,6 +183,12 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
                 .transform(new GlideCircleTransform(context))
                 .into(mMissAvatar);
 
+        if (mQuestionDetail.getIsPrise() == 0) {
+            mLoveImage.setImageResource(R.drawable.ic_miss_love);
+        } else {
+            mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+        }
+
         mName.setText(mQuestionDetail.getUserName());
         mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(mQuestionDetail.getCreateTime()));
         mQuestion.setText(mQuestionDetail.getQuestionContext());
@@ -182,6 +196,19 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
         mLoveNumber.setText(context.getString(R.string.love_miss, StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
         mRewardNumber.setText(context.getString(R.string.reward_miss, StrFormatter.getFormatCount(mQuestionDetail.getAwardCount())));
         mCommentNumber.setText(context.getString(R.string.comment_number_string, StrFormatter.getFormatCount(mQuestionDetail.getReplyCount())));
+        mVoice.setText(context.getString(R.string.voice_time, mQuestionDetail.getSoundTime()));
+        mVoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mQuestionDetail.getIsPlaying() == false) {
+                    mediaPlayerUtil.play(mQuestionDetail.getAnswerContext());
+                    mQuestionDetail.setIsPlaying(true);
+                } else {
+                    mediaPlayerUtil.release();
+                    mQuestionDetail.setIsPlaying(false);
+                }
+            }
+        });
     }
 
     private void requestQuestionReplyList() {
@@ -260,12 +287,15 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
         mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    @OnClick({R.id.comment, R.id.reward})
+    @OnClick({R.id.comment, R.id.reward, R.id.love})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.comment:
                 if (LocalUser.getUser().isLogin()) {
-
+                    Launcher.with(getActivity(), CommentActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
+                            .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+                            .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -279,6 +309,19 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
+                break;
+            case R.id.love:
+                Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+
+                    @Override
+                    protected void onRespSuccessData(Prise prise) {
+                        if (prise.getIsPrise() == 0) {
+                            mLoveImage.setImageResource(R.drawable.ic_miss_love);
+                        } else {
+                            mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+                        }
+                    }
+                }).fire();
                 break;
         }
     }

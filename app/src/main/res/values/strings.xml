@@ -678,4 +678,5 @@
     <string name="love_people_number">%1$d人喜欢</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
+    <string name="no_miss_reply">还没有小姐姐的回答哦~</string>
 </resources>

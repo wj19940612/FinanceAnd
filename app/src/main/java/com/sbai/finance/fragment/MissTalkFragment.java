@@ -180,6 +180,19 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (!isVisibleToUser) {
+            mediaPlayerUtil.release();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayerUtil.release();
+    }
+
     private void requestNewMessageCount() {
         Client.getNewMessageCount().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>(false) {

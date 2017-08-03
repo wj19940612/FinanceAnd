@@ -22,10 +22,10 @@ import butterknife.Unbinder;
 
 public class ChooseEconomicCircleNewsDialogFragment extends BaseDialogFragment {
 
-//    @BindView(R.id.economic_circle_news_list)
-//    AppCompatTextView mEconomicCircleNewsList;
-//    @BindView(R.id.cancel)
-//    AppCompatTextView mCancel;
+    @BindView(R.id.economic_circle_news_list)
+    AppCompatTextView mEconomicCircleNewsList;
+    @BindView(R.id.cancel)
+    AppCompatTextView mCancel;
 
     Unbinder unbinder;
 
@@ -38,18 +38,18 @@ public class ChooseEconomicCircleNewsDialogFragment extends BaseDialogFragment {
     }
 
 
-//    @OnClick({R.id.economic_circle_news_list, R.id.cancel})
-//    public void onViewClicked(View view) {
-//        switch (view.getId()) {
-//            case R.id.economic_circle_news_list:
-//                Launcher.with(getActivity(), EconomicCircleNewsActivity.class).execute();
-//                dismissAllowingStateLoss();
-//                break;
-//            case R.id.cancel:
-//                dismiss();
-//                break;
-//        }
-//    }
+    @OnClick({R.id.economic_circle_news_list, R.id.cancel})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.economic_circle_news_list:
+                Launcher.with(getActivity(), EconomicCircleNewsActivity.class).execute();
+                dismissAllowingStateLoss();
+                break;
+            case R.id.cancel:
+                dismiss();
+                break;
+        }
+    }
 
     @Override
     public void onDestroyView() {

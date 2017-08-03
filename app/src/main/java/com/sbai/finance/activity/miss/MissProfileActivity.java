@@ -39,6 +39,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.mediaPlayerUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -167,6 +168,12 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
         });
         mListView.addHeaderView(header);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayerUtil.release();
     }
 
     private void requestMissDetail() {
@@ -416,13 +423,6 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
 
-                mAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Launcher.with(context, MyQuestionsActivity.class).execute();
-                    }
-                });
-
                 Glide.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
@@ -443,6 +443,15 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                     mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
                 }
 
+                mMissAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, MissProfileActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
+                                .execute();
+                    }
+                });
+
                 mLoveNumber.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -458,6 +467,19 @@ public class MissProfileActivity extends BaseActivity implements AbsListView.OnS
                                 mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
                             }
                         }).fire();
+                    }
+                });
+
+                mVoice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (item.getIsPlaying() == false) {
+                            mediaPlayerUtil.play(item.getAnswerContext());
+                            item.setIsPlaying(true);
+                        } else {
+                            mediaPlayerUtil.release();
+                            item.setIsPlaying(false);
+                        }
                     }
                 });
             }
