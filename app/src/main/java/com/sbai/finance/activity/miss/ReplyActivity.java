@@ -33,7 +33,7 @@ public class ReplyActivity extends BaseActivity {
     TextView mPublish;
     private int mInvitationUserId;
     private int mDataId;
-    private int mReplyParentId;
+    private String mReplyParentId;
     private String mUserName;
 
     @Override
@@ -48,7 +48,7 @@ public class ReplyActivity extends BaseActivity {
     private void initData() {
         mInvitationUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
         mDataId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-        mReplyParentId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+        mReplyParentId = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
         mUserName = getIntent().getStringExtra(Launcher.EX_PAYLOAD_3);
     }
 
