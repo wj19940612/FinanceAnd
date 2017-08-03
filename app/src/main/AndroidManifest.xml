@@ -69,7 +69,6 @@
         <activity
             android:name=".activity.CatchCrashActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.economiccircle.OpinionDetailsActivity"
             android:screenOrientation="portrait"
@@ -78,12 +77,15 @@
             android:name=".activity.economiccircle.ContentImgActivity"
             android:screenOrientation="portrait"/>
 
-        <!--Login & Register-->
+        <!-- Login & Register -->
         <activity
             android:name=".activity.mine.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.AuthCodeActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 我的模块 -->
@@ -202,7 +204,6 @@
         <activity
             android:name=".activity.mine.cornucopia.EarningsAndExpendDetailsActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.future.FuturesListActivity"
             android:screenOrientation="portrait"/>
@@ -263,7 +264,6 @@
         <activity
             android:name=".activity.recharge.PayIntentionActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.stock.CompanyIntroActivity"
             android:screenOrientation="portrait"/>
@@ -348,7 +348,6 @@
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.miss.CommentActivity"
             android:screenOrientation="portrait"/>

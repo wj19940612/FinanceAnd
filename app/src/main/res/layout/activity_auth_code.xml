@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,78 +23,88 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/receivePhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="91dp"
-            android:text="@string/please_input_phone"
+            android:text="@string/auth_code_had_sent_"
             android:textColor="@color/unluckyText"
             android:textSize="20sp"/>
 
         <LinearLayout
+            android:id="@+id/authCodeArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:gravity="center_vertical"
-            android:minHeight="50dp">
+            android:minHeight="50dp"
+            android:visibility="visible">
 
             <EditText
-                android:id="@+id/phoneNumber"
-                style="@style/SignEditText.PhoneNum"
+                android:id="@+id/authCode"
+                style="@style/SignEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="@string/please_input_phone_number"/>
+                android:hint="@string/auth_code"
+                android:inputType="number"
+                android:maxLength="10"
+                android:paddingTop="10dp"/>
 
-            <ImageView
-                android:id="@+id/phoneNumberClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingLeft="10dp"
-                android:src="@drawable/ic_data_clear"
-                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/getAuthCode"
+                android:layout_width="93dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_auth_code_rounded"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="@string/get_auth_code"
+                android:textColor="@color/login_get_auth_code_color"/>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.3dp"
-            android:layout_marginTop="3dp"
+            android:background="@color/split"/>
+
+        <LinearLayout
+            android:id="@+id/passwordArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="50dp">
+
+            <EditText
+                android:id="@+id/password"
+                style="@style/SignEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:maxLength="18"/>
+
+            <ImageView
+                android:id="@+id/showPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_show_password"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
             android:background="@color/split"/>
 
         <TextView
-            android:id="@+id/next"
+            android:id="@+id/complete"
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_height"
             android:layout_marginTop="30dp"
             android:background="@drawable/btn_primary_rounded"
             android:enabled="false"
             android:gravity="center"
-            android:text="@string/next"
+            android:text="@string/complete"
             android:textColor="@android:color/white"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/protocolArea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/register_and_agree"
-            android:textColor="@color/unluckyText"
-            android:textSize="12sp"/>
-
-        <TextView
-            android:id="@+id/financeUserProtocol"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lemi_finance_user_protocol"
-            android:textColor="@color/blueAssist"
-            android:textSize="12sp"/>
     </LinearLayout>
 </RelativeLayout>

@@ -45,8 +45,8 @@
     <string name="login_ing">登录中</string>
     <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
-    <string name="login_hint">登录即表示同意</string>
-    <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
+    <string name="register_and_agree">注册即同意</string>
+    <string name="lemi_finance_user_protocol">《乐米金融用户协议》</string>
     <string name="confirm_agree">确认即同意</string>
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
     <string name="auth_code_login">验证码登录</string>
@@ -55,7 +55,8 @@
     <string name="register_free">免费注册</string>
     <string name="forget_password">忘记密码</string>
     <string name="please_input_phone">请输入手机号</string>
-
+    <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
+    
     <!--Home-->
     <string name="futures">期货</string>
     <string name="stock">股票</string>
@@ -471,7 +472,6 @@
     <string name="un_bind_bank_card_dialog_confirm">联系客服</string>
     <string name="text_number">%1$s(%2$s)</string>
     <string name="bind_bank_success_hint">银行卡信息已填写，交易后绑定</string>
-
 
     <string name="with_draw">提现</string>
     <string name="with_draw_hint">工作日两小时到账，具体请看    提现规则></string>
