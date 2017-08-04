@@ -154,6 +154,7 @@ public class MessagesActivity extends BaseActivity implements
     private void updateMessage(List<MissMessage> data) {
         stopRefreshAnimation();
         mNoReadCount = 0;
+        mMessageAdapter.clear();
         for (MissMessage missMessage : data) {
             if (mSet.add(missMessage.getId())) {
                 if (missMessage.getStatus() == MissMessage.NO_READ) {
