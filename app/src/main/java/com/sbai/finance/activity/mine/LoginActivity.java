@@ -31,8 +31,11 @@ import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PasswordInputFilter;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
+
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -265,7 +268,7 @@ public class LoginActivity extends BaseActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(password) || password.length() < 6) {
+        if (!isAuthCodeLogin() && (TextUtils.isEmpty(password) || password.length() < 6)) {
             return false;
         }
 
@@ -347,6 +350,7 @@ public class LoginActivity extends BaseActivity {
             mAuthCodeArea.setVisibility(View.GONE);
             mPasswordArea.setVisibility(View.VISIBLE);
             mPasswordLoginOperations.setVisibility(View.VISIBLE);
+            mAuthCode.setText("");
         } else {
             mPageTitle.setText(R.string.auth_code_login);
             mLoginSwitch.setText(R.string.password_login);
@@ -354,6 +358,7 @@ public class LoginActivity extends BaseActivity {
             mAuthCodeArea.setVisibility(View.VISIBLE);
             mPasswordArea.setVisibility(View.GONE);
             mPasswordLoginOperations.setVisibility(View.GONE);
+            mPassword.setText("");
         }
     }
 
@@ -372,6 +377,11 @@ public class LoginActivity extends BaseActivity {
         final String phoneNumber = getPhoneNumber();
         final String authCode = mAuthCode.getText().toString().trim();
         String password = mPassword.getText().toString();
+        try {
+            password = SecurityUtil.md5Encrypt(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         mLogin.setText(R.string.login_ing);
         mLoading.setVisibility(View.VISIBLE);

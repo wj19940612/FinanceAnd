@@ -237,7 +237,7 @@ public class Client {
      * @return
      */
     public static API authCodeLogin(String phone, String authCode) {
-        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("phone", phone)
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
@@ -252,7 +252,7 @@ public class Client {
      * @return
      */
     public static API login(String phone, String password) {
-        return new API("/user/registerLogin/login.do", new ApiParams()
+        return new API(POST, "/user/registerLogin/login.do", new ApiParams()
                 .put("phone", phone)
                 .put("password", password)
                 .put("deviceId", Preference.get().getPushClientId())
@@ -268,7 +268,7 @@ public class Client {
      * @return
      */
     public static API register(String phone, String password, String code) {
-        return new API("/user/registerLogin/reigster.do", new ApiParams()
+        return new API(POST, "/user/registerLogin/reigster.do", new ApiParams()
                 .put("phone", phone)
                 .put("password", password)
                 .put("code", code)
@@ -285,7 +285,7 @@ public class Client {
      * @return
      */
     public static API updateNewPassword(String phone, String password, String code) {
-        return new API("/user/user/forgetPassword.do", new ApiParams()
+        return new API(POST, "/user/user/forgetPassword.do", new ApiParams()
                 .put("phone", phone)
                 .put("password", password)
                 .put("code", code));
