@@ -146,6 +146,25 @@ public class MissMessage {
         private int id;
         private String userName;
         private String userPhone;
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPortrait() {
+            return portrait;
+        }
+
+        public void setPortrait(String portrait) {
+            this.portrait = portrait;
+        }
+
+        private String portrait;
 
         public int getId() {
             return id;
@@ -171,15 +190,16 @@ public class MissMessage {
             this.userPhone = userPhone;
         }
     }
-    public static class Data{
-        private String question;
 
-        public String getQuestion() {
-            return question;
+    public static class Data{
+        private String content;
+
+        public String getContent() {
+            return content;
         }
 
-        public void setQuestion(String question) {
-            this.question = question;
+        public void setContent(String content) {
+            this.content = content;
         }
     }
 }

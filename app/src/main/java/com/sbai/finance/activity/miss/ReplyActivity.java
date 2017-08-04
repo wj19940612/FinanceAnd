@@ -68,7 +68,7 @@ public class ReplyActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            if (TextUtils.isEmpty(mQuestionComment.getText())) {
+            if (TextUtils.isEmpty(mQuestionComment.getText().toString().trim())) {
                 mPublish.setEnabled(false);
                 mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
             } else if (mQuestionComment.getText().length() > 140) {

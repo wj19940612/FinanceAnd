@@ -57,16 +57,12 @@ public class EditWithWordLimitView extends LinearLayout {
 
     public void setOnTextChangeCallback(OnTextChangeCallback onTextChangeCallback) {
         mOnTextChangeCallback = onTextChangeCallback;
-        if (mEditText != null) {
-            mEditText.addTextChangedListener(mValidationWatcher);
-        }
+        mEditText.addTextChangedListener(mValidationWatcher);
     }
 
     public void removeTextChangeCallback() {
         mOnTextChangeCallback = null;
-        if (mEditText != null) {
-            mEditText.removeTextChangedListener(mValidationWatcher);
-        }
+        mEditText.removeTextChangedListener(mValidationWatcher);
     }
 
     private void processAttrs(AttributeSet attrs) {

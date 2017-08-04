@@ -83,6 +83,7 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
             mRewardMoneyContent.setOtherMoney(mRewardInfo.getMoney());
             mRewardMoneyContent.setSelectedIndex(3);
             mRewardMoney.setText(String.valueOf(mRewardInfo.getMoney()));
+            mConfirmReward.setEnabled(true);
         }
         if (mRewardInfo != null && mRewardInfo.getMoneyList() != null) {
             mRewardMoneyContent.setMoneyList(mRewardInfo.getMoneyList())
@@ -95,6 +96,7 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
             if (mRewardInfo.getIndex() >= 0 && mRewardInfo.getIndex() < 3) {
                 mRewardMoneyContent.setSelectedIndex(mRewardInfo.getIndex());
                 mRewardMoney.setText(String.valueOf(mRewardInfo.getMoneyList().get(mRewardInfo.getIndex()).getMoney()));
+                mConfirmReward.setEnabled(true);
             }
         }
 
@@ -104,6 +106,7 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
         if (mRewardInfo != null) {
             mRewardInfo.setIndex(index);
         }
+        mConfirmReward.setEnabled(true);
         switch (index) {
             case 0:
             case 1:
