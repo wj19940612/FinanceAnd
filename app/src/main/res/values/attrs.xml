@@ -138,8 +138,8 @@
     <declare-styleable name="EditWithWordLimitView">
         <attr name="showHint" format="reference|string"/>
         <attr name="hintColor" format="reference|color"/>
-        <attr name="textSize" format="dimension"/>
-        <attr name="textColor" format="reference|color"/>
+        <attr name="InputTextSize" format="dimension"/>
+        <attr name="InputTextColor" format="reference|color"/>
         <attr name="wordLimit" format="reference|integer"/>
         <attr name="wordWarnColor" format="color|reference"/>
         <attr name="wordTextColor" format="color|reference"/>
