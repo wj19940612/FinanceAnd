@@ -118,8 +118,8 @@
     <declare-styleable name="BattleProgress">
         <attr name="progressDrawable" format="reference|color"/>
         <attr name="orientation">
-            <enum name="horizontal" value="0" />
-            <enum name="vertical" value="1" />
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
         </attr>
         <attr name="rightPadding" format="dimension"/>
         <attr name="leftPadding" format="dimension"/>
@@ -133,5 +133,16 @@
         <attr name="leftLabelSize" format="dimension"/>
         <attr name="leftLabel" format="reference|string"/>
 
+    </declare-styleable>
+
+    <declare-styleable name="EditWithWordLimitView">
+        <attr name="showHint" format="reference|string"/>
+        <attr name="hintColor" format="reference|color"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColor" format="reference|color"/>
+        <attr name="wordLimit" format="reference|integer"/>
+        <attr name="wordWarnColor" format="color|reference"/>
+        <attr name="wordTextColor" format="color|reference"/>
+        <attr name="wordTextSize" format="dimension"/>
     </declare-styleable>
 </resources>

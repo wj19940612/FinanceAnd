@@ -23,7 +23,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -84,12 +83,6 @@ public class HistoryTestResultActivity extends BaseActivity {
                     }
                 })
                 .fire();
-        ArrayList<TestResultModel> testResultModels = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            TestResultModel testResultModel = new TestResultModel(System.currentTimeMillis() + i, i, "正确率" + i + i + "%,超过" + i + i + "的同学");
-            testResultModels.add(testResultModel);
-        }
-        updateHistoryTestResultList(testResultModels);
     }
 
     private void updateHistoryTestResultList(List<TestResultModel> data) {

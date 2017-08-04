@@ -17,54 +17,124 @@ public class ExamQuestionsModel implements Parcelable {
     public static final int RESULT_C = 2;
     public static final int RESULT_D = 3;
 
-    private String topic;
-    private int id;
 
-    public String getTopic() {
-        return topic;
+    /**
+     * analysis : 打算大苏打打算大苏打
+     * content : [{"content":"法撒旦发是的","id":892321037251899392,"right":false,"seq":1},{"content":"法撒旦发","id":892321037251899393,"right":true,"seq":2}]
+     * digest : fdsaa
+     * id : 5980309868fad7db045c8986
+     * levelRatio : 2.1
+     * modifyTime : 2017-08-01 17:48:08
+     * option : false
+     * status : 0
+     * title : 阿斯顿ASD阿斯顿ASD
+     * type : 2
+     * createTime : 2017-08-02 09:19:40
+     */
+
+    //题目解析
+    private String analysis;
+    private String digest;
+    private String id;
+    private double levelRatio;
+    private String modifyTime;
+    private boolean option;
+    private int status;
+    private String title;
+    private int type;
+    private String createTime;
+    private List<ContentBean> content;
+
+
+    public String getAnalysis() {
+        return analysis;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setAnalysis(String analysis) {
+        this.analysis = analysis;
     }
 
-    public int getId() {
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public List<DataBean> getDataList() {
-        return mDataList;
+    public double getLevelRatio() {
+        return levelRatio;
     }
 
-    public void setDataList(List<DataBean> dataList) {
-        mDataList = dataList;
+    public void setLevelRatio(double levelRatio) {
+        this.levelRatio = levelRatio;
     }
 
-    private List<DataBean> mDataList;
+    public String getModifyTime() {
+        return modifyTime;
+    }
 
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 
-    public static class DataBean implements Parcelable {
+    public boolean isOption() {
+        return option;
+    }
 
-        private boolean isSelect;
+    public void setOption(boolean option) {
+        this.option = option;
+    }
 
-        public String getResult() {
-            return result;
-        }
+    public int getStatus() {
+        return status;
+    }
 
-        public void setResult(String result) {
-            this.result = result;
-        }
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-        public DataBean(String result) {
-            this.result = result;
-        }
+    public String getTitle() {
+        return title;
+    }
 
-        private String result;
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public List<ContentBean> getContent() {
+        return content;
+    }
+
+    public void setContent(List<ContentBean> content) {
+        this.content = content;
+    }
+
+    public static class ContentBean implements Parcelable {
         public boolean isSelect() {
             return isSelect;
         }
@@ -73,7 +143,49 @@ public class ExamQuestionsModel implements Parcelable {
             isSelect = select;
         }
 
-        public DataBean() {
+        /**
+         * content : 法撒旦发是的
+         * id : 892321037251899392
+         * right : false
+         * seq : 1
+
+         */
+        private boolean isSelect;
+        private String content;
+        private long id;
+        private boolean right;
+        private int seq;
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public boolean isRight() {
+            return right;
+        }
+
+        public void setRight(boolean right) {
+            this.right = right;
+        }
+
+        public int getSeq() {
+            return seq;
+        }
+
+        public void setSeq(int seq) {
+            this.seq = seq;
         }
 
         @Override
@@ -83,26 +195,34 @@ public class ExamQuestionsModel implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeByte(this.isSelect ? (byte) 1 : (byte) 0);
-            dest.writeString(this.result);
+            dest.writeString(this.content);
+            dest.writeLong(this.id);
+            dest.writeByte(this.right ? (byte) 1 : (byte) 0);
+            dest.writeInt(this.seq);
         }
 
-        protected DataBean(Parcel in) {
-            this.isSelect = in.readByte() != 0;
-            this.result = in.readString();
+        public ContentBean() {
         }
 
-        public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
+        protected ContentBean(Parcel in) {
+            this.content = in.readString();
+            this.id = in.readLong();
+            this.right = in.readByte() != 0;
+            this.seq = in.readInt();
+        }
+
+        public static final Creator<ContentBean> CREATOR = new Creator<ContentBean>() {
             @Override
-            public DataBean createFromParcel(Parcel source) {
-                return new DataBean(source);
+            public ContentBean createFromParcel(Parcel source) {
+                return new ContentBean(source);
             }
 
             @Override
-            public DataBean[] newArray(int size) {
-                return new DataBean[size];
+            public ContentBean[] newArray(int size) {
+                return new ContentBean[size];
             }
         };
+
     }
 
     @Override
@@ -112,18 +232,34 @@ public class ExamQuestionsModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.topic);
-        dest.writeInt(this.id);
-        dest.writeTypedList(this.mDataList);
+        dest.writeString(this.analysis);
+        dest.writeString(this.digest);
+        dest.writeString(this.id);
+        dest.writeDouble(this.levelRatio);
+        dest.writeString(this.modifyTime);
+        dest.writeByte(this.option ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.status);
+        dest.writeString(this.title);
+        dest.writeInt(this.type);
+        dest.writeString(this.createTime);
+        dest.writeTypedList(this.content);
     }
 
     public ExamQuestionsModel() {
     }
 
     protected ExamQuestionsModel(Parcel in) {
-        this.topic = in.readString();
-        this.id = in.readInt();
-        this.mDataList = in.createTypedArrayList(DataBean.CREATOR);
+        this.analysis = in.readString();
+        this.digest = in.readString();
+        this.id = in.readString();
+        this.levelRatio = in.readDouble();
+        this.modifyTime = in.readString();
+        this.option = in.readByte() != 0;
+        this.status = in.readInt();
+        this.title = in.readString();
+        this.type = in.readInt();
+        this.createTime = in.readString();
+        this.content = in.createTypedArrayList(ContentBean.CREATOR);
     }
 
     public static final Creator<ExamQuestionsModel> CREATOR = new Creator<ExamQuestionsModel>() {

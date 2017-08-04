@@ -638,7 +638,7 @@
     <string name="pass">跳过</string>
     <!--姐说-->
     <string name="question">提问</string>
-    <string name="write_your_question_wait_miss_answer">写下你的问题，等待小姐姐们的回音哦~</string>
+    <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
     <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
@@ -678,6 +678,10 @@
     <string name="train_count">完成 %1$d 次</string>
     <string name="read_count">%1$d 次阅读</string>
     <string name="back">返回</string>
+    <string name="you_want_study">你想要学?</string>
+    <string name="we_will_provide_early">我们会尽快为您提供</string>
+    <string name="change_trains">换一批</string>
+    <string name="tell_platform">告诉平台</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>
@@ -693,4 +697,11 @@
     <string name="voice_time">%1$d秒</string>
     <string name="love_people_number">%1$d人喜欢</string>
     <string name="count">(%1$s)</string>
+    <string name="reply_someBody">回复%1$s :</string>
+    <string name="no_miss_reply">还没有小姐姐的回答哦~</string>
+    <string name="no_question">你还没提问过哦</string>
+    <string name="ask_question_to_miss">向小姐姐提问</string>
+    <string name="source_and_time">来源: %1$s    %2$s</string>
+
+
 </resources>

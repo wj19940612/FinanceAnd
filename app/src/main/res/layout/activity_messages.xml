@@ -14,11 +14,11 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:bottomHasSplitLine="true"
-        app:titleText="@string/message_remind"
         app:rightText="@string/all_read"
-        app:rightVisible="true"
         app:rightTextColor="@color/unluckyText"
-        app:rightTextSize="15sp"/>
+        app:rightTextSize="15sp"
+        app:rightVisible="true"
+        app:titleText="@string/message_remind"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -26,16 +26,38 @@
         android:layout_height="match_parent"
         android:background="@color/background">
 
-        <ListView
-            android:id="@+id/listView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:divider="@null"
-            android:dividerHeight="@dimen/common_padding"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding"
-            android:scrollbars="none"/>
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:divider="@null"
+                android:dividerHeight="@dimen/common_padding"
+                android:paddingLeft="@dimen/common_padding"
+                android:paddingRight="@dimen/common_padding"
+                android:scrollbars="none"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:drawablePadding="25dp"
+                android:drawableTop="@drawable/img_no_message"
+                android:gravity="center_horizontal"
+                android:paddingTop="150dp"
+                android:text="@string/now_not_has_data"
+                android:textColor="@color/assistText"
+                android:textSize="@dimen/navigate_size"
+                android:visibility="gone"/>
+        </LinearLayout>
+
 
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

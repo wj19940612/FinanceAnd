@@ -34,6 +34,16 @@ public class MissMessage {
     private int userId;
     private int status;
     private Data data;
+    private int dataId;
+
+    public int getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
+    }
+
     public boolean isNoRead() {
         return status == NO_READ;
     }

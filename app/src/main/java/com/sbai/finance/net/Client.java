@@ -1764,13 +1764,28 @@ public class Client {
     }
 
     //请求参加水平测试人数
+
+    /**
+     * /train/evaluate/FinishCount.do
+     * 完成测评的人数
+     *
+     * @return
+     */
     public static API requestJoinTestedNumber() {
-        return new API("");
+        return new API("/train/evaluate/FinishCount.do");
     }
 
     //请求测试题库
+
+    /**
+     * /train/evaluate/topic.do
+     * GET
+     * 获取题目
+     *
+     * @return
+     */
     public static API requestExamQuestions() {
-        return new API("");
+        return new API("/train/evaluate/topic.do");
     }
 
     //提交水平测试答案接口
@@ -1783,8 +1798,15 @@ public class Client {
         return new API("");
     }
 
+    /**
+     * /train/evaluate/historyLog.do
+     * GET
+     * 历史测评
+     *
+     * @return
+     */
     public static API requestHistoryTestResultList() {
-        return new API("");
+        return new API("/train/evaluate/historyLog.do");
     }
 
     /**
@@ -1842,7 +1864,7 @@ public class Client {
      * @param dataId
      * @return
      */
-    public static API addComment(int invitationUserId, Integer replyParentId, String content, int dataId) {
+    public static API addComment(int invitationUserId, String replyParentId, String content, int dataId) {
         return new API(POST, "/user/comment/insertComment.do", new ApiParams()
                 .put("invitationUserId", invitationUserId)
                 .put("replyParentId", replyParentId)
@@ -1914,7 +1936,7 @@ public class Client {
      *
      * @return
      */
-    public static API getDailyReportDetail(int id) {
+    public static API getDailyReportDetail(String id) {
         return new API(POST, "/user/dailyReport/showDetail.do", new ApiParams()
                 .put("id", id));
     }
@@ -2020,6 +2042,19 @@ public class Client {
                         .put("dataId", dataId)
                         .put("page", page)
                         .put("pageSize", pageSize)
+        );
+    }
+
+    /**
+     * 提问详情
+     *
+     * @param questionId
+     * @return
+     */
+    public static API getQuestionDetails(int questionId) {
+        return new API("/explain/question/questionInfo.do",
+                new ApiParams()
+                        .put("questionId", questionId)
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.leveltest;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.leveltest.ExamQuestionsModel;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.itemAnimator.BaseItemAnimator;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -36,7 +38,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
     private ArrayList<ExamQuestionsModel> mExamQuestionsModelList;
     private int mExamPosition = 0;
     private ExamQuestionsAdapter mExamQuestionsAdapter;
-    private ExamQuestionsModel.DataBean mSelectResult;
+    private ExamQuestionsModel.ContentBean mSelectResult;
     private int mSelectPosition = -1;
 
     @Override
@@ -46,16 +48,13 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         ButterKnife.bind(this);
         mTitleBar.setTitleSize(17);
         mExamQuestionsModelList = getIntent().getParcelableArrayListExtra(Launcher.EX_PAYLOAD);
-
-        mExamQuestionsAdapter = new ExamQuestionsAdapter(new ArrayList<ExamQuestionsModel.DataBean>());
+        mExamQuestionsAdapter = new ExamQuestionsAdapter(new ArrayList<ExamQuestionsModel.ContentBean>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mExamQuestionsAdapter);
-//        DISAPPEARING
         mRecyclerView.setItemAnimator(new BaseItemAnimator());
-//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mExamQuestionsAdapter.setOnExamResultSelectListener(new ExamQuestionsAdapter.OnExamResultSelectListener() {
             @Override
-            public void onExamResultSelect(ExamQuestionsModel.DataBean examQuestionsModel, int position) {
+            public void onExamResultSelect(ExamQuestionsModel.ContentBean examQuestionsModel, int position) {
                 if (mSelectPosition != position && mSelectPosition != -1) {
                     if (mSelectResult != null) {
                         mSelectResult.setSelect(false);
@@ -81,8 +80,8 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         if (hasExamQuestions() && mExamPosition <= mExamQuestionsModelList.size()) {
             ExamQuestionsModel examQuestionsModel = mExamQuestionsModelList.get(mExamPosition);
             if (examQuestionsModel != null) {
-                mExam.setText(examQuestionsModel.getTopic());
-                List<ExamQuestionsModel.DataBean> dataList = examQuestionsModel.getDataList();
+                mExam.setText(examQuestionsModel.getTitle());
+                List<ExamQuestionsModel.ContentBean> dataList = examQuestionsModel.getContent();
                 if (dataList != null && !dataList.isEmpty()) {
                     mExamQuestionsAdapter.updateData(dataList);
                 }
@@ -145,18 +144,18 @@ public class LevelExamQuestionsActivity extends BaseActivity {
     static class ExamQuestionsAdapter extends RecyclerView.Adapter<ExamQuestionsAdapter.ExamQuestionsViewHolder> {
 
         static interface OnExamResultSelectListener {
-            void onExamResultSelect(ExamQuestionsModel.DataBean examQuestionsModel, int position);
+            void onExamResultSelect(ExamQuestionsModel.ContentBean examQuestionsModel, int position);
         }
 
         public OnExamResultSelectListener mOnExamResultSelectListener;
 
-        private ArrayList<ExamQuestionsModel.DataBean> mExamQuestionsModelList;
+        private ArrayList<ExamQuestionsModel.ContentBean> mExamQuestionsModelList;
 
-        public ExamQuestionsAdapter(ArrayList<ExamQuestionsModel.DataBean> examQuestionsModelArrayList) {
+        public ExamQuestionsAdapter(ArrayList<ExamQuestionsModel.ContentBean> examQuestionsModelArrayList) {
             mExamQuestionsModelList = examQuestionsModelArrayList;
         }
 
-        public void updateData(List<ExamQuestionsModel.DataBean> examQuestionsModels) {
+        public void updateData(List<ExamQuestionsModel.ContentBean> examQuestionsModels) {
             notifyItemMoved(0, mExamQuestionsModelList.size());
             mExamQuestionsModelList.clear();
             mExamQuestionsModelList.addAll(examQuestionsModels);
@@ -190,30 +189,50 @@ public class LevelExamQuestionsActivity extends BaseActivity {
             TextView mResult;
             @BindView(R.id.card)
             CardView mCard;
+            @BindView(R.id.resultTitle)
+            TextView mResultTitle;
 
             ExamQuestionsViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final ExamQuestionsModel.DataBean examQuestionsModel, final OnExamResultSelectListener onExamResultSelectListener, final int position) {
+            public void bindDataWithView(final ExamQuestionsModel.ContentBean examQuestionsModel,
+                                         final OnExamResultSelectListener onExamResultSelectListener,
+                                         final int position) {
                 if (examQuestionsModel == null) return;
-                mResult.setText(examQuestionsModel.getResult());
                 mResult.setSelected(examQuestionsModel.isSelect());
+                mResult.setText(SecurityUtil.AESDecrypt(examQuestionsModel.getContent()));
+                mResultTitle.setText(examQuestionsModel.getSeq());
                 mCard.setBackgroundResource(R.drawable.bg_white_rounded_eight_radius);
-//                mCard.setBackgroundResource(R.drawable.bg_white_rounded_shade);
                 mCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mCard.setBackgroundResource(R.drawable.bg_color_primary_rounded);
                         mResult.setSelected(true);
-                        examQuestionsModel.setSelect(true);
+                        mResultTitle.setTextColor(Color.WHITE);
                         if (onExamResultSelectListener != null) {
                             onExamResultSelectListener.onExamResultSelect(examQuestionsModel, position);
                         }
                     }
                 });
             }
+
+            /**
+             * 将1 转为A
+             * 2  转为B
+             *
+             * @param number
+             */
+            private String getQuestionsNumber(int number) {
+                String[] strings = {"A", "B", "C", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"
+                        , "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+                if (number < 26) {
+                    return strings[number - 1];
+                }
+                return "";
+            }
+
         }
     }
 

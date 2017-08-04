@@ -5,6 +5,7 @@ package com.sbai.finance.model;
  */
 
 public class DailyReport {
+    public static final int HTML=1;
 
     /**
      * clicks : 0

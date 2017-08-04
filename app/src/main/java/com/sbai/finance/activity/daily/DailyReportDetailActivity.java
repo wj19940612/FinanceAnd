@@ -17,12 +17,17 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.dialog.ShareDialogFragment;
+import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.EventModel;
 import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.net.Callback2D;
@@ -31,7 +36,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
-import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,32 +50,40 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 public class DailyReportDetailActivity extends BaseActivity {
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
-
-    public static final String EX_URL = "url";
-    public static final String EX_TITLE = "title";
-    public static String EX_RAW_COOKIE = "rawCookie";
-    public static final String EX_EVENT = "event";
-    public static final String EX_STOCK_NEWS = "stock_news";
-
-    @BindView(R.id.eventTitle)
-    TextView mEventTitle;
-    @BindView(R.id.timeAndSource)
-    TextView mTimeAndSource;
-    @BindView(R.id.progress)
-    ProgressBar mProgress;
+    public static final String EX_ID = "id";
+    public static final String EX_RAW_COOKIE = "rawCookie";
+    public static final String EX_FORMAT = "format";
+    @BindView(R.id.image)
+    ImageView mImage;
+    @BindView(R.id.click)
+    TextView mClick;
+    @BindView(R.id.title)
+    TextView mTitle;
+    @BindView(R.id.sourceAndTime)
+    TextView mSourceAndTime;
+    @BindView(R.id.titleArea)
+    LinearLayout mTitleArea;
     @BindView(R.id.webView)
     WebView mWebView;
+    @BindView(R.id.progress)
+    ProgressBar mProgress;
+    @BindView(R.id.refreshButton)
+    Button mRefreshButton;
     @BindView(R.id.errorPage)
     LinearLayout mErrorPage;
-    @BindView(R.id.eventTitleInfo)
-    LinearLayout mEventTitleInfo;
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
+    @BindView(R.id.back)
+    TextView mBack;
+    @BindView(R.id.share)
+    TextView mShare;
+    @BindView(R.id.bottom)
+    LinearLayout mBottom;
+
     private boolean mLoadSuccess;
     protected String mPageUrl;
-    protected String mTitle;
     protected String mRawCookie;
     protected String mPureHtml;
+    private String mId;
+    private int mFormat;
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
@@ -88,71 +100,82 @@ public class DailyReportDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detail);
+        setContentView(R.layout.activity_daily_report_detail);
         ButterKnife.bind(this);
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
-        EventModel event = (EventModel) getIntent().getSerializableExtra(EX_EVENT);
-        StockNewsInfoModel stockNewsInfoModel = getIntent().getParcelableExtra(EX_STOCK_NEWS);
-        mRawCookie = getIntent().getStringExtra(EX_RAW_COOKIE);
-
-
-        initData(event);
-        initStockNewsData(stockNewsInfoModel);
-        String eventId = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
-        if (!TextUtils.isEmpty(eventId)) {
-            Client.getBigEventContent(eventId)
-                    .setIndeterminate(this)
-                    .setTag(TAG)
-                    .setCallback(new Callback2D<Resp<EventModel>, EventModel>() {
-                        @Override
-                        protected void onRespSuccessData(EventModel data) {
-                            initData(data);
-                            initWebView();
-                        }
-                    })
-                    .fireFree();
-        }
-        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWebView.scrollTo(0,0);
-            }
-        });
+        initData(getIntent());
+        initView();
         initWebView();
+        requestDailyReportDetail();
     }
 
-    private void initStockNewsData(StockNewsInfoModel stockNewsInfoModel) {
-        if (stockNewsInfoModel != null) {
-            mTitleBar.setTitle(R.string.stock_news);
-            mEventTitleInfo.setVisibility(View.VISIBLE);
-            mEventTitle.setText(stockNewsInfoModel.getTitle());
+    private void requestDailyReportDetail() {
+        if (TextUtils.isEmpty(mId)) return;
+        Client.getDailyReportDetail(mId).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<DailyReport>, DailyReport>() {
+                    @Override
+                    protected void onRespSuccessData(DailyReport data) {
+                        updateDailyReportData(data);
+                    }
+                }).fireFree();
+    }
 
-            if (TextUtils.isEmpty(stockNewsInfoModel.getFrom())) {
-                mTimeAndSource.setText(DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
-            } else {
-                mTimeAndSource.setText(DateUtil.getFormatTime(stockNewsInfoModel.getTime()));
-            }
-            mPureHtml = stockNewsInfoModel.getContent();
+    private void updateDailyReportData(DailyReport data) {
+        if (data.isHtml()) {
+            mTitleArea.setVisibility(View.VISIBLE);
+            mClick.setText(getString(R.string.read_count, data.getClicks()));
+            Glide.with(getActivity())
+                    .load(data.getCoverUrl())
+                    .into(mImage);
+            mTitle.setText(data.getTitle());
+            mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getFormatTime(data.getCreateTime())));
+            mPureHtml = data.getContent();
+        } else {
+            mTitleArea.setVisibility(View.GONE);
+            mPageUrl = data.getContent();
+        }
+        loadPage();
+    }
+
+    private void initView() {
+        if (mFormat == DailyReport.HTML) {
+            mTitleArea.setVisibility(View.GONE);
         }
     }
 
-    protected void initData(EventModel event) {
-        if (event != null) {
-            if (!event.isH5Style()) {
-                mEventTitleInfo.setVisibility(View.VISIBLE);
-                mEventTitle.setText(event.getTitle());
+    protected void initData(Intent intent) {
+        mRawCookie = intent.getStringExtra(EX_RAW_COOKIE);
+        mId = intent.getStringExtra(EX_ID);
+        mFormat = intent.getIntExtra(EX_FORMAT, 0);
+    }
 
-                if (TextUtils.isEmpty(event.getSource())) {
-                    mTimeAndSource.setText(DateUtil.getFormatTime(event.getCreateTime()));
-                } else {
-                    mTimeAndSource.setText(event.getSource() + "  " + DateUtil.getFormatTime(event.getCreateTime()));
-                }
-                mPureHtml = event.getContent();
-            } else {
-                mEventTitleInfo.setVisibility(View.GONE);
-                mPageUrl = event.getUrl();
-            }
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
+        mWebView.onPause();
+    }
+
+    @OnClick({R.id.back, R.id.share, R.id.refreshButton})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.share:
+                ShareDialogFragment.newInstance().show(getSupportFragmentManager());
+                break;
+            case R.id.refreshButton:
+                mWebView.reload();
+                break;
         }
     }
 
@@ -232,9 +255,6 @@ public class DailyReportDetailActivity extends BaseActivity {
                 }
             }
         });
-
-
-        loadPage();
     }
 
     protected void loadPage() {
@@ -281,25 +301,6 @@ public class DailyReportDetailActivity extends BaseActivity {
             }
         }
     }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
-        mWebView.onPause();
-    }
-
-    @OnClick(R.id.refreshButton)
-    public void onClick() {
-        mWebView.reload();
-    }
-
 
     protected class WebViewClient extends android.webkit.WebViewClient {
 
