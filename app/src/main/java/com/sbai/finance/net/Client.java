@@ -1764,13 +1764,9 @@ public class Client {
     }
 
     /**
-     * 获取小姐姐列表
-     * <p>
-     * =======
      * <p>
      * /**
      * 获取小姐姐列表
-     * >>>>>>> dev
      *
      * @return
      */
@@ -2011,5 +2007,14 @@ public class Client {
                 new ApiParams()
                         .put("questionId", questionId)
         );
+    }
+
+    //获取用户分数情况
+    public static API requestUserScore() {
+        return new API("");
+    }
+
+    public static API requestTrainProjectList() {
+        return new API("");
     }
 }
