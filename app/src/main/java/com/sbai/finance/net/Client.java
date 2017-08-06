@@ -1887,7 +1887,7 @@ public class Client {
      *
      * @return
      */
-    public static API getDailyReportDetail(int id) {
+    public static API getDailyReportDetail(String id) {
         return new API(POST, "/user/dailyReport/showDetail.do", new ApiParams()
                 .put("id", id));
     }

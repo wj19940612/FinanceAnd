@@ -100,7 +100,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		requestMyQuestionList();
 	}
 
 	private void initRewardInfo() {
@@ -352,7 +352,11 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 						}).fire();
 					}
 				});
-
+				if (Preference.get().getAnswerIds()!=null&&Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
+					mVoice.setTextColor(Color.parseColor("#999999"));
+				} else {
+					mVoice.setTextColor(Color.parseColor("#55adff"));
+				}
 
 				mVoice.setOnClickListener(new View.OnClickListener() {
 					@Override

@@ -619,8 +619,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
                 mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
                 mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
-
-                if (Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
+                if (Preference.get().getAnswerIds()!=null&&Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
                     mVoice.setTextColor(Color.parseColor("#999999"));
                 } else {
                     mVoice.setTextColor(Color.parseColor("#55adff"));

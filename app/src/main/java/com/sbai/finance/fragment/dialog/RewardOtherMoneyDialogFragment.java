@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -89,6 +90,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout((int) (dm.widthPixels * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
         }
+        mOtherMoneyContent.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         mOtherMoneyContent.addTextChangedListener(mValidationWatcher);
     }
 
@@ -96,7 +98,10 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mOtherMoneyContent.removeTextChangedListener(mValidationWatcher);
-        if (mOtherMoneyContent.getText().toString().isEmpty()) {
+        String content = mOtherMoneyContent.getText().toString();
+        if (content.isEmpty() || content.length() > 15
+                || Long.valueOf(content.replace(",", "")) < 10
+                || Long.valueOf(content.replace(",", "")) > 10000000) {
             RewardMissDialogFragment.newInstance()
                     .show(getActivity().getSupportFragmentManager());
         } else {

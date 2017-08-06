@@ -622,7 +622,7 @@
     <string name="number_ge">%1$s个</string>
     <!--姐说-->
     <string name="question">提问</string>
-    <string name="question_reward_will_gain_money">每次问题被打打赏,可以获得一半的赏金哦~</string>
+    <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
     <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
@@ -662,6 +662,11 @@
     <string name="train_count">完成 %1$d 次</string>
     <string name="read_count">%1$d 次阅读</string>
     <string name="back">返回</string>
+    <string name="you_want_study">你想要学?</string>
+    <string name="we_will_provide_early">我们会尽快为您提供</string>
+    <string name="change_trains">换一批</string>
+    <string name="tell_platform">告诉平台</string>
+    <string name="other_you_want_study">其他想要的训练项目</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>
@@ -691,4 +696,7 @@
     <string name="to_login">去登陆</string>
     <string name="not_join_train">还未进行训练</string>
     <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
+    <string name="source_and_time">来源: %1$s    %2$s</string>
+
+
 </resources>

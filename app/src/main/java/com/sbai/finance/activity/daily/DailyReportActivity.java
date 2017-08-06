@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.daily;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,8 +25,10 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.CookieManger;
 
 import java.util.HashSet;
 import java.util.List;
@@ -76,6 +80,19 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
         mSwipeRefreshLayout.setAdapter(mListView, mDailyReportAdapter);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mDailyReportAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DailyReport dailyReport = (DailyReport) parent.getItemAtPosition(position);
+                if (dailyReport!=null){
+                    Launcher.with(getActivity(), DailyReportDetailActivity.class)
+                            .putExtra(DailyReportDetailActivity.EX_FORMAT, dailyReport.getFormat())
+                            .putExtra(DailyReportDetailActivity.EX_ID,dailyReport.getId())
+                            .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                }
+            }
+        });
     }
 
     @Override
