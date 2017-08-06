@@ -59,7 +59,7 @@
         android:background="@drawable/btn_auth_code_rounded"
         android:gravity="center"
         android:text="@string/start_test"
-        android:textColor="@color/yellowGradientStart"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp"/>
 
     <TextView

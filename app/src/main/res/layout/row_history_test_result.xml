@@ -5,25 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background"
     android:orientation="vertical">
 
-    <Space
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="12dp"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="12dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="3dp"
         android:background="@android:color/white"
         android:foreground="?android:attr/selectableItemBackground"
         android:minHeight="100dp"
         android:orientation="vertical"
         app:cardCornerRadius="@dimen/eight_radius"
-        app:cardElevation="3dp"
+        app:cardElevation="1dp"
         app:cardMaxElevation="4dp"
         app:contentPadding="@dimen/common_padding"
         app:contentPaddingBottom="9dp">

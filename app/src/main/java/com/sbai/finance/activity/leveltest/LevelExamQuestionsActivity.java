@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,17 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.leveltest.ExamQuestionsModel;
+import com.sbai.finance.model.leveltest.TestAnswerUtils;
+import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.itemAnimator.BaseItemAnimator;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,34 +45,75 @@ public class LevelExamQuestionsActivity extends BaseActivity {
     private ExamQuestionsModel.ContentBean mSelectResult;
     private int mSelectPosition = -1;
 
+
+    //{"answers":[{"answerIds":[{"optionId":892321037251899393}],"topicId":"5980309868fad7db045c8986"}]}
+    //answerIds 可能有多个答案 optionId 选择的答案ID
+
+    private TestAnswerUtils mTestAnswerUtils;
+    private ArrayList<TestAnswerUtils.AnswersBean> mTestAnswerList;
+    private ExamQuestionsModel mSelectQuestion;
+
+    private ArrayList<ExamQuestionsModel.ContentBean> mContentBeenList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_exam_questions);
         ButterKnife.bind(this);
+
+
+        mContentBeenList = new ArrayList<ExamQuestionsModel.ContentBean>();
+        mTestAnswerUtils = new TestAnswerUtils();
+        mTestAnswerList = new ArrayList<>();
+
         mTitleBar.setTitleSize(17);
         mExamQuestionsModelList = getIntent().getParcelableArrayListExtra(Launcher.EX_PAYLOAD);
-        mExamQuestionsAdapter = new ExamQuestionsAdapter(new ArrayList<ExamQuestionsModel.ContentBean>());
+        mExamQuestionsAdapter = new ExamQuestionsAdapter(mContentBeenList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mExamQuestionsAdapter);
         mRecyclerView.setItemAnimator(new BaseItemAnimator());
+
         mExamQuestionsAdapter.setOnExamResultSelectListener(new ExamQuestionsAdapter.OnExamResultSelectListener() {
             @Override
             public void onExamResultSelect(ExamQuestionsModel.ContentBean examQuestionsModel, int position) {
-                if (mSelectPosition != position && mSelectPosition != -1) {
-                    if (mSelectResult != null) {
-                        mSelectResult.setSelect(false);
-                        mExamQuestionsAdapter.notifyItemChanged(mSelectPosition, mSelectResult);
-                    }
-                }
-                mSelectResult = examQuestionsModel;
-                mSelectPosition = position;
-                confirmResult(0);
+                changeExam(examQuestionsModel, position);
             }
-
         });
         changeExamProgress();
         updateExam();
+    }
+
+    private void changeExam(ExamQuestionsModel.ContentBean examQuestionsModel, int position) {
+        if (mSelectPosition != position && mSelectPosition != -1) {
+            if (mSelectResult != null) {
+                mSelectResult.setSelect(false);
+                mExamQuestionsAdapter.notifyItemChanged(mSelectPosition, mSelectResult);
+            }
+        }
+        saveSelectedResult(examQuestionsModel);
+        mSelectResult = examQuestionsModel;
+        mSelectPosition = position;
+        selectResult();
+    }
+
+    //组装答案
+    private void saveSelectedResult(ExamQuestionsModel.ContentBean examQuestionsModel) {
+
+        TestAnswerUtils.AnswersBean.AnswerIdsBean answerIdsBean = new TestAnswerUtils.AnswersBean.AnswerIdsBean();
+        answerIdsBean.setOptionId(examQuestionsModel.getId());
+
+        ArrayList<TestAnswerUtils.AnswersBean.AnswerIdsBean> answerIdsBeen = new ArrayList<>();
+        answerIdsBeen.add(answerIdsBean);
+
+        TestAnswerUtils.AnswersBean answersBean = new TestAnswerUtils.AnswersBean();
+        if (mSelectQuestion != null) {
+            answersBean.setTopicId(mSelectQuestion.getId());
+        }
+        answersBean.setAnswerIds(answerIdsBeen);
+        if (mExamPosition == mExamQuestionsModelList.size()) {
+            mTestAnswerList.remove(mExamPosition - 1);
+        }
+        mTestAnswerList.add(answersBean);
     }
 
     private boolean hasExamQuestions() {
@@ -78,10 +123,10 @@ public class LevelExamQuestionsActivity extends BaseActivity {
 
     private void updateExam() {
         if (hasExamQuestions() && mExamPosition <= mExamQuestionsModelList.size()) {
-            ExamQuestionsModel examQuestionsModel = mExamQuestionsModelList.get(mExamPosition);
-            if (examQuestionsModel != null) {
-                mExam.setText(examQuestionsModel.getTitle());
-                List<ExamQuestionsModel.ContentBean> dataList = examQuestionsModel.getContent();
+            mSelectQuestion = mExamQuestionsModelList.get(mExamPosition);
+            if (mSelectQuestion != null) {
+                mExam.setText(mSelectQuestion.getTitle());
+                ArrayList<ExamQuestionsModel.ContentBean> dataList = mSelectQuestion.getContent();
                 if (dataList != null && !dataList.isEmpty()) {
                     mExamQuestionsAdapter.updateData(dataList);
                 }
@@ -115,51 +160,79 @@ public class LevelExamQuestionsActivity extends BaseActivity {
 
 
     //提交答案
-    private void confirmResult(int result) {
+    private void selectResult() {
         if (!hasExamQuestions()) return;
-
-        // TODO: 2017/8/1 调用提交答案接口
-//        Client.confirmLevelTestResult()
-//                .setTag(TAG)
-//                .setIndeterminate(this)
-//                .setCallback(new Callback<Resp<Object>>() {
-//                    @Override
-//                    protected void onRespSuccess(Resp<Object> resp) {
-        mExamPosition++;
+        if (mExamPosition < mExamQuestionsModelList.size()) {
+            mExamPosition++;
+        }
         if (mExamPosition == mExamQuestionsModelList.size()) {
-            // TODO: 2017/8/1 打开结果页面
-            Launcher.with(getActivity(), ExamResultActivity.class).execute();
-            finish();
+            confirmResult();
         } else {
             updateExam();
             changeExamProgress();
         }
-//                    }
-//                })
-//                .fireFree();
+    }
+
+    private void confirmResult() {
+        mTestAnswerUtils.setAnswers(mTestAnswerList);
+        Client.confirmLevelTestResult(mTestAnswerUtils)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<TestResultModel>, TestResultModel>() {
+                    @Override
+                    protected void onRespSuccessData(TestResultModel data) {
+                        Launcher.with(getActivity(), ExamResultActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, data)
+                                .execute();
+                        finish();
+                    }
+                })
+                .fire();
+
+        Log.d(TAG, "confirmResult: " + mTestAnswerUtils.toString());
+
+
+        // TODO: 2017/8/6 模拟数据
+//        TestResultModel testResultModel = new TestResultModel();
+//        testResultModel.setAllAccuracy(0.50);
+//        testResultModel.setPassPercent(0.20);
+//        testResultModel.setLevel(4);
+//
+//        testResultModel.setBaseAccuracy(0.3);
+//        testResultModel.setProfitAccuracy(0.2);
+//        testResultModel.setRiskAccuracy(0.2);
+//        testResultModel.setSkillAccuracy(0.2);
+//        testResultModel.setTheoryAccuracy(0.1);
+//        Launcher.with(getActivity(), ExamResultActivity.class)
+//                .putExtra(Launcher.EX_PAYLOAD, testResultModel)
+//                .execute();
+//        finish();
 
     }
 
 
     static class ExamQuestionsAdapter extends RecyclerView.Adapter<ExamQuestionsAdapter.ExamQuestionsViewHolder> {
 
-        static interface OnExamResultSelectListener {
+        interface OnExamResultSelectListener {
             void onExamResultSelect(ExamQuestionsModel.ContentBean examQuestionsModel, int position);
         }
 
         public OnExamResultSelectListener mOnExamResultSelectListener;
 
         private ArrayList<ExamQuestionsModel.ContentBean> mExamQuestionsModelList;
+        private int mShowCount;
 
         public ExamQuestionsAdapter(ArrayList<ExamQuestionsModel.ContentBean> examQuestionsModelArrayList) {
             mExamQuestionsModelList = examQuestionsModelArrayList;
         }
 
-        public void updateData(List<ExamQuestionsModel.ContentBean> examQuestionsModels) {
-            notifyItemMoved(0, mExamQuestionsModelList.size());
+        public void updateData(ArrayList<ExamQuestionsModel.ContentBean> examQuestionsModels) {
             mExamQuestionsModelList.clear();
             mExamQuestionsModelList.addAll(examQuestionsModels);
-            notifyItemRangeChanged(0, mExamQuestionsModelList.size());
+            notifyDataSetChanged();
+//            mExamQuestionsModelList = examQuestionsModels;
+//            notifyItemRangeChanged(0, mExamQuestionsModelList.size());
+//            mShowCount = examQuestionsModels.size();
         }
 
         public void setOnExamResultSelectListener(OnExamResultSelectListener onExamResultSelectListener) {
@@ -182,6 +255,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         @Override
         public int getItemCount() {
             return mExamQuestionsModelList != null ? mExamQuestionsModelList.size() : 0;
+//            return mShowCount;
         }
 
         static class ExamQuestionsViewHolder extends RecyclerView.ViewHolder {
@@ -202,8 +276,9 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                                          final int position) {
                 if (examQuestionsModel == null) return;
                 mResult.setSelected(examQuestionsModel.isSelect());
-                mResult.setText(SecurityUtil.AESDecrypt(examQuestionsModel.getContent()));
-                mResultTitle.setText(examQuestionsModel.getSeq());
+                mResult.setText(examQuestionsModel.getContent());
+                mResultTitle.setText(getQuestionsNumber(examQuestionsModel.getSeq()));
+                mResultTitle.setTextColor(Color.parseColor("#222222"));
                 mCard.setBackgroundResource(R.drawable.bg_white_rounded_eight_radius);
                 mCard.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -235,5 +310,6 @@ public class LevelExamQuestionsActivity extends BaseActivity {
 
         }
     }
+
 
 }

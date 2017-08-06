@@ -9,17 +9,16 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
-import static android.content.ContentValues.TAG;
+import com.sbai.finance.model.leveltest.TestResultModel;
 
 /**
  * Created by ${wangJie} on 2017/8/2.
  */
 
-public class CreditScoreView extends View {
+public class ScoreView extends View {
 
     //数据个数
     private int DataCount = 5;
@@ -32,14 +31,11 @@ public class CreditScoreView extends View {
     //中心Y坐标
     private int mCenterY;
     //各维度标题
-    private String[] mTitles = {"盈利能力", "信用历史", "基本面分析", "指标分析", "理论掌握"};
-    //各维度图标
-//    private int[] icons = {R.mipmap.ic_performance, R.mipmap.ic_history, R.mipmap.ic_contacts,
-//            R.mipmap.ic_predilection, R.mipmap.ic_identity};
+    private String[] mTitles = {"盈利能力", "风险控制", "基本面分析", "指标分析", "理论掌握"};
     //各维度分值
-    private float[] data = {170, 180, 160, 170, 180};
+    private double[] mData;
     //数据最大值
-    private float mMaxValue = 280;
+    private float mMaxValue;
     //雷达图与标题的间距
     private int mRadarMargin;
     //雷达区画笔
@@ -70,15 +66,15 @@ public class CreditScoreView extends View {
     //内圆环直径
     private int mInsideLoopRadius;
 
-    public CreditScoreView(Context context) {
+    public ScoreView(Context context) {
         this(context, null);
     }
 
-    public CreditScoreView(Context context, AttributeSet attrs) {
+    public ScoreView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CreditScoreView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ScoreView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -163,40 +159,18 @@ public class CreditScoreView extends View {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         drawCircle(canvas);
-        drawPolygon(canvas);
         drawLines(canvas);
         drawRegion(canvas);
         drawScore(canvas);
         drawTitle(canvas);
-        drawIcon(canvas);
     }
 
     private void drawCircle(Canvas canvas) {
-        Log.d(TAG, "drawCircle: " + mInsideLoopRadius + " " + mRadius);
         canvas.drawCircle(mCenterX, mCenterY, mInsideLoopRadius, mInsideLoopPaint);
         canvas.drawCircle(mCenterX, mCenterY, mInsideLoopRadius - 2, mInsideCirclePaint);
         canvas.drawCircle(mCenterX, mCenterY, mRadius, mOutCirclePaint);
     }
 
-    /**
-     * 绘制多边形
-     *
-     * @param canvas 画布
-     */
-    private void drawPolygon(Canvas canvas) {
-//        Path path = new Path();
-//        for (int i = 0; i < DataCount; i++) {
-//            if (i == 0) {
-//                path.moveTo(getPoint(i).x, getPoint(i).y);
-//            } else {
-//                path.lineTo(getPoint(i).x, getPoint(i).y);
-//            }
-//        }
-//
-//        //闭合路径
-//        path.close();
-//        canvas.drawPath(path, mMainPaint);
-    }
 
     /**
      * 绘制连接线
@@ -226,7 +200,7 @@ public class CreditScoreView extends View {
 
         for (int i = 0; i < DataCount; i++) {
             //计算百分比
-            float percent = data[i] / mMaxValue;
+            float percent = (float) (mData[i] / mMaxValue);
             int x = getPoint(i, 0, percent).x;
             int y = getPoint(i, 0, percent).y;
             if (i == 0) {
@@ -255,7 +229,7 @@ public class CreditScoreView extends View {
         int score = 0;
         //计算总分
         for (int i = 0; i < DataCount; i++) {
-            score += data[i];
+            score += mData[i];
         }
 //        canvas.drawText(score + "", mCenterX, mCenterY + mScoreSize / 2, mScorePaint);
     }
@@ -290,43 +264,6 @@ public class CreditScoreView extends View {
         }
     }
 
-    /**
-     * 绘制图标
-     *
-     * @param canvas 画布
-     */
-    private void drawIcon(Canvas canvas) {
-//        for (int i = 0; i < DataCount; i++) {
-//            int x = getPoint(i, mRadarMargin, 1).x;
-//            int y = getPoint(i, mRadarMargin, 1).y;
-//
-//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), icons[i]);
-//            int iconWidth = bitmap.getWidth();
-//            int iconHeight = bitmap.getHeight();
-//            float titleWidth = mTitlePaint.measureText(mTitles[i]);
-//
-//            //上面获取到的x、y坐标是标题左下角的坐标
-//            //需要将图标移动到标题上方居中位置
-//            if (i == 0) {
-//                x += (titleWidth - iconWidth) / 2;
-//                y -= (iconHeight + getTextHeight(mTitlePaint));
-//            } else if (i == 1) {
-//                x += (titleWidth - iconWidth) / 2;
-//                y -= (iconHeight / 2 + getTextHeight(mTitlePaint));
-//            } else if (i == 2) {
-//                x -= (iconWidth + (titleWidth - iconWidth) / 2);
-//                y -= (iconHeight / 2 + getTextHeight(mTitlePaint));
-//            } else if (i == 3) {
-//                x -= (iconWidth + (titleWidth - iconWidth) / 2);
-//                y -= (iconHeight + getTextHeight(mTitlePaint));
-//            } else if (i == 4) {
-//                x -= iconWidth / 2;
-//                y -= (iconHeight + getTextHeight(mTitlePaint));
-//            }
-//
-//            canvas.drawBitmap(bitmap, x, y, mTitlePaint);
-//        }
-    }
 
     /**
      * 获取雷达图上各个点的坐标
@@ -391,5 +328,12 @@ public class CreditScoreView extends View {
 
     private int px2sp(float px) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, px, getResources().getDisplayMetrics());
+    }
+
+    public void setData(TestResultModel data) {
+        double[] dataScore = {data.getProfitAccuracy(), data.getRiskAccuracy(), data.getBaseAccuracy(),
+                data.getSkillAccuracy(), data.getTheoryAccuracy()};
+        mData = dataScore;
+        mMaxValue = 1;
     }
 }

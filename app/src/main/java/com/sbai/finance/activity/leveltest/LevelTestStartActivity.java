@@ -2,9 +2,13 @@ package com.sbai.finance.activity.leveltest;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -14,8 +18,11 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.TitleBar;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -87,21 +94,43 @@ public class LevelTestStartActivity extends BaseActivity {
         }
     }
 
-    // TODO: 2017/7/31 请求题库接口
     private void openLevelExamQuestionsPage() {
         Client.requestExamQuestions()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<ArrayList<ExamQuestionsModel>>, ArrayList<ExamQuestionsModel>>() {
+                .setCallback(new Callback2D<Resp<String>, String>() {
                     @Override
-                    protected void onRespSuccessData(ArrayList<ExamQuestionsModel> data) {
-                        Launcher.with(getActivity(), LevelExamQuestionsActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
-                                .execute();
+                    protected void onRespSuccessData(String data) {
+                        ArrayList<ExamQuestionsModel> examQuestionsList = getExamQuestionsList(data);
+                        if (examQuestionsList != null && !examQuestionsList.isEmpty()) {
 
+                            for (ExamQuestionsModel result : examQuestionsList) {
+                                Log.d(TAG, "onRespSuccessData: " + result.toString());
+                            }
+
+                            Launcher.with(getActivity(), LevelExamQuestionsActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, examQuestionsList)
+                                    .execute();
+                        } else {
+                            ToastUtil.show(R.string.get_exam_questions_fail);
+                        }
                     }
                 })
                 .fire();
+
+    }
+
+    private ArrayList<ExamQuestionsModel> getExamQuestionsList(String data) {
+        //需要对其进行AES解密
+        try {
+            String s = SecurityUtil.AESDecrypt(data);
+            Type type = new TypeToken<ArrayList<ExamQuestionsModel>>() {
+            }.getType();
+            return new Gson().fromJson(s, type);
+        } catch (JsonSyntaxException e) {
+            Log.d(TAG, "getExamQuestionsList: " + e);
+        }
+        return null;
 
     }
 }

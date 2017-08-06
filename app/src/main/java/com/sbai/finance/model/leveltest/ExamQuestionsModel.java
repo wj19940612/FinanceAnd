@@ -3,7 +3,7 @@ package com.sbai.finance.model.leveltest;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by ${wangJie} on 2017/7/31.
@@ -11,12 +11,6 @@ import java.util.List;
  */
 
 public class ExamQuestionsModel implements Parcelable {
-
-    public static final int RESULT_A = 0;
-    public static final int RESULT_B = 1;
-    public static final int RESULT_C = 2;
-    public static final int RESULT_D = 3;
-
 
     /**
      * analysis : 打算大苏打打算大苏打
@@ -43,7 +37,7 @@ public class ExamQuestionsModel implements Parcelable {
     private String title;
     private int type;
     private String createTime;
-    private List<ContentBean> content;
+    private ArrayList<ContentBean> content;
 
 
     public String getAnalysis() {
@@ -126,11 +120,11 @@ public class ExamQuestionsModel implements Parcelable {
         this.createTime = createTime;
     }
 
-    public List<ContentBean> getContent() {
+    public ArrayList<ContentBean> getContent() {
         return content;
     }
 
-    public void setContent(List<ContentBean> content) {
+    public void setContent(ArrayList<ContentBean> content) {
         this.content = content;
     }
 
@@ -148,7 +142,6 @@ public class ExamQuestionsModel implements Parcelable {
          * id : 892321037251899392
          * right : false
          * seq : 1
-
          */
         private boolean isSelect;
         private String content;
@@ -223,6 +216,16 @@ public class ExamQuestionsModel implements Parcelable {
             }
         };
 
+        @Override
+        public String toString() {
+            return "ContentBean{" +
+                    "isSelect=" + isSelect +
+                    ", content='" + content + '\'' +
+                    ", id=" + id +
+                    ", right=" + right +
+                    ", seq=" + seq +
+                    '}';
+        }
     }
 
     @Override
@@ -273,4 +276,21 @@ public class ExamQuestionsModel implements Parcelable {
             return new ExamQuestionsModel[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ExamQuestionsModel{" +
+                "analysis='" + analysis + '\'' +
+                ", digest='" + digest + '\'' +
+                ", id='" + id + '\'' +
+                ", levelRatio=" + levelRatio +
+                ", modifyTime='" + modifyTime + '\'' +
+                ", option=" + option +
+                ", status=" + status +
+                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", createTime='" + createTime + '\'' +
+                ", content=" + content +
+                '}';
+    }
 }

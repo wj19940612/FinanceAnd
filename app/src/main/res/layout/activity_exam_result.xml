@@ -41,17 +41,29 @@
             android:textSize="50sp"
             tools:text="50.78%"/>
 
+
         <TextView
-            android:id="@+id/accuracyHint"
+            android:id="@+id/accuracyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/accuracy"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:lineSpacingExtra="3dp"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            tools:text="正确率\n19.6%.超过20%的同学"/>
+            android:text="正确率"/>
+
+        <TextView
+            android:id="@+id/accuracyHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/accuracyTitle"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            tools:text="19.6%.超过20%的同学"/>
 
         <android.support.v7.widget.CardView
             android:id="@+id/result"
@@ -138,8 +150,8 @@
     </RelativeLayout>
 
 
-    <com.sbai.finance.view.leveltest.CreditScoreView
-        android:id="@+id/resultImage"
+    <com.sbai.finance.view.leveltest.ScoreView
+        android:id="@+id/score"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"/>

@@ -42,5 +42,8 @@
     <color name="backgroundGradientStart">#69b2ff</color>
     <color name="backgroundGradientEnd">#8687f9</color>
 
+
+    <!---->
+    <color name="yellowScoreGrade">#ffC200</color>
     <color name="hint_white_color">#FDFDFD</color>
 </resources>

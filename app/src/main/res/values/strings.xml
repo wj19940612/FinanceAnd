@@ -636,6 +636,9 @@
     <string name="going_train">马上去训练提升</string>
     <string name="test_result">测评结果</string>
     <string name="pass">跳过</string>
+    <string name="get_exam_questions_fail">测试题目获取失败</string>
+    <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
+
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>

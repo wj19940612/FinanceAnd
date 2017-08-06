@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Space;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -20,6 +19,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.leveltest.TestResultModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
@@ -41,7 +41,7 @@ public class HistoryTestResultActivity extends BaseActivity {
     private HistoryTestResultAdapter mHistoryTestResultAdapter;
 
     private int mPage = 0;
-    private HashSet<Long> mSet;
+    private HashSet<String> mSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class HistoryTestResultActivity extends BaseActivity {
     private void requestHistoryTestResultList() {
         Client.requestHistoryTestResultList()
                 .setTag(TAG)
-                .setCallback(new Callback2D<List<TestResultModel>, List<TestResultModel>>() {
+                .setCallback(new Callback2D<Resp<List<TestResultModel>>, List<TestResultModel>>() {
                     @Override
                     protected void onRespSuccessData(List<TestResultModel> data) {
                         updateHistoryTestResultList(data);
@@ -83,7 +83,17 @@ public class HistoryTestResultActivity extends BaseActivity {
                     }
                 })
                 .fire();
+
+        // TODO: 2017/8/4 测试
+//        List<TestResultModel> result;
+//        result = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            TestResultModel testResultModel = new TestResultModel(i, System.currentTimeMillis() + i, i, 0.2 + i);
+//            result.add(testResultModel);
+//        }
+//        updateHistoryTestResultList(result);
     }
+
 
     private void updateHistoryTestResultList(List<TestResultModel> data) {
         if (data == null || data.isEmpty()) {
@@ -119,8 +129,11 @@ public class HistoryTestResultActivity extends BaseActivity {
 
     static class HistoryTestResultAdapter extends ArrayAdapter<TestResultModel> {
 
+        private Context mContext;
+
         public HistoryTestResultAdapter(@NonNull Context context) {
             super(context, 0);
+            mContext = context;
         }
 
         @NonNull
@@ -134,7 +147,7 @@ public class HistoryTestResultActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), position);
+            viewHolder.bindDataWithView(getItem(position), position, mContext);
             return convertView;
         }
 
@@ -145,22 +158,37 @@ public class HistoryTestResultActivity extends BaseActivity {
             TextView mAccuracy;
             @BindView(R.id.time)
             TextView mTime;
-            @BindView(R.id.empty)
-            Space mEmpty;
+//            @BindView(R.id.empty)
+//            Space mEmpty;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(TestResultModel item, int position) {
-                if (position == 0) {
-                    mEmpty.setVisibility(View.VISIBLE);
-                } else {
-                    mEmpty.setVisibility(View.GONE);
+            public void bindDataWithView(TestResultModel item, int position, Context context) {
+                mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
+                mGrade.setText(getTestGrade(item.getLevel()));
+                mAccuracy.setText(context.getString(R.string.accuracy_ranking,
+                        String.valueOf(item.getAllAccuracy()),
+                        String.valueOf(item.getPassPercent()) + "%"));
+            }
+
+
+            private String getTestGrade(int grade) {
+                switch (grade) {
+                    case 1:
+                        return "LV1 入门";
+                    case 2:
+                        return "LV2 初级";
+                    case 3:
+                        return "LV3 中级";
+                    case 4:
+                        return "LV4 高级";
+                    case 5:
+                        return "LV5 精通";
+                    default:
+                        return "";
                 }
-                mGrade.setText("LV1 入门");
-                mAccuracy.setText(item.getAccuracy());
-                mTime.setText(DateUtil.format(item.getCreateTime(), "yyyy-MM-dd"));
             }
         }
 

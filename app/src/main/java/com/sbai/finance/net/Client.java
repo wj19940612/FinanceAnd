@@ -1,8 +1,10 @@
 package com.sbai.finance.net;
 
 import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.leveltest.TestAnswerUtils;
 import com.sbai.httplib.ApiParams;
 
 
@@ -1789,13 +1791,18 @@ public class Client {
     }
 
     //提交水平测试答案接口
-    public static API confirmLevelTestResult() {
-        return new API("");
-    }
 
-    //请求用户的测试成绩
-    public static API requestUserTestResult() {
-        return new API("");
+    /**
+     * /**
+     * train/evaluate/End.do
+     * POST
+     * 提交测评
+     *
+     * @return
+     */
+    public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
+        return new API(POST, "/train/evaluate/End.do",
+                new ApiParams().put("finishPO", new Gson().toJson(finishPO)));
     }
 
     /**
