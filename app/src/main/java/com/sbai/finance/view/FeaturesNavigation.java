@@ -101,15 +101,17 @@ public class FeaturesNavigation extends LinearLayout {
     }
 
     private View createItemView(final NavItem navItem) {
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
+        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20,
                 getResources().getDisplayMetrics());
-
+        int drawablePadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
+                getResources().getDisplayMetrics());
         TextView textView = new TextView(getContext());
         textView.setText(navItem.textRes);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView.setGravity(Gravity.CENTER);
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryText));
         textView.setBackgroundResource(R.drawable.bg_white);
         textView.setCompoundDrawablesWithIntrinsicBounds(0, navItem.iconRes, 0, 0);
+        textView.setCompoundDrawablePadding(drawablePadding);
         textView.setPadding(0, padding, 0, padding);
         textView.setOnClickListener(new OnClickListener() {
             @Override

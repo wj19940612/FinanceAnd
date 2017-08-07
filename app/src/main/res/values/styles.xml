@@ -197,4 +197,11 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="reward_money">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/reward_money_text_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/btn_reward_money</item>
+    </style>
+
 </resources>

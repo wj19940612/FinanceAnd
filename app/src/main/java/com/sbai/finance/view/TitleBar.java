@@ -268,7 +268,7 @@ public class TitleBar extends RelativeLayout {
     }
 
     public void setRightViewEnable(boolean enable) {
-        mRightView.setEnabled(enable);
+        mRightViewParent.setEnabled(enable);
     }
 
     public CharSequence getTitle() {
