@@ -73,7 +73,7 @@
             android:minHeight="50dp">
 
             <EditText
-                android:id="@+id/oldPassword"
+                android:id="@+id/password"
                 style="@style/SignEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:maxLength="18"/>
 
             <ImageView
-                android:id="@+id/showOldPassword"
+                android:id="@+id/showPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_show_password"/>

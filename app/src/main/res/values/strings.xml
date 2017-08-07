@@ -54,6 +54,7 @@
     <string name="password_login">密码登录</string>
     <string name="password">密码</string>
     <string name="new_password">新密码</string>
+    <string name="old_password">旧密码</string>
     <string name="register_free">免费注册</string>
     <string name="forget_password">忘记密码</string>
     <string name="please_input_phone">请输入手机号</string>
@@ -236,6 +237,7 @@
     <string name="modify_login_password">修改登录密码</string>
     <string name="modify_security_password">修改安全密码</string>
     <string name="forget_security_password">忘记安全密码</string>
+    <string name="same_passwords">新旧密码一致</string>
 
     <!--安全设置-->
     <string name="please_input_old_password">请输入旧安全密码</string>

@@ -11,7 +11,7 @@
 
     <dimen name="common_split">10dp</dimen>
     <dimen name="common_split_height">13dp</dimen>
-    <dimen name="common_margin">15dp</dimen>
+    <dimen name="common_margin">14dp</dimen>
 
     <dimen name="navigate_size">16sp</dimen>
     <dimen name="search_size">13sp</dimen>

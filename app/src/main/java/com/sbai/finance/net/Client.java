@@ -276,6 +276,7 @@ public class Client {
                 .put("platform", 0));
     }
 
+
     /**
      * 忘记密码：更新新密码
      *
@@ -2062,6 +2063,7 @@ public class Client {
 
     /**
      * 听语音
+     *
      * @param questionId
      * @return
      */
@@ -2070,5 +2072,17 @@ public class Client {
                 new ApiParams()
                         .put("questionId", questionId)
         );
+    }
+
+    /**
+     * 设置/修改登录密码
+     *
+     * @param password
+     * @return
+     */
+    public static API updateLoginPassword(String password) {
+        return new API("/user/user/setPassword.do", new ApiParams()
+                .put(", password", password));
+        // TODO: 07/08/2017 接口不对
     }
 }

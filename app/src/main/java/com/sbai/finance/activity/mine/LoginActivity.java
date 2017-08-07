@@ -78,14 +78,14 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.authCodeArea)
     LinearLayout mAuthCodeArea;
-    @BindView(R.id.oldPasswordArea)
+    @BindView(R.id.passwordArea)
     LinearLayout mPasswordArea;
     @BindView(R.id.passwordLoginOperations)
     LinearLayout mPasswordLoginOperations;
 
-    @BindView(R.id.showOldPassword)
+    @BindView(R.id.showPassword)
     ImageView mShowPassword;
-    @BindView(R.id.oldPassword)
+    @BindView(R.id.password)
     EditText mPassword;
 
     private KeyBoardHelper mKeyBoardHelper;
@@ -280,7 +280,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick({R.id.closePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.rootView,
-            R.id.loginSwitch, R.id.loginSwitchTop, R.id.showOldPassword,
+            R.id.loginSwitch, R.id.loginSwitchTop, R.id.showPassword,
             R.id.register, R.id.forgetPassword})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -302,7 +302,7 @@ public class LoginActivity extends BaseActivity {
             case R.id.rootView:
                 KeyBoardUtils.closeKeyboard(mRootView);
                 break;
-            case R.id.showOldPassword:
+            case R.id.showPassword:
                 togglePasswordVisible();
                 break;
 

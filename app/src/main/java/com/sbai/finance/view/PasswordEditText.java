@@ -9,8 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,7 +31,7 @@ import java.lang.reflect.Field;
 
 public class PasswordEditText extends LinearLayout {
 
-    private static final float DEFAULT_LINE_HEIGHT_DP = 3;
+    private static final float DEFAULT_LINE_HEIGHT = 0.5f;
 
     private EditText mPassword;
     private ImageView mShowPassword;
@@ -36,6 +42,7 @@ public class PasswordEditText extends LinearLayout {
 
     private Paint mPaint;
     private float mBottomLineHeight;
+    private int mMaxCharNum;
 
     public PasswordEditText(Context context) {
         super(context);
@@ -51,11 +58,12 @@ public class PasswordEditText extends LinearLayout {
     }
 
     private void processAttrs(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.IconTextRow);
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.PasswordEditText);
 
         mTextHint = typedArray.getText(R.styleable.PasswordEditText_textHint);
         mHasBottomLine = typedArray.getBoolean(R.styleable.PasswordEditText_hasBottomLine, false);
         mBottomLineColor = typedArray.getColorStateList(R.styleable.PasswordEditText_bottomLineColor);
+        mMaxCharNum = typedArray.getInt(R.styleable.PasswordEditText_maxCharNum, Integer.MAX_VALUE);
         if (mBottomLineColor == null) {
             mBottomLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), android.R.color.black));
         }
@@ -64,17 +72,27 @@ public class PasswordEditText extends LinearLayout {
     }
 
     private void init() {
+        setWillNotDraw(false);
+        setGravity(Gravity.CENTER_VERTICAL);
+
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
         mBottomLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                DEFAULT_LINE_HEIGHT_DP,
+                DEFAULT_LINE_HEIGHT,
                 getResources().getDisplayMetrics());
 
         setOrientation(HORIZONTAL);
         mPassword = initPasswordEditText();
-        mPassword.setHint(mTextHint);
+        setHint(mTextHint);
 
         mShowPassword = new ImageView(getContext());
         mShowPassword.setImageResource(R.drawable.btn_show_password);
+        mShowPassword.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisible();
+            }
+        });
 
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
@@ -82,12 +100,40 @@ public class PasswordEditText extends LinearLayout {
         addView(mShowPassword);
     }
 
+    public String getPassword() {
+        return mPassword.getText().toString();
+    }
+
+    public void setHint(CharSequence hint) {
+        mPassword.setHint(hint);
+    }
+
+    public void setHint(int hintRes) {
+        mPassword.setHint(hintRes);
+    }
+
+    private void togglePasswordVisible() {
+        if (mShowPassword.isSelected()) {
+            mShowPassword.setSelected(false);
+            mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        } else {
+            mShowPassword.setSelected(true);
+            mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+        mPassword.postInvalidate();
+        CharSequence text = mPassword.getText();
+        if (text != null) {
+            Spannable spanText = (Spannable) text;
+            Selection.setSelection(spanText, text.length());
+        }
+    }
+
     private EditText initPasswordEditText() {
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12,
                 getResources().getDisplayMetrics());
         EditText editText = new EditText(getContext());
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        editText.setFilters(new InputFilter[]{new PasswordInputFilter()});
+        editText.setFilters(new InputFilter[]{new PasswordInputFilter(), new InputFilter.LengthFilter(mMaxCharNum)});
         editText.setBackground(null);
         editText.setPadding(0, padding, 0, padding);
         editText.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryText));
@@ -114,9 +160,8 @@ public class PasswordEditText extends LinearLayout {
             mPaint.setColor(mBottomLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mBottomLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
-            float lineY = getHeight() / 2;
-//            float lineY = getHeight() - mBottomLineHeight;
-            canvas.drawLine(getPaddingLeft(), lineY, getWidth() - getPaddingRight(), lineY, mPaint);
+            float lineY = getHeight() - mBottomLineHeight;
+            canvas.drawLine(0, lineY, getWidth(), lineY, mPaint);
         }
     }
 }

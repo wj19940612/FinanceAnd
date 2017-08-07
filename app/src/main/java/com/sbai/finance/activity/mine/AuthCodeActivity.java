@@ -47,9 +47,9 @@ public class AuthCodeActivity extends BaseActivity {
     EditText mAuthCode;
     @BindView(R.id.getAuthCode)
     TextView mGetAuthCode;
-    @BindView(R.id.oldPassword)
+    @BindView(R.id.password)
     EditText mPassword;
-    @BindView(R.id.showOldPassword)
+    @BindView(R.id.showPassword)
     ImageView mShowPassword;
     @BindView(R.id.complete)
     TextView mComplete;
@@ -128,13 +128,13 @@ public class AuthCodeActivity extends BaseActivity {
         mPhone = intent.getStringExtra(ExtraKeys.PHONE);
     }
 
-    @OnClick({R.id.getAuthCode, R.id.showOldPassword, R.id.complete, R.id.rootView})
+    @OnClick({R.id.getAuthCode, R.id.showPassword, R.id.complete, R.id.rootView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
                 getAuthCode();
                 break;
-            case R.id.showOldPassword:
+            case R.id.showPassword:
                 togglePasswordVisible();
                 break;
             case R.id.complete:

@@ -67,7 +67,6 @@ public class IconTextRow extends LinearLayout {
         int defaultFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14,
                 getResources().getDisplayMetrics());
 
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLeftIcon = typedArray.getDrawable(R.styleable.IconTextRow_leftIcon);
         mRightIcon = typedArray.getDrawable(R.styleable.IconTextRow_rightIcon);
         mSubTextViewBg = typedArray.getDrawable(R.styleable.IconTextRow_subTextBackground);
@@ -107,6 +106,8 @@ public class IconTextRow extends LinearLayout {
     }
 
     private void init() {
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());

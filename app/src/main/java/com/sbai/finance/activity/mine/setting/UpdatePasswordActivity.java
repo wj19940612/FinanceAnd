@@ -2,26 +2,40 @@ package com.sbai.finance.activity.mine.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.KeyBoardUtils;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.PasswordEditText;
+import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class UpdatePasswordActivity extends AppCompatActivity {
-
-
-    @BindView(R.id.confirm)
-    TextView mConfirm;
+public class UpdatePasswordActivity extends BaseActivity {
 
     @BindView(R.id.rootView)
     LinearLayout mRootView;
+
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+
+    @BindView(R.id.oldPassword)
+    PasswordEditText mOldPassword;
+    @BindView(R.id.password)
+    PasswordEditText mPassword;
+
+    @BindView(R.id.complete)
+    TextView mComplete;
 
     private boolean mHasLoginPassword;
 
@@ -32,40 +46,90 @@ public class UpdatePasswordActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initData(getIntent());
+        initView();
+    }
 
-//        if (mHasLoginPassword) { // modify password view
-//            mPasswordArea.setVisibility(View.VISIBLE);
-//            mOldPasswordArea.setVisibility(View.VISIBLE);
-//            mPassword.setFilters(new InputFilter[]{new PasswordInputFilter()});
-//            mOldPassword.setFilters(new InputFilter[]{new PasswordInputFilter()});
-//        } else {
-//            mPasswordArea.setVisibility(View.VISIBLE);
-//            mOldPasswordArea.setVisibility(View.GONE);
-//            mPassword.setFilters(new InputFilter[]{new PasswordInputFilter()});
-//        }
+    private void initView() {
+        if (mHasLoginPassword) { // modify password view
+            mTitleBar.setTitle(R.string.modify_login_password);
+            mOldPassword.setVisibility(View.VISIBLE);
+            mPassword.setVisibility(View.VISIBLE);
+            mOldPassword.setHint(R.string.old_password);
+            mPassword.setHint(R.string.new_password);
+            mOldPassword.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mOldPassword.requestFocus();
+                    KeyBoardUtils.openKeyBoard(mOldPassword);
+                }
+            }, 200);
+
+        } else {
+            mTitleBar.setTitle(R.string.set_login_password);
+            mOldPassword.setVisibility(View.GONE);
+            mPassword.setVisibility(View.VISIBLE);
+            mPassword.setHint(R.string.password);
+            mPassword.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mPassword.requestFocus();
+                    KeyBoardUtils.openKeyBoard(mPassword);
+                }
+            }, 200);
+        }
     }
 
     private void initData(Intent intent) {
         mHasLoginPassword = intent.getBooleanExtra(ExtraKeys.HAS_LOGIN_PSD, false);
     }
 
-    @OnClick({R.id.confirm, R.id.rootView, R.id.showOldPassword})
+    @OnClick({R.id.confirm, R.id.rootView, R.id.showPassword})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.confirm:
                 updateLoginPassword();
                 break;
-//            case R.id.rootView:
-//                KeyBoardUtils.closeKeyboard(mPassword);
-//                break;
-//            case R.id.showOldPassword:
-//                break;
-//            case R.id.showPassword:
-//                break;
+            case R.id.rootView:
+                KeyBoardUtils.closeKeyboard(mRootView);
+                break;
         }
     }
 
     private void updateLoginPassword() {
-        // TODO: 04/08/2017 update login password
+        if (mHasLoginPassword) {
+            boolean samePasswords = checkSamePasswords();
+            if (samePasswords) {
+                ToastUtil.show(R.string.same_passwords);
+            } else {
+                requestUpdatePassword();
+            }
+        } else {
+            requestUpdatePassword();
+        }
+    }
+
+    private void requestUpdatePassword() {
+        String password = mPassword.getPassword();
+        Client.updateLoginPassword(password)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        // TODO: 07/08/2017 toast 不同
+                        if (mHasLoginPassword) {
+
+                        } else {
+
+                        }
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                }).fire();
+    }
+
+    private boolean checkSamePasswords() {
+        String oldPassword = mOldPassword.getPassword();
+        String password = mPassword.getPassword();
+        return oldPassword.equals(password);
     }
 }
