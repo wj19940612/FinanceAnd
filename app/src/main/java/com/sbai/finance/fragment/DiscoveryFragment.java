@@ -250,9 +250,9 @@ public class DiscoveryFragment extends BaseFragment {
                 int colors[] = {Color.parseColor("#FFB269"), Color.parseColor("#FB857A")};
                 mTrainType.setText(item.getTrainType());
                 mTrainCount.setText(context.getString(R.string.train_count, item.getTrainCount()));
-                GradientDrawable gradient = new GradientDrawable(GradientDrawable.Orientation.TR_BL, colors);
+                GradientDrawable gradient = new GradientDrawable(GradientDrawable.Orientation.TL_BR, colors);
                 gradient.setCornerRadius(Display.dp2Px(8, context.getResources()));
-                mContent.setBackground(gradient);
+                mContent.setBackgroundDrawable(gradient);
             }
         }
     }

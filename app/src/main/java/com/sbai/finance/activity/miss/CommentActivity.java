@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.miss;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -79,14 +78,20 @@ public class CommentActivity extends BaseActivity {
         mQuestionComment.removeTextChangedListener(mValidationWatcher);
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
     private void initView() {
         mQuestionComment.addTextChangedListener(mValidationWatcher);
     }
 
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            if (TextUtils.isEmpty(mQuestionComment.getText())) {
+            if (TextUtils.isEmpty(mQuestionComment.getText().toString().trim())) {
                 mPublish.setEnabled(false);
                 mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
             } else if (mQuestionComment.getText().length() > 140) {
@@ -116,6 +121,7 @@ public class CommentActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.show(R.string.publish_success);
+                            setResult(RESULT_OK);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

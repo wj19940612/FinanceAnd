@@ -275,32 +275,42 @@ public class MessagesActivity extends BaseActivity implements
 
             private void bindDataWithView(final MissMessage item, final Context context) {
                 if (item.getSourceUser() != null) {
-                    mUserName.setText(item.getSourceUser().getUserName());
-                    Glide.with(context)
-                            .load(item.getSourceUser().getUserPhone())
-                            .transform(new GlideCircleTransform(context))
-                            .into(mAvatar);
+                    if (item.getType() == MissMessage.TYPE_MISS_ANSWER) {
+                        mUserName.setText(item.getSourceUser().getName());
+                        Glide.with(context)
+                                .load(item.getSourceUser().getPortrait())
+                                .placeholder(R.drawable.ic_default_avatar)
+                                .transform(new GlideCircleTransform(context))
+                                .into(mAvatar);
+
+                    } else {
+                        mUserName.setText(item.getSourceUser().getUserName());
+                        Glide.with(context)
+                                .load(item.getSourceUser().getUserPhone())
+                                .placeholder(R.drawable.ic_default_avatar)
+                                .transform(new GlideCircleTransform(context))
+                                .into(mAvatar);
+                    }
                 }
-                mQuestion.setText(item.getMsg());
-                Glide.with(context).load(R.drawable.ic_default_avatar).into(mAvatar);
                 if (item.getData() != null) {
-                    mReplyContent.setText(item.getData().getQuestion());
+                    mQuestion.setText(item.getData().getContent());
                 }
                 switch (item.getType()) {
                     case MissMessage.TYPE_MISS_ANSWER:
                         mMessageType.setText(context.getString(R.string.answer_your_question));
-                        if (item.getData() != null) {
-                            mQuestion.setText(item.getData().getQuestion());
-                        }
                         mMessageType.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context, R.drawable.ic_miss_message), null, null, null);
                         mReplyContent.setVisibility(View.GONE);
                         break;
                     case MissMessage.TYPE_COMMENT:
+                        mReplyContent.setText(item.getMsg());
                         mMessageType.setText(context.getString(R.string.comment_your_question));
+                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                     case MissMessage.TYPE_REPLY:
+                        mReplyContent.setText(item.getMsg());
                         mMessageType.setText(context.getString(R.string.reply_your_comment));
+                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                 }

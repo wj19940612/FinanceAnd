@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.miss;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.sbai.finance.Preference;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
@@ -28,6 +27,7 @@ import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Prise;
 import com.sbai.finance.model.missTalk.Question;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -68,6 +68,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private HashSet<Integer> mSet;
 	private View mFootView;
 	private RewardInfo mRewardInfo;
+	private List<Question> mMyQuestionList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,8 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		ButterKnife.bind(this);
 		initRewardInfo();
 		mSet = new HashSet<>();
-		mMyQuestionAdapter = new MyQuestionAdapter(this);
+		mMyQuestionList = new ArrayList<>();
+		mMyQuestionAdapter = new MyQuestionAdapter(this, mMyQuestionList, TAG);
 		mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
 			@Override
 			public void onRewardClick(Question item) {
@@ -218,8 +220,11 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	}
 
 	static class MyQuestionAdapter extends ArrayAdapter<Question> {
+
 		private Context mContext;
 		private OnClickCallback mOnClickCallback;
+		private List<Question> mMyQuestionList;
+		private String TAG;
 
 		public void setOnClickCallback(OnClickCallback onClickCallback) {
 			mOnClickCallback = onClickCallback;
@@ -229,9 +234,11 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			void onRewardClick(Question item);
 		}
 
-		private MyQuestionAdapter(@NonNull Context context) {
+		private MyQuestionAdapter(@NonNull Context context, List<Question> myQuestionList, String TAG) {
 			super(context, 0);
 			this.mContext = context;
+			this.mMyQuestionList = myQuestionList;
+			this.TAG = TAG;
 		}
 
 		@NonNull
@@ -247,7 +254,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback);
+			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback, position, mMyQuestionList, TAG);
 			return convertView;
 		}
 
@@ -285,8 +292,14 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				ButterKnife.bind(this, view);
 			}
 
-			public void bindingData(final Context context, final Question item, final OnClickCallback onClickCallback) {
+			public void bindingData(final Context context, final Question item,
+			                        final OnClickCallback onClickCallback, int position,
+			                        List<Question> myQuestionList, final String TAG) {
 				if (item == null) return;
+
+				if (position == myQuestionList.size() - 1) {
+					mSplit.setVisibility(View.GONE);
+				}
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -309,16 +322,17 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				mName.setText(item.getUserName());
 				mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
 				mQuestion.setText(item.getQuestionContext());
+				mVoice.setText(context.getString(R.string.voice_time, item.getSoundTime()));
 				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
 				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
 				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
-				mIngotNumber.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onClickCallback.onRewardClick(item);
-					}
-				});
+
+				/*if (MissVoiceRecorder.isHeard(item.getId())) {
+					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
+				} else {
+					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+				}*/
 
 				if (item.getIsPrise() == 0) {
 					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
@@ -352,24 +366,28 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 						}).fire();
 					}
 				});
-				if (Preference.get().getAnswerIds()!=null&&Preference.get().getAnswerIds().equalsIgnoreCase(item.getId() + "")) {
-					mVoice.setTextColor(Color.parseColor("#999999"));
-				} else {
-					mVoice.setTextColor(Color.parseColor("#55adff"));
-				}
 
 				mVoice.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (item.getIsPlaying() == false) {
-							mediaPlayerUtil.play(item.getAnswerContext());
-							item.setIsPlaying(true);
-						} else {
-							mediaPlayerUtil.release();
-							item.setIsPlaying(false);
-						}
-						Preference.get().setAnswerIds(item.getId() + "");
-						mVoice.setTextColor(Color.parseColor("#999999"));
+						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+							@Override
+							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+								if (resp.isSuccess()) {
+									if (mediaPlayerUtil.isPlaying()) {
+										mediaPlayerUtil.release();
+									} else {
+										mediaPlayerUtil.play(item.getAnswerContext());
+										/*if (!MissVoiceRecorder.isHeard(item.getId())) {
+											MissVoiceRecorder.markHeard(item.getId());
+											item.setListenCount(item.getListenCount() + 1);
+											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
+											mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+										}*/
+									}
+								}
+							}
+						}).fire();
 					}
 				});
 			}

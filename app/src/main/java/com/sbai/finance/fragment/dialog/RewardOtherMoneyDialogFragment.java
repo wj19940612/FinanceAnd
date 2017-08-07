@@ -98,7 +98,10 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mOtherMoneyContent.removeTextChangedListener(mValidationWatcher);
-        if (mOtherMoneyContent.getText().toString().isEmpty()) {
+        String content = mOtherMoneyContent.getText().toString();
+        if (content.isEmpty() || content.length() > 15
+                || Long.valueOf(content.replace(",", "")) < 10
+                || Long.valueOf(content.replace(",", "")) > 10000000) {
             RewardMissDialogFragment.newInstance()
                     .show(getActivity().getSupportFragmentManager());
         } else {

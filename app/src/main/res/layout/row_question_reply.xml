@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="小金"
+            tools:text="小金"
             android:textColor="@color/primaryText"
             android:textSize="12sp"/>
 
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="有没有好的选股方法啊"
+            tools:text="有没有好的选股方法啊"
             android:textColor="@color/luckyText"
             android:textSize="12sp"/>
 
