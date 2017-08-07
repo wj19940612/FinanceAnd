@@ -1,7 +1,6 @@
 package com.sbai.finance.net;
 
 import com.android.volley.Request;
-import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leveltest.TestAnswerUtils;
@@ -1801,8 +1800,7 @@ public class Client {
      * @return
      */
     public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
-        String s = new Gson().toJson(finishPO);
-        return new API(POST, "/train/evaluate/End.do", s);
+        return new API(POST, "/train/evaluate/End.do", new ApiParams(finishPO));
     }
 
     /**

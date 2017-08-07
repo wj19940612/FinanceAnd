@@ -1,5 +1,7 @@
 package com.sbai.httplib;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -7,8 +9,13 @@ import java.util.HashMap;
 public class ApiParams {
 
     private HashMap<String, String> mParams;
+    private Object mJsonBody;
 
     public ApiParams() {
+    }
+
+    public ApiParams(Object jsonBody) {
+        mJsonBody = jsonBody;
     }
 
     public ApiParams(Class<?> clazz, Object object) {
@@ -57,6 +64,13 @@ public class ApiParams {
             }
         }
         return builder.toString();
+    }
+
+    public String toJson() {
+        if (mJsonBody != null) {
+            return new Gson().toJson(mJsonBody);
+        }
+        return null;
     }
 
 }
