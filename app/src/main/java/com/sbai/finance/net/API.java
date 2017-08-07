@@ -41,16 +41,16 @@ public class API extends RequestManager {
         this(Request.Method.GET, uri, apiParams, 0);
     }
 
+    public API(String uri, ApiParams apiParams, int version) {
+        this(Request.Method.GET, uri, apiParams, version);
+    }
+
     public API(int method, String uri) {
         this(method, uri, null, 0);
     }
 
     public API(int method, String uri, ApiParams apiParams) {
         this(method, uri, apiParams, 0);
-    }
-
-    public API(String uri, ApiParams apiParams, int version) {
-        this(Request.Method.GET, uri, apiParams, version);
     }
 
     public API(int method, String uri, ApiParams apiParams, int version) {

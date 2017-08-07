@@ -23,9 +23,10 @@
 
     <string name="details">详情</string>
     <string name="comment_number">评论(%1$d)</string>
+    <string name="comment_number_string">评论(%1$s)</string>
     <string name="no_comment">暂无评论~快来发表您的评论吧</string>
     <string name="share">分享</string>
-    <string name="comment">发表评论&#8230;</string>
+    <string name="publish_comment">发表评论&#8230;</string>
     <string name="new_message_count">%1$d条消息</string>
     <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
@@ -629,4 +630,74 @@
 
 
     <string name="number_ge">%1$s个</string>
+    <!--姐说-->
+    <string name="question">提问</string>
+    <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
+    <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
+    <string name="commit">提交</string>
+    <string name="words_number">%1$d/140</string>
+    <string name="miss_comment">评论</string>
+    <string name="publish_your_comment">你想对小姐姐说~</string>
+    <string name="publish">发布</string>
+    <string name="reply">回复</string>
+    <string name="reward">打赏</string>
+    <string name="message_remind">消息提醒</string>
+    <string name="message_remind_count">消息提醒(%1$d)</string>
+    <string name="reply_your_comment">回复了你的评论</string>
+    <string name="comment_your_question">评论了你的提问</string>
+    <string name="answer_your_question">解答了你的提问</string>
+    <string name="give_up_question_no_restore_comment"> 现在放弃提问,已输入的内容将不会保存</string>
+    <string name="give_up_no_restore_comment"> 现在放弃,已输入的内容将不会保存</string>
+    <string name="give_up_question">放弃提问</string>
+    <string name="continue_question">继续提问</string>
+    <string name="give_up">放弃</string>
+    <string name="continue_comment">继续</string>
+    <string name="all_has_read">全部标记为已读</string>
+    <string name="other">其他</string>
+    <string name="confirm_reward">确认打赏</string>
+    <string name="other_money_ingot">其他金额(元宝)</string>
+    <string name="at_least_ten_ingot">最少10元宝哦～</string>
+    <string name="most_reward_ten_million_ingot">最高打赏金额1000万元宝</string>
+    <string name="at_least_reward_ten_ingot">最低打赏金额10元宝</string>
+    <string name="all_read">全部已读</string>
+    <string name="success_reward">成功打赏</string>
+    <string name="deduct">扣除</string>
+    <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
+    <string name="publish_success">发布成功</string>
+
+
+    <!--discovery-->
+    <string name="daily">乐米日报</string>
+    <string name="train_program">训练项目</string>
+    <string name="train_count">完成 %1$d 次</string>
+    <string name="read_count">%1$d 次阅读</string>
+    <string name="back">返回</string>
+    <string name="you_want_study">你想要学?</string>
+    <string name="we_will_provide_early">我们会尽快为您提供</string>
+    <string name="change_trains">换一批</string>
+    <string name="tell_platform">告诉平台</string>
+    <string name="other_you_want_study">其他想要的训练项目</string>
+
+    <!--miss_talk-->
+    <string name="her_answer">她的回答</string>
+    <string name="hot_question">热门提问</string>
+    <string name="latest_question">最新提问</string>
+    <string name="ask_her_question">向她提问</string>
+    <string name="listener_number">%1$s人听过</string>
+    <string name="my_question">我的提问</string>
+    <string name="love_miss">%1$s人喜欢了小姐姐</string>
+    <string name="reward_miss">%1$s人打赏了小姐姐</string>
+    <string name="love">喜欢</string>
+    <string name="comment">评论</string>
+    <string name="voice_time">%1$d秒</string>
+    <string name="love_people_number">%1$s人喜欢</string>
+    <string name="count">(%1$s)</string>
+    <string name="reply_someBody">回复%1$s :</string>
+    <string name="no_miss_reply">还没有小姐姐的回答哦~</string>
+    <string name="no_miss_introduce">小姐姐还没有写简介</string>
+    <string name="no_question">你还没提问过哦</string>
+    <string name="ask_question_to_miss">向小姐姐提问</string>
+    <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
+    <string name="miss_first_time">快用提问夺走小姐姐的"第一次"吧</string>
+    <string name="source_and_time">来源: %1$s    %2$s</string>
 </resources>

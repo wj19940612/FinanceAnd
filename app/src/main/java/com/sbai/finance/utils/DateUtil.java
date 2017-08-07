@@ -203,6 +203,12 @@ public class DateUtil {
         return dateFormat.format(date);
     }
 
+    public static String getFormatSpecialSlashNoHour(long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH_NO_HOUR);
+        Date date = new Date(timestamp);
+        return dateFormat.format(date);
+    }
+
     /**
      * 将日期格式转化为时间(秒数)
      *
@@ -328,6 +334,29 @@ public class DateUtil {
             }
         } else {
             return DateUtil.format(createTime, DateUtil.FORMAT_YEAR_MONTH_DAY);
+        }
+    }
+
+    /**
+     * 格式化时间  一分钟之内显示刚刚
+     * 一小时内显示多少分钟前
+     * 一小时后显示几点几分 06:24
+     * 超过零点显示几月几日 07/07
+     * 不是今年  则 2015/12/18
+     *
+     * @param createTime
+     * @return
+     */
+    public static String getMissFormatTime(long createTime) {
+        long systemTime = System.currentTimeMillis();
+        if (DateUtil.isInThisYear(createTime)) {
+            if (DateUtil.isToday(createTime, systemTime)) {
+                return DateUtil.format(createTime, "HH:mm");
+            } else {
+                return DateUtil.format(createTime, "MM/dd");
+            }
+        } else {
+            return DateUtil.format(createTime, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR);
         }
     }
 

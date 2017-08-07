@@ -237,7 +237,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="3"
             android:background="@null"
-            android:hint="@string/comment"
+            android:hint="@string/publish_comment"
             android:maxLength="300"
             android:padding="14dp"
             android:textColorHint="@color/unluckyText"
