@@ -32,6 +32,7 @@ public class API extends RequestManager {
     private ApiParams mApiParams;
     private ApiIndeterminate mIndeterminate;
     private RetryPolicy mRetryPolicy;
+    private String mBody;
 
     public API(String uri) {
         this(Request.Method.GET, uri, null, 0);
@@ -56,15 +57,19 @@ public class API extends RequestManager {
     }
 
     public API(int method, String uri, ApiParams apiParams, int version) {
-        this(method, uri, apiParams, version, null);
+        this(method, uri, apiParams, null, version);
     }
 
-    public API(int method, String uri, ApiParams apiParams, int version, String body) {
+    public API(int method, String uri, String jsonBody) {
+        this(method, uri, null, jsonBody, 0);
+    }
 
+    public API(int method, String uri, ApiParams apiParams, String jsonBody, int version) {
         mUri = uri;
         mApiParams = apiParams;
         mMethod = method;
         mTag = "";
+        mBody = jsonBody;
     }
 
 
@@ -161,7 +166,8 @@ public class API extends RequestManager {
             type = mCallback.getGenericType();
         }
 
-        GsonRequest request = new GsonRequest(mMethod, url, headers, mApiParams, type, mCallback);
+        GsonRequest request
+                = new GsonRequest(mMethod, url, headers, mApiParams, mBody, type, mCallback);
         request.setTag(mTag);
 
         if (mRetryPolicy != null) {
