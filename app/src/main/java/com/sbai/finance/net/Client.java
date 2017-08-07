@@ -383,7 +383,7 @@ public class Client {
      * @return
      */
     public static API getNewMessageCount() {
-        return new API(POST, "/msg/msg/count.do", null);
+        return new API(POST, "/msg/msg/count.do");
     }
 
     /**
@@ -1358,7 +1358,7 @@ public class Client {
      * @return
      */
     public static API requestUserFundInfo() {
-        return new API(POST, "/user/userAccount/userAccountInfo.do", null);
+        return new API(POST, "/user/userAccount/userAccountInfo.do");
     }
 
     /**
@@ -1414,7 +1414,7 @@ public class Client {
 
     //提现手续费
     public static API requestWithDrawPoundage() {
-        return new API(POST, "/user/withdraw/getFee.do", null);
+        return new API(POST, "/user/withdraw/getFee.do");
     }
 
     /**
