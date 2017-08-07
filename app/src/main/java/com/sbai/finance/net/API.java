@@ -32,6 +32,7 @@ public class API extends RequestManager {
     private ApiParams mApiParams;
     private ApiIndeterminate mIndeterminate;
     private RetryPolicy mRetryPolicy;
+    private String mBody;
 
     public API(String uri) {
         this(Request.Method.GET, uri, null, 0);
@@ -153,7 +154,8 @@ public class API extends RequestManager {
             type = mCallback.getGenericType();
         }
 
-        GsonRequest request = new GsonRequest(mMethod, url, headers, mApiParams, type, mCallback);
+        GsonRequest request
+                = new GsonRequest(mMethod, url, headers, mApiParams, mBody, type, mCallback);
         request.setTag(mTag);
 
         if (mRetryPolicy != null) {
