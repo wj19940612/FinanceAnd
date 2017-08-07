@@ -2,9 +2,12 @@ package com.sbai.finance.activity.miss;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +41,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.mediaPlayerUtil;
 import com.sbai.finance.view.MyListView;
@@ -102,6 +106,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     LinearLayout mReward;
     @BindView(R.id.commentNumber)
     TextView mCommentNumber;
+    @BindView(R.id.voiceLevel)
+    View mVoiceLevel;
+    @BindView(R.id.voiceArea)
+    LinearLayout mVoiceArea;
 
     private int mQuestionId;
     private int mType = 1;
@@ -212,11 +220,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(question.getReplyCount())));
         mVoice.setText(getString(R.string.voice_time, question.getSoundTime()));
 
-        /*if (MissVoiceRecorder.isHeard(question.getId())) {
+        if (MissVoiceRecorder.isHeard(question.getId())) {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.unluckyText));
         } else {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        }*/
+        }
 
         mMissAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,27 +235,54 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             }
         });
 
-        mVoice.setOnClickListener(new View.OnClickListener() {
+        mVoiceArea.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                        if (resp.isSuccess()) {
-                            if (mediaPlayerUtil.isPlaying()) {
-                                mediaPlayerUtil.release();
-                            } else {
-                                mediaPlayerUtil.play(question.getAnswerContext());
-                               /* if (!MissVoiceRecorder.isHeard(question.getId())) {
+                //加动画
+                mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+                AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+                animation.start();
+
+                if (!MissVoiceRecorder.isHeard(question.getId())) {
+                    //没听过
+                    Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                            if (resp.isSuccess()) {
+                                if (mediaPlayerUtil.isPlaying()) {
+                                    mediaPlayerUtil.release();
+                                    mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+                                } else {
+                                    mediaPlayerUtil.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+                                        @Override
+                                        public void onCompletion(MediaPlayer mp) {
+                                            mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+                                        }
+                                    });
+
                                     MissVoiceRecorder.markHeard(question.getId());
                                     question.setListenCount(question.getListenCount() + 1);
                                     mListenerNumber.setTextColor(ContextCompat.getColor(QuestionDetailActivity.this, R.color.unluckyText));
                                     mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
-                                }*/
+                                }
                             }
                         }
+                    }).fire();
+                } else {
+                    //听过
+                    if (mediaPlayerUtil.isPlaying()) {
+                        mediaPlayerUtil.release();
+                        mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+                    } else {
+                        mediaPlayerUtil.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+                            }
+                        });
                     }
-                }).fire();
+                }
             }
         });
 

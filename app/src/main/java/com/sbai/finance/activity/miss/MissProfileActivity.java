@@ -3,9 +3,12 @@ package com.sbai.finance.activity.miss;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,6 +43,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.mediaPlayerUtil;
 import com.sbai.finance.view.ObservableScrollView;
@@ -414,6 +418,10 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 			TextView mIngotNumber;
 			@BindView(R.id.split)
 			View mSplit;
+			@BindView(R.id.voiceLevel)
+			View mVoiceLevel;
+			@BindView(R.id.voiceArea)
+			LinearLayout mVoiceArea;
 
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
@@ -423,7 +431,7 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 			                        int position, List<Question> herAnswerList, final String TAG) {
 				if (item == null) return;
 				if (position == herAnswerList.size() - 1) {
-					mSplit.setVisibility(View.GONE);
+
 				}
 
 				Glide.with(context).load(item.getUserPortrait())
@@ -445,11 +453,11 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
-				/*if (MissVoiceRecorder.isHeard(item.getId())) {
+				if (MissVoiceRecorder.isHeard(item.getId())) {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 				} else {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-				}*/
+				}
 
 				if (item.getIsPrise() == 0) {
 					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
@@ -484,27 +492,54 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 					}
 				});
 
-				mVoice.setOnClickListener(new View.OnClickListener() {
+				mVoiceArea.setOnClickListener(new View.OnClickListener() {
+
 					@Override
 					public void onClick(View v) {
-						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									if (mediaPlayerUtil.isPlaying()) {
-										mediaPlayerUtil.release();
-									} else {
-										mediaPlayerUtil.play(item.getAnswerContext());
-										/*if (!MissVoiceRecorder.isHeard(item.getId())) {
+						//加动画
+						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+						animation.start();
+
+						if (!MissVoiceRecorder.isHeard(item.getId())) {
+							//没听过
+							Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+									if (resp.isSuccess()) {
+										if (mediaPlayerUtil.isPlaying()) {
+											mediaPlayerUtil.release();
+											mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+										} else {
+											mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+												@Override
+												public void onCompletion(MediaPlayer mp) {
+													mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+												}
+											});
+
 											MissVoiceRecorder.markHeard(item.getId());
 											item.setListenCount(item.getListenCount() + 1);
 											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 											mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-										}*/
+										}
 									}
 								}
+							}).fire();
+						} else {
+							//听过
+							if (mediaPlayerUtil.isPlaying()) {
+								mediaPlayerUtil.release();
+								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+							} else {
+								mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+									}
+								});
 							}
-						}).fire();
+						}
 					}
 				});
 			}
