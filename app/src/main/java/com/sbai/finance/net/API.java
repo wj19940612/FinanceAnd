@@ -54,11 +54,20 @@ public class API extends RequestManager {
         this(method, uri, apiParams, 0);
     }
 
-    public API(int method, String uri, ApiParams apiParams, int version) {
+    public  API(int method, String uri, ApiParams apiParams, int version) {
+        this(method, uri, apiParams, null, version);
+    }
+
+    public API(int method, String uri, String jsonBody) {
+        this(method, uri, null, jsonBody, 0);
+    }
+
+    public API(int method, String uri, ApiParams apiParams, String jsonBody, int version) {
         mUri = uri;
         mApiParams = apiParams;
         mMethod = method;
         mTag = "";
+        mBody = jsonBody;
     }
 
     public API setTag(String tag) {
