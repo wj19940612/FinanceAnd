@@ -336,7 +336,8 @@
         <activity
             android:name=".activity.miss.MissProfileActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.MyQuestionsActivity"
+        <activity
+            android:name=".activity.miss.MyQuestionsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -358,14 +359,14 @@
             android:name=".activity.miss.MessagesActivity"
             android:screenOrientation="portrait">
         </activity>
-
         <activity
             android:name=".activity.daily.DailyReportActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.miss.MissAvatarActivity">
+        </activity>
     </application>
 
 </manifest>

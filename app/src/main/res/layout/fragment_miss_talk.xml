@@ -21,12 +21,6 @@
             android:textColor="@color/primaryText"
             android:textSize="17sp"/>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        </RelativeLayout>
-
         <ImageView
             android:id="@+id/more"
             android:layout_width="wrap_content"
@@ -81,13 +75,29 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:background="@android:color/white"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"/>
+                    android:orientation="vertical">
+
+                    <com.sbai.finance.view.EmptyRecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"/>
+
+                    <TextView
+                        android:id="@+id/missEmpty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="40dp"
+                        android:text="现在还没有小姐姐哦"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
 
                 <View
                     android:layout_width="match_parent"
@@ -95,6 +105,7 @@
                     android:background="@color/split"/>
 
                 <TextView
+                    android:id="@+id/hotQuestion"
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
                     android:background="@color/background"
@@ -102,7 +113,8 @@
                     android:paddingLeft="14dp"
                     android:text="@string/hot_question"
                     android:textColor="@color/luckyText"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:visibility="gone"/>
 
                 <com.sbai.finance.view.MyListView
                     android:id="@+id/hotListView"
@@ -125,6 +137,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:divider="@null"/>
+
+                <TextView
+                    android:id="@+id/empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="200dp"
+                    android:text="@string/ask_miss"
+                    android:visibility="gone"/>
 
             </LinearLayout>
         </ScrollView>

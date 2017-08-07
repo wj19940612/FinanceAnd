@@ -2012,4 +2012,16 @@ public class Client {
                         .put("questionId", questionId)
         );
     }
+
+    /**
+     * 听语音
+     * @param questionId
+     * @return
+     */
+    public static API listen(int questionId) {
+        return new API("/explain/question/listen.do",
+                new ApiParams()
+                        .put("questionId", questionId)
+        );
+    }
 }

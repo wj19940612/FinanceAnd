@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -31,6 +31,7 @@ import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Prise;
 import com.sbai.finance.model.missTalk.Question;
 import com.sbai.finance.model.missTalk.QuestionReply;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -53,7 +54,9 @@ import butterknife.OnClick;
 import static com.sbai.finance.R.id.question;
 
 
-public class QuestionDetailActivity extends BaseActivity implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
+    private static final int REQ_COMMENT = 1001;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -100,7 +103,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
     @BindView(R.id.commentNumber)
     TextView mCommentNumber;
 
-    private Question mQuestionDetail;
+    private int mQuestionId;
     private int mType = 1;
     private int mPageSize = 20;
     private int mPage = 0;
@@ -108,6 +111,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
     private View mFootView;
     private QuestionReplyListAdapter mQuestionReplyListAdapter;
     private RewardInfo mRewardInfo;
+    private Question mQuestionDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,22 +121,31 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
 
         initData(getIntent());
         initRewardInfo();
-        updateQuestionDetails(this);
         mSet = new HashSet<>();
         mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mQuestionReplyListAdapter);
-        mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(this);
 
+        requestQuestionDetail();
         requestQuestionReplyList();
         initSwipeRefreshLayout();
-        mScrollView.smoothScrollTo(0, 0);
+    }
+
+    private void requestQuestionDetail() {
+        Client.getQuestionDetails(mQuestionId).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Question>, Question>() {
+                    @Override
+                    protected void onRespSuccessData(Question question) {
+                        updateQuestionDetail(question);
+                        mQuestionDetail = question;
+                    }
+                }).fire();
     }
 
     private void initRewardInfo() {
         mRewardInfo = new RewardInfo();
-        mRewardInfo.setId(mQuestionDetail.getId());
+        mRewardInfo.setId(mQuestionId);
         mRewardInfo.setType(RewardInfo.TYPE_QUESTION);
         List<RewardMoney> list = new ArrayList<>();
         RewardMoney rewardMoney = new RewardMoney();
@@ -153,6 +166,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
             public void onRefresh() {
                 mSet.clear();
                 mPage = 0;
+                requestQuestionDetail();
                 requestQuestionReplyList();
             }
         });
@@ -169,50 +183,79 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
     }
 
     private void initData(Intent intent) {
-        mQuestionDetail = (Question) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
+        mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
     }
 
-    private void updateQuestionDetails(Context context) {
-        Glide.with(context).load(mQuestionDetail.getUserPortrait())
+    private void updateQuestionDetail(final Question question) {
+        Glide.with(this).load(question.getUserPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
-                .transform(new GlideCircleTransform(context))
+                .transform(new GlideCircleTransform(this))
                 .into(mAvatar);
 
-        Glide.with(context).load(mQuestionDetail.getCustomPortrait())
+        Glide.with(this).load(question.getCustomPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
-                .transform(new GlideCircleTransform(context))
+                .transform(new GlideCircleTransform(this))
                 .into(mMissAvatar);
 
-        if (mQuestionDetail.getIsPrise() == 0) {
+        if (question.getIsPrise() == 0) {
             mLoveImage.setImageResource(R.drawable.ic_miss_love);
         } else {
             mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
         }
 
-        mName.setText(mQuestionDetail.getUserName());
-        mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(mQuestionDetail.getCreateTime()));
-        mQuestion.setText(mQuestionDetail.getQuestionContext());
-        mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestionDetail.getListenCount())));
-        mLoveNumber.setText(context.getString(R.string.love_miss, StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
-        mRewardNumber.setText(context.getString(R.string.reward_miss, StrFormatter.getFormatCount(mQuestionDetail.getAwardCount())));
-        mCommentNumber.setText(context.getString(R.string.comment_number_string, StrFormatter.getFormatCount(mQuestionDetail.getReplyCount())));
-        mVoice.setText(context.getString(R.string.voice_time, mQuestionDetail.getSoundTime()));
+        mName.setText(question.getUserName());
+        mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(question.getCreateTime()));
+        mQuestion.setText(question.getQuestionContext());
+        mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
+        mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(question.getPriseCount())));
+        mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(question.getAwardCount())));
+        mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(question.getReplyCount())));
+        mVoice.setText(getString(R.string.voice_time, question.getSoundTime()));
+
+        /*if (MissVoiceRecorder.isHeard(question.getId())) {
+            mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.unluckyText));
+        } else {
+            mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        }*/
+
+        mMissAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(QuestionDetailActivity.this, MissProfileActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, question.getAnswerCustomId())
+                        .execute();
+            }
+        });
+
         mVoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mQuestionDetail.getIsPlaying() == false) {
-                    mediaPlayerUtil.play(mQuestionDetail.getAnswerContext());
-                    mQuestionDetail.setIsPlaying(true);
-                } else {
-                    mediaPlayerUtil.release();
-                    mQuestionDetail.setIsPlaying(false);
-                }
+                Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                        if (resp.isSuccess()) {
+                            if (mediaPlayerUtil.isPlaying()) {
+                                mediaPlayerUtil.release();
+                            } else {
+                                mediaPlayerUtil.play(question.getAnswerContext());
+                               /* if (!MissVoiceRecorder.isHeard(question.getId())) {
+                                    MissVoiceRecorder.markHeard(question.getId());
+                                    question.setListenCount(question.getListenCount() + 1);
+                                    mListenerNumber.setTextColor(ContextCompat.getColor(QuestionDetailActivity.this, R.color.unluckyText));
+                                    mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
+                                }*/
+                            }
+                        }
+                    }
+                }).fire();
             }
         });
+
+        mScrollView.smoothScrollTo(0, 0);
     }
 
     private void requestQuestionReplyList() {
-        Client.getQuestionReplyList(mType, mQuestionDetail.getId(), mPage, mPageSize)
+        Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
@@ -271,20 +314,6 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
                 mQuestionReplyListAdapter.add(questionReply);
             }
         }
-
-        mScrollView.smoothScrollTo(0, 0);
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition =
-                (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
     @OnClick({R.id.comment, R.id.reward, R.id.love})
@@ -295,7 +324,7 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
                     Launcher.with(getActivity(), CommentActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
                             .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
-                            .execute();
+                            .executeForResult(REQ_COMMENT);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -311,17 +340,22 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
                 }
                 break;
             case R.id.love:
-                Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+                if (LocalUser.getUser().isLogin()) {
+                    Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
-                    @Override
-                    protected void onRespSuccessData(Prise prise) {
-                        if (prise.getIsPrise() == 0) {
-                            mLoveImage.setImageResource(R.drawable.ic_miss_love);
-                        } else {
-                            mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+                        @Override
+                        protected void onRespSuccessData(Prise prise) {
+                            if (prise.getIsPrise() == 0) {
+                                mLoveImage.setImageResource(R.drawable.ic_miss_love);
+                            } else {
+                                mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+                            }
+                            requestQuestionDetail();
                         }
-                    }
-                }).fire();
+                    }).fire();
+                } else{
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
     }
@@ -381,24 +415,41 @@ public class QuestionDetailActivity extends BaseActivity implements AbsListView.
 
             public void bindingData(Context context, QuestionReply.DataBean item) {
                 if (item == null) return;
-                if (item.getUserModel() == null) return;
 
-                Glide.with(context).load(item.getUserModel().getUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
-                        .into(mAvatar);
+                if (item.getUserModel() != null) {
+                    Glide.with(context).load(item.getUserModel().getUserPortrait())
+                            .placeholder(R.drawable.ic_default_avatar)
+                            .transform(new GlideCircleTransform(context))
+                            .into(mAvatar);
 
-                mUserName.setText(item.getUserModel().getUserName());
+                    mUserName.setText(item.getUserModel().getUserName());
+                    mPublishTime.setText(DateUtil.getFormatTime(item.getUserModel().getCreateTime()));
+                }
+
                 mOpinionContent.setText(item.getContent());
-                mPublishTime.setText(DateUtil.getFormatTime(item.getUserModel().getCreateTime()));
+
                 if (item.getReplys().size() == 0) {
                     mReplyArea.setVisibility(View.GONE);
                 } else {
                     mReplyArea.setVisibility(View.VISIBLE);
-                    mReplyName.setText(item.getReplys().get(0).getUserModel().getUserName());
+                    if (item.getReplys().get(0).getUserModel()!= null) {
+                        mReplyName.setText(item.getReplys().get(0).getUserModel().getUserName());
+                    }
                     mReplyContent.setText(item.getReplys().get(0).getContent());
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_COMMENT && resultCode == RESULT_OK) {
+            mSet.clear();
+            mPage = 0;
+            mSwipeRefreshLayout.setRefreshing(true);
+            requestQuestionDetail();
+            requestQuestionReplyList();
         }
     }
 }

@@ -52,6 +52,13 @@ public class mediaPlayerUtil {
 		}
 	}
 
+	public static boolean isPlaying(){
+		if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+			return true;
+		}
+		return false;
+	}
+
 	public static void release() {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.stop();
