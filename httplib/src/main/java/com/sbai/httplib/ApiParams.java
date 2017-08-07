@@ -9,13 +9,13 @@ import java.util.HashMap;
 public class ApiParams {
 
     private HashMap<String, String> mParams;
-    private Object mObject;
+    private Object mJsonBody;
 
     public ApiParams() {
     }
 
-    public ApiParams(Object jsonObject) {
-        mObject = jsonObject;
+    public ApiParams(Object jsonBody) {
+        mJsonBody = jsonBody;
     }
 
     public ApiParams(Class<?> clazz, Object object) {
@@ -67,8 +67,8 @@ public class ApiParams {
     }
 
     public String toJson() {
-        if (mObject != null) {
-            return new Gson().toJson(mObject);
+        if (mJsonBody != null) {
+            return new Gson().toJson(mJsonBody);
         }
         return null;
     }
