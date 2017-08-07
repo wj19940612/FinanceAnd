@@ -76,7 +76,7 @@ public class ReplyDialogFragment extends BaseDialogFragment{
 					Launcher.with(getActivity(), ReplyActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mInvitationUserId)
 							.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId())
-							.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getReplyParentId())
+							.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId())
 							.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName())
 							.execute();
 					dismissAllowingStateLoss();

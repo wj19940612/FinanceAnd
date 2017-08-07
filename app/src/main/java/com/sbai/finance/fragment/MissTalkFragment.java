@@ -1,7 +1,9 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -89,8 +92,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	TextView mMissEmpty;
 
 	private List<Miss> mMissList;
-	private List<Question> mHotQuestionList;
-	private List<Question> mLatestQuestionList;
 	private MissListAdapter mMissListAdapter;
 	private HotQuestionListAdapter mHotQuestionListAdapter;
 	private LatestQuestionListAdapter mLatestQuestionListAdapter;
@@ -161,8 +162,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	private void initHotQuestionList() {
-		mHotQuestionList = new ArrayList<>();
-		mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity(), mHotQuestionList, TAG);
+		mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity(), TAG);
 		mHotListView.setAdapter(mHotQuestionListAdapter);
 		mHotListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -177,8 +177,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	private void initLatestQuestionList() {
-		mLatestQuestionList = new ArrayList<>();
-		mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity(), mLatestQuestionList, TAG);
+		mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity(), TAG);
 		mLatestListView.setEmptyView(mEmpty);
 		mLatestListView.setAdapter(mLatestQuestionListAdapter);
 		mLatestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -457,13 +456,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	static class HotQuestionListAdapter extends ArrayAdapter<Question> {
 
 		private Context mContext;
-		private List<Question> mHotQuestionList;
 		private String TAG;
 
-		private HotQuestionListAdapter(@NonNull Context context, List<Question> hotQuestionList, String TAG) {
+		private HotQuestionListAdapter(@NonNull Context context, String TAG) {
 			super(context, 0);
 			this.mContext = context;
-			this.mHotQuestionList = hotQuestionList;
 			this.TAG = TAG;
 		}
 
@@ -479,7 +476,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position), position, mHotQuestionList, TAG);
+			viewHolder.bindingData(mContext, getItem(position), position, TAG);
 			return convertView;
 		}
 
@@ -508,18 +505,18 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			TextView mIngotNumber;
 			@BindView(R.id.split)
 			View mSplit;
+			@BindView(R.id.voiceLevel)
+			View mVoiceLevel;
+			@BindView(R.id.voiceArea)
+			LinearLayout mVoiceArea;
 
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
 
 			public void bindingData(final Context context, final Question item,
-			                        int position, List<Question> hotQuestionList, final String TAG) {
+			                        final int position, final String TAG) {
 				if (item == null) return;
-
-				if (position == hotQuestionList.size() - 1) {
-					mSplit.setVisibility(View.GONE);
-				}
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -583,18 +580,33 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 					}
 				});
 
-				mVoice.setOnClickListener(new View.OnClickListener() {
+				mVoiceArea.setOnClickListener(new View.OnClickListener() {
+
 					@Override
 					public void onClick(View v) {
-						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									if (mediaPlayerUtil.isPlaying()) {
-										mediaPlayerUtil.release();
-									} else {
-										mediaPlayerUtil.play(item.getAnswerContext());
-										if (!MissVoiceRecorder.isHeard(item.getId())) {
+						
+						//加动画
+						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+						animation.start();
+
+						if (!MissVoiceRecorder.isHeard(item.getId())) {
+							//没听过
+							Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+									if (resp.isSuccess()) {
+										if (mediaPlayerUtil.isPlaying()) {
+											mediaPlayerUtil.release();
+											mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+										} else {
+											mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+												@Override
+												public void onCompletion(MediaPlayer mp) {
+													mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+												}
+											});
+
 											MissVoiceRecorder.markHeard(item.getId());
 											item.setListenCount(item.getListenCount() + 1);
 											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
@@ -602,8 +614,21 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 										}
 									}
 								}
+							}).fire();
+						} else {
+							//听过
+							if (mediaPlayerUtil.isPlaying()) {
+								mediaPlayerUtil.release();
+								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+							} else {
+								mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+									}
+								});
 							}
-						}).fire();
+						}
 					}
 				});
 			}
@@ -613,13 +638,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	static class LatestQuestionListAdapter extends ArrayAdapter<Question> {
 
 		private Context mContext;
-		private List<Question> mLatestQuestionList;
 		private String TAG;
 
-		private LatestQuestionListAdapter(@NonNull Context context, List<Question> latestQuestionList, String TAG) {
+		private LatestQuestionListAdapter(@NonNull Context context, String TAG) {
 			super(context, 0);
 			this.mContext = context;
-			this.mLatestQuestionList = latestQuestionList;
 			this.TAG = TAG;
 		}
 
@@ -635,7 +658,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position), position, mLatestQuestionList, TAG);
+			viewHolder.bindingData(mContext, getItem(position), position, TAG);
 			return convertView;
 		}
 
@@ -664,17 +687,19 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			TextView mIngotNumber;
 			@BindView(R.id.split)
 			View mSplit;
+			@BindView(R.id.voiceLevel)
+			View mVoiceLevel;
+			@BindView(R.id.voiceArea)
+			LinearLayout mVoiceArea;
+
 
 			ViewHolder(View view) {
 				ButterKnife.bind(this, view);
 			}
 
 			public void bindingData(final Context context, final Question item,
-			                        int position, List<Question> latestQuestionList, final String TAG) {
+			                        int position, final String TAG) {
 				if (item == null) return;
-				if (position == latestQuestionList.size() - 1) {
-					mSplit.setVisibility(View.GONE);
-				}
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -738,18 +763,33 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 					}
 				});
 
-				mVoice.setOnClickListener(new View.OnClickListener() {
+				mVoiceArea.setOnClickListener(new View.OnClickListener() {
+
 					@Override
 					public void onClick(View v) {
-						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									if (mediaPlayerUtil.isPlaying()) {
-										mediaPlayerUtil.release();
-									} else {
-										mediaPlayerUtil.play(item.getAnswerContext());
-									if (!MissVoiceRecorder.isHeard(item.getId())) {
+						//加动画
+						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+						animation.start();
+
+						if (!MissVoiceRecorder.isHeard(item.getId())) {
+							//没听过
+							Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+								@Override
+								protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+									if (resp.isSuccess()) {
+										if (mediaPlayerUtil.isPlaying()) {
+											mediaPlayerUtil.release();
+											mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+										} else {
+											mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+												@Override
+												public void onCompletion(MediaPlayer mp) {
+													mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+												}
+											});
+
+
 											MissVoiceRecorder.markHeard(item.getId());
 											item.setListenCount(item.getListenCount() + 1);
 											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
@@ -757,8 +797,21 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 										}
 									}
 								}
+							}).fire();
+						} else {
+							//听过
+							if (mediaPlayerUtil.isPlaying()) {
+								mediaPlayerUtil.release();
+								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+							} else {
+								mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+									}
+								});
 							}
-						}).fire();
+						}
 					}
 				});
 			}

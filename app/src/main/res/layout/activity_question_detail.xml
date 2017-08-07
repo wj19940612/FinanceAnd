@@ -102,26 +102,41 @@
                         android:layout_marginTop="8dp"
                         android:src="@drawable/ic_default_avatar"/>
 
-                    <TextView
-                        android:id="@+id/voice"
+                    <LinearLayout
+                        android:id="@+id/voiceArea"
                         android:layout_width="98dp"
                         android:layout_height="32dp"
                         android:layout_alignTop="@+id/missAvatar"
                         android:layout_toLeftOf="@+id/missAvatar"
                         android:background="@drawable/bg_voice_answer"
-                        android:gravity="center"
-                        android:text="500秒"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"/>
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/voiceLevel"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginLeft="8dp"
+                            android:background="@drawable/ic_voice_4"/>
+
+                        <TextView
+                            android:id="@+id/voice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/voice_time"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/listenerNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/voice"
+                        android:layout_alignLeft="@+id/voiceArea"
                         android:layout_below="@+id/missAvatar"
                         android:layout_marginTop="5dp"
-                        android:text="3.6万人听过"
+                        android:text="@string/listener_number"
                         android:textColor="@color/colorPrimary"
                         android:textSize="10sp"/>
                 </RelativeLayout>

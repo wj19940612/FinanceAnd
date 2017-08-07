@@ -107,10 +107,10 @@
                 <TextView
                     android:id="@+id/hotQuestion"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/background"
-                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
+                    android:paddingTop="14dp"
                     android:text="@string/hot_question"
                     android:textColor="@color/luckyText"
                     android:textSize="12sp"
@@ -124,10 +124,10 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/background"
-                    android:gravity="center_vertical"
                     android:paddingLeft="14dp"
+                    android:paddingTop="14dp"
                     android:text="@string/latest_question"
                     android:textColor="@color/luckyText"
                     android:textSize="12sp"/>
