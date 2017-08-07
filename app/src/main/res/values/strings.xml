@@ -58,7 +58,7 @@
     <string name="please_input_phone">请输入手机号</string>
     <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
     <string name="reset_password_success">重设密码成功，请重新登录</string>
-    
+
     <!--Home-->
     <string name="futures">期货</string>
     <string name="stock">股票</string>
@@ -228,11 +228,13 @@
     <!--设置-->
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
-    <string name="safety_setting">安全设置</string>
-    <string name="safety_center">安全中心</string>
-    <string name="setting_safety_password">设置安全密码</string>
-    <string name="modify_safety_password">修改安全密码</string>
-    <string name="forget_safety_password">忘记安全密码</string>
+    <string name="security_setting">安全设置</string>
+    <string name="security_center">安全中心</string>
+    <string name="set_security_password">设置安全密码</string>
+    <string name="set_login_password">设置登录密码</string>
+    <string name="modify_login_password">修改登录密码</string>
+    <string name="modify_security_password">修改安全密码</string>
+    <string name="forget_security_password">忘记安全密码</string>
 
     <!--安全设置-->
     <string name="please_input_old_password">请输入旧安全密码</string>

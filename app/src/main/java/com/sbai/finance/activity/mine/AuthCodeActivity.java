@@ -26,9 +26,12 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.PasswordInputFilter;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +47,9 @@ public class AuthCodeActivity extends BaseActivity {
     EditText mAuthCode;
     @BindView(R.id.getAuthCode)
     TextView mGetAuthCode;
-    @BindView(R.id.password)
+    @BindView(R.id.oldPassword)
     EditText mPassword;
-    @BindView(R.id.showPassword)
+    @BindView(R.id.showOldPassword)
     ImageView mShowPassword;
     @BindView(R.id.complete)
     TextView mComplete;
@@ -125,13 +128,13 @@ public class AuthCodeActivity extends BaseActivity {
         mPhone = intent.getStringExtra(ExtraKeys.PHONE);
     }
 
-    @OnClick({R.id.getAuthCode, R.id.showPassword, R.id.complete, R.id.rootView})
+    @OnClick({R.id.getAuthCode, R.id.showOldPassword, R.id.complete, R.id.rootView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
                 getAuthCode();
                 break;
-            case R.id.showPassword:
+            case R.id.showOldPassword:
                 togglePasswordVisible();
                 break;
             case R.id.complete:
@@ -146,6 +149,11 @@ public class AuthCodeActivity extends BaseActivity {
     private void doCompleteButtonClick() {
         String password = mPassword.getText().toString();
         String authCode = mAuthCode.getText().toString().trim();
+        try {
+            SecurityUtil.md5Encrypt(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         if (mPageType == PAGE_TYPE_REGISTER) {
             Client.register(mPhone, password, authCode)
                     .setTag(TAG).setIndeterminate(this)

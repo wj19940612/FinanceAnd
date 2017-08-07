@@ -114,7 +114,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/passwordArea"
+            android:id="@+id/oldPasswordArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -122,7 +122,7 @@
             android:minHeight="50dp">
 
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/oldPassword"
                 style="@style/SignEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                 android:maxLength="18"/>
 
             <ImageView
-                android:id="@+id/showPassword"
+                android:id="@+id/showOldPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_show_password"/>

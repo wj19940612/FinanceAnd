@@ -36,6 +36,7 @@ public class UserInfo implements Parcelable {
     private String land;
     private String userPhone;
     private boolean bIsSetNickName;
+    private boolean isSetPass; // 是否设置登录密码
     //用户头像网址
     private String userPortrait;
     private int agencyId;
@@ -112,6 +113,14 @@ public class UserInfo implements Parcelable {
 
     public boolean isbIsSetNickName() {
         return bIsSetNickName;
+    }
+
+    public boolean isSetPass() {
+        return isSetPass;
+    }
+
+    public void setSetPass(boolean setPass) {
+        isSetPass = setPass;
     }
 
     public void setbIsSetNickName(boolean bIsSetNickName) {

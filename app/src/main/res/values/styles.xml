@@ -22,7 +22,7 @@
         <item name="android:textColor">@color/primaryText</item>
         <item name="android:textSize">15sp</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColorHint">@color/secondaryText</item>
+        <item name="android:textColorHint">@color/unluckyText</item>
         <item name="android:textCursorDrawable">@drawable/color_cursor</item>
     </style>
 

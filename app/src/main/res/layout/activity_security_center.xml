@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.mine.setting.SecurityCenterActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_split_height"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/security_center"
+        app:titleTextColor="@color/primaryText"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/setLoginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:minHeight="@dimen/common_height"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/set_login_password"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/split"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/modifyLoginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:minHeight="@dimen/common_height"
+        android:visibility="gone"
+        app:hasBottomSplitLine="true"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/modify_login_password"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:splitLineColor="@color/split"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/setSecurityPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:minHeight="@dimen/common_height"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/set_security_password"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"/>
+
+    <LinearLayout
+        android:id="@+id/modifySecurityPasswordArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.sbai.finance.view.IconTextRow
+            android:id="@+id/modifySecurityPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white"
+            android:minHeight="@dimen/common_height"
+            app:hasBottomSplitLine="true"
+            app:rightIcon="@drawable/ic_arrow_right_tint"
+            app:rowText="@string/modify_security_password"
+            app:rowTextColor="@color/primaryText"
+            app:rowTextSize="15sp"
+            app:splitLineColor="@color/split"/>
+
+        <com.sbai.finance.view.IconTextRow
+            android:id="@+id/forgetSecurityPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white"
+            android:minHeight="@dimen/common_height"
+            app:rightIcon="@drawable/ic_arrow_right_tint"
+            app:rowText="@string/forget_security_password"
+            app:rowTextColor="@color/primaryText"
+            app:rowTextSize="15sp"/>
+    </LinearLayout>
+</LinearLayout>

@@ -16,7 +16,7 @@
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
-        app:titleText="@string/modify_safety_password"
+        app:titleText="@string/modify_security_password"
         app:titleTextColor="@color/primaryText"/>
 
     <android.support.v7.widget.AppCompatTextView

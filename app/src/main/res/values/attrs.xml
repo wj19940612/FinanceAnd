@@ -17,6 +17,11 @@
         <attr name="textPaddingBottom" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="PasswordEditText">
+        <attr name="textHint" format="reference|string"/>
+        <attr name="hasBottomLine" format="boolean"/>
+        <attr name="bottomLineColor" format="reference|color"/>
+    </declare-styleable>
 
     <declare-styleable name="IconTextRow">
         <attr name="leftIcon" format="reference"/>
@@ -118,8 +123,8 @@
     <declare-styleable name="BattleProgress">
         <attr name="progressDrawable" format="reference|color"/>
         <attr name="orientation">
-            <enum name="horizontal" value="0" />
-            <enum name="vertical" value="1" />
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
         </attr>
         <attr name="rightPadding" format="dimension"/>
         <attr name="leftPadding" format="dimension"/>
