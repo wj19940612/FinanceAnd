@@ -9,7 +9,6 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -66,6 +65,9 @@ public class ScoreView extends View {
     private int mTitleSize;
     //内圆环直径
     private int mInsideLoopRadius;
+
+
+    private TestResultModel mTestResultModel;
 
     public ScoreView(Context context) {
         this(context, null);
@@ -146,32 +148,39 @@ public class ScoreView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         //雷达图半径
-
-
         mRadius = Math.min(h, w) / 2 * 0.5f;
-        mMaxValue = mRadius * 2;
+        mMaxValue = mRadius;
 
-        Log.d(TAG, "onSizeChanged: ");
+        if (mTestResultModel != null) {
+            double[] dataScore = {mTestResultModel.getProfitAccuracy() * mMaxValue,
+                    mTestResultModel.getRiskAccuracy() * mMaxValue,
+                    mTestResultModel.getBaseAccuracy() * mMaxValue,
+                    mTestResultModel.getSkillAccuracy() * mMaxValue,
+                    mTestResultModel.getTheoryAccuracy() * mMaxValue};
 
+            mData = dataScore;
+        }
 
         mInsideLoopRadius = (int) (mRadius * 0.8);
         //中心坐标
         mCenterX = w / 2;
         mCenterY = h / 2;
         postInvalidate();
-        super.onSizeChanged(w, h, oldw, oldh);
     }
 
+
     @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         drawCircle(canvas);
         drawLines(canvas);
         drawRegion(canvas);
         drawScore(canvas);
         drawTitle(canvas);
     }
+
 
     private void drawCircle(Canvas canvas) {
         canvas.drawCircle(mCenterX, mCenterY, mInsideLoopRadius, mInsideLoopPaint);
@@ -239,7 +248,6 @@ public class ScoreView extends View {
         for (int i = 0; i < DataCount; i++) {
             score += mData[i];
         }
-//        canvas.drawText(score + "", mCenterX, mCenterY + mScoreSize / 2, mScorePaint);
     }
 
     /**
@@ -251,13 +259,9 @@ public class ScoreView extends View {
         for (int i = 0; i < DataCount; i++) {
             int x = getPoint(i, mRadarMargin, 1).x;
             int y = getPoint(i, mRadarMargin, 1).y;
-
-//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), icons[i]);
-//            int iconHeight = bitmap.getHeight();
             int iconHeight = 0;
             float titleWidth = mTitlePaint.measureText(mTitles[i]);
 
-            //底下两个角的坐标需要向下移动半个图片的位置（1、2）
             if (i == 1) {
                 y += (iconHeight / 2);
             } else if (i == 2) {
@@ -284,7 +288,7 @@ public class ScoreView extends View {
     }
 
     /**
-     * 获取雷达图上各个点的坐标（包括维度标题与图标的坐标）
+     * 获取雷达图上各个点的坐标（包括维度标题坐标）
      *
      * @param position    坐标位置
      * @param radarMargin 雷达图与维度标题的间距
@@ -339,10 +343,7 @@ public class ScoreView extends View {
     }
 
     public void setData(TestResultModel data) {
-        Log.d(TAG, "setData: " + mMaxValue+"  "+mRadius);
-        double[] dataScore = {data.getProfitAccuracy() * mMaxValue, data.getRiskAccuracy() * mMaxValue, data.getBaseAccuracy() * mMaxValue,
-                data.getSkillAccuracy() * mMaxValue, data.getTheoryAccuracy() * mMaxValue};
-        mData = dataScore;
-//        mMaxValue = 1;
+        mTestResultModel = data;
+        postInvalidate();
     }
 }

@@ -221,4 +221,24 @@ public class TestResultModel implements Parcelable{
             return new TestResultModel[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "TestResultModel{" +
+                "allAccuracy=" + allAccuracy +
+                ", createTime='" + createTime + '\'' +
+                ", finishStatus=" + finishStatus +
+                ", id=" + id +
+                ", level=" + level +
+                ", passPercent=" + passPercent +
+                ", baseAccuracy=" + baseAccuracy +
+                ", profitAccuracy=" + profitAccuracy +
+                ", riskAccuracy=" + riskAccuracy +
+                ", skillAccuracy=" + skillAccuracy +
+                ", theoryAccuracy=" + theoryAccuracy +
+                ", topicId=" + topicId +
+                ", updateTime='" + updateTime + '\'' +
+                ", userId=" + userId +
+                '}';
+    }
 }

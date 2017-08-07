@@ -45,15 +45,9 @@ public class LevelExamQuestionsActivity extends BaseActivity {
     private ExamQuestionsModel.ContentBean mSelectResult;
     private int mSelectPosition = -1;
 
-
-    //{"answers":[{"answerIds":[{"optionId":892321037251899393}],"topicId":"5980309868fad7db045c8986"}]}
-    //answerIds 可能有多个答案 optionId 选择的答案ID
-
     private TestAnswerUtils mTestAnswerUtils;
     private ArrayList<TestAnswerUtils.AnswersBean> mTestAnswerList;
     private ExamQuestionsModel mSelectQuestion;
-
-    private ArrayList<ExamQuestionsModel.ContentBean> mContentBeenList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +56,12 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         ButterKnife.bind(this);
 
 
-        mContentBeenList = new ArrayList<ExamQuestionsModel.ContentBean>();
         mTestAnswerUtils = new TestAnswerUtils();
         mTestAnswerList = new ArrayList<>();
 
         mTitleBar.setTitleSize(17);
         mExamQuestionsModelList = getIntent().getParcelableArrayListExtra(Launcher.EX_PAYLOAD);
-        mExamQuestionsAdapter = new ExamQuestionsAdapter(mContentBeenList);
+        mExamQuestionsAdapter = new ExamQuestionsAdapter(new ArrayList<ExamQuestionsModel.ContentBean>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mExamQuestionsAdapter);
         mRecyclerView.setItemAnimator(new BaseItemAnimator());
@@ -182,33 +175,30 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(TestResultModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
+
+                        //        // TODO: 2017/8/6 模拟数据
+                        TestResultModel testResultModel = new TestResultModel();
+                        testResultModel.setAllAccuracy(0.50);
+                        testResultModel.setPassPercent(0.20);
+                        testResultModel.setLevel(4);
+
+                        testResultModel.setBaseAccuracy(1);
+                        testResultModel.setProfitAccuracy(0.7);
+                        testResultModel.setRiskAccuracy(0.5);
+                        testResultModel.setSkillAccuracy(0.9);
+                        testResultModel.setTheoryAccuracy(0.1);
                         Launcher.with(getActivity(), ExamResultActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
+                                .putExtra(Launcher.EX_PAYLOAD, testResultModel)
                                 .execute();
                         finish();
+
+//                        Launcher.with(getActivity(), ExamResultActivity.class)
+//                                .putExtra(Launcher.EX_PAYLOAD, data)
+//                                .execute();
+//                        finish();
                     }
                 })
                 .fire();
-
-        Log.d(TAG, "confirmResult: " + mTestAnswerUtils.toString());
-
-
-//        // TODO: 2017/8/6 模拟数据
-//        TestResultModel testResultModel = new TestResultModel();
-//        testResultModel.setAllAccuracy(0.50);
-//        testResultModel.setPassPercent(0.20);
-//        testResultModel.setLevel(4);
-//
-//        testResultModel.setBaseAccuracy(0.3);
-//        testResultModel.setProfitAccuracy(0.2);
-//        testResultModel.setRiskAccuracy(0.2);
-//        testResultModel.setSkillAccuracy(0.2);
-//        testResultModel.setTheoryAccuracy(0.1);
-//        Launcher.with(getActivity(), ExamResultActivity.class)
-//                .putExtra(Launcher.EX_PAYLOAD, testResultModel)
-//                .execute();
-//        finish();
-
     }
 
 
@@ -228,12 +218,13 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         }
 
         public void updateData(ArrayList<ExamQuestionsModel.ContentBean> examQuestionsModels) {
-            mExamQuestionsModelList.clear();
+            if (mShowCount > 0) {
+                mExamQuestionsModelList.clear();
+                notifyItemRangeRemoved(0, mShowCount);
+            }
             mExamQuestionsModelList.addAll(examQuestionsModels);
-            notifyDataSetChanged();
-//            mExamQuestionsModelList = examQuestionsModels;
-//            notifyItemRangeChanged(0, mExamQuestionsModelList.size());
-//            mShowCount = examQuestionsModels.size();
+            notifyItemRangeChanged(0, mExamQuestionsModelList.size());
+            mShowCount = mExamQuestionsModelList.size();
         }
 
         public void setOnExamResultSelectListener(OnExamResultSelectListener onExamResultSelectListener) {
@@ -256,7 +247,6 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         @Override
         public int getItemCount() {
             return mExamQuestionsModelList != null ? mExamQuestionsModelList.size() : 0;
-//            return mShowCount;
         }
 
         static class ExamQuestionsViewHolder extends RecyclerView.ViewHolder {

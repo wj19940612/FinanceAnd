@@ -103,11 +103,6 @@ public class LevelTestStartActivity extends BaseActivity {
                     protected void onRespSuccessData(String data) {
                         ArrayList<ExamQuestionsModel> examQuestionsList = getExamQuestionsList(data);
                         if (examQuestionsList != null && !examQuestionsList.isEmpty()) {
-
-                            for (ExamQuestionsModel result : examQuestionsList) {
-                                Log.d(TAG, "onRespSuccessData: " + result.toString());
-                            }
-
                             Launcher.with(getActivity(), LevelExamQuestionsActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, examQuestionsList)
                                     .execute();
