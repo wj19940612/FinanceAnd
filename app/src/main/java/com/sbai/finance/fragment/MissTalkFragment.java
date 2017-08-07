@@ -584,6 +584,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
 					@Override
 					public void onClick(View v) {
+						
 						//加动画
 						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
 						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
@@ -787,6 +788,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 													mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 												}
 											});
+
 
 											MissVoiceRecorder.markHeard(item.getId());
 											item.setListenCount(item.getListenCount() + 1);

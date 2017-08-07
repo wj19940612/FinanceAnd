@@ -20,6 +20,10 @@ public class GsonRequest<T> extends Request<T> {
     private final Map<String, String> params;
     private final Type type;
     private final Listener<T> listener;
+    private final Object body;
+
+    private static final String PROTOCOL_CHARSET = "utf-8";
+    private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
     public GsonRequest(int method, String url, ApiHeaders headers, ApiParams params, Type type,
                        ApiCallback<T> callback) {
@@ -29,6 +33,7 @@ public class GsonRequest<T> extends Request<T> {
         this.params = params != null ? params.get() : null;
         this.type = type;
         this.listener = callback;
+        this.body = params.toJson();
     }
 
     @Override
@@ -42,6 +47,22 @@ public class GsonRequest<T> extends Request<T> {
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         return headers != null ? headers : super.getHeaders();
+    }
+
+    @Override
+    public String getBodyContentType() {
+        return body != null ? PROTOCOL_CONTENT_TYPE : super.getBodyContentType();
+    }
+
+    @Override
+    public byte[] getBody() throws AuthFailureError {
+        byte[] defaultBytes = super.getBody();
+        try {
+            return body != null ? body.toString().getBytes(PROTOCOL_CHARSET) : defaultBytes;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return defaultBytes;
+        }
     }
 
     @Override
@@ -92,10 +113,17 @@ public class GsonRequest<T> extends Request<T> {
         }
 
         builder.append(" ").append(getUrl());
+        buildBody(builder);
         buildParams(builder);
         buildHeader(builder);
 
         return builder.toString();
+    }
+
+    private void buildBody(StringBuilder builder) {
+        if (body != null) {
+            builder.append(body);
+        }
     }
 
     private void buildParams(StringBuilder builder) {
