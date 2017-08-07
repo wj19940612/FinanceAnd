@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -19,7 +20,7 @@ import com.sbai.finance.model.leveltest.TestResultModel;
  */
 
 public class ScoreView extends View {
-
+    private static final String TAG = "ScoreView";
     //数据个数
     private int DataCount = 5;
     //每个角的弧度
@@ -146,7 +147,14 @@ public class ScoreView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         //雷达图半径
+
+
         mRadius = Math.min(h, w) / 2 * 0.5f;
+        mMaxValue = mRadius * 2;
+
+        Log.d(TAG, "onSizeChanged: ");
+
+
         mInsideLoopRadius = (int) (mRadius * 0.8);
         //中心坐标
         mCenterX = w / 2;
@@ -331,9 +339,10 @@ public class ScoreView extends View {
     }
 
     public void setData(TestResultModel data) {
-        double[] dataScore = {data.getProfitAccuracy(), data.getRiskAccuracy(), data.getBaseAccuracy(),
-                data.getSkillAccuracy(), data.getTheoryAccuracy()};
+        Log.d(TAG, "setData: " + mMaxValue+"  "+mRadius);
+        double[] dataScore = {data.getProfitAccuracy() * mMaxValue, data.getRiskAccuracy() * mMaxValue, data.getBaseAccuracy() * mMaxValue,
+                data.getSkillAccuracy() * mMaxValue, data.getTheoryAccuracy() * mMaxValue};
         mData = dataScore;
-        mMaxValue = 1;
+//        mMaxValue = 1;
     }
 }

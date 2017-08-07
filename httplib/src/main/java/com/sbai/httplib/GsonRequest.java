@@ -1,5 +1,7 @@
 package com.sbai.httplib;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -8,12 +10,13 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import static com.android.volley.VolleyLog.TAG;
 
 public class GsonRequest<T> extends Request<T> {
 
@@ -21,14 +24,14 @@ public class GsonRequest<T> extends Request<T> {
     private final Map<String, String> params;
     private final Type type;
     private final Listener<T> listener;
-    private final JsonObject body;
+    private final String body;
 
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
 
     public GsonRequest(int method, String url, ApiHeaders headers, ApiParams params, Type type,
-                       ApiCallback<T> callback, JsonObject body) {
+                       ApiCallback<T> callback, String body) {
         super(method, url, callback);
 
         this.headers = headers != null ? headers.get() : null;
@@ -59,7 +62,7 @@ public class GsonRequest<T> extends Request<T> {
     @Override
     public byte[] getBody() throws AuthFailureError {
         try {
-            return body != null ? body.toString().getBytes(PROTOCOL_CHARSET) : null;
+            return body != null ? body.getBytes(PROTOCOL_CHARSET) : null;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
@@ -123,7 +126,8 @@ public class GsonRequest<T> extends Request<T> {
 
     private void buildBody(StringBuilder builder) {
         if (body != null) {
-            builder.append(body);
+            Log.d(TAG, "buildBody: " + body.toString());
+//            builder.append(body);
         }
     }
 

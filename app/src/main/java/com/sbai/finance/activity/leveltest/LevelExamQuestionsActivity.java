@@ -181,6 +181,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<TestResultModel>, TestResultModel>() {
                     @Override
                     protected void onRespSuccessData(TestResultModel data) {
+                        Log.d(TAG, "onRespSuccessData: " + data.toString());
                         Launcher.with(getActivity(), ExamResultActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
                                 .execute();
@@ -192,7 +193,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         Log.d(TAG, "confirmResult: " + mTestAnswerUtils.toString());
 
 
-        // TODO: 2017/8/6 模拟数据
+//        // TODO: 2017/8/6 模拟数据
 //        TestResultModel testResultModel = new TestResultModel();
 //        testResultModel.setAllAccuracy(0.50);
 //        testResultModel.setPassPercent(0.20);

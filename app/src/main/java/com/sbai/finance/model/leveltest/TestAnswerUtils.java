@@ -1,5 +1,8 @@
 package com.sbai.finance.model.leveltest;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,5 +90,11 @@ public class TestAnswerUtils {
         return "TestAnswerUtils{" +
                 "answers=" + answers +
                 '}';
+    }
+
+    public JsonObject toJsonObject(TestAnswerUtils testAnswerUtils) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("finishPO", new Gson().toJson(testAnswerUtils));
+        return jsonObject;
     }
 }

@@ -1801,8 +1801,8 @@ public class Client {
      * @return
      */
     public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
-        return new API(POST, "/train/evaluate/End.do",
-                new ApiParams().put("finishPO", new Gson().toJson(finishPO)));
+        String s = new Gson().toJson(finishPO);
+        return new API(POST, "/train/evaluate/End.do", s);
     }
 
     /**
@@ -2067,6 +2067,7 @@ public class Client {
 
     /**
      * 听语音
+     *
      * @param questionId
      * @return
      */

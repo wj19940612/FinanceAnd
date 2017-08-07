@@ -6,7 +6,6 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.google.gson.JsonObject;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.ApiHeaders;
 import com.sbai.httplib.ApiIndeterminate;
@@ -33,7 +32,7 @@ public class API extends RequestManager {
     private ApiParams mApiParams;
     private ApiIndeterminate mIndeterminate;
     private RetryPolicy mRetryPolicy;
-    private JsonObject mBody;
+    private String mBody;
 
     public API(String uri) {
         this(Request.Method.GET, uri, null, 0);
@@ -47,7 +46,7 @@ public class API extends RequestManager {
         this(method, uri, null, 0);
     }
 
-    public API(int method, String uri, JsonObject body) {
+    public API(int method, String uri, String body) {
         this(method, uri, null, 0, body);
     }
 
@@ -63,13 +62,14 @@ public class API extends RequestManager {
         this(method, uri, apiParams, version, null);
     }
 
-    public API(int method, String uri, ApiParams apiParams, int version, JsonObject body) {
+    public API(int method, String uri, ApiParams apiParams, int version, String body) {
         mUri = uri;
         mApiParams = apiParams;
         mMethod = method;
         mTag = "";
         mBody = body;
     }
+
 
     public API setTag(String tag) {
         this.mTag = tag;
@@ -163,7 +163,9 @@ public class API extends RequestManager {
             mCallback.setOnFinishedListener(new RequestFinishedListener());
             type = mCallback.getGenericType();
         }
-
+        ApiParams apiParams = new ApiParams();
+        apiParams.put("finishPO", mBody);
+        mApiParams = apiParams;
         GsonRequest request = new GsonRequest(mMethod, url, headers, mApiParams, type, mCallback, mBody);
         request.setTag(mTag);
 
