@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +43,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.mediaPlayerUtil;
@@ -538,11 +540,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
-				/*if (MissVoiceRecorder.isHeard(item.getId())) {
+				if (MissVoiceRecorder.isHeard(item.getId())) {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 				} else {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-				}*/
+				}
 
 				if (item.getIsPrise() == 0) {
 					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
@@ -592,12 +594,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 										mediaPlayerUtil.release();
 									} else {
 										mediaPlayerUtil.play(item.getAnswerContext());
-										/*if (!MissVoiceRecorder.isHeard(item.getId())) {
+										if (!MissVoiceRecorder.isHeard(item.getId())) {
 											MissVoiceRecorder.markHeard(item.getId());
 											item.setListenCount(item.getListenCount() + 1);
 											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 											mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-										}*/
+										}
 									}
 								}
 							}
@@ -693,11 +695,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
-				/*if (MissVoiceRecorder.isHeard(item.getId())) {
+				if (MissVoiceRecorder.isHeard(item.getId())) {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 				} else {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-				}*/
+				}
 
 				if (item.getIsPrise() == 0) {
 					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
@@ -747,12 +749,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 										mediaPlayerUtil.release();
 									} else {
 										mediaPlayerUtil.play(item.getAnswerContext());
-									/*	if (!MissVoiceRecorder.isHeard(item.getId())) {
+									if (!MissVoiceRecorder.isHeard(item.getId())) {
 											MissVoiceRecorder.markHeard(item.getId());
 											item.setListenCount(item.getListenCount() + 1);
 											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 											mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-										}*/
+										}
 									}
 								}
 							}
