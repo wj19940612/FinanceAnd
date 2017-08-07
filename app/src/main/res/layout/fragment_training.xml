@@ -40,12 +40,14 @@
                     android:src="@drawable/bg_home_training_circle_inside"/>
 
                 <ImageView
+                    android:id="@+id/titleTrainingCircleMiddle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/bg_home_training_circle_middle"/>
 
                 <ImageView
+                    android:id="@+id/titleTrainingCircleOutside"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

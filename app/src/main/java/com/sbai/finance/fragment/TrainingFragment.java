@@ -11,6 +11,8 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.train.ScoreIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.TrainProjectModel;
 import com.sbai.finance.net.Callback2D;
@@ -62,6 +65,10 @@ public class TrainingFragment extends BaseFragment {
     TextView mRecommendTrainTitle;
     @BindView(R.id.testHint)
     TextView mTestHint;
+    @BindView(R.id.titleTrainingCircleMiddle)
+    ImageView mTitleTrainingCircleMiddle;
+    @BindView(R.id.titleTrainingCircleOutside)
+    ImageView mTitleTrainingCircleOutside;
     private TrainAdapter mTrainAdapter;
 
 
@@ -168,6 +175,11 @@ public class TrainingFragment extends BaseFragment {
                         2f, 0.95f, Color.WHITE, Color.WHITE);
             }
             mScore.setText(spannableString);
+            Animation clockwiseAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.clockwise);
+            mTitleTrainingCircleMiddle.startAnimation(clockwiseAnimation);
+            Animation anticlockwiseAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.anticlockwise);
+            mTitleTrainingCircleOutside.startAnimation(anticlockwiseAnimation);//开始动画
+
         } else {
             mScore.setText(R.string.login_look_detail);
             mScoreHint.setText(R.string.to_login);
@@ -199,7 +211,7 @@ public class TrainingFragment extends BaseFragment {
                 break;
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
-                    // TODO: 2017/8/3 打开详情页面
+                    Launcher.with(getActivity(), ScoreIntroduceActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

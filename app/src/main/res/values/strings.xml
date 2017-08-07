@@ -698,5 +698,29 @@
     <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
     <string name="source_and_time">来源: %1$s    %2$s</string>
 
-
+    <!--了解学分-->
+    <string name="poor">较差</string>
+    <string name="middle_score">中等</string>
+    <string name="good">良好</string>
+    <string name="excellent">优秀</string>
+    <string name="very_strong">极强</string>
+    <string name="zero">0</string>
+    <string name="two_hundred">200</string>
+    <string name="four_hundred">400</string>
+    <string name="six_hundred">600</string>
+    <string name="eight_hundred">800</string>
+    <string name="one_thousand">1000</string>
+    <string name="score_explain_title">分数解释</string>
+    <string name="score_explain_content">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="exponent_specification">指数说明</string>
+    <string name="master_theoretical">理论掌握</string>
+    <string name="master_theoretical_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="earning_power">盈利能力</string>
+    <string name="earning_power_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="index_analysis">指标分析</string>
+    <string name="index_analysis_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="fundamentals">基本面</string>
+    <string name="fundamentals_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="risk_control">风险控制</string>
+    <string name="risk_control_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
 </resources>
