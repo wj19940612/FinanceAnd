@@ -1149,7 +1149,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     }
 
                     @Override
-                    protected void onRespFailureWitMsg(String msg) {
+                    protected void onRespFailureWitMsg(String msg, int code) {
                     }
                 })
                 .fire();

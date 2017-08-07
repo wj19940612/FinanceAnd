@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -25,6 +24,8 @@ import java.lang.reflect.Field;
 
 
 public class PasswordEditText extends LinearLayout {
+
+    private static final float DEFAULT_LINE_HEIGHT_DP = 3;
 
     private EditText mPassword;
     private ImageView mShowPassword;
@@ -64,16 +65,14 @@ public class PasswordEditText extends LinearLayout {
 
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBottomLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.5f,
+        mBottomLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                DEFAULT_LINE_HEIGHT_DP,
                 getResources().getDisplayMetrics());
 
         setOrientation(HORIZONTAL);
         mPassword = initPasswordEditText();
         mPassword.setHint(mTextHint);
-        mPassword.setText("SSS");
 
-        Log.d("TAG", "init: " + mTextHint);
-        
         mShowPassword = new ImageView(getContext());
         mShowPassword.setImageResource(R.drawable.btn_show_password);
 
@@ -115,9 +114,9 @@ public class PasswordEditText extends LinearLayout {
             mPaint.setColor(mBottomLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mBottomLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
-            float lineY = getHeight() - mBottomLineHeight;
+            float lineY = getHeight() / 2;
+//            float lineY = getHeight() - mBottomLineHeight;
             canvas.drawLine(getPaddingLeft(), lineY, getWidth() - getPaddingRight(), lineY, mPaint);
-            Log.d("TAG", "onDraw: ");
         }
     }
 }

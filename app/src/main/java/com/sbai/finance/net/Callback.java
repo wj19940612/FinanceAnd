@@ -111,7 +111,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
                 onRespSuccess(t);
             } else {
                 onFailure(null);
-                onRespFailureWitMsg(resp.getMsg());
+                onRespFailureWitMsg(resp.getMsg(), resp.getCode());
             }
         } else {
             onRespSuccess(t);
@@ -120,7 +120,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     protected abstract void onRespSuccess(T resp);
 
-    protected void onRespFailureWitMsg(String msg) {
+    protected void onRespFailureWitMsg(String msg, int code) {
         if (mErrorToast) {
             ToastUtil.show(msg);
         }

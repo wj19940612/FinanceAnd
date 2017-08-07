@@ -164,7 +164,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
-                        protected void onReceive(Resp<Object> objectResp) {
+                        protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
                                 mIsSuccess = true;
@@ -188,7 +188,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
-                        protected void onReceive(Resp<Object> objectResp) {
+                        protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
                                 mIsSuccess = true;

@@ -29,7 +29,7 @@ public abstract class Callback2D<T, D> extends Callback<T> {
             } else {
                 onFailure(null);
                 if (BuildConfig.DEBUG) {
-                    onRespFailureWitMsg("Fuck! Response's data is null.");
+                    onRespFailureWitMsg("Fuck! Response's data is null.", resp.getCode());
                 }
             }
         }

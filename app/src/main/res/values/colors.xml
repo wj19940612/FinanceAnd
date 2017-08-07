@@ -6,6 +6,7 @@
 
     <color name="redPrimary">#f25b57</color>
     <color name="greenPrimary">#2ecc9f</color>
+    <color name="blackPrimary">#222</color>
 
     <color name="background">#F5F5F5</color>
     <color name="gameBackground">#564F68</color>
