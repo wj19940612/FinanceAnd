@@ -8,7 +8,6 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
@@ -21,21 +20,20 @@ public class GsonRequest<T> extends Request<T> {
     private final Map<String, String> params;
     private final Type type;
     private final Listener<T> listener;
-    private final JsonObject body;
+    private final Object body;
 
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
-
     public GsonRequest(int method, String url, ApiHeaders headers, ApiParams params, Type type,
-                       ApiCallback<T> callback, JsonObject body) {
+                       ApiCallback<T> callback) {
         super(method, url, callback);
 
         this.headers = headers != null ? headers.get() : null;
         this.params = params != null ? params.get() : null;
         this.type = type;
         this.listener = callback;
-        this.body = body;
+        this.body = params.toJson();
     }
 
     @Override
@@ -58,11 +56,12 @@ public class GsonRequest<T> extends Request<T> {
 
     @Override
     public byte[] getBody() throws AuthFailureError {
+        byte[] defaultBytes = super.getBody();
         try {
-            return body != null ? body.toString().getBytes(PROTOCOL_CHARSET) : null;
+            return body != null ? body.toString().getBytes(PROTOCOL_CHARSET) : defaultBytes;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return null;
+            return defaultBytes;
         }
     }
 

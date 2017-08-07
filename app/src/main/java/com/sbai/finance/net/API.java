@@ -6,7 +6,6 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.google.gson.JsonObject;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.ApiHeaders;
 import com.sbai.httplib.ApiIndeterminate;
@@ -33,7 +32,6 @@ public class API extends RequestManager {
     private ApiParams mApiParams;
     private ApiIndeterminate mIndeterminate;
     private RetryPolicy mRetryPolicy;
-    private JsonObject mBody;
 
     public API(String uri) {
         this(Request.Method.GET, uri, null, 0);
@@ -43,32 +41,23 @@ public class API extends RequestManager {
         this(Request.Method.GET, uri, apiParams, 0);
     }
 
-    public API(int method, String uri) {
-        this(method, uri, null, 0);
+    public API(String uri, ApiParams apiParams, int version) {
+        this(Request.Method.GET, uri, apiParams, version);
     }
 
-    public API(int method, String uri, JsonObject body) {
-        this(method, uri, null, 0, body);
+    public API(int method, String uri) {
+        this(method, uri, null, 0);
     }
 
     public API(int method, String uri, ApiParams apiParams) {
         this(method, uri, apiParams, 0);
     }
 
-    public API(String uri, ApiParams apiParams, int version) {
-        this(Request.Method.GET, uri, apiParams, version);
-    }
-
     public API(int method, String uri, ApiParams apiParams, int version) {
-        this(method, uri, apiParams, version, null);
-    }
-
-    public API(int method, String uri, ApiParams apiParams, int version, JsonObject body) {
         mUri = uri;
         mApiParams = apiParams;
         mMethod = method;
         mTag = "";
-        mBody = body;
     }
 
     public API setTag(String tag) {
@@ -164,7 +153,7 @@ public class API extends RequestManager {
             type = mCallback.getGenericType();
         }
 
-        GsonRequest request = new GsonRequest(mMethod, url, headers, mApiParams, type, mCallback, mBody);
+        GsonRequest request = new GsonRequest(mMethod, url, headers, mApiParams, type, mCallback);
         request.setTag(mTag);
 
         if (mRetryPolicy != null) {
