@@ -11,28 +11,73 @@
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:bottomHasSplitLine="true"
         app:titleText="@string/leaderboard"/>
 
     <LinearLayout
-        android:id="@+id/ingotBoard"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/darker_gray"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/profitBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="20dp"
+        android:background="@color/background"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/ingotBoardArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@color/blackAssist"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="28dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="28dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_ingot_board"/>
+
+                <TextView
+                    android:id="@+id/ingotBoard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="left"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    tools:text="您的排名 1111"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profitBoard"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/savantBoard"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-    </LinearLayout>
 </LinearLayout>

@@ -27,6 +27,7 @@
             android:layout_height="44dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_reward_rounded"
+            android:enabled="false"
             android:gravity="center"
             android:text="@string/confirm_reward"
             android:textColor="@android:color/white"

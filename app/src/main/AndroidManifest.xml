@@ -346,9 +346,11 @@
         </activity>
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.CommentActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -364,6 +366,14 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.ReplyActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.daily.DailyReportDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.train.MoreTrainFeedBackActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.miss.MissAvatarActivity">
         </activity>

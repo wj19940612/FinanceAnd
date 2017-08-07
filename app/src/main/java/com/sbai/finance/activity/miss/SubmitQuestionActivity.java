@@ -12,17 +12,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
-import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
 import com.sbai.finance.model.miss.Miss;
-import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -33,8 +30,8 @@ import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.HorizontalGridView;
 import com.sbai.finance.view.MissInfoView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,8 +49,8 @@ public class SubmitQuestionActivity extends BaseActivity {
     TextView mWordsNumber;
     @BindView(R.id.missInfoGv)
     HorizontalGridView mMissInfoGv;
-    @BindView(R.id.commit)
-    TextView mCommit;
+    @BindView(R.id.title)
+    TitleBar mTitle;
     private GirdViewAdapter mGirdViewAdapter;
     private int mSelectedIndex = -1;
     private int mDefaultMissId;
@@ -70,6 +67,31 @@ public class SubmitQuestionActivity extends BaseActivity {
 
     private void initData(Intent intent) {
         mDefaultMissId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+    }
+
+    private void initView() {
+        mTitle.setRightViewEnable(false);
+        mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
+        mTitle.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestCommitQuestion();
+            }
+        });
+        mQuestionComment.setFocusable(true);
+        mQuestionComment.requestFocus();
+        mQuestionComment.addTextChangedListener(mValidationWatcher);
+        mGirdViewAdapter = new GirdViewAdapter(getActivity(), mDefaultMissId);
+        mGirdViewAdapter.setOnSelectedCallback(new GirdViewAdapter.OnSelectedCallback() {
+            @Override
+            public void onClick(int oldIndex, int index) {
+                mSelectedIndex = index;
+                if (oldIndex > -1 && oldIndex != index) {
+                    clearFocus(oldIndex);
+                }
+            }
+        });
+        mMissInfoGv.setAdapter(mGirdViewAdapter);
     }
 
     private void requestMissData() {
@@ -136,20 +158,6 @@ public class SubmitQuestionActivity extends BaseActivity {
         mQuestionComment.removeTextChangedListener(mValidationWatcher);
     }
 
-    private void initView() {
-        mQuestionComment.addTextChangedListener(mValidationWatcher);
-        mGirdViewAdapter = new GirdViewAdapter(getActivity(), mDefaultMissId);
-        mGirdViewAdapter.setOnSelectedCallback(new GirdViewAdapter.OnSelectedCallback() {
-            @Override
-            public void onClick(int oldIndex, int index) {
-                mSelectedIndex = index;
-                if (oldIndex > -1 && oldIndex != index) {
-                    clearFocus(oldIndex);
-                }
-            }
-        });
-        mMissInfoGv.setAdapter(mGirdViewAdapter);
-    }
 
     private void clearFocus(int index) {
         if (mMissInfoGv.getChildCount() > index) {
@@ -167,26 +175,22 @@ public class SubmitQuestionActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            if (TextUtils.isEmpty(mQuestionComment.getText())) {
-                mCommit.setEnabled(false);
+            if (TextUtils.isEmpty(mQuestionComment.getText().toString().trim())) {
+                mTitle.setRightViewEnable(false);
+                mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
                 mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
             } else if (mQuestionComment.getText().length() > 140) {
-                mCommit.setEnabled(false);
+                mTitle.setRightViewEnable(false);
+                mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
                 mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.redAssist));
             } else {
-                mCommit.setEnabled(true);
+                mTitle.setRightViewEnable(true);
+                mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.colorPrimary));
                 mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
             }
             mWordsNumber.setText(getString(R.string.words_number, mQuestionComment.getText().length()));
         }
     };
-
-    @OnClick(R.id.commit)
-    public void onViewClicked() {
-        // TODO: 2017-07-28 提交接口
-        requestCommitQuestion();
-    }
-
 
     static class GirdViewAdapter extends ArrayAdapter<Miss> {
         interface OnSelectedCallback {

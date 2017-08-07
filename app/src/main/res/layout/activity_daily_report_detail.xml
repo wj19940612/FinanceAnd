@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/background">
@@ -9,55 +10,148 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="11dp"
         app:cardCornerRadius="8dp">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:orientation="vertical">
-
-            <WebView
-                android:id="@+id/webView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:background="@color/background"/>
-
-            <ProgressBar
-                android:id="@+id/progress"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:progressDrawable="@drawable/progress_horizontal"/>
+            android:scrollbars="none">
 
             <LinearLayout
-                android:id="@+id/errorPage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:background="@android:color/white"
+                android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/titleArea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/network_error_please_reload"/>
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/refreshButton"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="214dp">
+
+                        <ImageView
+                            android:id="@+id/image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            tools:src="@drawable/ic_feedback_time_bg"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="@dimen/common_padding"
+                            android:layout_marginTop="@dimen/common_padding"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="4dp"
+                                android:layout_height="4dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="4dp"
+                                android:background="@drawable/bg_white_dot"/>
+
+                            <TextView
+                                android:id="@+id/click"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"
+                                tools:text="100 次阅读"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:lineSpacingExtra="2dp"
+                        android:padding="20dp"
+                        android:textColor="@color/blackAssist"
+                        android:textSize="20sp"
+                        tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
+
+                    <TextView
+                        android:id="@+id/sourceAndTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:paddingBottom="20dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:textColor="@color/blackAssist"
+                        android:textSize="12sp"
+                        tools:text="来源: 若愚"/>
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="6dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/colorPrimary"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:background="@drawable/btn_refresh"
-                    android:text="@string/refresh"
-                    android:textSize="16sp"/>
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <WebView
+                        android:id="@+id/webView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@android:color/white"
+                        android:scrollbars="none"/>
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:progressDrawable="@drawable/progress_horizontal"/>
+
+                    <LinearLayout
+                        android:id="@+id/errorPage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/network_error_please_reload"/>
+
+                        <Button
+                            android:id="@+id/refreshButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:background="@drawable/btn_refresh"
+                            android:text="@string/refresh"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        </ScrollView>
 
+    </android.support.v7.widget.CardView>
 
     <LinearLayout
         android:id="@+id/bottom"

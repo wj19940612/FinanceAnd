@@ -131,7 +131,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
             mRechargeMoney = getArguments().getString(KEY_MONEY);
             mRewardMoney = getArguments().getLong(KEY_REWARD);
             mTitleHint = getArguments().getString(KEY_HINT);
-            mType= getArguments().getInt(KEY_TYPE);
+            mType = getArguments().getInt(KEY_TYPE);
             mId = getArguments().getInt(KEY_ID);
         }
     }
@@ -164,14 +164,21 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
-                        protected void onRespSuccess(Resp<Object> resp) {
-                            if (resp.isSuccess()) {
+                        protected void onReceive(Resp<Object> objectResp) {
+                            if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
                                 mIsSuccess = true;
+                                dismissAllowingStateLoss();
                             } else {
-                                ToastUtil.show(resp.getMsg());
+                                ToastUtil.show(objectResp.getMsg());
+                                if (objectResp.getCode() == 2203) {
+                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                }
                             }
-                            dismissAllowingStateLoss();
+                        }
+
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
                         }
                     }).fire();
 
@@ -181,14 +188,21 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
-                        protected void onRespSuccess(Resp<Object> resp) {
-                            if (resp.isSuccess()) {
+                        protected void onReceive(Resp<Object> objectResp) {
+                            if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
                                 mIsSuccess = true;
+                                dismissAllowingStateLoss();
                             } else {
-                                ToastUtil.show(resp.getMsg());
+                                ToastUtil.show(objectResp.getMsg());
+                                if (objectResp.getCode() == 2203) {
+                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                }
                             }
-                            dismissAllowingStateLoss();
+                        }
+
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
                         }
                     }).fire();
 

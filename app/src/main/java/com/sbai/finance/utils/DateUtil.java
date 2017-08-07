@@ -338,6 +338,29 @@ public class DateUtil {
     }
 
     /**
+     * 格式化时间  一分钟之内显示刚刚
+     * 一小时内显示多少分钟前
+     * 一小时后显示几点几分 06:24
+     * 超过零点显示几月几日 07/07
+     * 不是今年  则 2015/12/18
+     *
+     * @param createTime
+     * @return
+     */
+    public static String getMissFormatTime(long createTime) {
+        long systemTime = System.currentTimeMillis();
+        if (DateUtil.isInThisYear(createTime)) {
+            if (DateUtil.isToday(createTime, systemTime)) {
+                return DateUtil.format(createTime, "HH:mm");
+            } else {
+                return DateUtil.format(createTime, "MM/dd");
+            }
+        } else {
+            return DateUtil.format(createTime, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR);
+        }
+    }
+
+    /**
      * 格式化时间  如果是当天 则显示18:20
      * 如果是昨天 则 昨天 18:20
      * 其他的   12月12日 12:20

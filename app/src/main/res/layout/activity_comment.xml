@@ -22,7 +22,6 @@
         android:background="@android:color/white"
         android:gravity="top"
         android:hint="@string/publish_your_comment"
-        android:maxLength="140"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:paddingTop="12dp"
