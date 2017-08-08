@@ -74,6 +74,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/btn_reward_other_money_rounded"
+                android:enabled="false"
                 android:gravity="center"
                 android:text="@string/confirm"
                 android:textColor="@android:color/white"

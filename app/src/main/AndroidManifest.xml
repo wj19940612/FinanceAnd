@@ -361,11 +361,9 @@
             android:name=".activity.miss.MessagesActivity"
             android:screenOrientation="portrait">
         </activity>
-
         <activity
             android:name=".activity.daily.DailyReportActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"
@@ -382,6 +380,13 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.miss.MissAvatarActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
     </application>
 

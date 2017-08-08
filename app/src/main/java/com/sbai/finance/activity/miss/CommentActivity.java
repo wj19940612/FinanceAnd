@@ -1,13 +1,10 @@
 package com.sbai.finance.activity.miss;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -124,6 +121,7 @@ public class CommentActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.show(R.string.publish_success);
+                            setResult(RESULT_OK);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

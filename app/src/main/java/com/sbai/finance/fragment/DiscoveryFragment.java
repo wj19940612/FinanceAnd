@@ -25,6 +25,7 @@ import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.MoreTrainFeedBackActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
@@ -115,7 +116,7 @@ public class DiscoveryFragment extends BaseFragment {
 
             @Override
             public void onLeaderboardClick() {
-                Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
+                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
             }
         });
         initTrainListView();

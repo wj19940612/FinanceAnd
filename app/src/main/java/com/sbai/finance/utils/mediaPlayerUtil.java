@@ -13,7 +13,7 @@ public class mediaPlayerUtil {
 
 	private static MediaPlayer mMediaPlayer;
 
-	public static void play(String url) {
+	public static void play(String url, MediaPlayer.OnCompletionListener onCompletionListener) {
 
 		try {
 			if (mMediaPlayer == null) {
@@ -29,15 +29,7 @@ public class mediaPlayerUtil {
 				mMediaPlayer.reset();
 			}
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-				@Override
-				public void onCompletion(MediaPlayer mp) {
-					if (mMediaPlayer != null) {
-						mMediaPlayer.release();
-						mMediaPlayer = null;
-					}
-				}
-			});
+			mMediaPlayer.setOnCompletionListener(onCompletionListener);
 			mMediaPlayer.setDataSource(url);
 			mMediaPlayer.prepareAsync();
 			mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -50,6 +42,13 @@ public class mediaPlayerUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static boolean isPlaying(){
+		if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+			return true;
+		}
+		return false;
 	}
 
 	public static void release() {

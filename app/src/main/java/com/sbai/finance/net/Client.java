@@ -381,7 +381,7 @@ public class Client {
      * @return
      */
     public static API getNewMessageCount() {
-        return new API(POST, "/msg/msg/count.do", null);
+        return new API(POST, "/msg/msg/count.do");
     }
 
     /**
@@ -1356,7 +1356,7 @@ public class Client {
      * @return
      */
     public static API requestUserFundInfo() {
-        return new API(POST, "/user/userAccount/userAccountInfo.do", null);
+        return new API(POST, "/user/userAccount/userAccountInfo.do");
     }
 
     /**
@@ -1412,7 +1412,7 @@ public class Client {
 
     //提现手续费
     public static API requestWithDrawPoundage() {
-        return new API(POST, "/user/withdraw/getFee.do", null);
+        return new API(POST, "/user/withdraw/getFee.do");
     }
 
     /**
@@ -2020,6 +2020,26 @@ public class Client {
      */
     public static API getMyStudyInfo() {
         return new API("/train/course/findTrainCourse.do");
+    }
+
+    /**
+     * 听语音
+     *
+     * @param questionId
+     * @return
+     */
+    public static API listen(int questionId) {
+        return new API("/explain/question/listen.do",
+                new ApiParams()
+                        .put("questionId", questionId)
+        );
+    }
+
+    public static API getTrainCourse(String deviceId) {
+        return new API(POST, "/train/course/task.do",
+                new ApiParams()
+                        .put("deviceId", deviceId)
+        );
     }
 
 }
