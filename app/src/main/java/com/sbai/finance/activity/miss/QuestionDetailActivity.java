@@ -65,6 +65,8 @@ import static com.sbai.finance.activity.miss.ReplyActivity.REFRESH_REPLY;
 public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
 	private static final int REQ_COMMENT = 1001;
+	private static final int COMMENT = 1002;
+	private static final int REWARD = 1003;
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -189,9 +191,16 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		mediaPlayerUtil.release();
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mediaPlayerUtil.release();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReplyReceiver);
 	}
 
 	public RewardInfo getRewardInfo() {
@@ -361,41 +370,50 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.comment:
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), CommentActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-							.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
-							.executeForResult(REQ_COMMENT);
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
+				if (mQuestionDetail != null) {
+					if (LocalUser.getUser().isLogin()) {
+						Launcher.with(getActivity(), CommentActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
+								.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+								.executeForResult(REQ_COMMENT);
+
+					} else {
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						startActivityForResult(intent, COMMENT);
+					}
 				}
 				break;
 			case R.id.reward:
-				if (LocalUser.getUser().isLogin()) {
-					mRewardInfo.setMoney(0);
-					mRewardInfo.setIndex(-1);
-					RewardMissDialogFragment.newInstance()
-							.show(getSupportFragmentManager());
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
+				if (mQuestionDetail != null) {
+					if (LocalUser.getUser().isLogin()) {
+						mRewardInfo.setMoney(0);
+						mRewardInfo.setIndex(-1);
+						RewardMissDialogFragment.newInstance()
+								.show(getSupportFragmentManager());
+					} else {
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						startActivityForResult(intent, REWARD);
+					}
 				}
 				break;
 			case R.id.love:
-				if (LocalUser.getUser().isLogin()) {
-					Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+				if (mQuestionDetail != null) {
+					if (LocalUser.getUser().isLogin()) {
+						Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
-						@Override
-						protected void onRespSuccessData(Prise prise) {
-							if (prise.getIsPrise() == 0) {
-								mLoveImage.setImageResource(R.drawable.ic_miss_love);
-							} else {
-								mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+							@Override
+							protected void onRespSuccessData(Prise prise) {
+								if (prise.getIsPrise() == 0) {
+									mLoveImage.setImageResource(R.drawable.ic_miss_love);
+								} else {
+									mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+								}
+								mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(prise.getPriseCount())));
 							}
-							mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(prise.getPriseCount())));
-						}
-					}).fire();
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
+						}).fire();
+					} else {
+						Launcher.with(getActivity(), LoginActivity.class).execute();
+					}
 				}
 				break;
 		}
@@ -404,7 +422,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-		ReplyDialogFragment.newInstance(item, mQuestionDetail.getQuestionUserId()).show(getSupportFragmentManager());
+		ReplyDialogFragment.newInstance(item).show(getSupportFragmentManager());
 	}
 
 	static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
@@ -500,6 +518,22 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			requestQuestionDetail();
 			requestQuestionReplyList();
 			mScrollView.smoothScrollTo(0, 0);
+		}
+
+		if (requestCode == COMMENT && resultCode == RESULT_OK) {
+			if (mQuestionDetail != null) {
+				Launcher.with(getActivity(), CommentActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
+						.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+						.executeForResult(REQ_COMMENT);
+			}
+		}
+
+		if (requestCode == REWARD && resultCode == RESULT_OK) {
+			mRewardInfo.setMoney(0);
+			mRewardInfo.setIndex(-1);
+			RewardMissDialogFragment.newInstance()
+					.show(getSupportFragmentManager());
 		}
 	}
 

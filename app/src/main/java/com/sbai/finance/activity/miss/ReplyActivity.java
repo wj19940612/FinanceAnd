@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -23,6 +21,7 @@ import com.sbai.finance.utils.ValidationWatcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 
 /**
  * 回复页面
@@ -49,9 +48,6 @@ public class ReplyActivity extends BaseActivity {
         ButterKnife.bind(this);
         initData();
         initView();
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(this, LoginActivity.class).execute();
-        }
     }
 
     private void initData() {
@@ -104,9 +100,7 @@ public class ReplyActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            Intent intent = new Intent();
-                            intent.setAction(REFRESH_REPLY);
-                            LocalBroadcastManager.getInstance(ReplyActivity.this).sendBroadcastSync(intent);
+                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(REFRESH_REPLY));
                             ToastUtil.show(R.string.publish_success);
                             finish();
                         } else {

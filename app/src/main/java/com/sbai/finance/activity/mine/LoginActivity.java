@@ -318,7 +318,7 @@ public class LoginActivity extends BaseActivity {
                                 LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
                             }
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
-//                            setResult(RESULT_OK);
+                            setResult(RESULT_OK);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

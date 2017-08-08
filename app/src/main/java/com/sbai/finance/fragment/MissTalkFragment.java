@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
@@ -48,7 +49,6 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.mediaPlayerUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MyListView;
@@ -62,10 +62,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.R.id.missAvatar;
 import static com.sbai.finance.R.id.recyclerView;
 
 public class MissTalkFragment extends BaseFragment implements View.OnClickListener {
+
+	private static final int SUBMIT_QUESTION = 1001;
+	private static final int MY_QUESTION = 1002;
+	private static final int MESSAGE = 1003;
 
 	@BindView(R.id.more)
 	ImageView mMore;
@@ -153,9 +158,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		mMissListAdapter.setOnItemClickListener(new MissListAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClick(Miss item) {
-				if (item == null) {
-					ToastUtil.show("小姐姐不存在");
-				} else {
+				if (item != null) {
 					Launcher.with(getActivity(), MissProfileActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
 				}
@@ -282,6 +285,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
+						/*Collections.sort(questionList, new Comparator<Question>() {
+							@Override
+							public int compare(Question o2, Question o1) {
+								return Long.valueOf(o1.getCreateTime() - o2.getCreateTime()).intValue();
+							}
+						});*/
 						updateHotQuestionList(questionList);
 					}
 
@@ -831,7 +840,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				showPopupWindow();
 				break;
 			case R.id.message:
-				Launcher.with(getActivity(), MessagesActivity.class).execute();
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(getActivity(), MessagesActivity.class).execute();
+				} else {
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivityForResult(intent, MESSAGE);
+				}
 				mRedPoint.setVisibility(View.INVISIBLE);
 				break;
 			case R.id.titleBar:
@@ -857,15 +871,43 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				if (mPopupWindow.isShowing()) {
 					mPopupWindow.dismiss();
 				}
-				Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+				} else {
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivityForResult(intent, SUBMIT_QUESTION);
+				}
 			}
 			break;
 			case R.id.myQuestion: {
 				if (mPopupWindow.isShowing()) {
 					mPopupWindow.dismiss();
 				}
-				Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
+
+				if (LocalUser.getUser().isLogin()) {
+					Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
+				} else {
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivityForResult(intent, MY_QUESTION);
+				}
 			}
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == SUBMIT_QUESTION && resultCode == RESULT_OK) {
+			Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+		}
+
+		if (requestCode == MY_QUESTION && resultCode == RESULT_OK) {
+			Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
+		}
+
+		if (requestCode == MESSAGE && resultCode == RESULT_OK) {
+			Launcher.with(getActivity(), MessagesActivity.class).execute();
 		}
 	}
 }
