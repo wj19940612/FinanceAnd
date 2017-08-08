@@ -346,12 +346,12 @@
         </activity>
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.CommentActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name=".activity.miss.RewardActivity"
@@ -366,17 +366,19 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.ReplyActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.daily.DailyReportDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.train.MoreTrainFeedBackActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.MissAvatarActivity">
-        </activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".activity.miss.MissAvatarActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.trainexperience.TrainExperienceActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

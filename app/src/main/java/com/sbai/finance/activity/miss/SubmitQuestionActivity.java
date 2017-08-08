@@ -12,13 +12,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -36,7 +37,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 提交问题页面
@@ -63,6 +63,9 @@ public class SubmitQuestionActivity extends BaseActivity {
         initData(getIntent());
         initView();
         requestMissData();
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(this, LoginActivity.class).execute();
+        }
     }
 
     private void initData(Intent intent) {

@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -41,6 +42,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissVoiceRecorder;
@@ -81,8 +83,8 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 	TextView mName;
 	@BindView(R.id.voice)
 	TextView mVoice;
-	@BindView(R.id.loveNumber)
-	TextView mLoveNumber;
+	@BindView(R.id.lovePeopleNumber)
+	TextView mLovePeopleNumber;
 	@BindView(R.id.introduce)
 	TextView mIntroduce;
 	@BindView(R.id.attentionImage)
@@ -119,9 +121,11 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		ButterKnife.bind(this);
 		initData(getIntent());
 		initRewardInfo();
+		initFooterView();
 		mSet = new HashSet<>();
 		mHerAnswerList = new ArrayList<>();
 		mHerAnswerAdapter = new HerAnswerAdapter(this, mHerAnswerList, TAG);
+		mListView.setFocusable(false);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
@@ -153,6 +157,13 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		mRewardInfo.setMoneyList(list);
 	}
 
+	private void initFooterView() {
+		View view = new View(getActivity());
+		AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(60, getResources()));
+		view.setLayoutParams(params);
+		mListView.addFooterView(view);
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -179,7 +190,7 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		mName.setText(miss.getName());
 		mTitleName.setText(miss.getName());
 		mVoice.setText(getString(R.string.voice_time, miss.getSoundTime()));
-		mLoveNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(miss.getTotalPrise())));
+		mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(miss.getTotalPrise())));
 		if (!TextUtils.isEmpty(miss.getBrifeingText())) {
 			mIntroduce.setText(miss.getBrifeingText());
 		} else {
@@ -195,8 +206,6 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		}
 		mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(miss.getTotalAttention())));
 		mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(miss.getTotalAward())));
-
-		mScrollView.smoothScrollTo(0, 0);
 	}
 
 	@Override
@@ -465,15 +474,6 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
 				}
 
-				mMissAvatar.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Launcher.with(context, MissProfileActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
-								.execute();
-					}
-				});
-
 				mLoveNumber.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -487,6 +487,7 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
 								}
 								mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
+
 							}
 						}).fire();
 					}

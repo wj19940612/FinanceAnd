@@ -90,6 +90,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	TextView mEmpty;
 	@BindView(R.id.missEmpty)
 	TextView mMissEmpty;
+	@BindView(R.id.titleBar)
+	RelativeLayout mTitleBar;
 
 	private List<Miss> mMissList;
 	private MissListAdapter mMissListAdapter;
@@ -163,6 +165,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
 	private void initHotQuestionList() {
 		mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity(), TAG);
+		mHotListView.setFocusable(false);
 		mHotListView.setAdapter(mHotQuestionListAdapter);
 		mHotListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -178,6 +181,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
 	private void initLatestQuestionList() {
 		mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity(), TAG);
+		mLatestListView.setFocusable(false);
 		mLatestListView.setEmptyView(mEmpty);
 		mLatestListView.setAdapter(mLatestQuestionListAdapter);
 		mLatestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -318,7 +322,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	private void updateMissList(List<Miss> missList) {
 		mMissListAdapter.clear();
 		mMissListAdapter.addAll(missList);
-		mScrollView.smoothScrollTo(0, 0);
 	}
 
 	private void updateHotQuestionList(final List<Question> questionList) {
@@ -581,11 +584,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				});
 
 				mVoiceArea.setOnClickListener(new View.OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
-						
-						//加动画
+						//播放动画
 						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
 						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
 						animation.start();
@@ -598,11 +599,13 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 									if (resp.isSuccess()) {
 										if (mediaPlayerUtil.isPlaying()) {
 											mediaPlayerUtil.release();
+											mVoiceLevel.clearAnimation();
 											mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 										} else {
 											mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
 												@Override
 												public void onCompletion(MediaPlayer mp) {
+													mVoiceLevel.clearAnimation();
 													mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 												}
 											});
@@ -619,11 +622,13 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 							//听过
 							if (mediaPlayerUtil.isPlaying()) {
 								mediaPlayerUtil.release();
+								mVoiceLevel.clearAnimation();
 								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 							} else {
 								mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
 									@Override
 									public void onCompletion(MediaPlayer mp) {
+										mVoiceLevel.clearAnimation();
 										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 									}
 								});
@@ -819,19 +824,18 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	}
 
 
-	@OnClick({R.id.more, R.id.message})
+	@OnClick({R.id.more, R.id.message, R.id.titleBar})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.more:
 				showPopupWindow();
 				break;
 			case R.id.message:
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), MessagesActivity.class).execute();
-					mRedPoint.setVisibility(View.INVISIBLE);
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
-				}
+				Launcher.with(getActivity(), MessagesActivity.class).execute();
+				mRedPoint.setVisibility(View.INVISIBLE);
+				break;
+			case R.id.titleBar:
+				mScrollView.smoothScrollTo(0, 0);
 				break;
 		}
 	}
@@ -853,22 +857,14 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				if (mPopupWindow.isShowing()) {
 					mPopupWindow.dismiss();
 				}
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
-				}
+				Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
 			}
 			break;
 			case R.id.myQuestion: {
 				if (mPopupWindow.isShowing()) {
 					mPopupWindow.dismiss();
 				}
-				if (LocalUser.getUser().isLogin()) {
-					Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
-				}
+				Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
 			}
 		}
 	}

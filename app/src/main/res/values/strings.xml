@@ -688,6 +688,9 @@
     <string name="no_question">你还没提问过哦</string>
     <string name="ask_question_to_miss">向小姐姐提问</string>
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
-    <string name="miss_first_time">快用提问夺走小姐姐的"第一次"吧</string>
+    <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
     <string name="source_and_time">来源: %1$s    %2$s</string>
+
+    <!--trainExperience-->
+    <string name="train_experience">训练心得</string>
 </resources>
