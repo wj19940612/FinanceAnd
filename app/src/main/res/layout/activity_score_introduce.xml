@@ -18,39 +18,9 @@
             android:layout_height="wrap_content"
             app:backFeature="true"
             app:bottomHasSplitLine="true"
-            app:bottomSplitLineColor="@color/split"/>
-
-        <!--分数图  先占位-->
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="215dp"
-            android:background="@android:color/white"/>
-
+            app:bottomSplitLineColor="@color/split"
+            app:titleText="@string/understand_score"/>
         <include layout="@layout/layout_score_introduce"/>
-
-        <TextView
-            android:id="@+id/trade_level"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="38dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:textColor="@color/blackAssist"
-            tools:text="交易水平:良好  超过了45%的交易账户"/>
-
-        <TextView
-            android:id="@+id/trainAdvise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="38dp"
-            android:layout_marginTop="5dp"
-            android:lineSpacingExtra="2dp"
-            android:textColor="@color/luckyText"
-            android:textSize="12sp"
-            tools:text="建议：基础理论已经很不错了，您可以多做一些模拟交易来巩固知识"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="11dp"
                 android:drawablePadding="15dp"
-                android:drawableTop="@mipmap/ic_launcher_round"
+                android:drawableTop="@drawable/bg_score_explain_master_theoretical"
                 android:text="@string/master_theoretical"
                 android:textColor="@color/blackAssist"
                 android:textSize="16sp"/>
@@ -132,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="11dp"
                 android:drawablePadding="15dp"
-                android:drawableTop="@mipmap/ic_launcher_round"
+                android:drawableTop="@drawable/bg_score_explain_earning_power"
                 android:text="@string/earning_power"
                 android:textColor="@color/blackAssist"
                 android:textSize="16sp"/>
@@ -159,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="11dp"
                 android:drawablePadding="15dp"
-                android:drawableTop="@mipmap/ic_launcher_round"
+                android:drawableTop="@drawable/bg_score_explain_index_analysis"
                 android:text="@string/index_analysis"
                 android:textColor="@color/blackAssist"
                 android:textSize="16sp"/>
@@ -186,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="11dp"
                 android:drawablePadding="15dp"
-                android:drawableTop="@mipmap/ic_launcher_round"
+                android:drawableTop="@drawable/bg_score_explain_fundamentals"
                 android:text="@string/fundamentals"
                 android:textColor="@color/blackAssist"
                 android:textSize="16sp"/>
@@ -213,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="11dp"
                 android:drawablePadding="15dp"
-                android:drawableTop="@mipmap/ic_launcher_round"
+                android:drawableTop="@drawable/bg_score_explain_risk_control"
                 android:text="@string/risk_control"
                 android:textColor="@color/blackAssist"
                 android:textSize="16sp"/>
@@ -227,8 +197,8 @@
         </LinearLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="175dp"
-            android:background="@color/background"/>
+        android:layout_width="match_parent"
+        android:layout_height="175dp"
+        android:background="@color/background"/>
     </LinearLayout>
 </ScrollView>
