@@ -162,7 +162,7 @@
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
         android:layout_marginTop="50dp"
-        android:background="@drawable/btn_red_rounded"
+        android:background="@drawable/btn_primary_rounded"
         android:enabled="false"
         android:gravity="center"
         android:text="@string/submit_has_empty"

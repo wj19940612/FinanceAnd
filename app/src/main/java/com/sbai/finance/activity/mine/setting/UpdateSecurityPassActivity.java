@@ -1,19 +1,21 @@
 package com.sbai.finance.activity.mine.setting;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SafetyPasswordEditText;
@@ -23,49 +25,71 @@ import com.sbai.finance.view.TitleBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ModifySafetyPassActivity extends BaseActivity {
+public class UpdateSecurityPassActivity extends BaseActivity {
 
-    @BindView(R.id.safety_password_hint)
-    AppCompatTextView mSafetyPasswordHint;
-    @BindView(R.id.safety_password_number)
-    SafetyPasswordEditText mSafetyPasswordNumber;
-    @BindView(R.id.password_hint)
-    TextView mPasswordHint;
+    private static final int PAGE_TYPE_SET = 100;
+    private static final int PAGE_TYPE_MODIFY = 101;
+    private static final int PAGE_TYPE_FORGET_MODIFY = 102;
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
+    @BindView(R.id.securityPasswordHint)
+    AppCompatTextView mSafetyPasswordHint;
+
+    @BindView(R.id.securityPassword)
+    SafetyPasswordEditText mSecurityPassword;
+
+    @BindView(R.id.password_hint)
+    TextView mPasswordHint;
 
     private String mOldPassword;
     private String mNewPassWord;
+
     //输入密码的次数
     private int mPasswordInputCount;
     //用户是否设置过密码
-    private boolean mHasPassword;
+    private boolean mHasSecurityPassword;
     private String mAuthCode;
-    private boolean mIsForgetPass;
 
+    private int mPageType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modify_safety_pass);
+        setContentView(R.layout.activity_update_security_pass);
         ButterKnife.bind(this);
-        mHasPassword = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
-        mPasswordInputCount = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-        mAuthCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
-        mIsForgetPass = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_3, false);
-        mSafetyPasswordNumber.addTextChangedListener(mValidationWatcher);
+
+        initData(getIntent());
+
+        mSecurityPassword.addTextChangedListener(mValidationWatcher);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH) {
-            mSafetyPasswordNumber.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            mSecurityPassword.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
-        if (!mHasPassword) {
-            mTitleBar.setTitle(R.string.add_safety_pass);
-            mSafetyPasswordHint.setText(R.string.please_set_safety_pass);
+        if (mPageType == PAGE_TYPE_SET) {
+            mTitleBar.setTitle(R.string.add_security_pass);
+            mSafetyPasswordHint.setText(R.string.please_set_security_pass);
         }
 
-        if (mIsForgetPass) {
+        if (mPageType == PAGE_TYPE_FORGET_MODIFY) {
             mSafetyPasswordHint.setText(R.string.please_input_new_password);
+        }
+    }
+
+    private void initData(Intent intent) {
+        mHasSecurityPassword = intent.getBooleanExtra(ExtraKeys.HAS_SECURITY_PSD, false);
+        mAuthCode = intent.getStringExtra(ExtraKeys.AUTH_CODE);
+
+        if (mHasSecurityPassword) { // forget password & modify password
+            if (TextUtils.isEmpty(mAuthCode)) {
+                mPageType = PAGE_TYPE_MODIFY;
+            } else {
+                mPageType = PAGE_TYPE_FORGET_MODIFY;
+            }
+        } else {
+            mPageType = PAGE_TYPE_SET;
         }
     }
 
@@ -77,9 +101,9 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 mPasswordHint.setVisibility(View.GONE);
             }
 
-            if (mIsForgetPass) {
+            if (mPageType == PAGE_TYPE_FORGET_MODIFY) {
                 setForgetPass(password);
-            } else if (!mHasPassword) {
+            } else if (mPageType == PAGE_TYPE_SET) {
                 addPassWord(password);
             } else {
                 setNewPassWord(password);
@@ -93,16 +117,16 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 mNewPassWord = password;
                 mPasswordInputCount++;
 //                mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
-                mSafetyPasswordNumber.clearSafetyNumber();
+                mSecurityPassword.clearSafetyNumber();
 
             } else if (mPasswordInputCount == 2) {
                 if (mNewPassWord.equalsIgnoreCase(password)) {
                     confirmNewPassword(mNewPassWord);
                 } else {
-                    SmartDialog.with(ModifySafetyPassActivity.this,
+                    SmartDialog.with(UpdateSecurityPassActivity.this,
                             R.string.twice_password_is_different, R.string.modify_fail)
                             .show();
-                    mSafetyPasswordNumber.clearSafetyNumber();
+                    mSecurityPassword.clearSafetyNumber();
                 }
             }
         }
@@ -114,11 +138,11 @@ public class ModifySafetyPassActivity extends BaseActivity {
             if (mPasswordInputCount == 0) {
                 mNewPassWord = password;
                 mPasswordInputCount++;
-                mSafetyPasswordHint.setText(R.string.please_confirm_safety_pass);
-                mSafetyPasswordNumber.clearSafetyNumber();
+                mSafetyPasswordHint.setText(R.string.please_confirm_security_pass);
+                mSecurityPassword.clearSafetyNumber();
             } else if (mPasswordInputCount == 1) {
                 if (!password.equalsIgnoreCase(mNewPassWord)) {
-                    mSafetyPasswordNumber.clearSafetyNumber();
+                    mSecurityPassword.clearSafetyNumber();
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
                 } else {
@@ -162,7 +186,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                                     mOldPassword = passWord;
                                     mPasswordInputCount++;
                                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
-                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                    mSecurityPassword.clearSafetyNumber();
                                 }
                                 ToastMassage(resp);
                             }
@@ -171,7 +195,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
                             protected void onReceiveResponse(Resp<Object> objectResp) {
                                 super.onReceiveResponse(objectResp);
                                 if (objectResp.getCode() == 600) {
-                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                    mSecurityPassword.clearSafetyNumber();
                                 }
                             }
 
@@ -183,14 +207,14 @@ public class ModifySafetyPassActivity extends BaseActivity {
                 if (!isSameNewPasswordAndOldPass(mOldPassword, mNewPassWord)) {
                     mPasswordInputCount++;
                     mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
-                    mSafetyPasswordNumber.clearSafetyNumber();
+                    mSecurityPassword.clearSafetyNumber();
                 } else {
 //                    SmartDialog.with(ModifySafetyPassActivity.this,
 //                            R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
 //                            .show();
                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
                     mPasswordInputCount = 1;
-                    mSafetyPasswordNumber.clearSafetyNumber();
+                    mSecurityPassword.clearSafetyNumber();
                     mPasswordHint.setText(R.string.new_password_is_same_as_old_pass);
                     mPasswordHint.setVisibility(View.VISIBLE);
 
@@ -202,7 +226,7 @@ public class ModifySafetyPassActivity extends BaseActivity {
 //                    SmartDialog.with(ModifySafetyPassActivity.this,
 //                            R.string.twice_password_is_different, R.string.modify_fail)
 //                            .show();
-                    mSafetyPasswordNumber.clearSafetyNumber();
+                    mSecurityPassword.clearSafetyNumber();
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
@@ -238,6 +262,6 @@ public class ModifySafetyPassActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSafetyPasswordNumber.removeTextChangedListener(mValidationWatcher);
+        mSecurityPassword.removeTextChangedListener(mValidationWatcher);
     }
 }

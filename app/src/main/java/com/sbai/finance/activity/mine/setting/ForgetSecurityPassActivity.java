@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ForgetPassWordActivity extends BaseActivity {
+public class ForgetSecurityPassActivity extends BaseActivity {
 
     private static final int REQ_CODE_MODIFY_PASS = 24700;
 
@@ -44,7 +45,7 @@ public class ForgetPassWordActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forget_pass_word);
+        setContentView(R.layout.activity_forget_security_pass);
         ButterKnife.bind(this);
         mAuthCode.addTextChangedListener(mValidationWatcher);
 
@@ -99,10 +100,9 @@ public class ForgetPassWordActivity extends BaseActivity {
                                 if (resp.isSuccess()) {
                                     ToastUtil.show(resp.getMsg());
                                     restartGetAuthCode();
-                                    Launcher.with(getActivity(), ModifySafetyPassActivity.class)
-                                            .putExtra(Launcher.EX_PAYLOAD_3, true)
-                                            .putExtra(Launcher.EX_PAYLOAD_1, 1)
-                                            .putExtra(Launcher.EX_PAYLOAD_2, authCode)
+                                    Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
+                                            .putExtra(ExtraKeys.HAS_SECURITY_PSD, true)
+                                            .putExtra(ExtraKeys.AUTH_CODE, authCode)
                                             .executeForResult(REQ_CODE_MODIFY_PASS);
                                     ToastUtil.show(resp.getMsg());
                                 } else {

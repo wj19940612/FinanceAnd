@@ -107,7 +107,7 @@
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
         android:layout_marginTop="40dp"
-        android:background="@drawable/btn_red_rounded"
+        android:background="@drawable/btn_primary_rounded"
         android:enabled="true"
         android:text="@string/complete"
         android:textColor="@android:color/white"/>

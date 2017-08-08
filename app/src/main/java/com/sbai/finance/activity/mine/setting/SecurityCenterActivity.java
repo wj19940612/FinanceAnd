@@ -82,14 +82,14 @@ public class SecurityCenterActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.forgetSecurityPassword:
-                Launcher.with(getActivity(), ForgetPassWordActivity.class)
+                Launcher.with(getActivity(), ForgetSecurityPassActivity.class)
                         .executeForResult(REQ_CODE_UPDATE_SECURITY_PSD);
                 break;
 
             case R.id.modifySecurityPassword:
             case R.id.setSecurityPassword:
-                Launcher.with(getActivity(), ModifySafetyPassActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mHasSecurityPassword)
+                Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
+                        .putExtra(ExtraKeys.HAS_SECURITY_PSD, mHasSecurityPassword)
                         .executeForResult(REQ_CODE_UPDATE_SECURITY_PSD);
                 break;
 

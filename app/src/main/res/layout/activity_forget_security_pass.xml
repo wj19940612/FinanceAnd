@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.setting.ForgetPassWordActivity">
+    tools:context="com.sbai.finance.activity.mine.setting.ForgetSecurityPassActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
@@ -16,8 +16,8 @@
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
-        app:titleTextColor="@color/primaryText"
-        app:titleText="@string/forget_security_password"/>
+        app:titleText="@string/forget_security_password"
+        app:titleTextColor="@color/primaryText"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,13 +32,12 @@
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/phoneNumber"
             style="@style/SignEditText.PhoneNum"
-            android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:hint="@string/please_input_phone_number"
             android:paddingTop="0dp"/>
-
     </LinearLayout>
 
     <View
@@ -88,7 +87,7 @@
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
         android:layout_marginTop="40dp"
-        android:background="@drawable/btn_red_rounded"
+        android:background="@drawable/btn_primary_rounded"
         android:enabled="false"
         android:gravity="center"
         android:text="@string/ok"

@@ -6,4 +6,5 @@ public interface ExtraKeys {
     String PHONE = "phone";
     String HAS_SECURITY_PSD = "has_security_psd";
     String HAS_LOGIN_PSD = "has_login_psd";
+    String AUTH_CODE = "auth_code";
 }

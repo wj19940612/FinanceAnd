@@ -400,9 +400,9 @@
     <string name="pay_source">支付来源: %1$s</string>
 
     <!--钱包-->
-    <string name="add_safety_pass">添加安全密码</string>
-    <string name="please_set_safety_pass">请设置安全密码</string>
-    <string name="please_confirm_safety_pass">请再次确认安全密码</string>
+    <string name="add_security_pass">添加安全密码</string>
+    <string name="please_set_security_pass">请设置安全密码</string>
+    <string name="please_confirm_security_pass">请再次确认安全密码</string>
     <string name="twice_pass_is_different">两次密码输入不一致</string>
 
 

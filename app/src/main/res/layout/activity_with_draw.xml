@@ -138,7 +138,7 @@
         android:layout_height="@dimen/common_height"
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
-        android:background="@drawable/btn_red_rounded"
+        android:background="@drawable/btn_primary_rounded"
         android:enabled="false"
         android:text="@string/with_draw"
         android:textColor="@android:color/white"/>

@@ -25,18 +25,17 @@
         android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
         android:minHeight="@dimen/common_height"
-        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/security_center"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"
-        app:splitLineColor="@color/split"/>
+        app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/shieldSetting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
+        android:visibility="gone"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/shield"
         app:rowTextColor="@color/primaryText"
@@ -46,12 +45,12 @@
         android:id="@+id/newMessageNotification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
+        android:minHeight="@dimen/common_height"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/new_news_notification"
         app:rowTextColor="@color/primaryText"
-        android:layout_marginTop="@dimen/common_split_height"
-        android:minHeight="@dimen/common_height"
         app:rowTextSize="15sp"/>
 
     <View

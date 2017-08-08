@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
+import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
@@ -186,7 +186,7 @@ public class ExChangeProductFragment extends BaseFragment {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
+                        Launcher.with(getActivity(), UpdateSecurityPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
                     }
                 }).show();
     }
