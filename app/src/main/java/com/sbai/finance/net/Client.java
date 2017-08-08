@@ -1,8 +1,10 @@
 package com.sbai.finance.net;
 
 import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.leveltest.TestAnswerUtils;
 import com.sbai.httplib.ApiParams;
 
 
@@ -1763,7 +1765,63 @@ public class Client {
                 .put("varietyId", varietyId));
     }
 
+    //请求参加水平测试人数
+
     /**
+     * /train/evaluate/FinishCount.do
+     * 完成测评的人数
+     *
+     * @return
+     */
+    public static API requestJoinTestedNumber() {
+        return new API("/train/evaluate/FinishCount.do");
+    }
+
+    //请求测试题库
+
+    /**
+     * /train/evaluate/topic.do
+     * GET
+     * 获取题目
+     *
+     * @return
+     */
+    public static API requestExamQuestions() {
+        return new API("/train/evaluate/topic.do");
+    }
+
+    //提交水平测试答案接口
+
+    /**
+     * /**
+     * train/evaluate/End.do
+     * POST
+     * 提交测评
+     *
+     * @return
+     */
+    public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
+        return new API(POST, "/train/evaluate/End.do", new Gson().toJson(finishPO));
+    }
+
+    /**
+     * /train/evaluate/historyLog.do
+     * GET
+     * 历史测评
+     *
+     * @return
+     */
+    public static API requestHistoryTestResultList() {
+        return new API("/train/evaluate/historyLog.do");
+    }
+
+    /**
+<<<<<<< HEAD
+=======
+     * 获取小姐姐列表
+     * <p>
+     * <p>
+>>>>>>> dev
      * <p>
      * /**
      * 获取小姐姐列表

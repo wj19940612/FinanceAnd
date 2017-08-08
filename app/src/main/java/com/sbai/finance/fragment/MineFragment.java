@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.AboutUsActivity;
+import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.AttentionActivity;
 import com.sbai.finance.activity.mine.FansActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
@@ -280,8 +280,11 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.aboutUs:
-                Launcher.with(getActivity(), AboutUsActivity.class)
-                        .execute();
+//                Launcher.with(getActivity(), AboutUsActivity.class)
+//                        .execute();
+                // TODO: 2017/7/31  先增加水平测试入口
+                Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
+
                 break;
             case R.id.wallet:
                 if (LocalUser.getUser().isLogin()) {

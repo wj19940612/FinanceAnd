@@ -365,6 +365,19 @@
             android:name=".activity.daily.DailyReportActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.leveltest.LevelTestStartActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.LevelExamQuestionsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.ExamResultActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.HistoryTestResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>

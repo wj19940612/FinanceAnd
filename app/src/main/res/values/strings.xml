@@ -620,6 +620,25 @@
 
 
     <string name="number_ge">%1$s个</string>
+
+    <!--金融水平测试 -->
+    <string name="level_test_title">测测你的金融水平</string>
+    <string name="level_test_info_hint">融合五大指标（基本理论、技术分析、基本面分析、风险控制和盈利能力）全面测评根据测评结果私人订制训练项目</string>
+    <string name="number_people_join">(%1$d人已经参加)</string>
+    <string name="start_test">开始测试</string>
+    <string name="history_result">历史结果</string>
+    <string name="is_exit_test">是否退出测试？</string>
+    <string name="accidence">入门</string>
+    <string name="primary">初级</string>
+    <string name="intermediate">中级</string>
+    <string name="expert">高级</string>
+    <string name="master">精通</string>
+    <string name="going_train">马上去训练提升</string>
+    <string name="test_result">测评结果</string>
+    <string name="pass">跳过</string>
+    <string name="get_exam_questions_fail">测试题目获取失败</string>
+    <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
+
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>

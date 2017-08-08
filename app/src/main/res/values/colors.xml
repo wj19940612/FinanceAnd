@@ -44,4 +44,8 @@
 
     <color name="yellowShallow">#FFFCF5</color>
     <color name="yellowShallowBorder">#F3B071</color>
+
+    <!---->
+    <color name="yellowScoreGrade">#ffC200</color>
+    <color name="hint_white_color">#FDFDFD</color>
 </resources>
