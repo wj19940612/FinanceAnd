@@ -2012,4 +2012,14 @@ public class Client {
                         .put("questionId", questionId)
         );
     }
+
+    /**
+     * 学一学记录
+     *
+     * @return
+     */
+    public static API getMyStudyInfo() {
+        return new API("/train/course/findTrainCourse.do");
+    }
+
 }

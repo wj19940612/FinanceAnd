@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/optionArea"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal">
+              android:orientation="horizontal"
+              android:padding="@dimen/common_padding">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/option"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:textColor="@color/blackAssist"
         android:textSize="14sp"
         tools:text="普通股，优先股"/>
 
     <CheckBox
+        android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@null"
-        android:background="@drawable/checkbox_pay_way"/>
+        android:layout_gravity="center"
+        android:background="@drawable/checkout_study_room"
+        android:button="@null"/>
+
+    <TextView
+        android:id="@+id/answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="回答正确"/>
 
 </LinearLayout>

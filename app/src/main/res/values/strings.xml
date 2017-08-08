@@ -679,6 +679,14 @@
     <string name="answer_right_know_more">回答正确，了解更多可看解释哦～</string>
     <string name="question_explain">问题解释</string>
     <string name="right_answer">正确答案:%1$s</string>
+    <string name="worship">膜拜</string>
+    <string name="ingot_board">土豪榜</string>
+    <string name="savant_board">学霸榜</string>
+    <string name="profit_board">盈利榜</string>
+    <string name="rank">名次 %1$d</string>
+    <string name="today">今日</string>
+    <string name="this_week">本周</string>
+    <string name="week">周</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>
