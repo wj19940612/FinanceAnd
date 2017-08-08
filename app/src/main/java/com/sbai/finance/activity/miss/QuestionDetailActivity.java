@@ -403,12 +403,17 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 							@Override
 							protected void onRespSuccessData(Prise prise) {
+								int praiseCount;
 								if (prise.getIsPrise() == 0) {
 									mLoveImage.setImageResource(R.drawable.ic_miss_love);
+									praiseCount = mQuestionDetail.getPriseCount() - 1;
+									mQuestionDetail.setPriseCount(praiseCount);
 								} else {
 									mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+									praiseCount = mQuestionDetail.getPriseCount() + 1;
+									mQuestionDetail.setPriseCount(praiseCount);
 								}
-								mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(prise.getPriseCount())));
+								mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(praiseCount)));
 							}
 						}).fire();
 					} else {
