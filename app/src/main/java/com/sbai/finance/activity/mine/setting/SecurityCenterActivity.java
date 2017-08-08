@@ -115,7 +115,8 @@ public class SecurityCenterActivity extends BaseActivity {
         }
 
         if (requestCode == REQ_CODE_UPDATE_LOGIN_PSD && resultCode == RESULT_OK) {
-            // TODO: 07/08/2017 这边是否也会有类似于安全密码一样的跳转？
+            mSetLoginPassword.setVisibility(View.VISIBLE);
+            mModifyLoginPassword.setVisibility(View.GONE);
         }
     }
 }

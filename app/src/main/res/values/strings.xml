@@ -238,13 +238,12 @@
     <string name="modify_security_password">修改安全密码</string>
     <string name="forget_security_password">忘记安全密码</string>
     <string name="same_passwords">新旧密码一致</string>
-
-    <!--安全设置-->
     <string name="please_input_old_password">请输入旧安全密码</string>
     <string name="please_input_new_password">请输入新安全密码</string>
     <string name="please_confirm_new_password">请确认新安全密码</string>
-
+    <string name="modify_success">修改成功</string>
     <string name="modify_fail">修改失败</string>
+    <string name="set_success">设置成功</string>
     <string name="new_password_is_same_as_old_pass">新密码与旧密码相同</string>
     <string name="twice_password_is_different">两次新安全密码输入不一致</string>
 

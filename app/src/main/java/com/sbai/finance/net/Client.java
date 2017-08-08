@@ -2075,14 +2075,25 @@ public class Client {
     }
 
     /**
-     * 设置/修改登录密码
+     * 修改登录密码
      *
      * @param password
      * @return
      */
-    public static API updateLoginPassword(String password) {
+    public static API modifyPassword(String password, String oldPassword) {
+        return new API("/user/user/modifyPassword.do", new ApiParams()
+                .put("newPassword", password)
+                .put("oldPassword", oldPassword));
+    }
+
+    /**
+     * 第一次 设置登录密码
+     *
+     * @param password
+     * @return
+     */
+    public static API setPassword(String password) {
         return new API("/user/user/setPassword.do", new ApiParams()
-                .put(", password", password));
-        // TODO: 07/08/2017 接口不对
+                .put("password", password));
     }
 }

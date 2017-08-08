@@ -101,26 +101,36 @@ public class UpdatePasswordActivity extends BaseActivity {
             if (samePasswords) {
                 ToastUtil.show(R.string.same_passwords);
             } else {
-                requestUpdatePassword();
+                requestModifyPassword();
             }
         } else {
-            requestUpdatePassword();
+            requestSetPassword();
         }
     }
 
-    private void requestUpdatePassword() {
+    private void requestSetPassword() {
         String password = mPassword.getPassword();
-        Client.updateLoginPassword(password)
+        Client.setPassword(password)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp>() {
                     @Override
                     protected void onRespSuccess(Resp resp) {
-                        // TODO: 07/08/2017 toast 不同
-                        if (mHasLoginPassword) {
+                        ToastUtil.show(R.string.set_success);
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                }).fire();
+    }
 
-                        } else {
-
-                        }
+    private void requestModifyPassword() {
+        String password = mPassword.getPassword();
+        String oldPassword = mOldPassword.getPassword();
+        Client.modifyPassword(password, oldPassword)
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        ToastUtil.show(R.string.modify_success);
                         setResult(RESULT_OK);
                         finish();
                     }
