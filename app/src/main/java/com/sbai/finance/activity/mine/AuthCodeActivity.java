@@ -26,12 +26,9 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.PasswordInputFilter;
-import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
-
-import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,11 +146,8 @@ public class AuthCodeActivity extends BaseActivity {
     private void doCompleteButtonClick() {
         String password = mPassword.getText().toString();
         String authCode = mAuthCode.getText().toString().trim();
-        try {
-            SecurityUtil.md5Encrypt(password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        password = md5Encrypt(password);
+
         if (mPageType == PAGE_TYPE_REGISTER) {
             Client.register(mPhone, password, authCode)
                     .setTag(TAG).setIndeterminate(this)

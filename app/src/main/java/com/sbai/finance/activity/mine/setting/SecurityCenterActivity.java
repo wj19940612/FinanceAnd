@@ -115,8 +115,8 @@ public class SecurityCenterActivity extends BaseActivity {
         }
 
         if (requestCode == REQ_CODE_UPDATE_LOGIN_PSD && resultCode == RESULT_OK) {
-            mSetLoginPassword.setVisibility(View.VISIBLE);
-            mModifyLoginPassword.setVisibility(View.GONE);
+            mSetLoginPassword.setVisibility(View.GONE);
+            mModifyLoginPassword.setVisibility(View.VISIBLE);
         }
     }
 }

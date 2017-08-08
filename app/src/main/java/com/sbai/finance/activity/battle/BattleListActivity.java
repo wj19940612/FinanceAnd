@@ -148,7 +148,7 @@ public class BattleListActivity extends BaseActivity implements
     private void initLoginReceiver() {
         mLoginBroadcastReceiver = new LoginBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
         intentFilter.addAction(CreateBattleActivity.CREATE_SUCCESS_ACTION);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mLoginBroadcastReceiver, intentFilter);
@@ -812,7 +812,7 @@ public class BattleListActivity extends BaseActivity implements
     class LoginBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.ACTION_LOGIN_SUCCESS)) {
                 updateAvatar();
                 requestUserFindInfo();
                 requestCurrentBattle();

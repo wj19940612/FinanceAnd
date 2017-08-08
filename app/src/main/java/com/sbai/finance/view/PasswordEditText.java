@@ -11,6 +11,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
@@ -98,6 +99,14 @@ public class PasswordEditText extends LinearLayout {
         params.weight = 1;
         addView(mPassword, params);
         addView(mShowPassword);
+    }
+
+    public void addTextChangedListener(TextWatcher textWatcher) {
+        mPassword.addTextChangedListener(textWatcher);
+    }
+
+    public void removeTextChangedListener(TextWatcher textWatcher) {
+        mPassword.removeTextChangedListener(textWatcher);
     }
 
     public String getPassword() {

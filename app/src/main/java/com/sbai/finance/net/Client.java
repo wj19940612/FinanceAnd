@@ -227,8 +227,6 @@ public class Client {
 
     /**
      * 接口名称 快捷登入
-     * 请求类型 post
-     * 请求Url  /registerLogin/quickLogin.do
      *
      * @param authCode 短信验证码
      * @param phone    手机
@@ -293,40 +291,59 @@ public class Client {
     }
 
     /**
+     * 修改登录密码
+     *
+     * @param password
+     * @return
+     */
+    public static API modifyPassword(String password, String oldPassword) {
+        return new API(POST, "/user/user/modifyPassword.do", new ApiParams()
+                .put("newPassword", password)
+                .put("oldPassword", oldPassword));
+    }
+
+    /**
+     * 第一次 设置登录密码
+     *
+     * @param password
+     * @return
+     */
+    public static API setPassword(String password) {
+        return new API(POST, "/user/user/setPassword.do", new ApiParams()
+                .put("password", password));
+    }
+
+    /**
      * 接口名称 获取验证码
-     * 请求类型 get
-     * 请求Url  /registerLogin/sendMsgCode.do
      *
      * @param phone
      * @return
      */
-
     public static API getAuthCode(String phone) {
-        return new API("/user/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
+        return new API(POST, "/user/registerLogin/sendMsgCode.do", new ApiParams()
+                .put("phone", phone));
     }
 
     /**
      * 请求类型 post
-     * 请求Url  /user/updatePic.do
-     * 接口描述 修改头像
      *
      * @param pic
      * @return
      */
     public static API updateUserHeadImage(String pic) {
-        return new API(POST, "/user/user/updatePic.do", new ApiParams().put("pic", pic));
+        return new API(POST, "/user/user/updatePic.do", new ApiParams()
+                .put("pic", pic));
     }
 
     /**
-     * 请求类型 post
-     * 请求Url  user/user/updatePicLand.do 提交头像
-     * 接口描述 修改头像
+     * 修改头像
      *
      * @param picPath String 图片网址
      * @return
      */
     public static API updateUserHeadImagePath(String picPath) {
-        return new API("/user/user/updatePicLand.do", new ApiParams().put("picLand", picPath));
+        return new API("/user/user/updatePicLand.do", new ApiParams()
+                .put("picLand", picPath));
     }
 
     /**
@@ -2072,28 +2089,5 @@ public class Client {
                 new ApiParams()
                         .put("questionId", questionId)
         );
-    }
-
-    /**
-     * 修改登录密码
-     *
-     * @param password
-     * @return
-     */
-    public static API modifyPassword(String password, String oldPassword) {
-        return new API("/user/user/modifyPassword.do", new ApiParams()
-                .put("newPassword", password)
-                .put("oldPassword", oldPassword));
-    }
-
-    /**
-     * 第一次 设置登录密码
-     *
-     * @param password
-     * @return
-     */
-    public static API setPassword(String password) {
-        return new API("/user/user/setPassword.do", new ApiParams()
-                .put("password", password));
     }
 }

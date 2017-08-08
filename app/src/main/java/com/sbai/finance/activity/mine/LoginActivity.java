@@ -31,11 +31,8 @@ import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PasswordInputFilter;
-import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
-
-import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +41,6 @@ import butterknife.OnClick;
 import static com.sbai.finance.R.id.authCode;
 
 public class LoginActivity extends BaseActivity {
-
-    public static final String LOGIN_SUCCESS_ACTION = "LOGIN_SUCCESS_ACTION";
 
     private static final int REQ_CODE_REGISTER = 888;
 
@@ -165,12 +160,15 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) {
-            // 注册成功 发送广播 以及 关闭页面
-            LocalBroadcastManager.getInstance(getActivity())
-                    .sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
+        if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) { // 注册成功 发送广播 以及 关闭页面
+            sendLoginSuccessBroadcast();
             finish();
         }
+    }
+
+    private void sendLoginSuccessBroadcast() {
+        LocalBroadcastManager.getInstance(getActivity())
+                .sendBroadcast(new Intent(ACTION_LOGIN_SUCCESS));
     }
 
     private void setKeyboardHelper() {
@@ -377,11 +375,7 @@ public class LoginActivity extends BaseActivity {
         final String phoneNumber = getPhoneNumber();
         final String authCode = mAuthCode.getText().toString().trim();
         String password = mPassword.getText().toString();
-        try {
-            password = SecurityUtil.md5Encrypt(password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        password = md5Encrypt(password);
 
         mLogin.setText(R.string.login_ing);
         mLoading.setVisibility(View.VISIBLE);
@@ -433,8 +427,7 @@ public class LoginActivity extends BaseActivity {
     private void postLogin(Resp<UserInfo> resp, String phoneNumber) {
         if (resp.hasData()) {
             LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
-            LocalBroadcastManager.getInstance(getActivity())
-                    .sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
+            sendLoginSuccessBroadcast();
             finish();
         }
     }
