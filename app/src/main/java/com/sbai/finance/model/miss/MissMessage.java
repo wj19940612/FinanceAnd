@@ -148,6 +148,16 @@ public class MissMessage {
         private String userPhone;
         private String name;
 
+        public String getUserPortrait() {
+            return userPortrait;
+        }
+
+        public void setUserPortrait(String userPortrait) {
+            this.userPortrait = userPortrait;
+        }
+
+        private String userPortrait;
+
         public String getName() {
             return name;
         }

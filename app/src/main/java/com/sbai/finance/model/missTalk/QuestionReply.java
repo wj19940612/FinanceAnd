@@ -209,7 +209,7 @@ public class QuestionReply {
 			this.replys = replys;
 		}
 
-		public static class UserModelBean {
+		public static class UserModelBean implements Serializable{
 			/**
 			 * age : 25
 			 * certificationStatus : 1
@@ -315,7 +315,7 @@ public class QuestionReply {
 			}
 		}
 
-		public static class ReplysBean {
+		public static class ReplysBean implements Serializable{
 			/**
 			 * content : 发表一个评论yoyoyoyoyoyo333333!
 			 * createDate : 1501664280341

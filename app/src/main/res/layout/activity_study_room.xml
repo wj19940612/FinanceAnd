@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:bottomHasSplitLine="true"
+        app:titleText="@string/study_room"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:orientation="vertical"
+            android:paddingBottom="44dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/studyInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageView
+                        android:id="@+id/timeImg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        tools:src="@drawable/ic_study_room_day"/>
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="44dp"
+                        android:layout_marginTop="35dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        tools:text="7月20日 周三"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="210dp"
+                        android:layout_marginTop="26dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="9dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/study_days"
+                                android:textColor="@android:color/white"
+                                android:textSize="20sp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="@string/continuous_study"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="@string/longest_continuous_study"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="@string/total_scholarship"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/studyDays"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="20sp"
+                                tools:text="7"/>
+
+                            <TextView
+                                android:id="@+id/continuousDay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"
+                                tools:text="@string/day"/>
+
+                            <TextView
+                                android:id="@+id/longestContinuousDay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"
+                                tools:text="@string/day"/>
+
+                            <TextView
+                                android:id="@+id/totalScholarship"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"
+                                tools:text="@string/ingot_number"/>
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="143dp"
+                    android:background="@android:color/white"
+                    android:orientation="vertical"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/testTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="17dp"
+                            android:layout_marginTop="21dp"
+                            android:gravity="center"
+                            android:textColor="@color/blackPrimary"
+                            android:textSize="15sp"
+                            tools:text="股票按市场不同可分为"/>
+
+                        <com.sbai.finance.view.MyListView
+                            android:id="@+id/listView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="24dp"
+                            android:layout_marginTop="24dp">
+
+                            <TextView
+                                android:id="@+id/commit"
+                                android:layout_width="112dp"
+                                android:layout_height="36dp"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/btn_study_rounded"
+                                android:enabled="false"
+                                android:gravity="center"
+                                android:text="@string/ok"
+                                android:textColor="@android:color/white"
+                                android:textSize="15sp"/>
+
+                            <TextView
+                                android:id="@+id/testResult"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:textColor="@color/unluckyText"
+                                android:textSize="12sp"
+                                android:visibility="gone"
+                                tools:text="@string/answer_wrong_study_together"/>
+                        </RelativeLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/explainArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/transparent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:cardCornerRadius="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="22dp"
+                            android:layout_marginLeft="@dimen/common_padding"
+                            android:layout_marginRight="@dimen/common_padding"
+                            android:layout_marginTop="22dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/rightAnswer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blackPrimary"
+                                android:textSize="20sp"
+                                tools:text="@string/right_answer"/>
+
+                            <TextView
+                                android:id="@+id/answerDetail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="9dp"
+                                android:textColor="@color/unluckyText"
+                                android:textSize="14sp"
+                                tools:text="由于我国的证券市场还不成熟，目前还不具备发展场外交易市场的条件。根据投资者范 围不同，我国股票市场还可分为境内投资者参与的A股市场和专供境外投资者参与的B股市场证券是各类财产所有权或债权凭证的通称，是 用来证明证券持有人有权依据券面所载内容取得相 应权益的凭证 。"/>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/bg_question_answer"
+                    android:gravity="center"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
+                    android:text="@string/question_explain"
+                    android:textColor="@color/luckyText"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

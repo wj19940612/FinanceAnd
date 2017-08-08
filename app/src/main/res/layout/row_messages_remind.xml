@@ -89,8 +89,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="10dp"
-            android:ellipsize="end"
-            android:maxLines="2"
             android:textColor="@color/luckyText"
             android:textSize="14sp"
             tools:text="股票按市场不同可分为A股、B股、H股等股票按市场不同可分为A股、B股、H股等。"/>

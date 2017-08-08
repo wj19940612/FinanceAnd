@@ -25,7 +25,9 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Prise;
@@ -76,6 +78,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private RewardInfo mRewardInfo;
 	private List<Question> mMyQuestionList;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,6 +106,9 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mListView.setOnItemClickListener(this);
 		mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
+		if (!LocalUser.getUser().isLogin()) {
+			Launcher.with(this, LoginActivity.class).execute();
+		}
 	}
 
 	@Override

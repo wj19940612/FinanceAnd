@@ -9,6 +9,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@android:color/white">
@@ -77,16 +78,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/white"
                     android:orientation="vertical">
 
                     <com.sbai.finance.view.EmptyRecyclerView
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"/>
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"/>
 
                     <TextView
                         android:id="@+id/missEmpty"
@@ -143,9 +143,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="200dp"
-                    android:text="@string/ask_miss"
-                    android:visibility="gone"/>
+                    android:layout_marginTop="100dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@drawable/img_no_message"
+                    android:text="@string/ask_miss"/>
 
             </LinearLayout>
         </ScrollView>

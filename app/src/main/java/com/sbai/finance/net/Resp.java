@@ -19,6 +19,8 @@ public class Resp<T> {
     //聚宝盆兑换资金不足
     public static final int CODE_EXCHANGE_FUND_IS_NOT_ENOUGH = 2201;
 
+    //安全密码错误
+    public static final int CODE_SAFETY_INPUT_ERROR = 2203;
     public static final int CODE_LIGHTNING_ORDER_INVALID = 703;
 
     private int code;

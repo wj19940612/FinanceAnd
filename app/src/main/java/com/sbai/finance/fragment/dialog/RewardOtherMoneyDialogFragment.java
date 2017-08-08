@@ -92,6 +92,10 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
         }
         mOtherMoneyContent.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         mOtherMoneyContent.addTextChangedListener(mValidationWatcher);
+        if (mRewardInfo != null && mRewardInfo.getMoney() > 0) {
+            mOtherMoneyContent.setText(String.valueOf(mRewardInfo.getMoney()));
+            mConfirm.setEnabled(true);
+        }
     }
 
     @Override
@@ -99,9 +103,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
         super.onDestroyView();
         mOtherMoneyContent.removeTextChangedListener(mValidationWatcher);
         String content = mOtherMoneyContent.getText().toString();
-        if (content.isEmpty() || content.length() > 15
-                || Long.valueOf(content.replace(",", "")) < 10
-                || Long.valueOf(content.replace(",", "")) > 10000000) {
+        if (content.isEmpty()) {
             RewardMissDialogFragment.newInstance()
                     .show(getActivity().getSupportFragmentManager());
         } else {
@@ -171,6 +173,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.dialogClose:
+                mOtherMoneyContent.setText("");
                 dismiss();
                 break;
             case R.id.confirm:

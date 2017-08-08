@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.leaderboard.LeaderBoardsActivity">
 
@@ -29,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="@color/blackPrimary"
+            android:background="@color/yellowAssist"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -55,28 +56,94 @@
                     android:textSize="12sp"
                     tools:text="您的排名 1111"/>
             </LinearLayout>
+
+            <com.sbai.finance.view.ImageListView
+                android:id="@+id/ingotImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profitBoardArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="#A485FF"
+            android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="28dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="28dp"
+                android:orientation="vertical">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_profit_board"/>
+
+                <TextView
+                    android:id="@+id/profitBoard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="left"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    tools:text="您的排名 1111"/>
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/profitBoard"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="vertical">
+            <com.sbai.finance.view.ImageListView
+                android:id="@+id/profitsImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/savantBoard"
+            android:id="@+id/savantBoardArea"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:background="#A485FF"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="28dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="28dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_savant_board"/>
+
+                <TextView
+                    android:id="@+id/savantBoard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="left"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    tools:text="您的排名 1111"/>
+            </LinearLayout>
+
+            <com.sbai.finance.view.ImageListView
+                android:id="@+id/savantImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
         </LinearLayout>
     </LinearLayout>
 
