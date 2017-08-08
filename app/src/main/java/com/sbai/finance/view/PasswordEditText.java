@@ -113,6 +113,10 @@ public class PasswordEditText extends LinearLayout {
         return mPassword.getText().toString();
     }
 
+    public void setPassword(String password) {
+        mPassword.setText(password);
+    }
+
     public void setHint(CharSequence hint) {
         mPassword.setHint(hint);
     }

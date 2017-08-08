@@ -3,15 +3,9 @@ package com.sbai.finance.activity.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Selection;
-import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,10 +19,10 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardUtils;
-import com.sbai.finance.utils.PasswordInputFilter;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.PasswordEditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,16 +34,18 @@ public class AuthCodeActivity extends BaseActivity {
 
     @BindView(R.id.receivePhone)
     TextView mReceivePhone;
+
     @BindView(R.id.authCode)
     EditText mAuthCode;
     @BindView(R.id.getAuthCode)
     TextView mGetAuthCode;
+
     @BindView(R.id.password)
-    EditText mPassword;
-    @BindView(R.id.showPassword)
-    ImageView mShowPassword;
+    PasswordEditText mPassword;
+
     @BindView(R.id.complete)
     TextView mComplete;
+
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
 
@@ -76,7 +72,6 @@ public class AuthCodeActivity extends BaseActivity {
 
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        mPassword.setFilters(new InputFilter[] {new PasswordInputFilter()});
 
         mAuthCode.postDelayed(new Runnable() {
             @Override
@@ -107,7 +102,7 @@ public class AuthCodeActivity extends BaseActivity {
 
     private boolean checkCompleteButtonEnable() {
         String authCode = mAuthCode.getText().toString().trim();
-        String password = mPassword.getText().toString();
+        String password = mPassword.getPassword();
 
         if (TextUtils.isEmpty(authCode) || authCode.length() < 4) {
             return false;
@@ -125,14 +120,11 @@ public class AuthCodeActivity extends BaseActivity {
         mPhone = intent.getStringExtra(ExtraKeys.PHONE);
     }
 
-    @OnClick({R.id.getAuthCode, R.id.showPassword, R.id.complete, R.id.rootView})
+    @OnClick({R.id.getAuthCode, R.id.complete, R.id.rootView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
                 getAuthCode();
-                break;
-            case R.id.showPassword:
-                togglePasswordVisible();
                 break;
             case R.id.complete:
                 doCompleteButtonClick();
@@ -144,7 +136,7 @@ public class AuthCodeActivity extends BaseActivity {
     }
 
     private void doCompleteButtonClick() {
-        String password = mPassword.getText().toString();
+        String password = mPassword.getPassword();
         String authCode = mAuthCode.getText().toString().trim();
         password = md5Encrypt(password);
 
@@ -172,22 +164,6 @@ public class AuthCodeActivity extends BaseActivity {
                             finish();
                         }
                     }).fire();
-        }
-    }
-
-    private void togglePasswordVisible() {
-        if (mShowPassword.isSelected()) {
-            mShowPassword.setSelected(false);
-            mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        } else {
-            mShowPassword.setSelected(true);
-            mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-        }
-        mPassword.postInvalidate();
-        CharSequence text = mPassword.getText();
-        if (text != null) {
-            Spannable spanText = (Spannable) text;
-            Selection.setSelection(spanText, text.length());
         }
     }
 

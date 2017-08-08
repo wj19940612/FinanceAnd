@@ -4,12 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Selection;
-import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -30,9 +25,9 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.PasswordInputFilter;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.PasswordEditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,15 +68,12 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.authCodeArea)
     LinearLayout mAuthCodeArea;
-    @BindView(R.id.passwordArea)
-    LinearLayout mPasswordArea;
+
     @BindView(R.id.passwordLoginOperations)
     LinearLayout mPasswordLoginOperations;
 
-    @BindView(R.id.showPassword)
-    ImageView mShowPassword;
     @BindView(R.id.password)
-    EditText mPassword;
+    PasswordEditText mPassword;
 
     private KeyBoardHelper mKeyBoardHelper;
 
@@ -98,7 +90,6 @@ public class LoginActivity extends BaseActivity {
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        mPassword.setFilters(new InputFilter[] {new PasswordInputFilter()});
         mPhoneNumber.setText(LocalUser.getUser().getPhone());
 
         initListener();
@@ -256,7 +247,7 @@ public class LoginActivity extends BaseActivity {
     private boolean checkSignInButtonEnable() {
         String phone = getPhoneNumber();
         String authCode = mAuthCode.getText().toString().trim();
-        String password = mPassword.getText().toString();
+        String password = mPassword.getPassword();
 
         if (TextUtils.isEmpty(phone) || phone.length() < 11) {
             return false;
@@ -278,8 +269,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick({R.id.closePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.rootView,
-            R.id.loginSwitch, R.id.loginSwitchTop, R.id.showPassword,
-            R.id.register, R.id.forgetPassword})
+            R.id.loginSwitch, R.id.loginSwitchTop, R.id.register, R.id.forgetPassword})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -299,9 +289,6 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.rootView:
                 KeyBoardUtils.closeKeyboard(mRootView);
-                break;
-            case R.id.showPassword:
-                togglePasswordVisible();
                 break;
 
             case R.id.register:
@@ -324,29 +311,13 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void togglePasswordVisible() {
-        if (mShowPassword.isSelected()) {
-            mShowPassword.setSelected(false);
-            mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        } else {
-            mShowPassword.setSelected(true);
-            mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-        }
-        mPassword.postInvalidate();
-        CharSequence text = mPassword.getText();
-        if (text != null) {
-            Spannable spanText = (Spannable) text;
-            Selection.setSelection(spanText, text.length());
-        }
-    }
-
     private void switchLoginMode() {
         if (isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mPageTitle.setText(R.string.password_login);
             mLoginSwitch.setText(R.string.auth_code_login);
             mLoginSwitchTop.setText(R.string.auth_code_login);
             mAuthCodeArea.setVisibility(View.GONE);
-            mPasswordArea.setVisibility(View.VISIBLE);
+            mPassword.setVisibility(View.VISIBLE);
             mPasswordLoginOperations.setVisibility(View.VISIBLE);
             mAuthCode.setText("");
         } else {
@@ -354,9 +325,9 @@ public class LoginActivity extends BaseActivity {
             mLoginSwitch.setText(R.string.password_login);
             mLoginSwitchTop.setText(R.string.password_login);
             mAuthCodeArea.setVisibility(View.VISIBLE);
-            mPasswordArea.setVisibility(View.GONE);
+            mPassword.setVisibility(View.GONE);
             mPasswordLoginOperations.setVisibility(View.GONE);
-            mPassword.setText("");
+            mPassword.setPassword("");
         }
     }
 
@@ -374,7 +345,7 @@ public class LoginActivity extends BaseActivity {
 
         final String phoneNumber = getPhoneNumber();
         final String authCode = mAuthCode.getText().toString().trim();
-        String password = mPassword.getText().toString();
+        String password = mPassword.getPassword();
         password = md5Encrypt(password);
 
         mLogin.setText(R.string.login_ing);

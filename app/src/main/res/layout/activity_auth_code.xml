@@ -65,33 +65,15 @@
             android:layout_height="0.3dp"
             android:background="@color/split"/>
 
-        <LinearLayout
+        <com.sbai.finance.view.PasswordEditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="50dp">
-
-            <EditText
-                android:id="@+id/password"
-                style="@style/SignEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:maxLength="18"/>
-
-            <ImageView
-                android:id="@+id/showPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_show_password"/>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.3dp"
-            android:background="@color/split"/>
+            android:minHeight="50dp"
+            app:bottomLineColor="@color/split"
+            app:hasBottomLine="true"
+            app:maxCharNum="18"
+            app:textHint="@string/password"/>
 
         <TextView
             android:id="@+id/complete"
