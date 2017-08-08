@@ -27,7 +27,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingRight="@dimen/common_padding"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="16sp"
                 tools:text="因素不可预测，随时可能出现也就是因素不可预测，随时可能出现"/>
 
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="8dp"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
                 tools:text="贾斯丁"/>
 

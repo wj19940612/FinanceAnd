@@ -16,7 +16,7 @@
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
         app:titleText="@string/about_le_mi"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="68dp"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="34dp"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="15sp"
         tools:text="乐米金融1.1"/>
 
@@ -45,7 +45,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/action_product"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
@@ -58,7 +58,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/user_protocol"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
@@ -70,7 +70,7 @@
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/check_update"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 

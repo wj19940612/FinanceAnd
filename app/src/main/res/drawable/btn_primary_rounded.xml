@@ -2,20 +2,22 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true" android:state_pressed="false">
         <shape>
-            <solid android:color="@color/warningText"/>
-            <corners android:radius="@dimen/common_eight_radius"/>
+            <solid android:color="@color/colorPrimary"/>
+            <corners android:radius="@dimen/button_radius"/>
         </shape>
     </item>
+
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="#7FCD4A47"/>
-            <corners android:radius="@dimen/common_eight_radius"/>
+            <solid android:color="#7f55adff"/>
+            <corners android:radius="@dimen/button_radius"/>
         </shape>
     </item>
+
     <item>
         <shape>
             <solid android:color="@color/greyAssist"/>
-            <corners android:radius="@dimen/common_eight_radius"/>
+            <corners android:radius="@dimen/button_radius"/>
         </shape>
     </item>
 </selector>

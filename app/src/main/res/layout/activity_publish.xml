@@ -18,7 +18,7 @@
         app:rightImage="@drawable/ic_common_more"
         app:rightVisible="true"
         app:titleText="@string/my_publish"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>

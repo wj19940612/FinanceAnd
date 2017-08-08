@@ -166,7 +166,7 @@
                             android:layout_marginBottom="17dp"
                             android:layout_marginTop="21dp"
                             android:gravity="center"
-                            android:textColor="@color/blackAssist"
+                            android:textColor="@color/blackPrimary"
                             android:textSize="15sp"
                             tools:text="股票按市场不同可分为"/>
 
@@ -242,7 +242,7 @@
                                 android:id="@+id/rightAnswer"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/blackAssist"
+                                android:textColor="@color/blackPrimary"
                                 android:textSize="20sp"
                                 tools:text="@string/right_answer"/>
 

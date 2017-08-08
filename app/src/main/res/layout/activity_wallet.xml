@@ -58,7 +58,7 @@
         app:leftIcon="@drawable/ic_mine_wallet_recharge"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/recharge"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -70,7 +70,7 @@
         app:leftIcon="@drawable/ic_mine_wallet_withdrawal"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/withdraw"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -81,7 +81,7 @@
         app:leftIcon="@drawable/ic_mine_wallet_detail"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/market_detail"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -93,6 +93,6 @@
         app:leftIcon="@drawable/ic_mine_wallet_bankcard"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/bank_card"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"/>
 </LinearLayout>

@@ -76,7 +76,7 @@
                         android:background="@android:color/white"
                         android:lineSpacingExtra="2dp"
                         android:padding="20dp"
-                        android:textColor="@color/blackAssist"
+                        android:textColor="@color/blackPrimary"
                         android:textSize="20sp"
                         tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
 
@@ -88,7 +88,7 @@
                         android:paddingBottom="20dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
-                        android:textColor="@color/blackAssist"
+                        android:textColor="@color/blackPrimary"
                         android:textSize="12sp"
                         tools:text="来源: 若愚"/>
 
@@ -179,7 +179,7 @@
                 android:drawablePadding="@dimen/common_padding"
                 android:gravity="center"
                 android:text="@string/back"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="14sp"/>
         </RelativeLayout>
 
@@ -204,7 +204,7 @@
                 android:drawablePadding="@dimen/common_padding"
                 android:gravity="center"
                 android:text="@string/share"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="14sp"/>
         </RelativeLayout>
 

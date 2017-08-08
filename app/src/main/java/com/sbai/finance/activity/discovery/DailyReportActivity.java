@@ -1,7 +1,6 @@
-package com.sbai.finance.activity.daily;
+package com.sbai.finance.activity.discovery;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

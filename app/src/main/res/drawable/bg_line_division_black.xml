@@ -9,7 +9,7 @@
 
     <item android:bottom="0.7dp">
         <shape>
-            <solid android:color="@color/blackAssist"/>
+            <solid android:color="@color/primaryText"/>
         </shape>
     </item>
 </layer-list>

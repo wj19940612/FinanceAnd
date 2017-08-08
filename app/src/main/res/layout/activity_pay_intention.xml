@@ -16,7 +16,7 @@
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
         app:titleText="@string/pay_intention"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <ScrollView
         android:id="@+id/scrollView"

@@ -90,7 +90,6 @@ public class FeaturesNavigation extends LinearLayout {
 
     private void setupView() {
         setOrientation(HORIZONTAL);
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.redAssist));
 
         for (int i = 0; i < mNavItemList.size(); i++) {
             View itemView = createItemView(mNavItemList.get(i));

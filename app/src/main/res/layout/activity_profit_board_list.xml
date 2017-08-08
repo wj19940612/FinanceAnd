@@ -15,7 +15,7 @@
         app:bottomHasSplitLine="true"
         app:bottomSplitLineColor="@color/split"
         app:titleText="@string/profit_board"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/blackPrimary"/>
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout
         android:id="@+id/tabLayout"

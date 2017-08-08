@@ -33,16 +33,16 @@
             android:paddingBottom="15dp"
             android:paddingTop="6dp"
             android:text="@string/holder_card_state"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/rootView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="5dp"
             android:text="@string/holder_card_content"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="12sp"/>
     </LinearLayout>
 </RelativeLayout>

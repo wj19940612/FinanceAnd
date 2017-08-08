@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/banner_detail"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
     <LinearLayout
         android:id="@+id/eventTitleInfo"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
            android:layout_marginBottom="18dp"
            android:gravity="center"
            android:textSize="17sp"
-           android:textColor="@color/blackAssist"
+           android:textColor="@color/primaryText"
            tool:text="证监会李主席发言:鼓励上市公司"
            />
         <TextView

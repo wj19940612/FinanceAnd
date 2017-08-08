@@ -39,7 +39,7 @@
                 android:id="@+id/click"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="12sp"
                 tools:text="100 次阅读"/>
         </LinearLayout>
@@ -54,7 +54,7 @@
             android:layout_marginLeft="@dimen/common_padding"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/blackPrimary"
             android:textSize="12sp"
             tools:text="2017/05/15"/>
 
@@ -68,7 +68,7 @@
             android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/blackPrimary"
             android:textSize="15sp"
             tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>
 

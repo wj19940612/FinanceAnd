@@ -124,7 +124,7 @@ import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
  */
 public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
 
-    @BindView(R.id.content)
+    @BindView(R.id.rootView)
     LinearLayout mContent;
 
     @BindView(R.id.battleContent)
@@ -222,7 +222,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         mContent.removeAllViews();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.content, BattleRecordsFragment.newInstance(mBattle))
+                .add(R.id.rootView, BattleRecordsFragment.newInstance(mBattle))
                 .commitAllowingStateLoss();
     }
 
@@ -1116,8 +1116,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
-                    protected void onReceive(Resp<TradeOrder> resp) {
-                        super.onReceive(resp);
+                    protected void onReceiveResponse(Resp<TradeOrder> resp) {
+                        super.onReceiveResponse(resp);
                         if (resp.getCode() == GameCode.ORDER_EXISIT) {
                             refreshTradeView();
                         }
@@ -1136,8 +1136,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
-                    protected void onReceive(Resp<TradeOrderClosePosition> resp) {
-                        super.onReceive(resp);
+                    protected void onReceiveResponse(Resp<TradeOrderClosePosition> resp) {
+                        super.onReceiveResponse(resp);
                         if (resp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
                         }
@@ -1149,7 +1149,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     }
 
                     @Override
-                    protected void onToastErrorMessage(String msg) {
+                    protected void onRespFailureWitMsg(String msg, int code) {
                     }
                 })
                 .fire();
