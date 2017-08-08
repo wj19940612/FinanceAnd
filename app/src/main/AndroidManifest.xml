@@ -379,6 +379,16 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".activity.trainexperience.TrainExperienceActivity"
                   android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.ProfitBoardListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
+            android:screenOrientation="portrait"/>
+       
+        <activity
+            android:name=".activity.studyroom.StudyRoomActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

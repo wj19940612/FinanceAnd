@@ -171,7 +171,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                                 dismissAllowingStateLoss();
                             } else {
                                 ToastUtil.show(objectResp.getMsg());
-                                if (objectResp.getCode() == 2203) {
+                                if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
                                     mSafetyPasswordNumber.clearSafetyNumber();
                                 }
                             }
@@ -195,7 +195,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                                 dismissAllowingStateLoss();
                             } else {
                                 ToastUtil.show(objectResp.getMsg());
-                                if (objectResp.getCode() == 2203) {
+                                if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
                                     mSafetyPasswordNumber.clearSafetyNumber();
                                 }
                             }

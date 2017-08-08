@@ -2014,7 +2014,17 @@ public class Client {
     }
 
     /**
+     * 学一学记录
+     *
+     * @return
+     */
+    public static API getMyStudyInfo() {
+        return new API("/train/course/findTrainCourse.do");
+    }
+
+    /**
      * 听语音
+     *
      * @param questionId
      * @return
      */
@@ -2024,4 +2034,12 @@ public class Client {
                         .put("questionId", questionId)
         );
     }
+
+    public static API getTrainCourse(String deviceId) {
+        return new API(POST, "/train/course/task.do",
+                new ApiParams()
+                        .put("deviceId", deviceId)
+        );
+    }
+
 }

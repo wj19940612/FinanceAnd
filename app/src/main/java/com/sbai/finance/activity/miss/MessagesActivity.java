@@ -121,8 +121,10 @@ public class MessagesActivity extends BaseActivity implements
                     if (missMessage.isNoRead()) {
                         requestReadMessage(missMessage.getId());
                     }
-                    requestMessageDetail(missMessage.getDataId());
-                    // TODO: 2017-08-02 跳转到消息详情页
+                    //   requestMessageDetail(missMessage.getDataId());
+                    Launcher.with(getActivity(), QuestionDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, missMessage.getDataId())
+                            .execute();
                 }
             }
         });
@@ -286,7 +288,7 @@ public class MessagesActivity extends BaseActivity implements
                     } else {
                         mUserName.setText(item.getSourceUser().getUserName());
                         Glide.with(context)
-                                .load(item.getSourceUser().getUserPhone())
+                                .load(item.getSourceUser().getUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAvatar);
