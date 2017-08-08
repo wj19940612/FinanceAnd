@@ -2,6 +2,7 @@ package com.sbai.finance.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,7 +30,8 @@ import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.MoreTrainFeedBackActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.TrainProgram;
+import com.sbai.finance.model.train.TrainProgram;
+import com.sbai.finance.model.train.Train;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -116,7 +118,7 @@ public class DiscoveryFragment extends BaseFragment {
 
             @Override
             public void onLeaderboardClick() {
-                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
+                Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
             }
         });
         initTrainListView();
@@ -135,15 +137,25 @@ public class DiscoveryFragment extends BaseFragment {
     }
 
     private void requestTrainData() {
-        for (int i = 1; i < 5; i++) {
-            TrainProgram trainProgram = new TrainProgram();
-            trainProgram.setLevel(i % 2);
-            trainProgram.setTrainCount(i);
-            trainProgram.setTrainType("aaa");
-            mTrainAdapter.add(trainProgram);
+        Client.getRecommendTrainList(0).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<Train>>, List<Train>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Train> data) {
+                        updateTrainData(data);
+                    }
+                })
+                .fireFree();
+    }
+
+    private void updateTrainData(List<Train> data) {
+        mTrainAdapter.clear();
+        for (Train train : data) {
+            if (train.getTrain() != null) {
+                mTrainAdapter.add(train.getTrain());
+            }
         }
         mTrainAdapter.notifyDataSetChanged();
-
     }
 
     private void requestDailyReportData() {
@@ -236,8 +248,8 @@ public class DiscoveryFragment extends BaseFragment {
             CardView mContent;
             @BindView(R.id.trainImg)
             ImageView mTrainImg;
-            @BindView(R.id.gradeImg)
-            ImageView mGradeImg;
+            @BindView(R.id.grade)
+            TextView mGrade;
             @BindView(R.id.trainType)
             TextView mTrainType;
             @BindView(R.id.trainCount)
@@ -248,12 +260,23 @@ public class DiscoveryFragment extends BaseFragment {
             }
 
             private void bindDataWithView(TrainProgram item, Context context) {
-                int colors[] = {Color.parseColor("#FFB269"), Color.parseColor("#FB857A")};
-                mTrainType.setText(item.getTrainType());
-                mTrainCount.setText(context.getString(R.string.train_count, item.getTrainCount()));
+                Glide.with(context)
+                        .load(item.getImageUrl())
+                        .into(mTrainImg);
+                mTrainType.setText(item.getTitle());
+                if (item.getFinishCount() == 0) {
+                    mTrainCount.setText(context.getString(R.string.have_no_train));
+                } else {
+                    mTrainCount.setText(context.getString(R.string.train_count, item.getFinishCount()));
+                }
+                mGrade.setText(context.getString(R.string.level, item.getLevel()));
+                mContent.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}, context));
+            }
+
+            private Drawable createDrawable(int[] colors, Context context) {
                 GradientDrawable gradient = new GradientDrawable(GradientDrawable.Orientation.TL_BR, colors);
                 gradient.setCornerRadius(Display.dp2Px(8, context.getResources()));
-                mContent.setBackgroundDrawable(gradient);
+                return gradient;
             }
         }
     }

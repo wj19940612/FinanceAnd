@@ -13,6 +13,7 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.profit.ProfitBoardListFragment;
+import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -113,9 +114,9 @@ public class ProfitBoardListActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ProfitBoardListFragment.newInstance(ProfitBoardListFragment.TYPE_TODY);
+                    return ProfitBoardListFragment.newInstance(LeaderBoardRank.TODAY);
                 case 1:
-                    return ProfitBoardListFragment.newInstance(ProfitBoardListFragment.TYPE_WEEK);
+                    return ProfitBoardListFragment.newInstance(LeaderBoardRank.WEEK);
             }
             return null;
         }

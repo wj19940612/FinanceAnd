@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.ImageListView;
@@ -79,7 +80,7 @@ public class LeaderBoardsActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ingotBoardArea:
                 Launcher.with(getActivity(), IngotOrSavantLeaderBoardActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, IngotOrSavantLeaderBoardActivity.TYPE_INGOT)
+                        .putExtra(Launcher.EX_PAYLOAD, LeaderBoardRank.INGOT)
                         .execute();
                 break;
             case R.id.profitBoardArea:
@@ -88,7 +89,7 @@ public class LeaderBoardsActivity extends BaseActivity {
                 break;
             case R.id.savantBoardArea:
                 Launcher.with(getActivity(), IngotOrSavantLeaderBoardActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, IngotOrSavantLeaderBoardActivity.TYPE_SAVANT)
+                        .putExtra(Launcher.EX_PAYLOAD, LeaderBoardRank.SAVANT)
                         .execute();
                 break;
         }

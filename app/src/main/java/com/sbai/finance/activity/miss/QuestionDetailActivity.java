@@ -388,18 +388,18 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                             requestQuestionDetail();
                         }
                     }).fire();
-                } else{
+                } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
         }
     }
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-		ReplyDialogFragment.newInstance(item, mQuestionDetail.getQuestionUserId()).show(getSupportFragmentManager());
-	}
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
+        ReplyDialogFragment.newInstance(item, mQuestionDetail.getQuestionUserId()).show(getSupportFragmentManager());
+    }
 
     static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
         private Context mContext;
@@ -467,7 +467,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     mReplyArea.setVisibility(View.GONE);
                 } else {
                     mReplyArea.setVisibility(View.VISIBLE);
-                    if (item.getReplys().get(0).getUserModel()!= null) {
+                    if (item.getReplys().get(0).getUserModel() != null) {
                         mReplyName.setText(item.getReplys().get(0).getUserModel().getUserName());
                     }
                     mReplyContent.setText(item.getReplys().get(0).getContent());

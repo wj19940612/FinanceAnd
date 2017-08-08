@@ -13,6 +13,10 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.leaderboard.IngotOrSavantLeaderBoardActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.leaderboard.LeaderBoardRank;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
@@ -28,8 +32,6 @@ import butterknife.Unbinder;
 
 public class ProfitBoardListFragment extends BaseFragment implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
-    public static final int TYPE_TODY = 0;
-    public static final int TYPE_WEEK = 1;
 
     @BindView(R.id.listView)
     ListView mListView;
@@ -48,14 +50,22 @@ public class ProfitBoardListFragment extends BaseFragment implements
     Unbinder unbinder;
     private IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter mLeaderBoardAdapter;
     private Set<Integer> mSet;
-    private int mType;
+    private String mType;
 
-    public static ProfitBoardListFragment newInstance(int type) {
+    public static ProfitBoardListFragment newInstance(String type) {
         ProfitBoardListFragment profitBoardListFragment = new ProfitBoardListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("type", type);
+        bundle.putString("type", type);
         profitBoardListFragment.setArguments(bundle);
         return profitBoardListFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mType = getArguments().getString("type");
+        }
     }
 
     @Nullable
@@ -70,16 +80,36 @@ public class ProfitBoardListFragment extends BaseFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+        requestProfitBoardData();
     }
 
     private void initView() {
         mSet = new HashSet<>();
-        mLeaderBoardAdapter = new IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter(getActivity());
+        mLeaderBoardAdapter = new IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter(getActivity(), LeaderBoardRank.PROFIT);
         mListView.setAdapter(mLeaderBoardAdapter);
         mListView.setEmptyView(mEmpty);
     }
 
     private void requestProfitBoardData() {
+        Client.getleaderBoardList(LeaderBoardRank.PROFIT, mType).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<LeaderBoardRank>, LeaderBoardRank>() {
+                    @Override
+                    protected void onRespSuccessData(LeaderBoardRank data) {
+                        updateProfitBoardData(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateProfitBoardData(LeaderBoardRank data) {
+        stopRefreshAnimation();
+        mLeaderBoardAdapter.clear();
+        for (LeaderBoardRank.DataBean dataBean : data.getData()) {
+            if (mSet.add(dataBean.getUser().getId())) {
+                mLeaderBoardAdapter.add(dataBean);
+            }
+        }
+        mLeaderBoardAdapter.notifyDataSetChanged();
     }
 
     private void requestMyProfitBoardData() {

@@ -2042,4 +2042,50 @@ public class Client {
         );
     }
 
+    /**
+     * 推荐训练列表
+     */
+    public static API getRecommendTrainList(int page) {
+        return new API("/train/train/recommendList.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", 100));
+    }
+
+    /**
+     * 更多训练项目换一批
+     *
+     * @param pageSize
+     * @return
+     */
+    public static API getFeedBackTrainList(int pageSize) {
+        return new API("/train/trainfeedback/changeBatchTrainMore.do",
+                new ApiParams()
+                        .put("pageSize", pageSize));
+    }
+
+    public static API commitFeedBackTrain(String ids, String content) {
+        return new API(POST, "/train/trainfeedback/moreTrainFeedback.do",
+                new ApiParams()
+                        .put("ids", ids)
+                        .put("content", content));
+    }
+
+    /**
+     * 乐米分排行
+     * profit gold  appraise
+     * day week
+     *
+     * @param type
+     * @param timeType
+     * @return
+     */
+
+    public static API getleaderBoardList(String type, String timeType) {
+        return new API("/train/rank/rank.do",
+                new ApiParams()
+                        .put("type", type)
+                        .put("timeType", timeType));
+    }
+
 }

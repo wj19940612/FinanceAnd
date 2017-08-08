@@ -144,5 +144,6 @@
         <attr name="wordWarnColor" format="color|reference"/>
         <attr name="wordTextColor" format="color|reference"/>
         <attr name="wordTextSize" format="dimension"/>
+        <attr name="focusable" format="boolean"/>
     </declare-styleable>
 </resources>

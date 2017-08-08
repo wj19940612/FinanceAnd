@@ -24,10 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:background="@color/background"
-                android:divider="@null"
-                android:dividerHeight="@dimen/common_padding"
-                android:paddingLeft="@dimen/common_padding"
-                android:paddingRight="@dimen/common_padding"
+                android:dividerHeight="0.5dp"
                 android:scrollbars="none"
                 android:visibility="visible"/>
 
