@@ -18,11 +18,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.BattleListActivity;
-import com.sbai.finance.activity.daily.DailyReportActivity;
-import com.sbai.finance.activity.daily.DailyReportDetailActivity;
+import com.sbai.finance.activity.discovery.DailyReportActivity;
+import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.future.FuturesListActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
-import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
@@ -119,6 +118,7 @@ public class DiscoveryFragment extends BaseFragment {
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
             }
         });
+
         initTrainListView();
         initDailyReportView();
         requestTrainData();

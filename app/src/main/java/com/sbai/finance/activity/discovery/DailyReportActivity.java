@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.daily;
+package com.sbai.finance.activity.discovery;
 
 import android.content.Context;
 import android.os.Bundle;

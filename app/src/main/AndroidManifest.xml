@@ -374,8 +374,13 @@
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+
+        <!-- 发现 -->
         <activity
-            android:name=".activity.daily.DailyReportDetailActivity"
+            android:name=".activity.discovery.DailyReportDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.discovery.DailyReportActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 训练 -->

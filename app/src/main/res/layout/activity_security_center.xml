@@ -27,12 +27,10 @@
         android:layout_marginBottom="@dimen/common_margin"
         android:background="@drawable/bg_white"
         android:minHeight="@dimen/common_height"
-        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/set_login_password"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"
-        app:splitLineColor="@color/split"/>
+        app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/modifyLoginPassword"
@@ -42,12 +40,10 @@
         android:background="@drawable/bg_white"
         android:minHeight="@dimen/common_height"
         android:visibility="gone"
-        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/modify_login_password"
         app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"
-        app:splitLineColor="@color/split"/>
+        app:rowTextSize="15sp"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/setSecurityPassword"

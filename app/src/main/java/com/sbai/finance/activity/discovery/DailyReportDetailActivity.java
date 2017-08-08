@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.daily;
+package com.sbai.finance.activity.discovery;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -28,13 +28,10 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.model.DailyReport;
-import com.sbai.finance.model.EventModel;
-import com.sbai.finance.model.stock.StockNewsInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 
 import butterknife.BindView;
