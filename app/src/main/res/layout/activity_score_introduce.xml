@@ -36,8 +36,8 @@
             android:layout_marginRight="38dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="交易水平:良好  超过了45%的交易账户"
-            android:textColor="@color/blackAssist"/>
+            android:textColor="@color/blackAssist"
+            tools:text="交易水平:良好  超过了45%的交易账户"/>
 
         <TextView
             android:id="@+id/trainAdvise"
@@ -48,9 +48,9 @@
             android:layout_marginRight="38dp"
             android:layout_marginTop="5dp"
             android:lineSpacingExtra="2dp"
-            android:text="建议：基础理论已经很不错了，您可以多做一些模拟交易来巩固知识"
             android:textColor="@color/luckyText"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            tools:text="建议：基础理论已经很不错了，您可以多做一些模拟交易来巩固知识"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -54,15 +54,6 @@ public class Question implements Serializable {
 	private int appointCustomId;
 	private int replyCount;
 	private int soundTime;
-	private boolean isPlaying = false;
-
-	public boolean getIsPlaying() {
-		return isPlaying;
-	}
-
-	public void setIsPlaying(boolean playing) {
-		isPlaying = playing;
-	}
 
 	public int getSoundTime() {
 		return soundTime;

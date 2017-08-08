@@ -1,10 +1,12 @@
 package com.sbai.finance.model.missTalk;
 
+import java.io.Serializable;
+
 /**
  * 小姐姐列表
  */
 
-public class Miss {
+public class Miss implements Serializable{
 
 	/**
 	 * briefingSound : aaa

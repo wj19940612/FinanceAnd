@@ -375,8 +375,11 @@
             android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".activity.train.ScoreIntroduceActivity">
-        </activity>
+        <activity
+            android:name=".activity.train.ScoreIntroduceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".activity.miss.MissAvatarActivity"/>
     </application>
 
 </manifest>

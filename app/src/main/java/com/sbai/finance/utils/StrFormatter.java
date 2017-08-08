@@ -132,7 +132,7 @@ public class StrFormatter {
     public static String getFormatCount(int count) {
         String number = String.valueOf(count);
         int length = number.length();
-        if (count >= 10000 && count > 100000000) {
+        if (count >= 10000 && count < 100000000) {
             return number.substring(0, length -4) + ".0" + FinanceUtil.UNIT_WANG;
         } else if (count >= 100000000){
             return number.substring(0, length - 8) + ".0" + FinanceUtil.UNIT_YI;
