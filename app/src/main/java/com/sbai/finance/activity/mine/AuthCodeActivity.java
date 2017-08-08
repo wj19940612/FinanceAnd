@@ -169,6 +169,7 @@ public class AuthCodeActivity extends BaseActivity {
                         protected void onRespSuccess(Resp resp) {
                             ToastUtil.show(R.string.reset_password_success);
                             setResult(RESULT_OK);
+                            finish();
                         }
                     }).fire();
         }
