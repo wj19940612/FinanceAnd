@@ -139,6 +139,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.slide_out_to_bottom);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mPhoneNumber.removeTextChangedListener(mPhoneValidationWatcher);
@@ -274,7 +280,6 @@ public class LoginActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.closePage:
                 finish();
-                overridePendingTransition(0, R.anim.slide_out_to_bottom);
                 break;
             case R.id.phoneNumberClear:
                 mPhoneNumber.setText("");
@@ -439,5 +444,4 @@ public class LoginActivity extends BaseActivity {
             mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
         }
     }
-
 }

@@ -33,9 +33,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * Created by linrongfang on 2017/5/16.
+ * 对战分享好友弹框
  */
-
 public class ShareDialogFragment extends DialogFragment {
 
     private static final String SHARE_URL = API.getHost() + "/mobi/authCodeLogin/share?code=";

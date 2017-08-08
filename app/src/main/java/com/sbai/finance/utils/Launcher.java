@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
-
-import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.LoginActivity;
+import android.support.v4.app.ActivityOptionsCompat;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -43,6 +40,7 @@ public class Launcher {
     private Context mContext;
     private Intent mIntent;
     private Class<?> mClass;
+    private ActivityOptionsCompat mOptionsCompat;
 
     private Launcher() {
         mIntent = new Intent();
@@ -125,12 +123,6 @@ public class Launcher {
     public void execute() {
         if (mContext != null) {
             mContext.startActivity(mIntent);
-            if (mClass.getName().equalsIgnoreCase(LoginActivity.class.getName())) {
-                ((AppCompatActivity) mContext).overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_change);
-            }
-            mClass = null;
-            mContext = null;
-            mIntent = null;
         }
     }
 
@@ -139,12 +131,6 @@ public class Launcher {
             if (mContext instanceof Activity) {
                 Activity activity = (Activity) mContext;
                 activity.startActivityForResult(mIntent, requestCode);
-                if (mClass.getName().equalsIgnoreCase(LoginActivity.class.getName())) {
-                    ((AppCompatActivity) mContext).overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_change);
-                }
-                mClass = null;
-                mContext = null;
-                mIntent = null;
             }
         }
     }
