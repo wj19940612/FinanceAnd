@@ -41,7 +41,7 @@
             android:id="@+id/money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"
             tool:text="+100元"/>
     </LinearLayout>

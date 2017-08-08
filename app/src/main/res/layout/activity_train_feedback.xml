@@ -69,7 +69,7 @@
                 android:paddingBottom="@dimen/common_padding"
                 android:paddingLeft="@dimen/common_padding"
                 android:paddingRight="@dimen/common_padding"
-                app:InputTextColor="@color/blackAssist"
+                app:InputTextColor="@color/blackPrimary"
                 app:InputTextSize="15sp"
                 app:focusable="false"
                 app:showHint="@string/other_you_want_study"

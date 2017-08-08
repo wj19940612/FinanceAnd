@@ -1,19 +1,16 @@
 package com.sbai.finance.model.mutual;
 
 /**
- * Created by Administrator on 2017-05-23.
+ * 2 借款协议  3 用户协议  4 兑换规则  6充值服务协议
  */
 
 public class ArticleProtocol {
 
-    //    2 借款协议  3 用户协议  4 兑换规则  6充值服务协议
     public static final int PROTOCOL_BORROW = 2;
     public static final int PROTOCOL_USER = 3;
     public static final int PROTOCOL_EXCHANGE = 4;
-    public static final int PROTOCOL_BATTLE=5;
+    public static final int PROTOCOL_BATTLE = 5;
     public static final int PROTOCOL_RECHARGE_SERVICE = 6;
-
-
 
     /**
      * content : 如影随形

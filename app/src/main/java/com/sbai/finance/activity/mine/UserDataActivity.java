@@ -257,7 +257,7 @@ public class UserDataActivity extends BaseActivity {
 					}
 				})
 				.setTitleMaxLines(2)
-				.setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+				.setTitleTextColor(ContextCompat.getColor(this, R.color.primaryText))
 				.setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
 				.setNegative(R.string.cancel)
 				.show();
@@ -300,7 +300,7 @@ public class UserDataActivity extends BaseActivity {
 				})
 				.setMessageTextSize(17)
 				.setTitleMaxLines(2)
-				.setMessageTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+				.setMessageTextColor(ContextCompat.getColor(this, R.color.primaryText))
 				.setNegative(R.string.cancel)
 				.show();
 	}

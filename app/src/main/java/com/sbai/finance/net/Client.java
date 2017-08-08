@@ -227,58 +227,123 @@ public class Client {
 
     /**
      * 接口名称 快捷登入
-     * 请求类型 post
-     * 请求Url  /registerLogin/quickLogin.do
      *
-     * @param msgCode 短信验证码
-     * @param phone   手机
-     *                deviceId 设备id
-     *                platform 平台 0安卓 1ios
+     * @param authCode 短信验证码
+     * @param phone    手机
+     *                 deviceId 设备id
+     *                 platform 平台 0-安卓 1-ios
      * @return
      */
-    public static API login(String msgCode, String phone) {
-        return new API("/user/registerLogin/quickLogin.do", new ApiParams()
-                .put("msgCode", msgCode)
+    public static API authCodeLogin(String phone, String authCode) {
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
                 .put("phone", phone)
+                .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0));
     }
 
     /**
+     * 常规登录
+     *
+     * @param phone
+     * @param password
+     * @return
+     */
+    public static API login(String phone, String password) {
+        return new API(POST, "/user/registerLogin/login.do", new ApiParams()
+                .put("phone", phone)
+                .put("password", password)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0));
+    }
+
+    /**
+     * 注册
+     *
+     * @param phone
+     * @param password
+     * @param code
+     * @return
+     */
+    public static API register(String phone, String password, String code) {
+        return new API(POST, "/user/registerLogin/reigster.do", new ApiParams()
+                .put("phone", phone)
+                .put("password", password)
+                .put("code", code)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0));
+    }
+
+
+    /**
+     * 忘记密码：更新新密码
+     *
+     * @param phone
+     * @param password
+     * @param code
+     * @return
+     */
+    public static API updateNewPassword(String phone, String password, String code) {
+        return new API(POST, "/user/user/forgetPassword.do", new ApiParams()
+                .put("phone", phone)
+                .put("password", password)
+                .put("code", code));
+    }
+
+    /**
+     * 修改登录密码
+     *
+     * @param password
+     * @return
+     */
+    public static API modifyPassword(String password, String oldPassword) {
+        return new API(POST, "/user/user/modifyPassword.do", new ApiParams()
+                .put("newPassword", password)
+                .put("oldPassword", oldPassword));
+    }
+
+    /**
+     * 第一次 设置登录密码
+     *
+     * @param password
+     * @return
+     */
+    public static API setPassword(String password) {
+        return new API(POST, "/user/user/setPassword.do", new ApiParams()
+                .put("password", password));
+    }
+
+    /**
      * 接口名称 获取验证码
-     * 请求类型 get
-     * 请求Url  /registerLogin/sendMsgCode.do
      *
      * @param phone
      * @return
      */
-
     public static API getAuthCode(String phone) {
-        return new API("/user/registerLogin/sendMsgCode.do", new ApiParams().put("phone", phone));
+        return new API(POST, "/user/registerLogin/sendMsgCode.do", new ApiParams()
+                .put("phone", phone));
     }
 
     /**
      * 请求类型 post
-     * 请求Url  /user/updatePic.do
-     * 接口描述 修改头像
      *
      * @param pic
      * @return
      */
     public static API updateUserHeadImage(String pic) {
-        return new API(POST, "/user/user/updatePic.do", new ApiParams().put("pic", pic));
+        return new API(POST, "/user/user/updatePic.do", new ApiParams()
+                .put("pic", pic));
     }
 
     /**
-     * 请求类型 post
-     * 请求Url  user/user/updatePicLand.do 提交头像
-     * 接口描述 修改头像
+     * 修改头像
      *
      * @param picPath String 图片网址
      * @return
      */
     public static API updateUserHeadImagePath(String picPath) {
-        return new API("/user/user/updatePicLand.do", new ApiParams().put("picLand", picPath));
+        return new API("/user/user/updatePicLand.do", new ApiParams()
+                .put("picLand", picPath));
     }
 
     /**
@@ -940,9 +1005,9 @@ public class Client {
     }
 
 
-    //乐米协议
-
     /**
+     * 乐米协议
+     *
      * @param id 2 借款协议  3 用户协议  4 兑换规则
      * @return
      */
@@ -1581,7 +1646,7 @@ public class Client {
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
-    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
     //期货分享地址
     public static final String FUTURE_SHARE_URL = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
     //股票分享地址

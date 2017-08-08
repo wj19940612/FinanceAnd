@@ -17,6 +17,12 @@
         <attr name="textPaddingBottom" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="PasswordEditText">
+        <attr name="textHint" format="reference|string"/>
+        <attr name="hasBottomLine" format="boolean"/>
+        <attr name="bottomLineColor" format="reference|color"/>
+        <attr name="maxCharNum" format="integer" />
+    </declare-styleable>
 
     <declare-styleable name="IconTextRow">
         <attr name="leftIcon" format="reference"/>

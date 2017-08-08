@@ -10,6 +10,13 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
+ * Four main callback method:
+ * <ul>
+ *     <li>onStart()</li>
+ *     <li>onFinish()</li>
+ *     <li>onSuccess()</li>
+ *      <li>onFailure()</li>
+ * </ul>
  * @param <T>
  */
 public abstract class ApiCallback<T> implements Response.Listener<T>, Response.ErrorListener {
@@ -47,12 +54,18 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
         mIndeterminate = Indeterminate;
     }
 
+    /**
+     * Call when request start
+     */
     public void onStart() {
         if (mIndeterminate != null) {
             mIndeterminate.onHttpUiShow(mTag);
         }
     }
 
+    /**
+     * Call when request finish
+     */
     public void onFinish() {
         if (mOnFinishedListener != null) {
             mOnFinishedListener.onFinished(mTag, mUrl);
@@ -63,8 +76,18 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
         }
     }
 
+    /**
+     * Call when request success
+     *
+     * @param t
+     */
     public abstract void onSuccess(T t);
 
+    /**
+     * Call when request failure
+     *
+     * @param volleyError
+     */
     public abstract void onFailure(VolleyError volleyError);
 
     @Override

@@ -4,10 +4,10 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/background"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              android:background="@color/background"
-              tools:context="com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity">
+              tools:context="com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
@@ -16,18 +16,18 @@
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
-        app:titleText="@string/modify_safety_password"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleText="@string/modify_security_password"
+        app:titleTextColor="@color/primaryText"/>
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/safety_password_hint"
+    <TextView
+        android:id="@+id/securityPasswordHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="110dp"
         android:text="@string/please_input_old_password"/>
 
     <com.sbai.finance.view.SafetyPasswordEditText
-        android:id="@+id/safety_password_number"
+        android:id="@+id/securityPassword"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"

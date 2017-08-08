@@ -35,7 +35,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="16sp"
             tools:text="反方向的钟"/>
 
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="14sp"
             tools:text="@string/big_variety_name"/>
 
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="14sp"
             tools:text="乐米金融"/>
     </LinearLayout>

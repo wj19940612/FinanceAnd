@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,6 +29,7 @@ import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
@@ -40,12 +40,13 @@ import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.logging.Logger;
+import java.security.NoSuchAlgorithmException;
 
 public class BaseActivity extends AppCompatActivity implements
         ApiIndeterminate, TimerHandler.TimerCallback {
 
-    public static final String ACTION_TOKEN_EXPIRED = "com.sbai.fx.token_expired";
+    public static final String ACTION_TOKEN_EXPIRED = "com.sbai.fin.token_expired";
+    public static final String ACTION_LOGIN_SUCCESS = "com.sbai.fin.login_success";
 
     public static final String EX_TOKEN_EXPIRED_MESSAGE = "token_expired_msg";
 
@@ -79,7 +80,7 @@ public class BaseActivity extends AppCompatActivity implements
 //                            onTokenExpiredCancel();
 //                        }
 //                    })
-//                    .setPositive(R.string.login, new SmartDialog.OnClickListener() {
+//                    .setPositive(R.string.authCodeLogin, new SmartDialog.OnClickListener() {
 //                        @Override
 //                        public void onClick(Dialog dialog) {
 //                            dialog.dismiss();
@@ -312,5 +313,20 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public void onTimeUp(int count) {
 
+    }
+
+    /**
+     * md5 加密
+     *
+     * @param value
+     * @return
+     */
+    protected String md5Encrypt(String value) {
+        try {
+            return SecurityUtil.md5Encrypt(value);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return value;
+        }
     }
 }

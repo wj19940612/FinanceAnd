@@ -7,12 +7,12 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:background="@android:color/white"
-        android:id="@+id/content"
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="6dp"
         android:maxLines="2"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="14sp"
         tool:text="就是非金属矿大发挥空间大家开始放假开始都会发几款好科技大厦附近客户撒打开房间活动开始金凤花开觉得是打算尽快发挥空间的是否健康 防护等级考试发挥"/>
 

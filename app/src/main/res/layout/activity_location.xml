@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/location"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:drawablePadding="8dp"
         android:padding="@dimen/common_padding"
         android:text="@string/restart_get_location"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="15sp"/>
 
     <TextView
@@ -53,7 +53,7 @@
         android:background="@android:color/white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/choice_location"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:rowTextSize="@dimen/list_title_size"
         app:subTextColor="@color/assistText"
         app:subTextSize="@dimen/sp_14"/>
