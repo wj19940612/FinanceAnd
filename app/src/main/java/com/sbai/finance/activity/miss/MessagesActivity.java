@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.MissMessage;
 import com.sbai.finance.model.missTalk.Question;
 import com.sbai.finance.net.Callback;
@@ -91,7 +93,7 @@ public class MessagesActivity extends BaseActivity implements
             public void onClick(View v) {
                 for (int i = 0; i < mMessageAdapter.getCount(); i++) {
                     MissMessage missMessage = mMessageAdapter.getItem(i);
-                    if (missMessage != null && missMessage.getStatus() == MissMessage.NO_READ) {
+                    if (missMessage != null && missMessage.isNoRead()) {
                         requestReadMessage(missMessage.getId());
                     }
                 }
@@ -159,7 +161,7 @@ public class MessagesActivity extends BaseActivity implements
         mMessageAdapter.clear();
         for (MissMessage missMessage : data) {
             if (mSet.add(missMessage.getId())) {
-                if (missMessage.getStatus() == MissMessage.NO_READ) {
+                if (missMessage.isNoRead()) {
                     mNoReadCount++;
                 }
                 mMessageAdapter.add(missMessage);

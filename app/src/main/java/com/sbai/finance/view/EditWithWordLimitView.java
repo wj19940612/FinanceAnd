@@ -30,6 +30,7 @@ public class EditWithWordLimitView extends LinearLayout {
     private int mTextSize;
     private int mWordTextSize;
     private int mWordLimit;
+    private boolean mFocusable;
 
     private EditText mEditText;
     private TextView mWordLimitView;
@@ -81,6 +82,7 @@ public class EditWithWordLimitView extends LinearLayout {
         mWordTextColor = typedArray.getColor(R.styleable.EditWithWordLimitView_wordTextColor, Color.GRAY);
         mTextSize = typedArray.getDimensionPixelOffset(R.styleable.EditWithWordLimitView_InputTextSize, defaultTextSize);
         mWordTextSize = typedArray.getDimensionPixelOffset(R.styleable.EditWithWordLimitView_wordTextSize, defaultWordSize);
+        mFocusable = typedArray.getBoolean(R.styleable.EditWithWordLimitView_focusable, true);
         typedArray.recycle();
 
     }
@@ -117,6 +119,17 @@ public class EditWithWordLimitView extends LinearLayout {
         } else {
             mWordLimitView.setText(StrUtil.mergeTextWithColor(String.valueOf(count), mWordWarnColor, "/" + mWordLimit));
         }
+    }
 
+    public int getWordLimitCount() {
+        return mWordLimit;
+    }
+
+    public String getInputComment() {
+        return mEditText.getText().toString();
+    }
+
+    public void clearFocus() {
+        mEditText.clearFocus();
     }
 }

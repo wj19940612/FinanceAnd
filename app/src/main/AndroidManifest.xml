@@ -343,14 +343,16 @@
         <!-- 小姐姐 -->
         <activity
             android:name=".activity.miss.MissProfileActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".activity.miss.MyQuestionsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.miss.QuestionDetailActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
@@ -387,7 +389,7 @@
         <activity
             android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
             android:name=".activity.trainexperience.TrainExperienceActivity"
             android:screenOrientation="portrait"/>

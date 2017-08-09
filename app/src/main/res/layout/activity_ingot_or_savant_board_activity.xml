@@ -17,8 +17,7 @@
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,11 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:background="@color/background"
-                android:divider="@null"
-                android:dividerHeight="@dimen/common_padding"
-                android:paddingLeft="@dimen/common_padding"
-                android:paddingRight="@dimen/common_padding"
+                android:dividerHeight="0.5dp"
                 android:scrollbars="none"
                 android:visibility="visible"/>
 
@@ -55,6 +50,7 @@
                 android:visibility="gone"/>
 
             <LinearLayout
+                android:id="@+id/myBoardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"

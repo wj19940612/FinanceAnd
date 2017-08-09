@@ -404,6 +404,7 @@ public class LoginActivity extends BaseActivity {
         if (resp.hasData()) {
             LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
             sendLoginSuccessBroadcast();
+            setResult(RESULT_OK);
             finish();
         }
     }

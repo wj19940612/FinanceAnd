@@ -669,6 +669,7 @@
     <string name="daily">乐米日报</string>
     <string name="train_program">训练项目</string>
     <string name="train_count">完成 %1$d 次</string>
+    <string name="have_no_train">还未进行训练</string>
     <string name="read_count">%1$d 次阅读</string>
     <string name="back">返回</string>
     <string name="you_want_study">你想要学?</string>
@@ -677,6 +678,7 @@
     <string name="tell_platform">告诉平台</string>
     <string name="other_you_want_study">其他想要的训练项目</string>
     <string name="day">%1$d天</string>
+    <string name="level">L%1$d</string>
 
 
     <string name="study_room">自习室</string>
@@ -696,6 +698,8 @@
     <string name="today">今日</string>
     <string name="this_week">本周</string>
     <string name="week">周</string>
+    <string name="integrate_number_no_blank">%1$s分</string>
+    <string name="thank_you_feedback">感谢反馈,我们会尽快为您准备</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>

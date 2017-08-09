@@ -98,7 +98,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_toRightOf="@+id/avatarBackground"
                             android:lineSpacingExtra="5dp"
-                            android:text="Hello~我是小金,大家多多给我打赏哦~Hello~我是小金,大家多多给我打赏哦~"
+                            tools:text="Hello~我是小金,大家多多给我打赏哦~Hello~我是小金,大家多多给我打赏哦~"
                             android:textColor="@android:color/white"
                             android:textSize="12sp"/>
                     </RelativeLayout>
@@ -131,14 +131,14 @@
                                 android:gravity="center"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
-                                tools:text="@string/attention"/>
+                                android:text="@string/attention"/>
 
                             <TextView
                                 android:id="@+id/attentionNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="@string/count"
+                                tools:text="@string/count"
                                 android:textColor="@android:color/white"
                                 android:textSize="10sp"/>
                         </LinearLayout>
@@ -177,7 +177,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="@string/count"
+                                tools:text="@string/count"
                                 android:textColor="@android:color/white"
                                 android:textSize="10sp"/>
 

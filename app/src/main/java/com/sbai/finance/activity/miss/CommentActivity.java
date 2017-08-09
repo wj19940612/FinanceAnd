@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -44,9 +42,6 @@ public class CommentActivity extends BaseActivity {
         ButterKnife.bind(this);
         initData();
         initView();
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(this, LoginActivity.class).execute();
-        }
     }
 
     private void initData() {
