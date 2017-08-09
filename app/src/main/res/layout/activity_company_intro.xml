@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/company_info"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -40,7 +40,7 @@
                 android:paddingTop="20dp"
                 app:headline_text="@string/company_name"
                 app:headline_text_minWidth="0dp"
-                app:info_text_color="@color/blackAssist"/>
+                app:info_text_color="@color/primaryText"/>
 
             <com.sbai.finance.view.BottomTextViewLayout
                 android:id="@+id/register_capital"
@@ -49,7 +49,7 @@
                 android:background="@android:color/white"
                 app:headline_text="@string/register_capital"
                 app:headline_text_minWidth="0dp"
-                app:info_text_color="@color/blackAssist"/>
+                app:info_text_color="@color/primaryText"/>
 
             <com.sbai.finance.view.BottomTextViewLayout
                 android:id="@+id/market_date"
@@ -58,7 +58,7 @@
                 android:background="@android:color/white"
                 app:headline_text="@string/market_date"
                 app:headline_text_minWidth="0dp"
-                app:info_text_color="@color/blackAssist"/>
+                app:info_text_color="@color/primaryText"/>
 
             <com.sbai.finance.view.BottomTextViewLayout
                 android:id="@+id/publish_prise"
@@ -67,7 +67,7 @@
                 android:background="@android:color/white"
                 app:headline_text="@string/publish_prise"
                 app:headline_text_minWidth="0dp"
-                app:info_text_color="@color/blackAssist"/>
+                app:info_text_color="@color/primaryText"/>
 
             <com.sbai.finance.view.BottomTextViewLayout
                 android:id="@+id/company_address"
@@ -76,7 +76,7 @@
                 android:background="@android:color/white"
                 app:headline_text="@string/company_address"
                 app:headline_text_minWidth="0dp"
-                app:info_text_color="@color/blackAssist"
+                app:info_text_color="@color/primaryText"
                 app:info_text_lineSpacingExtra="8dp"/>
 
             <com.sbai.finance.view.BottomTextViewLayout
@@ -86,7 +86,7 @@
                 android:background="@android:color/white"
                 app:headline_text="@string/business_scope"
                 app:headline_text_minWidth="0dp"
-                app:info_text_color="@color/blackAssist"
+                app:info_text_color="@color/primaryText"
                 app:info_text_lineSpacingExtra="10dp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

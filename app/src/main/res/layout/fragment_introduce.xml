@@ -32,7 +32,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/american_gold"/>
         </LinearLayout>
@@ -56,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="GLAC"/>
         </LinearLayout>
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:lineSpacingExtra="5dp"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/trade_time_summer_winter"/>
         </LinearLayout>
@@ -105,7 +105,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/unable_holding_overnight"/>
         </LinearLayout>
@@ -129,7 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/gram_per_hand"/>
         </LinearLayout>
@@ -153,7 +153,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/yuan_per_gram"/>
         </LinearLayout>
@@ -177,7 +177,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/contract_value_percent_four"/>
         </LinearLayout>
@@ -201,7 +201,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/long_and_short_two_way_transaction"/>
         </LinearLayout>
@@ -225,7 +225,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/free_offer_match_trade"/>
         </LinearLayout>
@@ -249,7 +249,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/the_last_trading_day_after_5_consecutive_working_days"/>
         </LinearLayout>
@@ -275,7 +275,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="13sp"
                 tools:text="@string/not_more_than_the_last_trading_day_settlement_price_plus_minus_percent_three"/>
         </LinearLayout>

@@ -37,19 +37,29 @@
     <string name="limit">期限%1$s天</string>
     <string name="interest">利息%1$s元</string>
 
-    <!--Login page-->
+    <!--Login & Register-->
     <string name="phone_number">手机号</string>
-    <string name="please_input_phone_number">手机号码</string>
+    <string name="please_input_phone_number">手机号</string>
     <string name="auth_code">验证码</string>
     <string name="get_auth_code">获取验证码</string>
     <string name="login">登录</string>
     <string name="login_ing">登录中</string>
     <string name="resend_after_n_seconds">%1$ds</string>
     <string name="obtain_auth_code_continue">重新获取</string>
-    <string name="login_hint">登录即表示同意</string>
-    <string name="lemi_finance_protocol">《乐米金融用户协议》</string>
+    <string name="register_and_agree">注册即同意</string>
+    <string name="lemi_finance_user_protocol">《乐米金融用户协议》</string>
     <string name="confirm_agree">确认即同意</string>
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
+    <string name="auth_code_login">验证码登录</string>
+    <string name="password_login">密码登录</string>
+    <string name="password">密码</string>
+    <string name="new_password">新密码</string>
+    <string name="old_password">旧密码</string>
+    <string name="register_free">免费注册</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="please_input_phone">请输入手机号</string>
+    <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
+    <string name="reset_password_success">重设密码成功，请重新登录</string>
 
     <!--Home-->
     <string name="futures">期货</string>
@@ -220,18 +230,20 @@
     <!--设置-->
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
-    <string name="safety_setting">安全设置</string>
-    <string name="safety_center">安全中心</string>
-    <string name="setting_safety_password">设置安全密码</string>
-    <string name="modify_safety_password">修改安全密码</string>
-    <string name="forget_safety_password">忘记安全密码</string>
-
-    <!--安全设置-->
+    <string name="security_setting">安全设置</string>
+    <string name="security_center">安全中心</string>
+    <string name="set_security_password">设置安全密码</string>
+    <string name="set_login_password">设置登录密码</string>
+    <string name="modify_login_password">修改登录密码</string>
+    <string name="modify_security_password">修改安全密码</string>
+    <string name="forget_security_password">忘记安全密码</string>
+    <string name="same_passwords">新旧密码一致</string>
     <string name="please_input_old_password">请输入旧安全密码</string>
     <string name="please_input_new_password">请输入新安全密码</string>
     <string name="please_confirm_new_password">请确认新安全密码</string>
-
+    <string name="modify_success">修改成功</string>
     <string name="modify_fail">修改失败</string>
+    <string name="set_success">设置成功</string>
     <string name="new_password_is_same_as_old_pass">新密码与旧密码相同</string>
     <string name="twice_password_is_different">两次新安全密码输入不一致</string>
 
@@ -388,9 +400,9 @@
     <string name="pay_source">支付来源: %1$s</string>
 
     <!--钱包-->
-    <string name="add_safety_pass">添加安全密码</string>
-    <string name="please_set_safety_pass">请设置安全密码</string>
-    <string name="please_confirm_safety_pass">请再次确认安全密码</string>
+    <string name="add_security_pass">添加安全密码</string>
+    <string name="please_set_security_pass">请设置安全密码</string>
+    <string name="please_confirm_security_pass">请再次确认安全密码</string>
     <string name="twice_pass_is_different">两次密码输入不一致</string>
 
 
@@ -466,7 +478,6 @@
     <string name="un_bind_bank_card_dialog_confirm">联系客服</string>
     <string name="text_number">%1$s(%2$s)</string>
     <string name="bind_bank_success_hint">银行卡信息已填写，交易后绑定</string>
-
 
     <string name="with_draw">提现</string>
     <string name="with_draw_hint">工作日两小时到账，具体请看    提现规则></string>
@@ -679,6 +690,7 @@
     <string name="daily">乐米日报</string>
     <string name="train_program">训练项目</string>
     <string name="train_count">完成 %1$d 次</string>
+    <string name="have_no_train">还未进行训练</string>
     <string name="read_count">%1$d 次阅读</string>
     <string name="back">返回</string>
     <string name="you_want_study">你想要学?</string>
@@ -686,6 +698,29 @@
     <string name="change_trains">换一批</string>
     <string name="tell_platform">告诉平台</string>
     <string name="other_you_want_study">其他想要的训练项目</string>
+    <string name="day">%1$d天</string>
+    <string name="level">L%1$d</string>
+
+
+    <string name="study_room">自习室</string>
+    <string name="study_days">已学天数</string>
+    <string name="continuous_study">连续学习:</string>
+    <string name="longest_continuous_study">最长连续学习:</string>
+    <string name="total_scholarship">累计奖学金</string>
+    <string name="answer_wrong_study_together">既然没答对,那就一起来学习下吧～</string>
+    <string name="answer_right_know_more">回答正确，了解更多可看解释哦～</string>
+    <string name="question_explain">问题解释</string>
+    <string name="right_answer">正确答案:%1$s</string>
+    <string name="worship">膜拜</string>
+    <string name="ingot_board">土豪榜</string>
+    <string name="savant_board">学霸榜</string>
+    <string name="profit_board">盈利榜</string>
+    <string name="rank">名次 %1$d</string>
+    <string name="today">今日</string>
+    <string name="this_week">本周</string>
+    <string name="week">周</string>
+    <string name="integrate_number_no_blank">%1$s分</string>
+    <string name="thank_you_feedback">感谢反馈,我们会尽快为您准备</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>
@@ -750,6 +785,8 @@
     <string name="advise">建议:%1$s</string>
 
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
-    <string name="miss_first_time">快用提问夺走小姐姐的"第一次"吧</string>
+    <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
 
+    <!--trainExperience-->
+    <string name="train_experience">训练心得</string>
 </resources>

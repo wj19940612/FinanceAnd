@@ -264,7 +264,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
             AppCompatImageView mNotReadNewsHint;
             @BindView(R.id.time)
             AppCompatTextView mTime;
-            @BindView(R.id.content)
+            @BindView(R.id.rootView)
             AppCompatTextView mContent;
 
             ViewHolder(View view) {

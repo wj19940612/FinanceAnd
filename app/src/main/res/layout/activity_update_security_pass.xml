@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              tools:context="com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_black"
+        app:barBackground="@android:color/white"
+        app:titleText="@string/modify_security_password"
+        app:titleTextColor="@color/primaryText"/>
+
+    <TextView
+        android:id="@+id/securityPasswordHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:text="@string/please_input_old_password"/>
+
+    <com.sbai.finance.view.SafetyPasswordEditText
+        android:id="@+id/securityPassword"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:layout_marginTop="@dimen/common_margin"
+        android:cursorVisible="false"
+        android:focusableInTouchMode="true"
+        android:inputType="number"
+        android:lines="1"
+        android:maxLength="6"/>
+
+    <TextView
+        android:id="@+id/password_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_mine_bankcard_prompt"
+        android:drawablePadding="5dp"
+        android:visibility="gone"/>
+</LinearLayout>

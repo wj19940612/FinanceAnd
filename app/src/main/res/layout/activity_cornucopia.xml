@@ -33,7 +33,7 @@
             android:drawableLeft="@drawable/ic_coin_small"
             android:drawablePadding="9dp"
             android:gravity="center_vertical"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"
             tools:text="800  元宝\n查看明细>"/>
 
@@ -52,7 +52,7 @@
             android:drawablePadding="9dp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/common_padding"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="15sp"
             tools:text="1000.00  积分\n查看明细>"/>
     </LinearLayout>

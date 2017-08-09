@@ -1,7 +1,9 @@
 package com.sbai.finance.activity.miss;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -20,10 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 /**
  * 回复页面
  */
 public class ReplyActivity extends BaseActivity {
+
+    public static final String REFRESH_REPLY = "refresh_reply";
 
     @BindView(R.id.questionComment)
     EditText mQuestionComment;
@@ -95,6 +100,7 @@ public class ReplyActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
+                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(REFRESH_REPLY));
                             ToastUtil.show(R.string.publish_success);
                             finish();
                         } else {

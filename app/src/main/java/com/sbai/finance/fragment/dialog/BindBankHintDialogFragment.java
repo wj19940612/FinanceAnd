@@ -35,7 +35,7 @@ public class BindBankHintDialogFragment extends DialogFragment {
     AppCompatImageView mDialogDelete;
     @BindView(R.id.title)
     TextView mTitle;
-    @BindView(R.id.content)
+    @BindView(R.id.rootView)
     TextView mContent;
 
 

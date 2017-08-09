@@ -14,7 +14,7 @@
         app:titleText="@string/futures"
         app:bottomHasSplitLine="true"
         app:bottomSplitLineColor="@color/split"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout
         android:id="@+id/tabLayout"

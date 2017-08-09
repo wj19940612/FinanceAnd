@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/stock_optional"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -16,7 +16,7 @@
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:minWidth="100dp"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="13sp"
         tools:text="100000.00"/>
 
@@ -42,7 +42,7 @@
         android:layout_gravity="right|center_vertical"
         android:background="@drawable/bg_cell_btn"
         android:gravity="center"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="13sp"
         tools:text="5元宝"/>
 </LinearLayout>

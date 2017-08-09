@@ -1,8 +1,5 @@
 package com.sbai.finance.fragment.dialog;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -17,17 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.DownloadListener;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.web.EventDetailActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +35,7 @@ public class BattleRuleDialogFragment extends DialogFragment {
     AppCompatImageView mDialogDelete;
     @BindView(R.id.title)
     TextView mTitle;
-    @BindView(R.id.content)
+    @BindView(R.id.rootView)
     TextView mContent;
 
     private Unbinder mBind;

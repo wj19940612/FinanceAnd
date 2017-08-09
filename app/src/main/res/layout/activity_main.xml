@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/tab_background"
-
         app:interval="2dp"
         app:textColor="@color/bottom_tab_text"
         app:textSize="12sp"/>

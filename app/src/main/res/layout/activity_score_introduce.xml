@@ -94,7 +94,7 @@
                 android:drawablePadding="15dp"
                 android:drawableTop="@drawable/bg_score_explain_master_theoretical"
                 android:text="@string/master_theoretical"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="16sp"/>
 
             <TextView

@@ -10,7 +10,7 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FundDetailActivity;
-import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
+import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
@@ -141,7 +141,7 @@ public class WalletActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Boolean data) {
                         if (!data) {
-                            Launcher.with(getActivity(), ModifySafetyPassActivity.class)
+                            Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, data.booleanValue())
                                     .executeForResult(REQ_CODE_ADD_SAFETY_PASS);
                         } else {

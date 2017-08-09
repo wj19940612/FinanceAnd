@@ -10,7 +10,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_login_head_close"
+        android:drawableLeft="@drawable/ic_login_close"
         android:gravity="center_horizontal|center_vertical"
         android:padding="@dimen/common_padding"
         android:text="@string/please_input_pass"
@@ -29,7 +29,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
         android:text="@string/with_draw"
-        android:textColor="@color/blackAssist"/>
+        android:textColor="@color/primaryText"/>
 
     <TextView
         android:id="@+id/money"
@@ -38,7 +38,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="24sp"
         tools:text="￥2000"/>
 

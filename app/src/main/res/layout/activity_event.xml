@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/event_title"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"

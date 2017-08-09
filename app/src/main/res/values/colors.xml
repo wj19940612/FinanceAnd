@@ -6,6 +6,8 @@
 
     <color name="redPrimary">#f25b57</color>
     <color name="greenPrimary">#2ecc9f</color>
+    <color name="blackPrimary">#222</color>
+    <color name="blackAssist">#222</color>
 
     <color name="background">#F5F5F5</color>
     <color name="gameBackground">#564F68</color>
@@ -14,8 +16,6 @@
 
     <!--Assist-->
     <color name="yellowAssist">#ffc336</color>
-
-    <color name="blackAssist">#222222</color>
     <color name="greenAssist">#2ecc9f</color>
     <color name="redAssist">#ef6d6a</color>
     <color name="greyAssist">#7B7B7B</color>

@@ -338,6 +338,17 @@ public class DateUtil {
     }
 
     /**
+     * 返回格式 7月15日
+     *
+     * @param createTime
+     * @return
+     */
+
+    public static String getStudyFormatTime(long createTime) {
+        return DateUtil.format(createTime, DateUtil.FORMAT_NOT_HOUR);
+    }
+
+    /**
      * 格式化时间  一分钟之内显示刚刚
      * 一小时内显示多少分钟前
      * 一小时后显示几点几分 06:24

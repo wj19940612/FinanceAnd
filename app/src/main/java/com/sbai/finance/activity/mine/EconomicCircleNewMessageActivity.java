@@ -198,7 +198,7 @@ public class EconomicCircleNewMessageActivity extends BaseActivity implements Ad
 			TextView mMessage;
 			@BindView(R.id.time)
 			TextView mTime;
-			@BindView(R.id.content)
+			@BindView(R.id.rootView)
 			TextView mContent;
 			@BindView(R.id.borrowMoneyImg)
 			ImageView mBorrowMoneyImg;

@@ -16,7 +16,7 @@
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
         app:titleText="@string/credit"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/credit"
@@ -27,7 +27,7 @@
         android:minHeight="@dimen/common_height"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/real_name_authentication"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 </LinearLayout>
