@@ -2,17 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/ic_launch_fight_selected"
+        android:drawable="@drawable/btn_launch_fight_selected"
         android:state_enabled="true" android:state_pressed="false">
     </item>
 
     <item
-        android:drawable="@drawable/ic_launch_fight_pressed"
+        android:drawable="@drawable/btn_launch_fight_pressed"
         android:state_pressed="true">
     </item>
 
     <item
-        android:drawable="@drawable/ic_launch_fight"
+        android:drawable="@drawable/btn_launch_fight_disabled"
         android:state_enabled="false">
     </item>
 </selector>
