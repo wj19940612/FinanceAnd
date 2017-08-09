@@ -7,7 +7,6 @@ public class MissMessage {
     public static final int TYPE_COMMENT = 50;
     public static final int TYPE_REPLY = 51;
     public static final int TYPE_MISS_ANSWER = 52;
-    public static final int NO_READ = 0;
     public static final int READ = 1;
 
     /**
@@ -45,7 +44,7 @@ public class MissMessage {
     }
 
     public boolean isNoRead() {
-        return status == NO_READ;
+        return status != READ;
     }
 
     public Data getData() {

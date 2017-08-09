@@ -11,10 +11,10 @@
     <ImageView
         android:id="@+id/trainImg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:layout_centerInParent="true"
         android:background="@android:color/transparent"
-        android:scaleType="centerInside"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_bank_pay"/>
 
     <LinearLayout
@@ -27,12 +27,14 @@
         android:paddingLeft="24dp"
         android:paddingTop="@dimen/common_padding">
 
-        <ImageView
-            android:id="@+id/gradeImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_arrow_more"/>
+        <TextView
+            android:id="@+id/grade"
+            android:layout_width="24dp"
+            android:layout_height="16dp"
+            android:background="@drawable/bg_train_level_rounded"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"/>
 
         <TextView
             android:id="@+id/trainType"

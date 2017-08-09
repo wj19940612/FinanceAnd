@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.studyroom.MyStudyInfo;
@@ -21,8 +23,12 @@ import com.sbai.finance.model.studyroom.StudyOption;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.view.MyListView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,6 +77,7 @@ public class StudyRoomActivity extends BaseActivity {
         initStudyView();
         initListView();
         requestMyStudyData();
+        requestTrainData();
     }
 
     private void initStudyView() {
@@ -82,6 +89,24 @@ public class StudyRoomActivity extends BaseActivity {
     private void initListView() {
         mOptionAdapter = new OptionAdapter(getActivity());
         mListView.setAdapter(mOptionAdapter);
+    }
+
+    private void requestTrainData() {
+        Client.getTrainCourse(AppInfo.getDeviceHardwareId(getActivity())).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                    @Override
+                    protected void onRespSuccessData(Object data) {
+                        StudyOption studyOption = new Gson().fromJson(SecurityUtil.AESDecrypt((String) data), StudyOption.class);
+                        updateTrainData(studyOption);
+                    }
+                }).fireFree();
+    }
+
+    private void updateTrainData(StudyOption data) {
+        mOptionAdapter.clear();
+        mOptionAdapter.addAll(data.getContent());
+        mOptionAdapter.notifyDataSetChanged();
     }
 
     private void requestMyStudyData() {
@@ -96,9 +121,9 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void updateMyStudyData(MyStudyInfo data) {
-        mStudyDays.setText(data.getTotalStudy());
-        mContinuousDay.setText(data.getHoldStudy());
-        mLongestContinuousDay.setText(data.getHoldStudyMax());
+        mStudyDays.setText(String.valueOf(data.getTotalStudy()));
+        mContinuousDay.setText(String.valueOf(data.getHoldStudy()));
+        mLongestContinuousDay.setText(String.valueOf(data.getHoldStudyMax()));
         mTotalScholarship.setText(getString(R.string.ingot_number, String.valueOf(data.getTotalReward())));
 
     }
@@ -107,7 +132,7 @@ public class StudyRoomActivity extends BaseActivity {
     public void onViewClicked() {
     }
 
-    static class OptionAdapter extends ArrayAdapter<StudyOption> {
+    static class OptionAdapter extends ArrayAdapter<StudyOption.ContentBean> {
 
         public OptionAdapter(@NonNull Context context) {
             super(context, 0);
@@ -142,16 +167,13 @@ public class StudyRoomActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(StudyOption item, Context context) {
+            public void bindDataWithView(StudyOption.ContentBean item, Context context) {
+                mOption.setText(item.getContent());
             }
 
             @OnClick(R.id.optionArea)
             public void onClick(View view) {
-                if (mCheckbox.isChecked()) {
-                    mCheckbox.setChecked(false);
-                } else {
-                    mCheckbox.setChecked(true);
-                }
+
             }
         }
     }

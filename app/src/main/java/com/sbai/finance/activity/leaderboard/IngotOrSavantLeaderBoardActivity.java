@@ -9,15 +9,22 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -36,9 +43,6 @@ import butterknife.ButterKnife;
 public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
         CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
-    public static final int TYPE_INGOT = 0;
-    public static final int TYPE_SAVANT = 1;
-
     @BindView(R.id.title)
     TitleBar mTitle;
     @BindView(R.id.listView)
@@ -55,24 +59,27 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     TextView mIngot;
     @BindView(R.id.rank)
     TextView mRank;
+    @BindView(R.id.myBoardInfo)
+    LinearLayout mMyBoardInfo;
     private LeaderBoardAdapter mLeaderBoardAdapter;
     private Set<Integer> mSet;
-    private int mType;
+    private String mType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingot_or_savant_board_activity);
         ButterKnife.bind(this);
-        mType = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mType = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
         initTitle();
+        initMyBoardView();
         initListView();
         requestLeaderBoardData();
         requestMyLeaderData();
     }
 
     private void initTitle() {
-        if (mType == TYPE_INGOT) {
+        if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)) {
             mTitle.setTitle(R.string.ingot_board);
         } else {
             mTitle.setTitle(R.string.savant_board);
@@ -81,9 +88,34 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
 
     private void initListView() {
         mSet = new HashSet<>();
-        mLeaderBoardAdapter = new LeaderBoardAdapter(getActivity());
+        mLeaderBoardAdapter = new LeaderBoardAdapter(getActivity(), mType);
+        initHeaderView();
         mListView.setAdapter(mLeaderBoardAdapter);
         mListView.setEmptyView(mEmpty);
+    }
+
+    private void initHeaderView() {
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(14, getResources()));
+        view.setLayoutParams(params);
+        mListView.addHeaderView(view);
+    }
+
+    private void initFooterView(int value) {
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(value, getResources()));
+        view.setLayoutParams(params);
+        mListView.addFooterView(view);
+    }
+
+    private void initMyBoardView() {
+        if (LocalUser.getUser().isLogin()) {
+            mMyBoardInfo.setVisibility(View.VISIBLE);
+            initFooterView(60);
+        } else {
+            mMyBoardInfo.setVisibility(View.GONE);
+            initFooterView(14);
+        }
     }
 
     @Override
@@ -99,15 +131,25 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     }
 
     private void requestLeaderBoardData() {
-
+        Client.getleaderBoardList(mType, null).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<LeaderBoardRank>, LeaderBoardRank>() {
+                    @Override
+                    protected void onRespSuccessData(LeaderBoardRank data) {
+                        updateLeaderBoardData(data);
+                    }
+                }).fireFree();
     }
 
     private void requestMyLeaderData() {
 
     }
 
-    private void updateLeaderBoardData() {
-
+    private void updateLeaderBoardData(LeaderBoardRank data) {
+        stopRefreshAnimation();
+        mLeaderBoardAdapter.clear();
+        mLeaderBoardAdapter.addAll(data.getData());
+        mLeaderBoardAdapter.notifyDataSetChanged();
     }
 
     private void updateeMyLeaderData() {
@@ -147,19 +189,21 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
-    public static class LeaderBoardAdapter extends ArrayAdapter<LeaderBoardRank> {
+    public static class LeaderBoardAdapter extends ArrayAdapter<LeaderBoardRank.DataBean> {
         private Callback mCallback;
+        private String mType;
 
         public void setCallback(Callback callback) {
             mCallback = callback;
         }
 
         public interface Callback {
-            void onWarshipClick(LeaderBoardRank item);
+            void onWarshipClick(LeaderBoardRank.DataBean item);
         }
 
-        public LeaderBoardAdapter(@NonNull Context context) {
+        public LeaderBoardAdapter(@NonNull Context context, String type) {
             super(context, 0);
+            mType = type;
         }
 
         @Override
@@ -189,7 +233,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     } else {
                         viewHolder = (TopThreeViewHolder) convertView.getTag();
                     }
-                    viewHolder.bindDataWithView(getItem(position), position, getContext(), mCallback);
+                    viewHolder.bindDataWithView(getItem(position), position, getContext(), mCallback, mType);
                     break;
                 case 1:
                     NormalViewHolder normalViewHolder;
@@ -200,7 +244,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     } else {
                         normalViewHolder = (NormalViewHolder) convertView.getTag();
                     }
-                    normalViewHolder.bindDataWithView(getItem(position), getContext());
+                    normalViewHolder.bindDataWithView(getItem(position), position, getContext(), mType);
                     break;
                 default:
             }
@@ -225,7 +269,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final LeaderBoardRank item, int position, Context context, final Callback callback) {
+            public void bindDataWithView(final LeaderBoardRank.DataBean item, int position, Context context, final Callback callback, String type) {
                 mWorship.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -236,12 +280,12 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     }
                 });
                 Glide.with(context)
-                        .load(item.getUserPortrait())
+                        .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
-                mUserName.setText(item.getUserName());
-                mIngot.setText(context.getString(R.string.ingot_number, String.valueOf(item.getIngot())));
+                mUserName.setText(item.getUser().getUserName());
+                mIngot.setText(context.getString(R.string.ingot_number, String.valueOf(item.getScore())));
                 switch (position) {
                     case 0:
                         mRankImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rank_top_1));
@@ -251,6 +295,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                         break;
                     case 2:
                         mRankImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_rank_top_3));
+                        break;
+                }
+                switch (type) {
+                    case LeaderBoardRank.INGOT:
+                        mIngot.setText(context.getString(R.string.ingot_number, String.valueOf(item.getScore())));
+                        break;
+                    case LeaderBoardRank.PROFIT:
+                    case LeaderBoardRank.SAVANT:
+                        mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf(item.getScore())));
                         break;
                 }
             }
@@ -271,16 +324,23 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(LeaderBoardRank item, Context context) {
+            public void bindDataWithView(LeaderBoardRank.DataBean item, int position, Context context, String type) {
                 Glide.with(context)
-                        .load(item.getUserPortrait())
+                        .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
-                mUserName.setText(item.getUserName());
-                mIngot.setText(context.getString(R.string.ingot_number, String.valueOf(item.getIngot())));
-                mRank.setText(item.getRank());
-
+                mUserName.setText(item.getUser().getUserName());
+                switch (type) {
+                    case LeaderBoardRank.INGOT:
+                        mIngot.setText(context.getString(R.string.ingot_number, String.valueOf(item.getScore())));
+                        break;
+                    case LeaderBoardRank.PROFIT:
+                    case LeaderBoardRank.SAVANT:
+                        mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf(item.getScore())));
+                        break;
+                }
+                mRank.setText(String.valueOf(position+1));
             }
         }
     }
