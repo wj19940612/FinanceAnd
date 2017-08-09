@@ -1,8 +1,10 @@
 package com.sbai.finance.net;
 
 import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.leveltest.TestAnswerUtils;
 import com.sbai.httplib.ApiParams;
 
 
@@ -1829,14 +1831,66 @@ public class Client {
                 .put("varietyId", varietyId));
     }
 
+    //请求参加水平测试人数
+
     /**
+     * /train/evaluate/FinishCount.do
+     * 完成测评的人数
+     *
+     * @return
+     */
+    public static API requestJoinTestedNumber() {
+        return new API("/train/evaluate/FinishCount.do");
+    }
+
+    //请求测试题库
+
+    /**
+     * /train/evaluate/topic.do
+     * GET
+     * 获取题目
+     *
+     * @return
+     */
+    public static API requestExamQuestions() {
+        return new API("/train/evaluate/topic.do");
+    }
+
+    //提交水平测试答案接口
+
+    /**
+     * /**
+     * train/evaluate/End.do
+     * POST
+     * 提交测评
+     *
+     * @return
+     */
+    public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
+        return new API(POST, "/train/evaluate/End.do", new Gson().toJson(finishPO));
+    }
+
+    /**
+     * /train/evaluate/historyLog.do
+     * GET
+     * 历史测评
+     *
+     * @return
+     */
+    public static API requestHistoryTestResultList() {
+        return new API("/train/evaluate/historyLog.do");
+    }
+
+    /**
+     * <<<<<<< HEAD
+     * =======
      * 获取小姐姐列表
      * <p>
-     * =======
+     * <p>
+     * >>>>>>> dev
      * <p>
      * /**
      * 获取小姐姐列表
-     * >>>>>>> dev
      *
      * @return
      */
@@ -2080,6 +2134,45 @@ public class Client {
     }
 
     /**
+     * http://var.esongbai.xyz/train/appraise/user.do
+     * GET
+     * 获得登录用户的评价分
+     *
+     * @return
+     */
+    public static API requestUserScore() {
+        return new API("/train/appraise/user.do");
+    }
+
+    /**
+     * http://var.esongbai.xyz/train/train/myList.do
+     * GET
+     * 我的训练列表
+     *
+     * @return
+     */
+    public static API requestMineTrainProjectList() {
+        return new API("/train/train/myList.do",
+                new ApiParams()
+                        .put("page", 0)
+                        .put("pageSize", 50));
+    }
+
+    /**
+     * /train/train/recommendList.do
+     * GET
+     * 推荐列表
+     *
+     * @return
+     */
+    public static API requestTrainProjectList() {
+        return new API("/train/train/recommendList.do",
+                new ApiParams()
+                        .put("page", 0)
+                        .put("pageSize", 50));
+    }
+
+    /**
      * 学一学记录
      *
      * @return
@@ -2094,6 +2187,7 @@ public class Client {
      * @param questionId
      * @return
      */
+
     public static API listen(int questionId) {
         return new API("/explain/question/listen.do",
                 new ApiParams()
@@ -2101,21 +2195,31 @@ public class Client {
         );
     }
 
-    public static API getTrainCourse(String deviceId) {
-        return new API(POST, "/train/course/task.do",
-                new ApiParams()
-                        .put("deviceId", deviceId)
-        );
+
+    /**
+     * /train/appraise/suggest.do
+     * GET
+     * 评价建议
+     */
+    public static API requestScoreStageAndRemark() {
+        return new API("/train/appraise/suggest.do");
     }
 
     /**
-     * 推荐训练列表
+     * 推荐训练列表  一般不会很多
      */
     public static API getRecommendTrainList(int page) {
         return new API("/train/train/recommendList.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", 100));
+    }
+
+    public static API getTrainCourse(String deviceId) {
+        return new API(POST, "/train/course/task.do",
+                new ApiParams()
+                        .put("deviceId", deviceId)
+        );
     }
 
     /**

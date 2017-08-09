@@ -1,13 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@color/background"
+                                            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/training"
-        android:layout_width="wrap_content"
-        android:text="training"
-        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_home_training">
+
+            <ImageView
+                android:id="@+id/gift"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="33dp"
+                android:src="@drawable/ic_home_gift"/>
+
+            <FrameLayout
+                android:id="@+id/lookTrainDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bg_home_training_circle_inside"/>
+
+                <ImageView
+                    android:id="@+id/titleTrainingCircleMiddle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bg_home_training_circle_middle"/>
+
+                <ImageView
+                    android:id="@+id/titleTrainingCircleOutside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bg_home_training_circle_outside"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    tools:text="乐米学分\n 860\n你还没有完成训练"/>
+
+                <TextView
+                    android:id="@+id/scoreHint"
+                    android:layout_width="76dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/common_padding"
+                    android:background="@drawable/bg_white_link"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    tools:text="查看详情"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/title"
+            android:layout_marginBottom="5dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/white"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/rankingList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableLeft="@drawable/ic_home_ranking"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="49dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/ranking"
+                    android:textColor="@color/blackAssist"/>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="24dp"
+                    android:background="@color/split"/>
+
+                <TextView
+                    android:id="@+id/reviewLessonRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableLeft="@drawable/ic_home_review_lesson_room"
+                    android:drawablePadding="8dp"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="49dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/review_lesson_room"
+                    android:textColor="@color/blackAssist"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/recommendTrainTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card"
+            android:layout_marginBottom="@dimen/common_padding"
+            android:layout_marginLeft="@dimen/common_padding"
+            android:layout_marginTop="15dp"
+            android:text="@string/recommend_train"
+            android:textColor="#333333"/>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/recommendTrainTitle"/>
+
+
+        <LinearLayout
+            android:id="@+id/testHint"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/testYourLevel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_padding"
+                android:layout_weight="1"
+                android:text="@string/start_test_hint"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/closeHint"
+                android:layout_width="14dp"
+                android:layout_height="12dp"
+                android:layout_marginRight="@dimen/common_padding"
+                android:background="@drawable/ic_close"/>
+        </LinearLayout>
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/card"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/img_no_message"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="@string/click_refresh"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -66,7 +66,7 @@
     <string name="forex">外汇</string>
     <string name="help">互助借款</string>
     <string name="optional">自选</string>
-    <string name="leaderboard">排行榜</string>
+    <string name="ranking">排行榜</string>
     <string name="battle_hint">来一把紧张激烈的对战吧！</string>
 
     <string name="banner_detail">活动详情</string>
@@ -629,6 +629,25 @@
 
 
     <string name="number_ge">%1$s个</string>
+
+    <!--金融水平测试 -->
+    <string name="level_test_title">测测你的金融水平</string>
+    <string name="level_test_info_hint">融合五大指标（基本理论、技术分析、基本面分析、风险控制和盈利能力）全面测评根据测评结果私人订制训练项目</string>
+    <string name="number_people_join">(%1$d人已经参加)</string>
+    <string name="start_test">开始测试</string>
+    <string name="history_result">历史结果</string>
+    <string name="is_exit_test">是否退出测试？</string>
+    <string name="accidence">入门</string>
+    <string name="primary">初级</string>
+    <string name="intermediate">中级</string>
+    <string name="expert">高级</string>
+    <string name="master">精通</string>
+    <string name="going_train">马上去训练提升</string>
+    <string name="test_result">测评结果</string>
+    <string name="pass">跳过</string>
+    <string name="get_exam_questions_fail">测试题目获取失败</string>
+    <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
+
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
@@ -732,9 +751,53 @@
     <string name="no_miss_introduce">小姐姐还没有写简介</string>
     <string name="no_question">你还没提问过哦</string>
     <string name="ask_question_to_miss">向小姐姐提问</string>
+
+    <!--首页 训练-->
+    <string name="review_lesson_room">自习室</string>
+    <string name="recommend_train">推荐训练</string>
+    <string name="mine_train">我的训练</string>
+    <string name="lemi_score">乐米学分:</string>
+    <string name="look_detail">查看详情</string>
+    <string name="login_look_detail">登录查看我的乐米学分</string>
+    <string name="to_login">去登陆</string>
+    <string name="not_join_train">还未进行训练</string>
+    <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
+    <string name="source_and_time">来源: %1$s    %2$s</string>
+
+    <!--了解学分-->
+    <string name="poor">较差</string>
+    <string name="middle_score">中等</string>
+    <string name="good">良好</string>
+    <string name="excellent">优秀</string>
+    <string name="very_strong">极强</string>
+    <string name="zero">0</string>
+    <string name="two_hundred">200</string>
+    <string name="four_hundred">400</string>
+    <string name="six_hundred">600</string>
+    <string name="eight_hundred">800</string>
+    <string name="one_thousand">1000</string>
+    <string name="score_explain_title">分数解释</string>
+    <string name="score_explain_content">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="exponent_specification">指数说明</string>
+    <string name="master_theoretical">理论掌握</string>
+    <string name="master_theoretical_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="earning_power">盈利能力</string>
+    <string name="earning_power_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="index_analysis">指标分析</string>
+    <string name="index_analysis_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="fundamentals">基本面</string>
+    <string name="fundamentals_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="risk_control">风险控制</string>
+    <string name="risk_control_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="understand_score">了解学分</string>
+    <string name="you_are_not_trained">\n你还没有完成训练</string>
+    <string name="train_grade">L%1$d</string>
+    <string name="trade_level">交易水平:%1$s  超过了%2$s的交易账户</string>
+    <string name="advise">建议:%1$s</string>
+    <string name="click_refresh">点击刷新</string>
+
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
-    <string name="source_and_time">来源: %1$s    %2$s</string>
 
     <!--trainExperience-->
     <string name="train_experience">训练心得</string>

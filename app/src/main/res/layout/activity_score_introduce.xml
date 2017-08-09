@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sbai.finance.activity.train.ScoreIntroduceActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:backFeature="true"
+            app:bottomHasSplitLine="true"
+            app:bottomSplitLineColor="@color/split"
+            app:titleText="@string/understand_score"/>
+
+        <!--<include layout="@layout/layout_score_introduce"/>-->
+
+        <com.sbai.finance.view.leveltest.ScoreView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="215dp"
+            app:middleLoopCircleColor="@color/background"
+            app:outSideCircleColor="@color/split"
+            app:radarLineColor="@color/split"
+            app:showInsideCircle="true"/>
+
+        <com.sbai.finance.view.train.ScoreProgressView
+            android:id="@+id/scoreProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="42dp"
+            android:paddingRight="30dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@color/background"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <TextView
+                android:id="@+id/bg_score_explain"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_score_explain"
+                android:gravity="center"
+                android:paddingLeft="@dimen/common_padding"
+                android:paddingRight="@dimen/common_padding"
+                android:text="@string/score_explain_content"
+                android:textColor="#E7A05D"/>
+
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_score_explain_rounded"
+                android:gravity="center"
+                android:text="@string/score_explain_title"
+                android:textColor="@color/luckyText"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bg_score_explain"
+                android:layout_marginTop="20dp"
+                android:text="@string/exponent_specification"
+                android:textColor="@color/luckyText"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/bg_line_division_center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
+                android:drawablePadding="15dp"
+                android:drawableTop="@drawable/bg_score_explain_master_theoretical"
+                android:text="@string/master_theoretical"
+                android:textColor="@color/blackPrimary"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:text="@string/master_theoretical_introduce"
+                android:textColor="@color/luckyText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/bg_line_division_center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
+                android:drawablePadding="15dp"
+                android:drawableTop="@drawable/bg_score_explain_earning_power"
+                android:text="@string/earning_power"
+                android:textColor="@color/blackAssist"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:text="@string/earning_power_introduce"
+                android:textColor="@color/luckyText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/bg_line_division_center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
+                android:drawablePadding="15dp"
+                android:drawableTop="@drawable/bg_score_explain_index_analysis"
+                android:text="@string/index_analysis"
+                android:textColor="@color/blackAssist"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:text="@string/index_analysis_introduce"
+                android:textColor="@color/luckyText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/bg_line_division_center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
+                android:drawablePadding="15dp"
+                android:drawableTop="@drawable/bg_score_explain_fundamentals"
+                android:text="@string/fundamentals"
+                android:textColor="@color/blackAssist"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:text="@string/fundamentals_introduce"
+                android:textColor="@color/luckyText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/bg_line_division_center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="11dp"
+                android:drawablePadding="15dp"
+                android:drawableTop="@drawable/bg_score_explain_risk_control"
+                android:text="@string/risk_control"
+                android:textColor="@color/blackAssist"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:text="@string/risk_control_introduce"
+                android:textColor="@color/luckyText"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:background="@color/background"/>
+    </LinearLayout>
+</ScrollView>

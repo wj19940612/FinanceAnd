@@ -46,15 +46,17 @@ public class API extends RequestManager {
         this(Request.Method.GET, uri, apiParams, version);
     }
 
+
     public API(int method, String uri) {
         this(method, uri, null, 0);
+
     }
 
     public API(int method, String uri, ApiParams apiParams) {
         this(method, uri, apiParams, 0);
     }
 
-    public  API(int method, String uri, ApiParams apiParams, int version) {
+    public API(int method, String uri, ApiParams apiParams, int version) {
         this(method, uri, apiParams, null, version);
     }
 
@@ -69,6 +71,7 @@ public class API extends RequestManager {
         mTag = "";
         mBody = jsonBody;
     }
+
 
     public API setTag(String tag) {
         this.mTag = tag;
