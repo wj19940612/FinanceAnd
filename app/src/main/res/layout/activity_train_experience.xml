@@ -4,10 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/background"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        app:rightTextColor="@color/colorPrimary"
+        app:rightTextSize="15sp"
+        app:rightVisible="true"
+        app:rightText="写心得"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -21,8 +27,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="14dp">
+        android:layout_height="match_parent">
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -35,6 +40,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:background="@color/background"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -44,10 +54,50 @@
                     android:text="热门心得"
                     android:textColor="@color/primaryText"
                     android:textSize="14sp"/>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="@color/split"/>
+
+
+                <com.sbai.finance.view.MyListView
+                    android:id="@+id/hotListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14dp"
+                    android:text="最新心得"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/split"/>
+
+                <com.sbai.finance.view.MyListView
+                    android:id="@+id/LatestListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"/>
+
+                <TextView
+                    android:id="@+id/empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="100dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@drawable/img_no_message"
+                    android:text="@string/ask_miss"/>
 
             </LinearLayout>
         </ScrollView>
