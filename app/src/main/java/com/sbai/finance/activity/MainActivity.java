@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
+import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
@@ -119,7 +120,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 1:
                     return new MissTalkFragment();
                 case 2:
-                    return new MissTalkFragment();
+                    return new DiscoveryFragment();
                 case 3:
                     return new MineFragment();
             }
