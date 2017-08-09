@@ -25,6 +25,9 @@ public class MyStudyInfo {
     private int totalReward;
     private int totalStudy;
     private int userId;
+    public boolean isLearned(){
+        return learn==1;
+    }
 
     public int getHoldStudy() {
         return holdStudy;

@@ -4,9 +4,11 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -14,13 +16,14 @@
         app:titleText="@string/study_room"/>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/background"
             android:orientation="vertical"
             android:paddingBottom="44dp">
@@ -174,7 +177,9 @@
                         <com.sbai.finance.view.MyListView
                             android:id="@+id/listView"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:dividerHeight="0.5dp"
+                            android:divider="@color/background"/>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -190,7 +195,7 @@
                                 android:background="@drawable/btn_study_rounded"
                                 android:enabled="false"
                                 android:gravity="center"
-                                android:text="@string/ok"
+                                android:text="@string/hand_in_paper"
                                 android:textColor="@android:color/white"
                                 android:textSize="15sp"/>
 

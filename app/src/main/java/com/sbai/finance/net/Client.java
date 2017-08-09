@@ -2153,4 +2153,33 @@ public class Client {
                         .put("timeType", timeType));
     }
 
+    /**
+     * 提交试卷
+     *
+     * @param jsonStr
+     * @return
+     */
+
+    public static API handInPaper(String jsonStr) {
+        return new API(POST, "/train/course/finishTask.do", jsonStr);
+    }
+
+    /**
+     * 膜拜
+     *
+     * @param targetId
+     * @return
+     */
+    public static API worship(int targetId) {
+        return new API(POST, "/rank/worship.do",
+                new ApiParams()
+                        .put("targetId", targetId));
+    }
+
+    /**
+     * 排行列表数据
+     */
+    public static API getLeaderLists() {
+        return new API("/train/rank/list.do");
+    }
 }

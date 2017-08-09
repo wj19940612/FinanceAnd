@@ -681,6 +681,9 @@
     <string name="other_you_want_study">其他想要的训练项目</string>
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
+    <string name="wechat">微信好友</string>
+    <string name="sina_weibo">新浪微博</string>
+    <string name="share_to_1">分享至</string>
 
 
     <string name="study_room">自习室</string>
@@ -701,7 +704,14 @@
     <string name="this_week">本周</string>
     <string name="week">周</string>
     <string name="integrate_number_no_blank">%1$s分</string>
+    <string name="ingot_number_no_blank">%1$d元宝</string>
     <string name="thank_you_feedback">感谢反馈,我们会尽快为您准备</string>
+    <string name="hand_in_paper">交卷</string>
+    <string name="today_already_study">今日已学</string>
+    <string name="answer_wrong">答错了哦</string>
+    <string name="answer_right">非常正确</string>
+    <string name="your_rank">您的排名 %1$d</string>
+    <string name="you_no_enter_leader_board">您还未进入榜单</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>

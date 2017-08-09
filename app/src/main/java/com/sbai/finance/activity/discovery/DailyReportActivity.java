@@ -60,6 +60,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
         setContentView(R.layout.activity_daily_report);
         ButterKnife.bind(this);
         initListHeader();
+        initListFooter();
         initListView();
         requestDailyList();
     }
@@ -69,6 +70,13 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(1, getResources()));
         view.setLayoutParams(params);
         mListView.addHeaderView(view);
+    }
+
+    private void initListFooter() {
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(1, getResources()));
+        view.setLayoutParams(params);
+        mListView.addFooterView(view);
     }
 
     private void initListView() {
@@ -83,10 +91,10 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DailyReport dailyReport = (DailyReport) parent.getItemAtPosition(position);
-                if (dailyReport!=null){
+                if (dailyReport != null) {
                     Launcher.with(getActivity(), DailyReportDetailActivity.class)
                             .putExtra(DailyReportDetailActivity.EX_FORMAT, dailyReport.getFormat())
-                            .putExtra(DailyReportDetailActivity.EX_ID,dailyReport.getId())
+                            .putExtra(DailyReportDetailActivity.EX_ID, dailyReport.getId())
                             .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                             .execute();
                 }

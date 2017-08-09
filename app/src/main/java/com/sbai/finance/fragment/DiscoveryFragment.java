@@ -23,6 +23,7 @@ import com.sbai.finance.activity.discovery.DailyReportActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.future.FuturesListActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
+import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;

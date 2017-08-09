@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
+import com.sbai.finance.fragment.dialog.ShareReportDialogFragment;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -42,7 +43,7 @@ import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
- * Created by Administrator on 2017-05-03.
+ * 乐米日报详情
  */
 
 public class DailyReportDetailActivity extends BaseActivity {
@@ -168,7 +169,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.share:
-                ShareDialogFragment.newInstance().show(getSupportFragmentManager());
+                ShareReportDialogFragment.newInstance().show(getSupportFragmentManager());
                 break;
             case R.id.refreshButton:
                 mWebView.reload();

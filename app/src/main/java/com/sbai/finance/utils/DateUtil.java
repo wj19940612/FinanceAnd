@@ -372,6 +372,20 @@ public class DateUtil {
     }
 
     /**
+     * 当前是否白天
+     *
+     * @return
+     */
+    public static boolean isDayTime() {
+        long systemTime = System.currentTimeMillis();
+        int time = Integer.valueOf(DateUtil.format(systemTime, "HHmm"));
+        if (time >= 600 && time <= 1800) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 格式化时间  如果是当天 则显示18:20
      * 如果是昨天 则 昨天 18:20
      * 其他的   12月12日 12:20

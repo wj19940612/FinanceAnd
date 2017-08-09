@@ -12,9 +12,15 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.ImageListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,14 +61,6 @@ public class LeaderBoardsActivity extends BaseActivity {
         requestBoardData();
     }
 
-    private void requestBoardData() {
-        if (LocalUser.getUser().isLogin()) {
-            mProfitsImages.setImages(LocalUser.getUser().getUserInfo().getUserPortrait(), LocalUser.getUser().getUserInfo().getUserPortrait());
-            mIngotImages.setImages(LocalUser.getUser().getUserInfo().getUserPortrait(), LocalUser.getUser().getUserInfo().getUserPortrait());
-            mSavantImages.setImages(LocalUser.getUser().getUserInfo().getUserPortrait(), LocalUser.getUser().getUserInfo().getUserPortrait());
-        }
-    }
-
     private void initView() {
         mIngotBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}));
         mProfitBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}));
@@ -73,6 +71,59 @@ public class LeaderBoardsActivity extends BaseActivity {
         GradientDrawable gradient = new GradientDrawable(GradientDrawable.Orientation.TL_BR, colors);
         gradient.setCornerRadius(Display.dp2Px(8, getActivity().getResources()));
         return gradient;
+    }
+
+    private void requestBoardData() {
+        Client.getLeaderLists().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<LeaderBoardRank>>, List<LeaderBoardRank>>() {
+                    @Override
+                    protected void onRespSuccessData(List<LeaderBoardRank> data) {
+                        updateBoardData(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateBoardData(List<LeaderBoardRank> data) {
+        for (LeaderBoardRank item : data) {
+            List<String> images = new ArrayList<>();
+            for (LeaderBoardRank.DataBean dataBean : item.getData()) {
+                if (dataBean.getUser() != null) {
+                    images.add(dataBean.getUser().getUserPortrait());
+                }
+            }
+            switch (item.getType()) {
+                case LeaderBoardRank.INGOT:
+                    mIngotImages.setImages(images);
+                    if (LocalUser.getUser().isLogin()) {
+                        if (item.getCurr() != null) {
+                            mIngotBoard.setText(getString(R.string.your_rank, item.getCurr().getNo()));
+                        } else {
+                            mIngotBoard.setText(getString(R.string.you_no_enter_leader_board));
+                        }
+                    }
+                    break;
+                case LeaderBoardRank.PROFIT:
+                    mProfitsImages.setImages(images);
+                    if (LocalUser.getUser().isLogin()) {
+                        if (item.getCurr() != null) {
+                            mProfitBoard.setText(getString(R.string.your_rank, item.getCurr().getNo()));
+                        } else {
+                            mProfitBoard.setText(getString(R.string.you_no_enter_leader_board));
+                        }
+                    }
+                    break;
+                case LeaderBoardRank.SAVANT:
+                    mSavantImages.setImages(images);
+                    if (LocalUser.getUser().isLogin()) {
+                        if (item.getCurr() != null) {
+                            mSavantBoard.setText(getString(R.string.your_rank, item.getCurr().getNo()));
+                        } else {
+                            mSavantBoard.setText(getString(R.string.you_no_enter_leader_board));
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     @OnClick({R.id.ingotBoardArea, R.id.profitBoardArea, R.id.savantBoardArea})
