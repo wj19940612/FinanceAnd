@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="提问详情"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/blackPrimary"/>
 
     <View
         android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="@string/voice_time"
+                            tools:text="@string/voice_time"
                             android:textColor="@android:color/white"
                             android:textSize="14sp"/>
                     </LinearLayout>
@@ -136,7 +136,7 @@
                         android:layout_alignLeft="@+id/voiceArea"
                         android:layout_below="@+id/missAvatar"
                         android:layout_marginTop="5dp"
-                        android:text="@string/listener_number"
+                        tools:text="@string/listener_number"
                         android:textColor="@color/colorPrimary"
                         android:textSize="10sp"/>
                 </RelativeLayout>
@@ -154,7 +154,7 @@
                         android:id="@+id/loveNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/love_miss"
+                        tools:text="@string/love_miss"
                         android:textColor="@color/unluckyText"
                         android:textSize="10sp"/>
 
@@ -163,7 +163,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="@string/reward_miss"
+                        tools:text="@string/reward_miss"
                         android:textColor="@color/unluckyText"
                         android:textSize="10sp"/>
 

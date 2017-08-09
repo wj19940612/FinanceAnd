@@ -76,6 +76,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private RewardInfo mRewardInfo;
 	private List<Question> mMyQuestionList;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,6 +110,18 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	protected void onResume() {
 		super.onResume();
 		requestMyQuestionList();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mediaPlayerUtil.release();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mediaPlayerUtil.release();
 	}
 
 	private void initRewardInfo() {

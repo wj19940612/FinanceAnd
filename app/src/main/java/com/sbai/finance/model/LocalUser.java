@@ -7,25 +7,19 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.mine.UserInfo;
 
 public class LocalUser {
-
-    public interface Callback {
-        void onUpdateCompleted();
-    }
+    private static LocalUser sLocalUser;
 
     private UserInfo mUserInfo;
     private String mPhone;
-    private static LocalUser sLocalUser;
-    private static boolean sReload;
 
     public static LocalUser getUser() {
-        if (sLocalUser == null || sReload) {
+        if (sLocalUser == null) {
             sLocalUser = loadFromPreference();
         }
         return sLocalUser;
     }
 
     private static LocalUser loadFromPreference() {
-        sReload = false;
         String userJson = Preference.get().getUserJson();
         if (!TextUtils.isEmpty(userJson)) {
             Gson gson = new Gson();
@@ -38,7 +32,6 @@ public class LocalUser {
     private void saveToPreference() {
         String userJson = new Gson().toJson(this);
         Preference.get().setUserJson(userJson);
-        sReload = true;
     }
 
     public void setUserInfo(UserInfo userInfo, String phone) {
@@ -51,7 +44,6 @@ public class LocalUser {
         mUserInfo = userInfo;
         saveToPreference();
     }
-
 
     public UserInfo getUserInfo() {
         return mUserInfo;

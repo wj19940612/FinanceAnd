@@ -40,7 +40,7 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="50dp"
                 android:text="@string/login"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="17sp"/>
 
             <View
@@ -79,7 +79,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             tools:text="1220\n 关注"/>
 
         <View
@@ -95,7 +95,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             tools:text="12200\n 粉丝"/>
 
         <View
@@ -112,7 +112,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             tools:text="1220\n 我的发表"/>
     </LinearLayout>
 

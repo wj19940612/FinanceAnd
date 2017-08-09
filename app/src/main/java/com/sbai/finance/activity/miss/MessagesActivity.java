@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.MissMessage;
 import com.sbai.finance.model.missTalk.Question;
 import com.sbai.finance.net.Callback;
@@ -91,7 +93,7 @@ public class MessagesActivity extends BaseActivity implements
             public void onClick(View v) {
                 for (int i = 0; i < mMessageAdapter.getCount(); i++) {
                     MissMessage missMessage = mMessageAdapter.getItem(i);
-                    if (missMessage != null && missMessage.getStatus() == MissMessage.NO_READ) {
+                    if (missMessage != null && missMessage.isNoRead()) {
                         requestReadMessage(missMessage.getId());
                     }
                 }
@@ -121,8 +123,10 @@ public class MessagesActivity extends BaseActivity implements
                     if (missMessage.isNoRead()) {
                         requestReadMessage(missMessage.getId());
                     }
-                    requestMessageDetail(missMessage.getDataId());
-                    // TODO: 2017-08-02 跳转到消息详情页
+                    //   requestMessageDetail(missMessage.getDataId());
+                    Launcher.with(getActivity(), QuestionDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, missMessage.getDataId())
+                            .execute();
                 }
             }
         });
@@ -157,7 +161,7 @@ public class MessagesActivity extends BaseActivity implements
         mMessageAdapter.clear();
         for (MissMessage missMessage : data) {
             if (mSet.add(missMessage.getId())) {
-                if (missMessage.getStatus() == MissMessage.NO_READ) {
+                if (missMessage.isNoRead()) {
                     mNoReadCount++;
                 }
                 mMessageAdapter.add(missMessage);
@@ -286,7 +290,7 @@ public class MessagesActivity extends BaseActivity implements
                     } else {
                         mUserName.setText(item.getSourceUser().getUserName());
                         Glide.with(context)
-                                .load(item.getSourceUser().getUserPhone())
+                                .load(item.getSourceUser().getUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
                                 .transform(new GlideCircleTransform(context))
                                 .into(mAvatar);

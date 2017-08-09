@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/optional"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
     <include layout="@layout/layout_variety_header"/>
     <RelativeLayout
         android:layout_width="match_parent"

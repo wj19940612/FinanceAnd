@@ -25,7 +25,7 @@
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:paddingTop="12dp"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/blackPrimary"
         android:textColorHint="@color/unluckyText"
         android:textSize="15sp"/>
 

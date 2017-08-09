@@ -262,7 +262,7 @@ public class LocationActivity extends BaseActivity {
                 picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
                 picker.setAnimationStyle(R.style.BottomDialogAnimation);
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
-                picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.blackAssist));
+                picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
                 WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
                 lineConfig.setColor(ContextCompat.getColor(getActivity(), R.color.background));
                 picker.setLineConfig(lineConfig);

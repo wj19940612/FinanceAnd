@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/my_question"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/blackPrimary"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

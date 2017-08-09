@@ -194,7 +194,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     }
                 })
                 .setTitleMaxLines(1)
-                .setTitleTextColor(ContextCompat.getColor(this, R.color.blackAssist))
+                .setTitleTextColor(ContextCompat.getColor(this, R.color.primaryText))
                 .setMessageTextColor(ContextCompat.getColor(this, R.color.opinionText))
                 .setNegative(R.string.no)
                 .show();
@@ -234,8 +234,8 @@ public abstract class StockTradeActivity extends BaseActivity {
                     }
 
                     @Override
-                    protected void onReceive(Resp<JsonObject> resp) {
-                        super.onReceive(resp);
+                    protected void onReceiveResponse(Resp<JsonObject> resp) {
+                        super.onReceiveResponse(resp);
                         // 701 代表已经添加过
                         if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
                             mTradeFloatButtons.setHasAddInOption(true);

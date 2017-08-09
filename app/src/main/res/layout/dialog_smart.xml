@@ -32,7 +32,7 @@
             android:gravity="center_vertical"
             android:lineSpacingExtra="3dp"
             android:maxLines="2"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="17sp"
             tools:text="啥地方噶进口飞机都是的撒娇开发环境撒打开了凤凰科技的撒都十分罕见的萨克"/>
     </LinearLayout>

@@ -349,8 +349,8 @@ public class CreateBattleActivity extends BaseActivity {
                     }
 
                     @Override
-                    protected void onReceive(Resp<Battle> battleResp) {
-                        super.onReceive(battleResp);
+                    protected void onReceiveResponse(Resp<Battle> battleResp) {
+                        super.onReceiveResponse(battleResp);
                         showCreateBattleMoneyIsNotEnoughDialog(battleResp);
                     }
                 }).fire();

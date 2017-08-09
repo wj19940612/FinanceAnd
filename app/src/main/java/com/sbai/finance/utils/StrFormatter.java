@@ -133,9 +133,9 @@ public class StrFormatter {
         String number = String.valueOf(count);
         int length = number.length();
         if (count >= 10000 && count < 100000000) {
-            return number.substring(0, length -4) + ".0" + FinanceUtil.UNIT_WANG;
+            return number.substring(0, length -4) + ".0"  + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG;
         } else if (count >= 100000000){
-            return number.substring(0, length - 8) + ".0" + FinanceUtil.UNIT_YI;
+            return number.substring(0, length - 8) + ".0"  + number.substring(length - 8, length - 7) + FinanceUtil.UNIT_YI;
         }
         return number + "";
     }

@@ -1,13 +1,16 @@
 package com.sbai.finance.activity.miss;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,11 +59,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.question;
+import static com.sbai.finance.activity.miss.ReplyActivity.REFRESH_REPLY;
 
 
 public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private static final int REQ_COMMENT = 1001;
+    private static final int COMMENT = 1002;
+    private static final int REWARD = 1003;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -120,6 +126,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private QuestionReplyListAdapter mQuestionReplyListAdapter;
     private RewardInfo mRewardInfo;
     private Question mQuestionDetail;
+    private RefreshReplyReceiver mRefreshReplyReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,10 +141,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mQuestionReplyListAdapter);
         mListView.setOnItemClickListener(this);
+        mListView.setFocusable(false);
 
         requestQuestionDetail();
         requestQuestionReplyList();
         initSwipeRefreshLayout();
+        registerRefreshReceiver();
     }
 
     private void requestQuestionDetail() {
@@ -176,14 +185,22 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 mPage = 0;
                 requestQuestionDetail();
                 requestQuestionReplyList();
+                mScrollView.smoothScrollTo(0, 0);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayerUtil.release();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mediaPlayerUtil.release();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReplyReceiver);
     }
 
     public RewardInfo getRewardInfo() {
@@ -285,8 +302,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 }
             }
         });
-
-        mScrollView.smoothScrollTo(0, 0);
     }
 
     private void requestQuestionReplyList() {
@@ -355,51 +370,65 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.comment:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), CommentActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-                            .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
-                            .executeForResult(REQ_COMMENT);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                if (mQuestionDetail != null) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), CommentActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
+                                .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+                                .executeForResult(REQ_COMMENT);
+
+                    } else {
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivityForResult(intent, COMMENT);
+                    }
                 }
                 break;
             case R.id.reward:
-                if (LocalUser.getUser().isLogin()) {
-                    mRewardInfo.setMoney(0);
-                    mRewardInfo.setIndex(-1);
-                    RewardMissDialogFragment.newInstance()
-                            .show(getSupportFragmentManager());
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                if (mQuestionDetail != null) {
+                    if (LocalUser.getUser().isLogin()) {
+                        mRewardInfo.setMoney(0);
+                        mRewardInfo.setIndex(-1);
+                        RewardMissDialogFragment.newInstance()
+                                .show(getSupportFragmentManager());
+                    } else {
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivityForResult(intent, REWARD);
+                    }
                 }
                 break;
             case R.id.love:
-                if (LocalUser.getUser().isLogin()) {
-                    Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+                if (mQuestionDetail != null) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
-                        @Override
-                        protected void onRespSuccessData(Prise prise) {
-                            if (prise.getIsPrise() == 0) {
-                                mLoveImage.setImageResource(R.drawable.ic_miss_love);
-                            } else {
-                                mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+                            @Override
+                            protected void onRespSuccessData(Prise prise) {
+                                int praiseCount;
+                                if (prise.getIsPrise() == 0) {
+                                    mLoveImage.setImageResource(R.drawable.ic_miss_love);
+                                    praiseCount = mQuestionDetail.getPriseCount() - 1;
+                                    mQuestionDetail.setPriseCount(praiseCount);
+                                } else {
+                                    mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+                                    praiseCount = mQuestionDetail.getPriseCount() + 1;
+                                    mQuestionDetail.setPriseCount(praiseCount);
+                                }
+                                mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(praiseCount)));
                             }
-                            requestQuestionDetail();
-                        }
-                    }).fire();
-                } else{
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }).fire();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
                 break;
         }
     }
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-		ReplyDialogFragment.newInstance(item, mQuestionDetail.getQuestionUserId()).show(getSupportFragmentManager());
-	}
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
+        ReplyDialogFragment.newInstance(item).show(getSupportFragmentManager());
+    }
 
     static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
         private Context mContext;
@@ -458,7 +487,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                             .into(mAvatar);
 
                     mUserName.setText(item.getUserModel().getUserName());
-                    mPublishTime.setText(DateUtil.getFormatTime(item.getUserModel().getCreateTime()));
+                    mPublishTime.setText(DateUtil.getMissFormatTime(item.getUserModel().getCreateTime()));
+                } else {
+                    Glide.with(context).load(R.drawable.ic_default_avatar)
+                            .transform(new GlideCircleTransform(context))
+                            .into(mAvatar);
+                    mUserName.setText("");
+                    mPublishTime.setText("");
                 }
 
                 mOpinionContent.setText(item.getContent());
@@ -467,8 +502,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     mReplyArea.setVisibility(View.GONE);
                 } else {
                     mReplyArea.setVisibility(View.VISIBLE);
-                    if (item.getReplys().get(0).getUserModel()!= null) {
+                    if (item.getReplys().get(0).getUserModel() != null) {
                         mReplyName.setText(item.getReplys().get(0).getUserModel().getUserName());
+                    } else {
+                        mReplyName.setText("");
                     }
                     mReplyContent.setText(item.getReplys().get(0).getContent());
                 }
@@ -485,6 +522,43 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             mSwipeRefreshLayout.setRefreshing(true);
             requestQuestionDetail();
             requestQuestionReplyList();
+            mScrollView.smoothScrollTo(0, 0);
+        }
+
+        if (requestCode == COMMENT && resultCode == RESULT_OK) {
+            if (mQuestionDetail != null) {
+                Launcher.with(getActivity(), CommentActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
+                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+                        .executeForResult(REQ_COMMENT);
+            }
+        }
+
+        if (requestCode == REWARD && resultCode == RESULT_OK) {
+            mRewardInfo.setMoney(0);
+            mRewardInfo.setIndex(-1);
+            RewardMissDialogFragment.newInstance()
+                    .show(getSupportFragmentManager());
+        }
+    }
+
+    private void registerRefreshReceiver() {
+        mRefreshReplyReceiver = new RefreshReplyReceiver();
+        IntentFilter filter = new IntentFilter(REFRESH_REPLY);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReplyReceiver, filter);
+    }
+
+
+    private class RefreshReplyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mSet.clear();
+            mPage = 0;
+            mSwipeRefreshLayout.setRefreshing(true);
+            requestQuestionDetail();
+            requestQuestionReplyList();
+            mScrollView.smoothScrollTo(0, 0);
         }
     }
 }

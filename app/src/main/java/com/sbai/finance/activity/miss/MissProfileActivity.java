@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -41,6 +42,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissVoiceRecorder;
@@ -59,7 +61,11 @@ import butterknife.OnClick;
 /**
  * 小姐姐详细资料页面
  */
-public class MissProfileActivity extends BaseActivity implements AdapterView.OnItemClickListener, ObservableScrollView.ScrollViewListener {
+public class MissProfileActivity extends BaseActivity implements
+		AdapterView.OnItemClickListener, ObservableScrollView.ScrollViewListener {
+
+	private static final int SUBMIT_QUESTION = 1001;
+	private static final int REWARD = 1002;
 
 	@BindView(R.id.listView)
 	ListView mListView;
@@ -81,8 +87,8 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 	TextView mName;
 	@BindView(R.id.voice)
 	TextView mVoice;
-	@BindView(R.id.loveNumber)
-	TextView mLoveNumber;
+	@BindView(R.id.lovePeopleNumber)
+	TextView mLovePeopleNumber;
 	@BindView(R.id.introduce)
 	TextView mIntroduce;
 	@BindView(R.id.attentionImage)
@@ -119,9 +125,11 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		ButterKnife.bind(this);
 		initData(getIntent());
 		initRewardInfo();
+		initFooterView();
 		mSet = new HashSet<>();
 		mHerAnswerList = new ArrayList<>();
 		mHerAnswerAdapter = new HerAnswerAdapter(this, mHerAnswerList, TAG);
+		mListView.setFocusable(false);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
@@ -130,6 +138,35 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		requestMissDetail();
 		requestHerAnswerList();
 		initSwipeRefreshLayout();
+		mHerAnswerAdapter.setCallback(new HerAnswerAdapter.ItemCallback() {
+			@Override
+			public void loveOnClick(final Question item) {
+
+				Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+
+					@Override
+					protected void onRespSuccessData(Prise prise) {
+						item.setIsPrise(prise.getIsPrise());
+						item.setPriseCount(prise.getPriseCount());
+						mHerAnswerAdapter.notifyDataSetChanged();
+						int praiseCount;
+						if (prise.getIsPrise() == 0) {
+							praiseCount = mMiss.getTotalPrise() - 1;
+							mMiss.setTotalPrise(praiseCount);
+						} else {
+							praiseCount = mMiss.getTotalPrise() + 1;
+							mMiss.setTotalPrise(praiseCount);
+						}
+						mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
+					}
+				}).fire();
+			}
+
+			@Override
+			public void rewardOnClick() {
+				// TODO: 2017/8/8 问题打赏 之后刷新数据
+			}
+		});
 	}
 
 	private void initData(Intent intent) {
@@ -153,6 +190,19 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		mRewardInfo.setMoneyList(list);
 	}
 
+	private void initFooterView() {
+		View view = new View(getActivity());
+		AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(60, getResources()));
+		view.setLayoutParams(params);
+		mListView.addFooterView(view);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mediaPlayerUtil.release();
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -167,6 +217,12 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 						updateMissDetail(miss);
 						mMiss = miss;
 					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						mVoice.setVisibility(View.GONE);
+					}
 				}).fire();
 	}
 
@@ -178,8 +234,14 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 
 		mName.setText(miss.getName());
 		mTitleName.setText(miss.getName());
-		mVoice.setText(getString(R.string.voice_time, miss.getSoundTime()));
-		mLoveNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(miss.getTotalPrise())));
+		mTitleName.setAlpha(0);
+		if (miss.getSoundTime() == 0) {
+			mVoice.setVisibility(View.GONE);
+		} else {
+			mVoice.setText(getString(R.string.voice_time, miss.getSoundTime()));
+		}
+
+		mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(miss.getTotalPrise())));
 		if (!TextUtils.isEmpty(miss.getBrifeingText())) {
 			mIntroduce.setText(miss.getBrifeingText());
 		} else {
@@ -195,8 +257,6 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		}
 		mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(miss.getTotalAttention())));
 		mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(miss.getTotalAward())));
-
-		mScrollView.smoothScrollTo(0, 0);
 	}
 
 	@Override
@@ -204,7 +264,7 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 		Question item = (Question) parent.getItemAtPosition(position);
 		if (item != null) {
 			Launcher.with(this, QuestionDetailActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item).execute();
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
 		}
 	}
 
@@ -289,43 +349,50 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.avatar:
-				Launcher.with(this, MissAvatarActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
-						.execute();
+				if (mMiss != null) {
+					Launcher.with(this, MissAvatarActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
+							.execute();
+				}
 				break;
 			case R.id.voice:
 				break;
 			case R.id.attention:
-				if (LocalUser.getUser().isLogin()) {
-					Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
+				if (mMiss != null) {
+					if (LocalUser.getUser().isLogin()) {
+						Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
 
-						@Override
-						protected void onRespSuccessData(Attention attention) {
-							if (attention.getIsAttention() == 0) {
-								mAttentionImage.setImageResource(R.drawable.ic_not_attention);
-								mAttentionText.setText(R.string.attention);
-							} else {
-								mAttentionImage.setImageResource(R.drawable.ic_attention);
-								mAttentionText.setText(R.string.is_attention);
+							@Override
+							protected void onRespSuccessData(Attention attention) {
+								if (attention.getIsAttention() == 0) {
+									mAttentionImage.setImageResource(R.drawable.ic_not_attention);
+									mAttentionText.setText(R.string.attention);
+								} else {
+									mAttentionImage.setImageResource(R.drawable.ic_attention);
+									mAttentionText.setText(R.string.is_attention);
+								}
+								mAttentionNumber.setText(getString(R.string.count,
+										StrFormatter.getFormatCount(attention.getAttentionCount())));
 							}
-							mAttentionNumber.setText(getString(R.string.count,
-									StrFormatter.getFormatCount(attention.getAttentionCount())));
-						}
-					}).fire();
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
+						}).fire();
+					} else {
+						Launcher.with(getActivity(), LoginActivity.class).execute();
+					}
 				}
 				break;
 			case R.id.reward:
-				if (LocalUser.getUser().isLogin()) {
-					if (mRewardInfo != null) {
-						mRewardInfo.setMoney(0);
-						mRewardInfo.setIndex(-1);
+				if (mMiss != null) {
+					if (LocalUser.getUser().isLogin()) {
+						if (mRewardInfo != null) {
+							mRewardInfo.setMoney(0);
+							mRewardInfo.setIndex(-1);
+						}
+						RewardMissDialogFragment.newInstance()
+								.show(getSupportFragmentManager());
+					} else {
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						startActivityForResult(intent, REWARD);
 					}
-					RewardMissDialogFragment.newInstance()
-							.show(getSupportFragmentManager());
-				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 				break;
 			case R.id.askHerQuestion:
@@ -334,7 +401,8 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 							.putExtra(Launcher.EX_PAYLOAD, mCustomId)
 							.execute();
 				} else {
-					Launcher.with(getActivity(), LoginActivity.class).execute();
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					startActivityForResult(intent, SUBMIT_QUESTION);
 				}
 				break;
 			case R.id.back:
@@ -364,15 +432,26 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 
 	static class HerAnswerAdapter extends ArrayAdapter<Question> {
 
+		public interface ItemCallback {
+			void loveOnClick(Question item);
+
+			void rewardOnClick();
+		}
+
 		private Context mContext;
 		private List<Question> mHerAnswerList;
 		private String TAG;
+		private ItemCallback mCallback;
 
 		private HerAnswerAdapter(@NonNull Context context, List<Question> herAnswerList, String TAG) {
 			super(context, 0);
 			this.mContext = context;
 			this.mHerAnswerList = herAnswerList;
 			this.TAG = TAG;
+		}
+
+		public void setCallback(ItemCallback callback) {
+			mCallback = callback;
 		}
 
 		@NonNull
@@ -388,8 +467,7 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-
-			viewHolder.bindingData(mContext, getItem(position), position, mHerAnswerList, TAG);
+			viewHolder.bindingData(mContext, getItem(position), position, mHerAnswerList, TAG, mCallback);
 			return convertView;
 		}
 
@@ -428,7 +506,7 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 			}
 
 			public void bindingData(final Context context, final Question item,
-			                        int position, List<Question> herAnswerList, final String TAG) {
+			                        int position, List<Question> herAnswerList, final String TAG, final ItemCallback callback) {
 				if (item == null) return;
 				if (position == herAnswerList.size() - 1) {
 
@@ -465,30 +543,12 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
 				}
 
-				mMissAvatar.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Launcher.with(context, MissProfileActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
-								.execute();
-					}
-				});
-
 				mLoveNumber.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
-
-							@Override
-							protected void onRespSuccessData(Prise prise) {
-								if (prise.getIsPrise() == 0) {
-									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
-								} else {
-									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
-								}
-								mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
-							}
-						}).fire();
+						if (callback != null) {
+							callback.loveOnClick(item);
+						}
 					}
 				});
 
@@ -543,6 +603,25 @@ public class MissProfileActivity extends BaseActivity implements AdapterView.OnI
 					}
 				});
 			}
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REWARD && resultCode == RESULT_OK) {
+			if (mRewardInfo != null) {
+				mRewardInfo.setMoney(0);
+				mRewardInfo.setIndex(-1);
+			}
+			RewardMissDialogFragment.newInstance()
+					.show(getSupportFragmentManager());
+		}
+
+		if (requestCode == SUBMIT_QUESTION && resultCode == RESULT_OK) {
+			Launcher.with(getActivity(), SubmitQuestionActivity.class)
+					.putExtra(Launcher.EX_PAYLOAD, mCustomId)
+					.execute();
 		}
 	}
 }

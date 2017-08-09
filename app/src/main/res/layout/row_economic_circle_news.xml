@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/avatar"
         android:layout_toRightOf="@+id/avatar"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="15sp"
         tools:text="反方向的钟"/>
 
@@ -31,7 +31,7 @@
         android:layout_below="@+id/userName"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/avatar"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/primaryText"
         android:textSize="12sp"
         tools:text="这里是消息的内容"/>
 
@@ -63,7 +63,7 @@
         android:layout_marginTop="14dp">
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/rootView"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:ellipsize="end"

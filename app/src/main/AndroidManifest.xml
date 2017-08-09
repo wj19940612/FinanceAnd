@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <!-- To auto-complete the email text field in the authCodeLogin form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -74,45 +74,21 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity
+            android:name=".activity.economiccircle.ContentImgActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- Login & Register -->
+        <activity
             android:name=".activity.mine.LoginActivity"
+            android:theme="@style/LoginPageEnter"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.future.FuturesListActivity"
+            android:name=".activity.mine.InputPhoneActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.EventActivity"
+            android:name=".activity.mine.AuthCodeActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.home.OptionalActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.home.SearchOptionalActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.home.TopicActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.future.FutureTradeActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.stock.StockListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.stock.SearchStockActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.stock.StockDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.stock.StockIndexActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.TopicDetailActivity"
-            android:screenOrientation="portrait"/>
-        <!-- 观点大神 -->
-        <activity
-            android:name=".activity.opinion.OpinionActivity"
-            android:screenOrientation="portrait"/>
+
         <!-- 我的模块 -->
         <activity
             android:name=".activity.mine.ModifyUserInfoActivity"
@@ -151,35 +127,8 @@
             android:name=".activity.mine.CreditActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.economiccircle.ContentImgActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.mine.setting.LocationActivity"
             android:screenOrientation="portrait"/>
-
-        <!-- 交易 H5 -->
-        <activity
-            android:name=".activity.WebActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.trade.TradeWebActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.BannerActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.HideTitleWebActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.EventDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.StockNewsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.recharge.PayIntentionActivity"
-            android:screenOrientation="portrait"/>
-
         <!-- 反馈 -->
         <activity
             android:name=".activity.mine.FeedbackActivity"
@@ -189,44 +138,15 @@
         <activity
             android:name=".activity.mine.FundDetailActivity"
             android:screenOrientation="portrait"/>
-
         <!-- 选择相册图片 -->
         <activity
             android:name=".activity.mine.ImageSelectActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.CompanyIntroActivity"
-            android:screenOrientation="portrait"/>
-        <!-- 相册图片预览 -->
-
-        <activity
             android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.recharge.WeChatPayActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".WBShareActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
 
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.umeng.socialize.editorpage.ShareActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault"/>
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <!-- 我的设置模块 -->
+        <!-- 我的: 设置 Setting -->
         <activity
             android:name=".activity.mine.setting.SettingActivity"
             android:screenOrientation="portrait"/>
@@ -237,17 +157,20 @@
             android:name=".activity.mine.setting.SetNotificationSwitchActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.setting.SafetySettingActivity"
+            android:name=".activity.mine.setting.SecurityCenterActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.setting.ModifySafetyPassActivity"
+            android:name=".activity.mine.setting.UpdateSecurityPassActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.mine.setting.ForgetPassWordActivity"
+            android:name=".activity.mine.setting.ForgetSecurityPassActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.mine.setting.UpdatePasswordActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.AreaTakePhoneActivity"
             android:screenOrientation="portrait"/>
@@ -286,9 +209,94 @@
         <activity
             android:name=".activity.mine.cornucopia.EarningsAndExpendDetailsActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.future.FuturesListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.EventActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.OptionalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.SearchOptionalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.TopicActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.future.FutureTradeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.StockListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.SearchStockActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.StockDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.StockIndexActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.TopicDetailActivity"
+            android:screenOrientation="portrait"/>
+        <!-- 观点大神 -->
+        <activity
+            android:name=".activity.opinion.OpinionActivity"
+            android:screenOrientation="portrait"/>
 
-        <!-- 期货大战 -->
+        <!-- 交易 H5 -->
+        <activity
+            android:name=".activity.WebActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.TradeWebActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.BannerActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.HideTitleWebActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.EventDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.web.StockNewsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.recharge.PayIntentionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.stock.CompanyIntroActivity"
+            android:screenOrientation="portrait"/>
+        <!-- 相册图片预览 -->
 
+        <activity
+            android:name=".activity.recharge.WeChatPayActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.UMDefault"/>
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <!-- 期货大战 -->
         <activity
@@ -335,34 +343,34 @@
         <!-- 小姐姐 -->
         <activity
             android:name=".activity.miss.MissProfileActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".activity.miss.MyQuestionsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.miss.QuestionDetailActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.CommentActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name=".activity.miss.RewardActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.MessagesActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.daily.DailyReportActivity"
+            android:name=".activity.miss.MissAvatarActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.leveltest.LevelTestStartActivity"
@@ -379,16 +387,35 @@
 
         <activity
             android:name=".activity.miss.ReplyActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- 发现 -->
+        <activity
+            android:name=".activity.discovery.DailyReportDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.daily.DailyReportDetailActivity"
+            android:name=".activity.discovery.DailyReportActivity"
             android:screenOrientation="portrait"/>
+
+        <!-- 训练 -->
         <activity
             android:name=".activity.train.MoreTrainFeedBackActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".activity.trainexperience.TrainExperienceActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.MissAvatarActivity">
+        <activity
+            android:name=".activity.leaderboard.ProfitBoardListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.studyroom.StudyRoomActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.miss.ShareActivity">
         </activity>
     </application>
 

@@ -148,7 +148,7 @@ public class BattleListActivity extends BaseActivity implements
     private void initLoginReceiver() {
         mLoginBroadcastReceiver = new LoginBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(LoginActivity.LOGIN_SUCCESS_ACTION);
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
         intentFilter.addAction(CreateBattleActivity.CREATE_SUCCESS_ACTION);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mLoginBroadcastReceiver, intentFilter);
@@ -360,7 +360,7 @@ public class BattleListActivity extends BaseActivity implements
         Client.joinBattle(data.getId(), Battle.SOURCE_HALL).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    protected void onReceive(Resp<Battle> battleResp) {
+                    protected void onReceiveResponse(Resp<Battle> battleResp) {
                         if (battleResp.isSuccess()) {
                             Battle battle = battleResp.getData();
                             if (battle != null) {
@@ -393,7 +393,7 @@ public class BattleListActivity extends BaseActivity implements
         Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    protected void onReceive(Resp<Battle> battleResp) {
+                    protected void onReceiveResponse(Resp<Battle> battleResp) {
                         if (battleResp.isSuccess() && battleResp.getData() != null) {
                             showMatchSuccessDialog(battleResp.getData());
                         } else if (battleResp.getCode() == Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT) {
@@ -812,7 +812,7 @@ public class BattleListActivity extends BaseActivity implements
     class LoginBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
+            if (intent.getAction().equalsIgnoreCase(LoginActivity.ACTION_LOGIN_SUCCESS)) {
                 updateAvatar();
                 requestUserFindInfo();
                 requestCurrentBattle();

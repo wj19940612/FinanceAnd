@@ -6,9 +6,8 @@ import android.os.Parcelable;
 import com.sbai.finance.model.LocalUser;
 
 /**
- * Created by ${wangJie} on 2017/4/17.
+ * 登录后的用户信息数据
  */
-
 public class UserInfo implements Parcelable {
     //	待审核0、审核通过1、审核未通过 2
     public static final int CREDIT_IS_APPROVE_ING = 0;
@@ -37,11 +36,10 @@ public class UserInfo implements Parcelable {
     private String land;
     private String userPhone;
     private boolean bIsSetNickName;
-    //用户头像网址
-    private String userPortrait;
+    private boolean isSetPass;      // 是否设置登录密码
+    private String userPortrait;     //用户头像网址
     private int agencyId;
-    //认证状态
-    private Integer certificationStatus;
+    private Integer certificationStatus;     //认证状态
     private long createTime;
     private int id;
     private long lastLoginTime;
@@ -50,14 +48,13 @@ public class UserInfo implements Parcelable {
     private int loginNum;
     private int modifyNickNameTimes;
     private String registrationIp;
-    //	待审核0、审核通过1、审核未通过 2
-    private int status;
-    //1 女 2男
-    private int userSex;
-    //经度
-    private double longitude;
-    //纬度
-    private double latitude;
+
+    private int status;     //	待审核0、审核通过1、审核未通过 2
+
+    private int userSex;     //1 女 2男
+
+    private double longitude;     //经度
+    private double latitude;       //纬度
 
     public double getLongitude() {
         return longitude;
@@ -113,6 +110,14 @@ public class UserInfo implements Parcelable {
 
     public boolean isbIsSetNickName() {
         return bIsSetNickName;
+    }
+
+    public boolean isSetPass() {
+        return isSetPass;
+    }
+
+    public void setSetPass(boolean setPass) {
+        isSetPass = setPass;
     }
 
     public void setbIsSetNickName(boolean bIsSetNickName) {

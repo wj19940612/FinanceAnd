@@ -1,6 +1,9 @@
 package com.sbai.finance.model.missTalk;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,7 +67,7 @@ public class QuestionReply {
 		this.data = data;
 	}
 
-	public static class DataBean implements Serializable{
+	public static class DataBean implements Parcelable{
 		/**
 		 * content : 发表一个评论yoyoyoyoyoyo333333!
 		 * createDate : 1501664354913
@@ -209,7 +212,7 @@ public class QuestionReply {
 			this.replys = replys;
 		}
 
-		public static class UserModelBean {
+		public static class UserModelBean implements Parcelable{
 			/**
 			 * age : 25
 			 * certificationStatus : 1
@@ -313,9 +316,56 @@ public class QuestionReply {
 			public void setUserSex(int userSex) {
 				this.userSex = userSex;
 			}
+
+			@Override
+			public int describeContents() {
+				return 0;
+			}
+
+			@Override
+			public void writeToParcel(Parcel dest, int flags) {
+				dest.writeInt(this.age);
+				dest.writeInt(this.certificationStatus);
+				dest.writeLong(this.createTime);
+				dest.writeInt(this.id);
+				dest.writeString(this.land);
+				dest.writeInt(this.status);
+				dest.writeString(this.userName);
+				dest.writeString(this.userPhone);
+				dest.writeString(this.userPortrait);
+				dest.writeInt(this.userSex);
+			}
+
+			public UserModelBean() {
+			}
+
+			protected UserModelBean(Parcel in) {
+				this.age = in.readInt();
+				this.certificationStatus = in.readInt();
+				this.createTime = in.readLong();
+				this.id = in.readInt();
+				this.land = in.readString();
+				this.status = in.readInt();
+				this.userName = in.readString();
+				this.userPhone = in.readString();
+				this.userPortrait = in.readString();
+				this.userSex = in.readInt();
+			}
+
+			public static final Creator<UserModelBean> CREATOR = new Creator<UserModelBean>() {
+				@Override
+				public UserModelBean createFromParcel(Parcel source) {
+					return new UserModelBean(source);
+				}
+
+				@Override
+				public UserModelBean[] newArray(int size) {
+					return new UserModelBean[size];
+				}
+			};
 		}
 
-		public static class ReplysBean {
+		public static class ReplysBean implements Parcelable{
 			/**
 			 * content : 发表一个评论yoyoyoyoyoyo333333!
 			 * createDate : 1501664280341
@@ -342,7 +392,7 @@ public class QuestionReply {
 			private int type;
 			private int userAuditor;
 			private UserModelBeanX userModel;
-			private List<?> replys;
+			private List<ReplysBean> replys;
 
 			public String getContent() {
 				return content;
@@ -432,15 +482,15 @@ public class QuestionReply {
 				this.userModel = userModel;
 			}
 
-			public List<?> getReplys() {
+			public List<ReplysBean> getReplys() {
 				return replys;
 			}
 
-			public void setReplys(List<?> replys) {
+			public void setReplys(List<ReplysBean> replys) {
 				this.replys = replys;
 			}
 
-			public static class UserModelBeanX {
+			public static class UserModelBeanX implements Parcelable{
 				/**
 				 * age : 25
 				 * certificationStatus : 1
@@ -544,7 +594,161 @@ public class QuestionReply {
 				public void setUserSex(int userSex) {
 					this.userSex = userSex;
 				}
+
+				@Override
+				public int describeContents() {
+					return 0;
+				}
+
+				@Override
+				public void writeToParcel(Parcel dest, int flags) {
+					dest.writeInt(this.age);
+					dest.writeInt(this.certificationStatus);
+					dest.writeLong(this.createTime);
+					dest.writeInt(this.id);
+					dest.writeString(this.land);
+					dest.writeInt(this.status);
+					dest.writeString(this.userName);
+					dest.writeString(this.userPhone);
+					dest.writeString(this.userPortrait);
+					dest.writeInt(this.userSex);
+				}
+
+				public UserModelBeanX() {
+				}
+
+				protected UserModelBeanX(Parcel in) {
+					this.age = in.readInt();
+					this.certificationStatus = in.readInt();
+					this.createTime = in.readLong();
+					this.id = in.readInt();
+					this.land = in.readString();
+					this.status = in.readInt();
+					this.userName = in.readString();
+					this.userPhone = in.readString();
+					this.userPortrait = in.readString();
+					this.userSex = in.readInt();
+				}
+
+				public static final Creator<UserModelBeanX> CREATOR = new Creator<UserModelBeanX>() {
+					@Override
+					public UserModelBeanX createFromParcel(Parcel source) {
+						return new UserModelBeanX(source);
+					}
+
+					@Override
+					public UserModelBeanX[] newArray(int size) {
+						return new UserModelBeanX[size];
+					}
+				};
 			}
+
+			@Override
+			public int describeContents() {
+				return 0;
+			}
+
+			@Override
+			public void writeToParcel(Parcel dest, int flags) {
+				dest.writeString(this.content);
+				dest.writeLong(this.createDate);
+				dest.writeInt(this.dataId);
+				dest.writeString(this.id);
+				dest.writeString(this.replyParentId);
+				dest.writeInt(this.star);
+				dest.writeInt(this.status);
+				dest.writeInt(this.sysAuditor);
+				dest.writeInt(this.type);
+				dest.writeInt(this.userAuditor);
+				dest.writeParcelable(this.userModel, flags);
+				dest.writeTypedList(this.replys);
+			}
+
+			public ReplysBean() {
+			}
+
+			protected ReplysBean(Parcel in) {
+				this.content = in.readString();
+				this.createDate = in.readLong();
+				this.dataId = in.readInt();
+				this.id = in.readString();
+				this.replyParentId = in.readString();
+				this.star = in.readInt();
+				this.status = in.readInt();
+				this.sysAuditor = in.readInt();
+				this.type = in.readInt();
+				this.userAuditor = in.readInt();
+				this.userModel = in.readParcelable(UserModelBeanX.class.getClassLoader());
+				this.replys = in.createTypedArrayList(ReplysBean.CREATOR);
+			}
+
+			public static final Creator<ReplysBean> CREATOR = new Creator<ReplysBean>() {
+				@Override
+				public ReplysBean createFromParcel(Parcel source) {
+					return new ReplysBean(source);
+				}
+
+				@Override
+				public ReplysBean[] newArray(int size) {
+					return new ReplysBean[size];
+				}
+			};
 		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(this.content);
+			dest.writeLong(this.createDate);
+			dest.writeInt(this.dataId);
+			dest.writeString(this.id);
+			dest.writeString(this.remark);
+			dest.writeString(this.replyParentId);
+			dest.writeInt(this.status);
+			dest.writeInt(this.sysAuditor);
+			dest.writeInt(this.type);
+			dest.writeInt(this.userAuditor);
+			dest.writeInt(this.replyCount);
+			dest.writeInt(this.star);
+			dest.writeParcelable(this.userModel, flags);
+			dest.writeList(this.replys);
+		}
+
+		public DataBean() {
+		}
+
+		protected DataBean(Parcel in) {
+			this.content = in.readString();
+			this.createDate = in.readLong();
+			this.dataId = in.readInt();
+			this.id = in.readString();
+			this.remark = in.readString();
+			this.replyParentId = in.readString();
+			this.status = in.readInt();
+			this.sysAuditor = in.readInt();
+			this.type = in.readInt();
+			this.userAuditor = in.readInt();
+			this.replyCount = in.readInt();
+			this.star = in.readInt();
+			this.userModel = in.readParcelable(UserModelBean.class.getClassLoader());
+			this.replys = new ArrayList<ReplysBean>();
+			in.readList(this.replys, ReplysBean.class.getClassLoader());
+		}
+
+		public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
+			@Override
+			public DataBean createFromParcel(Parcel source) {
+				return new DataBean(source);
+			}
+
+			@Override
+			public DataBean[] newArray(int size) {
+				return new DataBean[size];
+			}
+		};
 	}
 }

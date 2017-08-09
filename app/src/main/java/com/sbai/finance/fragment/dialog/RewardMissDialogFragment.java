@@ -9,20 +9,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.setting.ModifySafetyPassActivity;
+import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.SubmitQuestionActivity;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.RewardSelectMoneyView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -156,7 +152,7 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(getActivity(), ModifySafetyPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
+                        Launcher.with(getActivity(), UpdateSecurityPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
                     }
                 }).show();
     }

@@ -16,7 +16,7 @@
         app:backIcon="@drawable/ic_tb_back_black"
         app:barBackground="@android:color/white"
         app:titleText="@string/modify_user_info"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <RelativeLayout
         android:id="@+id/headImageLayout"
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:text="@string/head_image"
-            android:textColor="@color/blackAssist"
+            android:textColor="@color/primaryText"
             android:textSize="@dimen/common_default_size"/>
 
         <android.support.v7.widget.AppCompatImageView
@@ -62,7 +62,7 @@
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/nick_name"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
@@ -76,7 +76,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/sex"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"/>
 
@@ -89,7 +89,7 @@
         app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/age"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
 
         app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"/>
@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/location"
-            android:textColor="@color/blackAssist"/>
+            android:textColor="@color/primaryText"/>
 
         <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/location"
@@ -141,7 +141,7 @@
         android:background="@drawable/bg_white"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/credit"
-        app:rowTextColor="@color/blackAssist"
+        app:rowTextColor="@color/primaryText"
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 

@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.activity.mine.LoginActivity.ACTION_LOGIN_SUCCESS;
+
 public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
@@ -87,7 +90,8 @@ public class MineFragment extends BaseFragment {
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(LoginActivity.LOGIN_SUCCESS_ACTION)) {
+            if (intent.getAction().equalsIgnoreCase(ACTION_LOGIN_SUCCESS)) {
+                Log.d("TAG", "onReceive: " + "ACTION_LOGIN_SUCCESS");
                 updateUserImage();
                 updateUserStatus();
             }
@@ -105,7 +109,8 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(LoginBroadcastReceiver, new IntentFilter(BaseActivity.ACTION_TOKEN_EXPIRED));
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         initViews();
     }
 

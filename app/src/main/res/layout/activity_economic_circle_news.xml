@@ -16,7 +16,7 @@
         app:barBackground="@android:color/white"
         app:rightImage="@drawable/ic_common_more"
         app:titleText="@string/news"
-        app:titleTextColor="@color/blackAssist"/>
+        app:titleTextColor="@color/primaryText"/>
 
     <View
         android:layout_width="match_parent"

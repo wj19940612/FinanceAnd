@@ -299,7 +299,7 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void confirmRecharge(final String money, Integer bankId) {
-        KeyBoardUtils.closeKeyboard(this, mRechargeCount);
+        KeyBoardUtils.closeKeyboard(mRechargeCount);
         if (mUsablePlatform.isBankPay()) {
             Launcher.with(getActivity(), BankCardPayActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, money)

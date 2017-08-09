@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="@string/title_matching"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/primaryText"
                 android:textSize="15sp"/>
         </LinearLayout>
 
