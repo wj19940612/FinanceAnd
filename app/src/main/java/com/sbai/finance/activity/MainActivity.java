@@ -39,6 +39,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
+
         checkVersion();
     }
 
@@ -70,7 +71,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

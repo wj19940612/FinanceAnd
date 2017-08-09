@@ -21,7 +21,7 @@
         <attr name="textHint" format="reference|string"/>
         <attr name="hasBottomLine" format="boolean"/>
         <attr name="bottomLineColor" format="reference|color"/>
-        <attr name="maxCharNum" format="integer" />
+        <attr name="maxCharNum" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="IconTextRow">
@@ -36,6 +36,12 @@
         <attr name="subTextSize" format="reference|dimension"/>
         <attr name="subTextColor" format="color"/>
         <attr name="subTextBackground" format="reference"/>
+        <attr name="subTextDrawable" format="reference"/>
+        <attr name="subTextVisible">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
         <attr name="rowText" format="reference|string"/>
         <attr name="rowTextSize" format="dimension"/>
         <attr name="rowTextColor" format="color"/>
@@ -44,6 +50,7 @@
         <attr name="rowSubTextColor" format="color"/>
         <attr name="rowTextSpaceExtra" format="dimension"/>
         <attr name="rowVerticalPadding" format="dimension"/>
+        <attr name="rowHorizontalPadding" format="dimension"/>
         <attr name="hasBottomSplitLine" format="boolean"/>
         <attr name="splitLineColor" format="color|reference"/>
     </declare-styleable>
