@@ -176,26 +176,11 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     protected void onRespSuccessData(TestResultModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
 
-                        //        // TODO: 2017/8/6 模拟数据
-                        TestResultModel testResultModel = new TestResultModel();
-                        testResultModel.setAllAccuracy(0.50);
-                        testResultModel.setPassPercent(0.20);
-                        testResultModel.setLevel(4);
-
-                        testResultModel.setBaseAccuracy(1);
-                        testResultModel.setProfitAccuracy(0.7);
-                        testResultModel.setRiskAccuracy(0.5);
-                        testResultModel.setSkillAccuracy(0.9);
-                        testResultModel.setTheoryAccuracy(0.1);
                         Launcher.with(getActivity(), ExamResultActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, testResultModel)
+                                .putExtra(Launcher.EX_PAYLOAD, data)
                                 .execute();
                         finish();
 
-//                        Launcher.with(getActivity(), ExamResultActivity.class)
-//                                .putExtra(Launcher.EX_PAYLOAD, data)
-//                                .execute();
-//                        finish();
                     }
                 })
                 .fire();

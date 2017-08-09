@@ -39,7 +39,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-        checkVersion();
+        // TODO: 2017/8/9  先注释掉
+//        checkVersion();
         translucentStatusBar();
     }
 
@@ -117,10 +118,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             switch (position) {
                 case 0:
                     return new TrainingFragment();
-                case 2:
-                    return new MissTalkFragment();
                 case 1:
                     return new DiscoveryFragment();
+                case 2:
+                    return new MissTalkFragment();
                 case 3:
                     return new MineFragment();
             }

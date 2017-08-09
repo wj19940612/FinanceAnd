@@ -21,6 +21,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
@@ -84,14 +85,6 @@ public class HistoryTestResultActivity extends BaseActivity {
                 })
                 .fire();
 
-        // TODO: 2017/8/4 测试
-//        List<TestResultModel> result;
-//        result = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            TestResultModel testResultModel = new TestResultModel(i, System.currentTimeMillis() + i, i, 0.2 + i);
-//            result.add(testResultModel);
-//        }
-//        updateHistoryTestResultList(result);
     }
 
 
@@ -158,8 +151,6 @@ public class HistoryTestResultActivity extends BaseActivity {
             TextView mAccuracy;
             @BindView(R.id.time)
             TextView mTime;
-//            @BindView(R.id.empty)
-//            Space mEmpty;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -170,7 +161,7 @@ public class HistoryTestResultActivity extends BaseActivity {
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
                         String.valueOf(item.getAllAccuracy()),
-                        String.valueOf(item.getPassPercent()) + "%"));
+                        NumberFormatUtils.formatPercentString(item.getPassPercent())));
             }
 
 

@@ -433,7 +433,6 @@ public class ScoreView extends View {
     }
 
     public void setUserTrainScoreData(UserEachTrainingScoreModel userEachTrainingScoreModel) {
-        // TODO: 2017/8/9 测试数据
 //        TestResultModel testResultModel = new TestResultModel();
 //        testResultModel.setAllAccuracy(0.50);
 //        testResultModel.setPassPercent(0.20);

@@ -2151,7 +2151,7 @@ public class Client {
      * @return
      */
     public static API requestMineTrainProjectList() {
-        return new API("train/train/myList.do",
+        return new API("/train/train/myList.do",
                 new ApiParams()
                         .put("page", 0)
                         .put("pageSize", 50));
@@ -2165,7 +2165,19 @@ public class Client {
      * @return
      */
     public static API requestTrainProjectList() {
-        return new API("/train/train/recommendList.do");
+        return new API("/train/train/recommendList.do",
+                new ApiParams()
+                        .put("page", 0)
+                        .put("pageSize", 50));
+    }
+
+    /**
+     * 学一学记录
+     *
+     * @return
+     */
+    public static API getMyStudyInfo() {
+        return new API("/train/course/findTrainCourse.do");
     }
 
     /**

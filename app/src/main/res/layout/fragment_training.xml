@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <RelativeLayout
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -52,33 +51,35 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/bg_home_training_circle_outside"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        tools:text="乐米学分\n 860\n你还没有完成训练"/>
-
-                    <TextView
-                        android:id="@+id/scoreHint"
-                        android:layout_width="76dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/common_padding"
-                        android:background="@drawable/bg_white_link"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        tools:text="查看详情"/>
-                </LinearLayout>
             </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    tools:text="乐米学分\n 860\n你还没有完成训练"/>
+
+                <TextView
+                    android:id="@+id/scoreHint"
+                    android:layout_width="76dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/common_padding"
+                    android:background="@drawable/bg_white_link"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    tools:text="查看详情"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <android.support.v7.widget.CardView
@@ -150,19 +151,46 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/recommendTrainTitle"/>
 
-        <TextView
+
+        <LinearLayout
             android:id="@+id/testHint"
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="5dp"
             android:background="@color/colorPrimary"
-            android:drawableRight="@drawable/ic_close_s"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding"
-            android:text="@string/start_test_hint"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"/>
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/testYourLevel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_padding"
+                android:layout_weight="1"
+                android:text="@string/start_test_hint"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/closeHint"
+                android:layout_width="14dp"
+                android:layout_height="12dp"
+                android:layout_marginRight="@dimen/common_padding"
+                android:background="@drawable/ic_close_s"
+                android:paddingLeft="@dimen/common_padding"/>
+        </LinearLayout>
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/card"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/img_no_message"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="@string/click_refresh"
+            android:visibility="gone"/>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

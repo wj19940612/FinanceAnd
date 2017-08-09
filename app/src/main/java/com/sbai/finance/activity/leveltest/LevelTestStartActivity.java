@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -49,11 +50,14 @@ public class LevelTestStartActivity extends BaseActivity {
         translucentStatusBar();
 
         requestJoinTestedNumber();
-        updateCompleteTestNumber(0l);
+        updateCompleteTestNumber(0L);
 
-        // TODO: 2017/8/2 从登陆注册页面进来
-        mTitleBar.setLeftText(R.string.pass);
-        mTitleBar.setLeftTextColor(Color.WHITE);
+        boolean isFirstTest = getIntent().getBooleanExtra(ExtraKeys.FIRST_TEST, false);
+        if (isFirstTest) {
+            mTitleBar.setLeftText(R.string.pass);
+            mTitleBar.setLeftTextColor(Color.WHITE);
+            mHistoryResult.setVisibility(View.GONE);
+        }
 
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,16 +12,20 @@ import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
@@ -65,12 +70,18 @@ public class TrainingFragment extends BaseFragment {
     CardView mCard;
     @BindView(R.id.recommendTrainTitle)
     TextView mRecommendTrainTitle;
-    @BindView(R.id.testHint)
-    TextView mTestHint;
     @BindView(R.id.titleTrainingCircleMiddle)
     ImageView mTitleTrainingCircleMiddle;
     @BindView(R.id.titleTrainingCircleOutside)
     ImageView mTitleTrainingCircleOutside;
+    @BindView(android.R.id.empty)
+    AppCompatTextView mEmpty;
+    @BindView(R.id.testYourLevel)
+    TextView mTestYourLevel;
+    @BindView(R.id.closeHint)
+    TextView mCloseHint;
+    @BindView(R.id.testHint)
+    LinearLayout mTestHint;
 
 
     private TrainAdapter mTrainAdapter;
@@ -93,9 +104,10 @@ public class TrainingFragment extends BaseFragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mTrainAdapter);
+        startAnimation();
         requestUserScore();
         updateUserScore(null);
-        requestRecommendTrainProjectList();
+        requestMineTrainingProjectList();
     }
 
     @Override
@@ -104,7 +116,6 @@ public class TrainingFragment extends BaseFragment {
         if (isVisibleToUser && isAdded()) {
             requestUserScore();
             requestMineTrainingProjectList();
-            requestRecommendTrainProjectList();
         }
     }
 
@@ -112,17 +123,27 @@ public class TrainingFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             Client.requestMineTrainProjectList()
                     .setTag(TAG)
-                    .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<ArrayList<TrainProjectModel>>, ArrayList<TrainProjectModel>>() {
                         @Override
                         protected void onRespSuccessData(ArrayList<TrainProjectModel> data) {
                             if (data != null && !data.isEmpty()) {
                                 mTrainAdapter.setIsMineTrained(true);
-                                mTrainAdapter.addAll(data);
+                                mRecommendTrainTitle.setText(R.string.mine_train);
+                                updateTrainProjectList(data);
+                            } else {
+                                requestRecommendTrainProjectList();
                             }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            requestRecommendTrainProjectList();
                         }
                     })
                     .fire();
+        } else {
+            requestRecommendTrainProjectList();
         }
     }
 
@@ -134,7 +155,6 @@ public class TrainingFragment extends BaseFragment {
 
     private void requestRecommendTrainProjectList() {
         Client.requestTrainProjectList()
-                .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArrayList<TrainProjectModel>>, ArrayList<TrainProjectModel>>() {
                     @Override
@@ -142,27 +162,24 @@ public class TrainingFragment extends BaseFragment {
                         mTrainAdapter.setIsMineTrained(false);
                         updateTrainProjectList(data);
                     }
-                }).fire();
 
-//        ArrayList<TrainProjectModel> trainProjectModels = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            TrainProjectModel trainProjectModel = new TrainProjectModel();
-//            trainProjectModel.setGrade("L" + i);
-//            trainProjectModel.setTrainName("K" + i + i + "训练");
-//            trainProjectModel.setCompleteNeedTime(i + "分钟");
-//            trainProjectModel.setCompleteNumber(i);
-//            if (i % 2 == 0) {
-//                trainProjectModel.setTrained(true);
-//            }
-//            trainProjectModel.setTrainIcon("https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3792466390,2360703660&fm=173&s=FDB01E9D3E9470C6CE3C89600300F033&w=640&h=959&img.JPEG");
-//            trainProjectModels.add(trainProjectModel);
-//        }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        updateTrainProjectList(null);
+                    }
+                }).fire();
     }
 
     private void updateTrainProjectList(ArrayList<TrainProjectModel> trainProjectModels) {
-        if (trainProjectModels == null) {
-
+        if (trainProjectModels == null || trainProjectModels.isEmpty()) {
+            mEmpty.setVisibility(View.VISIBLE);
+            mRecommendTrainTitle.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
         } else {
+            mEmpty.setVisibility(View.GONE);
+            mRecommendTrainTitle.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             mTrainAdapter.addAll(trainProjectModels);
         }
     }
@@ -183,22 +200,35 @@ public class TrainingFragment extends BaseFragment {
             if (score == 0) {
                 spannableString = StrUtil.mergeTextWithRatioColor(
                         getString(R.string.lemi_score), "\n" + score, getString(R.string.you_are_not_trained),
-                        2f, 0.95f, Color.WHITE, Color.WHITE);
+                        2.5f, 0.95f, Color.WHITE, Color.WHITE);
             } else {
                 spannableString = StrUtil.mergeTextWithRatioColor(
                         getString(R.string.lemi_score), "\n" + score, "\n超过" + NumberFormatUtils.formatPercentString(rank),
-                        2f, 0.95f, Color.WHITE, Color.WHITE);
+                        2.5f, 0.95f, Color.WHITE, Color.WHITE);
             }
             mScore.setText(spannableString);
-            Animation clockwiseAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.clockwise);
-            mTitleTrainingCircleMiddle.startAnimation(clockwiseAnimation);
-            Animation anticlockwiseAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.anticlockwise);
-            mTitleTrainingCircleOutside.startAnimation(anticlockwiseAnimation);//开始动画
 
         } else {
             mScore.setText(R.string.login_look_detail);
             mScoreHint.setText(R.string.to_login);
         }
+    }
+
+    private void startAnimation() {
+        int animationTime = 3000;
+        final RotateAnimation clockwiseAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        clockwiseAnimation.setDuration(animationTime);
+        clockwiseAnimation.setFillAfter(true);
+        clockwiseAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        mTitleTrainingCircleMiddle.startAnimation(clockwiseAnimation);
+
+        final RotateAnimation anticlockwiseAnimation = new RotateAnimation(360f, 0f, Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anticlockwiseAnimation.setDuration(animationTime);
+        anticlockwiseAnimation.setFillAfter(true);
+        anticlockwiseAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        mTitleTrainingCircleOutside.startAnimation(anticlockwiseAnimation);
     }
 
     private void requestUserScore() {
@@ -212,7 +242,6 @@ public class TrainingFragment extends BaseFragment {
                             updateUserScore(data);
                         }
                     })
-                    .setIndeterminate(this)
                     .fire();
         }
     }
@@ -224,7 +253,8 @@ public class TrainingFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.gift, R.id.lookTrainDetail, R.id.rankingList, R.id.reviewLessonRoom, R.id.testHint})
+    @OnClick({R.id.gift, R.id.lookTrainDetail, R.id.rankingList,
+            R.id.reviewLessonRoom, R.id.closeHint, R.id.testHint, android.R.id.empty})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.gift:
@@ -244,8 +274,15 @@ public class TrainingFragment extends BaseFragment {
             case R.id.reviewLessonRoom:
                 // TODO: 2017/8/4 自习室
                 break;
-            case R.id.testHint:
+            case R.id.closeHint:
                 mTestHint.setVisibility(View.GONE);
+                break;
+            case R.id.testHint:
+                Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
+                mTestHint.setVisibility(View.GONE);
+                break;
+            case android.R.id.empty:
+                requestMineTrainingProjectList();
                 break;
         }
     }
@@ -310,17 +347,41 @@ public class TrainingFragment extends BaseFragment {
 
             public void bindDataWithView(TrainProjectModel trainProjectModel, Context context, boolean isMineTrained) {
                 if (trainProjectModel == null) return;
-                Glide.with(context).load(trainProjectModel.getImageUrl())
-                        .into(mTrainIcon);
-                SpannableString spannableString = StrUtil.mergeTextWithRatio(trainProjectModel.getTitle()
-                        , "\n" + context.getString(R.string.train_count, trainProjectModel.getFinish()),
-                        0.7f);
-                mTrainTitle.setText(spannableString);
-                mTrainGrade.setText(context.getString(R.string.train_grade, trainProjectModel.getLevel()));
+
+                TrainProjectModel.RecordBean record = trainProjectModel.getRecord();
+                TrainProjectModel.TrainBean train = trainProjectModel.getTrain();
+
+                int finishCount = 0;
+                long needTime = 0;
+                if (record != null) {
+                    finishCount = record.getFinish();
+                }
+                SpannableString spannableString = null;
+
+                if (train != null) {
+                    Glide.with(context)
+                            .load(train.getImageUrl())
+                            .placeholder(R.drawable.bg_common_replace_image)
+                            .into(mTrainIcon);
+                    if (isMineTrained) {
+                        spannableString = StrUtil.mergeTextWithRatio(train.getTitle()
+                                , "\n" + context.getString(R.string.train_count, finishCount),
+                                0.7f);
+                        mTrainTitle.setText(spannableString);
+                    } else {
+                        mTrainTitle.setText(train.getTitle());
+                    }
+                    mTrainGrade.setText(context.getString(R.string.train_grade, train.getLevel()));
+                    needTime = train.getTime();
+                } else {
+                    mTrainIcon.setBackgroundResource(R.drawable.bg_common_replace_image);
+                }
+
+
                 if (isMineTrained) {
                     mTrainStatus.setVisibility(View.GONE);
                     mTrainTime.setVisibility(View.VISIBLE);
-                    mTrainTime.setText(DateUtil.getMinutes(trainProjectModel.getTime()));
+                    mTrainTime.setText(DateUtil.getMinutes(needTime));
                 } else {
                     mTrainStatus.setVisibility(View.VISIBLE);
                     mTrainTime.setVisibility(View.GONE);

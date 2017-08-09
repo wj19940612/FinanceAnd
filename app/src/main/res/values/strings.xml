@@ -745,6 +745,7 @@
     <!--首页 训练-->
     <string name="review_lesson_room">自习室</string>
     <string name="recommend_train">推荐训练</string>
+    <string name="mine_train">我的训练</string>
     <string name="lemi_score">乐米学分:</string>
     <string name="look_detail">查看详情</string>
     <string name="login_look_detail">登录查看我的乐米学分</string>
@@ -783,6 +784,7 @@
     <string name="train_grade">L%1$d</string>
     <string name="trade_level">交易水平:%1$s  超过了%2$s的交易账户</string>
     <string name="advise">建议:%1$s</string>
+    <string name="click_refresh">点击刷新</string>
 
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
