@@ -20,7 +20,20 @@
             app:bottomHasSplitLine="true"
             app:bottomSplitLineColor="@color/split"
             app:titleText="@string/understand_score"/>
-        <include layout="@layout/layout_score_introduce"/>
+
+        <!--<include layout="@layout/layout_score_introduce"/>-->
+
+        <com.sbai.finance.view.leveltest.ScoreView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="215dp"/>
+
+        <com.sbai.finance.view.train.ScoreProgressView
+            android:id="@+id/scoreProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="42dp"
+            android:paddingRight="30dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -197,8 +210,8 @@
         </LinearLayout>
 
         <View
-        android:layout_width="match_parent"
-        android:layout_height="175dp"
-        android:background="@color/background"/>
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:background="@color/background"/>
     </LinearLayout>
 </ScrollView>

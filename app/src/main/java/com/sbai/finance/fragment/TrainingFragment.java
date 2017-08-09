@@ -25,14 +25,16 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.TrainProjectModel;
+import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +71,10 @@ public class TrainingFragment extends BaseFragment {
     ImageView mTitleTrainingCircleMiddle;
     @BindView(R.id.titleTrainingCircleOutside)
     ImageView mTitleTrainingCircleOutside;
+
+
     private TrainAdapter mTrainAdapter;
+    private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
 
     @Nullable
@@ -83,17 +88,14 @@ public class TrainingFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         mTrainAdapter = new TrainAdapter(getActivity(), new ArrayList<TrainProjectModel>());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mTrainAdapter);
-
         requestUserScore();
-        updateUserScore();
-        requestTrainProjectList();
-
+        updateUserScore(null);
+        requestRecommendTrainProjectList();
     }
 
     @Override
@@ -101,7 +103,26 @@ public class TrainingFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
             requestUserScore();
-            requestTrainProjectList();
+            requestMineTrainingProjectList();
+            requestRecommendTrainProjectList();
+        }
+    }
+
+    private void requestMineTrainingProjectList() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.requestMineTrainProjectList()
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<ArrayList<TrainProjectModel>>, ArrayList<TrainProjectModel>>() {
+                        @Override
+                        protected void onRespSuccessData(ArrayList<TrainProjectModel> data) {
+                            if (data != null && !data.isEmpty()) {
+                                mTrainAdapter.setIsMineTrained(true);
+                                mTrainAdapter.addAll(data);
+                            }
+                        }
+                    })
+                    .fire();
         }
     }
 
@@ -111,37 +132,31 @@ public class TrainingFragment extends BaseFragment {
         requestUserScore();
     }
 
-    public void loginSuccess() {
-        requestUserScore();
-
-    }
-
-    // TODO: 2017/8/3 请求训练项目
-    private void requestTrainProjectList() {
+    private void requestRecommendTrainProjectList() {
         Client.requestTrainProjectList()
                 .setIndeterminate(this)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TrainProjectModel>>, List<TrainProjectModel>>() {
+                .setCallback(new Callback2D<Resp<ArrayList<TrainProjectModel>>, ArrayList<TrainProjectModel>>() {
                     @Override
-                    protected void onRespSuccessData(List<TrainProjectModel> data) {
+                    protected void onRespSuccessData(ArrayList<TrainProjectModel> data) {
+                        mTrainAdapter.setIsMineTrained(false);
+                        updateTrainProjectList(data);
                     }
                 }).fire();
 
-        ArrayList<TrainProjectModel> trainProjectModels = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            TrainProjectModel trainProjectModel = new TrainProjectModel();
-            trainProjectModel.setGrade("L" + i);
-            trainProjectModel.setTrainName("K" + i + i + "训练");
-            trainProjectModel.setCompleteNeedTime(i + "分钟");
-            trainProjectModel.setCompleteNumber(i);
-            if (i % 2 == 0) {
-                trainProjectModel.setTrained(true);
-            }
-            trainProjectModel.setTrainIcon("https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3792466390,2360703660&fm=173&s=FDB01E9D3E9470C6CE3C89600300F033&w=640&h=959&img.JPEG");
-            trainProjectModels.add(trainProjectModel);
-        }
-
-        updateTrainProjectList(trainProjectModels);
+//        ArrayList<TrainProjectModel> trainProjectModels = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            TrainProjectModel trainProjectModel = new TrainProjectModel();
+//            trainProjectModel.setGrade("L" + i);
+//            trainProjectModel.setTrainName("K" + i + i + "训练");
+//            trainProjectModel.setCompleteNeedTime(i + "分钟");
+//            trainProjectModel.setCompleteNumber(i);
+//            if (i % 2 == 0) {
+//                trainProjectModel.setTrained(true);
+//            }
+//            trainProjectModel.setTrainIcon("https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3792466390,2360703660&fm=173&s=FDB01E9D3E9470C6CE3C89600300F033&w=640&h=959&img.JPEG");
+//            trainProjectModels.add(trainProjectModel);
+//        }
     }
 
     private void updateTrainProjectList(ArrayList<TrainProjectModel> trainProjectModels) {
@@ -152,8 +167,7 @@ public class TrainingFragment extends BaseFragment {
         }
     }
 
-    // TODO: 2017/8/3 更新用户分数
-    private void updateUserScore() {
+    private void updateUserScore(UserEachTrainingScoreModel data) {
         if (LocalUser.getUser().isLogin()) {
             boolean userLookTrainDetail = Preference.get().isUserLookTrainDetail(LocalUser.getUser().getPhone());
             if (userLookTrainDetail) {
@@ -162,16 +176,17 @@ public class TrainingFragment extends BaseFragment {
                 mScoreHint.setVisibility(View.VISIBLE);
             }
             mScoreHint.setText(R.string.look_detail);
-            // TODO: 2017/8/3 模拟数据
-            int score = 0;
+
+            int score = data != null ? (int) data.getUserTotalScore() : 0;
+            double rank = data != null ? data.getRank() : 0;
             SpannableString spannableString;
             if (score == 0) {
                 spannableString = StrUtil.mergeTextWithRatioColor(
-                        getString(R.string.lemi_score), "\n0", "\n你还没有完成训练",
+                        getString(R.string.lemi_score), "\n" + score, getString(R.string.you_are_not_trained),
                         2f, 0.95f, Color.WHITE, Color.WHITE);
             } else {
                 spannableString = StrUtil.mergeTextWithRatioColor(
-                        getString(R.string.lemi_score), "\n860", "\n超过",
+                        getString(R.string.lemi_score), "\n" + score, "\n超过" + NumberFormatUtils.formatPercentString(rank),
                         2f, 0.95f, Color.WHITE, Color.WHITE);
             }
             mScore.setText(spannableString);
@@ -186,14 +201,19 @@ public class TrainingFragment extends BaseFragment {
         }
     }
 
-    // TODO: 2017/8/3 获取用户分数
     private void requestUserScore() {
         if (LocalUser.getUser().isLogin()) {
             Client.requestUserScore()
                     .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<UserEachTrainingScoreModel>, UserEachTrainingScoreModel>() {
+                        @Override
+                        protected void onRespSuccessData(UserEachTrainingScoreModel data) {
+                            mUserEachTrainingScoreModel = data;
+                            updateUserScore(data);
+                        }
+                    })
                     .setIndeterminate(this)
                     .fire();
-            updateUserScore();
         }
     }
 
@@ -211,7 +231,9 @@ public class TrainingFragment extends BaseFragment {
                 break;
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), ScoreIntroduceActivity.class).execute();
+                    Launcher.with(getActivity(), ScoreIntroduceActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
+                            .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -232,6 +254,8 @@ public class TrainingFragment extends BaseFragment {
 
         private ArrayList<TrainProjectModel> mTrainProjectModels;
         private Context mContext;
+        //用来区分自己的训练还是推荐训练
+        private boolean mIsMineTrained;
 
         public TrainAdapter(Context context, ArrayList<TrainProjectModel> trainProjectModels) {
             this.mTrainProjectModels = trainProjectModels;
@@ -239,7 +263,7 @@ public class TrainingFragment extends BaseFragment {
         }
 
         public void addAll(ArrayList<TrainProjectModel> trainProjectModels) {
-            this.notifyItemRangeRemoved(0, mTrainProjectModels.size());
+            notifyItemRangeRemoved(0, mTrainProjectModels.size());
             mTrainProjectModels.clear();
             mTrainProjectModels.addAll(trainProjectModels);
             notifyItemRangeChanged(0, mTrainProjectModels.size());
@@ -253,12 +277,16 @@ public class TrainingFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mTrainProjectModels.get(position), mContext);
+            holder.bindDataWithView(mTrainProjectModels.get(position), mContext, mIsMineTrained);
         }
 
         @Override
         public int getItemCount() {
             return mTrainProjectModels != null ? mTrainProjectModels.size() : 0;
+        }
+
+        public void setIsMineTrained(boolean isMineTrained) {
+            this.mIsMineTrained = isMineTrained;
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
@@ -280,19 +308,19 @@ public class TrainingFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(TrainProjectModel trainProjectModel, Context context) {
+            public void bindDataWithView(TrainProjectModel trainProjectModel, Context context, boolean isMineTrained) {
                 if (trainProjectModel == null) return;
-                Glide.with(context).load(trainProjectModel.getTrainIcon())
+                Glide.with(context).load(trainProjectModel.getImageUrl())
                         .into(mTrainIcon);
-                SpannableString spannableString = StrUtil.mergeTextWithRatio(trainProjectModel.getTrainName()
-                        , "\n" + context.getString(R.string.train_count, trainProjectModel.getCompleteNumber()),
+                SpannableString spannableString = StrUtil.mergeTextWithRatio(trainProjectModel.getTitle()
+                        , "\n" + context.getString(R.string.train_count, trainProjectModel.getFinish()),
                         0.7f);
                 mTrainTitle.setText(spannableString);
-                mTrainGrade.setText(trainProjectModel.getGrade());
-                if (trainProjectModel.isTrained()) {
+                mTrainGrade.setText(context.getString(R.string.train_grade, trainProjectModel.getLevel()));
+                if (isMineTrained) {
                     mTrainStatus.setVisibility(View.GONE);
                     mTrainTime.setVisibility(View.VISIBLE);
-                    mTrainTime.setText(trainProjectModel.getCompleteNeedTime());
+                    mTrainTime.setText(DateUtil.getMinutes(trainProjectModel.getTime()));
                 } else {
                     mTrainStatus.setVisibility(View.VISIBLE);
                     mTrainTime.setVisibility(View.GONE);

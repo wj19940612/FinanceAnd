@@ -145,4 +145,18 @@
         <attr name="wordTextColor" format="color|reference"/>
         <attr name="wordTextSize" format="dimension"/>
     </declare-styleable>
+
+
+    <declare-styleable name="ScoreView">
+        <attr name="areaCount" format="integer"/>
+        <attr name="showScore" format="boolean"/>
+        <attr name="scoreTextSize" format="dimension|reference"/>
+        <attr name="scoreTextColor" format="color|reference"/>
+        <attr name="showAreaPoint" format="boolean"/>
+        <attr name="outSideCircleColor" format="color"/>
+        <attr name="middleCircleColor" format="color"/>
+        <attr name="scoreViewTitleTextColor" format="color"/>
+        <attr name="scoreViewTitleTextSize" format="dimension|reference"/>
+        <attr name="showInsideCircle" format="boolean"/>
+    </declare-styleable>
 </resources>

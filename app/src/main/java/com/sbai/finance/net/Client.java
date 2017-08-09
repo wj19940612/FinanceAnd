@@ -1816,12 +1816,12 @@ public class Client {
     }
 
     /**
-<<<<<<< HEAD
-=======
+     * <<<<<<< HEAD
+     * =======
      * 获取小姐姐列表
      * <p>
      * <p>
->>>>>>> dev
+     * >>>>>>> dev
      * <p>
      * /**
      * 获取小姐姐列表
@@ -2067,13 +2067,40 @@ public class Client {
         );
     }
 
-    //获取用户分数情况
+    /**
+     * http://var.esongbai.xyz/train/appraise/user.do
+     * GET
+     * 获得登录用户的评价分
+     *
+     * @return
+     */
     public static API requestUserScore() {
-        return new API("");
+        return new API("/train/appraise/user.do");
     }
 
+    /**
+     * http://var.esongbai.xyz/train/train/myList.do
+     * GET
+     * 我的训练列表
+     *
+     * @return
+     */
+    public static API requestMineTrainProjectList() {
+        return new API("train/train/myList.do",
+                new ApiParams()
+                        .put("page", 0)
+                        .put("pageSize", 50));
+    }
+
+    /**
+     * /train/train/recommendList.do
+     * GET
+     * 推荐列表
+     *
+     * @return
+     */
     public static API requestTrainProjectList() {
-        return new API("");
+        return new API("/train/train/recommendList.do");
     }
 
     /**
@@ -2088,5 +2115,15 @@ public class Client {
                 new ApiParams()
                         .put("questionId", questionId)
         );
+    }
+
+
+    /**
+     * /train/appraise/suggest.do
+     * GET
+     * 评价建议
+     */
+    public static API requestScoreStageAndRemark() {
+        return new API("/train/appraise/suggest.do");
     }
 }

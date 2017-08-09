@@ -1,6 +1,7 @@
 package com.sbai.finance.view.leveltest;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -8,11 +9,15 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Point;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.sbai.finance.R;
 import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.training.UserEachTrainingScoreModel;
+
 
 /**
  * Created by ${wangJie} on 2017/8/2.
@@ -21,7 +26,7 @@ import com.sbai.finance.model.leveltest.TestResultModel;
 public class ScoreView extends View {
     private static final String TAG = "ScoreView";
     //数据个数
-    private int DataCount = 5;
+    private int DataCount;
     //每个角的弧度
     private float mRadian = (float) (Math.PI * 2 / DataCount);
     //雷达图半径
@@ -31,7 +36,7 @@ public class ScoreView extends View {
     //中心Y坐标
     private int mCenterY;
     //各维度标题
-    private String[] mTitles = {"盈利能力", "风险控制", "基本面分析", "指标分析", "理论掌握"};
+    private String[] mTitles = {"盈利能力", "指标分析", "基本面分析", "风险控制", "理论掌握"};
     //各维度分值
     private double[] mData;
     //数据最大值
@@ -46,28 +51,38 @@ public class ScoreView extends View {
     private Paint mScorePaint;
     //标题画笔
     private Paint mTitlePaint;
-    //图标画笔
-    private Paint mIconPaint;
     //五个点画笔
     private Paint mPointPaint;
 
     //外围的圆环
     private Paint mOutCirclePaint;
+    //外围环的颜色
+    private int mOutCircleColor;
 
     //内部圆环
-    private Paint mInsideLoopPaint;
+    private Paint mMiddleLoopPaint;
     //内部圆圈
-    private Paint mInsideCirclePaint;
+    private Paint mMiddleCirclePaint;
 
     //分数大小
-    private int mScoreSize;
+    private float mScoreTextSize;
     //标题文字大小
     private int mTitleSize;
     //内圆环直径
-    private int mInsideLoopRadius;
+    private int mMiddleLoopRadius;
+    //是否显示分数
+    private boolean mShowScore;
 
 
+    //是否显示外围5个点
+    private boolean mShowFivePoint;
     private TestResultModel mTestResultModel;
+    private int mScoreTextColor;
+    private int mTitleTextColor;
+    private boolean mHasInsideCircle;
+    //内部圆半径
+    private int mInsideCircleRadius;
+    private Paint mInsidePaint;
 
     public ScoreView(Context context) {
         this(context, null);
@@ -79,16 +94,27 @@ public class ScoreView extends View {
 
     public ScoreView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        processAttrs(attrs);
         init();
+    }
+
+    private void processAttrs(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ScoreView);
+        DataCount = typedArray.getInt(R.styleable.ScoreView_areaCount, 5);
+        mShowScore = typedArray.getBoolean(R.styleable.ScoreView_showScore, true);
+        mScoreTextSize = typedArray.getDimension(R.styleable.ScoreView_scoreTextSize, 14);
+        mScoreTextColor = typedArray.getColor(R.styleable.ScoreView_scoreViewTitleTextColor, Color.WHITE);
+        mShowFivePoint = typedArray.getBoolean(R.styleable.ScoreView_showAreaPoint, false);
+        mOutCircleColor = typedArray.getColor(R.styleable.ScoreView_outSideCircleColor, ContextCompat.getColor(getContext(), R.color.yellowAssist));
+        mTitleTextColor = typedArray.getColor(R.styleable.ScoreView_scoreViewTitleTextColor, ContextCompat.getColor(getContext(), R.color.luckyText));
+        mTitleSize = typedArray.getDimensionPixelSize(R.styleable.ScoreView_scoreTextSize, 12);
+        mHasInsideCircle = typedArray.getBoolean(R.styleable.ScoreView_showInsideCircle, false);
+        typedArray.recycle();
     }
 
 
     private void init() {
-
-        mScoreSize = px2sp(28);
         mRadarMargin = px2dp(15);
-        mTitleSize = px2sp(12);
-
         mMainPaint = new Paint();
         mMainPaint.setAntiAlias(true);
         mMainPaint.setStrokeWidth(px2dp(1));
@@ -98,24 +124,26 @@ public class ScoreView extends View {
         mOutCirclePaint = new Paint();
         mOutCirclePaint.setAntiAlias(true);
         mOutCirclePaint.setStrokeWidth(px2dp(1));
-        mOutCirclePaint.setColor(Color.parseColor("#ffc336"));
+        mOutCirclePaint.setColor(mOutCircleColor);
         mOutCirclePaint.setStyle(Paint.Style.STROKE);
 
 
-        mInsideCirclePaint = new Paint();
-        mInsideCirclePaint.setAntiAlias(true);
-        mInsideCirclePaint.setColor(Color.parseColor("#FFFDF0"));
-        mInsideCirclePaint.setAlpha(120);
-        mInsideCirclePaint.setStyle(Paint.Style.FILL);
+        mMiddleCirclePaint = new Paint();
+        mMiddleCirclePaint.setAntiAlias(true);
+        mMiddleCirclePaint.setColor(Color.parseColor("#FFFDF0"));
+        mMiddleCirclePaint.setAlpha(120);
+        mMiddleCirclePaint.setStyle(Paint.Style.FILL);
 
 
-        mInsideLoopPaint = new Paint();
-        mInsideLoopPaint.setAntiAlias(true);
-        mInsideLoopPaint.setColor(Color.parseColor("#FFDF93"));
-        mInsideLoopPaint.setStyle(Paint.Style.STROKE);
-        mInsideLoopPaint.setStrokeWidth(px2dp(1));
-        PathEffect effects = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
-        mInsideLoopPaint.setPathEffect(effects);
+        mMiddleLoopPaint = new Paint();
+        mMiddleLoopPaint.setAntiAlias(true);
+        mMiddleLoopPaint.setColor(Color.parseColor("#FFDF93"));
+        mMiddleLoopPaint.setStyle(Paint.Style.STROKE);
+        mMiddleLoopPaint.setStrokeWidth(px2dp(1));
+        if (mShowFivePoint) {
+            PathEffect effects = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
+            mMiddleLoopPaint.setPathEffect(effects);
+        }
 
         mPointPaint = new Paint();
         mPointPaint.setAntiAlias(true);
@@ -131,19 +159,24 @@ public class ScoreView extends View {
 
         mScorePaint = new Paint();
         mScorePaint.setAntiAlias(true);
-        mScorePaint.setTextSize(mScoreSize);
-        mScorePaint.setColor(Color.parseColor("#ffc336"));
+        mScorePaint.setTextSize(mScoreTextSize);
+        mScorePaint.setColor(mScoreTextColor);
         mScorePaint.setTextAlign(Paint.Align.CENTER);
         mScorePaint.setStyle(Paint.Style.FILL);
 
         mTitlePaint = new Paint();
         mTitlePaint.setAntiAlias(true);
         mTitlePaint.setTextSize(mTitleSize);
-        mTitlePaint.setColor(Color.parseColor("#666666"));
+        mTitlePaint.setColor(mTitleTextColor);
         mTitlePaint.setStyle(Paint.Style.FILL);
 
-        mIconPaint = new Paint();
-        mIconPaint.setAntiAlias(true);
+        if (mHasInsideCircle) {
+            mInsidePaint = new Paint();
+            mInsidePaint.setAntiAlias(true);
+            mInsidePaint.setStrokeWidth(px2dp(1));
+            mInsidePaint.setColor(Color.parseColor("F5F5F5"));
+            mInsidePaint.setStyle(Paint.Style.STROKE);
+        }
     }
 
     @Override
@@ -155,15 +188,20 @@ public class ScoreView extends View {
 
         if (mTestResultModel != null) {
             double[] dataScore = {mTestResultModel.getProfitAccuracy() * mMaxValue,
-                    mTestResultModel.getRiskAccuracy() * mMaxValue,
-                    mTestResultModel.getBaseAccuracy() * mMaxValue,
                     mTestResultModel.getSkillAccuracy() * mMaxValue,
+                    mTestResultModel.getBaseAccuracy() * mMaxValue,
+                    mTestResultModel.getRiskAccuracy() * mMaxValue,
                     mTestResultModel.getTheoryAccuracy() * mMaxValue};
 
             mData = dataScore;
         }
 
-        mInsideLoopRadius = (int) (mRadius * 0.8);
+        if (mHasInsideCircle) {
+            mInsideCircleRadius = (int) (mRadius / 3);
+            mMiddleLoopRadius = mInsideCircleRadius * 2;
+        } else {
+            mMiddleLoopRadius = (int) (mRadius * 0.8);
+        }
         //中心坐标
         mCenterX = w / 2;
         mCenterY = h / 2;
@@ -177,14 +215,16 @@ public class ScoreView extends View {
         drawCircle(canvas);
         drawLines(canvas);
         drawRegion(canvas);
-        drawScore(canvas);
+        if (mShowScore) {
+            drawScore(canvas);
+        }
         drawTitle(canvas);
     }
 
 
     private void drawCircle(Canvas canvas) {
-        canvas.drawCircle(mCenterX, mCenterY, mInsideLoopRadius, mInsideLoopPaint);
-        canvas.drawCircle(mCenterX, mCenterY, mInsideLoopRadius - 2, mInsideCirclePaint);
+        canvas.drawCircle(mCenterX, mCenterY, mMiddleLoopRadius, mMiddleLoopPaint);
+        canvas.drawCircle(mCenterX, mCenterY, mMiddleLoopRadius - 2, mMiddleCirclePaint);
         canvas.drawCircle(mCenterX, mCenterY, mRadius, mOutCirclePaint);
     }
 
@@ -203,7 +243,9 @@ public class ScoreView extends View {
             path.moveTo(mCenterX, mCenterY);
             path.lineTo(x, y);
             canvas.drawPath(path, mMainPaint);
-            canvas.drawCircle(x, y, px2dp(3), mPointPaint);
+            if (mShowFivePoint) {
+                canvas.drawCircle(x, y, px2dp(3), mPointPaint);
+            }
         }
     }
 
@@ -214,7 +256,7 @@ public class ScoreView extends View {
      */
     private void drawRegion(Canvas canvas) {
         Path path = new Path();
-
+        if (mData == null) return;
         for (int i = 0; i < DataCount; i++) {
             //计算百分比
             float percent = (float) (mData[i] / mMaxValue);
@@ -245,9 +287,14 @@ public class ScoreView extends View {
     private void drawScore(Canvas canvas) {
         int score = 0;
         //计算总分
-        for (int i = 0; i < DataCount; i++) {
-            score += mData[i];
+        if (mData != null) {
+            for (int i = 0; i < DataCount; i++) {
+                score += mData[i];
+            }
         }
+        // TODO: 2017/8/9 测试
+//        canvas.drawText(String.valueOf(score), mCenterX, mCenterY + mScoreTextSize / 2, mScorePaint);
+        canvas.drawText(String.valueOf(score), mCenterX, mCenterY, mScorePaint);
     }
 
     /**
@@ -345,5 +392,10 @@ public class ScoreView extends View {
     public void setData(TestResultModel data) {
         mTestResultModel = data;
         postInvalidate();
+    }
+
+    public void setUserTrainScoreData(UserEachTrainingScoreModel userEachTrainingScoreModel) {
+        mTestResultModel = userEachTrainingScoreModel.getTestResultModel();
+        invalidate();
     }
 }
