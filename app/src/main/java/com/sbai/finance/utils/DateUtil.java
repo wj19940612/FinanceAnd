@@ -669,7 +669,7 @@ public class DateUtil {
      * @param seconds
      * @return
      */
-    public static String getMinutes(int seconds) {
+    public static String getMinutes(long seconds) {
         return seconds / 60 + "分钟";
     }
 
