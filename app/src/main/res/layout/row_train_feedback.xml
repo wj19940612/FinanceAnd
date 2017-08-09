@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:textColor="@color/blackAssist"
+        android:textColor="@color/blackPrimary"
         android:textSize="14sp"
         tools:text="什么是持仓量？"/>
 
