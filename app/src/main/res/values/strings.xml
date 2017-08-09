@@ -663,6 +663,8 @@
     <string name="deduct">扣除</string>
     <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
     <string name="publish_success">发布成功</string>
+    <string name="go_exchange">去兑换</string>
+    <string name="ignot_not_enough">元宝不足</string>
 
 
     <!--discovery-->
@@ -680,7 +682,6 @@
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
     <string name="wechat">微信好友</string>
-    <string name="sina_weibo">新浪微博</string>
     <string name="share_to_1">分享至</string>
 
 
@@ -710,6 +711,7 @@
     <string name="answer_right">非常正确</string>
     <string name="your_rank">您的排名 %1$d</string>
     <string name="you_no_enter_leader_board">您还未进入榜单</string>
+    <string name="click_see_your_rank">点击查看您的排名</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>

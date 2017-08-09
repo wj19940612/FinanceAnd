@@ -80,10 +80,10 @@ public class ProfitBoardListActivity extends BaseActivity {
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Fragment fragment = mFuturePagesAdapter.getFragment(pagePosition);
-//                if (fragment instanceof FutureListFragment) {
-//                    ((FutureListFragment) fragment).scrollToTop();
-//                }
+                Fragment fragment = mFuturePagesAdapter.getFragment(pagePosition);
+                if (fragment instanceof ProfitBoardListFragment) {
+                    ((ProfitBoardListFragment) fragment).scrollToTop();
+                }
             }
         });
     }

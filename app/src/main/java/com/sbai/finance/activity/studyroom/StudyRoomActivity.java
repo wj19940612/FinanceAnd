@@ -291,6 +291,7 @@ public class StudyRoomActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             updateResultView();
+                            requestMyStudyData();
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }

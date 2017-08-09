@@ -81,6 +81,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
 
     private void initListView() {
         mSet = new HashSet<>();
+        scrollToTop(mTitleBar, mListView);
         mDailyReportAdapter = new DailyReportAdapter(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);

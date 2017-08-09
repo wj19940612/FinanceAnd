@@ -2171,10 +2171,12 @@ public class Client {
      * @param targetId
      * @return
      */
-    public static API worship(int targetId) {
-        return new API(POST, "/rank/worship.do",
+    public static API worship(int targetId, String type, String timeType) {
+        return new API(POST, "/train/rank/worship.do",
                 new ApiParams()
-                        .put("targetId", targetId));
+                        .put("targetId", targetId)
+                        .put("type", type)
+                        .put("timeType", timeType));
     }
 
     /**
@@ -2182,5 +2184,14 @@ public class Client {
      */
     public static API getLeaderLists() {
         return new API("/train/rank/list.do");
+    }
+
+    /**
+     * 批量对消息
+     */
+    public static API batchRead(String ids) {
+        return new API(POST, "/msg/msg/readBatch.do",
+                new ApiParams()
+                        .put("ids", ids));
     }
 }

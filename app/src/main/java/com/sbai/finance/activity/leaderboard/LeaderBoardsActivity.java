@@ -94,35 +94,29 @@ public class LeaderBoardsActivity extends BaseActivity {
             switch (item.getType()) {
                 case LeaderBoardRank.INGOT:
                     mIngotImages.setImages(images);
-                    if (LocalUser.getUser().isLogin()) {
-                        if (item.getCurr() != null) {
-                            mIngotBoard.setText(getString(R.string.your_rank, item.getCurr().getNo()));
-                        } else {
-                            mIngotBoard.setText(getString(R.string.you_no_enter_leader_board));
-                        }
-                    }
+                    updateSelfLeaderInfo(mIngotBoard, item);
                     break;
                 case LeaderBoardRank.PROFIT:
                     mProfitsImages.setImages(images);
-                    if (LocalUser.getUser().isLogin()) {
-                        if (item.getCurr() != null) {
-                            mProfitBoard.setText(getString(R.string.your_rank, item.getCurr().getNo()));
-                        } else {
-                            mProfitBoard.setText(getString(R.string.you_no_enter_leader_board));
-                        }
-                    }
+                    updateSelfLeaderInfo(mProfitBoard, item);
                     break;
                 case LeaderBoardRank.SAVANT:
                     mSavantImages.setImages(images);
-                    if (LocalUser.getUser().isLogin()) {
-                        if (item.getCurr() != null) {
-                            mSavantBoard.setText(getString(R.string.your_rank, item.getCurr().getNo()));
-                        } else {
-                            mSavantBoard.setText(getString(R.string.you_no_enter_leader_board));
-                        }
-                    }
+                    updateSelfLeaderInfo(mSavantBoard, item);
                     break;
             }
+        }
+    }
+
+    private void updateSelfLeaderInfo(TextView textView, LeaderBoardRank item) {
+        if (LocalUser.getUser().isLogin()) {
+            if (item.getCurr() != null) {
+                textView.setText(getString(R.string.your_rank, item.getCurr().getNo()));
+            } else {
+                textView.setText(getString(R.string.you_no_enter_leader_board));
+            }
+        } else {
+            textView.setText(getString(R.string.click_see_your_rank));
         }
     }
 

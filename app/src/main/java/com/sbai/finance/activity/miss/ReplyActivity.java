@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.miss;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +63,28 @@ public class ReplyActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mQuestionComment.removeTextChangedListener(mValidationWatcher);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (TextUtils.isEmpty(mQuestionComment.getText())) {
+            super.onBackPressed();
+        }
+        SmartDialog.single(getActivity(), getString(R.string.give_up_no_restore_comment))
+                .setTitle(getString(R.string.hint))
+                .setNegative(R.string.give_up, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .setPositive(R.string.continue_comment, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     private void initView() {

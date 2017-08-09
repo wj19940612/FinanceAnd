@@ -3,10 +3,12 @@ package com.sbai.finance.activity.leaderboard;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 土豪榜和学霸榜共用页面
@@ -67,13 +70,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     TextView mRank;
     @BindView(R.id.myBoardInfo)
     LinearLayout mMyBoardInfo;
+    @BindView(R.id.tipInfo)
+    TextView mTipInfo;
     private LeaderBoardAdapter mLeaderBoardAdapter;
     private Set<Integer> mSet;
     private String mType;
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            requestMyStudyData();
+            requestLeaderBoardData();
         }
     };
 
@@ -86,7 +91,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
         initTitle();
         initMyBoardView();
         initListView();
+        initLoginReceiver();
         requestLeaderBoardData();
+    }
+
+    private void initLoginReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mLoginReceiver, intentFilter);
     }
 
     private void initTitle() {
@@ -114,6 +127,11 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
             }
         });
         initHeaderView();
+        initFooterView(60);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
+        mSwipeRefreshLayout.setAdapter(mListView, mLeaderBoardAdapter);
         mListView.setAdapter(mLeaderBoardAdapter);
         mListView.setEmptyView(mEmpty);
     }
@@ -133,25 +151,30 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     }
 
     private void initMyBoardView() {
-        if (LocalUser.getUser().isLogin()) {
-            mMyBoardInfo.setVisibility(View.VISIBLE);
-            initFooterView(60);
-        } else {
+        if (!LocalUser.getUser().isLogin()) {
             mMyBoardInfo.setVisibility(View.GONE);
-            initFooterView(14);
+            mTipInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setText(getString(R.string.click_see_your_rank));
         }
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        //     startScheduleJob(10 * 1000);
+        startScheduleJob(10 * 1000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopRefreshAnimation();
+        stopScheduleJob();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity())
+                .unregisterReceiver(mLoginReceiver);
     }
 
     private void requestLeaderBoardData() {
@@ -165,7 +188,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     }
 
     private void requestWorship(int id) {
-        Client.worship(id).setTag(TAG)
+        Client.worship(id, mType, null).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -181,6 +204,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
 
     private void updateLeaderBoardData(LeaderBoardRank data) {
         stopRefreshAnimation();
+        mSet.clear();
         mLeaderBoardAdapter.clear();
         mLeaderBoardAdapter.addAll(data.getData());
         mLeaderBoardAdapter.notifyDataSetChanged();
@@ -188,9 +212,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     }
 
     private void updateMyLeaderData(LeaderBoardRank data) {
-        if (data.getCurr() == null) return;
+        if (data.getCurr() == null) {
+            mMyBoardInfo.setVisibility(View.GONE);
+            mTipInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setText(getString(R.string.you_no_enter_leader_board));
+            return;
+        }
+        mMyBoardInfo.setVisibility(View.VISIBLE);
+        mTipInfo.setVisibility(View.GONE);
         if (LocalUser.getUser().isLogin()) {
-            mMyBoardInfo.setVisibility(View.VISIBLE);
             Glide.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
@@ -239,7 +269,6 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                             mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())));
                         }
                     }
-
                 }
                 mRank.setText("");
                 switch (rank) {
@@ -265,7 +294,6 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
 
     @Override
     public void onLoadMore() {
-        requestLeaderBoardData();
     }
 
 
@@ -286,7 +314,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
 
     private void reset() {
         mSet.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+
+    @OnClick(R.id.tipInfo)
+    public void onViewClicked() {
+        if (mTipInfo.getText().toString().equalsIgnoreCase(getString(R.string.click_see_your_rank))) {
+            if (!LocalUser.getUser().isLogin()) {
+                Launcher.with(getActivity(), LoginActivity.class).execute();
+            }
+        }
     }
 
     public static class LeaderBoardAdapter extends ArrayAdapter<LeaderBoardRank.DataBean> {
@@ -416,10 +452,10 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     case LeaderBoardRank.SAVANT:
                         if (item.getWorshipCount() > 0) {
                             mIngot.setText(StrUtil.mergeTextWithColor(context.getString(R.string.integrate_number_no_blank, String.valueOf(item.getScore())),
-                                    " +" + context.getString(R.string.integrate_number_no_blank, String.valueOf(item.getWorshipCount()))
+                                    " +" + context.getString(R.string.ingot_number_no_blank, Math.round(item.getWorshipCount()))
                                     , ContextCompat.getColor(context, R.color.unluckyText)));
                         } else {
-                            mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf(item.getScore())));
+                            mIngot.setText(context.getString(R.string.ingot_number_no_blank, Math.round(item.getScore())));
                         }
                         break;
                 }

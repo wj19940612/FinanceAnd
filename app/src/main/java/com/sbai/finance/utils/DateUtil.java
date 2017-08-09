@@ -362,7 +362,13 @@ public class DateUtil {
         long systemTime = System.currentTimeMillis();
         if (DateUtil.isInThisYear(createTime)) {
             if (DateUtil.isToday(createTime, systemTime)) {
-                return DateUtil.format(createTime, "HH:mm");
+                if (systemTime - createTime < 60 * 1000) {
+                    return "刚刚";
+                } else if (systemTime - createTime < 60 * 60 * 1000) {
+                    return ((systemTime - createTime) / (60 * 1000) + "分钟前");
+                } else {
+                    return DateUtil.format(createTime, "HH:mm");
+                }
             } else {
                 return DateUtil.format(createTime, "MM/dd");
             }

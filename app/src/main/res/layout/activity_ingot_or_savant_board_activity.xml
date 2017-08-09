@@ -31,6 +31,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:dividerHeight="0.5dp"
+                android:footerDividersEnabled="false"
                 android:scrollbars="none"
                 android:visibility="visible"/>
 
@@ -59,7 +60,8 @@
                 android:paddingBottom="@dimen/common_padding"
                 android:paddingLeft="28dp"
                 android:paddingRight="@dimen/common_padding"
-                android:paddingTop="@dimen/common_padding">
+                android:paddingTop="@dimen/common_padding"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/avatar"
@@ -101,8 +103,20 @@
                     android:textColor="@color/unluckyText"
                     android:textSize="16sp"
                     tools:text="@string/rank"/>
-
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tipInfo"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/myBoardInfo"
+                android:background="#F0222222"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                tools:text="@string/you_no_enter_leader_board"/>
+
 
         </RelativeLayout>
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
