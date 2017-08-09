@@ -119,6 +119,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 0:
                     return new TrainingFragment();
                 case 1:
+                    return new MissTalkFragment();
+                case 2:
                     return new DiscoveryFragment();
                 case 2:
                     return new MissTalkFragment();

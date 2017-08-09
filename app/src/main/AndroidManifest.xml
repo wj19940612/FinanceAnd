@@ -421,8 +421,7 @@
         <activity
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.ShareActivity">
-        </activity>
+
     </application>
 
 </manifest>

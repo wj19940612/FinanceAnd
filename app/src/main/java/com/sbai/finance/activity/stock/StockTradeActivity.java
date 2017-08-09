@@ -413,7 +413,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     public void setUpTitleBar(TitleBar titleBar) {
-        final String shareUrl = String.format(Client.STOCK_SHARE_URL,
+        final String shareUrl = String.format(Client.SHARE_URL_STOCK,
                 mVariety.getVarietyType(), mVariety.getVarietyId());
         final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
         final String shareDescribe = getString(R.string.share_desc);

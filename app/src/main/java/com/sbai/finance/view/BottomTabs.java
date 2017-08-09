@@ -52,8 +52,8 @@ public class BottomTabs extends LinearLayout {
     }
 
     private void init() {
-        mIcons = new int[]{R.drawable.tab_training, R.drawable.tab_discovery, R.drawable.tab_mine, R.drawable.tab_mine};
-        mTexts = new int[]{R.string.training, R.string.discovery, R.string.miss_talk, R.string.mine};
+        mIcons = new int[]{R.drawable.tab_training, R.drawable.tab_miss, R.drawable.tab_discovery, R.drawable.tab_mine};
+        mTexts = new int[]{R.string.training, R.string.miss_talk, R.string.discovery, R.string.mine};
 
         setOrientation(HORIZONTAL);
         if (mIcons != null && mTexts != null) {
