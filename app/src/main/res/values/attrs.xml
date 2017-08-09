@@ -150,13 +150,17 @@
     <declare-styleable name="ScoreView">
         <attr name="areaCount" format="integer"/>
         <attr name="showScore" format="boolean"/>
-        <attr name="scoreTextSize" format="dimension|reference"/>
+        <attr name="scoreTextSizePx" format="integer"/>
         <attr name="scoreTextColor" format="color|reference"/>
         <attr name="showAreaPoint" format="boolean"/>
         <attr name="outSideCircleColor" format="color"/>
-        <attr name="middleCircleColor" format="color"/>
+        <attr name="middleCircleColor" format="color|reference"/>
         <attr name="scoreViewTitleTextColor" format="color"/>
-        <attr name="scoreViewTitleTextSize" format="dimension|reference"/>
+        <attr name="scoreViewTitleTextSizePx" format="integer"/>
         <attr name="showInsideCircle" format="boolean"/>
+        <attr name="insideCircleColor" format="color|reference"/>
+        <attr name="middleLoopCircleColor" format="color|reference"/>
+        <attr name="valueColor" format="color|reference"/>
+        <attr name="radarLineColor" format="color|reference"/>
     </declare-styleable>
 </resources>

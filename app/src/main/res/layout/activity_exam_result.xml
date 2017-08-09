@@ -155,7 +155,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:showAreaPoint="true"
-        app:showInsideCircle="false"/>
+        app:showInsideCircle="false"
+        app:showScore="false"/>
 
     <TextView
         android:id="@+id/going_train"

@@ -26,7 +26,11 @@
         <com.sbai.finance.view.leveltest.ScoreView
             android:id="@+id/score"
             android:layout_width="wrap_content"
-            android:layout_height="215dp"/>
+            android:layout_height="215dp"
+            app:middleLoopCircleColor="@color/background"
+            app:outSideCircleColor="@color/split"
+            app:radarLineColor="@color/split"
+            app:showInsideCircle="true"/>
 
         <com.sbai.finance.view.train.ScoreProgressView
             android:id="@+id/scoreProgress"
