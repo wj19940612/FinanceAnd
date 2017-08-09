@@ -32,6 +32,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -91,12 +92,7 @@ public class MessagesActivity extends BaseActivity implements
         mTitle.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < mMessageAdapter.getCount(); i++) {
-                    MissMessage missMessage = mMessageAdapter.getItem(i);
-                    if (missMessage != null && missMessage.isNoRead()) {
-                        requestReadMessage(missMessage.getId());
-                    }
-                }
+                requestBatchReadMessage();
             }
         });
     }
@@ -189,6 +185,30 @@ public class MessagesActivity extends BaseActivity implements
                 }).fireFree();
     }
 
+    private void requestBatchReadMessage() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mMessageAdapter.getCount(); i++) {
+            MissMessage missMessage = mMessageAdapter.getItem(i);
+            if (missMessage != null && missMessage.isNoRead()) {
+                sb.append(missMessage.getId()).append(",");
+            }
+        }
+        if (sb.toString().length() == 0) return;
+        sb.deleteCharAt(sb.length() - 1);
+        Client.batchRead(sb.toString()).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            updateAllMessageStatus();
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fireFree();
+    }
+
     private void updateMessageStatus(int msgId) {
         if (mNoReadCount > 0) {
             mNoReadCount--;
@@ -206,6 +226,21 @@ public class MessagesActivity extends BaseActivity implements
                     missMessage.setStatus(MissMessage.READ);
                     mMessageAdapter.notifyDataSetChanged();
                     break;
+                }
+            }
+        }
+    }
+
+    private void updateAllMessageStatus() {
+        mNoReadCount = 0;
+        mTitle.setTitle(R.string.message_remind);
+        mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
+        if (mMessageAdapter != null) {
+            for (int i = 0; i < mMessageAdapter.getCount(); i++) {
+                MissMessage missMessage = mMessageAdapter.getItem(i);
+                if (missMessage != null && missMessage.isNoRead()) {
+                    missMessage.setStatus(MissMessage.READ);
+                    mMessageAdapter.notifyDataSetChanged();
                 }
             }
         }
@@ -318,7 +353,7 @@ public class MessagesActivity extends BaseActivity implements
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                 }
-                mTime.setText(DateUtil.getFormatTime(item.getCreateTime()));
+                mTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
                 if (item.isNoRead()) {
                     mRedDot.setVisibility(View.VISIBLE);
                 } else {

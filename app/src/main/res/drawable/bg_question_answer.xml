@@ -5,6 +5,6 @@
 
     <stroke
         android:width="0.5dp"
-        android:color="@color/luckyText"/>
+        android:color="@color/unluckyText"/>
     <solid android:color="@android:color/white"/>
 </shape>

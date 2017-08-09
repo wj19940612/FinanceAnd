@@ -78,7 +78,7 @@ public class FeaturesNavigation extends LinearLayout {
                 if (mListener != null) mListener.onFuturesClick();
             }
         }));
-        mNavItemList.add(new NavItem(R.drawable.ic_nav_leaderboard, R.string.leaderboard, new Runnable() {
+        mNavItemList.add(new NavItem(R.drawable.ic_nav_leaderboard, R.string.ranking, new Runnable() {
             @Override
             public void run() {
                 if (mListener != null) mListener.onLeaderboardClick();

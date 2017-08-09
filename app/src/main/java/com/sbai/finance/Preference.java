@@ -24,6 +24,7 @@ public class Preference {
         String IS_FIRST_WITH_DRAW = "is_first_with_draw";
         String USER_HAS_SafePass = "user_has_safe_pass";
         String MISS_TALK_ANSWERS = "miss_talk_answers";
+        String USER_LOOK_DETAIL = "user_look_detail";
     }
 
     private static Preference sInstance;
@@ -159,5 +160,13 @@ public class Preference {
 
     public String getAnswerIds() {
         return mPrefs.getString(Key.MISS_TALK_ANSWERS, null);
+    }
+
+    public void setUserHasLookTrainDetail(String key, boolean hasLookTrainDetail) {
+        apply(key + Key.USER_LOOK_DETAIL, hasLookTrainDetail);
+    }
+
+    public boolean isUserLookTrainDetail(String key) {
+        return mPrefs.getBoolean(key + Key.USER_LOOK_DETAIL, false);
     }
 }

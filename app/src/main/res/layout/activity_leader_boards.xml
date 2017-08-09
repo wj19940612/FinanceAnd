@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:bottomHasSplitLine="true"
-        app:titleText="@string/leaderboard"/>
+        app:titleText="@string/ranking"/>
 
     <LinearLayout
         android:layout_width="match_parent"

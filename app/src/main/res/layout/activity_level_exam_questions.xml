@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.leveltest.LevelExamQuestionsActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@drawable/bg_white"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_level_exam_questions_title"/>
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
+        android:fitsSystemWindows="true"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_close"
+        app:barBackground="@android:color/transparent"
+        app:titleTextColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/exam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBar"
+        android:layout_marginBottom="70dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="2"
+        android:minHeight="66dp"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:text="若采取____财政、货币政策通常会造成股价下跌 "/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/exam"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"/>
+
+    <!--<ListView-->
+    <!--android:id="@+id/listView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/exam"-->
+    <!--android:layout_marginLeft="@dimen/common_padding"-->
+    <!--android:layout_marginRight="@dimen/common_padding"/>-->
+</RelativeLayout>

@@ -1,22 +1,38 @@
 package com.sbai.finance.fragment.profit;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.leaderboard.IngotOrSavantLeaderBoardActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
@@ -24,6 +40,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -47,10 +64,21 @@ public class ProfitBoardListFragment extends BaseFragment implements
     TextView mRank;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.myBoardInfo)
+    LinearLayout mMyBoardInfo;
     Unbinder unbinder;
+    @BindView(R.id.tipInfo)
+    TextView mTipInfo;
     private IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter mLeaderBoardAdapter;
     private Set<Integer> mSet;
     private String mType;
+
+    private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requestProfitBoardData();
+        }
+    };
 
     public static ProfitBoardListFragment newInstance(String type) {
         ProfitBoardListFragment profitBoardListFragment = new ProfitBoardListFragment();
@@ -79,20 +107,59 @@ public class ProfitBoardListFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initMyBoardView();
         initView();
+        initLoginReceiver();
         requestProfitBoardData();
+    }
+
+    private void initLoginReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mLoginReceiver, intentFilter);
     }
 
     private void initView() {
         mSet = new HashSet<>();
+        initFooterView();
         mLeaderBoardAdapter = new IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter(getActivity(), LeaderBoardRank.PROFIT);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
+        mSwipeRefreshLayout.setAdapter(mListView, mLeaderBoardAdapter);
+        mLeaderBoardAdapter.setCallback(new IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter.Callback() {
+            @Override
+            public void onWarshipClick(LeaderBoardRank.DataBean item) {
+                if (item.getUser() != null) {
+                    requestWorship(item.getUser().getId());
+                }
+            }
+        });
         mListView.setAdapter(mLeaderBoardAdapter);
         mListView.setEmptyView(mEmpty);
     }
 
+    private void initFooterView() {
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(60, getResources()));
+        view.setLayoutParams(params);
+        mListView.addFooterView(view);
+    }
+
+    private void initMyBoardView() {
+        if (!LocalUser.getUser().isLogin()) {
+            mMyBoardInfo.setVisibility(View.GONE);
+            mTipInfo.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void scrollToTop() {
+        mListView.smoothScrollToPosition(0);
+    }
+
     private void requestProfitBoardData() {
         Client.getleaderBoardList(LeaderBoardRank.PROFIT, mType).setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<LeaderBoardRank>, LeaderBoardRank>() {
                     @Override
                     protected void onRespSuccessData(LeaderBoardRank data) {
@@ -101,30 +168,120 @@ public class ProfitBoardListFragment extends BaseFragment implements
                 }).fireFree();
     }
 
+    private void requestWorship(int id) {
+        Client.worship(id, LeaderBoardRank.PROFIT, mType).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            requestProfitBoardData();
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fireFree();
+    }
+
     private void updateProfitBoardData(LeaderBoardRank data) {
         stopRefreshAnimation();
+        mSet.clear();
         mLeaderBoardAdapter.clear();
         for (LeaderBoardRank.DataBean dataBean : data.getData()) {
-            if (mSet.add(dataBean.getUser().getId())) {
+            if (dataBean.getUser() != null && mSet.add(dataBean.getUser().getId())) {
                 mLeaderBoardAdapter.add(dataBean);
             }
         }
         mLeaderBoardAdapter.notifyDataSetChanged();
+        updateMyLeaderData(data);
     }
 
-    private void requestMyProfitBoardData() {
+    private void updateMyLeaderData(LeaderBoardRank data) {
+        if (data.getCurr() == null) {
+            mMyBoardInfo.setVisibility(View.GONE);
+            mTipInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setText(getString(R.string.you_no_enter_leader_board));
+            return;
+        }
+        mMyBoardInfo.setVisibility(View.VISIBLE);
+        mTipInfo.setVisibility(View.GONE);
+        if (LocalUser.getUser().isLogin()) {
+            Glide.with(getActivity())
+                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .transform(new GlideCircleTransform(getActivity()))
+                    .into(mAvatar);
+            mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
+            if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)
+                    || mType.equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
+                mIngot.setText(getString(R.string.ingot_number_no_blank, data.getCurr().getScore()));
+            } else if (mType.equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
+                mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())));
+            }
+            if (data.getCurr().getNo() > 3) {
+                mRank.setText(getString(R.string.rank, data.getCurr().getNo()));
+            } else {
+                LeaderBoardRank.DataBean dataBean = null;
+                int rank = 0;
+                for (int i = 0; i < data.getData().size(); i++) {
+                    if (i > 2) {
+                        break;
+                    }
+                    if (data.getData().get(i).getUser() != null) {
+                        if (data.getData().get(i).getUser().getId() == LocalUser.getUser().getUserInfo().getId()) {
+                            dataBean = data.getData().get(i);
+                            rank = i + 1;
+                            break;
+                        }
+                    }
+                }
+                if (dataBean != null) {
+                    if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)
+                            || mType.equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
+                        if (dataBean.getWorshipCount() > 0) {
+                            mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.ingot_number_no_blank, Math.round(data.getCurr().getScore())),
+                                    " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
+                                    , ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+                        } else {
+                            mIngot.setText(getString(R.string.ingot_number_no_blank, Math.round(data.getCurr().getScore())));
+                        }
+                    } else if (mType.equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
+                        if (dataBean.getWorshipCount() > 0) {
+                            mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())),
+                                    " +" + getString(R.string.integrate_number_no_blank, String.valueOf(dataBean.getWorshipCount()))
+                                    , ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+                        } else {
+                            mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())));
+                        }
+                    }
 
+                }
+                mRank.setText("");
+                switch (rank) {
+                    case 1:
+                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_1), null);
+                        break;
+                    case 2:
+                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_2), null);
+                        break;
+                    case 3:
+                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_3), null);
+                        break;
+                }
+            }
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        LocalBroadcastManager.getInstance(getActivity())
+                .unregisterReceiver(mLoginReceiver);
     }
 
     @Override
     public void onLoadMore() {
-        requestProfitBoardData();
     }
 
 
@@ -132,7 +289,6 @@ public class ProfitBoardListFragment extends BaseFragment implements
     public void onRefresh() {
         reset();
         requestProfitBoardData();
-        requestMyProfitBoardData();
     }
 
     private void stopRefreshAnimation() {
@@ -146,6 +302,9 @@ public class ProfitBoardListFragment extends BaseFragment implements
 
     private void reset() {
         mSet.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+
+    @OnClick(R.id.tipInfo)
+    public void onViewClicked() {
     }
 }

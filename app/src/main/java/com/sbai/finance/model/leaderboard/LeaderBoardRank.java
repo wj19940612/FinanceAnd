@@ -13,7 +13,16 @@ public class LeaderBoardRank {
     public static final String TODAY = "day";
     public static final String WEEK = "week";
     private String type;
+    private CurrBean curr;
     private List<DataBean> data;
+
+    public CurrBean getCurr() {
+        return curr;
+    }
+
+    public void setCurr(CurrBean curr) {
+        this.curr = curr;
+    }
 
     public String getType() {
         return type;
@@ -38,7 +47,25 @@ public class LeaderBoardRank {
          */
 
         private double score;
+        private int worshipCount;
+        private boolean isWorship;
         private UserBean user;
+
+        public int getWorshipCount() {
+            return worshipCount;
+        }
+
+        public void setWorshipCount(int worshipCount) {
+            this.worshipCount = worshipCount;
+        }
+
+        public boolean isWorship() {
+            return isWorship;
+        }
+
+        public void setWorship(boolean worship) {
+            isWorship = worship;
+        }
 
         public double getScore() {
             return score;
@@ -99,6 +126,27 @@ public class LeaderBoardRank {
             public void setUserPhone(String userPhone) {
                 this.userPhone = userPhone;
             }
+        }
+    }
+
+    public static class CurrBean {
+        private int no;
+        private double score;
+
+        public int getNo() {
+            return no;
+        }
+
+        public void setNo(int no) {
+            this.no = no;
+        }
+
+        public double getScore() {
+            return score;
+        }
+
+        public void setScore(double score) {
+            this.score = score;
         }
     }
 }

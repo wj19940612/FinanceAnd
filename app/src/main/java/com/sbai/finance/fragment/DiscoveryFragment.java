@@ -26,6 +26,7 @@ import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.MoreTrainFeedBackActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
@@ -270,7 +271,20 @@ public class DiscoveryFragment extends BaseFragment {
                     mTrainCount.setText(context.getString(R.string.train_count, item.getFinishCount()));
                 }
                 mGrade.setText(context.getString(R.string.level, item.getLevel()));
-                mContent.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}, context));
+                switch (item.getType()) {
+                    case Train.TRAIN_THEORY:
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
+                        break;
+                    case Train.TRAIN_TECHNOLOGY:
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#694FC8"), Color.parseColor("#C86DD7")}, context));
+                        break;
+                    case Train.TRAIN_BASIS:
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FF8930"), Color.parseColor("#F7D34C")}, context));
+                        break;
+                    case Train.TRAIN_COMPREHENSIVE:
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#4F8CFE"), Color.parseColor("#33BCFE")}, context));
+                        break;
+                }
             }
 
             private Drawable createDrawable(int[] colors, Context context) {
