@@ -167,7 +167,7 @@
         app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_list_feed_back"
         app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/feed_back"
+        app:rowText="@string/feedback"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
         app:splitLineColor="@color/split"/>

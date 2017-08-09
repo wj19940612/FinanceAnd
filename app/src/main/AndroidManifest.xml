@@ -80,8 +80,8 @@
         <!-- Login & Register -->
         <activity
             android:name=".activity.mine.LoginActivity"
-            android:theme="@style/LoginPageEnter"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginPageEnter"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
             android:screenOrientation="portrait"/>
@@ -402,8 +402,7 @@
         <activity
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.ShareActivity">
-        </activity>
+
     </application>
 
 </manifest>

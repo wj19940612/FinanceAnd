@@ -16,7 +16,6 @@
 
     <!--!!!!deprecated-->
     <string name="home">乐米</string>
-    <string name="economic_circle">经济圈</string>
 
     <!-- EconomicCircle -->
     <string name="big_variety_name">%1$s:  </string>
@@ -171,7 +170,7 @@
     <string name="about_us">关于我们</string>
     <string name="please_login">您好，请先登录</string>
     <string name="detail">明细</string>
-    <string name="feed_back">意见反馈</string>
+    <string name="feedback">意见反馈</string>
     <string name="new_message">新消息</string>
     <string name="wallet">钱包</string>
     <string name="item">条</string>
@@ -383,9 +382,9 @@
 
     <!--分享-->
     <string name="share_to">分享到:</string>
-    <string name="wechat_friend">微信</string>
+    <string name="wechat_friend">微信好友</string>
     <string name="wechat_circle">朋友圈</string>
-    <string name="weibo">微博</string>
+    <string name="sina_weibo">新浪微博</string>
     <string name="share_succeed">分享成功</string>
     <string name="share_failed">分享失败</string>
     <string name="share_cancel">取消分享</string>
@@ -393,7 +392,8 @@
     <string name="share_desc">乐米金融，金融小白的第一战!</string>
     <string name="invite_you_join_future_battle">%1$s邀请你进行一场【美黄金】期货对战，我敢邀，你敢来吗？</string>
     <string name="future_battle_desc">乐米期货对战，紧张激烈的金融游戏，勇者无所畏惧，还有更多元宝好礼等你领取，快来加入吧！</string>
-
+    <string name="share_and_get_ingot">登录用户分享即可得10元宝，每日最多可得30元宝</string>
+    
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
     <string name="pay_count">支付金额: %1$s</string>
@@ -405,10 +405,8 @@
     <string name="please_confirm_security_pass">请再次确认安全密码</string>
     <string name="twice_pass_is_different">两次密码输入不一致</string>
 
-
     <!--权限-->
     <string name="please_open_camera_permission">请打开相机权限</string>
-
 
     <!--钱包-->
     <string name="balance">账户余额</string>

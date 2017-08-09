@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,8 @@ import java.util.Map;
  * 统一普通弹框
  */
 public class SmartDialog {
+
+    private final static double DEFAULT_SCALE = 0.8f;
 
     private TextView mTitle;
     private TextView mMessage;
@@ -60,6 +63,9 @@ public class SmartDialog {
     private OnDismissListener mDismissListener;
     private int mPositiveTextColor;
     private int mNegativeVisible;
+    private float mWidthScale;
+    private int mGravity;
+    private int mWindowAnim;
 
     private boolean mCancelableOnTouchOutside;
 
@@ -178,9 +184,15 @@ public class SmartDialog {
 
         mCancelableOnTouchOutside = true;
         mCustomView = null;
+        mGravity = -1;
+        mWindowAnim = -1;
     }
 
     private void scaleDialogWidth(double scale) {
+        if (scale == 0) {
+            scale = DEFAULT_SCALE;
+        }
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         mDialog.getWindow().setLayout((int) (displayMetrics.widthPixels * scale),
@@ -208,6 +220,11 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setWindowAnim(int windowAnim) {
+        mWindowAnim = windowAnim;
+        return this;
+    }
+
     public SmartDialog setPositiveTextColor(int resColorId) {
         mPositiveTextColor = resColorId;
         return this;
@@ -215,6 +232,11 @@ public class SmartDialog {
 
     public SmartDialog setMessageGravity(int gravity) {
         mMessageGravity = gravity;
+        return this;
+    }
+
+    public SmartDialog setGravity(int gravity) {
+        mGravity = gravity;
         return this;
     }
 
@@ -301,6 +323,11 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setWidthScale(float widthScale) {
+        mWidthScale = widthScale;
+        return this;
+    }
+
     public void show() {
         if (mDialog != null) { // single dialog
             setupDialog();
@@ -310,7 +337,7 @@ public class SmartDialog {
 
         if (!mActivity.isFinishing()) {
             mDialog.show();
-            scaleDialogWidth(0.8);
+            scaleDialogWidth(mWidthScale);
         }
     }
 
@@ -426,6 +453,18 @@ public class SmartDialog {
                     }
                 }
             });
+        }
+
+        if (mGravity != -1) {
+            WindowManager.LayoutParams params = mDialog.getWindow().getAttributes();
+            params.gravity = mGravity;
+            mDialog.getWindow().setAttributes(params);
+        }
+
+        if (mWindowAnim != -1) {
+            WindowManager.LayoutParams params = mDialog.getWindow().getAttributes();
+            params.windowAnimations = mWindowAnim;
+            mDialog.getWindow().setAttributes(params);
         }
     }
 }
