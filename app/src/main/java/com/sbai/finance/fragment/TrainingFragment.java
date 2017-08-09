@@ -9,6 +9,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +104,7 @@ public class TrainingFragment extends BaseFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setItemAnimator(null);
         mRecyclerView.setAdapter(mTrainAdapter);
         startAnimation();
         requestUserScore();
@@ -151,6 +153,7 @@ public class TrainingFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         requestUserScore();
+        requestMineTrainingProjectList();
     }
 
     private void requestRecommendTrainProjectList() {
@@ -180,7 +183,26 @@ public class TrainingFragment extends BaseFragment {
             mEmpty.setVisibility(View.GONE);
             mRecommendTrainTitle.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
+            Log.d(TAG, "updateTrainProjectList: " + trainProjectModels);
+            mTrainAdapter.clear();
             mTrainAdapter.addAll(trainProjectModels);
+            showJoinTestLayout(trainProjectModels);
+        }
+    }
+
+    private void showJoinTestLayout(ArrayList<TrainProjectModel> trainProjectModels) {
+        int joinTestCount = 0;
+        if (trainProjectModels == null) return;
+        for (TrainProjectModel data : trainProjectModels) {
+            TrainProjectModel.RecordBean record = data.getRecord();
+            if (record != null) {
+                joinTestCount += record.getFinish();
+            }
+        }
+        if (joinTestCount > 0) {
+            mTestHint.setVisibility(View.GONE);
+        } else {
+            mTestHint.setVisibility(View.VISIBLE);
         }
     }
 
@@ -278,8 +300,15 @@ public class TrainingFragment extends BaseFragment {
                 mTestHint.setVisibility(View.GONE);
                 break;
             case R.id.testHint:
-                Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
-                mTestHint.setVisibility(View.GONE);
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
+                    if (mScoreHint.isShown()) {
+                        Preference.get().setUserHasLookTrainDetail(LocalUser.getUser().getPhone(), true);
+                        mScoreHint.setVisibility(View.GONE);
+                    }
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case android.R.id.empty:
                 requestMineTrainingProjectList();
@@ -300,10 +329,13 @@ public class TrainingFragment extends BaseFragment {
         }
 
         public void addAll(ArrayList<TrainProjectModel> trainProjectModels) {
-            notifyItemRangeRemoved(0, mTrainProjectModels.size());
-            mTrainProjectModels.clear();
             mTrainProjectModels.addAll(trainProjectModels);
             notifyItemRangeChanged(0, mTrainProjectModels.size());
+        }
+
+        public void clear() {
+            mTrainProjectModels.clear();
+            notifyItemRangeRemoved(0, mTrainProjectModels.size());
         }
 
         @Override

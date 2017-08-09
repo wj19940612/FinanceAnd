@@ -158,7 +158,8 @@
             android:layout_height="32dp"
             android:layout_alignParentBottom="true"
             android:background="@color/colorPrimary"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/testYourLevel"
@@ -175,8 +176,7 @@
                 android:layout_width="14dp"
                 android:layout_height="12dp"
                 android:layout_marginRight="@dimen/common_padding"
-                android:background="@drawable/ic_close_s"
-                android:paddingLeft="@dimen/common_padding"/>
+                android:background="@drawable/ic_close"/>
         </LinearLayout>
 
 

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
-import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
@@ -39,8 +38,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-        // TODO: 2017/8/9  先注释掉
-//        checkVersion();
+        checkVersion();
         translucentStatusBar();
     }
 
@@ -72,7 +70,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -120,8 +118,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     return new TrainingFragment();
                 case 1:
                     return new MissTalkFragment();
-                case 2:
-                    return new DiscoveryFragment();
                 case 2:
                     return new MissTalkFragment();
                 case 3:
