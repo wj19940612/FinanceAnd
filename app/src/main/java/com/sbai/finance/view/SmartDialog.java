@@ -97,6 +97,10 @@ public class SmartDialog {
         return dialog;
     }
 
+    public static SmartDialog single(Activity activity) {
+        return single(activity, "");
+    }
+
     public static SmartDialog with(Activity activity, int resId) {
         SmartDialog dialog = new SmartDialog(activity);
         addMap(activity, dialog);

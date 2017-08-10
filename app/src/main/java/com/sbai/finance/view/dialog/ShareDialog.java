@@ -1,9 +1,11 @@
 package com.sbai.finance.view.dialog;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.ToastUtil;
@@ -17,21 +19,18 @@ import com.umeng.socialize.media.UMWeb;
 
 /**
  * 分享弹框，使用看下方代码：
- *
+ * <p>
  * ShareDialog.with(getActivity())
- *  .setShareTitle("TEST")
- *  .setShareDescription("TEST DES")
- *  .setShareUrl(String.format(Client.SHARE_URL_QUESTION, 1234))
- *  .setListener(new ShareDialog.OnShareDialogCallback() {
- *          @Override
- *          public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
- *          }
+ * .setShareTitle("TEST")
+ * .setShareDescription("TEST DES")
+ * .setShareUrl(String.format(Client.SHARE_URL_QUESTION, 1234))
+ * .setListener(new ShareDialog.OnShareDialogCallback() {
  *
- *          @Override
- *          public void onFeedbackClick(View view) {
- *          }
- *  }).show();
- *
+ * @Override public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
+ * }
+ * @Override public void onFeedbackClick(View view) {
+ * }
+ * }).show();
  */
 public class ShareDialog {
 
@@ -51,9 +50,11 @@ public class ShareDialog {
     private SmartDialog mSmartDialog;
     private View mView;
 
+    private CharSequence mTitle;
     private String mShareTitle;
     private String mShareDescription;
     private String mShareUrl;
+    private boolean mHasFeedback;
     private SHARE_PLATFORM mPlatform;
 
     private OnShareDialogCallback mListener;
@@ -150,7 +151,7 @@ public class ShareDialog {
     public static ShareDialog with(Activity activity) {
         ShareDialog shareDialog = new ShareDialog();
         shareDialog.mActivity = activity;
-        shareDialog.mSmartDialog = SmartDialog.with(activity);
+        shareDialog.mSmartDialog = SmartDialog.single(activity);
         shareDialog.mView = LayoutInflater.from(activity).inflate(R.layout.dialog_share, null);
         shareDialog.mSmartDialog.setCustomView(shareDialog.mView);
         shareDialog.init();
@@ -182,6 +183,21 @@ public class ShareDialog {
         return this;
     }
 
+    public ShareDialog hasFeedback(boolean hasFeedback) {
+        mHasFeedback = hasFeedback;
+        return this;
+    }
+
+    public ShareDialog setTitle(int titleRes) {
+        mTitle = mActivity.getText(titleRes);
+        return this;
+    }
+
+    public ShareDialog setTitle(CharSequence title) {
+        mTitle = title;
+        return this;
+    }
+
     public ShareDialog setShareUrl(String url) {
         mShareUrl = url;
         return this;
@@ -198,6 +214,15 @@ public class ShareDialog {
     }
 
     public void show() {
+        if (!mHasFeedback) {
+            mView.findViewById(R.id.secondSplitLine).setVisibility(View.GONE);
+            mView.findViewById(R.id.secondArea).setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(mTitle)) {
+            TextView title = (TextView) mView.findViewById(R.id.title);
+            title.setText(mTitle);
+        }
+
         mSmartDialog.setWidthScale(1)
                 .setGravity(Gravity.BOTTOM)
                 .setWindowAnim(R.style.BottomDialogAnimation)

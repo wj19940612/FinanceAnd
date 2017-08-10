@@ -26,14 +26,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.dialog.ShareDialogFragment;
-import com.sbai.finance.fragment.dialog.ShareReportDialogFragment;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.view.dialog.ShareDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -169,7 +168,15 @@ public class DailyReportDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.share:
-                ShareReportDialogFragment.newInstance().show(getSupportFragmentManager());
+                // TODO: 10/08/2017 添加乐米日报分享弹框
+                //ShareReportDialogFragment
+                ShareDialog.with(getActivity())
+                        .hasFeedback(false)
+                        .setTitle(R.string.share_to)
+                        .setShareTitle("TEST")
+                        .setShareDescription("TEST")
+                        .setShareUrl("")
+                        .show();
                 break;
             case R.id.refreshButton:
                 mWebView.reload();
