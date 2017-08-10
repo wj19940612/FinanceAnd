@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -197,19 +198,27 @@ public class MoreTrainFeedBackActivity extends BaseActivity {
                     mCheckbox.setChecked(false);
                 }
                 mOption.setText(item.getQuestion());
+                mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            if (onItemClickCallback != null) {
+                                onItemClickCallback.onSelect(item);
+                            }
+                        } else {
+                            if (onItemClickCallback != null) {
+                                onItemClickCallback.onCancel(item);
+                            }
+                        }
+                    }
+                });
                 mOptionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mCheckbox.isChecked()) {
-                            if (onItemClickCallback != null) {
-                                mCheckbox.setChecked(false);
-                                onItemClickCallback.onCancel(item);
-                            }
+                            mCheckbox.setChecked(false);
                         } else {
-                            if (onItemClickCallback != null) {
-                                mCheckbox.setChecked(true);
-                                onItemClickCallback.onSelect(item);
-                            }
+                            mCheckbox.setChecked(true);
                         }
                     }
                 });

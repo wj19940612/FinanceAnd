@@ -173,9 +173,9 @@ public class DailyReportDetailActivity extends BaseActivity {
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
                         .setTitle(R.string.share_to)
-                        .setShareTitle("TEST")
-                        .setShareDescription("TEST")
-                        .setShareUrl("")
+                        .setShareTitle(getString(R.string.share_to))
+                        .setShareDescription(getString(R.string.share_desc))
+                        .setShareUrl(String.format(Client.SHARE_URL_REPORT, mId))
                         .show();
                 break;
             case R.id.refreshButton:
