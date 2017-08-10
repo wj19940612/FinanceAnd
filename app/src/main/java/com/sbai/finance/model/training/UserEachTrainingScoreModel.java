@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.utils.FinanceUtil;
 
 import java.util.List;
 
@@ -59,8 +60,18 @@ public class UserEachTrainingScoreModel implements Parcelable {
         private int classifyId;
         //评价因子名称
         private String classifyName;
-        //因子得分
+        //因子得分  正确率
         private double socre;
+        //每一项的总分
+        private double totalScore;
+
+        public double getTotalScore() {
+            return totalScore;
+        }
+
+        public void setTotalScore(double totalScore) {
+            this.totalScore = totalScore;
+        }
 
         public double getSocre() {
             return socre;
@@ -86,6 +97,19 @@ public class UserEachTrainingScoreModel implements Parcelable {
             this.classifyName = classifyName;
         }
 
+        public ScoresBean() {
+        }
+
+        @Override
+        public String toString() {
+            return "ScoresBean{" +
+                    "classifyId=" + classifyId +
+                    ", classifyName='" + classifyName + '\'' +
+                    ", socre=" + socre +
+                    ", totalScore=" + totalScore +
+                    '}';
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -96,15 +120,14 @@ public class UserEachTrainingScoreModel implements Parcelable {
             dest.writeInt(this.classifyId);
             dest.writeString(this.classifyName);
             dest.writeDouble(this.socre);
-        }
-
-        public ScoresBean() {
+            dest.writeDouble(this.totalScore);
         }
 
         protected ScoresBean(Parcel in) {
             this.classifyId = in.readInt();
             this.classifyName = in.readString();
             this.socre = in.readDouble();
+            this.totalScore = in.readDouble();
         }
 
         public static final Creator<ScoresBean> CREATOR = new Creator<ScoresBean>() {
@@ -118,15 +141,6 @@ public class UserEachTrainingScoreModel implements Parcelable {
                 return new ScoresBean[size];
             }
         };
-
-        @Override
-        public String toString() {
-            return "ScoresBean{" +
-                    "classifyId=" + classifyId +
-                    ", classifyName='" + classifyName + '\'' +
-                    ", socre=" + socre +
-                    '}';
-        }
     }
 
     @Override
@@ -168,28 +182,32 @@ public class UserEachTrainingScoreModel implements Parcelable {
                 '}';
     }
 
+    // 计算每一项的分数所占各个总分的比例
     public TestResultModel getTestResultModel() {
         TestResultModel testResultModel = new TestResultModel();
         for (ScoresBean data : getScores()) {
+            double scale = 0;
+            if (data.getTotalScore() != 0) {
+                scale = FinanceUtil.divide(data.getSocre(), data.getTotalScore()).doubleValue();
+            }
             switch (data.getClassifyName()) {
                 case "盈利能力":
-                    testResultModel.setProfitAccuracy(data.getSocre());
+                    testResultModel.setProfitAccuracy(scale);
                     break;
                 case "风险控制":
-                    testResultModel.setRiskAccuracy(data.getSocre());
+                    testResultModel.setRiskAccuracy(scale);
                     break;
                 case "基本面分析":
-                    testResultModel.setBaseAccuracy(data.getSocre());
+                    testResultModel.setBaseAccuracy(scale);
                     break;
                 case "指标分析":
-                    testResultModel.setSkillAccuracy(data.getSocre());
+                    testResultModel.setSkillAccuracy(scale);
                     break;
                 case "理论掌握":
-                    testResultModel.setTheoryAccuracy(data.getSocre());
+                    testResultModel.setTheoryAccuracy(scale);
                     break;
             }
         }
-
         return testResultModel;
     }
 }

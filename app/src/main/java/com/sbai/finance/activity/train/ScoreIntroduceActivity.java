@@ -4,16 +4,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.leveltest.TestResultModel;
 import com.sbai.finance.model.training.TrainAppraiseAndRemark;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.train.ScoreProgressView;
 import com.sbai.finance.view.leveltest.ScoreView;
+import com.sbai.finance.view.train.ScoreProgressView;
 
 import java.util.ArrayList;
 
@@ -41,26 +43,56 @@ public class ScoreIntroduceActivity extends BaseActivity {
 
 
         mUserEachTrainingScoreModel = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
-        Log.d(TAG, "onCreate: " + mUserEachTrainingScoreModel.toString());
+        //测评结果页数据
+        TestResultModel historyTestResultModel = getIntent().getParcelableExtra(ExtraKeys.HISTORY_TEST_RESULT);
+        if (historyTestResultModel != null) {
+            updateScoreViewData(historyTestResultModel);
+        }
+
+        requestUserScore();
+
+        //训练首页数据
         if (mUserEachTrainingScoreModel != null) {
-            mScore.setUserTrainScoreData(mUserEachTrainingScoreModel);
+            Log.d(TAG, "onCreate: " + mUserEachTrainingScoreModel.toString());
+            TestResultModel testResultModel = mUserEachTrainingScoreModel.getTestResultModel();
+            updateScoreViewData(testResultModel);
         }
 
         requestScoreStageAndRemark();
     }
 
-    private void requestScoreStageAndRemark() {
-        Client.requestScoreStageAndRemark()
+
+    private void requestUserScore() {
+        Client.requestUserScore()
                 .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<ArrayList<TrainAppraiseAndRemark>>, ArrayList<TrainAppraiseAndRemark>>() {
+                .setCallback(new Callback2D<Resp<UserEachTrainingScoreModel>, UserEachTrainingScoreModel>() {
                     @Override
-                    protected void onRespSuccessData(ArrayList<TrainAppraiseAndRemark> data) {
-                        if (mUserEachTrainingScoreModel == null) return;
-                        mScoreProgress.setUserScoreGradeData(data, mUserEachTrainingScoreModel);
+                    protected void onRespSuccessData(UserEachTrainingScoreModel data) {
+                        mUserEachTrainingScoreModel = data;
+                        requestScoreStageAndRemark();
                     }
-                })
-                .fireFree();
+                }).fire();
+    }
+
+    private void updateScoreViewData(TestResultModel testResultModel) {
+        if (testResultModel != null) {
+            mScore.setUserTrainScoreData(testResultModel);
+        }
+    }
+
+    private void requestScoreStageAndRemark() {
+        if (mUserEachTrainingScoreModel != null) {
+            Client.requestScoreStageAndRemark()
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<ArrayList<TrainAppraiseAndRemark>>, ArrayList<TrainAppraiseAndRemark>>() {
+                        @Override
+                        protected void onRespSuccessData(ArrayList<TrainAppraiseAndRemark> data) {
+                            mScoreProgress.setUserScoreGradeData(data, mUserEachTrainingScoreModel);
+                        }
+                    })
+                    .fireFree();
+        }
     }
 
 }
