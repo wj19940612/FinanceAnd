@@ -121,7 +121,7 @@
                 android:drawablePadding="15dp"
                 android:drawableTop="@drawable/bg_score_explain_earning_power"
                 android:text="@string/earning_power"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="16sp"/>
 
             <TextView
@@ -148,7 +148,7 @@
                 android:drawablePadding="15dp"
                 android:drawableTop="@drawable/bg_score_explain_index_analysis"
                 android:text="@string/index_analysis"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="16sp"/>
 
             <TextView
@@ -175,7 +175,7 @@
                 android:drawablePadding="15dp"
                 android:drawableTop="@drawable/bg_score_explain_fundamentals"
                 android:text="@string/fundamentals"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="16sp"/>
 
             <TextView
@@ -202,7 +202,7 @@
                 android:drawablePadding="15dp"
                 android:drawableTop="@drawable/bg_score_explain_risk_control"
                 android:text="@string/risk_control"
-                android:textColor="@color/blackAssist"
+                android:textColor="@color/blackPrimary"
                 android:textSize="16sp"/>
 
             <TextView
