@@ -485,25 +485,23 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                             .placeholder(R.drawable.ic_default_avatar)
                             .transform(new GlideCircleTransform(context))
                             .into(mAvatar);
-
                     mUserName.setText(item.getUserModel().getUserName());
-                    mPublishTime.setText(DateUtil.getMissFormatTime(item.getUserModel().getCreateTime()));
                 } else {
                     Glide.with(context).load(R.drawable.ic_default_avatar)
                             .transform(new GlideCircleTransform(context))
                             .into(mAvatar);
                     mUserName.setText("");
-                    mPublishTime.setText("");
                 }
 
+                mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
                 mOpinionContent.setText(item.getContent());
 
-                if (item.getReplys().size() == 0) {
+                if (item.getReplys().size() == 0 || item.getReplys() == null) {
                     mReplyArea.setVisibility(View.GONE);
                 } else {
                     mReplyArea.setVisibility(View.VISIBLE);
                     if (item.getReplys().get(0).getUserModel() != null) {
-                        mReplyName.setText(item.getReplys().get(0).getUserModel().getUserName());
+                        mReplyName.setText(context.getString(R.string.reply_name,item.getReplys().get(0).getUserModel().getUserName() ));
                     } else {
                         mReplyName.setText("");
                     }

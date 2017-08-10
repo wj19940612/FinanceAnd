@@ -12,6 +12,7 @@ import java.io.IOException;
 public class mediaPlayerUtil {
 
 	private static MediaPlayer mMediaPlayer;
+	//private static AudioManager mAudioManager;
 
 	public static void play(String url, MediaPlayer.OnCompletionListener onCompletionListener) {
 
@@ -28,6 +29,10 @@ public class mediaPlayerUtil {
 			} else {
 				mMediaPlayer.reset();
 			}
+		/*	//1 初始化AudioManager对象
+			mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			//2 申请焦点
+			mAudioManager.requestAudioFocus(mAudioFocusChange, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);*/
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mMediaPlayer.setOnCompletionListener(onCompletionListener);
 			mMediaPlayer.setDataSource(url);

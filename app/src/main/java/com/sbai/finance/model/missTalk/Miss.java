@@ -176,6 +176,8 @@ public class Miss implements Serializable{
 				", id=" + id +
 				", brifeingText='" + brifeingText + '\'' +
 				", status=" + status +
+				", soundTime=" + soundTime +
+				", isAttention=" + isAttention +
 				'}';
 	}
 }

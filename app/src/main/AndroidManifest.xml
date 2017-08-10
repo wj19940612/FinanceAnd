@@ -409,7 +409,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.trainexperience.TrainExperienceActivity"
+            android:name=".activity.train.TrainExperienceActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.leaderboard.ProfitBoardListActivity"
@@ -420,7 +420,12 @@
         <activity
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.miss.ShareActivity">
+        </activity>
+        <activity android:name=".activity.train.LookBigPictureActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.train.WriteExperienceActivity"
+                  android:screenOrientation="portrait"/>
 
     </application>
-
 </manifest>
