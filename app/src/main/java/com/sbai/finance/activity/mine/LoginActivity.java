@@ -159,8 +159,7 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) { // 注册成功 发送广播 以及 关闭页面
-            sendLoginSuccessBroadcast();
-            finish();
+            postLogin();
         }
     }
 
@@ -369,7 +368,8 @@ public class LoginActivity extends BaseActivity {
 
                         @Override
                         protected void onRespSuccess(Resp<UserInfo> resp) {
-                            postLogin(resp, phoneNumber);
+                            LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                            postLogin();
                         }
 
                         @Override
@@ -389,7 +389,8 @@ public class LoginActivity extends BaseActivity {
 
                         @Override
                         protected void onRespSuccess(Resp<UserInfo> resp) {
-                            postLogin(resp, phoneNumber);
+                            LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                            postLogin();
                         }
 
                         @Override
@@ -401,18 +402,16 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void postLogin(Resp<UserInfo> resp, String phoneNumber) {
-        if (resp.hasData()) {
-            LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
-            sendLoginSuccessBroadcast();
-            if (!LocalUser.getUser().getUserInfo().hasTested()) {
-                Launcher.with(getActivity(), LevelTestStartActivity.class)
-                        .putExtra(ExtraKeys.FIRST_TEST, true)
-                        .execute();
-            }
-            setResult(RESULT_OK);
-            finish();
+    private void postLogin() {
+        if (!LocalUser.getUser().getUserInfo().hasEvaluated()) {
+            Launcher.with(getActivity(), LevelTestStartActivity.class)
+                    .putExtra(ExtraKeys.FIRST_TEST, true)
+                    .execute();
         }
+
+        sendLoginSuccessBroadcast();
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void resetLoginButton() {

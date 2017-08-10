@@ -39,3 +39,5 @@
 - 赞赏、打赏：Reward
 - 元宝：Ingot
 - 积分：Score
+- 评测：Evaluation
+
