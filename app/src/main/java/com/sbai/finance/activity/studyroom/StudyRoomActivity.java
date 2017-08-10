@@ -22,6 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.RewardGetActivity;
@@ -221,7 +222,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void requestTrainData() {
-        Client.getTrainCourse(AppInfo.getDeviceHardwareId(getActivity())).setTag(TAG)
+        Client.getTrainCourse(Preference.get().getPushClientId()).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Object>, Object>() {
                     @Override
