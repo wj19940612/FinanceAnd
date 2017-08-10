@@ -183,7 +183,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setEvaluate(1);
                         LocalUser.getUser().setUserInfo(userInfo);
-                        Launcher.with(getActivity(), EvaluationActivity.class)
+                        Launcher.with(getActivity(), EvaluationResultActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
                                 .execute();
                         finish();

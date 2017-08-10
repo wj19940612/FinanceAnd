@@ -11,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,6 +30,7 @@ import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.train.MoreTrainFeedBackActivity;
+import com.sbai.finance.activity.train.TrainDetailActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.train.Train;
@@ -204,6 +206,18 @@ public class DiscoveryFragment extends BaseFragment {
         mListView.setFocusable(false);
         mTrainAdapter = new TrainAdapter(getContext());
         mListView.setAdapter(mTrainAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TrainProgram trainProgram = (TrainProgram) parent.getItemAtPosition(position);
+                if (trainProgram != null) {
+                    Launcher.with(getActivity(), TrainDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, trainProgram.getId())
+                            .putExtra(Launcher.EX_PAYLOAD_1, trainProgram.getType())
+                            .execute();
+                }
+            }
+        });
     }
 
     @Override
