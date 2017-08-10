@@ -641,8 +641,7 @@
     <string name="other_you_want_study">其他想要的训练项目</string>
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
-    <string name="wechat">微信好友</string>
-    <string name="share_to_1">分享至</string>
+    <string name="share_to">分享至</string>
 
 
     <string name="study_room">自习室</string>
@@ -724,7 +723,6 @@
     <string name="risk_control">风险控制</string>
     <string name="risk_control_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
     <string name="understand_score">了解学分</string>
-    <string name="you_are_not_trained">你还没有完成训练</string>
     <string name="train_grade">L%1$d</string>
     <string name="trade_level">交易水平:%1$s  超过了%2$s的交易账户</string>
     <string name="advise">建议:%1$s</string>
