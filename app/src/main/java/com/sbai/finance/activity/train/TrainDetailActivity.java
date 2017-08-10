@@ -285,7 +285,7 @@ public class TrainDetailActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						if (LocalUser.getUser().isLogin()) {
-							Client.trainExperiencePraise(item.getId(), item.getIsPraise())
+							Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
 									.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
 										@Override
 										protected void onRespSuccessData(TrainPraise data) {
@@ -294,6 +294,7 @@ public class TrainDetailActivity extends BaseActivity {
 											} else {
 												mLoveNumber.setSelected(false);
 											}
+											item.setIsPraise(data.getIsPraise());
 											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
 										}
 									}).fire();
@@ -383,6 +384,7 @@ public class TrainDetailActivity extends BaseActivity {
 				.setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
 				.setShareDescription(getString(R.string.train_share_description))
 				.setShareUrl(SHARE_URL_TRAIN_EXPERIENCE)
+				.hasFeedback(true)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
 					@Override
 					public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {

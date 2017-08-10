@@ -198,17 +198,13 @@ public class MoreTrainFeedBackActivity extends BaseActivity {
                     mCheckbox.setChecked(false);
                 }
                 mOption.setText(item.getQuestion());
-                mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                mCheckbox.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            if (onItemClickCallback != null) {
-                                onItemClickCallback.onSelect(item);
-                            }
+                    public void onClick(View v) {
+                        if (mCheckbox.isChecked()) {
+                            onItemClickCallback.onSelect(item);
                         } else {
-                            if (onItemClickCallback != null) {
-                                onItemClickCallback.onCancel(item);
-                            }
+                            onItemClickCallback.onCancel(item);
                         }
                     }
                 });
@@ -216,8 +212,10 @@ public class MoreTrainFeedBackActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         if (mCheckbox.isChecked()) {
+                            onItemClickCallback.onCancel(item);
                             mCheckbox.setChecked(false);
                         } else {
+                            onItemClickCallback.onSelect(item);
                             mCheckbox.setChecked(true);
                         }
                     }

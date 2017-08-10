@@ -63,6 +63,7 @@ public class LeaderBoardsActivity extends BaseActivity {
             requestBoardData();
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,12 +73,14 @@ public class LeaderBoardsActivity extends BaseActivity {
         initLoginReceiver();
         requestBoardData();
     }
+
     private void initLoginReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mLoginReceiver, intentFilter);
     }
+
     private void initView() {
         mIngotBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}));
         mProfitBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}));
@@ -137,7 +140,7 @@ public class LeaderBoardsActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.ingotBoardArea, R.id.profitBoardArea, R.id.savantBoardArea, R.id.ingotBoard, R.id.profitBoard, R.id.savantBoard})
+    @OnClick({R.id.ingotBoardArea, R.id.profitBoardArea, R.id.savantBoardArea})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ingotBoardArea:

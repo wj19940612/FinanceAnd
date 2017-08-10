@@ -2375,7 +2375,7 @@ public class Client {
      * @return
      */
     public static API trainExperiencePraise(String praiseId, int isPraise) {
-        return new API("/train/perception/dealClickPraise.do", new ApiParams()
+        return new API(POST, "/train/perception/dealClickPraise.do", new ApiParams()
                 .put("praiseId", praiseId)
                 .put("isPraise", isPraise));
     }
