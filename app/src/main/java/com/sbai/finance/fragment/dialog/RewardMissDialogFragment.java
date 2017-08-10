@@ -3,17 +3,20 @@ package com.sbai.finance.fragment.dialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -127,7 +130,23 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
 
     @OnClick(R.id.confirmReward)
     public void onViewClicked() {
-        requestUserHasSafetyPass();
+        requestUserFindInfo();
+    }
+
+    private void requestUserFindInfo() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfoModel data) {
+                        if (data.getYuanbao() < Long.valueOf(mRewardMoney.getText().toString())) {
+                            showRechargeDialog(getActivity());
+                        } else {
+                            requestUserHasSafetyPass();
+                        }
+                    }
+                })
+                .fireFree();
     }
 
     private void requestUserHasSafetyPass() {
@@ -155,6 +174,19 @@ public class RewardMissDialogFragment extends BaseDialogFragment {
                         Launcher.with(getActivity(), UpdateSecurityPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
                     }
                 }).show();
+    }
+
+    private void showRechargeDialog(final FragmentActivity activity) {
+        SmartDialog.single(getActivity(), getString(R.string.ignot_not_enough))
+                .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(activity, CornucopiaActivity.class).execute();
+                    }
+                }).setNegative(R.string.cancel)
+                .show();
+        dismiss();
     }
 
     private void showInputSafetyPassDialog() {

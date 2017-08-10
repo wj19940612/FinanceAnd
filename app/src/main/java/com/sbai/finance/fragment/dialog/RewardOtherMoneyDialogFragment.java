@@ -152,9 +152,9 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     };
 
     private void rewardLowLeast() {
-        mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
-        mWarnTip.setText(getString(R.string.at_least_reward_ten_ingot));
-        mWarnTip.setVisibility(View.VISIBLE);
+//        mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
+//        mWarnTip.setText(getString(R.string.at_least_reward_ten_ingot));
+//        mWarnTip.setVisibility(View.VISIBLE);
         mConfirm.setEnabled(false);
     }
 

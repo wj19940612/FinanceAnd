@@ -1,15 +1,21 @@
 package com.sbai.finance.activity.leaderboard;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.net.Callback2D;
@@ -51,16 +57,27 @@ public class LeaderBoardsActivity extends BaseActivity {
     ImageListView mSavantImages;
     @BindView(R.id.savantBoardArea)
     LinearLayout mSavantBoardArea;
-
+    private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requestBoardData();
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leader_boards);
         ButterKnife.bind(this);
         initView();
+        initLoginReceiver();
         requestBoardData();
     }
-
+    private void initLoginReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mLoginReceiver, intentFilter);
+    }
     private void initView() {
         mIngotBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}));
         mProfitBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}));
@@ -110,17 +127,17 @@ public class LeaderBoardsActivity extends BaseActivity {
 
     private void updateSelfLeaderInfo(TextView textView, LeaderBoardRank item) {
         if (LocalUser.getUser().isLogin()) {
-            if (item.getCurr() != null) {
-                textView.setText(getString(R.string.your_rank, item.getCurr().getNo()));
-            } else {
+            if (item.getCurr() == null || item.getCurr().getNo() == 0) {
                 textView.setText(getString(R.string.you_no_enter_leader_board));
+            } else {
+                textView.setText(getString(R.string.your_rank, item.getCurr().getNo()));
             }
         } else {
             textView.setText(getString(R.string.click_see_your_rank));
         }
     }
 
-    @OnClick({R.id.ingotBoardArea, R.id.profitBoardArea, R.id.savantBoardArea})
+    @OnClick({R.id.ingotBoardArea, R.id.profitBoardArea, R.id.savantBoardArea, R.id.ingotBoard, R.id.profitBoard, R.id.savantBoard})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ingotBoardArea:
@@ -137,6 +154,23 @@ public class LeaderBoardsActivity extends BaseActivity {
                         .putExtra(Launcher.EX_PAYLOAD, LeaderBoardRank.SAVANT)
                         .execute();
                 break;
+            case R.id.ingotBoard:
+            case R.id.profitBoard:
+            case R.id.savantBoard:
+                if (view instanceof TextView) {
+                    TextView textView = (TextView) view;
+                    if (textView.getText().toString().equalsIgnoreCase(getString(R.string.click_see_your_rank))) {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                }
+                break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity())
+                .unregisterReceiver(mLoginReceiver);
     }
 }

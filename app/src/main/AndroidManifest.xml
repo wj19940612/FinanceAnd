@@ -401,7 +401,8 @@
         <activity
             android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
+
         <activity
             android:name=".activity.train.ScoreIntroduceActivity"
             android:screenOrientation="portrait"
@@ -418,8 +419,6 @@
         <activity
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.ShareActivity">
-        </activity>
         <activity
             android:name=".activity.train.LookBigPictureActivity"
             android:screenOrientation="portrait"/>

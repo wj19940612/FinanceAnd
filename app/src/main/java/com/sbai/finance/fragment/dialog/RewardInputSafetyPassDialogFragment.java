@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -37,6 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 
 /**
  * 打赏输入安全密码页面
@@ -207,6 +210,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                         protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
+                                sendRewardSuccessBroadcast(getActivity());
                                 mIsSuccess = true;
                                 dismissAllowingStateLoss();
                             } else {
@@ -230,12 +234,18 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         }
     }
 
+    private void sendRewardSuccessBroadcast(FragmentActivity activity) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_REWARD_SUCCESS);
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+    }
+
     private void showRechargeDialog(final FragmentActivity activity) {
         SmartDialog.single(getActivity(), getString(R.string.ignot_not_enough))
                 .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
-                        dismiss();
+                        dialog.dismiss();
                         Launcher.with(activity, CornucopiaActivity.class).execute();
                     }
                 }).setNegative(R.string.cancel)

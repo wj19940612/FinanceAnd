@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -145,6 +146,7 @@ public class StudyRoomActivity extends BaseActivity {
                 mCommit.setEnabled(false);
             }
         });
+        mListView.setFocusable(false);
         mListView.setAdapter(mOptionAdapter);
     }
 
@@ -161,9 +163,6 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void updateResultView() {
-        mCommit.setVisibility(View.GONE);
-        mTestResult.setVisibility(View.VISIBLE);
-        mExplainArea.setVisibility(View.VISIBLE);
         StudyOption.ContentBean item = mOptionAdapter.getItem(mSelectedIndex);
         if (item == null) return;
         if (item.isRight()) {
@@ -173,6 +172,9 @@ public class StudyRoomActivity extends BaseActivity {
             mTestResult.setText(getString(R.string.answer_wrong_study_together));
             updateResultListView(false);
         }
+        mCommit.setVisibility(View.GONE);
+        mTestResult.setVisibility(View.VISIBLE);
+        mExplainArea.setVisibility(View.VISIBLE);
     }
 
     private void updateResultListView(boolean right) {
@@ -183,11 +185,15 @@ public class StudyRoomActivity extends BaseActivity {
                 if (view != null) {
                     CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
                     TextView answer = (TextView) view.findViewById(R.id.answer);
+                    TextView option = (TextView) view.findViewById(R.id.option);
                     LinearLayout optionArea = (LinearLayout) view.findViewById(R.id.optionArea);
                     if (cb != null) {
                         cb.setVisibility(View.GONE);
                     }
                     if (i == mSelectedIndex) {
+                        if (option != null) {
+                            option.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+                        }
                         if (right) {
                             if (answer != null) {
                                 answer.setVisibility(View.VISIBLE);
@@ -363,20 +369,29 @@ public class StudyRoomActivity extends BaseActivity {
 
             public void bindDataWithView(final StudyOption.ContentBean item, final int position, Context context, final OnClickCallback onClickCallback) {
                 mOption.setText(item.getContent());
+                mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            setSelected(position, onClickCallback);
+                        } else {
+                            setUnSelected(onClickCallback);
+                        }
+                    }
+                });
                 mOptionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mCheckbox.isChecked()) {
-                            setUnSelected(onClickCallback);
+                            mCheckbox.setChecked(false);
                         } else {
-                            setSelected(position, onClickCallback);
+                            mCheckbox.setChecked(true);
                         }
                     }
                 });
             }
 
             private void setUnSelected(OnClickCallback onClickCallback) {
-                mCheckbox.setChecked(false);
                 if (onClickCallback != null) {
                     onClickCallback.onUnSelected();
                 }
@@ -384,7 +399,6 @@ public class StudyRoomActivity extends BaseActivity {
             }
 
             private void setSelected(int position, OnClickCallback onClickCallback) {
-                mCheckbox.setChecked(true);
                 if (onClickCallback != null) {
                     onClickCallback.onSelect(mSelectedIndex, position);
                 }

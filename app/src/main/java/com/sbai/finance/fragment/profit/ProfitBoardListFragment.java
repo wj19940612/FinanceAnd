@@ -31,6 +31,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -132,7 +133,11 @@ public class ProfitBoardListFragment extends BaseFragment implements
             @Override
             public void onWarshipClick(LeaderBoardRank.DataBean item) {
                 if (item.getUser() != null) {
-                    requestWorship(item.getUser().getId());
+                    if (LocalUser.getUser().isLogin()) {
+                        requestWorship(item.getUser().getId());
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
                 }
             }
         });
@@ -151,7 +156,26 @@ public class ProfitBoardListFragment extends BaseFragment implements
         if (!LocalUser.getUser().isLogin()) {
             mMyBoardInfo.setVisibility(View.GONE);
             mTipInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setText(getString(R.string.click_see_your_rank));
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startScheduleJob(10 * 1000);
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestProfitBoardData();
     }
 
     public void scrollToTop() {
@@ -197,10 +221,12 @@ public class ProfitBoardListFragment extends BaseFragment implements
     }
 
     private void updateMyLeaderData(LeaderBoardRank data) {
-        if (data.getCurr() == null) {
+        if (data.getCurr() == null || data.getCurr().getNo() == 0) {
             mMyBoardInfo.setVisibility(View.GONE);
             mTipInfo.setVisibility(View.VISIBLE);
-            mTipInfo.setText(getString(R.string.you_no_enter_leader_board));
+            if (LocalUser.getUser().isLogin()) {
+                mTipInfo.setText(getString(R.string.you_no_enter_leader_board));
+            }
             return;
         }
         mMyBoardInfo.setVisibility(View.VISIBLE);
@@ -211,12 +237,12 @@ public class ProfitBoardListFragment extends BaseFragment implements
                     .placeholder(R.drawable.ic_default_avatar)
                     .transform(new GlideCircleTransform(getActivity()))
                     .into(mAvatar);
-            mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
-            if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)
-                    || mType.equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
-                mIngot.setText(getString(R.string.ingot_number_no_blank, data.getCurr().getScore()));
-            } else if (mType.equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
-                mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())));
+            mUserName.setText(getString(R.string.me));
+            if (data.getType().equalsIgnoreCase(LeaderBoardRank.INGOT)
+                    || data.getType().equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
+                mIngot.setText(getString(R.string.ingot_number_no_blank, Math.round(data.getCurr().getScore())));
+            } else if (data.getType().equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
+                mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(Math.round(data.getCurr().getScore()))));
             }
             if (data.getCurr().getNo() > 3) {
                 mRank.setText(getString(R.string.rank, data.getCurr().getNo()));
@@ -248,10 +274,10 @@ public class ProfitBoardListFragment extends BaseFragment implements
                     } else if (mType.equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
                         if (dataBean.getWorshipCount() > 0) {
                             mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())),
-                                    " +" + getString(R.string.integrate_number_no_blank, String.valueOf(dataBean.getWorshipCount()))
+                                    " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
                                     , ContextCompat.getColor(getActivity(), R.color.unluckyText)));
                         } else {
-                            mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())));
+                            mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf(Math.round(data.getCurr().getScore()))));
                         }
                     }
 
@@ -306,5 +332,8 @@ public class ProfitBoardListFragment extends BaseFragment implements
 
     @OnClick(R.id.tipInfo)
     public void onViewClicked() {
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 }

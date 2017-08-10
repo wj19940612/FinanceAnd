@@ -14,9 +14,11 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leveltest.ExamQuestionsModel;
 import com.sbai.finance.model.leveltest.TestAnswerUtils;
 import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -175,7 +177,9 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(TestResultModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
-
+                        UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                        userInfo.setEvaluate(1);
+                        LocalUser.getUser().setUserInfo(userInfo);
                         Launcher.with(getActivity(), ExamResultActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
                                 .execute();

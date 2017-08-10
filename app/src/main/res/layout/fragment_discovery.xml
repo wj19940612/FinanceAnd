@@ -41,7 +41,7 @@
                     android:layout_height="match_parent"
                     android:clickable="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_feedback_time_bg"/>
+                    android:src="@drawable/ic_discover_futures_battle"/>
             </android.support.v7.widget.CardView>
 
             <LinearLayout
@@ -59,7 +59,7 @@
                     app:rowText="@string/train_program"
                     app:rowTextSize="14sp"/>
 
-                <com.sbai.finance.view.MyListView
+                <ListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,7 +1,6 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
@@ -9,7 +8,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +24,10 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.TrainProjectModel;
@@ -36,6 +36,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.StrUtil;
@@ -47,47 +48,59 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+
 public class TrainingFragment extends BaseFragment {
 
 
     Unbinder unbinder;
     @BindView(R.id.gift)
     ImageView mGift;
-    @BindView(R.id.rankingList)
-    TextView mRankingList;
-    @BindView(R.id.reviewLessonRoom)
-    TextView mReviewLessonRoom;
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.score)
-    TextView mScore;
-    @BindView(R.id.scoreHint)
-    TextView mScoreHint;
-    @BindView(R.id.lookTrainDetail)
-    FrameLayout mLookTrainDetail;
-    @BindView(R.id.title)
-    RelativeLayout mTitle;
-    @BindView(R.id.card)
-    CardView mCard;
-    @BindView(R.id.recommendTrainTitle)
-    TextView mRecommendTrainTitle;
     @BindView(R.id.titleTrainingCircleMiddle)
     ImageView mTitleTrainingCircleMiddle;
     @BindView(R.id.titleTrainingCircleOutside)
     ImageView mTitleTrainingCircleOutside;
+    @BindView(R.id.lookTrainDetail)
+    FrameLayout mLookTrainDetail;
+    @BindView(R.id.scoreTitle)
+    TextView mScoreTitle;
+    @BindView(R.id.score)
+    TextView mScore;
+    @BindView(R.id.scoreProgress)
+    TextView mScoreProgress;
+    @BindView(R.id.lookDetailOrLogin)
+    TextView mLookDetailOrLogin;
+    @BindView(R.id.title)
+    RelativeLayout mTitle;
+    @BindView(R.id.rankingList)
+    LinearLayout mRankingList;
+    @BindView(R.id.reviewLessonRoom)
+    LinearLayout mReviewLessonRoom;
+    @BindView(R.id.card)
+    CardView mCard;
+    @BindView(R.id.recommendTrainTitle)
+    TextView mRecommendTrainTitle;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.testYourLevel)
     TextView mTestYourLevel;
     @BindView(R.id.closeHint)
-    TextView mCloseHint;
+    ImageView mCloseHint;
     @BindView(R.id.testHint)
     LinearLayout mTestHint;
+    @BindView(R.id.scrollView)
+    RelativeLayout mScrollView;
 
 
     private TrainAdapter mTrainAdapter;
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
+    private int mOldScore;
+    private int mNewScore;
+    private int mScoreOffset;
+    //如果点击了删除按钮，则退出再次进来在出现
+    private boolean showJoinTestHint;
 
     @Nullable
     @Override
@@ -100,13 +113,19 @@ public class TrainingFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        showJoinTestHint = true;
         mTrainAdapter = new TrainAdapter(getActivity(), new ArrayList<TrainProjectModel>());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(null);
         mRecyclerView.setAdapter(mTrainAdapter);
-        startAnimation();
+        mTrainAdapter.setOnTrainClickListener(new TrainAdapter.OnTrainClickListener() {
+            @Override
+            public void onTrainClick(TrainProjectModel trainProjectModel, int position) {
+                // TODO: 2017/8/10 训练列表 点击的训练
+            }
+        });
         requestUserScore();
         updateUserScore(null);
         requestMineTrainingProjectList();
@@ -183,10 +202,11 @@ public class TrainingFragment extends BaseFragment {
             mEmpty.setVisibility(View.GONE);
             mRecommendTrainTitle.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            Log.d(TAG, "updateTrainProjectList: " + trainProjectModels);
             mTrainAdapter.clear();
             mTrainAdapter.addAll(trainProjectModels);
-            showJoinTestLayout(trainProjectModels);
+            if (showJoinTestHint) {
+                showJoinTestLayout(trainProjectModels);
+            }
         }
     }
 
@@ -199,6 +219,7 @@ public class TrainingFragment extends BaseFragment {
                 joinTestCount += record.getFinish();
             }
         }
+
         if (joinTestCount > 0) {
             mTestHint.setVisibility(View.GONE);
         } else {
@@ -208,44 +229,62 @@ public class TrainingFragment extends BaseFragment {
 
     private void updateUserScore(UserEachTrainingScoreModel data) {
         if (LocalUser.getUser().isLogin()) {
+            mScoreTitle.setVisibility(View.VISIBLE);
+            mScore.setVisibility(View.VISIBLE);
+
             boolean userLookTrainDetail = Preference.get().isUserLookTrainDetail(LocalUser.getUser().getPhone());
             if (userLookTrainDetail) {
-                mScoreHint.setVisibility(View.GONE);
+                mLookDetailOrLogin.setVisibility(View.GONE);
             } else {
-                mScoreHint.setVisibility(View.VISIBLE);
+                mLookDetailOrLogin.setVisibility(View.VISIBLE);
             }
-            mScoreHint.setText(R.string.look_detail);
-
-            int score = data != null ? (int) data.getUserTotalScore() : 0;
+            mLookDetailOrLogin.setText(R.string.look_detail);
+            mNewScore = data != null ? (int) data.getUserTotalScore() : 0;
             double rank = data != null ? data.getRank() : 0;
-            SpannableString spannableString;
-            if (score == 0) {
-                spannableString = StrUtil.mergeTextWithRatioColor(
-                        getString(R.string.lemi_score), "\n" + score, getString(R.string.you_are_not_trained),
-                        2.5f, 0.95f, Color.WHITE, Color.WHITE);
-            } else {
-                spannableString = StrUtil.mergeTextWithRatioColor(
-                        getString(R.string.lemi_score), "\n" + score, "\n超过" + NumberFormatUtils.formatPercentString(rank),
-                        2.5f, 0.95f, Color.WHITE, Color.WHITE);
-            }
-            mScore.setText(spannableString);
-
+            mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
+            startScoreAnimation(mNewScore);
         } else {
-            mScore.setText(R.string.login_look_detail);
-            mScoreHint.setText(R.string.to_login);
+            mTestHint.setVisibility(View.VISIBLE);
+            mScore.setVisibility(View.GONE);
+            mScoreTitle.setVisibility(View.GONE);
+            mScoreProgress.setText(R.string.login_look_detail);
+            mLookDetailOrLogin.setVisibility(View.VISIBLE);
+            mLookDetailOrLogin.setText(R.string.to_login);
         }
     }
 
+    private void startScoreAnimation(int newScore) {
+        if (newScore == mOldScore) {
+            mScore.setText(String.valueOf(newScore));
+        } else {
+            mOldScore = 0;
+            mScoreOffset = FinanceUtil.multiply(newScore, 0.05).intValue();
+            startScheduleJob(20);
+            startAnimation();
+        }
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        mOldScore += mScoreOffset;
+        if (mOldScore >= mNewScore) {
+            stopScheduleJob();
+            mOldScore = mNewScore;
+        }
+        mScore.setText(String.valueOf(mOldScore));
+    }
+
     private void startAnimation() {
-        int animationTime = 3000;
-        final RotateAnimation clockwiseAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF,
+        int animationTime = 1000;
+        final RotateAnimation clockwiseAnimation = new RotateAnimation(0f, 180, Animation.RELATIVE_TO_SELF,
                 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         clockwiseAnimation.setDuration(animationTime);
         clockwiseAnimation.setFillAfter(true);
         clockwiseAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         mTitleTrainingCircleMiddle.startAnimation(clockwiseAnimation);
 
-        final RotateAnimation anticlockwiseAnimation = new RotateAnimation(360f, 0f, Animation.RELATIVE_TO_SELF,
+        final RotateAnimation anticlockwiseAnimation = new RotateAnimation(180f, 0f, Animation.RELATIVE_TO_SELF,
                 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anticlockwiseAnimation.setDuration(animationTime);
         anticlockwiseAnimation.setFillAfter(true);
@@ -265,6 +304,8 @@ public class TrainingFragment extends BaseFragment {
                         }
                     })
                     .fire();
+        } else {
+            updateUserScore(null);
         }
     }
 
@@ -280,32 +321,36 @@ public class TrainingFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.gift:
+                // TODO: 2017/8/10 礼物接口
                 break;
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), ScoreIntroduceActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
-                            .execute();
+                    if (mUserEachTrainingScoreModel != null) {
+                        Launcher.with(getActivity(), ScoreIntroduceActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
+                                .execute();
+                    }
+                    if (mLookDetailOrLogin.isShown()) {
+                        Preference.get().setUserHasLookTrainDetail(LocalUser.getUser().getPhone(), true);
+                        mLookDetailOrLogin.setVisibility(View.GONE);
+                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.rankingList:
-                // TODO: 2017/8/4 排行榜
+                Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
                 break;
             case R.id.reviewLessonRoom:
-                // TODO: 2017/8/4 自习室
+                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 break;
             case R.id.closeHint:
+                showJoinTestHint = false;
                 mTestHint.setVisibility(View.GONE);
                 break;
             case R.id.testHint:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
-                    if (mScoreHint.isShown()) {
-                        Preference.get().setUserHasLookTrainDetail(LocalUser.getUser().getPhone(), true);
-                        mScoreHint.setVisibility(View.GONE);
-                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -317,6 +362,16 @@ public class TrainingFragment extends BaseFragment {
     }
 
     static class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> {
+
+        private OnTrainClickListener mOnTrainClickListener;
+
+        interface OnTrainClickListener {
+            void onTrainClick(TrainProjectModel trainProjectModel, int position);
+        }
+
+        public void setOnTrainClickListener(OnTrainClickListener onTrainClickListener) {
+            this.mOnTrainClickListener = onTrainClickListener;
+        }
 
         private ArrayList<TrainProjectModel> mTrainProjectModels;
         private Context mContext;
@@ -346,7 +401,8 @@ public class TrainingFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mTrainProjectModels.get(position), mContext, mIsMineTrained);
+            holder.bindDataWithView(mTrainProjectModels.get(position),
+                    mContext, mIsMineTrained, mOnTrainClickListener, position);
         }
 
         @Override
@@ -371,17 +427,30 @@ public class TrainingFragment extends BaseFragment {
             TextView mTrainTime;
             @BindView(R.id.trainGrade)
             TextView mTrainGrade;
+            @BindView(R.id.cardLayout)
+            CardView mCardLayout;
 
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(TrainProjectModel trainProjectModel, Context context, boolean isMineTrained) {
+            public void bindDataWithView(final TrainProjectModel trainProjectModel, Context context,
+                                         boolean isMineTrained, final OnTrainClickListener onTrainClickListener,
+                                         final int position) {
                 if (trainProjectModel == null) return;
 
                 TrainProjectModel.RecordBean record = trainProjectModel.getRecord();
                 TrainProjectModel.TrainBean train = trainProjectModel.getTrain();
+
+                mCardLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onTrainClickListener != null) {
+                            onTrainClickListener.onTrainClick(trainProjectModel, position);
+                        }
+                    }
+                });
 
                 int finishCount = 0;
                 long needTime = 0;

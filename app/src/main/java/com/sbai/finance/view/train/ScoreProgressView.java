@@ -123,7 +123,7 @@ public class ScoreProgressView extends LinearLayout {
 
     private void createTradeGradeTextView() {
         mTradeGradeTextView = new TextView(getContext());
-        mTradeGradeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.blackAssist));
+        mTradeGradeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.blackPrimary));
         mTradeGradeTextView.setGravity(Gravity.CENTER);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER;

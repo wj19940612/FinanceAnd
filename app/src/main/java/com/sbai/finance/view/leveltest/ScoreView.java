@@ -19,7 +19,6 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.leveltest.TestResultModel;
-import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 
 
 /**
@@ -117,7 +116,7 @@ public class ScoreView extends View {
         DataCount = typedArray.getInt(R.styleable.ScoreView_areaCount, 5);
         mShowScore = typedArray.getBoolean(R.styleable.ScoreView_showScore, true);
         mScoreTextSize = typedArray.getDimension(R.styleable.ScoreView_scoreTextSizePx, 72);
-        mScoreTextColor = typedArray.getColor(R.styleable.ScoreView_scoreViewTitleTextColor, Color.WHITE);
+        mScoreTextColor = typedArray.getColor(R.styleable.ScoreView_scoreViewTitleTextColor, ContextCompat.getColor(getContext(), R.color.blackPrimary));
         mShowFivePoint = typedArray.getBoolean(R.styleable.ScoreView_showAreaPoint, false);
         mOutCircleColor = typedArray.getColor(R.styleable.ScoreView_outSideCircleColor, ContextCompat.getColor(getContext(), R.color.yellowAssist));
         mTitleTextColor = typedArray.getColor(R.styleable.ScoreView_scoreViewTitleTextColor, ContextCompat.getColor(getContext(), R.color.luckyText));
@@ -328,7 +327,7 @@ public class ScoreView extends View {
                 score += mData[i];
             }
         }
-        canvas.drawText(String.valueOf(score), mCenterX, mCenterY + mScoreTextSize / 2, mScorePaint);
+        canvas.drawText(String.valueOf(score), mCenterX, mCenterY + mScoreTextSize / 3, mScorePaint);
     }
 
     /**
@@ -432,7 +431,8 @@ public class ScoreView extends View {
         postInvalidate();
     }
 
-    public void setUserTrainScoreData(UserEachTrainingScoreModel userEachTrainingScoreModel) {
+    //了解分页数据
+    public void setUserTrainScoreData(TestResultModel testResultModel) {
 //        TestResultModel testResultModel = new TestResultModel();
 //        testResultModel.setAllAccuracy(0.50);
 //        testResultModel.setPassPercent(0.20);
@@ -445,7 +445,7 @@ public class ScoreView extends View {
 //        testResultModel.setTheoryAccuracy(0.3);
 //        mTestResultModel = testResultModel;
 
-        mTestResultModel = userEachTrainingScoreModel.getTestResultModel();
+        mTestResultModel = testResultModel;
         mValuePaint.reset();
         mValuePaint.setAntiAlias(true);
         int startColor = Color.parseColor("#64A0FE");

@@ -37,6 +37,8 @@ public class UserInfo implements Parcelable {
     private String userPhone;
     private boolean bIsSetNickName;
     private boolean isSetPass;      // 是否设置登录密码
+    private boolean isNewUser;      // 是否是新注册的用户
+    private int registerRewardIngot; // 新注册的用户奖励的元宝数量
     private String userPortrait;     //用户头像网址
     private int agencyId;
     private Integer certificationStatus;     //认证状态
@@ -58,12 +60,8 @@ public class UserInfo implements Parcelable {
     //是否进行过测试
     private int evaluate;
 
-    public boolean hasTested() {
-        return getEvaluate() == 1;
-    }
-
-    public int getEvaluate() {
-        return evaluate;
+    public boolean hasEvaluated() {
+        return evaluate == 1;
     }
 
     public void setEvaluate(int evaluate) {
