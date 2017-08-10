@@ -59,7 +59,7 @@
                     app:rowText="@string/train_program"
                     app:rowTextSize="14sp"/>
 
-                <com.sbai.finance.view.MyListView
+                <ListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

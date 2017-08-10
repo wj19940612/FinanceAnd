@@ -12,4 +12,5 @@ public interface ExtraKeys {
     String AUTH_CODE = "auth_code";
 
     String FIRST_TEST = "first_test";
+    String HISTORY_TEST_RESULT = "history_test_result";
 }

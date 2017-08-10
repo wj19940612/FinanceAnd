@@ -9,18 +9,22 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.train.ScoreIntroduceActivity;
 import com.sbai.finance.model.leveltest.TestResultModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
@@ -31,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HistoryTestResultActivity extends BaseActivity {
+public class HistoryTestResultActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -55,6 +59,7 @@ public class HistoryTestResultActivity extends BaseActivity {
 
         mHistoryTestResultAdapter = new HistoryTestResultAdapter(this);
         mListView.setAdapter(mHistoryTestResultAdapter);
+        mListView.setOnItemClickListener(this);
 
         mCustomSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -117,6 +122,16 @@ public class HistoryTestResultActivity extends BaseActivity {
         }
         if (mCustomSwipeRefreshLayout.isLoading()) {
             mCustomSwipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        TestResultModel testResultModel = (TestResultModel) parent.getAdapter().getItem(position);
+        if (testResultModel != null) {
+            Launcher.with(getActivity(), ScoreIntroduceActivity.class)
+                    .putExtra(ExtraKeys.HISTORY_TEST_RESULT,testResultModel)
+                    .execute();
         }
     }
 

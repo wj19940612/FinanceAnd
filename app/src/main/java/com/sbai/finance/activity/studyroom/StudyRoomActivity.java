@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -368,20 +369,29 @@ public class StudyRoomActivity extends BaseActivity {
 
             public void bindDataWithView(final StudyOption.ContentBean item, final int position, Context context, final OnClickCallback onClickCallback) {
                 mOption.setText(item.getContent());
+                mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            setSelected(position, onClickCallback);
+                        } else {
+                            setUnSelected(onClickCallback);
+                        }
+                    }
+                });
                 mOptionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mCheckbox.isChecked()) {
-                            setUnSelected(onClickCallback);
+                            mCheckbox.setChecked(false);
                         } else {
-                            setSelected(position, onClickCallback);
+                            mCheckbox.setChecked(true);
                         }
                     }
                 });
             }
 
             private void setUnSelected(OnClickCallback onClickCallback) {
-                mCheckbox.setChecked(false);
                 if (onClickCallback != null) {
                     onClickCallback.onUnSelected();
                 }
@@ -389,7 +399,6 @@ public class StudyRoomActivity extends BaseActivity {
             }
 
             private void setSelected(int position, OnClickCallback onClickCallback) {
-                mCheckbox.setChecked(true);
                 if (onClickCallback != null) {
                     onClickCallback.onSelect(mSelectedIndex, position);
                 }

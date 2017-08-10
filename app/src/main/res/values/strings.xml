@@ -576,7 +576,7 @@
     <!--金融水平测试 -->
     <string name="level_test_title">测测你的金融水平</string>
     <string name="level_test_info_hint">融合五大指标（基本理论、技术分析、基本面分析、风险控制和盈利能力）全面测评根据测评结果私人订制训练项目</string>
-    <string name="number_people_join">(%1$d人已经参加)</string>
+    <string name="number_people_join">(%1$d人已参加)</string>
     <string name="start_test">开始测试</string>
     <string name="history_result">历史结果</string>
     <string name="is_exit_test">是否退出测试？</string>
@@ -629,6 +629,7 @@
 
     <!--discovery-->
     <string name="daily">乐米日报</string>
+    <string name="no_report">暂无日报</string>
     <string name="train_program">训练项目</string>
     <string name="train_count">完成 %1$d 次</string>
     <string name="have_no_train">还未进行训练</string>
@@ -703,7 +704,7 @@
     <string name="look_detail">查看详情</string>
     <string name="login_look_detail">登录查看我的乐米学分</string>
     <string name="to_login">去登陆</string>
-    <string name="more_than_number">超过%1$s的用户</string>
+    <string name="more_than_number">超过了%1$s的用户</string>
     <string name="not_join_train">还未进行训练</string>
     <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
     <string name="source_and_time">来源: %1$s    %2$s</string>

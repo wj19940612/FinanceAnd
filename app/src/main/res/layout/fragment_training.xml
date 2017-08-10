@@ -91,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         tools:text="你还没有完成训练"/>
@@ -140,7 +140,7 @@
                             android:gravity="center"
                             android:paddingTop="5dp"
                             android:text="@string/ranking"
-                            android:textColor="@color/blackAssist"/>
+                            android:textColor="@color/blackPrimary"/>
                     </LinearLayout>
 
 
@@ -168,7 +168,7 @@
                             android:paddingRight="20dp"
                             android:paddingTop="5dp"
                             android:text="@string/review_lesson_room"
-                            android:textColor="@color/blackAssist"/>
+                            android:textColor="@color/blackPrimary"/>
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
