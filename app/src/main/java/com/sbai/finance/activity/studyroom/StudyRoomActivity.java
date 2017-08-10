@@ -222,7 +222,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void requestTrainData() {
-        Client.getTrainCourse(Preference.get().getPushClientId()).setTag(TAG)
+        Client.getTrainCourse(null).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Object>, Object>() {
                     @Override
@@ -294,6 +294,10 @@ public class StudyRoomActivity extends BaseActivity {
                 mCommit.setText(getString(R.string.hand_in_paper));
                 mIsLearned = false;
             }
+        } else {
+            mCommit.setVisibility(View.VISIBLE);
+            mCommit.setText(getString(R.string.hand_in_paper));
+            mIsLearned = false;
         }
     }
 
