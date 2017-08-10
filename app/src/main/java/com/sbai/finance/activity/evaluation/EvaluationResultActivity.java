@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EvaluationActivity extends BaseActivity {
+public class EvaluationResultActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -91,18 +91,15 @@ public class EvaluationActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    @OnClick(R.id.going_train)
+    public void onViewClicked() {
+
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
             int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
             RewardGetActivity.show(getActivity(), reward);
             LocalUser.getUser().setNewUser(false);
         }
-    }
 
-    @OnClick(R.id.going_train)
-    public void onViewClicked() {
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

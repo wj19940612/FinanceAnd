@@ -384,7 +384,7 @@
             android:name=".activity.evaluation.EvaluationQuestionsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.evaluation.EvaluationActivity"
+            android:name=".activity.evaluation.EvaluationResultActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.evaluation.HistoryTestResultActivity"
