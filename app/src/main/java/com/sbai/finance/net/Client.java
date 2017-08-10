@@ -2259,8 +2259,9 @@ public class Client {
      *
      * @return
      */
-    public static API getHotExperienceList() {
-        return new API("/train/perception/findHotPerception.do");
+    public static API getHotExperienceList(int trainId) {
+        return new API("/train/perception/findHotPerception.do",
+                new ApiParams().put("trainId", trainId));
     }
 
     /**
@@ -2270,11 +2271,12 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getLatestExperienceList(int page, int pageSize) {
+    public static API getLatestExperienceList(int page, int pageSize, int trainId) {
         return new API("/train/perception/pageQueryRecentPerception.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("trainId", trainId));
     }
 
     /**
@@ -2337,4 +2339,29 @@ public class Client {
                 new ApiParams()
                         .put("ids", ids));
     }
+	/**
+	 * 获取训练详情
+	 * @param trainId
+	 * @return
+	 */
+	public static API getTrainDetail(int trainId) {
+		return new API("/train/train/detail.do",
+				new ApiParams()
+						.put("trainId", trainId));
+	}
+
+	/**
+	 * 最近完成训练的人
+	 * @param page
+	 * @param pageSize
+	 * @param trainId
+	 * @return
+	 */
+	public static API getFinishPeopleList(int page, int pageSize, int trainId) {
+		return new API("/train/train/finishUser.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize)
+						.put("trainId", trainId));
+	}
 }

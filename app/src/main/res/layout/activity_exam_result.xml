@@ -73,7 +73,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="@dimen/common_padding"
             android:layout_marginRight="@dimen/common_padding"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="25dp"
             android:background="@android:color/white"
             android:minHeight="90dp"
             app:cardCornerRadius="8dp"

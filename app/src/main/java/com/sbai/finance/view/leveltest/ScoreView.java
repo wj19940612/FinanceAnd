@@ -120,7 +120,7 @@ public class ScoreView extends View {
         mShowFivePoint = typedArray.getBoolean(R.styleable.ScoreView_showAreaPoint, false);
         mOutCircleColor = typedArray.getColor(R.styleable.ScoreView_outSideCircleColor, ContextCompat.getColor(getContext(), R.color.yellowAssist));
         mTitleTextColor = typedArray.getColor(R.styleable.ScoreView_scoreViewTitleTextColor, ContextCompat.getColor(getContext(), R.color.luckyText));
-        mTitleSize = typedArray.getDimensionPixelSize(R.styleable.ScoreView_scoreTextSizePx, 36);
+        mTitleSize = typedArray.getDimensionPixelSize(R.styleable.ScoreView_scoreTextSizePx, 12);
         mHasInsideCircle = typedArray.getBoolean(R.styleable.ScoreView_showInsideCircle, false);
         mInsideStrokeColor = typedArray.getColor(R.styleable.ScoreView_insideCircleColor, ContextCompat.getColor(getContext(), R.color.background));
         mMiddleColor = typedArray.getColor(R.styleable.ScoreView_middleCircleColor, Color.parseColor("#FFFDF0"));
@@ -133,7 +133,7 @@ public class ScoreView extends View {
 
     private void init() {
         mRadarMargin = px2dp(15);
-        mTitleSize = sp2px(mTitleSize);
+        mTitleSize = px2dp(mTitleSize);
         mRadian = (float) (Math.PI * 2 / DataCount);
 
         mMainPaint = new Paint();

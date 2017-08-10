@@ -35,6 +35,7 @@ import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
+import com.sbai.finance.activity.train.TrainDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.missTalk.Miss;
@@ -842,8 +843,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.more:
-				showPopupWindow();
+				//showPopupWindow();
 				//Launcher.with(getActivity(), TrainExperienceActivity.class).execute();
+				Launcher.with(getActivity(), TrainDetailActivity.class).execute();
 				break;
 			case R.id.message:
 				if (LocalUser.getUser().isLogin()) {
