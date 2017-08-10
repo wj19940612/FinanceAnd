@@ -120,6 +120,12 @@ public class TrainingFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(null);
         mRecyclerView.setAdapter(mTrainAdapter);
+        mTrainAdapter.setOnTrainClickListener(new TrainAdapter.OnTrainClickListener() {
+            @Override
+            public void onTrainClick(TrainProjectModel trainProjectModel, int position) {
+                // TODO: 2017/8/10 训练列表 
+            }
+        });
         requestUserScore();
         updateUserScore(null);
         requestMineTrainingProjectList();
@@ -355,6 +361,16 @@ public class TrainingFragment extends BaseFragment {
 
     static class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> {
 
+        private OnTrainClickListener mOnTrainClickListener;
+
+        interface OnTrainClickListener {
+            void onTrainClick(TrainProjectModel trainProjectModel, int position);
+        }
+
+        public void setOnTrainClickListener(OnTrainClickListener onTrainClickListener) {
+            this.mOnTrainClickListener = onTrainClickListener;
+        }
+
         private ArrayList<TrainProjectModel> mTrainProjectModels;
         private Context mContext;
         //用来区分自己的训练还是推荐训练
@@ -383,7 +399,8 @@ public class TrainingFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mTrainProjectModels.get(position), mContext, mIsMineTrained);
+            holder.bindDataWithView(mTrainProjectModels.get(position),
+                    mContext, mIsMineTrained, mOnTrainClickListener, position);
         }
 
         @Override
@@ -408,17 +425,30 @@ public class TrainingFragment extends BaseFragment {
             TextView mTrainTime;
             @BindView(R.id.trainGrade)
             TextView mTrainGrade;
+            @BindView(R.id.cardLayout)
+            CardView mCardLayout;
 
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(TrainProjectModel trainProjectModel, Context context, boolean isMineTrained) {
+            public void bindDataWithView(final TrainProjectModel trainProjectModel, Context context,
+                                         boolean isMineTrained, final OnTrainClickListener onTrainClickListener,
+                                         final int position) {
                 if (trainProjectModel == null) return;
 
                 TrainProjectModel.RecordBean record = trainProjectModel.getRecord();
                 TrainProjectModel.TrainBean train = trainProjectModel.getTrain();
+
+                mCardLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onTrainClickListener != null) {
+                            onTrainClickListener.onTrainClick(trainProjectModel, position);
+                        }
+                    }
+                });
 
                 int finishCount = 0;
                 long needTime = 0;
