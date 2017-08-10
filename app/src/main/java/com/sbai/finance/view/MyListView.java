@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
+import com.sbai.finance.utils.Display;
+
 /**
  * Created by lixiaokuan0819 on 2017/4/25.
  */
