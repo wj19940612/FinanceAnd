@@ -201,7 +201,8 @@
                                 android:gravity="center"
                                 android:text="@string/hand_in_paper"
                                 android:textColor="@android:color/white"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp"
+                                android:visibility="visible"/>
 
                             <TextView
                                 android:id="@+id/testResult"
