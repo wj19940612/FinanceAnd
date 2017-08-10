@@ -642,7 +642,7 @@
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
     <string name="wechat">微信好友</string>
-    <string name="share_to_1">分享至</string>
+    <string name="share_to">分享至</string>
 
 
     <string name="study_room">自习室</string>
