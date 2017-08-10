@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
@@ -202,8 +201,7 @@ public class MineFragment extends BaseFragment {
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
-                    //Launcher.with(getActivity(), LoginActivity.class).execute();
-                    RewardGetActivity.show(getActivity(), 300);
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.cornucopia:

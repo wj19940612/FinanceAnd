@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leveltest.ExamQuestionsModel;
 import com.sbai.finance.model.leveltest.TestAnswerUtils;
@@ -177,6 +178,8 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(TestResultModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
+                        openRewardPage();
+
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setEvaluate(1);
                         LocalUser.getUser().setUserInfo(userInfo);
@@ -188,6 +191,13 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     }
                 })
                 .fire();
+    }
+
+    private void openRewardPage() {
+        if (LocalUser.getUser().getUserInfo().isNewUser()) {
+            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
+            RewardGetActivity.show(getActivity(), reward);
+        }
     }
 
 

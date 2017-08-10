@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leveltest.ExamQuestionsModel;
@@ -59,6 +60,15 @@ public class LevelTestStartActivity extends BaseActivity {
             mHistoryResult.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (LocalUser.getUser().getUserInfo().isNewUser()) {
+            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
+            RewardGetActivity.show(getActivity(), reward);
+        }
+        super.onBackPressed();
     }
 
     private void updateCompleteTestNumber(Long data) {

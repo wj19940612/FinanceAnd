@@ -403,11 +403,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void postLogin() {
-//        if (LocalUser.getUser().getUserInfo().isNewUser()) {
-//            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
-//            RewardGetActivity.show(getActivity(), reward);
-//        }
-
         if (!LocalUser.getUser().getUserInfo().hasEvaluated()) {
             Launcher.with(getActivity(), LevelTestStartActivity.class)
                     .putExtra(ExtraKeys.FIRST_TEST, true)
