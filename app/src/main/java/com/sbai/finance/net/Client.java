@@ -2153,4 +2153,43 @@ public class Client {
                         .put("timeType", timeType));
     }
 
+    /**
+     * 获取热门心得列表
+     * @return
+     */
+    public static API getHotExperienceList() {
+        return new API("/train/perception/findHotPerception.do");
+    }
+
+    /**
+     * 获取最新心得列表
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public static API getLatestExperienceList(int page, int pageSize) {
+        return new API("/train/perception/pageQueryRecentPerception.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize));
+    }
+
+    /**
+     * 写心得
+     * @param invitationUserId
+     * @param type
+     * @param star
+     * @param content
+     * @param picture
+     * @return
+     */
+    public static API writeExperience(int invitationUserId, int type, int star, String content, String picture) {
+        return new API(POST, "/user/comment/insertComment.do?",
+                new ApiParams()
+                        .put("invitationUserId", invitationUserId)
+                        .put("type", type)
+                        .put("star", star)
+                        .put("content", content)
+                        .put("picture", picture));
+    }
 }

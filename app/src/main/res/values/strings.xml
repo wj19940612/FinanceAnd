@@ -718,7 +718,7 @@
     <string name="love_people_number">%1$s人喜欢</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
-    <string name="no_miss_reply">还没有小姐姐的回答哦~</string>
+    <string name="no_miss_reply">还没有小姐姐回答哦~</string>
     <string name="no_miss_introduce">小姐姐还没有写简介</string>
     <string name="no_question">你还没提问过哦</string>
     <string name="ask_question_to_miss">向小姐姐提问</string>
@@ -728,4 +728,7 @@
 
     <!--trainExperience-->
     <string name="train_experience">训练心得</string>
+    <string name="hot_experience">热门心得</string>
+    <string name="latest_experience">最新心得</string>
+    <string name="write_experience">写心得</string>
 </resources>

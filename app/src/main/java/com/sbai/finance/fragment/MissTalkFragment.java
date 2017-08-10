@@ -35,6 +35,7 @@ import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
+import com.sbai.finance.activity.trainexperience.TrainExperienceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.NewMessage;
 import com.sbai.finance.model.missTalk.Miss;
@@ -99,6 +100,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	RelativeLayout mTitleBar;
 
 	private List<Miss> mMissList;
+	private List<Question> mLatestQuestionList;
 	private MissListAdapter mMissListAdapter;
 	private HotQuestionListAdapter mHotQuestionListAdapter;
 	private LatestQuestionListAdapter mLatestQuestionListAdapter;
@@ -217,6 +219,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		if (LocalUser.getUser().isLogin()) {
 			requestNewMessageCount();
 			startScheduleJob(10 * 1000);
+		} else {
+			mRedPoint.setVisibility(View.GONE);
 		}
 	}
 
@@ -307,7 +311,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
+						mLatestQuestionList = questionList;
 						updateLatestQuestionList(questionList);
+
 						if (questionList.size() >= 20) {
 							mHotQuestion.setVisibility(View.VISIBLE);
 							requestHotQuestionList();
@@ -333,12 +339,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		mMissListAdapter.addAll(missList);
 	}
 
-	private void updateHotQuestionList(final List<Question> questionList) {
+	private void updateHotQuestionList(List<Question> questionList) {
 		mHotQuestionListAdapter.clear();
 		mHotQuestionListAdapter.addAll(questionList);
 	}
 
-	private void updateLatestQuestionList(final List<Question> questionList) {
+	private void updateLatestQuestionList(List<Question> questionList) {
 
 		if (questionList == null) {
 			stopRefreshAnimation();
@@ -351,7 +357,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				@Override
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
+					mCreateTime = mLatestQuestionList.get(mLatestQuestionList.size() - 1).getCreateTime();
 					requestLatestQuestionList();
 				}
 			});
@@ -837,7 +843,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.more:
-				showPopupWindow();
+				//showPopupWindow();
+				Launcher.with(getActivity(), TrainExperienceActivity.class).execute();
 				break;
 			case R.id.message:
 				if (LocalUser.getUser().isLogin()) {

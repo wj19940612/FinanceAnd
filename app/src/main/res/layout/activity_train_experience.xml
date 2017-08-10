@@ -4,16 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/background"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
-        app:rightTextColor="@color/colorPrimary"
-        app:rightTextSize="15sp"
-        app:rightVisible="true"
-        app:rightText="写心得"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
@@ -41,24 +37,30 @@
                 android:orientation="vertical">
 
                 <View
+                    android:id="@+id/spit1"
                     android:layout_width="match_parent"
                     android:layout_height="14dp"
-                    android:background="@color/background"/>
+                    android:background="@color/background"
+                    android:visibility="gone"/>
 
                 <TextView
+                    android:id="@+id/hotExperience"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
                     android:paddingLeft="14dp"
-                    android:text="热门心得"
+                    android:text="@string/hot_experience"
                     android:textColor="@color/primaryText"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
 
                 <View
+                    android:id="@+id/spit2"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/split"/>
+                    android:background="@color/split"
+                    android:visibility="gone"/>
 
 
                 <com.sbai.finance.view.MyListView
@@ -74,7 +76,7 @@
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
                     android:paddingLeft="14dp"
-                    android:text="最新心得"
+                    android:text="@string/latest_experience"
                     android:textColor="@color/primaryText"
                     android:textSize="14sp"/>
 
