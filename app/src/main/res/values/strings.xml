@@ -737,4 +737,9 @@
     <string name="hot_experience">热门心得</string>
     <string name="latest_experience">最新心得</string>
     <string name="write_experience">写心得</string>
+    <string name="relevant_knowledge">相关知识点</string>
+    <string name="difficulty">难度</string>
+    <string name="complete_number">%1$d人已完成</string>
+    <string name="train_level">L%1$d</string>
+    <string name="train_duration">%1$d分钟</string>
 </resources>
