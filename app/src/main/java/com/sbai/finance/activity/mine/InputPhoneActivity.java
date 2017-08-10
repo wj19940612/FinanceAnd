@@ -178,6 +178,9 @@ public class InputPhoneActivity extends BaseActivity {
             case R.id.financeUserProtocol:
                 openUserProtocolPage();
                 break;
+            case R.id.phoneNumberClear:
+                mPhoneNumber.setText("");
+                break;
         }
     }
 

@@ -169,7 +169,7 @@ public class TrainDetailActivity extends BaseActivity {
 						for (CompletePeople completePeople : completePeopleList) {
 							mCompletePeopleList.add(completePeople.getUser().getUserPortrait());
 						}
-						mImageListView.setImages(mCompletePeopleList);
+						mImageListView.setImages(mCompletePeopleList, R.drawable.ic_board_head_more_grey);
 					}
 				}).fire();
 	}
