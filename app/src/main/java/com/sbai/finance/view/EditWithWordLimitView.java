@@ -107,10 +107,11 @@ public class EditWithWordLimitView extends LinearLayout {
         mWordLimitView.setGravity(Gravity.RIGHT);
         mWordLimitView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mWordTextSize);
         mWordLimitView.setTextColor(mWordTextColor);
-        mWordLimitView.setPadding(0, (int) Display.dp2Px(3, getResources()), 0, 0);
+        mWordLimitView.setPadding(0, (int) Display.dp2Px(1, getResources()), 0, 0);
         mWordLimitView.setBackgroundColor(Color.TRANSPARENT);
+        mWordLimitView.setLayoutParams(params);
+        addView(mWordLimitView);
         setHintText(0);
-        addView(mWordLimitView, params);
     }
 
     private void setHintText(int count) {

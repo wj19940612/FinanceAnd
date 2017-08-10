@@ -398,10 +398,10 @@ public class StudyRoomActivity extends BaseActivity {
 
             public void bindDataWithView(final StudyOption.ContentBean item, final int position, Context context, final OnClickCallback onClickCallback) {
                 mOption.setText(item.getContent());
-                mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                mCheckbox.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
+                    public void onClick(View v) {
+                        if (mCheckbox.isChecked()) {
                             setSelected(position, onClickCallback);
                         } else {
                             setUnSelected(onClickCallback);
@@ -413,8 +413,10 @@ public class StudyRoomActivity extends BaseActivity {
                     public void onClick(View v) {
                         if (mCheckbox.isChecked()) {
                             mCheckbox.setChecked(false);
+                            setUnSelected(onClickCallback);
                         } else {
                             mCheckbox.setChecked(true);
+                            setSelected(position, onClickCallback);
                         }
                     }
                 });
