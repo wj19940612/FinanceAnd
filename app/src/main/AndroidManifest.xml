@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -69,6 +69,11 @@
         <activity
             android:name=".activity.CatchCrashActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.RewardGetActivity"
+            android:theme="@style/AppTheme.Transparent"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.economiccircle.OpinionDetailsActivity"
             android:screenOrientation="portrait"
@@ -422,10 +427,12 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.miss.ShareActivity">
         </activity>
-        <activity android:name=".activity.train.LookBigPictureActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".activity.train.WriteExperienceActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.train.LookBigPictureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.train.WriteExperienceActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 </manifest>

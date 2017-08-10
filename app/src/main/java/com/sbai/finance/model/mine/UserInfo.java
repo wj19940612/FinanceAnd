@@ -31,34 +31,42 @@ public class UserInfo implements Parcelable {
      * status : 0
      */
 
+    private int id;
     private String userName;
     private Integer age;
+    private int userSex;     //1 女 2男
+
     private String land;
     private String userPhone;
     private boolean bIsSetNickName;
-    private boolean isSetPass;      // 是否设置登录密码
-    private boolean isNewUser;      // 是否是新注册的用户
-    private int registerRewardIngot; // 新注册的用户奖励的元宝数量
     private String userPortrait;     //用户头像网址
     private int agencyId;
     private Integer certificationStatus;     //认证状态
     private long createTime;
-    private int id;
     private long lastLoginTime;
     private int loginErrorNum;
     private String loginIp;
     private int loginNum;
     private int modifyNickNameTimes;
     private String registrationIp;
-
     private int status;     //	待审核0、审核通过1、审核未通过 2
-
-    private int userSex;     //1 女 2男
 
     private double longitude;     //经度
     private double latitude;       //纬度
-    //是否进行过测试
-    private int evaluate;
+
+    private boolean isSetPass;      // 是否设置登录密码
+    private boolean isNewUser;      // 是否是新注册的用户
+    private int registerRewardIngot; // 新注册的用户奖励的元宝数量
+
+    private int evaluate; //是否进行过测试
+
+    public boolean isNewUser() {
+        return isNewUser;
+    }
+
+    public int getRegisterRewardIngot() {
+        return registerRewardIngot;
+    }
 
     public boolean hasEvaluated() {
         return evaluate == 1;

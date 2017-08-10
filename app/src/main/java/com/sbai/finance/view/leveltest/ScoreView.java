@@ -269,7 +269,7 @@ public class ScoreView extends View {
             if (i == 1) {
                 mEndX = x;
 
-                Log.d(TAG, "start: " + x + " " + y);
+                Log.d(TAG, "show: " + x + " " + y);
             } else if (i == 3) {
                 mStartX = x;
                 mStartY = y;

@@ -10,7 +10,7 @@ public class UserPublishModel {
      * data : [{"followStatus":0,"userName":"溺水的鱼","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493707651242.png"}]
      * pageSize : 15
      * resultCount : 0
-     * start : 0
+     * show : 0
      * total : 0
      */
 
