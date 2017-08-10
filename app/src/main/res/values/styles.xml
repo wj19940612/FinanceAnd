@@ -8,13 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.Transparent" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="windowNoTitle">true</item>
+    <style name="DialogTheme.NoTitle.FadeIn" parent="DialogTheme.NoTitle">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
     </style>
 
     <style name="DialogTheme.NoTitle" parent="Theme.AppCompat.Dialog">
@@ -29,7 +24,7 @@
 
     <style name="EnterFromBottom" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_bottom</item>
-        <item name="android:activityOpenExitAnimation">@anim/no_change</item>
+        <item name="android:activityOpenExitAnimation">@anim/hold</item>
     </style>
 
     <style name="SignEditText" parent="@android:style/TextAppearance">
