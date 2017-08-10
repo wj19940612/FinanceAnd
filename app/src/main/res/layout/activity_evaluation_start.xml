@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_level_test_start"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.leveltest.LevelTestStartActivity">
+    tools:context="com.sbai.finance.activity.evaluation.EvaluationStartActivity">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"

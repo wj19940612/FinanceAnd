@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.leveltest;
+package com.sbai.finance.activity.evaluation;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class LevelExamQuestionsActivity extends BaseActivity {
+public class EvaluationQuestionsActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -54,7 +54,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_level_exam_questions);
+        setContentView(R.layout.activity_evaluation_questions);
         ButterKnife.bind(this);
 
 
@@ -129,6 +129,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
         if (hasExamQuestions() &&
@@ -138,13 +139,14 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
-                            LevelExamQuestionsActivity.this.finish();
+                            EvaluationQuestionsActivity.this.finish();
                         }
                     }).show();
         } else {
             super.onBackPressed();
         }
     }
+
 
     private void changeExamProgress() {
         if (!hasExamQuestions()) return;
@@ -177,10 +179,11 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(TestResultModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
+
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setEvaluate(1);
                         LocalUser.getUser().setUserInfo(userInfo);
-                        Launcher.with(getActivity(), ExamResultActivity.class)
+                        Launcher.with(getActivity(), EvaluationActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
                                 .execute();
                         finish();

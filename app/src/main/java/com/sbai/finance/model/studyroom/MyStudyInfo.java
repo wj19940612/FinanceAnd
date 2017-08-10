@@ -1,32 +1,36 @@
 package com.sbai.finance.model.studyroom;
 
+import java.util.List;
+
 /**
  * 我的学一学
  */
 
 public class MyStudyInfo {
 
+
     /**
+     * answer : [{"answerIds":[{"optionId":892553962484412400}],"answerIdsMap":[],"topicId":"5981274668fadb6d8c3e2fa9"}]
      * holdStudy : 1
-     * holdStudyMax : 3
-     * lastTime : 2017-08-06 23:46:27
-     * learn : 0
-     * modifyTime : 2017-08-06 23:45:26
-     * totalReward : 60
-     * totalStudy : 6
-     * userId : 167
+     * holdStudyMax : 1
+     * lastTime : 2017-08-10 19:23:56
+     * learn : 1
+     * totalReward : 10
+     * totalStudy : 1
+     * userId : 198
      */
 
     private int holdStudy;
     private int holdStudyMax;
     private String lastTime;
     private int learn;
-    private String modifyTime;
     private int totalReward;
     private int totalStudy;
     private int userId;
-    public boolean isLearned(){
-        return learn==1;
+    private List<AnswerBean> answer;
+
+    public boolean isLearned() {
+        return learn == 1;
     }
 
     public int getHoldStudy() {
@@ -61,14 +65,6 @@ public class MyStudyInfo {
         this.learn = learn;
     }
 
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
     public int getTotalReward() {
         return totalReward;
     }
@@ -91,5 +87,65 @@ public class MyStudyInfo {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public List<AnswerBean> getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(List<AnswerBean> answer) {
+        this.answer = answer;
+    }
+
+    public static class AnswerBean {
+        /**
+         * answerIds : [{"optionId":892553962484412400}]
+         * answerIdsMap : []
+         * topicId : 5981274668fadb6d8c3e2fa9
+         */
+
+        private String topicId;
+        private List<AnswerIdsBean> answerIds;
+        private List<?> answerIdsMap;
+
+        public String getTopicId() {
+            return topicId;
+        }
+
+        public void setTopicId(String topicId) {
+            this.topicId = topicId;
+        }
+
+        public List<AnswerIdsBean> getAnswerIds() {
+            return answerIds;
+        }
+
+        public void setAnswerIds(List<AnswerIdsBean> answerIds) {
+            this.answerIds = answerIds;
+        }
+
+        public List<?> getAnswerIdsMap() {
+            return answerIdsMap;
+        }
+
+        public void setAnswerIdsMap(List<?> answerIdsMap) {
+            this.answerIdsMap = answerIdsMap;
+        }
+
+        public static class AnswerIdsBean {
+            /**
+             * optionId : 892553962484412400
+             */
+
+            private long optionId;
+
+            public long getOptionId() {
+                return optionId;
+            }
+
+            public void setOptionId(long optionId) {
+                this.optionId = optionId;
+            }
+        }
     }
 }

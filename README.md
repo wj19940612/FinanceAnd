@@ -40,4 +40,7 @@
 - 元宝：Ingot
 - 积分：Score
 - 评测：Evaluation
+- 学分: Credit
+
+
 

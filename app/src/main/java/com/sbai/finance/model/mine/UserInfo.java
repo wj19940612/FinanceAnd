@@ -64,6 +64,10 @@ public class UserInfo implements Parcelable {
         return isNewUser;
     }
 
+    public void setNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
     public int getRegisterRewardIngot() {
         return registerRewardIngot;
     }
@@ -263,17 +267,17 @@ public class UserInfo implements Parcelable {
     @Override
     public String toString() {
         return "UserInfo{" +
-                "userName='" + userName + '\'' +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
                 ", age=" + age +
+                ", userSex=" + userSex +
                 ", land='" + land + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", bIsSetNickName=" + bIsSetNickName +
-                ", isSetPass=" + isSetPass +
                 ", userPortrait='" + userPortrait + '\'' +
                 ", agencyId=" + agencyId +
                 ", certificationStatus=" + certificationStatus +
                 ", createTime=" + createTime +
-                ", id=" + id +
                 ", lastLoginTime=" + lastLoginTime +
                 ", loginErrorNum=" + loginErrorNum +
                 ", loginIp='" + loginIp + '\'' +
@@ -281,9 +285,11 @@ public class UserInfo implements Parcelable {
                 ", modifyNickNameTimes=" + modifyNickNameTimes +
                 ", registrationIp='" + registrationIp + '\'' +
                 ", status=" + status +
-                ", userSex=" + userSex +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
+                ", isSetPass=" + isSetPass +
+                ", isNewUser=" + isNewUser +
+                ", registerRewardIngot=" + registerRewardIngot +
                 ", evaluate=" + evaluate +
                 '}';
     }

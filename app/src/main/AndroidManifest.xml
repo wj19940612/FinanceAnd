@@ -71,7 +71,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.RewardGetActivity"
-            android:theme="@style/AppTheme.Transparent"
+            android:theme="@style/DialogTheme.NoTitle.FadeIn"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -378,16 +378,16 @@
             android:name=".activity.miss.MissAvatarActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.LevelTestStartActivity"
+            android:name=".activity.evaluation.EvaluationStartActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.LevelExamQuestionsActivity"
+            android:name=".activity.evaluation.EvaluationQuestionsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.ExamResultActivity"
+            android:name=".activity.evaluation.EvaluationActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.HistoryTestResultActivity"
+            android:name=".activity.evaluation.HistoryTestResultActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.ReplyActivity"
@@ -424,7 +424,6 @@
         <activity
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.train.LookBigPictureActivity"
             android:screenOrientation="portrait"/>

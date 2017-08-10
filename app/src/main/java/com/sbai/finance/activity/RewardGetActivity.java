@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -35,6 +36,20 @@ public class RewardGetActivity extends BaseActivity {
 
         String rewardStr = mRewardValue >= 0 ? "+" + mRewardValue : String.valueOf(mRewardValue);
         mReward.setText(rewardStr + getString(R.string.ingot));
+
+        startScheduleJob(1000, 1500);
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        Log.d(TAG, "onTimeUp: 1");
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.fade_out);
     }
 
     private void initData(Intent intent) {

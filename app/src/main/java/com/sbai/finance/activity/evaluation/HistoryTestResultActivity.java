@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.leveltest;
+package com.sbai.finance.activity.evaluation;
 
 import android.content.Context;
 import android.os.Bundle;

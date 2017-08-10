@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
+import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -254,7 +254,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void openLevelStartPage() {
-        Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
+        Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
     }
 
     @Override
