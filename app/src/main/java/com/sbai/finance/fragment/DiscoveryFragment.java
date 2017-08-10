@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,6 +41,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ListViewUtil;
 import com.sbai.finance.view.FeaturesNavigation;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 
 import java.util.List;
@@ -82,6 +84,10 @@ public class DiscoveryFragment extends BaseFragment {
     RelativeLayout mDaily2;
     @BindView(R.id.daily3)
     RelativeLayout mDaily3;
+    @BindView(R.id.title)
+    TitleBar mTitle;
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
 
     private TrainAdapter mTrainAdapter;
 
@@ -121,11 +127,20 @@ public class DiscoveryFragment extends BaseFragment {
                 Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
             }
         });
-
+        initScrollToTop();
         initTrainListView();
         initDailyReportView();
         requestTrainData();
         requestDailyReportData();
+    }
+
+    private void initScrollToTop() {
+        mTitle.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mScrollView.smoothScrollTo(0, 0);
+            }
+        });
     }
 
     private void initDailyReportView() {
