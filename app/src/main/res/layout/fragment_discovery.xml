@@ -8,12 +8,14 @@
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:bottomHasSplitLine="true"
         app:titleText="@string/discovery"/>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
