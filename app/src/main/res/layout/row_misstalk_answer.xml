@@ -55,15 +55,16 @@
         android:layout_marginLeft="38dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="6dp"
-        android:background="@drawable/bg_question">
+        android:background="@drawable/bg_question"
+        android:paddingBottom="5dp"
+        android:paddingTop="8dp">
 
         <TextView
             android:id="@+id/question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
             android:textColor="@color/primaryText"
             android:textSize="16sp"
             tools:text="有没有什么好的选股方法?"/>
