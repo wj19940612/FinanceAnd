@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.train;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,17 +18,25 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.train.CompletePeople;
 import com.sbai.finance.model.train.Experience;
 import com.sbai.finance.model.train.TrainDetail;
+import com.sbai.finance.model.train.TrainPraise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.dialog.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +44,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.net.Client.SHARE_URL_TRAIN_EXPERIENCE;
 
 
 public class TrainDetailActivity extends BaseActivity {
@@ -79,11 +90,13 @@ public class TrainDetailActivity extends BaseActivity {
 	@BindView(R.id.background)
 	RelativeLayout mBackground;
 
-	private int mTrainId = 5;
-	private int mType = 3;
+	private int mTrainId;
+	private int mType;
 	private int mPage = 0;
 	private int mPageSize = 3;
+	private TrainDetail mTrainDetail;
 	private List<String> mCompletePeopleList;
+	private List<Experience> mHotExperienceList;
 	private HotExperienceListAdapter mHotExperienceListAdapter;
 
 	@Override
@@ -91,9 +104,11 @@ public class TrainDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_train_detail);
 		ButterKnife.bind(this);
+		initData(getIntent());
 		initBackGround(mType);
 
 		mCompletePeopleList = new ArrayList<>();
+		mHotExperienceList = new ArrayList<>();
 		mHotExperienceListAdapter = new HotExperienceListAdapter(this);
 		mHotListView.setEmptyView(mEmpty);
 		mHotListView.setFocusable(false);
@@ -102,6 +117,11 @@ public class TrainDetailActivity extends BaseActivity {
 		requestTrainDetail();
 		requestFinishPeopleList();
 		requestHotExperienceList();
+	}
+
+	private void initData(Intent intent) {
+		mType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+		mTrainId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 	}
 
 	private void initBackGround(int type) {
@@ -134,6 +154,7 @@ public class TrainDetailActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<TrainDetail>, TrainDetail>() {
 					@Override
 					protected void onRespSuccessData(TrainDetail trainDetail) {
+						mTrainDetail = trainDetail;
 						updateTrainDetail(trainDetail);
 					}
 				}).fire();
@@ -158,7 +179,10 @@ public class TrainDetailActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {
-						updateHotExperienceList(experienceList);
+						for (int i = 0; i < 2; i++) {
+							mHotExperienceList.add(experienceList.get(i));
+						}
+						updateHotExperienceList(mHotExperienceList);
 					}
 				}).fire();
 	}
@@ -239,7 +263,7 @@ public class TrainDetailActivity extends BaseActivity {
 							.into(mAvatar);
 
 					mUserName.setText(item.getUserModel().getUserName());
-					mPublishTime.setText(item.getUserModel().getCreateTime());
+					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
 				} else {
 					Glide.with(context).load(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
@@ -250,6 +274,35 @@ public class TrainDetailActivity extends BaseActivity {
 
 				mExperience.setText(item.getContent());
 				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPraise()));
+
+				if (item.getIsPraise() == 1) {
+					mLoveNumber.setSelected(true);
+				} else {
+					mLoveNumber.setSelected(false);
+				}
+
+				mLoveNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LocalUser.getUser().isLogin()) {
+							Client.trainExperiencePraise(item.getId(), item.getIsPraise())
+									.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
+										@Override
+										protected void onRespSuccessData(TrainPraise data) {
+											if (data.getIsPraise() == 1) {
+												mLoveNumber.setSelected(true);
+											} else {
+												mLoveNumber.setSelected(false);
+											}
+											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
+										}
+									}).fire();
+
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
+					}
+				});
 
 				if (item.getPicture() == null || "".equalsIgnoreCase(item.getPicture())) {
 					mImageView.setVisibility(View.GONE);
@@ -297,15 +350,49 @@ public class TrainDetailActivity extends BaseActivity {
 				finish();
 				break;
 			case R.id.share:
+				share();
 				break;
 			case R.id.relevantKnowledge:
+				if (mTrainDetail != null && mTrainDetail.getTrain() != null) {
+					Launcher.with(getActivity(), WebActivity.class)
+							.putExtra(WebActivity.EX_TITLE, "相关知识点")
+							.putExtra(WebActivity.EX_URL, mTrainDetail.getTrain().getKnowledgeUrl())
+							.execute();
+				}
 				break;
 			case R.id.hotExperience:
+				Launcher.with(getActivity(), TrainExperienceActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD_1, mTrainId)
+						.execute();
 				break;
 			case R.id.writeExperience:
+				Launcher.with(getActivity(), WriteExperienceActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, mType)
+						.execute();
 				break;
 			case R.id.startTrain:
+				// TODO: 2017/8/10 开始训练
+				ToastUtil.show("开始训练");
 				break;
 		}
+	}
+
+	private void share() {
+		ShareDialog.with(getActivity())
+				.setTitle(getString(R.string.share_title))
+				.setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
+				.setShareDescription(getString(R.string.train_share_description))
+				.setShareUrl(SHARE_URL_TRAIN_EXPERIENCE)
+				.setListener(new ShareDialog.OnShareDialogCallback() {
+					@Override
+					public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
+						Client.share().setTag(TAG).fire();
+					}
+
+					@Override
+					public void onFeedbackClick(View view) {
+						Launcher.with(getActivity(), FeedbackActivity.class).execute();
+					}
+				}).show();
 	}
 }

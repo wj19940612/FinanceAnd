@@ -29,6 +29,7 @@ import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
+import com.sbai.finance.activity.train.TrainDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.TrainProjectModel;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
@@ -123,7 +124,12 @@ public class TrainingFragment extends BaseFragment {
         mTrainAdapter.setOnTrainClickListener(new TrainAdapter.OnTrainClickListener() {
             @Override
             public void onTrainClick(TrainProjectModel trainProjectModel, int position) {
-                // TODO: 2017/8/10 训练列表 点击的训练
+                if (trainProjectModel.getTrain() != null) {
+                    Launcher.with(getActivity(), TrainDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, trainProjectModel.getTrain().getType())
+                            .putExtra(Launcher.EX_PAYLOAD_1, trainProjectModel.getTrain().getId())
+                            .execute();
+                }
             }
         });
         requestUserScore();

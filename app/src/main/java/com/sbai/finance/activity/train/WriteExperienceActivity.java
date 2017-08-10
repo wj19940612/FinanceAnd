@@ -50,13 +50,19 @@ public class WriteExperienceActivity extends BaseActivity {
 
 	private boolean mIsAddPhoto = false;
 	private String mPath;
+	private int mType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_write_experience);
 		ButterKnife.bind(this);
+		initData(getIntent());
 		mExperience.addTextChangedListener(mValidationWatcher);
+	}
+
+	private void initData(Intent intent) {
+		mType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 	}
 
 	private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -119,7 +125,7 @@ public class WriteExperienceActivity extends BaseActivity {
 						@Override
 						protected void onRespSuccessData(List<String> data) {
 							String picture = data.get(0);
-							Client.writeExperience(4, 2, 2, mExperience.getText().toString().trim(), picture)
+							Client.writeExperience(4, mType, 2, mExperience.getText().toString().trim(), picture)
 									.setTag(TAG)
 									.setIndeterminate(WriteExperienceActivity.this)
 									.setCallback(new Callback<Resp<Object>>() {
@@ -143,7 +149,7 @@ public class WriteExperienceActivity extends BaseActivity {
 						}
 					}).fire();
 		} else {
-			Client.writeExperience(4, 2, 2, mExperience.getText().toString().trim(), null)
+			Client.writeExperience(4, 2, mType, mExperience.getText().toString().trim(), null)
 					.setTag(TAG)
 					.setIndeterminate(WriteExperienceActivity.this)
 					.setCallback(new Callback<Resp<Object>>() {

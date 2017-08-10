@@ -25,6 +25,8 @@ public class Client {
     public static final String SHARE_URL_QUESTION = API.getHost() + "/admin/lm/commentary.html?questionId=%d";
     //l乐米日报分享地址
     public static final String SHARE_URL_REPORT = API.getHost() + "/admin/lm/arcelor.html?id=%s";
+    //乐米训练心得分享地址
+    public static final String SHARE_URL_TRAIN_EXPERIENCE= API.getHost() + "admin/lm/train.html?trainId=2";
 
     /**
      * 获取期货品种
@@ -2364,4 +2366,21 @@ public class Client {
 						.put("pageSize", pageSize)
 						.put("trainId", trainId));
 	}
+
+
+    /**
+     * 训练点赞
+     * @param praiseId
+     * @param isPraise
+     * @return
+     */
+    public static API trainExperiencePraise(String praiseId, int isPraise) {
+        return new API("/train/perception/dealClickPraise.do", new ApiParams()
+                .put("praiseId", praiseId)
+                .put("isPraise", isPraise));
+    }
+
+    public static API share() {
+        return new API("/explain/question/share.do");
+    }
 }
