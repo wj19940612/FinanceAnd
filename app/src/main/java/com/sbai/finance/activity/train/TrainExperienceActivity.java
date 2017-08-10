@@ -65,6 +65,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	private int mPage = 0;
 	private HashSet<String> mSet;
 	private View mFootView;
+	private int mTrainId = 5;
 	private HotExperienceListAdapter mHotExperienceListAdapter;
 	private LatestExperienceListAdapter mLatestExperienceListAdapter;
 
@@ -125,7 +126,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	}
 
 	private void requestLatestExperienceList() {
-		Client.getLatestExperienceList(mPage, mPageSize).setTag(TAG)
+		Client.getLatestExperienceList(mPage, mPageSize, mTrainId).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {
@@ -153,7 +154,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	}
 
 	private void requestHotExperienceList() {
-		Client.getHotExperienceList().setTag(TAG)
+		Client.getHotExperienceList(mTrainId).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {

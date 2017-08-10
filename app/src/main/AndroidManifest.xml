@@ -389,12 +389,10 @@
         <activity
             android:name=".activity.leveltest.HistoryTestResultActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
-
 
         <!-- 发现 -->
         <activity
@@ -409,6 +407,7 @@
             android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
+
         <activity
             android:name=".activity.train.ScoreIntroduceActivity"
             android:screenOrientation="portrait"
@@ -425,8 +424,7 @@
         <activity
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.miss.ShareActivity">
-        </activity>
+
         <activity
             android:name=".activity.train.LookBigPictureActivity"
             android:screenOrientation="portrait"/>
@@ -434,5 +432,9 @@
             android:name=".activity.train.WriteExperienceActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activity.train.TrainDetailActivity"
+                  android:screenOrientation="portrait"/>
+
     </application>
+
 </manifest>
