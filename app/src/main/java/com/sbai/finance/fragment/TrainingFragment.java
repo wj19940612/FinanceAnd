@@ -123,7 +123,7 @@ public class TrainingFragment extends BaseFragment {
         mTrainAdapter.setOnTrainClickListener(new TrainAdapter.OnTrainClickListener() {
             @Override
             public void onTrainClick(TrainProjectModel trainProjectModel, int position) {
-                // TODO: 2017/8/10 训练列表 
+                // TODO: 2017/8/10 训练列表 点击的训练
             }
         });
         requestUserScore();
@@ -244,9 +244,11 @@ public class TrainingFragment extends BaseFragment {
             mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
             startScoreAnimation(mNewScore);
         } else {
+            mTestHint.setVisibility(View.VISIBLE);
             mScore.setVisibility(View.GONE);
             mScoreTitle.setVisibility(View.GONE);
             mScoreProgress.setText(R.string.login_look_detail);
+            mLookDetailOrLogin.setVisibility(View.VISIBLE);
             mLookDetailOrLogin.setText(R.string.to_login);
         }
     }
@@ -328,6 +330,10 @@ public class TrainingFragment extends BaseFragment {
                                 .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
                                 .execute();
                     }
+                    if (mLookDetailOrLogin.isShown()) {
+                        Preference.get().setUserHasLookTrainDetail(LocalUser.getUser().getPhone(), true);
+                        mLookDetailOrLogin.setVisibility(View.GONE);
+                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -345,10 +351,6 @@ public class TrainingFragment extends BaseFragment {
             case R.id.testHint:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
-                    if (mLookDetailOrLogin.isShown()) {
-                        Preference.get().setUserHasLookTrainDetail(LocalUser.getUser().getPhone(), true);
-                        mLookDetailOrLogin.setVisibility(View.GONE);
-                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
