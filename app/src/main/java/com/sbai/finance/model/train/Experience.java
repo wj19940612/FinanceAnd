@@ -1,4 +1,4 @@
-package com.sbai.finance.model.trainExperience;
+package com.sbai.finance.model.train;
 
 import java.util.List;
 

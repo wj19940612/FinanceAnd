@@ -683,6 +683,7 @@
     <string name="love_miss">%1$s人喜欢了小姐姐</string>
     <string name="reward_miss">%1$s人打赏了小姐姐</string>
     <string name="love">喜欢</string>
+    <string name="reply_name">%1$s:</string>
     <string name="comment">评论</string>
     <string name="voice_time">%1$d秒</string>
     <string name="love_people_number">%1$s人喜欢</string>

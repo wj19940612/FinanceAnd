@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.trainexperience;
+package com.sbai.finance.activity.train;
 
 import android.content.Intent;
 import android.os.Bundle;

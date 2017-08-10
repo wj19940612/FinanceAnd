@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.trainexperience;
+package com.sbai.finance.activity.train;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.trainExperience.Experience;
+import com.sbai.finance.model.train.Experience;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
