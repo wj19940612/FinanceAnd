@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.leveltest;
+package com.sbai.finance.activity.evaluation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.activity.RewardGetActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leveltest.TestResultModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
@@ -19,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ExamResultActivity extends BaseActivity {
+public class EvaluationActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -47,7 +49,7 @@ public class ExamResultActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exam_result);
+        setContentView(R.layout.activity_evaluation_result);
         ButterKnife.bind(this);
         translucentStatusBar();
         TestResultModel data = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
@@ -89,11 +91,22 @@ public class ExamResultActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (LocalUser.getUser().getUserInfo().isNewUser()) {
+            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
+            RewardGetActivity.show(getActivity(), reward);
+            LocalUser.getUser().setNewUser(false);
+        }
+    }
+
     @OnClick(R.id.going_train)
     public void onViewClicked() {
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
 }

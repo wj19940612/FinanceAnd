@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
-import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
+import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
@@ -350,7 +350,7 @@ public class TrainingFragment extends BaseFragment {
                 break;
             case R.id.testHint:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
+                    Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

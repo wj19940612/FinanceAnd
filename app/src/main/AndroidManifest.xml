@@ -378,16 +378,16 @@
             android:name=".activity.miss.MissAvatarActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.LevelTestStartActivity"
+            android:name=".activity.evaluation.EvaluationStartActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.LevelExamQuestionsActivity"
+            android:name=".activity.evaluation.EvaluationQuestionsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.ExamResultActivity"
+            android:name=".activity.evaluation.EvaluationActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leveltest.HistoryTestResultActivity"
+            android:name=".activity.evaluation.HistoryTestResultActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.ReplyActivity"

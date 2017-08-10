@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.leveltest;
+package com.sbai.finance.activity.evaluation;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leveltest.ExamQuestionsModel;
 import com.sbai.finance.model.leveltest.TestAnswerUtils;
@@ -34,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class LevelExamQuestionsActivity extends BaseActivity {
+public class EvaluationQuestionsActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -55,7 +54,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_level_exam_questions);
+        setContentView(R.layout.activity_evaluation_questions);
         ButterKnife.bind(this);
 
 
@@ -130,6 +129,7 @@ public class LevelExamQuestionsActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
         if (hasExamQuestions() &&
@@ -139,13 +139,14 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
-                            LevelExamQuestionsActivity.this.finish();
+                            EvaluationQuestionsActivity.this.finish();
                         }
                     }).show();
         } else {
             super.onBackPressed();
         }
     }
+
 
     private void changeExamProgress() {
         if (!hasExamQuestions()) return;
@@ -178,12 +179,11 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(TestResultModel data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
-                        openRewardPage();
 
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setEvaluate(1);
                         LocalUser.getUser().setUserInfo(userInfo);
-                        Launcher.with(getActivity(), ExamResultActivity.class)
+                        Launcher.with(getActivity(), EvaluationActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
                                 .execute();
                         finish();
@@ -191,13 +191,6 @@ public class LevelExamQuestionsActivity extends BaseActivity {
                     }
                 })
                 .fire();
-    }
-
-    private void openRewardPage() {
-        if (LocalUser.getUser().getUserInfo().isNewUser()) {
-            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
-            RewardGetActivity.show(getActivity(), reward);
-        }
     }
 
 

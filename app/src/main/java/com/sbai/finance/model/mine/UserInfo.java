@@ -64,6 +64,10 @@ public class UserInfo implements Parcelable {
         return isNewUser;
     }
 
+    public void setNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
+    }
+
     public int getRegisterRewardIngot() {
         return registerRewardIngot;
     }

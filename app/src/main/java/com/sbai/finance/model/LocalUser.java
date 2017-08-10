@@ -45,6 +45,12 @@ public class LocalUser {
         saveToPreference();
     }
 
+    public void setNewUser(boolean isNewUser) {
+        mUserInfo.setNewUser(isNewUser);
+        saveToPreference();
+    }
+
+
     public UserInfo getUserInfo() {
         return mUserInfo;
     }

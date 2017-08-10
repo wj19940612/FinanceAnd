@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.leveltest;
+package com.sbai.finance.activity.evaluation;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class LevelTestStartActivity extends BaseActivity {
+public class EvaluationStartActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -46,7 +46,7 @@ public class LevelTestStartActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_level_test_start);
+        setContentView(R.layout.activity_evaluation_start);
         ButterKnife.bind(this);
         translucentStatusBar();
 
@@ -67,6 +67,7 @@ public class LevelTestStartActivity extends BaseActivity {
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
             int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
             RewardGetActivity.show(getActivity(), reward);
+            LocalUser.getUser().setNewUser(false);
         }
         super.onBackPressed();
     }
@@ -117,7 +118,7 @@ public class LevelTestStartActivity extends BaseActivity {
                     protected void onRespSuccessData(String data) {
                         ArrayList<ExamQuestionsModel> examQuestionsList = getExamQuestionsList(data);
                         if (examQuestionsList != null && !examQuestionsList.isEmpty()) {
-                            Launcher.with(getActivity(), LevelExamQuestionsActivity.class)
+                            Launcher.with(getActivity(), EvaluationQuestionsActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, examQuestionsList)
                                     .execute();
                         } else {
