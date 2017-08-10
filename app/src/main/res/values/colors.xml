@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#55adff</color>
-    <color name="colorPrimaryDark">#0c0f16</color>
+    <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#ff4081</color>
 
     <color name="redPrimary">#f25b57</color>
     <color name="greenPrimary">#2ecc9f</color>
     <color name="blackPrimary">#222</color>
+    <color name="blackAssist">#222</color>
 
     <color name="background">#F5F5F5</color>
     <color name="gameBackground">#564F68</color>
@@ -40,4 +41,11 @@
     <color name="yellowGradientStart">#ffe548</color>
     <color name="backgroundGradientStart">#69b2ff</color>
     <color name="backgroundGradientEnd">#8687f9</color>
+
+    <color name="yellowShallow">#FFFCF5</color>
+    <color name="yellowShallowBorder">#F3B071</color>
+
+    <!---->
+    <color name="yellowScoreGrade">#ffC200</color>
+    <color name="hint_white_color">#FDFDFD</color>
 </resources>

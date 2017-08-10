@@ -1,9 +1,12 @@
 package com.sbai.finance.fragment.dialog;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,15 +19,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.sbai.finance.App;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SafetyPasswordEditText;
+import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +66,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     private String mTitleHint;
     private int mId;
     private boolean mIsSuccess;
+    private boolean mIsRecharge;
     private int mType;
 
     public static RewardInputSafetyPassDialogFragment newInstance(String money) {
@@ -143,9 +151,12 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (!mIsSuccess) {
+        if (!mIsSuccess && !mIsRecharge) {
             RewardMissDialogFragment.newInstance()
                     .show(getActivity().getSupportFragmentManager());
+        }
+        if (mIsRecharge) {
+            showRechargeDialog(getActivity());
         }
         if (mBind != null) {
             mBind.unbind();
@@ -170,9 +181,14 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                                 mIsSuccess = true;
                                 dismissAllowingStateLoss();
                             } else {
-                                ToastUtil.show(objectResp.getMsg());
-                                if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
-                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                                    mIsRecharge = true;
+                                    dismissAllowingStateLoss();
+                                } else {
+                                    if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
+                                        mSafetyPasswordNumber.clearSafetyNumber();
+                                    }
+                                    ToastUtil.show(objectResp.getMsg());
                                 }
                             }
                         }
@@ -194,9 +210,14 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                                 mIsSuccess = true;
                                 dismissAllowingStateLoss();
                             } else {
-                                ToastUtil.show(objectResp.getMsg());
-                                if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
-                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                                    mIsRecharge = true;
+                                    dismissAllowingStateLoss();
+                                } else {
+                                    if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
+                                        mSafetyPasswordNumber.clearSafetyNumber();
+                                    }
+                                    ToastUtil.show(objectResp.getMsg());
                                 }
                             }
                         }
@@ -207,5 +228,17 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     }).fire();
 
         }
+    }
+
+    private void showRechargeDialog(final FragmentActivity activity) {
+        SmartDialog.single(getActivity(), getString(R.string.ignot_not_enough))
+                .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dismiss();
+                        Launcher.with(activity, CornucopiaActivity.class).execute();
+                    }
+                }).setNegative(R.string.cancel)
+                .show();
     }
 }

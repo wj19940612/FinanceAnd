@@ -373,9 +373,23 @@
             android:name=".activity.miss.MissAvatarActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.leveltest.LevelTestStartActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.LevelExamQuestionsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.ExamResultActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leveltest.HistoryTestResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+
 
         <!-- 发现 -->
         <activity
@@ -389,7 +403,12 @@
         <activity
             android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.train.ScoreIntroduceActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.trainexperience.TrainExperienceActivity"
             android:screenOrientation="portrait"/>
@@ -408,6 +427,6 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".activity.trainexperience.WriteExperienceActivity"
                   android:screenOrientation="portrait"/>
-    </application>
 
+    </application>
 </manifest>

@@ -157,12 +157,12 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void updateTitle(List<Feedback> data) {
         //已经设置过标题就不设置了
-        if (!mTitleBar.getTitle().equals(getString(R.string.feed_back))) {
+        if (!mTitleBar.getTitle().equals(getString(R.string.feedback))) {
             return;
         }
         for (Feedback feedback : data) {
             if (!TextUtils.isEmpty(feedback.getReplyName())) {
-                mTitleBar.setTitle(getString(R.string.feed_back) + "-" + feedback.getReplyName());
+                mTitleBar.setTitle(getString(R.string.feedback) + "-" + feedback.getReplyName());
                 break;
             }
         }

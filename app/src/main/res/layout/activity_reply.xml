@@ -22,7 +22,6 @@
         android:background="@android:color/white"
         android:gravity="top"
         android:hint="回复上善若水"
-        android:maxLength="140"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:paddingTop="12dp"

@@ -1,5 +1,7 @@
 package com.sbai.httplib;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -13,6 +15,8 @@ import com.google.gson.JsonSyntaxException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import static com.android.volley.VolleyLog.TAG;
 
 public class GsonRequest<T> extends Request<T> {
 
@@ -122,7 +126,8 @@ public class GsonRequest<T> extends Request<T> {
 
     private void buildBody(StringBuilder builder) {
         if (body != null) {
-            builder.append(body);
+            Log.d(TAG, "buildBody: " + body.toString());
+//            builder.append(body);
         }
     }
 

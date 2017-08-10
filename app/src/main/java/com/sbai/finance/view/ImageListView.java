@@ -10,6 +10,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 头像堆叠显示
  */
@@ -29,29 +34,30 @@ public class ImageListView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setImages(String... images) {
+    public void setImages(List<String> images) {
+        if (images.isEmpty()) return;
         createView(images);
     }
 
-    private void createView(String[] images) {
+    private void createView(List<String> images) {
         mMarginRights = new int[]{(int) Display.dp2Px(21, getResources()), (int) Display.dp2Px(46, getResources()), (int) Display.dp2Px(74, getResources())};
-        switch (images.length) {
+        switch (images.size()) {
             case 0:
                 return;
             case 1:
                 createImageView(0).setImageResource(R.drawable.ic_board_head_more);
-                loadImage(createImageView(1), images[0]);
+                loadImage(createImageView(1), images.get(0));
                 break;
             case 2:
                 createImageView(0).setImageResource(R.drawable.ic_board_head_more);
-                loadImage(createImageView(1), images[0]);
-                loadImage(createImageView(2), images[1]);
+                loadImage(createImageView(1), images.get(1));
+                loadImage(createImageView(2), images.get(0));
                 break;
             case 3:
                 createImageView(0).setImageResource(R.drawable.ic_board_head_more);
-                loadImage(createImageView(1), images[0]);
-                loadImage(createImageView(2), images[1]);
-                loadImage(createImageView(3), images[2]);
+                loadImage(createImageView(1), images.get(2));
+                loadImage(createImageView(2), images.get(1));
+                loadImage(createImageView(3), images.get(0));
                 break;
         }
     }

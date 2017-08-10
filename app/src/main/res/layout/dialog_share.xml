@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:maxHeight="326dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="29dp"
+        android:text="@string/share_and_get_ingot"
+        android:textColor="@color/primaryText"
+        android:textSize="11sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="122dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/weChatFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:drawablePadding="@dimen/dp_10"
+            android:drawableTop="@drawable/ic_share_wechat"
+            android:gravity="center"
+            android:text="@string/wechat_friend"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/weChatFriendCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/dp_10"
+            android:drawableTop="@drawable/ic_share_circle"
+            android:gravity="center"
+            android:text="@string/wechat_circle"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/sinaWeibo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="35dp"
+            android:drawablePadding="@dimen/dp_10"
+            android:drawableTop="@drawable/ic_share_weibo"
+            android:gravity="center"
+            android:text="@string/sina_weibo"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="122dp">
+
+        <TextView
+            android:id="@+id/feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:drawablePadding="@dimen/dp_10"
+            android:drawableTop="@drawable/ic_feedback"
+            android:gravity="center"
+            android:text="@string/feedback"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:gravity="center"
+        android:minHeight="50dp"
+        android:text="@string/cancel"
+        android:textColor="@color/primaryText"
+        android:textSize="15sp"/>
+</LinearLayout>

@@ -55,6 +55,20 @@ public class UserInfo implements Parcelable {
 
     private double longitude;     //经度
     private double latitude;       //纬度
+    //是否进行过测试
+    private int evaluate;
+
+    public boolean hasTested() {
+        return getEvaluate() == 1;
+    }
+
+    public int getEvaluate() {
+        return evaluate;
+    }
+
+    public void setEvaluate(int evaluate) {
+        this.evaluate = evaluate;
+    }
 
     public double getLongitude() {
         return longitude;
@@ -248,6 +262,7 @@ public class UserInfo implements Parcelable {
                 ", land='" + land + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", bIsSetNickName=" + bIsSetNickName +
+                ", isSetPass=" + isSetPass +
                 ", userPortrait='" + userPortrait + '\'' +
                 ", agencyId=" + agencyId +
                 ", certificationStatus=" + certificationStatus +
@@ -261,6 +276,9 @@ public class UserInfo implements Parcelable {
                 ", registrationIp='" + registrationIp + '\'' +
                 ", status=" + status +
                 ", userSex=" + userSex +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", evaluate=" + evaluate +
                 '}';
     }
 

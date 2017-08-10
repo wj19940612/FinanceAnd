@@ -107,12 +107,12 @@ public class CommentActivity extends BaseActivity {
 
     @OnClick(R.id.publish)
     public void onViewClicked() {
-        // TODO: 28/07/2017 发送评论
         requestPublishComment();
 
     }
 
     private void requestPublishComment() {
+        mPublish.setEnabled(false);
         Client.addComment(mInvitationUserId, null, mQuestionComment.getText().toString().trim(), mDataId)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -125,6 +125,7 @@ public class CommentActivity extends BaseActivity {
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());
+                            mPublish.setEnabled(true);
                         }
                     }
                 }).fireFree();

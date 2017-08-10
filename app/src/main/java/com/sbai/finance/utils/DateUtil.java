@@ -362,13 +362,33 @@ public class DateUtil {
         long systemTime = System.currentTimeMillis();
         if (DateUtil.isInThisYear(createTime)) {
             if (DateUtil.isToday(createTime, systemTime)) {
-                return DateUtil.format(createTime, "HH:mm");
+                if (systemTime - createTime < 60 * 1000) {
+                    return "刚刚";
+                } else if (systemTime - createTime < 60 * 60 * 1000) {
+                    return ((systemTime - createTime) / (60 * 1000) + "分钟前");
+                } else {
+                    return DateUtil.format(createTime, "HH:mm");
+                }
             } else {
                 return DateUtil.format(createTime, "MM/dd");
             }
         } else {
             return DateUtil.format(createTime, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR);
         }
+    }
+
+    /**
+     * 当前是否白天
+     *
+     * @return
+     */
+    public static boolean isDayTime() {
+        long systemTime = System.currentTimeMillis();
+        int time = Integer.valueOf(DateUtil.format(systemTime, "HHmm"));
+        if (time >= 600 && time <= 1800) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -655,7 +675,7 @@ public class DateUtil {
      * @param seconds
      * @return
      */
-    public static String getMinutes(int seconds) {
+    public static String getMinutes(long seconds) {
         return seconds / 60 + "分钟";
     }
 

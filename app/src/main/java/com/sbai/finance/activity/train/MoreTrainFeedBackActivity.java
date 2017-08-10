@@ -69,9 +69,7 @@ public class MoreTrainFeedBackActivity extends BaseActivity {
             @Override
             public void onCancel(TrainFeedback trainFeedback) {
                 mIds.remove(trainFeedback);
-                if (mIds.isEmpty()) {
-                    mCommit.setEnabled(false);
-                }
+                setCommitEnable(mComment.getInputComment());
             }
         });
         mListView.setAdapter(mTrainAdapter);

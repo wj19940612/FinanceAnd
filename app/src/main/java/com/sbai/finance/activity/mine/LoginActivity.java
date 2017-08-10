@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
@@ -404,6 +405,11 @@ public class LoginActivity extends BaseActivity {
         if (resp.hasData()) {
             LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
             sendLoginSuccessBroadcast();
+            if (!LocalUser.getUser().getUserInfo().hasTested()) {
+                Launcher.with(getActivity(), LevelTestStartActivity.class)
+                        .putExtra(ExtraKeys.FIRST_TEST, true)
+                        .execute();
+            }
             setResult(RESULT_OK);
             finish();
         }

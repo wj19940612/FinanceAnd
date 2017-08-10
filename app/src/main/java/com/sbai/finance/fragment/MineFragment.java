@@ -6,15 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
-import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,27 +18,21 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
-import com.sbai.finance.activity.mine.AttentionActivity;
-import com.sbai.finance.activity.mine.FansActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
-import com.sbai.finance.activity.mine.PublishActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.wallet.WalletActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.IconTextRow;
 
 import java.util.ArrayList;
@@ -57,41 +47,33 @@ import static com.sbai.finance.activity.mine.LoginActivity.ACTION_LOGIN_SUCCESS;
 public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
-    private static final int REQ_CODE_NEW_NEWS = 18;
-    private static final int REQ_CODE_FANS_PAGE = 322;
-    private static final int REQ_CODE_ATTENTION_PAGE = 4555;
+    private static final int REQ_CODE_MESSAGE = 18;
 
     Unbinder unbinder;
+
     @BindView(R.id.userHeadImage)
-    AppCompatImageView mUserHeadImage;
+    ImageView mUserHeadImage;
     @BindView(R.id.userName)
-    AppCompatTextView mUserName;
-    @BindView(R.id.headImageLayout)
-    LinearLayout mHeadImageLayout;
-    @BindView(R.id.attention)
-    TextView mAttention;
-    @BindView(R.id.fans)
-    TextView mFans;
-    @BindView(R.id.minePublish)
-    TextView mMinePublish;
+    TextView mUserName;
+    @BindView(R.id.userInfoArea)
+    LinearLayout mUserInfoArea;
     @BindView(R.id.wallet)
     IconTextRow mWallet;
-    @BindView(R.id.news)
-    IconTextRow mNews;
-    @BindView(R.id.feedBack)
-    IconTextRow mFeedBack;
+    @BindView(R.id.cornucopia)
+    IconTextRow mCornucopia;
+    @BindView(R.id.message)
+    IconTextRow mMessage;
+    @BindView(R.id.feedback)
+    IconTextRow mFeedback;
     @BindView(R.id.setting)
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
-    @BindView(R.id.cornucopia)
-    IconTextRow mCornucopia;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(ACTION_LOGIN_SUCCESS)) {
-                Log.d("TAG", "onReceive: " + "ACTION_LOGIN_SUCCESS");
                 updateUserImage();
                 updateUserStatus();
             }
@@ -107,17 +89,16 @@ public class MineFragment extends BaseFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
-        initViews();
-    }
-
-    private void initViews() {
-        int margin = (int) Display.dp2Px(4f, getResources());
-        mNews.setRightTextMargin(margin);
-        mFeedBack.setRightTextMargin(margin);
     }
 
     @Override
@@ -126,14 +107,12 @@ public class MineFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(LoginBroadcastReceiver);
     }
 
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded() && LocalUser.getUser().isLogin()) {
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
-            requestUserAttentionAndroidFansNumber();
         }
     }
 
@@ -145,8 +124,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void requestNoReadNewsNumber() {
-        Client.getNoReadMessageNumber()
-                .setTag(TAG)
+        Client.getNoReadMessageNumber().setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
@@ -158,19 +136,17 @@ public class MineFragment extends BaseFragment {
                             }
                         }
                         if (count != 0) {
-                            mNews.setRightTextDrawable(R.drawable.ic_new_message);
+                            mMessage.setSubTextVisible(View.VISIBLE);
                         } else {
-                            mNews.setRightTextDrawable(0);
+                            mMessage.setSubTextVisible(View.GONE);
                         }
                     }
-                })
-                .fireFree();
+                }).fireFree();
     }
 
     private void requestNoReadFeedbackNumber() {
         Client.getNoReadFeedbackNumber()
-                .setTag(TAG)
-                .setIndeterminate(this)
+                .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<String>>() {
                     @Override
                     protected void onRespSuccess(Resp<String> resp) {
@@ -179,34 +155,24 @@ public class MineFragment extends BaseFragment {
                             updateNoReadFeedbackCount(count);
                         }
                     }
-                })
-                .fireFree();
+                }).fireFree();
     }
 
     private void updateNoReadFeedbackCount(int count) {
         if (count != 0) {
-            mFeedBack.setRightTextDrawable(R.drawable.ic_new_message);
+            mFeedback.setSubTextVisible(View.VISIBLE);
         } else {
-            mFeedBack.setRightTextDrawable(0);
+            mFeedback.setSubTextVisible(View.GONE);
         }
     }
 
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
-            updateUserNumber(null);
-            requestUserAttentionAndroidFansNumber();
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
             mUserName.setText(R.string.login);
-            int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
-            SpannableString attentionSpannableString = StrUtil.mergeTextWithColor("-", "\n" + getString(R.string.attention), color);
-            mAttention.setText(attentionSpannableString);
-            SpannableString fansSpannableString = StrUtil.mergeTextWithColor("-", "\n" + getString(R.string.fans), color);
-            mFans.setText(fansSpannableString);
-            SpannableString minePublishSpannableString = StrUtil.mergeTextWithColor("-", "\n" + getString(R.string.my_publish), color);
-            mMinePublish.setText(minePublishSpannableString);
         }
     }
 
@@ -223,81 +189,15 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @OnClick({R.id.headImageLayout, R.id.userHeadImage,
-            R.id.attention, R.id.fans, R.id.minePublish,
+    @OnClick({R.id.userInfoArea,
             R.id.cornucopia, R.id.wallet,
-            R.id.news, R.id.setting, R.id.aboutUs, R.id.feedBack})
+            R.id.message, R.id.feedback, R.id.financeEvaluation,
+            R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.userHeadImage:
-                if (LocalUser.getUser().isLogin()) {
-                    startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.attention:
-                if (LocalUser.getUser().isLogin()) {
-                    startActivityForResult(new Intent(getActivity(), AttentionActivity.class), REQ_CODE_ATTENTION_PAGE);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.fans:
-                if (LocalUser.getUser().isLogin()) {
-                    startActivityForResult(new Intent(getActivity(), FansActivity.class), REQ_CODE_FANS_PAGE);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.minePublish:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), PublishActivity.class).putExtra(Launcher.EX_PAYLOAD_1, LocalUser.getUser().getUserInfo().getUserSex()).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.news:
-                if (LocalUser.getUser().isLogin()) {
-                    startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_NEW_NEWS);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.setting:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), SettingActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.aboutUs:
-                Launcher.with(getActivity(), AboutUsActivity.class)
-                        .execute();
-                break;
-            case R.id.wallet:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), WalletActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
-            case R.id.feedBack:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -309,31 +209,42 @@ public class MineFragment extends BaseFragment {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
+            case R.id.wallet:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), WalletActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+
+            case R.id.message:
+                if (LocalUser.getUser().isLogin()) {
+                    startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_MESSAGE);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.feedback:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.featuresNavigation:
+                // TODO: 09/08/2017 跳转评测页面
+
+            case R.id.setting:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), SettingActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
+            case R.id.aboutUs:
+                Launcher.with(getActivity(), AboutUsActivity.class).execute();
+                break;
         }
-    }
-
-    private void requestUserAttentionAndroidFansNumber() {
-        Client.getAttentionFollowUserNumber(null)
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<AttentionAndFansNumberModel>, AttentionAndFansNumberModel>(false) {
-                    @Override
-                    protected void onRespSuccessData(AttentionAndFansNumberModel data) {
-                        updateUserNumber(data);
-                    }
-                })
-                .fire();
-    }
-
-    private void updateUserNumber(AttentionAndFansNumberModel data) {
-        if (data == null)
-            data = new AttentionAndFansNumberModel();
-        int color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
-        SpannableString attentionSpannableString = StrUtil.mergeTextWithColor(data.getAttention() + "", "\n" + getString(R.string.attention), color);
-        mAttention.setText(attentionSpannableString);
-        SpannableString fansSpannableString = StrUtil.mergeTextWithColor(data.getFollower() + "", "\n" + getString(R.string.fans), color);
-        mFans.setText(fansSpannableString);
-        SpannableString minePublishSpannableString = StrUtil.mergeTextWithColor(data.getViewpoint() + "", "\n" + getString(R.string.my_publish), color);
-        mMinePublish.setText(minePublishSpannableString);
     }
 
     @Override
@@ -349,14 +260,8 @@ public class MineFragment extends BaseFragment {
                     updateUserStatus();
                     updateUserImage();
                     break;
-                case REQ_CODE_NEW_NEWS:
+                case REQ_CODE_MESSAGE:
                     requestNoReadNewsNumber();
-                    break;
-                case REQ_CODE_FANS_PAGE:
-                    requestUserAttentionAndroidFansNumber();
-                    break;
-                case REQ_CODE_ATTENTION_PAGE:
-                    requestUserAttentionAndroidFansNumber();
                     break;
             }
         }

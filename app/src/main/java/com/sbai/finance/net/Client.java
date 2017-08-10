@@ -1,8 +1,10 @@
 package com.sbai.finance.net;
 
 import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.leveltest.TestAnswerUtils;
 import com.sbai.httplib.ApiParams;
 
 
@@ -10,6 +12,17 @@ public class Client {
 
     private static final int POST = Request.Method.POST;
     public static final int DEFAULT_PAGE_SIZE = 15;
+
+    //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
+    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
+    //h5的用户协议界面网址
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
+    //期货分享地址
+    public static final String SHARE_URL_FUTURE = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
+    //股票分享地址
+    public static final String SHARE_URL_STOCK = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
+    // 提问分享地址
+    public static final String SHARE_URL_QUESTION = API.getHost() + "/admin/lm/commentary.html?questionId=%d";
 
     /**
      * 获取期货品种
@@ -1643,16 +1656,6 @@ public class Client {
         return new API("/user/appVersion/getUpdateVersion.do", new ApiParams().put("platform", 0));
     }
 
-    //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
-    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
-    //h5的用户协议界面网址
-    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
-    //期货分享地址
-    public static final String FUTURE_SHARE_URL = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
-    //股票分享地址
-    public static final String STOCK_SHARE_URL = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
-
-
     /**
      * 获取期货对战品种列表
      *
@@ -1828,14 +1831,66 @@ public class Client {
                 .put("varietyId", varietyId));
     }
 
+    //请求参加水平测试人数
+
     /**
+     * /train/evaluate/FinishCount.do
+     * 完成测评的人数
+     *
+     * @return
+     */
+    public static API requestJoinTestedNumber() {
+        return new API("/train/evaluate/FinishCount.do");
+    }
+
+    //请求测试题库
+
+    /**
+     * /train/evaluate/topic.do
+     * GET
+     * 获取题目
+     *
+     * @return
+     */
+    public static API requestExamQuestions() {
+        return new API("/train/evaluate/topic.do");
+    }
+
+    //提交水平测试答案接口
+
+    /**
+     * /**
+     * train/evaluate/End.do
+     * POST
+     * 提交测评
+     *
+     * @return
+     */
+    public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
+        return new API(POST, "/train/evaluate/End.do", new Gson().toJson(finishPO));
+    }
+
+    /**
+     * /train/evaluate/historyLog.do
+     * GET
+     * 历史测评
+     *
+     * @return
+     */
+    public static API requestHistoryTestResultList() {
+        return new API("/train/evaluate/historyLog.do");
+    }
+
+    /**
+     * <<<<<<< HEAD
+     * =======
      * 获取小姐姐列表
      * <p>
-     * =======
+     * <p>
+     * >>>>>>> dev
      * <p>
      * /**
      * 获取小姐姐列表
-     * >>>>>>> dev
      *
      * @return
      */
@@ -2079,6 +2134,45 @@ public class Client {
     }
 
     /**
+     * http://var.esongbai.xyz/train/appraise/user.do
+     * GET
+     * 获得登录用户的评价分
+     *
+     * @return
+     */
+    public static API requestUserScore() {
+        return new API("/train/appraise/user.do");
+    }
+
+    /**
+     * http://var.esongbai.xyz/train/train/myList.do
+     * GET
+     * 我的训练列表
+     *
+     * @return
+     */
+    public static API requestMineTrainProjectList() {
+        return new API("/train/train/myList.do",
+                new ApiParams()
+                        .put("page", 0)
+                        .put("pageSize", 50));
+    }
+
+    /**
+     * /train/train/recommendList.do
+     * GET
+     * 推荐列表
+     *
+     * @return
+     */
+    public static API requestTrainProjectList() {
+        return new API("/train/train/recommendList.do",
+                new ApiParams()
+                        .put("page", 0)
+                        .put("pageSize", 50));
+    }
+
+    /**
      * 学一学记录
      *
      * @return
@@ -2093,6 +2187,7 @@ public class Client {
      * @param questionId
      * @return
      */
+
     public static API listen(int questionId) {
         return new API("/explain/question/listen.do",
                 new ApiParams()
@@ -2100,21 +2195,31 @@ public class Client {
         );
     }
 
-    public static API getTrainCourse(String deviceId) {
-        return new API(POST, "/train/course/task.do",
-                new ApiParams()
-                        .put("deviceId", deviceId)
-        );
+
+    /**
+     * /train/appraise/suggest.do
+     * GET
+     * 评价建议
+     */
+    public static API requestScoreStageAndRemark() {
+        return new API("/train/appraise/suggest.do");
     }
 
     /**
-     * 推荐训练列表
+     * 推荐训练列表  一般不会很多
      */
     public static API getRecommendTrainList(int page) {
         return new API("/train/train/recommendList.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", 100));
+    }
+
+    public static API getTrainCourse(String deviceId) {
+        return new API(POST, "/train/course/task.do",
+                new ApiParams()
+                        .put("deviceId", deviceId)
+        );
     }
 
     /**
@@ -2154,6 +2259,7 @@ public class Client {
     }
 
     /**
+
      * 获取热门心得列表
      * @return
      */
@@ -2191,5 +2297,44 @@ public class Client {
                         .put("star", star)
                         .put("content", content)
                         .put("picture", picture));
+    }
+
+     /** 提交试卷
+     * @param jsonStr
+     * @return
+     */
+
+    public static API handInPaper(String jsonStr) {
+        return new API(POST, "/train/course/finishTask.do", jsonStr);
+    }
+
+    /**
+     * 膜拜
+     *
+     * @param targetId
+     * @return
+     */
+    public static API worship(int targetId, String type, String timeType) {
+        return new API(POST, "/train/rank/worship.do",
+                new ApiParams()
+                        .put("targetId", targetId)
+                        .put("type", type)
+                        .put("timeType", timeType));
+    }
+
+    /**
+     * 排行列表数据
+     */
+    public static API getLeaderLists() {
+        return new API("/train/rank/list.do");
+    }
+
+    /**
+     * 批量对消息
+     */
+    public static API batchRead(String ids) {
+        return new API(POST, "/msg/msg/readBatch.do",
+                new ApiParams()
+                        .put("ids", ids));
     }
 }
