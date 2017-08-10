@@ -49,6 +49,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.mediaPlayerUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -60,6 +61,7 @@ import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.question;
 import static com.sbai.finance.activity.miss.ReplyActivity.REFRESH_REPLY;
+import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
 
 public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -147,6 +149,32 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         requestQuestionReplyList();
         initSwipeRefreshLayout();
         registerRefreshReceiver();
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                share();
+            }
+        });
+    }
+
+    private void share() {
+        ShareDialog.with(getActivity())
+                .setTitle(getString(R.string.share_title))
+                .setShareTitle(getString(R.string.question_share_share_title))
+                .setShareDescription(getString(R.string.question_share_description))
+                .setShareUrl(SHARE_URL_QUESTION)
+                .hasFeedback(false)
+                .setListener(new ShareDialog.OnShareDialogCallback() {
+                    @Override
+                    public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
+                        Client.share().setTag(TAG).fire();
+                    }
+
+                    @Override
+                    public void onFeedbackClick(View view) {
+                    }
+                }).show();
     }
 
     private void requestQuestionDetail() {

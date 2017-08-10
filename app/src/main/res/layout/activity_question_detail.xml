@@ -8,6 +8,8 @@
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        app:rightImage="@drawable/ic_share"
+        app:rightVisible="true"
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

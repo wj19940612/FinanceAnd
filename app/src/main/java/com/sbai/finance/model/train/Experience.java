@@ -1,38 +1,32 @@
 package com.sbai.finance.model.train;
 
-import java.util.List;
-
-/**
- * Created by lixiaokuan0819 on 2017/8/9.
- */
-
 public class Experience {
 
 	/**
-	 * content : 发表第 [ 10 ] 个训练心得
-	 * createDate : 1501637171316
-	 * hot : 0
-	 * id : 59812a3377c84e2515d18a96
+	 * content : 发表一个训练心得
+	 * createDate : 1501598260768
+	 * hot : 1
+	 * id : 5980923477c89a30126482bb
+	 * isPraise : 0
 	 * picture : http://img1.gtimg.com/ninja/2/2017/07/ninja150138073790352.jpg
-	 * praise : 56
-	 * replys : []
-	 * star : 2
-	 * status : 1
+	 * praise : 2
+	 * targetId : 1
 	 * type : 2
-	 * userModel : {"age":25,"certificationStatus":1,"createTime":"2017-05-10 10:22:01","id":165,"land":"浙江省-杭州市-上城区","status":0,"userName":"余潇","userPhone":"17767173523","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494565703036.png","userSex":1}
+	 * userModel : {"id":165,"userName":"余潇","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494565703036.png"}
+	 * star : 2
 	 */
 
 	private String content;
 	private long createDate;
 	private int hot;
 	private String id;
+	private int isPraise;
 	private String picture;
 	private int praise;
-	private int star;
-	private int status;
+	private int targetId;
 	private int type;
 	private UserModelBean userModel;
-	private List<?> replys;
+	private int star;
 
 	public String getContent() {
 		return content;
@@ -66,6 +60,14 @@ public class Experience {
 		this.id = id;
 	}
 
+	public int getIsPraise() {
+		return isPraise;
+	}
+
+	public void setIsPraise(int isPraise) {
+		this.isPraise = isPraise;
+	}
+
 	public String getPicture() {
 		return picture;
 	}
@@ -82,20 +84,12 @@ public class Experience {
 		this.praise = praise;
 	}
 
-	public int getStar() {
-		return star;
+	public int getTargetId() {
+		return targetId;
 	}
 
-	public void setStar(int star) {
-		this.star = star;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
+	public void setTargetId(int targetId) {
+		this.targetId = targetId;
 	}
 
 	public int getType() {
@@ -114,62 +108,24 @@ public class Experience {
 		this.userModel = userModel;
 	}
 
-	public List<?> getReplys() {
-		return replys;
+	public int getStar() {
+		return star;
 	}
 
-	public void setReplys(List<?> replys) {
-		this.replys = replys;
+	public void setStar(int star) {
+		this.star = star;
 	}
 
 	public static class UserModelBean {
 		/**
-		 * age : 25
-		 * certificationStatus : 1
-		 * createTime : 2017-05-10 10:22:01
 		 * id : 165
-		 * land : 浙江省-杭州市-上城区
-		 * status : 0
 		 * userName : 余潇
-		 * userPhone : 17767173523
 		 * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494565703036.png
-		 * userSex : 1
 		 */
 
-		private int age;
-		private int certificationStatus;
-		private String createTime;
 		private int id;
-		private String land;
-		private int status;
 		private String userName;
-		private String userPhone;
 		private String userPortrait;
-		private int userSex;
-
-		public int getAge() {
-			return age;
-		}
-
-		public void setAge(int age) {
-			this.age = age;
-		}
-
-		public int getCertificationStatus() {
-			return certificationStatus;
-		}
-
-		public void setCertificationStatus(int certificationStatus) {
-			this.certificationStatus = certificationStatus;
-		}
-
-		public String getCreateTime() {
-			return createTime;
-		}
-
-		public void setCreateTime(String createTime) {
-			this.createTime = createTime;
-		}
 
 		public int getId() {
 			return id;
@@ -177,22 +133,6 @@ public class Experience {
 
 		public void setId(int id) {
 			this.id = id;
-		}
-
-		public String getLand() {
-			return land;
-		}
-
-		public void setLand(String land) {
-			this.land = land;
-		}
-
-		public int getStatus() {
-			return status;
-		}
-
-		public void setStatus(int status) {
-			this.status = status;
 		}
 
 		public String getUserName() {
@@ -203,14 +143,6 @@ public class Experience {
 			this.userName = userName;
 		}
 
-		public String getUserPhone() {
-			return userPhone;
-		}
-
-		public void setUserPhone(String userPhone) {
-			this.userPhone = userPhone;
-		}
-
 		public String getUserPortrait() {
 			return userPortrait;
 		}
@@ -219,12 +151,30 @@ public class Experience {
 			this.userPortrait = userPortrait;
 		}
 
-		public int getUserSex() {
-			return userSex;
+		@Override
+		public String toString() {
+			return "UserModelBean{" +
+					"id=" + id +
+					", userName='" + userName + '\'' +
+					", userPortrait='" + userPortrait + '\'' +
+					'}';
 		}
+	}
 
-		public void setUserSex(int userSex) {
-			this.userSex = userSex;
-		}
+	@Override
+	public String toString() {
+		return "Experience{" +
+				"content='" + content + '\'' +
+				", createDate=" + createDate +
+				", hot=" + hot +
+				", id='" + id + '\'' +
+				", isPraise=" + isPraise +
+				", picture='" + picture + '\'' +
+				", praise=" + praise +
+				", targetId=" + targetId +
+				", type=" + type +
+				", userModel=" + userModel +
+				", star=" + star +
+				'}';
 	}
 }

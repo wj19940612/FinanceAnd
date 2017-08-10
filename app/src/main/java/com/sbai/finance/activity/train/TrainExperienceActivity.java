@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,15 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.train.Experience;
+import com.sbai.finance.model.train.TrainPraise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
@@ -65,7 +68,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	private int mPage = 0;
 	private HashSet<String> mSet;
 	private View mFootView;
-	private int mTrainId = 5;
+	private int mTrainId;
 	private HotExperienceListAdapter mHotExperienceListAdapter;
 	private LatestExperienceListAdapter mLatestExperienceListAdapter;
 
@@ -74,6 +77,7 @@ public class TrainExperienceActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_train_experience);
 		ButterKnife.bind(this);
+		initData(getIntent());
 		mSet = new HashSet<>();
 
 		initTitleBar();
@@ -84,12 +88,16 @@ public class TrainExperienceActivity extends BaseActivity {
 		scrollToTop(mTitleBar, mScrollView);
 	}
 
+	private void initData(Intent intent) {
+		mTrainId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+	}
+
 	private void initTitleBar() {
 		if (LocalUser.getUser().isLogin()) {
 			mTitleBar.setRightVisible(true);
 			mTitleBar.setRightText(R.string.write_experience);
 			mTitleBar.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.colorPrimary));
-			mTitleBar.setTitleSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
+			mTitleBar.setRightTextSize((int) Display.sp2Px(15, getResources()));
 			mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -274,7 +282,7 @@ public class TrainExperienceActivity extends BaseActivity {
 							.into(mAvatar);
 
 					mUserName.setText(item.getUserModel().getUserName());
-					mPublishTime.setText(item.getUserModel().getCreateTime());
+					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
 				} else {
 					Glide.with(context).load(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
@@ -285,6 +293,35 @@ public class TrainExperienceActivity extends BaseActivity {
 
 				mExperience.setText(item.getContent());
 				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPraise()));
+
+				if (item.getIsPraise() == 1) {
+					mLoveNumber.setSelected(true);
+				} else {
+					mLoveNumber.setSelected(false);
+				}
+
+				mLoveNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LocalUser.getUser().isLogin()) {
+							Client.trainExperiencePraise(item.getId(), item.getIsPraise())
+									.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
+										@Override
+										protected void onRespSuccessData(TrainPraise data) {
+											if (data.getIsPraise() == 1) {
+												mLoveNumber.setSelected(true);
+											} else {
+												mLoveNumber.setSelected(false);
+											}
+											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
+										}
+									}).fire();
+
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
+					}
+				});
 
 				if (item.getPicture() == null || "".equalsIgnoreCase(item.getPicture())) {
 					mImageView.setVisibility(View.GONE);
@@ -386,7 +423,7 @@ public class TrainExperienceActivity extends BaseActivity {
 							.into(mAvatar);
 
 					mUserName.setText(item.getUserModel().getUserName());
-					mPublishTime.setText(item.getUserModel().getCreateTime());
+					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
 				} else {
 					Glide.with(context).load(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
@@ -397,6 +434,35 @@ public class TrainExperienceActivity extends BaseActivity {
 
 				mExperience.setText(item.getContent());
 				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPraise()));
+
+				if (item.getIsPraise() == 1) {
+					mLoveNumber.setSelected(true);
+				} else {
+					mLoveNumber.setSelected(false);
+				}
+
+				mLoveNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LocalUser.getUser().isLogin()) {
+							Client.trainExperiencePraise(item.getId(), item.getIsPraise())
+									.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
+										@Override
+										protected void onRespSuccessData(TrainPraise data) {
+											if (data.getIsPraise() == 1) {
+												mLoveNumber.setSelected(true);
+											} else {
+												mLoveNumber.setSelected(false);
+											}
+											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
+										}
+									}).fire();
+
+						} else {
+							Launcher.with(context, LoginActivity.class).execute();
+						}
+					}
+				});
 
 				if (item.getPicture() == null || "".equalsIgnoreCase(item.getPicture())) {
 					mImageView.setVisibility(View.GONE);
