@@ -45,7 +45,7 @@
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="150dp"
-                android:text="@string/now_not_has_data"
+                android:text="@string/nobody_enter_leader_board"
                 android:textColor="@color/assistText"
                 android:textSize="@dimen/navigate_size"
                 android:visibility="gone"/>

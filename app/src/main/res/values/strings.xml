@@ -356,7 +356,7 @@
     <string name="invite_you_join_future_battle">%1$s邀请你进行一场【美黄金】期货对战，我敢邀，你敢来吗？</string>
     <string name="future_battle_desc">乐米期货对战，紧张激烈的金融游戏，勇者无所畏惧，还有更多元宝好礼等你领取，快来加入吧！</string>
     <string name="share_and_get_ingot">登录用户分享即可得10元宝，每日最多可得30元宝</string>
-    
+
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
     <string name="pay_count">支付金额: %1$s</string>
@@ -672,6 +672,8 @@
     <string name="your_rank">您的排名 %1$d</string>
     <string name="you_no_enter_leader_board">您还未进入榜单</string>
     <string name="click_see_your_rank">点击查看您的排名</string>
+    <string name="me">我</string>
+    <string name="nobody_enter_leader_board">暂时无人上榜</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>

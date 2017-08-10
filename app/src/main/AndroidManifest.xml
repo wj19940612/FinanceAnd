@@ -403,8 +403,7 @@
         <activity
             android:name=".activity.train.MoreTrainFeedBackActivity"
             android:screenOrientation="portrait"
-
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <activity
             android:name=".activity.train.ScoreIntroduceActivity"
             android:screenOrientation="portrait"
