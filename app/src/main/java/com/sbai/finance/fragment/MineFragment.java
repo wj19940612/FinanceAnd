@@ -189,9 +189,9 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.userInfoArea, R.id.cornucopia,
-            R.id.wallet, R.id.message,
-            R.id.feedback, R.id.financeEvaluation,
+    @OnClick({R.id.userInfoArea,
+            R.id.cornucopia, R.id.wallet,
+            R.id.message, R.id.feedback, R.id.financeEvaluation,
             R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {

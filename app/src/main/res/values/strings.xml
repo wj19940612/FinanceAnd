@@ -14,9 +14,6 @@
     <string name="discovery">发现</string>
     <string name="mine">我的</string>
 
-    <!--!!!!deprecated-->
-    <string name="home">乐米</string>
-
     <!-- EconomicCircle -->
     <string name="big_variety_name">%1$s:  </string>
 
@@ -26,7 +23,6 @@
     <string name="no_comment">暂无评论~快来发表您的评论吧</string>
     <string name="share">分享</string>
     <string name="publish_comment">发表评论&#8230;</string>
-    <string name="new_message_count">%1$d条消息</string>
     <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
     <item name="tag_opinion" type="id">0</item>
@@ -64,13 +60,9 @@
     <string name="futures">期货</string>
     <string name="stock">股票</string>
     <string name="forex">外汇</string>
-    <string name="help">互助借款</string>
     <string name="optional">自选</string>
     <string name="ranking">排行榜</string>
-    <string name="battle_hint">来一把紧张激烈的对战吧！</string>
 
-    <string name="banner_detail">活动详情</string>
-    <string name="recommend">推荐</string>
     <!--opinion-->
     <string name="opinion">观点大神</string>
     <string name="skilled">擅长类型</string>
@@ -90,14 +82,11 @@
     <string name="name">名称</string>
     <string name="lastPrice">最新价格</string>
     <string name="rate">涨跌幅</string>
-    <string name="opinion_master">观点大神</string>
-    <string name="idea_detail">眼光准，跟着做准没错</string>
     <string name="quick_publish">快来发表你的观点吧!</string>
     <string name="choose_trade_type">选择交易类型</string>
     <string name="quick_trade">快速交易</string>
     <string name="strategy_buy_sell">策略买卖(暂未开放)</string>
     <string name="firm_offer_open_account">实盘开户(暂未开放)</string>
-    <string name="confirm_login">确认登录</string>
     <string name="crude_oil_future">期货投资宝</string>
     <string name="quick_trade_offer_by_company">快速交易由“深圳达捷鑫科技有限公司”提供</string>
 
@@ -112,7 +101,6 @@
     <string name="event_title">大事件</string>
 
     <!--Trade page-->
-    <string name="stock_code">%1$s(%2$s)</string>
     <string name="today_open">今开</string>
     <string name="pre_close">昨收</string>
     <string name="highest">最高</string>
@@ -135,7 +123,6 @@
     <string name="week_k_line">周K</string>
     <string name="month_k_line">月K</string>
     <string name="there_is_no_more_data">没有更多数据了</string>
-    <string name="point">观点</string>
     <string name="introduce">简介</string>
     <string name="stock_news">新闻</string>
     <string name="rise_list">涨幅榜</string>
@@ -143,7 +130,6 @@
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="market_trading">交易中</string>
-    <string name="stock_halt">停牌</string>
     <string name="no_option">暂无自选股票/期货</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
@@ -155,7 +141,6 @@
     <string name="bid_3">买3</string>
     <string name="bid_4">买4</string>
     <string name="bid_5">买5</string>
-    <string name="five_market">五档</string>
     <string name="market_detail">明细</string>
 
     <!-- 我的界面 -->
@@ -168,13 +153,10 @@
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
-    <string name="please_login">您好，请先登录</string>
     <string name="detail">明细</string>
     <string name="feedback">意见反馈</string>
     <string name="finance_evaluation">金融水平初步测评</string>
-    <string name="new_message">新消息</string>
     <string name="wallet">钱包</string>
-    <string name="item">条</string>
     <string name="now_not_has_data">暂无消息</string>
     <string name="please_input_here">请在此输入......</string>
     <string name="you_dont_have_trade">你还没有交易过哦</string>
@@ -209,19 +191,14 @@
     <string name="sd_is_not_useful">sd卡不可使用</string>
     <string name="real_name">姓名</string>
     <string name="identity_card_number">身份证</string>
-    <string name="identity_card_font">身份证正面照片</string>
-    <string name="identity_card_reverse">身份证反面照片</string>
     <string name="identity_card_phone">身份证照片</string>
     <string name="again_submit">重新提交</string>
     <string name="boy">男</string>
     <string name="girl">女</string>
-    <string name="gps_is_close">定位服务已关闭</string>
-    <string name="please_open_gps_service">请到设置中开启开启[%1$s]定位服务</string>
     <string name="restart_get_location">点击重新获取位置</string>
     <string name="RMB">%1$S元</string>
 
     <!--   消息 -->
-    <string name="system_news">系统消息</string>
     <string name="load_more">点击加载更多</string>
     <string name="check_out_earlier_news">查看更早期的消息&#8230;</string>
     <string name="up_load_more">加载更多</string>
@@ -230,7 +207,6 @@
     <!--设置-->
     <string name="new_news_notification">新消息通知</string>
     <string name="shield_setting">屏蔽设置</string>
-    <string name="security_setting">安全设置</string>
     <string name="security_center">安全中心</string>
     <string name="set_security_password">设置安全密码</string>
     <string name="set_login_password">设置登录密码</string>
@@ -250,7 +226,6 @@
 
     <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>
-    <string name="relieve_shield">解除屏蔽</string>
     <string name="relieve_shield_dialog_title">是否对“%1$s”解除屏蔽?</string>
     <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
 
@@ -258,7 +233,6 @@
     <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再展示在你的经济圈。</string>
 
     <string name="cancel_attention_dialog_title">是否不再关注“%1$s”?</string>
-    <string name="cancel_attention">取消关注</string>
 
     <string name="if_attention">是否关注“%1$s”?</string>
 
@@ -269,7 +243,6 @@
     <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
     <string name="is_already_attention_other">已互相关注</string>
-    <string name="is_not_attention">未关注</string>
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
@@ -278,19 +251,12 @@
     <string name="is_auditing">审核中</string>
     <string name="attention_number">%1$d</string>
     <string name="fans_number">%1$d</string>
-    <string name="real_name_error">姓名输入错误</string>
-    <string name="identity_card_error">身份证输入错误</string>
     <string name="hint">提示</string>
 
     <string name="shield_him">屏蔽TA</string>
     <string name="is_shield">已屏蔽</string>
-    <string name="report">举报</string>
-    <string name="reply_number">回复(%1$d)</string>
-    <string name="love_number">喜欢(%1$d)</string>
-    <string name="number">%1$d</string>
     <string name="number999">999+</string>
     <string name="comment_number999">(999+)</string>
-    <string name="number99">99+</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
@@ -326,7 +292,6 @@
     <string name="publish_opinion">发表观点</string>
     <string name="opinion_length">%1$d/300</string>
     <string name="submit_has_empty">提  交</string>
-    <string name="please_enter_the_text">请输入文字...</string>
     <string name="describe_your_opinion">描述一下你的观点吧</string>
 
     <string name="end">已结束</string>
@@ -336,7 +301,6 @@
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
-    <string name="quick_to_express_your_opinion">快来发表你的观点吧!</string>
 
     <string name="send">发送</string>
     <string name="gallery">相册</string>
@@ -349,7 +313,6 @@
     <string name="pay_intention_hint1">意向金为平台服务费</string>
     <string name="pay_intention_hint2">无论用户是否成功借款都不予退还,请谅解</string>
     <string name="we_chat_pay">微信支付</string>
-    <string name="ali_pay">支付宝支付</string>
     <string name="intention_amount">￥0.01</string>
     <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
     <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
@@ -382,7 +345,6 @@
     <string name="business_scope">经营范围</string>
 
     <!--分享-->
-    <string name="share_to">分享到:</string>
     <string name="wechat_friend">微信好友</string>
     <string name="wechat_circle">朋友圈</string>
     <string name="sina_weibo">新浪微博</string>
@@ -414,13 +376,10 @@
     <string name="recharge">充值</string>
     <string name="withdraw">提现</string>
     <string name="bank_card">银行卡</string>
-    <string name="bank_card_pay">%1$s(%2$d)</string>
     <string name="bank_card_recharge_limit">单笔限额￥%1$d元</string>
     <string name="recharge_count">充值金额</string>
     <string name="recharge_hint">5元起充</string>
     <string name="recharge_service">遇到任何问题，请联系客服></string>
-    <string name="ali">支付宝</string>
-    <string name="wei_xin">微信</string>
     <string name="next">下一步</string>
     <string name="money_from">%1$s(%2$s)</string>
 
@@ -447,14 +406,11 @@
     <string name="bounty">赏金</string>
     <string name="versusing">对战中</string>
     <string name="versus_end">已结束</string>
-    <string name="versus_cancel">已取消</string>
     <string name="tie">平局</string>
     <string name="duration">时长</string>
     <string name="minute">%1$s分钟</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
-    <string name="battle_status_pending">等待中...</string>
-    <string name="battle_status_fighting">对战中...</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
@@ -465,7 +421,6 @@
     <string name="identity_card_">身份证:</string>
     <string name="phone_">手机号:</string>
     <string name="auth_code_">验证码:</string>
-    <string name="please_input_auth_code">请输入短信验证码</string>
     <string name="read_and_agreed">  我已阅读并同意</string>
     <string name="recharge_service_protocol">《充值服务协议》</string>
     <string name="unbind">解绑</string>
@@ -494,7 +449,6 @@
     <string name="complete">完成</string>
     <string name="REM_HINT">￥</string>
     <string name="yuan">￥%1$s</string>
-    <string name="yuan_number">￥%1$d</string>
     <string name="please_input_pass">请输入安全密码</string>
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
@@ -540,7 +494,6 @@
     <string name="versus_record">期货对战-战绩</string>
     <string name="battle_his_record">历史对战</string>
     <string name="battle_his_record_launch">历史对战></string>
-    <string name="see_his_battle">查看更早对战</string>
     <string name="go_battle">前往对战</string>
     <string name="wing">获胜</string>
     <string name="failure">败北</string>
@@ -548,7 +501,6 @@
     <string name="buy_price">买入价</string>
     <string name="position_profit">持仓盈亏(元)</string>
     <string name="no_position">暂无持仓</string>
-    <string name="versus_rule_title">决斗规则</string>
     <string name="join_versus_failure">加入失败</string>
     <string name="join_battle_balance_not_enough">余额不足，请充值或选择其他赏金较低的对战</string>
     <string name="join_versus_title">确认加入对战？</string>
@@ -558,11 +510,8 @@
     <string name="no_waiting">不等了</string>
     <string name="cancel_matching">取消匹配</string>
     <string name="cancel_tip">对手正在来的路上，是否要取消匹配？</string>
-    <string name="matching">匹配中</string>
-    <string name="matching_tip">正在进行匹配，请稍后</string>
     <string name="match_battle_confirm">确认匹配对战？</string>
     <string name="match_battle_tip">匹配对战将随机选择赏金在余额范围内的对局。</string>
-    <string name="versus_rule_tip">1、对战中下注金额进行冻结\n2、按照最后盈利情况进行结算，胜者获得对方赌注百分之九十的奖励\n3、平局不扣赌注，对局时间结束时用户将被清仓后进行结算\n4、对战无操盘记录将自动判负</string>
     <string name="battle_detail">对战详情</string>
     <string name="cancel_match">取消匹配</string>
     <string name="desc_matching">正在进行匹配，请稍后…</string>
@@ -582,7 +531,6 @@
     <string name="take_short_position">卖空建仓</string>
     <string name="take_more_close_position">买多平仓</string>
     <string name="take_short_close_position">卖空平仓</string>
-    <string name="join_self_versus_tip">不能加入自己创建的房间</string>
     <string name="battle_variety_name">对战品种 : </string>
     <string name="battle_time">对战时长 : </string>
     <string name="battle_reward">对战赏金 : </string>
@@ -597,7 +545,6 @@
     <string name="cancel_failed_game_start">取消失败，对战已开始</string>
     <string name="remaining_time">剩余%1$s</string>
     <string name="support">%1$s赞</string>
-    <string name="game_over">游戏结束</string>
     <string name="game_result_win">神操作！真是羡煞旁人</string>
     <string name="game_result_lose">别气馁，下一站大神</string>
     <string name="game_result_draw">英雄所见略同</string>
@@ -615,15 +562,10 @@
     <!--     版本更新             -->
     <string name="download_fail">下载失败</string>
     <string name="check_new_version">发现了新版本</string>
-    <string name="upgrade_now">立即升级</string>
-    <string name="download_failure">下载失败!</string>
     <string name="downloading">正在下载: %1$s</string>
-    <string name="button_downloading">下载中</string>
     <string name="download_start">开始下载</string>
-    <string name="download_stop">下载停止</string>
     <string name="please_not_download_again">请勿重复下载</string>
     <string name="download_complete">下载完成</string>
-    <string name="permission_granted_success">权限授予成功</string>
     <string name="now_update">立即更新</string>
     <string name="version">v%1$s</string>
     <string name="is_already_latest_version">已经是最新版本了</string>
@@ -671,7 +613,6 @@
     <string name="continue_question">继续提问</string>
     <string name="give_up">放弃</string>
     <string name="continue_comment">继续</string>
-    <string name="all_has_read">全部标记为已读</string>
     <string name="other">其他</string>
     <string name="confirm_reward">确认打赏</string>
     <string name="other_money_ingot">其他金额(元宝)</string>
@@ -680,7 +621,6 @@
     <string name="at_least_reward_ten_ingot">最低打赏金额10元宝</string>
     <string name="all_read">全部已读</string>
     <string name="success_reward">成功打赏</string>
-    <string name="deduct">扣除</string>
     <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
     <string name="publish_success">发布成功</string>
     <string name="go_exchange">去兑换</string>
@@ -766,17 +706,6 @@
     <string name="source_and_time">来源: %1$s    %2$s</string>
 
     <!--了解学分-->
-    <string name="poor">较差</string>
-    <string name="middle_score">中等</string>
-    <string name="good">良好</string>
-    <string name="excellent">优秀</string>
-    <string name="very_strong">极强</string>
-    <string name="zero">0</string>
-    <string name="two_hundred">200</string>
-    <string name="four_hundred">400</string>
-    <string name="six_hundred">600</string>
-    <string name="eight_hundred">800</string>
-    <string name="one_thousand">1000</string>
     <string name="score_explain_title">分数解释</string>
     <string name="score_explain_content">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
     <string name="exponent_specification">指数说明</string>
