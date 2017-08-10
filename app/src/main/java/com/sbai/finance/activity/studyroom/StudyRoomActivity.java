@@ -290,14 +290,9 @@ public class StudyRoomActivity extends BaseActivity {
                 }
 
             } else {
-                mCommit.setVisibility(View.VISIBLE);
                 mCommit.setText(getString(R.string.hand_in_paper));
                 mIsLearned = false;
             }
-        } else {
-            mCommit.setVisibility(View.VISIBLE);
-            mCommit.setText(getString(R.string.hand_in_paper));
-            mIsLearned = false;
         }
     }
 
