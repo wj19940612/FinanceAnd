@@ -10,13 +10,13 @@ public class ShieldedUserModel {
      * data : [{"createTime":1493827200000,"id":88,"shielduserId":105,"shielduserName":"用户317","shielduserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1493863530692.png"}]
      * pageSize : 15
      * resultCount : 1
-     * start : 0
+     * show : 0
      * total : 1
      */
 
 //    private int pageSize;
 //    private int resultCount;
-//    private int start;
+//    private int show;
 //    private int total;
 //    private List<DataBean> data;
 //
@@ -37,11 +37,11 @@ public class ShieldedUserModel {
 //    }
 //
 //    public int getStart() {
-//        return start;
+//        return show;
 //    }
 //
-//    public void setStart(int start) {
-//        this.start = start;
+//    public void setStart(int show) {
+//        this.show = show;
 //    }
 //
 //    public int getTotal() {

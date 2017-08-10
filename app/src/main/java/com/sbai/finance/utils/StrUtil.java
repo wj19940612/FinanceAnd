@@ -158,7 +158,7 @@ public class StrUtil {
 			res.setSpan(new RelativeSizeSpan(ratio1), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			if (s2Color != Color.TRANSPARENT) {
 				res.setSpan(new ForegroundColorSpan(s2Color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//				res.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//				res.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), show, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			}
 			res.setSpan(new RelativeSizeSpan(ratio2), start2, end2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

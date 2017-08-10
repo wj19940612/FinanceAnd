@@ -17,7 +17,7 @@ public class QuestionReply {
 	 * data : [{"content":"发表一个评论yoyoyoyoyoyo333333!","createDate":1501664354913,"dataId":2,"id":"5981946377c87b05eb1b3c0b","remark":"内容正常","replyParentId":"5981941977c85d3b0d864f41","replys":[{"content":"发表一个评论yoyoyoyoyoyo333333!","createDate":1501664280341,"dataId":2,"id":"5981941977c85d3b0d864f41","replyParentId":"root_reply","replys":[],"star":2,"status":1,"sysAuditor":1,"type":1,"userAuditor":1,"userModel":{"age":25,"certificationStatus":1,"createTime":1494382921000,"id":165,"land":"浙江省-杭州市-上城区","status":0,"userName":"余潇","userPhone":"17767173523","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494565703036.png","userSex":1}}],"status":1,"sysAuditor":1,"type":1,"userAuditor":1},{"content":"发表一个评论yoyoyoyoyoyo333333!","createDate":1501664280341,"dataId":2,"id":"5981941977c85d3b0d864f41","replyCount":1,"replyParentId":"root_reply","replys":[],"star":2,"status":1,"sysAuditor":1,"type":1,"userAuditor":1,"userModel":{"age":25,"certificationStatus":1,"createTime":1494382921000,"id":165,"land":"浙江省-杭州市-上城区","status":0,"userName":"余潇","userPhone":"17767173523","userPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494565703036.png","userSex":1}}]
 	 * pageSize : 2
 	 * resultCount : 11
-	 * start : 0
+	 * show : 0
 	 * total : 6
 	 */
 

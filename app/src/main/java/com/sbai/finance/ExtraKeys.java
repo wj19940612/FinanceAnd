@@ -1,5 +1,8 @@
 package com.sbai.finance;
 
+/**
+ * 会使用多次的 Intent Extra key 放这里，针对特别页面的放页面里面
+ */
 public interface ExtraKeys {
 
     String PAGE_TYPE = "page_type";
