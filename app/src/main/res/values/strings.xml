@@ -629,6 +629,7 @@
 
     <!--discovery-->
     <string name="daily">乐米日报</string>
+    <string name="no_report">暂无日报</string>
     <string name="train_program">训练项目</string>
     <string name="train_count">完成 %1$d 次</string>
     <string name="have_no_train">还未进行训练</string>

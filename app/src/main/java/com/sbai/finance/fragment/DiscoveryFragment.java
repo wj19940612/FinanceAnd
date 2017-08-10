@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,7 +27,6 @@ import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
-import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.MoreTrainFeedBackActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
@@ -37,9 +37,9 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ListViewUtil;
 import com.sbai.finance.view.FeaturesNavigation;
 import com.sbai.finance.view.IconTextRow;
-import com.sbai.finance.view.MyListView;
 import com.sbai.httplib.CookieManger;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class DiscoveryFragment extends BaseFragment {
     @BindView(R.id.training)
     IconTextRow mTraining;
     @BindView(R.id.listView)
-    MyListView mListView;
+    ListView mListView;
     @BindView(R.id.daily)
     IconTextRow mDaily;
     @BindView(R.id.image1)
@@ -157,6 +157,7 @@ public class DiscoveryFragment extends BaseFragment {
             }
         }
         mTrainAdapter.notifyDataSetChanged();
+        ListViewUtil.setListViewHeightBasedOnChildren(mListView);
     }
 
     private void requestDailyReportData() {

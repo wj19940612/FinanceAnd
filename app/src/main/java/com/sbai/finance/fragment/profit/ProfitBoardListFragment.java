@@ -156,6 +156,7 @@ public class ProfitBoardListFragment extends BaseFragment implements
         if (!LocalUser.getUser().isLogin()) {
             mMyBoardInfo.setVisibility(View.GONE);
             mTipInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setText(getString(R.string.click_see_your_rank));
         }
     }
 
@@ -331,5 +332,8 @@ public class ProfitBoardListFragment extends BaseFragment implements
 
     @OnClick(R.id.tipInfo)
     public void onViewClicked() {
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 }

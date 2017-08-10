@@ -21,6 +21,7 @@ import java.util.List;
 
 public class ImageListView extends RelativeLayout {
     private int[] mMarginRights;
+    private int mDrawble;
 
     public ImageListView(Context context) {
         super(context);
@@ -34,9 +35,16 @@ public class ImageListView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
 
+
+    public void setImages(List<String> images, int resId) {
+        if (images.isEmpty()) return;
+        setDrawble(resId);
+        createView(images);
+    }
+
     public void setImages(List<String> images) {
         if (images.isEmpty()) return;
-        createView(images);
+        setImages(images, R.drawable.ic_board_head_more);
     }
 
     private void createView(List<String> images) {
@@ -45,16 +53,16 @@ public class ImageListView extends RelativeLayout {
             case 0:
                 return;
             case 1:
-                createImageView(0).setImageResource(R.drawable.ic_board_head_more);
+                createImageView(0).setImageResource(mDrawble);
                 loadImage(createImageView(1), images.get(0));
                 break;
             case 2:
-                createImageView(0).setImageResource(R.drawable.ic_board_head_more);
+                createImageView(0).setImageResource(mDrawble);
                 loadImage(createImageView(1), images.get(1));
                 loadImage(createImageView(2), images.get(0));
                 break;
             case 3:
-                createImageView(0).setImageResource(R.drawable.ic_board_head_more);
+                createImageView(0).setImageResource(mDrawble);
                 loadImage(createImageView(1), images.get(2));
                 loadImage(createImageView(2), images.get(1));
                 loadImage(createImageView(3), images.get(0));
@@ -87,5 +95,10 @@ public class ImageListView extends RelativeLayout {
                 .load(url).placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getContext()))
                 .into(imageView);
+    }
+
+    public ImageListView setDrawble(int resId) {
+        mDrawble = resId;
+        return this;
     }
 }

@@ -23,6 +23,8 @@ public class Client {
     public static final String SHARE_URL_STOCK = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
     // 提问分享地址
     public static final String SHARE_URL_QUESTION = API.getHost() + "/admin/lm/commentary.html?questionId=%d";
+    //l乐米日报分享地址
+    public static final String SHARE_URL_REPORT = API.getHost() + "/admin/lm/arcelor.html?id=%s";
 
     /**
      * 获取期货品种
@@ -2253,8 +2255,8 @@ public class Client {
     }
 
     /**
-
      * 获取热门心得列表
+     *
      * @return
      */
     public static API getHotExperienceList() {
@@ -2263,6 +2265,7 @@ public class Client {
 
     /**
      * 获取最新心得列表
+     *
      * @param page
      * @param pageSize
      * @return
@@ -2276,6 +2279,7 @@ public class Client {
 
     /**
      * 写心得
+     *
      * @param invitationUserId
      * @param type
      * @param star
@@ -2293,7 +2297,9 @@ public class Client {
                         .put("picture", picture));
     }
 
-     /** 提交试卷
+    /**
+     * 提交试卷
+     *
      * @param jsonStr
      * @return
      */

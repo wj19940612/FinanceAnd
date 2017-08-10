@@ -324,10 +324,8 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
 
     @OnClick(R.id.tipInfo)
     public void onViewClicked() {
-        if (mTipInfo.getText().toString().equalsIgnoreCase(getString(R.string.click_see_your_rank))) {
-            if (!LocalUser.getUser().isLogin()) {
-                Launcher.with(getActivity(), LoginActivity.class).execute();
-            }
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
         }
     }
 
