@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -48,6 +49,7 @@ public class MineFragment extends BaseFragment {
 
     private static final int REQ_CODE_USER_INFO = 801;
     private static final int REQ_CODE_MESSAGE = 18;
+    private static final int REQ_CODE_LOGIN = 10700;
 
     Unbinder unbinder;
 
@@ -231,9 +233,13 @@ public class MineFragment extends BaseFragment {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.featuresNavigation:
-                // TODO: 09/08/2017 跳转评测页面
-
+            case R.id.financeEvaluation:
+                if (LocalUser.getUser().isLogin()) {
+                    openLevelStartPage();
+                } else {
+                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_CODE_LOGIN);
+                }
+                break;
             case R.id.setting:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), SettingActivity.class).execute();
@@ -245,6 +251,10 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), AboutUsActivity.class).execute();
                 break;
         }
+    }
+
+    private void openLevelStartPage() {
+        Launcher.with(getActivity(), LevelTestStartActivity.class).execute();
     }
 
     @Override
@@ -262,6 +272,9 @@ public class MineFragment extends BaseFragment {
                     break;
                 case REQ_CODE_MESSAGE:
                     requestNoReadNewsNumber();
+                    break;
+                case REQ_CODE_LOGIN:
+                    openLevelStartPage();
                     break;
             }
         }
