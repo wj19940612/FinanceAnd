@@ -134,6 +134,7 @@ public class EvaluationStartActivity extends BaseActivity {
         //需要对其进行AES解密
         try {
             String s = SecurityUtil.AESDecrypt(data);
+            Log.d(TAG, "getExamQuestionsList: " + s);
             Type type = new TypeToken<ArrayList<ExamQuestionsModel>>() {
             }.getType();
             return new Gson().fromJson(s, type);

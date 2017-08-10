@@ -146,6 +146,36 @@ public class MyStudyInfo {
             public void setOptionId(long optionId) {
                 this.optionId = optionId;
             }
+
+            @Override
+            public String toString() {
+                return "AnswerIdsBean{" +
+                        "optionId=" + optionId +
+                        '}';
+            }
         }
+
+        @Override
+        public String toString() {
+            return "AnswerBean{" +
+                    "topicId='" + topicId + '\'' +
+                    ", answerIds=" + answerIds +
+                    ", answerIdsMap=" + answerIdsMap +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "MyStudyInfo{" +
+                "holdStudy=" + holdStudy +
+                ", holdStudyMax=" + holdStudyMax +
+                ", lastTime='" + lastTime + '\'' +
+                ", learn=" + learn +
+                ", totalReward=" + totalReward +
+                ", totalStudy=" + totalStudy +
+                ", userId=" + userId +
+                ", answer=" + answer +
+                '}';
     }
 }
