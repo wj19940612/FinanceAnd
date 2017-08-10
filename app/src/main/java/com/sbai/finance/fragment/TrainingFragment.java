@@ -26,8 +26,10 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.leveltest.LevelTestStartActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.TrainProjectModel;
@@ -291,10 +293,10 @@ public class TrainingFragment extends BaseFragment {
                 }
                 break;
             case R.id.rankingList:
-                // TODO: 2017/8/4 排行榜
+                Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
                 break;
             case R.id.reviewLessonRoom:
-                // TODO: 2017/8/4 自习室
+                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 break;
             case R.id.closeHint:
                 mTestHint.setVisibility(View.GONE);

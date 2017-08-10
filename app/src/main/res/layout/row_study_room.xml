@@ -10,8 +10,6 @@
         android:id="@+id/optionArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0.5dp"
-        android:layout_marginTop="0.5dp"
         android:background="@android:color/white"
         android:orientation="horizontal"
         android:padding="@dimen/common_padding">

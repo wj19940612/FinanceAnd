@@ -145,6 +145,7 @@ public class StudyRoomActivity extends BaseActivity {
                 mCommit.setEnabled(false);
             }
         });
+        mListView.setFocusable(false);
         mListView.setAdapter(mOptionAdapter);
     }
 
@@ -161,9 +162,6 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void updateResultView() {
-        mCommit.setVisibility(View.GONE);
-        mTestResult.setVisibility(View.VISIBLE);
-        mExplainArea.setVisibility(View.VISIBLE);
         StudyOption.ContentBean item = mOptionAdapter.getItem(mSelectedIndex);
         if (item == null) return;
         if (item.isRight()) {
@@ -173,6 +171,9 @@ public class StudyRoomActivity extends BaseActivity {
             mTestResult.setText(getString(R.string.answer_wrong_study_together));
             updateResultListView(false);
         }
+        mCommit.setVisibility(View.GONE);
+        mTestResult.setVisibility(View.VISIBLE);
+        mExplainArea.setVisibility(View.VISIBLE);
     }
 
     private void updateResultListView(boolean right) {
@@ -183,11 +184,15 @@ public class StudyRoomActivity extends BaseActivity {
                 if (view != null) {
                     CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
                     TextView answer = (TextView) view.findViewById(R.id.answer);
+                    TextView option = (TextView) view.findViewById(R.id.option);
                     LinearLayout optionArea = (LinearLayout) view.findViewById(R.id.optionArea);
                     if (cb != null) {
                         cb.setVisibility(View.GONE);
                     }
                     if (i == mSelectedIndex) {
+                        if (option != null) {
+                            option.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+                        }
                         if (right) {
                             if (answer != null) {
                                 answer.setVisibility(View.VISIBLE);

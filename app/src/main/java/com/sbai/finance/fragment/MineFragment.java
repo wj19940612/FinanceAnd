@@ -195,6 +195,13 @@ public class MineFragment extends BaseFragment {
             R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.userInfoArea:
+                if (LocalUser.getUser().isLogin()) {
+                    startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+                break;
             case R.id.headImageLayout:
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
