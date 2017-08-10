@@ -24,8 +24,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.studyroom.FinishTaskReward;
 import com.sbai.finance.model.studyroom.MyStudyInfo;
 import com.sbai.finance.model.studyroom.StudyOption;
 import com.sbai.finance.model.studyroom.StudyResult;
@@ -89,6 +91,7 @@ public class StudyRoomActivity extends BaseActivity {
     private boolean mIsLearned;
     private int mSelectedIndex = -1;
     private String mTrainId;
+    private StudyOption mStudyOption;
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -104,7 +107,7 @@ public class StudyRoomActivity extends BaseActivity {
         initStudyView();
         initListView();
         initLoginReceiver();
-        requestMyStudyData();
+//        requestMyStudyData();
         requestTrainData();
     }
 
@@ -225,11 +228,13 @@ public class StudyRoomActivity extends BaseActivity {
                     protected void onRespSuccessData(Object data) {
                         StudyOption studyOption = new Gson().fromJson(SecurityUtil.AESDecrypt((String) data), StudyOption.class);
                         updateTrainData(studyOption);
+                        requestMyStudyData();
                     }
                 }).fireFree();
     }
 
     private void updateTrainData(StudyOption data) {
+        mStudyOption = data;
         if (data == null) return;
         mOptionAdapter.clear();
         mOptionAdapter.addAll(data.getContent());
@@ -265,10 +270,26 @@ public class StudyRoomActivity extends BaseActivity {
         mTotalScholarship.setText(getString(R.string.ingot_number_no_blank, data.getTotalReward()));
         if (LocalUser.getUser().isLogin()) {
             if (data.isLearned()) {
-                mCommit.setText(getString(R.string.today_already_study));
-                mCommit.setEnabled(false);
-                mIsLearned = true;
+                if (data.getAnswer() != null && data.getAnswer().size() > 0) {
+                    if (mStudyOption != null && mStudyOption.getId().equalsIgnoreCase(data.getAnswer().get(0).getTopicId())) {
+                        if (data.getAnswer().get(0).getAnswerIds().size() > 0) {
+                            for (int i = 0; i < mStudyOption.getContent().size(); i++) {
+                                if (mStudyOption.getContent().get(i).getId() == data.getAnswer().get(0).getAnswerIds().get(0).getOptionId()) {
+                                    mSelectedIndex = i;
+                                    updateResultView();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    mCommit.setText(getString(R.string.today_already_study));
+                    mCommit.setEnabled(false);
+                    mIsLearned = true;
+                }
+
             } else {
+                mCommit.setVisibility(View.VISIBLE);
                 mCommit.setText(getString(R.string.hand_in_paper));
                 mIsLearned = false;
             }
@@ -276,6 +297,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void requestHandInPaper() {
+        if (mSelectedIndex == -1) return;
         StudyResult studyResult = new StudyResult();
         studyResult.setDataId(AppInfo.getDeviceHardwareId(getActivity()));
         List<StudyResult.AnswersBean> answerList = new ArrayList<>();
@@ -292,17 +314,24 @@ public class StudyRoomActivity extends BaseActivity {
 
         Client.handInPaper(new Gson().toJson(studyResult)).setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<Object>>() {
+                .setCallback(new Callback<Resp<FinishTaskReward>>() {
                     @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
+                    protected void onRespSuccess(Resp<FinishTaskReward> resp) {
                         if (resp.isSuccess()) {
                             updateResultView();
                             requestMyStudyData();
+                            showRewardView(resp.getData().getGold());
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
                     }
                 }).fireFree();
+    }
+
+    private void showRewardView(double gold) {
+        if (gold > 0) {
+            RewardGetActivity.show(this, (int) Math.round(gold));
+        }
     }
 
     @OnClick(R.id.commit)
