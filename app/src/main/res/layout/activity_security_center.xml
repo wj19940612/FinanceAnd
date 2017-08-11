@@ -16,7 +16,7 @@
         android:layout_marginBottom="@dimen/common_margin"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        app:barBackground="@android:color/white"
+        android:background="@android:color/white"
         app:titleText="@string/security_center"
         app:titleTextColor="@color/primaryText"/>
 

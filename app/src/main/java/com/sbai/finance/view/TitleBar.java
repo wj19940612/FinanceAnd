@@ -26,17 +26,16 @@ public class TitleBar extends RelativeLayout {
     private static final float HEIGHT_SPLIT_LINE_DP = 0.5f;
 
     private CharSequence mTitle;
-    private int mTitleSize;
+    private float mTitleSize;
     private ColorStateList mTitleColor;
     private CharSequence mRightText;
-    private int mRightTextSize;
+    private float mRightTextSize;
     private ColorStateList mRightTextColor;
     private Drawable mRightImage;
     private Drawable mRightBackground;
     private boolean mRightVisible;
     private boolean mBackFeature;
     private Drawable mBackIcon;
-    private int mBackgroundRes;
 
     private TextView mTitleView;
     private TextView mLeftView;
@@ -72,14 +71,16 @@ public class TitleBar extends RelativeLayout {
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TitleBar);
 
-        int defaultTitleSize = 18;
-        int defaultFontSize = 12;
+        int defaultTitleSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18,
+                getResources().getDisplayMetrics());
+        int defaultFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
+                getResources().getDisplayMetrics());
 
         mTitle = typedArray.getText(R.styleable.TitleBar_titleText);
-        mTitleSize = typedArray.getDimensionPixelOffset(R.styleable.TitleBar_titleTextSize, defaultTitleSize);
+        mTitleSize = typedArray.getDimension(R.styleable.TitleBar_titleTextSize, defaultTitleSize);
         mTitleColor = typedArray.getColorStateList(R.styleable.TitleBar_titleTextColor);
         mRightText = typedArray.getText(R.styleable.TitleBar_rightText);
-        mRightTextSize = typedArray.getDimensionPixelOffset(R.styleable.TitleBar_rightTextSize, defaultFontSize);
+        mRightTextSize = typedArray.getDimension(R.styleable.TitleBar_rightTextSize, defaultFontSize);
         mRightTextColor = typedArray.getColorStateList(R.styleable.TitleBar_rightTextColor);
         mRightImage = typedArray.getDrawable(R.styleable.TitleBar_rightImage);
         mRightBackground = typedArray.getDrawable(R.styleable.TitleBar_rightBackground);
@@ -90,17 +91,14 @@ public class TitleBar extends RelativeLayout {
         if (customViewResId != -1) {
             mCustomView = LayoutInflater.from(getContext()).inflate(customViewResId, null);
         }
-        mBackgroundRes = typedArray.getResourceId(R.styleable.TitleBar_barBackground, android.R.color.white);
-
-
-        mHasBottomSplitLine = typedArray.getBoolean(R.styleable.TitleBar_bottomHasSplitLine, false);
-        mSplitLineColor = typedArray.getColorStateList(R.styleable.TitleBar_bottomSplitLineColor);
+        mHasBottomSplitLine = typedArray.getBoolean(R.styleable.TitleBar_hasBottomSplitLine, false);
+        mSplitLineColor = typedArray.getColorStateList(R.styleable.TitleBar_splitLineColor);
         if (mSplitLineColor == null) {
             mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.split));
         }
         mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
                 getResources().getDisplayMetrics());
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
         typedArray.recycle();
     }
 
@@ -115,7 +113,10 @@ public class TitleBar extends RelativeLayout {
     }
 
     private void init() {
-        setBackgroundResource(mBackgroundRes);
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        setBackgroundResource(android.R.color.white);
+
         int fixedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
                 getResources().getDisplayMetrics());
         int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14,
@@ -163,10 +164,10 @@ public class TitleBar extends RelativeLayout {
         addView(mRightViewParent, params);
 
         setTitle(mTitle);
-        setTitleSize(mTitleSize);
+        setTitleSize(TypedValue.COMPLEX_UNIT_PX, mTitleSize);
         setTitleColor(mTitleColor);
         setRightText(mRightText);
-        setRightTextSize(mRightTextSize);
+        setRightTextSize(TypedValue.COMPLEX_UNIT_PX, mRightTextSize);
         setRightTextColor(mRightTextColor);
         setRightImage(mRightImage);
         setRightBackground(mRightBackground);
@@ -194,17 +195,18 @@ public class TitleBar extends RelativeLayout {
     }
 
     public void setTitle(CharSequence title) {
-        if (mTitleView == null) return;
-
         mTitle = title;
         mTitleView.setText(mTitle);
     }
 
-    public void setTitleSize(int titleSize) {
-        if (mTitleView == null) return;
+    public void setTitleSize(int unit, float titleSize) {
+        mTitleView.setTextSize(unit, titleSize);
+        mTitleSize = mTitleView.getTextSize();
+    }
 
-        mTitleSize = titleSize;
+    public void setTitleSize(int titleSize) {
         mTitleView.setTextSize(titleSize);
+        mTitleSize = mTitleView.getTextSize();
     }
 
     public void setRightText(int resid) {
@@ -231,9 +233,14 @@ public class TitleBar extends RelativeLayout {
         mLeftView.setTextColor(color);
     }
 
-    public void setRightTextSize(int rightTextSize) {
-        mRightTextSize = rightTextSize;
-        mRightView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mRightTextSize);
+    public void setRightTextSize(int unit, float rightTextSize) {
+        mRightView.setTextSize(unit, rightTextSize);
+        mRightTextSize = mRightView.getTextSize();
+    }
+
+    public void setRightTextSize(float rightTextSize) {
+        mRightView.setTextSize(rightTextSize);
+        mRightTextSize = mRightView.getTextSize();
     }
 
     private void setRightBackground(Drawable background) {
@@ -260,8 +267,6 @@ public class TitleBar extends RelativeLayout {
     }
 
     public void setTitleColor(ColorStateList titleColor) {
-        if (mTitleView == null) return;
-
         mTitleColor = titleColor;
         if (mTitleColor != null) {
             mTitleView.setTextColor(mTitleColor);

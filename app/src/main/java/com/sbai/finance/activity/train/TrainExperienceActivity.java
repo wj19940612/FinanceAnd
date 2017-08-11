@@ -28,7 +28,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
@@ -97,7 +96,7 @@ public class TrainExperienceActivity extends BaseActivity {
 			mTitleBar.setRightVisible(true);
 			mTitleBar.setRightText(R.string.write_experience);
 			mTitleBar.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.colorPrimary));
-			mTitleBar.setRightTextSize((int) Display.sp2Px(15, getResources()));
+			mTitleBar.setRightTextSize(15);
 			mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

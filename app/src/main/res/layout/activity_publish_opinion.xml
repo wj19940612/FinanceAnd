@@ -12,11 +12,11 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        app:barBackground="@android:color/white"
-        app:titleTextColor="@color/primaryText"
-        app:titleText="@string/publish_opinion"/>
+        app:titleText="@string/publish_opinion"
+        app:titleTextColor="@color/primaryText"/>
 
     <View
         android:layout_width="match_parent"
@@ -61,10 +61,10 @@
                 android:id="@+id/textLength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textSize="10sp"
-                android:textColor="@color/unluckyText"
                 android:layout_alignBottom="@id/opinionType"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
                 tool:text="33/300"/>
 
         </RelativeLayout>
