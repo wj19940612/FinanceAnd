@@ -5,20 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     app:cardCornerRadius="8dp">
 
     <ImageView
         android:id="@+id/trainImg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:scaleType="fitXY"
         tools:src="@drawable/ic_bank_pay"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_height="100dp"
         android:orientation="vertical"
         android:paddingBottom="24dp"
         android:paddingLeft="24dp"
@@ -37,7 +36,7 @@
             android:id="@+id/trainType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/white"
             android:textSize="15sp"
