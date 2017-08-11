@@ -40,6 +40,7 @@ import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.utils.SerializeObjectUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
@@ -89,7 +90,7 @@ public class StudyRoomActivity extends BaseActivity {
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
     private OptionAdapter mOptionAdapter;
-    private boolean mIsLearned;
+    private boolean mIsUpdateTrain;
     private int mSelectedIndex = -1;
     private String mTrainId;
     private StudyOption mStudyOption;
@@ -108,7 +109,6 @@ public class StudyRoomActivity extends BaseActivity {
         initStudyView();
         initListView();
         initLoginReceiver();
-//        requestMyStudyData();
         requestTrainData();
     }
 
@@ -131,6 +131,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void initListView() {
+        mIsUpdateTrain = true;
         scrollToTop(mTitle, mScrollView);
         mOptionAdapter = new OptionAdapter(getActivity());
         mOptionAdapter.setOnClickCallback(new OptionAdapter.OnClickCallback() {
@@ -139,9 +140,7 @@ public class StudyRoomActivity extends BaseActivity {
                 mSelectedIndex = index;
                 if (oldIndex == -1 && oldIndex == index) return;
                 clearFocus(oldIndex);
-                if (!mIsLearned) {
-                    mCommit.setEnabled(true);
-                }
+                mCommit.setEnabled(true);
             }
 
             @Override
@@ -228,14 +227,13 @@ public class StudyRoomActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Object data) {
                         StudyOption studyOption = new Gson().fromJson(SecurityUtil.AESDecrypt((String) data), StudyOption.class);
-                        updateTrainData(studyOption);
+                        mStudyOption = studyOption;
                         requestMyStudyData();
                     }
                 }).fireFree();
     }
 
     private void updateTrainData(StudyOption data) {
-        mStudyOption = data;
         if (data == null) return;
         mOptionAdapter.clear();
         mOptionAdapter.addAll(data.getContent());
@@ -269,29 +267,35 @@ public class StudyRoomActivity extends BaseActivity {
         mContinuousDay.setText(getString(R.string.day, data.getHoldStudy()));
         mLongestContinuousDay.setText(getString(R.string.day, data.getHoldStudyMax()));
         mTotalScholarship.setText(getString(R.string.ingot_number_no_blank, data.getTotalReward()));
-        if (LocalUser.getUser().isLogin()) {
-            if (data.isLearned()) {
-                if (data.getAnswer() != null && data.getAnswer().size() > 0) {
-                    if (mStudyOption != null && mStudyOption.getId().equalsIgnoreCase(data.getAnswer().get(0).getTopicId())) {
-                        if (data.getAnswer().get(0).getAnswerIds().size() > 0) {
-                            for (int i = 0; i < mStudyOption.getContent().size(); i++) {
-                                if (mStudyOption.getContent().get(i).getId() == data.getAnswer().get(0).getAnswerIds().get(0).getOptionId()) {
-                                    mSelectedIndex = i;
-                                    updateResultView();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    mCommit.setText(getString(R.string.today_already_study));
-                    mCommit.setEnabled(false);
-                    mIsLearned = true;
-                }
 
-            } else {
-                mCommit.setText(getString(R.string.hand_in_paper));
-                mIsLearned = false;
+        if (!mIsUpdateTrain) return;
+
+        if (data.isLearned()) {
+            if (data.getAnswer() != null && data.getAnswer().size() > 0) {
+                if (mStudyOption != null && mStudyOption.getId().equalsIgnoreCase(data.getAnswer().get(0).getTopicId())) {
+                    updateTrainEndView(mStudyOption, data);
+                } else if (mStudyOption == null) {
+                    //取缓存的数据
+                    StudyOption studyOption = (StudyOption) SerializeObjectUtil.String2Object(Preference.get().getStudyData(data.getAnswer().get(0).getTopicId()));
+                    if (studyOption != null) {
+                        updateTrainEndView(studyOption, data);
+                    }
+                }
+            }
+        } else {
+            updateTrainData(mStudyOption);
+        }
+    }
+
+    private void updateTrainEndView(StudyOption studyOption, MyStudyInfo data) {
+        updateTrainData(studyOption);
+        if (data.getAnswer().get(0).getAnswerIds().size() > 0) {
+            for (int i = 0; i < studyOption.getContent().size(); i++) {
+                if (studyOption.getContent().get(i).getId() == data.getAnswer().get(0).getAnswerIds().get(0).getOptionId()) {
+                    mSelectedIndex = i;
+                    updateResultView();
+                    break;
+                }
             }
         }
     }
@@ -319,13 +323,21 @@ public class StudyRoomActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<FinishTaskReward> resp) {
                         if (resp.isSuccess()) {
                             updateResultView();
+                            mIsUpdateTrain = false;
                             requestMyStudyData();
                             showRewardView(resp.getData().getGold());
+                            saveStudyDataToFile();
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
                     }
                 }).fireFree();
+    }
+
+    private void saveStudyDataToFile() {
+        if (mStudyOption != null) {
+            Preference.get().setStudyData(mStudyOption.getId(), SerializeObjectUtil.Object2String(mStudyOption));
+        }
     }
 
     private void showRewardView(double gold) {

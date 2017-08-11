@@ -650,7 +650,7 @@
     <string name="study_days">已学天数</string>
     <string name="continuous_study">连续学习:</string>
     <string name="longest_continuous_study">最长连续学习:</string>
-    <string name="total_scholarship">累计奖学金</string>
+    <string name="total_scholarship">累计奖学金:</string>
     <string name="answer_wrong_study_together">既然没答对,那就一起来学习下吧～</string>
     <string name="answer_right_know_more">回答正确，了解更多可看解释哦～</string>
     <string name="question_explain">问题解释</string>
