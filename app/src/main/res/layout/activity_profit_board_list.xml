@@ -15,6 +15,11 @@
         app:splitLineColor="@color/split"
         app:titleText="@string/profit_board"
         app:titleTextColor="@color/blackPrimary"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        />
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout
         android:id="@+id/tabLayout"

@@ -167,4 +167,8 @@ public class RewardSelectMoneyView extends LinearLayout {
         }
         return 0;
     }
+
+    public long getOtherMoney() {
+        return mOtherMoney;
+    }
 }

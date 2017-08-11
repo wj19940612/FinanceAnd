@@ -77,7 +77,7 @@ public class RewardMissActivity extends BaseActivity {
 
             @Override
             public void selectedOther() {
-                RewardOtherMoneyDialogFragment.newInstance(mRewardMoneyContent.getSelectedMoney())
+                RewardOtherMoneyDialogFragment.newInstance(mRewardMoneyContent.getOtherMoney())
                         .setOnSelectMoneyCallback(new RewardOtherMoneyDialogFragment.OnSelectMoneyCallback() {
                             @Override
                             public void selectedMoney(long money) {
@@ -148,7 +148,14 @@ public class RewardMissActivity extends BaseActivity {
     }
 
     private void showAddSafetyPassDialog() {
+        mRewardArea.setVisibility(View.GONE);
         SmartDialog.with(getActivity(), getString(R.string.is_not_set_safety_pass))
+                .setOnDismissListener(new SmartDialog.OnDismissListener() {
+                    @Override
+                    public void onDismiss(Dialog dialog) {
+                        mRewardArea.setVisibility(View.VISIBLE);
+                    }
+                })
                 .setPositive(R.string.go_to_set, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
@@ -159,22 +166,43 @@ public class RewardMissActivity extends BaseActivity {
     }
 
     private void showRechargeDialog(final FragmentActivity activity) {
+        mRewardArea.setVisibility(View.GONE);
         SmartDialog.single(getActivity(), getString(R.string.ignot_not_enough))
+                .setOnDismissListener(new SmartDialog.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(Dialog dialog) {
+                        mRewardArea.setVisibility(View.VISIBLE);
+                    }
+                })
                 .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         Launcher.with(activity, CornucopiaActivity.class).execute();
                     }
-                }).setNegative(R.string.cancel)
+                })
+                .setNegative(R.string.cancel)
                 .show();
     }
 
     private void showInputSafetyPassDialog() {
+        mRewardArea.setVisibility(View.GONE);
         long rewardMoney = mRewardMoneyContent.getSelectedMoney();
         String content = getString(R.string.ingot_number, StrFormatter.getFormIngot(rewardMoney));
         RewardInputSafetyPassDialogFragment.newInstance(mId,
                 content, getString(R.string.reward), rewardMoney, mType)
+                .setOnSelectMoneyCallback(new RewardInputSafetyPassDialogFragment.RewardResultCallback() {
+                    @Override
+                    public void success() {
+                        finish();
+                    }
+
+                    @Override
+                    public void failure() {
+                        mRewardArea.setVisibility(View.VISIBLE);
+                    }
+                })
                 .show(getActivity().getSupportFragmentManager());
     }
 }

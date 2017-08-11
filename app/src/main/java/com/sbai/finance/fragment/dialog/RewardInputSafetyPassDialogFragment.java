@@ -69,11 +69,13 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     private String mTitleHint;
     private int mId;
     private int mType;
+    private boolean mIsSuccess;
 
     private RewardResultCallback mRewardResultCallback;
 
-    public void setOnSelectMoneyCallback(RewardResultCallback rewardResultCallback) {
+    public RewardInputSafetyPassDialogFragment setOnSelectMoneyCallback(RewardResultCallback rewardResultCallback) {
         mRewardResultCallback = rewardResultCallback;
+        return this;
     }
 
     public interface RewardResultCallback {
@@ -164,6 +166,15 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mIsSuccess) {
+            if (mRewardResultCallback != null) {
+                mRewardResultCallback.success();
+            }
+        } else {
+            if (mRewardResultCallback != null) {
+                mRewardResultCallback.failure();
+            }
+        }
         if (mBind != null) {
             mBind.unbind();
         }
@@ -183,6 +194,8 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                         protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
+                                mIsSuccess = true;
+                                sendRewardSuccessBroadcast(getActivity());
                                 dismissAllowingStateLoss();
                             } else {
                                 if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
@@ -210,6 +223,8 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                         protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
+                                mIsSuccess = true;
+                                sendRewardSuccessBroadcast(getActivity());
                                 dismissAllowingStateLoss();
                             } else {
                                 if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
