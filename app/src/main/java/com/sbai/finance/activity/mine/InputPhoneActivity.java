@@ -163,7 +163,7 @@ public class InputPhoneActivity extends BaseActivity {
         return mPhoneNumber.getText().toString().trim().replaceAll(" ", "");
     }
 
-    @OnClick({R.id.next, R.id.rootView, R.id.financeUserProtocol})
+    @OnClick({R.id.next, R.id.rootView, R.id.financeUserProtocol, R.id.phoneNumberClear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.next:

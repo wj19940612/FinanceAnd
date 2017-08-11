@@ -115,7 +115,9 @@ public class TitleBar extends RelativeLayout {
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        setBackgroundResource(android.R.color.white);
+        if (getBackground() == null) {
+            setBackgroundResource(android.R.color.white);
+        }
 
         int fixedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
                 getResources().getDisplayMetrics());
