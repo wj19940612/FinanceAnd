@@ -296,6 +296,9 @@ public class MissProfileActivity extends BaseActivity implements
 					public void onFailure(VolleyError volleyError) {
 						super.onFailure(volleyError);
 						stopRefreshAnimation();
+						mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
+						mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
+						mIntroduce.setText(R.string.no_miss_introduce);
 					}
 				}).fire();
 	}
