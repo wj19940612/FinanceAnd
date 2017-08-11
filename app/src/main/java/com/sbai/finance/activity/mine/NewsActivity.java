@@ -63,7 +63,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         ButterKnife.bind(this);
-        mEmpty.setText(R.string.now_not_has_data);
+        mEmpty.setText(R.string.now_not_has_news);
         mListView.setEmptyView(mEmpty);
         mListView.setDivider(null);
         mSet = new HashSet<>();

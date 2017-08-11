@@ -24,8 +24,8 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
+import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.train.ScoreIntroduceActivity;
@@ -97,9 +97,9 @@ public class TrainingFragment extends BaseFragment {
     private TrainAdapter mTrainAdapter;
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
-    private int mOldScore;
-    private int mNewScore;
-    private int mScoreOffset;
+    private double mOldScore;
+    private double mNewScore;
+    private double mScoreOffset;
     //如果点击了删除按钮，则退出再次进来在出现
     private boolean showJoinTestHint;
 
@@ -259,12 +259,12 @@ public class TrainingFragment extends BaseFragment {
         }
     }
 
-    private void startScoreAnimation(int newScore) {
+    private void startScoreAnimation(double newScore) {
         if (newScore == mOldScore) {
-            mScore.setText(String.valueOf(newScore));
+            mScore.setText(String.valueOf((int) newScore));
         } else {
             mOldScore = 0;
-            mScoreOffset = FinanceUtil.multiply(newScore, 0.05).intValue();
+            mScoreOffset = FinanceUtil.multiply(newScore, 0.05).doubleValue();
             startScheduleJob(20);
             startAnimation();
         }
@@ -278,7 +278,7 @@ public class TrainingFragment extends BaseFragment {
             stopScheduleJob();
             mOldScore = mNewScore;
         }
-        mScore.setText(String.valueOf(mOldScore));
+        mScore.setText(String.valueOf((int) mOldScore));
     }
 
     private void startAnimation() {

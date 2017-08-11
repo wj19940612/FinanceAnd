@@ -29,7 +29,7 @@ public class UserEachTrainingScoreModel implements Parcelable {
         double totalScore = 0;
         if (getScores() != null && !getScores().isEmpty()) {
             for (ScoresBean data : getScores()) {
-                totalScore += data.getSocre();
+                totalScore += data.getScore();
             }
         }
         return totalScore;
@@ -61,7 +61,7 @@ public class UserEachTrainingScoreModel implements Parcelable {
         //评价因子名称
         private String classifyName;
         //因子得分  正确率
-        private double socre;
+        private double score;
         //每一项的总分
         private double totalScore;
 
@@ -73,12 +73,12 @@ public class UserEachTrainingScoreModel implements Parcelable {
             this.totalScore = totalScore;
         }
 
-        public double getSocre() {
-            return socre;
+        public double getScore() {
+            return score;
         }
 
-        public void setSocre(double socre) {
-            this.socre = socre;
+        public void setScore(double score) {
+            this.score = score;
         }
 
         public int getClassifyId() {
@@ -105,7 +105,7 @@ public class UserEachTrainingScoreModel implements Parcelable {
             return "ScoresBean{" +
                     "classifyId=" + classifyId +
                     ", classifyName='" + classifyName + '\'' +
-                    ", socre=" + socre +
+                    ", score=" + score +
                     ", totalScore=" + totalScore +
                     '}';
         }
@@ -119,14 +119,14 @@ public class UserEachTrainingScoreModel implements Parcelable {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.classifyId);
             dest.writeString(this.classifyName);
-            dest.writeDouble(this.socre);
+            dest.writeDouble(this.score);
             dest.writeDouble(this.totalScore);
         }
 
         protected ScoresBean(Parcel in) {
             this.classifyId = in.readInt();
             this.classifyName = in.readString();
-            this.socre = in.readDouble();
+            this.score = in.readDouble();
             this.totalScore = in.readDouble();
         }
 
@@ -188,7 +188,7 @@ public class UserEachTrainingScoreModel implements Parcelable {
         for (ScoresBean data : getScores()) {
             double scale = 0;
             if (data.getTotalScore() != 0) {
-                scale = FinanceUtil.divide(data.getSocre(), data.getTotalScore()).doubleValue();
+                scale = FinanceUtil.divide(data.getScore(), data.getTotalScore()).doubleValue();
             }
             switch (data.getClassifyName()) {
                 case "盈利能力":

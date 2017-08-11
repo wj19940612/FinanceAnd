@@ -147,10 +147,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
-                                android:layout_marginBottom="@dimen/common_padding"
-                                android:layout_marginLeft="@dimen/common_padding"
+                                android:background="@drawable/ic_common_mask_black"
                                 android:ellipsize="end"
                                 android:maxLines="1"
+                                android:paddingBottom="@dimen/common_padding"
+                                android:paddingLeft="@dimen/common_padding"
                                 android:textColor="@android:color/white"
                                 android:textSize="15sp"
                                 tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>
@@ -167,7 +168,8 @@
                                 android:layout_width="0dp"
                                 android:layout_height="100dp"
                                 android:layout_marginRight="2dp"
-                                android:layout_weight="1">
+                                android:layout_weight="1"
+                                android:background="@drawable/ic_common_mask_black">
 
                                 <ImageView
                                     android:id="@+id/image2"
@@ -179,9 +181,13 @@
                                 <TextView
                                     android:id="@+id/title2"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_centerInParent="true"
-                                    android:layout_margin="@dimen/common_padding"
+                                    android:background="@drawable/ic_common_mask_black"
+                                    android:ellipsize="end"
+                                    android:gravity="center_vertical"
+                                    android:maxLines="2"
+                                    android:padding="@dimen/common_padding"
                                     android:textColor="@android:color/white"
                                     android:textSize="15sp"
                                     tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>
@@ -203,9 +209,13 @@
                                 <TextView
                                     android:id="@+id/title3"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_centerInParent="true"
-                                    android:layout_margin="@dimen/common_padding"
+                                    android:background="@drawable/ic_common_mask_black"
+                                    android:ellipsize="end"
+                                    android:gravity="center_vertical"
+                                    android:maxLines="2"
+                                    android:padding="@dimen/common_padding"
                                     android:textColor="@android:color/white"
                                     android:textSize="15sp"
                                     tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>

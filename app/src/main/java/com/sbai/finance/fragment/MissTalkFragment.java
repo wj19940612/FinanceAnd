@@ -45,6 +45,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissVoiceRecorder;
@@ -862,7 +863,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	private void showPopupWindow() {
 		if (mPopupWindow != null) {
 			if (!mPopupWindow.isShowing()) {
-				mPopupWindow.showAsDropDown(mMore, -30, 50);
+				mPopupWindow.showAsDropDown(mMore, -(int) Display.dp2Px(90,getResources()), (int) Display.dp2Px(17,getResources()));
 			} else {
 				mPopupWindow.dismiss();
 			}

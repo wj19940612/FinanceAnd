@@ -30,7 +30,7 @@ import butterknife.OnClick;
  */
 public class ReplyActivity extends BaseActivity {
 
-    public static final String REFRESH_REPLY = "refresh_reply";
+    public static final String ACTION_REPLY_SUCCESS = "reply";
 
     @BindView(R.id.questionComment)
     EditText mQuestionComment;
@@ -124,7 +124,7 @@ public class ReplyActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(REFRESH_REPLY));
+                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REPLY_SUCCESS));
                             ToastUtil.show(R.string.publish_success);
                             finish();
                         } else {

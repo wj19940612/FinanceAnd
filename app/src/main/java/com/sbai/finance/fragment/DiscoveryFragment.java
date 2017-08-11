@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -303,7 +304,11 @@ public class DiscoveryFragment extends BaseFragment {
                 mGrade.setText(context.getString(R.string.level, item.getLevel()));
                 switch (item.getType()) {
                     case Train.TRAIN_THEORY:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
+                        }else {
+                            mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
+                        }
                         break;
                     case Train.TRAIN_TECHNOLOGY:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#694FC8"), Color.parseColor("#C86DD7")}, context));
