@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Common attrs-->
+    <attr name="hasBottomSplitLine" format="boolean"/>
+    <attr name="splitLineColor" format="color|reference"/>
+
     <declare-styleable name="PageIndicator">
         <attr name="indicators" format="integer"/>
         <attr name="indicatorsInterval" format="dimension"/>
@@ -19,8 +23,8 @@
 
     <declare-styleable name="PasswordEditText">
         <attr name="textHint" format="reference|string"/>
-        <attr name="hasBottomLine" format="boolean"/>
-        <attr name="bottomLineColor" format="reference|color"/>
+        <attr name="hasBottomSplitLine"/>
+        <attr name="splitLineColor"/>
         <attr name="maxCharNum" format="integer"/>
     </declare-styleable>
 
@@ -51,8 +55,8 @@
         <attr name="rowTextSpaceExtra" format="dimension"/>
         <attr name="rowVerticalPadding" format="dimension"/>
         <attr name="rowHorizontalPadding" format="dimension"/>
-        <attr name="hasBottomSplitLine" format="boolean"/>
-        <attr name="splitLineColor" format="color|reference"/>
+        <attr name="hasBottomSplitLine"/>
+        <attr name="splitLineColor"/>
     </declare-styleable>
 
     <declare-styleable name="TitleBar">
@@ -68,9 +72,8 @@
         <attr name="rightVisible" format="boolean"/>
         <attr name="backFeature" format="boolean"/>
         <attr name="backIcon" format="reference"/>
-        <attr name="barBackground" format="reference"/>
-        <attr name="bottomHasSplitLine" format="boolean"/>
-        <attr name="bottomSplitLineColor" format="color|reference"/>
+        <attr name="hasBottomSplitLine"/>
+        <attr name="splitLineColor"/>
     </declare-styleable>
 
     <declare-styleable name="TradeFloatButtons">

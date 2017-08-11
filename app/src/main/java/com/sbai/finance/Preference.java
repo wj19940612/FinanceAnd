@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.model.studyroom.StudyOption;
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
@@ -168,5 +169,13 @@ public class Preference {
 
     public boolean isUserLookTrainDetail(String key) {
         return mPrefs.getBoolean(key + Key.USER_LOOK_DETAIL, false);
+    }
+
+    public String getStudyData(String id) {
+        return mPrefs.getString(id, null);
+    }
+
+    public void setStudyData(String id, String data) {
+        apply(id, data);
     }
 }

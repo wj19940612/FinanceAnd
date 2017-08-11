@@ -15,9 +15,9 @@
             android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             app:backFeature="true"
             app:backIcon="@drawable/common_cancel"
-            app:barBackground="@android:color/white"
             app:titleText="@string/quick_trade"
             app:titleTextColor="@color/primaryText"/>
 
@@ -34,8 +34,8 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_future_oil"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_future_oil"/>
 
         <TextView
             android:layout_width="wrap_content"
