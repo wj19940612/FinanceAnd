@@ -50,8 +50,9 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     private String mContent;
     private OnSelectMoneyCallback mOnSelectMoneyCallback;
 
-    public void setOnSelectMoneyCallback(OnSelectMoneyCallback onSelectMoneyCallback) {
+    public RewardOtherMoneyDialogFragment setOnSelectMoneyCallback(OnSelectMoneyCallback onSelectMoneyCallback) {
         mOnSelectMoneyCallback = onSelectMoneyCallback;
+        return this;
     }
 
     public interface OnSelectMoneyCallback {

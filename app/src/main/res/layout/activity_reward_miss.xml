@@ -10,13 +10,15 @@
         android:id="@+id/cancelArea"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="@android:color/transparent"/>
 
     <FrameLayout
         android:id="@+id/rewardArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <LinearLayout

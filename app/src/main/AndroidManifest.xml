@@ -395,7 +395,8 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.RewardMissActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme.NoTitle"/>
 
         <!-- 发现 -->
         <activity

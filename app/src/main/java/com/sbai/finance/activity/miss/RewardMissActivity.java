@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.dialog.RewardInputSafetyPassDialogFragment;
+import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -59,6 +62,32 @@ public class RewardMissActivity extends BaseActivity {
         setContentView(R.layout.activity_reward_miss);
         ButterKnife.bind(this);
         initData(getIntent());
+        initView();
+    }
+
+    private void initView() {
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        mRewardMoneyContent.setOnSelectedCallback(new RewardSelectMoneyView.OnSelectedCallback() {
+            @Override
+            public void selected(long money) {
+                mRewardMoney.setText((String.valueOf(money)));
+                mConfirmReward.setEnabled(true);
+            }
+
+            @Override
+            public void selectedOther() {
+                RewardOtherMoneyDialogFragment.newInstance(mRewardMoneyContent.getSelectedMoney())
+                        .setOnSelectMoneyCallback(new RewardOtherMoneyDialogFragment.OnSelectMoneyCallback() {
+                            @Override
+                            public void selectedMoney(long money) {
+                                mRewardMoneyContent.setOtherMoney(money);
+                                mRewardMoney.setText((String.valueOf(money)));
+                            }
+                        })
+                        .show(getSupportFragmentManager());
+            }
+        });
     }
 
     private void initData(Intent intent) {

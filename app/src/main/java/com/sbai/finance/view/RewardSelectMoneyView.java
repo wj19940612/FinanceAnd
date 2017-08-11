@@ -26,6 +26,17 @@ public class RewardSelectMoneyView extends LinearLayout {
     TextView mIndex3;
     private int mSelectedIndex;
     private long mOtherMoney;
+    private OnSelectedCallback mOnSelectedCallback;
+
+    public void setOnSelectedCallback(OnSelectedCallback onSelectedCallback) {
+        mOnSelectedCallback = onSelectedCallback;
+    }
+
+    public interface OnSelectedCallback {
+        void selected(long money);
+
+        void selectedOther();
+    }
 
     public RewardSelectMoneyView(Context context) {
         super(context);
@@ -68,18 +79,30 @@ public class RewardSelectMoneyView extends LinearLayout {
         switch (view.getId()) {
             case R.id.index0:
                 mIndex0.setSelected(true);
+                if (mOnSelectedCallback != null) {
+                    mOnSelectedCallback.selected(Long.valueOf(mIndex0.getText().toString()));
+                }
                 mSelectedIndex = 0;
                 break;
             case R.id.index1:
                 mIndex1.setSelected(true);
+                if (mOnSelectedCallback != null) {
+                    mOnSelectedCallback.selected(Long.valueOf(mIndex1.getText().toString()));
+                }
                 mSelectedIndex = 1;
                 break;
             case R.id.index2:
                 mIndex2.setSelected(true);
+                if (mOnSelectedCallback != null) {
+                    mOnSelectedCallback.selected(Long.valueOf(mIndex2.getText().toString()));
+                }
                 mSelectedIndex = 2;
                 break;
             case R.id.index3:
                 mIndex3.setSelected(true);
+                if (mOnSelectedCallback != null) {
+                    mOnSelectedCallback.selectedOther();
+                }
                 mSelectedIndex = 3;
                 break;
         }
