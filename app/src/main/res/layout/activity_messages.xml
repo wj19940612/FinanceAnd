@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:bottomHasSplitLine="true"
+        app:hasBottomSplitLine="true"
         app:rightText="@string/all_read"
         app:rightTextColor="@color/unluckyText"
         app:rightTextSize="15sp"

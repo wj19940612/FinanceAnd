@@ -12,9 +12,9 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:barBackground="@color/colorPrimaryDark"
         app:customView="@layout/tb_product_name"
         app:rightImage="@drawable/ic_share"
         app:rightVisible="true"/>
@@ -47,9 +47,9 @@
                 android:id="@+id/priceChange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="+0.00     +0.00%"
                 android:textColor="@color/redPrimary"
-                android:textSize="14sp"
-                android:text="+0.00     +0.00%"/>
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <LinearLayout

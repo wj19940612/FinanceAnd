@@ -38,8 +38,8 @@ public class PasswordEditText extends LinearLayout {
     private ImageView mShowPassword;
 
     private CharSequence mTextHint;
-    private boolean mHasBottomLine;
-    private ColorStateList mBottomLineColor;
+    private boolean mHasBottomSplitLine;
+    private ColorStateList mSplitLineColor;
 
     private Paint mPaint;
     private float mBottomLineHeight;
@@ -62,11 +62,11 @@ public class PasswordEditText extends LinearLayout {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.PasswordEditText);
 
         mTextHint = typedArray.getText(R.styleable.PasswordEditText_textHint);
-        mHasBottomLine = typedArray.getBoolean(R.styleable.PasswordEditText_hasBottomLine, false);
-        mBottomLineColor = typedArray.getColorStateList(R.styleable.PasswordEditText_bottomLineColor);
+        mHasBottomSplitLine = typedArray.getBoolean(R.styleable.PasswordEditText_hasBottomSplitLine, false);
+        mSplitLineColor = typedArray.getColorStateList(R.styleable.PasswordEditText_splitLineColor);
         mMaxCharNum = typedArray.getInt(R.styleable.PasswordEditText_maxCharNum, Integer.MAX_VALUE);
-        if (mBottomLineColor == null) {
-            mBottomLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), android.R.color.black));
+        if (mSplitLineColor == null) {
+            mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), android.R.color.black));
         }
 
         typedArray.recycle();
@@ -169,8 +169,8 @@ public class PasswordEditText extends LinearLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mHasBottomLine) {
-            mPaint.setColor(mBottomLineColor.getDefaultColor());
+        if (mHasBottomSplitLine) {
+            mPaint.setColor(mSplitLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mBottomLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
             float lineY = getHeight() - mBottomLineHeight;

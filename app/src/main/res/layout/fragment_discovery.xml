@@ -11,7 +11,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:bottomHasSplitLine="true"
+        app:hasBottomSplitLine="true"
         app:titleText="@string/discovery"/>
 
     <ScrollView

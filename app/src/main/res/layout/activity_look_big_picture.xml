@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:barBackground="@color/primaryText"
+        android:background="@color/primaryText"
         app:titleText="1/1"
         app:titleTextColor="@android:color/white"/>
 
