@@ -237,6 +237,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     private void sendRewardSuccessBroadcast(FragmentActivity activity) {
         Intent intent = new Intent();
         intent.setAction(ACTION_REWARD_SUCCESS);
+        intent.putExtra(Launcher.EX_PAYLOAD, mType);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 
