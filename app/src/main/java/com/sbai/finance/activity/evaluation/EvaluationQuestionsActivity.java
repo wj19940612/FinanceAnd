@@ -26,6 +26,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.itemAnimator.BaseItemAnimator;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.exam)
-    TextView mExam;
+    AutofitTextView mExam;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private ArrayList<ExamQuestionsModel> mExamQuestionsModelList;
@@ -56,7 +57,6 @@ public class EvaluationQuestionsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evaluation_questions);
         ButterKnife.bind(this);
-
 
         mTestAnswerUtils = new TestAnswerUtils();
         mTestAnswerList = new ArrayList<>();
@@ -120,7 +120,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
         if (hasExamQuestions() && mExamPosition <= mExamQuestionsModelList.size()) {
             mSelectQuestion = mExamQuestionsModelList.get(mExamPosition);
             if (mSelectQuestion != null) {
-                mExam.setText(mSelectQuestion.getTitle());
+                mExam.setText(mSelectQuestion.getDigest());
                 ArrayList<ExamQuestionsModel.ContentBean> dataList = mSelectQuestion.getContent();
                 if (dataList != null && !dataList.isEmpty()) {
                     mExamQuestionsAdapter.updateData(dataList);
@@ -283,7 +283,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
              * @param number
              */
             private String getQuestionsNumber(int number) {
-                String[] strings = {"A", "B", "C", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"
+                String[] strings = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"
                         , "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
                 if (number < 26) {
                     return strings[number - 1];
