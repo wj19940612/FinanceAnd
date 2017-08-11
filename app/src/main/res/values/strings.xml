@@ -707,6 +707,7 @@
     <string name="to_login">去登录</string>
     <string name="more_than_number">超过了%1$s的用户</string>
     <string name="not_join_train">还未进行训练</string>
+    <string name="you_are_not_complete_train">你还没有完成训练</string>
     <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
     <string name="source_and_time">来源: %1$s    %2$s</string>
 
