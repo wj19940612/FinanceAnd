@@ -227,6 +227,7 @@ public class StudyRoomActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Object data) {
                         StudyOption studyOption = new Gson().fromJson(SecurityUtil.AESDecrypt((String) data), StudyOption.class);
+                        updateTrainData(studyOption);
                         mStudyOption = studyOption;
                         requestMyStudyData();
                     }
@@ -234,7 +235,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void updateTrainData(StudyOption data) {
-        if (data == null) return;
+        if (data == null||data==mStudyOption) return;
         mOptionAdapter.clear();
         mOptionAdapter.addAll(data.getContent());
         mOptionAdapter.notifyDataSetChanged();
