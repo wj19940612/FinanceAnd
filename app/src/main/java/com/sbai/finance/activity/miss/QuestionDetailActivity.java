@@ -30,7 +30,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
-import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
@@ -421,10 +420,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			case R.id.reward:
 				if (mQuestionDetail != null) {
 					if (LocalUser.getUser().isLogin()) {
-						mRewardInfo.setMoney(0);
-						mRewardInfo.setIndex(-1);
-						RewardMissDialogFragment.newInstance()
-								.show(getSupportFragmentManager());
 					} else {
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivityForResult(intent, REQ_REWARD_LOGIN);
@@ -577,10 +572,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 
 		if (requestCode == REQ_REWARD_LOGIN && resultCode == RESULT_OK) {
-			mRewardInfo.setMoney(0);
-			mRewardInfo.setIndex(-1);
-			RewardMissDialogFragment.newInstance()
-					.show(getSupportFragmentManager());
 		}
 	}
 

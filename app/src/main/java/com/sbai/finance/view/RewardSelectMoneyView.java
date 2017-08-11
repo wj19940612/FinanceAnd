@@ -2,7 +2,6 @@ package com.sbai.finance.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.miss.RewardMoney;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,23 +24,13 @@ public class RewardSelectMoneyView extends LinearLayout {
     TextView mIndex2;
     @BindView(R.id.index3)
     TextView mIndex3;
-    private OnMoneySelectListener mOnMoneySelectListener;
     private int mSelectedIndex;
-    private List<RewardMoney> mMoneyList;
-
-    public void setOnMoneySelectListener(OnMoneySelectListener onMoneySelectListener) {
-        mOnMoneySelectListener = onMoneySelectListener;
-    }
-
-    public interface OnMoneySelectListener {
-        void onSelected(int index);
-    }
+    private long mOtherMoney;
 
     public RewardSelectMoneyView(Context context) {
         super(context);
         init();
     }
-
 
     public RewardSelectMoneyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -79,25 +65,20 @@ public class RewardSelectMoneyView extends LinearLayout {
             default:
                 break;
         }
-        if (mOnMoneySelectListener == null) return;
         switch (view.getId()) {
             case R.id.index0:
-                mOnMoneySelectListener.onSelected(0);
                 mIndex0.setSelected(true);
                 mSelectedIndex = 0;
                 break;
             case R.id.index1:
-                mOnMoneySelectListener.onSelected(1);
                 mIndex1.setSelected(true);
                 mSelectedIndex = 1;
                 break;
             case R.id.index2:
-                mOnMoneySelectListener.onSelected(2);
                 mIndex2.setSelected(true);
                 mSelectedIndex = 2;
                 break;
             case R.id.index3:
-                mOnMoneySelectListener.onSelected(3);
                 mIndex3.setSelected(true);
                 mSelectedIndex = 3;
                 break;
@@ -105,24 +86,12 @@ public class RewardSelectMoneyView extends LinearLayout {
     }
 
     public RewardSelectMoneyView setOtherMoney(long money) {
+        mOtherMoney = money;
         mIndex3.setText(getContext().getString(R.string.other) + "\n" + String.valueOf(money));
         return this;
     }
 
-    public RewardSelectMoneyView setMoneyList(List<RewardMoney> moneyList) {
-        mMoneyList = moneyList;
-        updateMoneyView();
-        return this;
-    }
-
-    private void updateMoneyView() {
-        if (mMoneyList!=null&&mMoneyList.size()>2){
-            mIndex0.setText(mMoneyList.get(0).getMoney()+getContext().getString(R.string.ingot));
-            mIndex1.setText(mMoneyList.get(1).getMoney()+getContext().getString(R.string.ingot));
-            mIndex2.setText(mMoneyList.get(2).getMoney()+getContext().getString(R.string.ingot));
-        }
-    }
-    public void setSelectedIndex(int index){
+    public void setSelectedIndex(int index) {
         switch (mSelectedIndex) {
             case 0:
                 mIndex0.setSelected(false);
@@ -158,5 +127,21 @@ public class RewardSelectMoneyView extends LinearLayout {
 
     public int getSelectedIndex() {
         return mSelectedIndex;
+    }
+
+    public long getSelectedMoney() {
+        switch (mSelectedIndex) {
+            case 0:
+                return Long.valueOf(mIndex0.getText().toString());
+            case 1:
+                return Long.valueOf(mIndex1.getText().toString());
+            case 2:
+                return Long.valueOf(mIndex2.getText().toString());
+            case 3:
+                return mOtherMoney;
+            default:
+                break;
+        }
+        return 0;
     }
 }

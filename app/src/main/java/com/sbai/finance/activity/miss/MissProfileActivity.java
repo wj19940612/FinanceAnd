@@ -29,7 +29,6 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
@@ -386,12 +385,7 @@ public class MissProfileActivity extends BaseActivity implements
 			case R.id.reward:
 				if (mMiss != null) {
 					if (LocalUser.getUser().isLogin()) {
-						if (mRewardInfo != null) {
-							mRewardInfo.setMoney(0);
-							mRewardInfo.setIndex(-1);
-						}
-						RewardMissDialogFragment.newInstance()
-								.show(getSupportFragmentManager());
+                         RewardMissActivity.show(getActivity(),mCustomId,RewardInfo.TYPE_MISS);
 					} else {
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivityForResult(intent, REWARD);
@@ -613,12 +607,8 @@ public class MissProfileActivity extends BaseActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REWARD && resultCode == RESULT_OK) {
-			if (mRewardInfo != null) {
-				mRewardInfo.setMoney(0);
-				mRewardInfo.setIndex(-1);
-			}
-			RewardMissDialogFragment.newInstance()
-					.show(getSupportFragmentManager());
+//			RewardMissDialogFragment.newInstance()
+//					.show(getSupportFragmentManager());
 		}
 
 		if (requestCode == SUBMIT_QUESTION && resultCode == RESULT_OK) {
