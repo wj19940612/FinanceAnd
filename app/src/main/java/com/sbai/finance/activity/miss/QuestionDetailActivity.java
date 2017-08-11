@@ -118,6 +118,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     View mVoiceLevel;
     @BindView(R.id.voiceArea)
     LinearLayout mVoiceArea;
+    @BindView(R.id.noComment)
+    TextView mNoComment;
 
     private int mQuestionId;
     private int mType = 1;
@@ -264,6 +266,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(question.getAwardCount())));
         mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(question.getReplyCount())));
         mVoice.setText(getString(R.string.voice_time, question.getSoundTime()));
+
+        if (question.getReplyCount() > 0) {
+            mNoComment.setVisibility(View.GONE);
+            mCommentArea.setBackgroundColor(ContextCompat.getColor(this, R.color.background));
+        }
 
         if (MissVoiceRecorder.isHeard(question.getId())) {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.unluckyText));
@@ -524,16 +531,25 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
                 mOpinionContent.setText(item.getContent());
 
-                if (item.getReplys().size() == 0 || item.getReplys() == null) {
-                    mReplyArea.setVisibility(View.GONE);
-                } else {
-                    mReplyArea.setVisibility(View.VISIBLE);
-                    if (item.getReplys().get(0).getUserModel() != null) {
-                        mReplyName.setText(context.getString(R.string.reply_name,item.getReplys().get(0).getUserModel().getUserName() ));
+                if (item.getReplys() != null) {
+                    if (item.getReplys().size() == 0) {
+                        mReplyArea.setVisibility(View.GONE);
                     } else {
-                        mReplyName.setText("");
+                        mReplyArea.setVisibility(View.VISIBLE);
+                        if (item.getReplys().get(0) != null) {
+                            if (item.getReplys().get(0).getUserModel() != null) {
+                                mReplyName.setText(context.getString(R.string.reply_name,item.getReplys().get(0).getUserModel().getUserName() ));
+                            } else {
+                                mReplyName.setText("");
+                            }
+                            mReplyContent.setText(item.getReplys().get(0).getContent());
+                        } else {
+                            mReplyName.setText("");
+                            mReplyContent.setText("");
+                        }
                     }
-                    mReplyContent.setText(item.getReplys().get(0).getContent());
+                } else {
+                    mReplyArea.setVisibility(View.GONE);
                 }
             }
         }
