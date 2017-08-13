@@ -25,6 +25,7 @@ import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -47,10 +48,28 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     @BindView(R.id.warnTip)
     TextView mWarnTip;
     private String mContent;
-    private RewardInfo mRewardInfo;
+    private OnSelectMoneyCallback mOnSelectMoneyCallback;
+
+    public RewardOtherMoneyDialogFragment setOnSelectMoneyCallback(OnSelectMoneyCallback onSelectMoneyCallback) {
+        mOnSelectMoneyCallback = onSelectMoneyCallback;
+        return this;
+    }
+
+    public interface OnSelectMoneyCallback {
+        void selectedMoney(long money);
+    }
+
 
     public static RewardOtherMoneyDialogFragment newInstance() {
         RewardOtherMoneyDialogFragment fragment = new RewardOtherMoneyDialogFragment();
+        return fragment;
+    }
+
+    public static RewardOtherMoneyDialogFragment newInstance(long money) {
+        RewardOtherMoneyDialogFragment fragment = new RewardOtherMoneyDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong(Launcher.EX_PAYLOAD, money);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -58,18 +77,6 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
-        if (getActivity() instanceof QuestionDetailActivity) {
-            QuestionDetailActivity activity = (QuestionDetailActivity) getActivity();
-            mRewardInfo = activity.getRewardInfo();
-        }
-        if (getActivity() instanceof MyQuestionsActivity) {
-            MyQuestionsActivity activity = (MyQuestionsActivity) getActivity();
-            mRewardInfo = activity.getRewardInfo();
-        }
-        if (getActivity() instanceof MissProfileActivity) {
-            MissProfileActivity activity = (MissProfileActivity) getActivity();
-            mRewardInfo = activity.getRewardInfo();
-        }
     }
 
     @Nullable
@@ -92,9 +99,12 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
         }
         mOtherMoneyContent.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         mOtherMoneyContent.addTextChangedListener(mValidationWatcher);
-        if (mRewardInfo != null && mRewardInfo.getMoney() > 0) {
-            mOtherMoneyContent.setText(String.valueOf(mRewardInfo.getMoney()));
-            mConfirm.setEnabled(true);
+        if (getArguments() != null) {
+            long money = getArguments().getLong(Launcher.EX_PAYLOAD, 0);
+            if (money > 0) {
+                mOtherMoneyContent.setText(String.valueOf(money));
+                mConfirm.setEnabled(true);
+            }
         }
     }
 
@@ -102,17 +112,6 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mOtherMoneyContent.removeTextChangedListener(mValidationWatcher);
-        String content = mOtherMoneyContent.getText().toString();
-        if (content.isEmpty()) {
-            RewardMissDialogFragment.newInstance()
-                    .show(getActivity().getSupportFragmentManager());
-        } else {
-            if (mRewardInfo != null) {
-                mRewardInfo.setMoney(Long.valueOf(mOtherMoneyContent.getText().toString().replace(",", "")));
-            }
-            RewardMissDialogFragment.newInstance()
-                    .show(getActivity().getSupportFragmentManager());
-        }
         unbinder.unbind();
     }
 
@@ -152,9 +151,6 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     };
 
     private void rewardLowLeast() {
-//        mOtherMoneyContent.setTextColor(ContextCompat.getColor(getContext(), R.color.redAssist));
-//        mWarnTip.setText(getString(R.string.at_least_reward_ten_ingot));
-//        mWarnTip.setVisibility(View.VISIBLE);
         mConfirm.setEnabled(false);
     }
 
@@ -173,10 +169,12 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.dialogClose:
-                mOtherMoneyContent.setText("");
                 dismiss();
                 break;
             case R.id.confirm:
+                if (mOnSelectMoneyCallback != null) {
+                    mOnSelectMoneyCallback.selectedMoney(Long.valueOf(mOtherMoneyContent.getText().toString().replace(",", "")));
+                }
                 dismiss();
                 break;
         }

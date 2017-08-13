@@ -12,8 +12,8 @@
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backFeature="true"
-        app:barBackground="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        app:backFeature="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,8 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
-            app:bottomLineColor="@color/split"
-            app:hasBottomLine="true"
+            app:splitLineColor="@color/split"
+            app:hasBottomSplitLine="true"
             app:maxCharNum="18"
             app:textHint="@string/password"/>
 

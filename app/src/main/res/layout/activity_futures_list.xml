@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:titleText="@string/futures"
-        app:bottomHasSplitLine="true"
-        app:bottomSplitLineColor="@color/split"
+        app:hasBottomSplitLine="true"
+        app:splitLineColor="@color/split"
         app:titleTextColor="@color/primaryText"/>
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout

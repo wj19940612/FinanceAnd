@@ -1,12 +1,13 @@
 package com.sbai.finance.model.studyroom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
- *自习室练习
+ * 自习室练习
  */
 
-public class StudyOption {
+public class StudyOption implements Serializable {
 
     /**
      * analysis : 敢死队风格士大夫个
@@ -102,7 +103,7 @@ public class StudyOption {
         this.content = content;
     }
 
-    public static class ContentBean {
+    public static class ContentBean implements Serializable {
         /**
          * content :
          * id : 892317136503042000

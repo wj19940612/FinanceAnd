@@ -67,9 +67,21 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     private long mRewardMoney;
     private String mTitleHint;
     private int mId;
-    private boolean mIsSuccess;
-    private boolean mIsRecharge;
     private int mType;
+    private boolean mIsSuccess;
+
+    private RewardResultCallback mRewardResultCallback;
+
+    public RewardInputSafetyPassDialogFragment setOnSelectMoneyCallback(RewardResultCallback rewardResultCallback) {
+        mRewardResultCallback = rewardResultCallback;
+        return this;
+    }
+
+    public interface RewardResultCallback {
+        void success();
+
+        void failure();
+    }
 
     public static RewardInputSafetyPassDialogFragment newInstance(String money) {
         Bundle args = new Bundle();
@@ -153,12 +165,14 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (!mIsSuccess && !mIsRecharge) {
-            RewardMissDialogFragment.newInstance()
-                    .show(getActivity().getSupportFragmentManager());
-        }
-        if (mIsRecharge) {
-            showRechargeDialog(getActivity());
+        if (mIsSuccess) {
+            if (mRewardResultCallback != null) {
+                mRewardResultCallback.success();
+            }
+        } else {
+            if (mRewardResultCallback != null) {
+                mRewardResultCallback.failure();
+            }
         }
         if (mBind != null) {
             mBind.unbind();
@@ -171,7 +185,6 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     }
 
     private void requestRewardMiss(String password) {
-        mIsSuccess = false;
         if (mType == RewardInfo.TYPE_MISS) {
             Client.rewardMiss(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
                     .setTag(TAG)
@@ -182,10 +195,10 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                                 ToastUtil.show(getString(R.string.success_reward));
                                 sendRewardSuccessBroadcast(getActivity());
                                 mIsSuccess = true;
+                                sendRewardSuccessBroadcast(getActivity());
                                 dismissAllowingStateLoss();
                             } else {
                                 if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
-                                    mIsRecharge = true;
                                     dismissAllowingStateLoss();
                                 } else {
                                     if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
@@ -210,12 +223,11 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                         protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
-                                sendRewardSuccessBroadcast(getActivity());
                                 mIsSuccess = true;
+                                sendRewardSuccessBroadcast(getActivity());
                                 dismissAllowingStateLoss();
                             } else {
                                 if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
-                                    mIsRecharge = true;
                                     dismissAllowingStateLoss();
                                 } else {
                                     if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
@@ -239,17 +251,5 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         intent.setAction(ACTION_REWARD_SUCCESS);
         intent.putExtra(Launcher.EX_PAYLOAD, mType);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-    }
-
-    private void showRechargeDialog(final FragmentActivity activity) {
-        SmartDialog.single(getActivity(), getString(R.string.ignot_not_enough))
-                .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        Launcher.with(activity, CornucopiaActivity.class).execute();
-                    }
-                }).setNegative(R.string.cancel)
-                .show();
     }
 }

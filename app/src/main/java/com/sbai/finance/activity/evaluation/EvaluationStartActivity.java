@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.evaluation;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.RewardGetActivity;
@@ -52,14 +50,6 @@ public class EvaluationStartActivity extends BaseActivity {
 
         requestJoinTestedNumber();
         updateCompleteTestNumber(0L);
-
-        boolean isFirstTest = getIntent().getBooleanExtra(ExtraKeys.FIRST_TEST, false);
-        if (isFirstTest) {
-            mTitleBar.setLeftText(R.string.pass);
-            mTitleBar.setLeftTextColor(Color.WHITE);
-            mHistoryResult.setVisibility(View.GONE);
-        }
-
     }
 
     @Override

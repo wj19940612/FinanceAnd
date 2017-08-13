@@ -16,7 +16,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:barBackground="@android:color/transparent"
+            android:background="@android:color/transparent"
             app:titleTextColor="@android:color/white"
             app:backIcon="@drawable/ic_tb_back_white"
             app:backFeature="true"
