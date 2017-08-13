@@ -48,6 +48,7 @@ public class RewardMissActivity extends BaseActivity {
     FrameLayout mRewardArea;
     private int mId;
     private int mType;
+    private int mSelectedIndex = -1;
 
     public static void show(Activity activity, int id, int type) {
         Launcher.with(activity, RewardMissActivity.class)
@@ -71,16 +72,31 @@ public class RewardMissActivity extends BaseActivity {
         mRewardMoneyContent.setOnSelectedCallback(new RewardSelectMoneyView.OnSelectedCallback() {
             @Override
             public void selected(long money) {
+                mSelectedIndex = mRewardMoneyContent.getSelectedIndex();
                 mRewardMoney.setText((String.valueOf(money)));
                 mConfirmReward.setEnabled(true);
             }
 
             @Override
             public void selectedOther() {
+                mRewardArea.setVisibility(View.GONE);
                 RewardOtherMoneyDialogFragment.newInstance(mRewardMoneyContent.getOtherMoney())
+                        .setOnDismissListener(new RewardOtherMoneyDialogFragment.OnDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                mRewardArea.setVisibility(View.VISIBLE);
+                                if (mSelectedIndex != -1) {
+                                    mRewardMoneyContent.setSelectedIndex(mSelectedIndex);
+                                    mRewardMoney.setText(String.valueOf(mRewardMoneyContent.getSelectedMoney()));
+                                }
+
+                            }
+                        })
                         .setOnSelectMoneyCallback(new RewardOtherMoneyDialogFragment.OnSelectMoneyCallback() {
                             @Override
                             public void selectedMoney(long money) {
+                                mRewardArea.setVisibility(View.VISIBLE);
+                                mSelectedIndex = mRewardMoneyContent.getSelectedIndex();
                                 mRewardMoneyContent.setOtherMoney(money);
                                 mRewardMoney.setText((String.valueOf(money)));
                             }

@@ -19,11 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.miss.MissProfileActivity;
-import com.sbai.finance.activity.miss.MyQuestionsActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.SubmitQuestionActivity;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -49,6 +44,17 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     TextView mWarnTip;
     private String mContent;
     private OnSelectMoneyCallback mOnSelectMoneyCallback;
+    private OnDismissListener mDismissListener;
+    private boolean mSuccess;
+
+    public interface OnDismissListener {
+        void onDismiss();
+    }
+
+    public RewardOtherMoneyDialogFragment setOnDismissListener(OnDismissListener onDismissListener) {
+        mDismissListener = onDismissListener;
+        return this;
+    }
 
     public RewardOtherMoneyDialogFragment setOnSelectMoneyCallback(OnSelectMoneyCallback onSelectMoneyCallback) {
         mOnSelectMoneyCallback = onSelectMoneyCallback;
@@ -97,6 +103,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout((int) (dm.widthPixels * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
         }
+
         mOtherMoneyContent.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         mOtherMoneyContent.addTextChangedListener(mValidationWatcher);
         if (getArguments() != null) {
@@ -112,6 +119,9 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mOtherMoneyContent.removeTextChangedListener(mValidationWatcher);
+        if (mDismissListener != null && !mSuccess) {
+            mDismissListener.onDismiss();
+        }
         unbinder.unbind();
     }
 
@@ -172,6 +182,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
                 dismiss();
                 break;
             case R.id.confirm:
+                mSuccess = true;
                 if (mOnSelectMoneyCallback != null) {
                     mOnSelectMoneyCallback.selectedMoney(Long.valueOf(mOtherMoneyContent.getText().toString().replace(",", "")));
                 }
