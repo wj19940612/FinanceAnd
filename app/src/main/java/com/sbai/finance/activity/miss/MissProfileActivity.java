@@ -1,14 +1,17 @@
 package com.sbai.finance.activity.miss;
 
 import android.animation.ArgbEvaluator;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -117,6 +120,7 @@ public class MissProfileActivity extends BaseActivity implements
 	private RewardInfo mRewardInfo;
 	private List<Question> mHerAnswerList;
 	private Miss mMiss;
+	private RefreshReceiver mRefreshReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +132,7 @@ public class MissProfileActivity extends BaseActivity implements
 		initFooterView();
 		mSet = new HashSet<>();
 		mHerAnswerList = new ArrayList<>();
-		mHerAnswerAdapter = new HerAnswerAdapter(this, mHerAnswerList, TAG);
+		mHerAnswerAdapter = new HerAnswerAdapter(this, TAG);
 		mListView.setFocusable(false);
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mHerAnswerAdapter);
@@ -138,6 +142,7 @@ public class MissProfileActivity extends BaseActivity implements
 		requestMissDetail();
 		requestHerAnswerList();
 		initSwipeRefreshLayout();
+		registerRefreshReceiver();
 		mHerAnswerAdapter.setCallback(new HerAnswerAdapter.ItemCallback() {
 			@Override
 			public void loveOnClick(final Question item) {
@@ -207,6 +212,7 @@ public class MissProfileActivity extends BaseActivity implements
 	public void onDestroy() {
 		super.onDestroy();
 		mediaPlayerUtil.release();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
 	}
 
 	private void requestMissDetail() {
@@ -264,7 +270,7 @@ public class MissProfileActivity extends BaseActivity implements
 		Question item = (Question) parent.getItemAtPosition(position);
 		if (item != null) {
 			Launcher.with(this, QuestionDetailActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
 		}
 	}
 
@@ -289,6 +295,7 @@ public class MissProfileActivity extends BaseActivity implements
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
+						mHerAnswerList = questionList;
 						updateHerAnswerList(questionList);
 					}
 
@@ -321,7 +328,7 @@ public class MissProfileActivity extends BaseActivity implements
 				@Override
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
+					mCreateTime = mHerAnswerList.get(mHerAnswerList.size() - 1).getCreateTime();
 					requestHerAnswerList();
 				}
 			});
@@ -442,14 +449,12 @@ public class MissProfileActivity extends BaseActivity implements
 		}
 
 		private Context mContext;
-		private List<Question> mHerAnswerList;
 		private String TAG;
 		private ItemCallback mCallback;
 
-		private HerAnswerAdapter(@NonNull Context context, List<Question> herAnswerList, String TAG) {
+		private HerAnswerAdapter(@NonNull Context context, String TAG) {
 			super(context, 0);
 			this.mContext = context;
-			this.mHerAnswerList = herAnswerList;
 			this.TAG = TAG;
 		}
 
@@ -470,7 +475,7 @@ public class MissProfileActivity extends BaseActivity implements
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.bindingData(mContext, getItem(position), position, mHerAnswerList, TAG, mCallback);
+			viewHolder.bindingData(mContext, getItem(position), TAG, mCallback);
 			return convertView;
 		}
 
@@ -509,11 +514,8 @@ public class MissProfileActivity extends BaseActivity implements
 			}
 
 			public void bindingData(final Context context, final Question item,
-			                        int position, List<Question> herAnswerList, final String TAG, final ItemCallback callback) {
+			                        final String TAG, final ItemCallback callback) {
 				if (item == null) return;
-				if (position == herAnswerList.size() - 1) {
-
-				}
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -625,6 +627,42 @@ public class MissProfileActivity extends BaseActivity implements
 			Launcher.with(getActivity(), SubmitQuestionActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, mCustomId)
 					.execute();
+		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode ==  RESULT_OK) {
+
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mRefreshReceiver = new RefreshReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_REWARD_SUCCESS);
+		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
+	}
+
+	private class RefreshReceiver extends BroadcastReceiver {
+
+		@Override
+
+		public void onReceive(Context context, Intent intent) {
+			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_MISS) {
+					int totalReward = mMiss.getTotalAward() + 1;
+					mMiss.setTotalAward(totalReward);
+					mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(totalReward)));
+				}
+			}
+
+			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
+					int totalReward = mMiss.getTotalAward() + 1;
+					mMiss.setTotalAward(totalReward);
+					mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(totalReward)));
+
+					// TODO: 2017/8/11 更新列表的打赏
+				}
+			}
 		}
 	}
 }

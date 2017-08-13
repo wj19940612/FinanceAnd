@@ -20,7 +20,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
@@ -181,6 +180,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                         protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
+                                sendRewardSuccessBroadcast(getActivity());
                                 mIsSuccess = true;
                                 dismissAllowingStateLoss();
                             } else {
@@ -237,6 +237,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     private void sendRewardSuccessBroadcast(FragmentActivity activity) {
         Intent intent = new Intent();
         intent.setAction(ACTION_REWARD_SUCCESS);
+        intent.putExtra(Launcher.EX_PAYLOAD, mType);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 

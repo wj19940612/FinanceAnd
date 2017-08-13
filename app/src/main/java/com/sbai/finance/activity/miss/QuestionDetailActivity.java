@@ -607,9 +607,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			}
 
 			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-				int rewardCount = mQuestionDetail.getAwardCount() + 1;
-				mQuestionDetail.setAwardCount(rewardCount);
-				mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
+				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
+					int rewardCount = mQuestionDetail.getAwardCount() + 1;
+					mQuestionDetail.setAwardCount(rewardCount);
+					mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
+				}
 			}
 		}
 	}
