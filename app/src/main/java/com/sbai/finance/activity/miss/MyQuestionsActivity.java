@@ -80,7 +80,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private int mPlayingPosition = -1;
 	private AnimationDrawable mAnimation;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -101,42 +100,37 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				view.setBackgroundResource(R.drawable.bg_play_voice);
 				mAnimation = (AnimationDrawable) view.getBackground();
 
-				//播放下一个之前把上一个播放位置的动画停了
-				if (mPlayingPosition != -1) {
-					View view1 = mListView.getChildAt(mPlayingPosition);
-					View voiceView = view1.findViewById(R.id.voiceLevel);
-					if (voiceView != null) {
-						voiceView.setBackgroundResource(R.drawable.ic_voice_4);
-					}
-				}
-
-				mAnimation.start();
 				if (!MissVoiceRecorder.isHeard(item.getId())) {
 					//没听过的
-					if (mPlayingPosition == position) {
-						mMediaPlayerManager.release();
-						view.setBackgroundResource(R.drawable.ic_voice_4);
-						mPlayingPosition = -1;
-					} else {
-						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-										@Override
-										public void onCompletion(MediaPlayer mp) {
-											view.setBackgroundResource(R.drawable.ic_voice_4);
-										}
-									});
 
-									MissVoiceRecorder.markHeard(item.getId());
-									item.setListenCount(item.getListenCount() + 1);
-									mMyQuestionAdapter.notifyDataSetChanged();
-									mPlayingPosition = position;
-								}
-							}
-						}).fire();
+					//播放下一个之前把上一个播放位置的动画停了
+					if (mPlayingPosition != -1) {
+						View view1 = mListView.getChildAt(mPlayingPosition);
+						View voiceView = view1.findViewById(R.id.voiceLevel);
+						if (voiceView != null) {
+							voiceView.setBackgroundResource(R.drawable.ic_voice_4);
+						}
 					}
+
+					mAnimation.start();
+					Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+						@Override
+						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+							if (resp.isSuccess()) {
+								mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										view.setBackgroundResource(R.drawable.ic_voice_4);
+									}
+								});
+
+								MissVoiceRecorder.markHeard(item.getId());
+								item.setListenCount(item.getListenCount() + 1);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								mPlayingPosition = position;
+							}
+						}
+					}).fire();
 				} else {
 					//听过的
 					if (mPlayingPosition == position) {
@@ -144,6 +138,15 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 						view.setBackgroundResource(R.drawable.ic_voice_4);
 						mPlayingPosition = -1;
 					} else {
+						//播放下一个之前把上一个播放位置的动画停了
+						if (mPlayingPosition != -1) {
+							View view1 = mListView.getChildAt(mPlayingPosition);
+							View voiceView = view1.findViewById(R.id.voiceLevel);
+							if (voiceView != null) {
+								voiceView.setBackgroundResource(R.drawable.ic_voice_4);
+							}
+						}
+
 						mAnimation.start();
 						mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
 							@Override
@@ -181,6 +184,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				voiceView.setBackgroundResource(R.drawable.ic_voice_4);
 			}
 		}
+		mPlayingPosition = -1;
 	}
 
 	@Override
@@ -193,6 +197,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				voiceView.setBackgroundResource(R.drawable.ic_voice_4);
 			}
 		}
+		mPlayingPosition = -1;
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -406,7 +411,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
 				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
-
+                if(itt)
 				if (MissVoiceRecorder.isHeard(item.getId())) {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
 				} else {
