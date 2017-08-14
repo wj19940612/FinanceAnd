@@ -180,4 +180,14 @@
         <attr name="valueColor" format="color|reference"/>
         <attr name="radarLineColor" format="color|reference"/>
     </declare-styleable>
+
+    <!--训练的时间进度条-->
+    <declare-styleable name="TrainProgressBar">
+        <attr name="boundaryColor" format="color|reference"/>
+        <attr name="boundaryHeight" format="dimension|reference"/>
+        <attr name="hintSplitLineColor" format="color|reference"/>
+        <attr name="hintSplitLineWidth" format="dimension|reference"/>
+        <attr name="hintSplitScale" format="float"/>
+        <attr name="hasSplitLine" format="boolean"/>
+    </declare-styleable>
 </resources>
