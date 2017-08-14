@@ -11,15 +11,15 @@ public class Resp<T> {
 
     // 资金不足
     public static final int CODE_FUND_NOT_ENOUGH = 704;
-    // 资金不足，部分买入
-    public static final int CODE_FUND_NOT_ENOUGH_AND_PART_DEAL = 702;
     // 自选重复添加
     public static final int CODE_REPEAT_ADD = 701;
-
-    //聚宝盆兑换资金不足
+    // 聚宝盆兑换资金不足
     public static final int CODE_EXCHANGE_FUND_IS_NOT_ENOUGH = 2201;
-
-    //安全密码错误
+    // 兑换项目不存在
+    public static final int CODE_EXCHANGE_ITEM_IS_GONE = 2204;
+    // 兑换项目已修改
+    public static final int CODE_EXCHANGE_ITEM_IS_MODIFIED = 2205;
+    // 安全密码错误
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
     public static final int CODE_LIGHTNING_ORDER_INVALID = 703;
 
@@ -54,12 +54,6 @@ public class Resp<T> {
 
     public boolean isTokenExpired() {
         return code == 503;
-    }
-
-    //兑换项目不存在 2204
-    // 兑换项目已修改 2205
-    public boolean isExchangeProductHasChange() {
-        return getCode() == 2204 || getCode() == 2205;
     }
 
     /**

@@ -349,29 +349,22 @@ public class CreateBattleActivity extends BaseActivity {
                     }
 
                     @Override
-                    protected void onReceiveResponse(Resp<Battle> battleResp) {
-                        super.onReceiveResponse(battleResp);
-                        showCreateBattleMoneyIsNotEnoughDialog(battleResp);
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == 2201) {
+                            SmartDialog.with(getActivity(), "余额不足,创建失败")
+                                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                                        @Override
+                                        public void onClick(Dialog dialog) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setTitle(R.string.hint)
+                                    .setNegativeVisible(View.GONE)
+                                    .show();
+                        } else {
+                            ToastUtil.show(failedResp.getMsg());
+                        }
                     }
                 }).fire();
-    }
-
-    private void showCreateBattleMoneyIsNotEnoughDialog(Resp<Battle> battleResp) {
-        if (battleResp.isSuccess()) {
-
-        } else if (battleResp.getCode() == 2201) {
-            SmartDialog.with(getActivity()).setMessage("余额不足,创建失败")
-                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setTitle(R.string.hint)
-                    .setNegativeVisible(View.GONE)
-                    .show();
-        } else {
-            ToastUtil.show(battleResp.getMsg());
-        }
     }
 }
