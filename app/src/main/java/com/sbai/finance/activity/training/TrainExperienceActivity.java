@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.train;
+package com.sbai.finance.activity.training;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.train.Experience;
-import com.sbai.finance.model.train.TrainPraise;
+import com.sbai.finance.model.training.Experience;
+import com.sbai.finance.model.training.TrainPraise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
