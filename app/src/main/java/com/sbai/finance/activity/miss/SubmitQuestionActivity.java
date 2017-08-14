@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
