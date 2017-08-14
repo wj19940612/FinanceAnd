@@ -729,7 +729,7 @@
     <string name="risk_control_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
     <string name="understand_score">了解学分</string>
     <string name="train_grade">L%1$d</string>
-    <string name="trade_level">交易水平:%1$s  超过了%2$s的交易账户</string>
+    <string name="trade_level">我的交易水平:%1$s  超过了%2$s的交易用户</string>
     <string name="advise">建议:%1$s</string>
     <string name="click_refresh">点击刷新</string>
 
