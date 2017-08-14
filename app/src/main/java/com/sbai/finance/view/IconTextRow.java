@@ -29,15 +29,15 @@ public class IconTextRow extends LinearLayout {
     private int mRightIconVisibility;
 
     private CharSequence mText;
-    private int mTextSize;
+    private float mTextSize;
     private ColorStateList mTextColor;
 
     private CharSequence mRowSubText;
-    private int mRowSubTextSize;
+    private float mRowSubTextSize;
     private ColorStateList mRowSubTextColor;
 
     private CharSequence mSubText;
-    private int mSubTextSize;
+    private float mSubTextSize;
     private ColorStateList mSubTextColor;
     private Drawable mSubTextDrawable;
     private int mSubTextVisible;
@@ -76,14 +76,14 @@ public class IconTextRow extends LinearLayout {
         mRightIcon = typedArray.getDrawable(R.styleable.IconTextRow_rightIcon);
         mRightIconVisibility = typedArray.getInt(R.styleable.IconTextRow_rightIconVisibility, 0);
         mText = typedArray.getText(R.styleable.IconTextRow_rowText);
-        mTextSize = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowTextSize, defaultFontSize);
+        mTextSize = typedArray.getDimension(R.styleable.IconTextRow_rowTextSize, defaultFontSize);
         mTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_rowTextColor);
         mRowSubText = typedArray.getText(R.styleable.IconTextRow_rowSubText);
-        mRowSubTextSize = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowSubTextSize, defaultFontSize);
+        mRowSubTextSize = typedArray.getDimension(R.styleable.IconTextRow_rowSubTextSize, defaultFontSize);
         mRowSubTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_rowSubTextColor);
         mRowTextSpaceExtra = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowTextSpaceExtra, 0);
         mSubText = typedArray.getText(R.styleable.IconTextRow_subText);
-        mSubTextSize = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_subTextSize, defaultFontSize);
+        mSubTextSize = typedArray.getDimension(R.styleable.IconTextRow_subTextSize, defaultFontSize);
         mSubTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_subTextColor);
         mSubTextViewBg = typedArray.getDrawable(R.styleable.IconTextRow_subTextBackground);
         mSubTextDrawable = typedArray.getDrawable(R.styleable.IconTextRow_subTextDrawable);

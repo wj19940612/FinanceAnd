@@ -115,6 +115,7 @@ public class SecurityCenterActivity extends BaseActivity {
         }
 
         if (requestCode == REQ_CODE_UPDATE_LOGIN_PSD && resultCode == RESULT_OK) {
+            mHasLoginPassword = LocalUser.getUser().getUserInfo().isSetPass();
             mSetLoginPassword.setVisibility(View.GONE);
             mModifyLoginPassword.setVisibility(View.VISIBLE);
         }

@@ -461,8 +461,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 mHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Launcher.with(context, UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId()).execute();
+//                        Launcher.with(context, UserDataActivity.class)
+//                                .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId()).execute();
                     }
                 });
 

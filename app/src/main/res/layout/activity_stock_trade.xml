@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:barBackground="@color/colorPrimaryDark"
+        android:background="@color/colorPrimaryDark"
         app:customView="@layout/tb_stock_name"
         app:rightImage="@drawable/ic_share"
         app:rightVisible="true"/>
