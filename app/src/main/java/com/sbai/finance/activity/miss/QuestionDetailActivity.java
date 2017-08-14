@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -33,10 +30,9 @@ import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
-import com.sbai.finance.model.missTalk.Prise;
-import com.sbai.finance.model.missTalk.Question;
-import com.sbai.finance.model.missTalk.QuestionReply;
-import com.sbai.finance.net.Callback;
+import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -292,7 +288,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
             @Override
             public void onClick(View v) {
-               
+
             }
         });
     }

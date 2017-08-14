@@ -320,5 +320,4 @@
         android:text="开始训练"
         android:textColor="@android:color/white"
         android:textSize="15sp"/>
-
 </LinearLayout>

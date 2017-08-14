@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.train;
+package com.sbai.finance.activity.training;
 
 import android.os.Bundle;
 import android.util.Log;

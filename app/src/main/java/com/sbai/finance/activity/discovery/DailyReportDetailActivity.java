@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -84,6 +85,7 @@ public class DailyReportDetailActivity extends BaseActivity {
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
+    private String mFirstContent;
 
 
     public String getRawCookie() {
@@ -129,9 +131,13 @@ public class DailyReportDetailActivity extends BaseActivity {
             mTitle.setText(data.getTitle());
             mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getFormatTime(data.getCreateTime())));
             mPureHtml = data.getContent();
+            //获取第一段内容
+            String content = Html.fromHtml(data.getContent()).toString().trim();
+            mFirstContent = content.substring(0, content.indexOf("\n"));
         } else {
             mTitleArea.setVisibility(View.GONE);
             mPageUrl = data.getContent();
+            mFirstContent = getString(R.string.latest_finance_hot_from_lemi);
         }
         loadPage();
 
