@@ -55,6 +55,7 @@ public class ScoreIntroduceActivity extends BaseActivity {
         if (mUserEachTrainingScoreModel != null) {
             Log.d(TAG, "onCreate: " + mUserEachTrainingScoreModel.toString());
             TestResultModel testResultModel = mUserEachTrainingScoreModel.getTestResultModel();
+            Log.d(TAG, "onCreate   testResultModel: " + testResultModel.toString());
             updateScoreViewData(testResultModel);
         }
 
@@ -88,7 +89,9 @@ public class ScoreIntroduceActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<ArrayList<TrainAppraiseAndRemark>>, ArrayList<TrainAppraiseAndRemark>>() {
                         @Override
                         protected void onRespSuccessData(ArrayList<TrainAppraiseAndRemark> data) {
-                            mScoreProgress.setUserScoreGradeData(data, mUserEachTrainingScoreModel);
+                            if (data != null && !data.isEmpty()) {
+                                mScoreProgress.setUserScoreGradeData(data, mUserEachTrainingScoreModel);
+                            }
                         }
                     })
                     .fireFree();
