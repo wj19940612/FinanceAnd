@@ -3,7 +3,6 @@ package com.sbai.finance.model.training;
 /**
  * 训练
  */
-
 public class Train {
 
     public static final int TRAIN_THEORY = 1;

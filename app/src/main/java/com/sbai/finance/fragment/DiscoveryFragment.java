@@ -87,8 +87,8 @@ public class DiscoveryFragment extends BaseFragment {
     RelativeLayout mDaily2;
     @BindView(R.id.daily3)
     RelativeLayout mDaily3;
-    @BindView(R.id.title)
-    TitleBar mTitle;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
 
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
@@ -132,11 +132,12 @@ public class DiscoveryFragment extends BaseFragment {
             }
         });
 
-        scrollToTop(mTitle, mScrollView);
+        scrollToTop(mTitleBar, mScrollView);
 
-        initTrainListView();
+        initTrainingListView();
         initDailyReportView();
-        requestTrainData();
+
+        requestTrainingList();
         requestDailyReportData();
     }
 
@@ -149,16 +150,14 @@ public class DiscoveryFragment extends BaseFragment {
         });
     }
 
-    private void requestTrainData() {
+    private void requestTrainingList() {
         Client.getRecommendTrainList(0).setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Train>>, List<Train>>() {
                     @Override
                     protected void onRespSuccessData(List<Train> data) {
                         updateTrainData(data);
                     }
-                })
-                .fireFree();
+                }).fireFree();
     }
 
     private void updateTrainData(List<Train> data) {
@@ -197,7 +196,7 @@ public class DiscoveryFragment extends BaseFragment {
         }
     }
 
-    private void initTrainListView() {
+    private void initTrainingListView() {
         mListView.setFocusable(false);
         mTrainAdapter = new TrainAdapter(getContext());
         mListView.setAdapter(mTrainAdapter);
@@ -300,7 +299,7 @@ public class DiscoveryFragment extends BaseFragment {
                     case Train.TRAIN_THEORY:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
-                        }else {
+                        } else {
                             mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
                         }
                         break;
