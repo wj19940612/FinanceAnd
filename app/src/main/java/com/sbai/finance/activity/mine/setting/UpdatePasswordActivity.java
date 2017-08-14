@@ -111,12 +111,17 @@ public class UpdatePasswordActivity extends BaseActivity {
         if (mHasLoginPassword) {
             String password = mPassword.getPassword();
             String oldPassword = mOldPassword.getPassword();
-            if (TextUtils.isEmpty(password) || TextUtils.isEmpty(oldPassword)) {
+            if (TextUtils.isEmpty(password) || password.length() < 6) {
                 return false;
             }
+
+            if (TextUtils.isEmpty(oldPassword) || oldPassword.length() < 6) {
+                return false;
+            }
+
         } else {
             String password = mPassword.getPassword();
-            if (TextUtils.isEmpty(password)) {
+            if (TextUtils.isEmpty(password) || password.length() < 6) {
                 return false;
             }
         }

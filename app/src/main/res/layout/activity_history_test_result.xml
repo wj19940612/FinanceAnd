@@ -10,12 +10,11 @@
 
 
     <com.sbai.finance.view.TitleBar
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:bottomHasSplitLine="true"
-        app:bottomSplitLineColor="@color/split"
+        app:hasBottomSplitLine="true"
+        app:splitLineColor="@color/split"
         app:titleText="@string/test_result"/>
     <include layout="@layout/layout_refresh_listview"/>
 </LinearLayout>

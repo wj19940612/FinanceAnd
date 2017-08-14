@@ -134,6 +134,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             mPageUrl = data.getContent();
         }
         loadPage();
+
     }
 
     private void initView() {

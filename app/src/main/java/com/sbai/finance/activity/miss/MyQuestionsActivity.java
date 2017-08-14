@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.dialog.RewardMissDialogFragment;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Prise;
@@ -89,14 +88,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
 			@Override
 			public void onRewardClick(Question item) {
-				if (mRewardInfo != null) {
-					mRewardInfo.setId(item.getId());
-					mRewardInfo.setType(RewardInfo.TYPE_QUESTION);
-					mRewardInfo.setMoney(0);
-					mRewardInfo.setIndex(-1);
-					RewardMissDialogFragment.newInstance()
-							.show(getSupportFragmentManager());
-				}
 			}
 		});
 		mListView.setEmptyView(mEmpty);

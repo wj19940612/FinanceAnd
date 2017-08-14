@@ -22,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="26dp"
+        android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
         app:backFeature="true"
         app:backIcon="@drawable/ic_close"
-        app:barBackground="@android:color/transparent"
         app:titleTextColor="@android:color/white"/>
 
     <com.sbai.finance.view.autofit.AutofitTextView

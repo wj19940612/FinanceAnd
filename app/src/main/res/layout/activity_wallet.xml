@@ -13,9 +13,9 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/wallet_bg"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:barBackground="@color/wallet_bg"
         app:titleText="@string/wallet"
         app:titleTextColor="@android:color/white"/>
 
