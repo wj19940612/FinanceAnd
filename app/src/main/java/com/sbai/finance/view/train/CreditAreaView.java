@@ -11,7 +11,6 @@ import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -101,37 +100,6 @@ public class CreditAreaView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mMeasuredWidth = getMeasuredWidth();
-        mMeasuredHeight = getMeasuredHeight();
-        if (mSplitHeight == 0) {
-            mSplitHeight = mMeasuredHeight;
-        }
-        Log.d(TAG, "onDraw: " + mMeasuredWidth + "  " + mMeasuredHeight);
-        Log.d(TAG, "mCredPercent: " + mCredPercent);
-        parameterIsNotLegal();
-
-        //如果有分数在合理区间内
-        if (0 < mCredPercent && mCredPercent < 1) {
-            mEndColor = getColor(mCredPercent);
-            mCreditAreaWidth = FinanceUtil.multiply(mMeasuredWidth, mCredPercent).floatValue();
-            Log.d(TAG, "mCreditAreaWidth: " + mCreditAreaWidth);
-            //如果达到最高分
-        } else if (mCredPercent == 1) {
-            mCreditAreaWidth = mMeasuredWidth;
-            //没有分数
-        } else if (mCredPercent == 0) {
-            mCreditAreaWidth = 0;
-        }
-
-        if (mCreditAreaWidth != 0) {
-            mCreditAreaRectF = new RectF(0, 0, mCreditAreaWidth, mMeasuredHeight);
-            LinearGradient linearGradient = new LinearGradient(0, 0,
-                    mCreditAreaWidth, mMeasuredHeight, mStartColor, mEndColor, Shader.TileMode.MIRROR);
-            mCreditAreaPaint.setShader(linearGradient);
-        }
-        if (0 < mCredPercent) {
-            mNotReachedCreditAreaRectF = new RectF(mCreditAreaWidth, 0, mMeasuredWidth, mMeasuredHeight);
-        }
     }
 
     private void parameterIsNotLegal() {
@@ -143,7 +111,28 @@ public class CreditAreaView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        
+
+
+        mMeasuredWidth = getWidth();
+        mMeasuredHeight = getHeight();
+        if (mSplitHeight == 0) {
+            mSplitHeight = mMeasuredHeight;
+        }
+        parameterIsNotLegal();
+
+        //如果有分数在合理区间内
+        getCreditAreaPercent();
+
+        if (mCreditAreaWidth != 0) {
+            mCreditAreaRectF = new RectF(0, 0, mCreditAreaWidth, mMeasuredHeight);
+            LinearGradient linearGradient = new LinearGradient(0, 0,
+                    mCreditAreaWidth, mMeasuredHeight, mStartColor, mEndColor, Shader.TileMode.MIRROR);
+            mCreditAreaPaint.setShader(linearGradient);
+        }
+        if (0 < mCredPercent) {
+            mNotReachedCreditAreaRectF = new RectF(mCreditAreaWidth, 0, mMeasuredWidth, mMeasuredHeight);
+        }
+
         //画分数区域
         if (mCreditAreaRectF != null) {
             canvas.drawRoundRect(mCreditAreaRectF, mRadius, mRadius, mCreditAreaPaint);
@@ -154,6 +143,19 @@ public class CreditAreaView extends View {
         }
         drawSplit(canvas);
 
+    }
+
+    private void getCreditAreaPercent() {
+        if (0 < mCredPercent && mCredPercent < 1) {
+            mEndColor = getColor(mCredPercent);
+            mCreditAreaWidth = FinanceUtil.multiply(mMeasuredWidth, mCredPercent).floatValue();
+            //如果达到最高分
+        } else if (mCredPercent == 1) {
+            mCreditAreaWidth = mMeasuredWidth;
+            //没有分数
+        } else if (mCredPercent == 0) {
+            mCreditAreaWidth = 0;
+        }
     }
 
 
