@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.utils.DateUtil;
@@ -132,9 +131,7 @@ public class BattleFloatView extends RelativeLayout {
                 public void onClick(View v) {
                     MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getContext(), UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                .execute();
+
                     } else {
                         Launcher.with(getContext(), LoginActivity.class).execute();
                     }
@@ -147,9 +144,7 @@ public class BattleFloatView extends RelativeLayout {
                     MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
                     if (LocalUser.getUser().isLogin()) {
                         if (mBattle.getAgainstUser() != 0) {
-                            Launcher.with(getContext(), UserDataActivity.class)
-                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                    .execute();
+
                         }
                     } else {
                         Launcher.with(getContext(), LoginActivity.class).execute();

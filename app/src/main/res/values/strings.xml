@@ -207,7 +207,7 @@
 
     <!--设置-->
     <string name="new_news_notification">新消息通知</string>
-    <string name="shield_setting">屏蔽设置</string>
+
     <string name="security_center">安全中心</string>
     <string name="set_security_password">设置安全密码</string>
     <string name="set_login_password">设置登录密码</string>
