@@ -192,5 +192,6 @@
         <attr name="hasSplit" format="boolean"/>
         <attr name="notReachedCreditViewColor" format="color|reference"/>
         <attr name="credPercent" format="float"/>
+        <attr name="gradeCount" format="integer"/>
     </declare-styleable>
 </resources>

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.sbai.finance.R;
@@ -59,7 +60,7 @@ public class CreditAreaView extends View {
     private int mRadius;
 
     //分为几段
-    private int mGradeCount = 5;
+    private int mGradeCount;
     private boolean mHasSplit;
     //所得分数占总分的比例  0-1;
     private float mCredPercent;
@@ -80,19 +81,20 @@ public class CreditAreaView extends View {
     }
 
     private void progressAttributeSet(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(R.styleable.CreditAreaView);
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CreditAreaView);
         mCredPercent = typedArray.getFloat(R.styleable.CreditAreaView_credPercent, 1);
         mStartColor = typedArray.getColor(R.styleable.CreditAreaView_startColor, ContextCompat.getColor(getContext(), R.color.backgroundGradientStart));
         mEndColor = typedArray.getColor(R.styleable.CreditAreaView_endColor, ContextCompat.getColor(getContext(), R.color.creditEndColor));
         mSplitColor = typedArray.getColor(R.styleable.CreditAreaView_splitColor, Color.WHITE);
-        mSplitWidth = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_splitWidth, 2);
+        mSplitWidth = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_splitWidth, dp2px(1));
         mSplitHeight = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_splitHeight, 0);
-        mRadius = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_viewRadius, 16);
+        mRadius = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_viewRadius, dp2px(8));
         mHasSplit = typedArray.getBoolean(R.styleable.CreditAreaView_hasSplit, true);
-        mNotReachedCreditViewColor = typedArray.getColor(R.styleable.CreditAreaView_notReachedCreditViewColor, Color.WHITE);
+        mNotReachedCreditViewColor = typedArray.getColor(R.styleable.CreditAreaView_notReachedCreditViewColor, Color.RED);
         if (mSplitWidth < 2) {
             mSplitWidth = 2;
         }
+        mGradeCount = typedArray.getInt(R.styleable.CreditAreaView_gradeCount, 4);
         typedArray.recycle();
     }
 
@@ -105,26 +107,31 @@ public class CreditAreaView extends View {
             mSplitHeight = mMeasuredHeight;
         }
         Log.d(TAG, "onDraw: " + mMeasuredWidth + "  " + mMeasuredHeight);
-        Log.d(TAG, "onSizeChanged: " + mCredPercent);
+        Log.d(TAG, "mCredPercent: " + mCredPercent);
         parameterIsNotLegal();
 
+        //如果有分数在合理区间内
         if (0 < mCredPercent && mCredPercent < 1) {
             mEndColor = getColor(mCredPercent);
             mCreditAreaWidth = FinanceUtil.multiply(mMeasuredWidth, mCredPercent).floatValue();
-            Log.d(TAG, "onSizeChanged: " + mCreditAreaWidth);
+            Log.d(TAG, "mCreditAreaWidth: " + mCreditAreaWidth);
+            //如果达到最高分
         } else if (mCredPercent == 1) {
             mCreditAreaWidth = mMeasuredWidth;
+            //没有分数
+        } else if (mCredPercent == 0) {
+            mCreditAreaWidth = 0;
         }
 
-        //如果分数所占比例在0 -1 中间
-        mCreditAreaRectF = new RectF(0, 0, mCreditAreaWidth, mMeasuredHeight);
-        if (mCredPercent != 0) {
+        if (mCreditAreaWidth != 0) {
+            mCreditAreaRectF = new RectF(0, 0, mCreditAreaWidth, mMeasuredHeight);
             LinearGradient linearGradient = new LinearGradient(0, 0,
                     mCreditAreaWidth, mMeasuredHeight, mStartColor, mEndColor, Shader.TileMode.MIRROR);
             mCreditAreaPaint.setShader(linearGradient);
         }
-
-        mNotReachedCreditAreaRectF = new RectF(mMeasuredWidth - mCreditAreaWidth, mMeasuredHeight - mCreditAreaWidth, mMeasuredWidth, mMeasuredHeight);
+        if (0 < mCredPercent) {
+            mNotReachedCreditAreaRectF = new RectF(mCreditAreaWidth, 0, mMeasuredWidth, mMeasuredHeight);
+        }
     }
 
     private void parameterIsNotLegal() {
@@ -136,38 +143,40 @@ public class CreditAreaView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-//        if (mCredPercent == 1) {
-        drawArea(canvas, mCreditAreaPaint);
-//        } else if (mCredPercent == 0) {
-//            drawArea(canvas, mNotReachedCreditPaint);
-//        }
-
-    }
-
-    //如果出现分数占总分为0 或者为1
-    private void drawArea(Canvas canvas, Paint paint) {
-        canvas.drawRoundRect(mCreditAreaRectF, mRadius, mRadius, paint);
-//        if (mHasSplit) {
-        Log.d(TAG, "drawArea: " + mGradeCount);
-        for (int i = 1; i < mGradeCount; i++) {
-            int lineX = mMeasuredWidth / (mGradeCount) * i;
-            Log.d(TAG, "drawArea: " + mMeasuredWidth);
-            canvas.drawLine(lineX, 0, lineX, mSplitHeight, paint);
+        
+        //画分数区域
+        if (mCreditAreaRectF != null) {
+            canvas.drawRoundRect(mCreditAreaRectF, mRadius, mRadius, mCreditAreaPaint);
         }
-//        }
+        //画未达到分数区域
+        if (mNotReachedCreditAreaRectF != null) {
+            canvas.drawRoundRect(mNotReachedCreditAreaRectF, mRadius, mRadius, mNotReachedCreditPaint);
+        }
+        drawSplit(canvas);
+
     }
 
+
+    private void drawSplit(Canvas canvas) {
+        if (mHasSplit) {
+            for (int i = 1; i < mGradeCount + 1; i++) {
+                int lineX = mMeasuredWidth / (mGradeCount + 1) * i;
+                canvas.drawLine(lineX, 0, lineX, mSplitHeight, mSplitLinePaint);
+            }
+        }
+    }
 
     private void init() {
         mCreditAreaPaint = new Paint();
         mCreditAreaPaint.setAntiAlias(true);
+        mCreditAreaPaint.setColor(Color.RED);
         mCreditAreaPaint.setShadowLayer(8, 0, 0, mStartColor);
+
 
         mNotReachedCreditPaint = new Paint();
         mNotReachedCreditPaint.setAntiAlias(true);
         mNotReachedCreditPaint.setColor(mNotReachedCreditViewColor);
-        mNotReachedCreditPaint.setStyle(Paint.Style.STROKE);
+        mNotReachedCreditPaint.setStyle(Paint.Style.FILL);
 
         mSplitLinePaint = new Paint();
         mSplitLinePaint.setAntiAlias(true);
@@ -182,8 +191,18 @@ public class CreditAreaView extends View {
      * @param percent
      */
     public void setPercent(float percent) {
+        setPercentAndGradeCount(percent, mGradeCount);
+    }
+
+
+    /**
+     * @param percent    设置得分区域占总区域百分比
+     * @param gradeCount 设置如果有分割线 ，将view分为几段
+     */
+    public void setPercentAndGradeCount(float percent, int gradeCount) {
         parameterIsNotLegal();
         this.mCredPercent = percent;
+        this.mGradeCount = gradeCount;
         postInvalidate();
     }
 
@@ -202,5 +221,13 @@ public class CreditAreaView extends View {
         return Color.argb(255, red, greed, blue);
     }
 
+
+    private int dp2px(float value) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getResources().getDisplayMetrics());
+    }
+
+    private float sp2px(float value) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, getResources().getDisplayMetrics());
+    }
 
 }
