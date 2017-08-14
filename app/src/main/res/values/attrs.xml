@@ -177,4 +177,16 @@
         <attr name="valueColor" format="color|reference"/>
         <attr name="radarLineColor" format="color|reference"/>
     </declare-styleable>
+
+    <!--分数区间 分段view  0 -200 -->
+    <declare-styleable name="CreditAreaView">
+        <attr name="startColor" format="color|reference"/>
+        <attr name="endColor" format="color|reference"/>
+        <attr name="splitColor" format="color|reference"/>
+        <attr name="splitWidth" format="dimension|reference"/>
+        <attr name="splitHeight" format="dimension|reference"/>
+        <attr name="viewRadius" format="dimension|reference"/>
+        <attr name="hasSplit" format="boolean"/>
+        <attr name="notReachedCreditViewColor" format="color|reference"/>
+    </declare-styleable>
 </resources>

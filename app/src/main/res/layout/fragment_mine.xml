@@ -150,4 +150,12 @@
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"/>
+
+    <com.sbai.finance.view.train.CreditAreaView
+        android:id="@+id/credit"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"/>
 </LinearLayout>
