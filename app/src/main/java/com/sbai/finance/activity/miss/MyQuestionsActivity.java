@@ -30,7 +30,6 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.missTalk.Prise;
 import com.sbai.finance.model.missTalk.Question;
 import com.sbai.finance.net.Callback;
@@ -53,8 +52,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.position;
-import static com.sbai.finance.R.id.voiceArea;
 
 /**
  * 我的提问页面
@@ -104,22 +101,23 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				view.setBackgroundResource(R.drawable.bg_play_voice);
 				mAnimation = (AnimationDrawable) view.getBackground();
 
-				if (mPlayingPosition == position) {
-					mMediaPlayerManager.release();
-					view.setBackgroundResource(R.drawable.ic_voice_4);
-					mPlayingPosition = -1;
-				} else {
-					//播放下一个之前把上一个播放位置的动画停了
-					if (mPlayingPosition != -1) {
-						View view1 = mListView.getChildAt(mPlayingPosition);
-						View voiceView = view1.findViewById(R.id.voiceLevel);
-						if (voiceView != null) {
-							voiceView.setBackgroundResource(R.drawable.ic_voice_4);
-						}
+				//播放下一个之前把上一个播放位置的动画停了
+				if (mPlayingPosition != -1) {
+					View view1 = mListView.getChildAt(mPlayingPosition);
+					View voiceView = view1.findViewById(R.id.voiceLevel);
+					if (voiceView != null) {
+						voiceView.setBackgroundResource(R.drawable.ic_voice_4);
 					}
+				}
 
-					mAnimation.start();
-					if (!MissVoiceRecorder.isHeard(item.getId())) {
+				mAnimation.start();
+				if (!MissVoiceRecorder.isHeard(item.getId())) {
+					//没听过的
+					if (mPlayingPosition == position) {
+						mMediaPlayerManager.release();
+						view.setBackgroundResource(R.drawable.ic_voice_4);
+						mPlayingPosition = -1;
+					} else {
 						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
 							@Override
 							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
@@ -138,21 +136,22 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 								}
 							}
 						}).fire();
+					}
+				} else {
+					//听过的
+					if (mPlayingPosition == position) {
+						mMediaPlayerManager.release();
+						view.setBackgroundResource(R.drawable.ic_voice_4);
+						mPlayingPosition = -1;
 					} else {
-						if (mPlayingPosition == position) {
-							mMediaPlayerManager.release();
-							view.setBackgroundResource(R.drawable.ic_voice_4);
-							mPlayingPosition = -1;
-						} else {
-							mAnimation.start();
-							mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-								@Override
-								public void onCompletion(MediaPlayer mp) {
-									view.setBackgroundResource(R.drawable.ic_voice_4);
-								}
-							});
-							mPlayingPosition = position;
-						}
+						mAnimation.start();
+						mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								view.setBackgroundResource(R.drawable.ic_voice_4);
+							}
+						});
+						mPlayingPosition = position;
 					}
 				}
 			}
@@ -306,6 +305,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
 		interface OnClickCallback {
 			void onRewardClick(Question item);
+
 			void onVoiceClick(Question item, int position, View view);
 		}
 
@@ -327,7 +327,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback);
+			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback, position);
 			return convertView;
 		}
 
@@ -362,7 +362,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			TextView mNoMissReply;
 			@BindView(R.id.voiceLevel)
 			View mVoiceLevel;
-			@BindView(voiceArea)
+			@BindView(R.id.voiceArea)
 			LinearLayout mVoiceArea;
 
 			ViewHolder(View view) {
@@ -370,7 +370,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			}
 
 			public void bindingData(final Context context, final Question item,
-			                        final OnClickCallback onClickCallback) {
+			                        final OnClickCallback onClickCallback, final int position) {
 				if (item == null) return;
 
 				Glide.with(context).load(item.getUserPortrait())
@@ -481,7 +481,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		public void onReceive(Context context, Intent intent) {
 			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++ ) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
 						Question question = mMyQuestionAdapter.getItem(i);
 						if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
 							int questionRewardCount = question.getAwardCount() + 1;
