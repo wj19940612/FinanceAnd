@@ -175,9 +175,9 @@ public class API extends RequestManager {
         }
 
         enqueue(request);
-//        Log.d(TAG, request.toString());
+        Log.d(TAG, request.toString());
     }
-
+    
     private static class RequestFinishedListener implements ApiCallback.onFinishedListener {
 
         public void onFinished(String tag, String url) {
