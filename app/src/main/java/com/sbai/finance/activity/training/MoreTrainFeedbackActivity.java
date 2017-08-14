@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.train;
+package com.sbai.finance.activity.training;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.mine.Feedback;
-import com.sbai.finance.model.train.TrainFeedback;
+import com.sbai.finance.model.training.TrainFeedback;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -36,7 +34,7 @@ import butterknife.OnClick;
  * 更多训练反馈页
  */
 
-public class MoreTrainFeedBackActivity extends BaseActivity {
+public class MoreTrainFeedbackActivity extends BaseActivity {
     @BindView(R.id.listView)
     MyListView mListView;
     @BindView(R.id.comment)

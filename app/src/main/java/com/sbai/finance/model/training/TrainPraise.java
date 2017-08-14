@@ -1,4 +1,4 @@
-package com.sbai.finance.model.train;
+package com.sbai.finance.model.training;
 
 /**
  * Created by lixiaokuan0819 on 2017/8/10.

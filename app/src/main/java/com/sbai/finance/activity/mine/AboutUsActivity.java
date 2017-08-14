@@ -9,7 +9,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
-import com.sbai.finance.model.AppVersionModel;
+import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -72,9 +72,9 @@ public class AboutUsActivity extends BaseActivity {
         Client.updateVersion()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<AppVersionModel>, AppVersionModel>() {
+                .setCallback(new Callback2D<Resp<AppVersion>, AppVersion>() {
                     @Override
-                    protected void onRespSuccessData(final AppVersionModel data) {
+                    protected void onRespSuccessData(final AppVersion data) {
                         if (data.isForceUpdate()) {
                             UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
                         } else if (data.isNeedUpdate()) {

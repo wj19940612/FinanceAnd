@@ -409,16 +409,16 @@
 
         <!-- 训练 -->
         <activity
-            android:name=".activity.train.MoreTrainFeedBackActivity"
+            android:name=".activity.training.MoreTrainFeedbackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
 
         <activity
-            android:name=".activity.train.ScoreIntroduceActivity"
+            android:name=".activity.training.ScoreIntroduceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.train.TrainExperienceActivity"
+            android:name=".activity.training.TrainExperienceActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.leaderboard.ProfitBoardListActivity"
@@ -430,14 +430,14 @@
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.train.LookBigPictureActivity"
+            android:name=".activity.training.LookBigPictureActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.train.WriteExperienceActivity"
+            android:name=".activity.training.WriteExperienceActivity"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activity.train.TrainDetailActivity"
+            android:name=".activity.training.TrainDetailActivity"
             android:screenOrientation="portrait"/>
 
     </application>
