@@ -9,8 +9,7 @@
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
