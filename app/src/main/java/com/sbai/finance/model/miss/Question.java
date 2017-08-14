@@ -1,4 +1,4 @@
-package com.sbai.finance.model.missTalk;
+package com.sbai.finance.model.miss;
 
 import java.io.Serializable;
 
@@ -31,6 +31,7 @@ public class Question implements Serializable {
 	 * appointCustomId : 6
 	 * replyCount : 6
 	 */
+	private boolean isPlaying;
 
 	private String answerContext;
 	private int answerCustomId;
@@ -54,6 +55,14 @@ public class Question implements Serializable {
 	private int appointCustomId;
 	private int replyCount;
 	private int soundTime;
+
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public void setPlaying(boolean playing) {
+		isPlaying = playing;
+	}
 
 	public int getSoundTime() {
 		return soundTime;

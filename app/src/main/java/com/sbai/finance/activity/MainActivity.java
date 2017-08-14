@@ -16,6 +16,7 @@ import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.websocket.WsClient;

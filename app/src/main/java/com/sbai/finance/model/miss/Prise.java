@@ -1,4 +1,4 @@
-package com.sbai.finance.model.missTalk;
+package com.sbai.finance.model.miss;
 
 /**
  * Created by lixiaokuan0819 on 2017/8/2.

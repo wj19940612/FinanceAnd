@@ -1,142 +1,183 @@
 package com.sbai.finance.model.miss;
 
+import java.io.Serializable;
+
 /**
- * 姐的个人信息
+ * 小姐姐列表
  */
 
-public class Miss {
+public class Miss implements Serializable{
 
-    /**
-     * briefingSound : aaa
-     * portrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1501549863096062105.png
-     * roleType : 0
-     * totalAttention : 0
-     * createTime : 1500954915000
-     * totalPrise : 1
-     * totalAward : 8
-     * totalListen : 4
-     * name : 草榴姐
-     * online : 0
-     * id : 6
-     * brifeingText : aaaa
-     * status : 0
-     */
+	/**
+	 * briefingSound : aaa
+	 * portrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1501549863096062105.png
+	 * roleType : 0
+	 * totalAttention : 0
+	 * createTime : 1500954915000
+	 * totalPrise : 1
+	 * totalAward : 15
+	 * totalListen : 4
+	 * name : 草榴姐
+	 * online : 0
+	 * id : 6
+	 * brifeingText : aaaa
+	 * status : 0
+	 */
 
-    private String briefingSound;
-    private String portrait;
-    private int roleType;
-    private int totalAttention;
-    private long createTime;
-    private int totalPrise;
-    private int totalAward;
-    private int totalListen;
-    private String name;
-    private int online;
-    private int id;
-    private String brifeingText;
-    private int status;
+	private String briefingSound;
+	private String portrait;
+	private int roleType;
+	private int totalAttention;
+	private long createTime;
+	private int totalPrise;
+	private int totalAward;
+	private int totalListen;
+	private String name;
+	private int online;
+	private int id;
+	private String brifeingText;
+	private int status;
+	private int soundTime;
+	private int isAttention;
 
-    public String getBriefingSound() {
-        return briefingSound;
-    }
+	public int isAttention() {
+		return isAttention;
+	}
 
-    public void setBriefingSound(String briefingSound) {
-        this.briefingSound = briefingSound;
-    }
+	public void setAttention(int attention) {
+		isAttention = attention;
+	}
 
-    public String getPortrait() {
-        return portrait;
-    }
+	public int getSoundTime() {
+		return soundTime;
+	}
 
-    public void setPortrait(String portrait) {
-        this.portrait = portrait;
-    }
+	public void setSoundTime(int soundTime) {
+		this.soundTime = soundTime;
+	}
 
-    public int getRoleType() {
-        return roleType;
-    }
+	public String getBriefingSound() {
+		return briefingSound;
+	}
 
-    public void setRoleType(int roleType) {
-        this.roleType = roleType;
-    }
+	public void setBriefingSound(String briefingSound) {
+		this.briefingSound = briefingSound;
+	}
 
-    public int getTotalAttention() {
-        return totalAttention;
-    }
+	public String getPortrait() {
+		return portrait;
+	}
 
-    public void setTotalAttention(int totalAttention) {
-        this.totalAttention = totalAttention;
-    }
+	public void setPortrait(String portrait) {
+		this.portrait = portrait;
+	}
 
-    public long getCreateTime() {
-        return createTime;
-    }
+	public int getRoleType() {
+		return roleType;
+	}
 
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
+	public void setRoleType(int roleType) {
+		this.roleType = roleType;
+	}
 
-    public int getTotalPrise() {
-        return totalPrise;
-    }
+	public int getTotalAttention() {
+		return totalAttention;
+	}
 
-    public void setTotalPrise(int totalPrise) {
-        this.totalPrise = totalPrise;
-    }
+	public void setTotalAttention(int totalAttention) {
+		this.totalAttention = totalAttention;
+	}
 
-    public int getTotalAward() {
-        return totalAward;
-    }
+	public long getCreateTime() {
+		return createTime;
+	}
 
-    public void setTotalAward(int totalAward) {
-        this.totalAward = totalAward;
-    }
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
+	}
 
-    public int getTotalListen() {
-        return totalListen;
-    }
+	public int getTotalPrise() {
+		return totalPrise;
+	}
 
-    public void setTotalListen(int totalListen) {
-        this.totalListen = totalListen;
-    }
+	public void setTotalPrise(int totalPrise) {
+		this.totalPrise = totalPrise;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public int getTotalAward() {
+		return totalAward;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setTotalAward(int totalAward) {
+		this.totalAward = totalAward;
+	}
 
-    public int getOnline() {
-        return online;
-    }
+	public int getTotalListen() {
+		return totalListen;
+	}
 
-    public void setOnline(int online) {
-        this.online = online;
-    }
+	public void setTotalListen(int totalListen) {
+		this.totalListen = totalListen;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getBrifeingText() {
-        return brifeingText;
-    }
+	public int getOnline() {
+		return online;
+	}
 
-    public void setBrifeingText(String brifeingText) {
-        this.brifeingText = brifeingText;
-    }
+	public void setOnline(int online) {
+		this.online = online;
+	}
 
-    public int getStatus() {
-        return status;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getBrifeingText() {
+		return brifeingText;
+	}
+
+	public void setBrifeingText(String brifeingText) {
+		this.brifeingText = brifeingText;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "Miss{" +
+				"briefingSound='" + briefingSound + '\'' +
+				", portrait='" + portrait + '\'' +
+				", roleType=" + roleType +
+				", totalAttention=" + totalAttention +
+				", createTime=" + createTime +
+				", totalPrise=" + totalPrise +
+				", totalAward=" + totalAward +
+				", totalListen=" + totalListen +
+				", name='" + name + '\'' +
+				", online=" + online +
+				", id=" + id +
+				", brifeingText='" + brifeingText + '\'' +
+				", status=" + status +
+				", soundTime=" + soundTime +
+				", isAttention=" + isAttention +
+				'}';
+	}
 }
