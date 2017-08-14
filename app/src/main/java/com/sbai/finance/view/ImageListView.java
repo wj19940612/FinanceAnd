@@ -53,13 +53,11 @@ public class ImageListView extends RelativeLayout {
             case 0:
                 return;
             case 1:
-                createImageView(0).setImageResource(mDrawble);
-                loadImage(createImageView(1), images.get(0));
+                loadImage(createImageView(0), images.get(0));
                 break;
             case 2:
-                createImageView(0).setImageResource(mDrawble);
-                loadImage(createImageView(1), images.get(1));
-                loadImage(createImageView(2), images.get(0));
+                loadImage(createImageView(0), images.get(1));
+                loadImage(createImageView(1), images.get(0));
                 break;
             case 3:
                 createImageView(0).setImageResource(mDrawble);
