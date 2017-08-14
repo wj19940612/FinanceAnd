@@ -159,18 +159,6 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        startScheduleJob(10 * 1000);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopScheduleJob();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity())
@@ -290,12 +278,6 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 }
             }
         }
-    }
-
-    @Override
-    public void onTimeUp(int count) {
-        super.onTimeUp(count);
-        requestLeaderBoardData();
     }
 
     @Override
