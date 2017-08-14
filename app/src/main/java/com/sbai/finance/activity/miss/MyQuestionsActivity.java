@@ -1,12 +1,16 @@
 package com.sbai.finance.activity.miss;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +42,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.mediaPlayerUtil;
+import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -49,6 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.R.id.position;
 import static com.sbai.finance.R.id.voiceArea;
 
 /**
@@ -74,6 +79,10 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private View mFootView;
 	private RewardInfo mRewardInfo;
 	private List<Question> mMyQuestionList;
+	private RefreshReceiver mRefreshReceiver;
+	private MediaPlayerManager mMediaPlayerManager;
+	private int mPlayingPosition = -1;
+	private AnimationDrawable mAnimation;
 
 
 	@Override
@@ -83,11 +92,62 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		ButterKnife.bind(this);
 		initRewardInfo();
 		mSet = new HashSet<>();
+		mMediaPlayerManager = new MediaPlayerManager(this);
 		mMyQuestionList = new ArrayList<>();
-		mMyQuestionAdapter = new MyQuestionAdapter(this, mMyQuestionList, TAG);
+		mMyQuestionAdapter = new MyQuestionAdapter(this, TAG);
 		mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
 			@Override
 			public void onRewardClick(Question item) {
+				RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
+			}
+
+			@Override
+			public void onVoiceClick(final Question item, final int position, final View view) {
+				view.setBackgroundResource(R.drawable.bg_play_voice);
+				mAnimation = (AnimationDrawable) view.getBackground();
+
+				if (mPlayingPosition == position) {
+					mMediaPlayerManager.release();
+					view.setBackgroundResource(R.drawable.ic_voice_4);
+					mPlayingPosition = -1;
+				} else {
+					mAnimation.start();
+					if (!MissVoiceRecorder.isHeard(item.getId())) {
+						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+							@Override
+							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+								if (resp.isSuccess()) {
+									mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+										@Override
+										public void onCompletion(MediaPlayer mp) {
+											view.setBackgroundResource(R.drawable.ic_voice_4);
+										}
+									});
+
+									MissVoiceRecorder.markHeard(item.getId());
+									item.setListenCount(item.getListenCount() + 1);
+									mMyQuestionAdapter.notifyDataSetChanged();
+									mPlayingPosition = position;
+								}
+							}
+						}).fire();
+					} else {
+						if (mPlayingPosition == position) {
+							mMediaPlayerManager.release();
+							view.setBackgroundResource(R.drawable.ic_voice_4);
+							mPlayingPosition = -1;
+						} else {
+							mAnimation.start();
+							mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+								@Override
+								public void onCompletion(MediaPlayer mp) {
+									view.setBackgroundResource(R.drawable.ic_voice_4);
+								}
+							});
+							mPlayingPosition = position;
+						}
+					}
+				}
 			}
 		});
 		mListView.setEmptyView(mEmpty);
@@ -95,6 +155,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mListView.setOnItemClickListener(this);
 		mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
+		registerRefreshReceiver();
 	}
 
 	@Override
@@ -106,13 +167,13 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mediaPlayerUtil.release();
+		mMediaPlayerManager.release();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mediaPlayerUtil.release();
+		mMediaPlayerManager.release();
 	}
 
 	private void initRewardInfo() {
@@ -151,6 +212,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
+						mMyQuestionList = questionList;
 						updateMyQuestionList(questionList);
 					}
 
@@ -174,7 +236,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				@Override
 				public void onClick(View v) {
 					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
+					mCreateTime = mMyQuestionList.get(mMyQuestionList.size() - 1).getCreateTime();
 					requestMyQuestionList();
 				}
 			});
@@ -237,7 +299,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
 		private Context mContext;
 		private OnClickCallback mOnClickCallback;
-		private List<Question> mMyQuestionList;
 		private String TAG;
 
 		public void setOnClickCallback(OnClickCallback onClickCallback) {
@@ -246,12 +307,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
 		interface OnClickCallback {
 			void onRewardClick(Question item);
+			void onVoiceClick(Question item, int position, View view);
 		}
 
-		private MyQuestionAdapter(@NonNull Context context, List<Question> myQuestionList, String TAG) {
+		private MyQuestionAdapter(@NonNull Context context, String TAG) {
 			super(context, 0);
 			this.mContext = context;
-			this.mMyQuestionList = myQuestionList;
 			this.TAG = TAG;
 		}
 
@@ -268,7 +329,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback, position, mMyQuestionList, TAG);
+			viewHolder.bindingData(mContext, getItem(position), mOnClickCallback, TAG);
 			return convertView;
 		}
 
@@ -311,13 +372,8 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			}
 
 			public void bindingData(final Context context, final Question item,
-			                        final OnClickCallback onClickCallback, int position,
-			                        List<Question> myQuestionList, final String TAG) {
+			                        final OnClickCallback onClickCallback, final String TAG) {
 				if (item == null) return;
-
-				if (position == myQuestionList.size() - 1) {
-					mSplit.setVisibility(View.GONE);
-				}
 
 				Glide.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
@@ -374,6 +430,15 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 					}
 				});
 
+				mIngotNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (onClickCallback != null) {
+							onClickCallback.onRewardClick(item);
+						}
+					}
+				});
+
 				mLoveNumber.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -396,52 +461,36 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
 					@Override
 					public void onClick(View v) {
-						//加动画
-						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
-						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
-						animation.start();
-
-						if (!MissVoiceRecorder.isHeard(item.getId())) {
-							//没听过
-							Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-								@Override
-								protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-									if (resp.isSuccess()) {
-										if (mediaPlayerUtil.isPlaying()) {
-											mediaPlayerUtil.release();
-											mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-										} else {
-											mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-												@Override
-												public void onCompletion(MediaPlayer mp) {
-													mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-												}
-											});
-
-											MissVoiceRecorder.markHeard(item.getId());
-											item.setListenCount(item.getListenCount() + 1);
-											mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
-											mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-										}
-									}
-								}
-							}).fire();
-						} else {
-							//听过
-							if (mediaPlayerUtil.isPlaying()) {
-								mediaPlayerUtil.release();
-								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-							} else {
-								mediaPlayerUtil.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-									@Override
-									public void onCompletion(MediaPlayer mp) {
-										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-									}
-								});
-							}
+						if (onClickCallback != null) {
+							onClickCallback.onVoiceClick(item, position, mVoiceLevel);
 						}
 					}
 				});
+			}
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mRefreshReceiver = new RefreshReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_REWARD_SUCCESS);
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
+	}
+
+	private class RefreshReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
+					for (Question question : mMyQuestionList) {
+						if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+							int questionRewardCount = question.getAwardCount() + 1;
+							question.setAwardCount(questionRewardCount);
+							mMyQuestionAdapter.notifyDataSetChanged();
+						}
+					}
+				}
 			}
 		}
 	}

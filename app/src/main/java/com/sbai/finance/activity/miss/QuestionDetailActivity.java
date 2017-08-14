@@ -45,7 +45,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.mediaPlayerUtil;
+import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -130,6 +130,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private RewardInfo mRewardInfo;
     private Question mQuestionDetail;
     private RefreshReceiver mRefreshReceiver;
+    private MediaPlayerManager mMediaPlayerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +141,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         initData(getIntent());
         initRewardInfo();
         mSet = new HashSet<>();
+        mMediaPlayerManager = new MediaPlayerManager(this);
         mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mQuestionReplyListAdapter);
@@ -222,13 +224,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     protected void onPause() {
         super.onPause();
-        mediaPlayerUtil.release();
+        mMediaPlayerManager.release();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaPlayerUtil.release();
+        mMediaPlayerManager.release();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
     }
 
@@ -290,50 +292,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
             @Override
             public void onClick(View v) {
-                //加动画
-                mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
-                AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
-                animation.start();
-
-                if (!MissVoiceRecorder.isHeard(question.getId())) {
-                    //没听过
-                    Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-                        @Override
-                        protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                            if (resp.isSuccess()) {
-                                if (mediaPlayerUtil.isPlaying()) {
-                                    mediaPlayerUtil.release();
-                                    mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-                                } else {
-                                    mediaPlayerUtil.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                                        @Override
-                                        public void onCompletion(MediaPlayer mp) {
-                                            mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-                                        }
-                                    });
-
-                                    MissVoiceRecorder.markHeard(question.getId());
-                                    question.setListenCount(question.getListenCount() + 1);
-                                    mListenerNumber.setTextColor(ContextCompat.getColor(QuestionDetailActivity.this, R.color.unluckyText));
-                                    mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
-                                }
-                            }
-                        }
-                    }).fire();
-                } else {
-                    //听过
-                    if (mediaPlayerUtil.isPlaying()) {
-                        mediaPlayerUtil.release();
-                        mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-                    } else {
-                        mediaPlayerUtil.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-                            }
-                        });
-                    }
-                }
+               
             }
         });
     }

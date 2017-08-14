@@ -1,6 +1,5 @@
 package com.sbai.finance.fragment.dialog;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
@@ -31,7 +29,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SafetyPasswordEditText;
-import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -193,7 +190,6 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                         protected void onReceiveResponse(Resp<Object> objectResp) {
                             if (objectResp.isSuccess()) {
                                 ToastUtil.show(getString(R.string.success_reward));
-                                sendRewardSuccessBroadcast(getActivity());
                                 mIsSuccess = true;
                                 sendRewardSuccessBroadcast(getActivity());
                                 dismissAllowingStateLoss();
@@ -250,6 +246,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
         Intent intent = new Intent();
         intent.setAction(ACTION_REWARD_SUCCESS);
         intent.putExtra(Launcher.EX_PAYLOAD, mType);
+	    intent.putExtra(Launcher.EX_PAYLOAD_1, mId);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 }

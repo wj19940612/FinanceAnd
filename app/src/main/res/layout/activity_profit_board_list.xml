@@ -15,17 +15,23 @@
         app:splitLineColor="@color/split"
         app:titleText="@string/profit_board"
         app:titleTextColor="@color/blackPrimary"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        />
 
     <com.sbai.finance.view.slidingTab.SlidingTabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:paddingBottom="5dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingTop="5dp"
+        android:text="@string/every_day_re_calculate"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
