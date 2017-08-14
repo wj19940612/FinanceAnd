@@ -133,7 +133,7 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         initScreenOnReceiver();
         updateAvatar();
-     //   requestBattleList();
+        //   requestBattleList();
 
         scrollToTop(mTitleBar, mListView);
     }
