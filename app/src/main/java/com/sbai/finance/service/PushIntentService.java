@@ -23,6 +23,7 @@ import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
@@ -105,11 +106,12 @@ public class PushIntentService extends GTIntentService {
         if (pushMessageModel.isBattleMatchSuccess() && Preference.get().isForeground()) {
             return;
         }
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(pushMessageModel.getTitle());
         builder.setContentText(pushMessageModel.getMsg());
         builder.setAutoCancel(true);
-        builder.setWhen(pushMessageModel.getCreateTime());
+        builder.setWhen(System.currentTimeMillis());
         String brand = Build.BRAND;
         PendingIntent intent = setPendingIntent(context, pushMessageModel);
         builder.setSmallIcon(R.mipmap.ic_launcher);
@@ -136,6 +138,9 @@ public class PushIntentService extends GTIntentService {
                 intent.putExtra(Launcher.EX_PAYLOAD_2, data.getData().getBatchCode());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
+        } else if (data.isMissAnswer()) {
+            intent = new Intent(context, QuestionDetailActivity.class);
+            intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }

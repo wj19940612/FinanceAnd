@@ -191,6 +191,7 @@ public class MissProfileActivity extends BaseActivity implements
                     view.setBackgroundResource(R.drawable.ic_voice_4);
                     mPlayingPosition = -1;
                 } else {
+                    //播放下一个之前把上一个播放位置的动画停了
                     if (mPlayingPosition != -1) {
                         View view1 = mListView.getChildAt(mPlayingPosition);
                         View voiceView = view1.findViewById(R.id.voiceLevel);
@@ -198,6 +199,7 @@ public class MissProfileActivity extends BaseActivity implements
                             voiceView.setBackgroundResource(R.drawable.ic_voice_4);
                         }
                     }
+
                     mAnimation.start();
                     if (!MissVoiceRecorder.isHeard(item.getId())) {
                         Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
@@ -253,13 +255,26 @@ public class MissProfileActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        //锁屏或者在后台运行或者跳转页面时停止播放和动画
         mMediaPlayerManager.release();
+        if (mPlayingPosition != -1) {
+            View voiceView = mListView.getChildAt(mPlayingPosition).findViewById(R.id.voiceLevel);
+            if (voiceView != null) {
+                voiceView.setBackgroundResource(R.drawable.ic_voice_4);
+            }
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mMediaPlayerManager.release();
+        if (mPlayingPosition != -1) {
+            View voiceView = mListView.getChildAt(mPlayingPosition).findViewById(R.id.voiceLevel);
+            if (voiceView != null) {
+                voiceView.setBackgroundResource(R.drawable.ic_voice_4);
+            }
+        }
     }
 
     private void requestMissDetail() {
@@ -318,10 +333,6 @@ public class MissProfileActivity extends BaseActivity implements
         if (item != null) {
             Launcher.with(this, QuestionDetailActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
-            View voiceView=view.findViewById(R.id.voiceLevel);
-            if (voiceView!=null){
-                voiceView.setBackgroundResource(R.drawable.ic_voice_4);
-            }
         }
     }
 
