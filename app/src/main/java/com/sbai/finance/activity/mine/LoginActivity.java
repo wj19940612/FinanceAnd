@@ -403,7 +403,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void postLogin() {
-        if (!LocalUser.getUser().getUserInfo().isNewUser()) {
+        if (LocalUser.getUser().getUserInfo().isNewUser()) {
             Launcher.with(getActivity(), EvaluationStartActivity.class)
                     .putExtra(ExtraKeys.FIRST_TEST, true)
                     .execute();

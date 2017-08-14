@@ -197,16 +197,19 @@ public class TitleBar extends RelativeLayout {
     }
 
     public void setTitle(CharSequence title) {
+        if (mTitleView == null) return;
         mTitle = title;
         mTitleView.setText(mTitle);
     }
 
     public void setTitleSize(int unit, float titleSize) {
+        if (mTitleView == null) return;
         mTitleView.setTextSize(unit, titleSize);
         mTitleSize = mTitleView.getTextSize();
     }
 
     public void setTitleSize(int titleSize) {
+        if (mTitleView == null) return;
         mTitleView.setTextSize(titleSize);
         mTitleSize = mTitleView.getTextSize();
     }
@@ -269,6 +272,7 @@ public class TitleBar extends RelativeLayout {
     }
 
     public void setTitleColor(ColorStateList titleColor) {
+        if (mTitleView == null) return;
         mTitleColor = titleColor;
         if (mTitleColor != null) {
             mTitleView.setTextColor(mTitleColor);
