@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.economiccircle;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,8 +26,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.PublishActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.LocalUser;
@@ -415,9 +412,6 @@ public class OpinionDetailsActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						if (LocalUser.getUser().isLogin()) {
-							Launcher.with(context, UserDataActivity.class)
-									.putExtra(Launcher.USER_ID, item.getUserId())
-									.executeForResult(REQ_CODE_USERDATA);
 						} else {
 							Launcher.with(context, LoginActivity.class).execute();
 						}
@@ -570,13 +564,7 @@ public class OpinionDetailsActivity extends BaseActivity {
 
 			case R.id.hotArea:
 				if (LocalUser.getUser().isLogin()) {
-					ComponentName callingActivity = getCallingActivity();
-					if (callingActivity != null && callingActivity.getClassName().equalsIgnoreCase(PublishActivity.class.getName())) {
-						return;
-					}
-					Launcher.with(this, UserDataActivity.class)
-							.putExtra(Launcher.USER_ID, mOpinionDetails.getUserId())
-							.executeForResult(REQ_CODE_USERDATA);
+
 				} else {
 					Launcher.with(this, LoginActivity.class).execute();
 				}

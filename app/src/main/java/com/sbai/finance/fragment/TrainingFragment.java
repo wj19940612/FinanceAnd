@@ -28,8 +28,8 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
-import com.sbai.finance.activity.train.ScoreIntroduceActivity;
-import com.sbai.finance.activity.train.TrainDetailActivity;
+import com.sbai.finance.activity.training.ScoreIntroduceActivity;
+import com.sbai.finance.activity.training.TrainDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.TrainProjectModel;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
@@ -224,13 +224,7 @@ public class TrainingFragment extends BaseFragment {
             }
         }
         changeUserJoinTestStatus(joinTestCount);
-        if (showJoinTestHint) {
-            if (joinTestCount > 0) {
-                mTestHint.setVisibility(View.GONE);
-            } else {
-                mTestHint.setVisibility(View.VISIBLE);
-            }
-        }
+
     }
 
     private void changeUserJoinTestStatus(int joinTestCount) {
@@ -259,6 +253,15 @@ public class TrainingFragment extends BaseFragment {
             }
             mLookDetailOrLogin.setText(R.string.look_detail);
             mNewScore = data != null ? (int) data.getUserTotalScore() : 0;
+
+            if (showJoinTestHint) {
+                if (mNewScore > 0) {
+                    mTestHint.setVisibility(View.GONE);
+                } else {
+                    mTestHint.setVisibility(View.VISIBLE);
+                }
+            }
+
             startScoreAnimation(mNewScore);
         } else {
             mTestHint.setVisibility(View.VISIBLE);
@@ -267,6 +270,12 @@ public class TrainingFragment extends BaseFragment {
             mScoreProgress.setText(R.string.login_look_detail);
             mLookDetailOrLogin.setVisibility(View.VISIBLE);
             mLookDetailOrLogin.setText(R.string.to_login);
+
+            if (showJoinTestHint) {
+                mTestHint.setVisibility(View.VISIBLE);
+            } else {
+                mTestHint.setVisibility(View.GONE);
+            }
         }
     }
 

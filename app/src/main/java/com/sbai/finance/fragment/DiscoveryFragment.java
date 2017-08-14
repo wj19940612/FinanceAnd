@@ -30,12 +30,12 @@ import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
-import com.sbai.finance.activity.train.MoreTrainFeedBackActivity;
-import com.sbai.finance.activity.train.TrainDetailActivity;
+import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
+import com.sbai.finance.activity.training.TrainDetailActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.train.Train;
-import com.sbai.finance.model.train.TrainProgram;
+import com.sbai.finance.model.training.Train;
+import com.sbai.finance.model.training.TrainProgram;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -87,8 +87,9 @@ public class DiscoveryFragment extends BaseFragment {
     RelativeLayout mDaily2;
     @BindView(R.id.daily3)
     RelativeLayout mDaily3;
-    @BindView(R.id.title)
-    TitleBar mTitle;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
 
@@ -130,20 +131,14 @@ public class DiscoveryFragment extends BaseFragment {
                 Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
             }
         });
-        initScrollToTop();
-        initTrainListView();
-        initDailyReportView();
-        requestTrainData();
-        requestDailyReportData();
-    }
 
-    private void initScrollToTop() {
-        mTitle.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mScrollView.smoothScrollTo(0, 0);
-            }
-        });
+        scrollToTop(mTitleBar, mScrollView);
+
+        initTrainingListView();
+        initDailyReportView();
+
+        requestTrainingList();
+        requestDailyReportData();
     }
 
     private void initDailyReportView() {
@@ -155,16 +150,14 @@ public class DiscoveryFragment extends BaseFragment {
         });
     }
 
-    private void requestTrainData() {
+    private void requestTrainingList() {
         Client.getRecommendTrainList(0).setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Train>>, List<Train>>() {
                     @Override
                     protected void onRespSuccessData(List<Train> data) {
                         updateTrainData(data);
                     }
-                })
-                .fireFree();
+                }).fireFree();
     }
 
     private void updateTrainData(List<Train> data) {
@@ -203,7 +196,7 @@ public class DiscoveryFragment extends BaseFragment {
         }
     }
 
-    private void initTrainListView() {
+    private void initTrainingListView() {
         mListView.setFocusable(false);
         mTrainAdapter = new TrainAdapter(getContext());
         mListView.setAdapter(mTrainAdapter);
@@ -234,7 +227,7 @@ public class DiscoveryFragment extends BaseFragment {
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
             case R.id.training:
-                Launcher.with(getActivity(), MoreTrainFeedBackActivity.class).execute();
+                Launcher.with(getActivity(), MoreTrainFeedbackActivity.class).execute();
                 break;
             case R.id.daily:
                 break;
@@ -306,7 +299,7 @@ public class DiscoveryFragment extends BaseFragment {
                     case Train.TRAIN_THEORY:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
-                        }else {
+                        } else {
                             mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
                         }
                         break;

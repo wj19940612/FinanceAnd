@@ -28,7 +28,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.AppVersionModel;
+import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.service.DownloadService;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PermissionUtil;
@@ -56,7 +56,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     @BindView(R.id.versionName)
     TextView mVersionName;
     private Unbinder mBind;
-    private AppVersionModel mAppVersionModel;
+    private AppVersion mAppVersion;
     private boolean mIsCanceledOnTouchOutside;
 
 
@@ -67,10 +67,10 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         }
     };
 
-    public static UpdateVersionDialogFragment newInstance(AppVersionModel appVersionModel, boolean isCanceledOnTouchOutside) {
+    public static UpdateVersionDialogFragment newInstance(AppVersion appVersion, boolean isCanceledOnTouchOutside) {
         Bundle args = new Bundle();
         UpdateVersionDialogFragment fragment = new UpdateVersionDialogFragment();
-        args.putParcelable(Launcher.EX_PAYLOAD, appVersionModel);
+        args.putParcelable(Launcher.EX_PAYLOAD, appVersion);
         args.putBoolean(Launcher.EX_PAYLOAD_1, isCanceledOnTouchOutside);
         fragment.setArguments(args);
         return fragment;
@@ -81,7 +81,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
         if (getArguments() != null) {
-            mAppVersionModel = getArguments().getParcelable(Launcher.EX_PAYLOAD);
+            mAppVersion = getArguments().getParcelable(Launcher.EX_PAYLOAD);
             mIsCanceledOnTouchOutside = getArguments().getBoolean(Launcher.EX_PAYLOAD_1, true);
         }
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mDownloadBroadcastReceiver,
@@ -100,9 +100,9 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initDialog();
-        mUpdateVersionMsg.setText(mAppVersionModel.getUpdateLog());
+        mUpdateVersionMsg.setText(mAppVersion.getUpdateLog());
         mTitle.setText(getString(R.string.check_new_version));
-        mVersionName.setText(getString(R.string.version, mAppVersionModel.getLastVersion()));
+        mVersionName.setText(getString(R.string.version, mAppVersion.getLastVersion()));
     }
 
     private void initDialog() {
@@ -186,12 +186,12 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     }
 
     private void updateApp() {
-        if (mAppVersionModel == null || TextUtils.isEmpty(mAppVersionModel.getDownloadUrl())) {
+        if (mAppVersion == null || TextUtils.isEmpty(mAppVersion.getDownloadUrl())) {
             return;
         }
         if (isStoragePermissionGranted()) {
             Intent intent = new Intent(getActivity(), DownloadService.class);
-            intent.putExtra(DownloadService.KEY_DOWN_LOAD_URL, mAppVersionModel.getDownloadUrl());
+            intent.putExtra(DownloadService.KEY_DOWN_LOAD_URL, mAppVersion.getDownloadUrl());
             getActivity().startService(intent);
         }
     }

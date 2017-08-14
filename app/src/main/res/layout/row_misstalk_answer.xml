@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="@string/voice_time"
+                tools:text="@string/voice_time"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"/>
         </LinearLayout>
@@ -113,7 +113,7 @@
             android:layout_alignLeft="@+id/voiceArea"
             android:layout_below="@+id/missAvatar"
             android:layout_marginTop="5dp"
-            android:text="@string/listener_number"
+            tools:text="@string/listener_number"
             android:textColor="@color/colorPrimary"
             android:textSize="10sp"/>
 
@@ -148,7 +148,7 @@
             android:drawableLeft="@drawable/ic_miss_love"
             android:drawablePadding="6dp"
             android:gravity="center"
-            android:text="3.6万"
+            tools:text="3.6万"
             android:textColor="@color/primaryText"
             android:textSize="14sp"/>
 
@@ -160,7 +160,7 @@
             android:drawableLeft="@drawable/ic_miss_comment"
             android:drawablePadding="6dp"
             android:gravity="center"
-            android:text="3003"
+            tools:text="3003"
             android:textColor="@color/primaryText"
             android:textSize="14sp"/>
 
@@ -172,7 +172,7 @@
             android:drawableLeft="@drawable/ic_miss_ingot"
             android:drawablePadding="6dp"
             android:gravity="center"
-            android:text="208"
+            tools:text="208"
             android:textColor="@color/primaryText"
             android:textSize="14sp"/>
 

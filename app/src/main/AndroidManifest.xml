@@ -109,18 +109,6 @@
             android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.UserDataActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.AttentionActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.FansActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.PublishActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.trade.PredictionRuleActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -155,9 +143,6 @@
         <!-- 我的: 设置 Setting -->
         <activity
             android:name=".activity.mine.setting.SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.setting.ShieldRelieveSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.setting.SetNotificationSwitchActivity"
@@ -409,16 +394,16 @@
 
         <!-- 训练 -->
         <activity
-            android:name=".activity.train.MoreTrainFeedBackActivity"
+            android:name=".activity.training.MoreTrainFeedbackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
 
         <activity
-            android:name=".activity.train.ScoreIntroduceActivity"
+            android:name=".activity.training.ScoreIntroduceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.train.TrainExperienceActivity"
+            android:name=".activity.training.TrainExperienceActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.leaderboard.ProfitBoardListActivity"
@@ -430,14 +415,14 @@
             android:name=".activity.studyroom.StudyRoomActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.train.LookBigPictureActivity"
+            android:name=".activity.training.LookBigPictureActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.train.WriteExperienceActivity"
+            android:name=".activity.training.WriteExperienceActivity"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activity.train.TrainDetailActivity"
+            android:name=".activity.training.TrainDetailActivity"
             android:screenOrientation="portrait"/>
 
     </application>

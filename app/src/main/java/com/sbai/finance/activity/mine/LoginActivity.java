@@ -86,12 +86,15 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
         translucentStatusBar();
 
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        mPhoneNumber.setText(LocalUser.getUser().getPhone());
+        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
+            mPhoneNumber.setText(LocalUser.getUser().getPhone());
+        }
 
         initListener();
 
@@ -99,6 +102,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initListener() {
+        mPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!TextUtils.isEmpty(mPhoneNumber.getText().toString()) && hasFocus) {
+                    mPhoneNumberClear.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         mAuthCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,14 +137,6 @@ public class LoginActivity extends BaseActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     mPhoneNumberClear.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-        mPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!TextUtils.isEmpty(mPhoneNumber.getText().toString()) && hasFocus) {
-                    mPhoneNumberClear.setVisibility(View.VISIBLE);
                 }
             }
         });

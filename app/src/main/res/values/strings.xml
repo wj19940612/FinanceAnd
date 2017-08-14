@@ -207,7 +207,7 @@
 
     <!--设置-->
     <string name="new_news_notification">新消息通知</string>
-    <string name="shield_setting">屏蔽设置</string>
+
     <string name="security_center">安全中心</string>
     <string name="set_security_password">设置安全密码</string>
     <string name="set_login_password">设置登录密码</string>
@@ -644,6 +644,7 @@
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
     <string name="share_to">分享至</string>
+    <string name="latest_finance_hot_from_lemi">来自乐米的每日最新金融热点</string>
 
 
     <string name="study_room">自习室</string>
@@ -728,7 +729,7 @@
     <string name="risk_control_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
     <string name="understand_score">了解学分</string>
     <string name="train_grade">L%1$d</string>
-    <string name="trade_level">交易水平:%1$s  超过了%2$s的交易账户</string>
+    <string name="trade_level">我的交易水平:%1$s  超过了%2$s的交易用户</string>
     <string name="advise">建议:%1$s</string>
     <string name="click_refresh">点击刷新</string>
 
@@ -746,7 +747,7 @@
     <string name="train_level">L%1$d</string>
     <string name="train_duration">%1$d分钟</string>
     <string name="share_success">分享成功</string>
-    <string name="share_title">登陆用户分享就得10元宝,每日最多30元宝</string>
+    <string name="share_title">登录用户分享就得10元宝,每日最多30元宝</string>
     <string name="train_share_share_title">大家都在用乐米进行%1$s训练，你还不快来加入我们?</string>
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
     <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>

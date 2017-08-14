@@ -12,7 +12,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.ReplyActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.missTalk.QuestionReply;
+import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
