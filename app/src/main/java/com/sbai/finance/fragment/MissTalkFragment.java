@@ -421,6 +421,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
                     @Override
                     protected void onRespSuccessData(List<Question> questionList) {
+                        if (questionList.size() == 0) {
+                            mHotQuestion.setVisibility(View.VISIBLE);
+                        }
                         mHotQuestionList = questionList;
                         updateHotQuestionList(questionList);
                     }
