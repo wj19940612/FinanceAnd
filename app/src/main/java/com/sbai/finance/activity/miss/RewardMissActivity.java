@@ -88,6 +88,7 @@ public class RewardMissActivity extends BaseActivity {
                                 if (mSelectedIndex != -1) {
                                     mRewardMoneyContent.setSelectedIndex(mSelectedIndex);
                                     mRewardMoney.setText(String.valueOf(mRewardMoneyContent.getSelectedMoney()));
+                                    mConfirmReward.setEnabled(true);
                                 }
 
                             }
@@ -99,6 +100,7 @@ public class RewardMissActivity extends BaseActivity {
                                 mSelectedIndex = mRewardMoneyContent.getSelectedIndex();
                                 mRewardMoneyContent.setOtherMoney(money);
                                 mRewardMoney.setText((String.valueOf(money)));
+                                mConfirmReward.setEnabled(true);
                             }
                         })
                         .show(getSupportFragmentManager());

@@ -235,7 +235,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
     private void updateTrainData(StudyOption data) {
-        if (data == null||data==mStudyOption) return;
+        if (data == null || data == mStudyOption) return;
         mOptionAdapter.clear();
         mOptionAdapter.addAll(data.getContent());
         mOptionAdapter.notifyDataSetChanged();
