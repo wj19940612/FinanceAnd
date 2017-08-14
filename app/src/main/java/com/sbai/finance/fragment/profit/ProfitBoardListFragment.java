@@ -160,24 +160,6 @@ public class ProfitBoardListFragment extends BaseFragment implements
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopScheduleJob();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        startScheduleJob(10 * 1000);
-    }
-
-    @Override
-    public void onTimeUp(int count) {
-        super.onTimeUp(count);
-        requestProfitBoardData();
-    }
-
     public void scrollToTop() {
         mListView.smoothScrollToPosition(0);
     }
