@@ -7,10 +7,9 @@ import com.sbai.finance.App;
 import com.sbai.finance.utils.AppInfo;
 
 /**
- * Created by ${wangJie} on 2017/7/4.
+ * 版本升级相关类
  */
-
-public class AppVersionModel implements Parcelable {
+public class AppVersion implements Parcelable {
     private static final String TAG = "AppVersionModel";
 
     /**
@@ -205,10 +204,10 @@ public class AppVersionModel implements Parcelable {
         dest.writeString(this.updateLog);
     }
 
-    public AppVersionModel() {
+    public AppVersion() {
     }
 
-    protected AppVersionModel(Parcel in) {
+    protected AppVersion(Parcel in) {
         this.createTime = in.readLong();
         this.downloadUrl = in.readString();
         this.forceUpdateAllPreVersions = in.readInt();
@@ -223,15 +222,15 @@ public class AppVersionModel implements Parcelable {
         this.updateLog = in.readString();
     }
 
-    public static final Creator<AppVersionModel> CREATOR = new Creator<AppVersionModel>() {
+    public static final Creator<AppVersion> CREATOR = new Creator<AppVersion>() {
         @Override
-        public AppVersionModel createFromParcel(Parcel source) {
-            return new AppVersionModel(source);
+        public AppVersion createFromParcel(Parcel source) {
+            return new AppVersion(source);
         }
 
         @Override
-        public AppVersionModel[] newArray(int size) {
-            return new AppVersionModel[size];
+        public AppVersion[] newArray(int size) {
+            return new AppVersion[size];
         }
     };
 }

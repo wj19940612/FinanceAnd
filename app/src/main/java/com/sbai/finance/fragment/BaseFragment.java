@@ -6,12 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.AbsListView;
+import android.widget.ScrollView;
 
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.TimerHandler;
-import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -53,20 +53,21 @@ public class BaseFragment extends Fragment implements
         API.cancel(TAG);
     }
 
-    protected void scrollToTop(TitleBar titleBar, final ListView listView) {
-        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listView.smoothScrollToPosition(0);
-            }
-        });
+    private void scrollToTop(View view) {
+        if (view instanceof AbsListView) {
+            ((AbsListView) view).smoothScrollToPositionFromTop(0, 0);
+        } else if (view instanceof RecyclerView) {
+            ((RecyclerView) view).smoothScrollToPosition(0);
+        } else if (view instanceof ScrollView) {
+            ((ScrollView) view).smoothScrollTo(0, 0);
+        }
     }
 
-    protected void scrollToTop(TitleBar titleBar, final RecyclerView recyclerView) {
-        titleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+    protected void scrollToTop(View anchor, final View view) {
+        anchor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.smoothScrollToPosition(0);
+                scrollToTop(view);
             }
         });
     }
