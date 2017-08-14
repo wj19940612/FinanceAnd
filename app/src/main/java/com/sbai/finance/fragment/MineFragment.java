@@ -104,7 +104,7 @@ public class MineFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
-        mCredit.setPercent(0.5f);
+        mCredit.setPercent(1f);
     }
 
     @Override

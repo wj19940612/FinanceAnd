@@ -81,6 +81,7 @@ public class CreditAreaView extends View {
 
     private void progressAttributeSet(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(R.styleable.CreditAreaView);
+        mCredPercent = typedArray.getFloat(R.styleable.CreditAreaView_credPercent, 1);
         mStartColor = typedArray.getColor(R.styleable.CreditAreaView_startColor, ContextCompat.getColor(getContext(), R.color.backgroundGradientStart));
         mEndColor = typedArray.getColor(R.styleable.CreditAreaView_endColor, ContextCompat.getColor(getContext(), R.color.creditEndColor));
         mSplitColor = typedArray.getColor(R.styleable.CreditAreaView_splitColor, Color.WHITE);
@@ -88,7 +89,7 @@ public class CreditAreaView extends View {
         mSplitHeight = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_splitHeight, 0);
         mRadius = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_viewRadius, 16);
         mHasSplit = typedArray.getBoolean(R.styleable.CreditAreaView_hasSplit, true);
-        mNotReachedCreditViewColor = typedArray.getColor(R.styleable.CreditAreaView_notReachedCreditViewColor, ContextCompat.getColor(getContext(), R.color.split));
+        mNotReachedCreditViewColor = typedArray.getColor(R.styleable.CreditAreaView_notReachedCreditViewColor, Color.WHITE);
         if (mSplitWidth < 2) {
             mSplitWidth = 2;
         }
@@ -103,46 +104,58 @@ public class CreditAreaView extends View {
         if (mSplitHeight == 0) {
             mSplitHeight = mMeasuredHeight;
         }
-        Log.d(TAG, "onDraw: " + mMeasuredWidth + "  " + mMeasuredWidth);
+        Log.d(TAG, "onDraw: " + mMeasuredWidth + "  " + mMeasuredHeight);
+        Log.d(TAG, "onSizeChanged: " + mCredPercent);
+        parameterIsNotLegal();
 
-        if (mCredPercent != 1) {
+        if (0 < mCredPercent && mCredPercent < 1) {
             mEndColor = getColor(mCredPercent);
-            mCreditAreaWidth = mMeasuredWidth;
-        } else {
             mCreditAreaWidth = FinanceUtil.multiply(mMeasuredWidth, mCredPercent).floatValue();
+            Log.d(TAG, "onSizeChanged: " + mCreditAreaWidth);
+        } else if (mCredPercent == 1) {
+            mCreditAreaWidth = mMeasuredWidth;
         }
 
         //如果分数所占比例在0 -1 中间
         mCreditAreaRectF = new RectF(0, 0, mCreditAreaWidth, mMeasuredHeight);
-        LinearGradient linearGradient = new LinearGradient(0, 0,
-                mCreditAreaWidth, mMeasuredHeight, mStartColor, mEndColor, Shader.TileMode.MIRROR);
-        mCreditAreaPaint.setShader(linearGradient);
+        if (mCredPercent != 0) {
+            LinearGradient linearGradient = new LinearGradient(0, 0,
+                    mCreditAreaWidth, mMeasuredHeight, mStartColor, mEndColor, Shader.TileMode.MIRROR);
+            mCreditAreaPaint.setShader(linearGradient);
+        }
 
         mNotReachedCreditAreaRectF = new RectF(mMeasuredWidth - mCreditAreaWidth, mMeasuredHeight - mCreditAreaWidth, mMeasuredWidth, mMeasuredHeight);
+    }
 
+    private void parameterIsNotLegal() {
+        if (mCredPercent < 0 | mCredPercent > 1) {
+            throw new IllegalStateException(" please input legal data   ");
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (mCredPercent == 1) {
-            drawArea(canvas, mCreditAreaPaint);
-        } else if (mCredPercent == 0) {
-            drawArea(canvas, mNotReachedCreditPaint);
-        }
+//        if (mCredPercent == 1) {
+        drawArea(canvas, mCreditAreaPaint);
+//        } else if (mCredPercent == 0) {
+//            drawArea(canvas, mNotReachedCreditPaint);
+//        }
 
     }
 
     //如果出现分数占总分为0 或者为1
     private void drawArea(Canvas canvas, Paint paint) {
         canvas.drawRoundRect(mCreditAreaRectF, mRadius, mRadius, paint);
-        if (mHasSplit) {
-            for (int i = 1; i < mGradeCount; i++) {
-                int lineX = mMeasuredWidth / (mGradeCount) * i;
-                canvas.drawLine(lineX, 0, lineX, mSplitHeight, paint);
-            }
+//        if (mHasSplit) {
+        Log.d(TAG, "drawArea: " + mGradeCount);
+        for (int i = 1; i < mGradeCount; i++) {
+            int lineX = mMeasuredWidth / (mGradeCount) * i;
+            Log.d(TAG, "drawArea: " + mMeasuredWidth);
+            canvas.drawLine(lineX, 0, lineX, mSplitHeight, paint);
         }
+//        }
     }
 
 
@@ -169,11 +182,8 @@ public class CreditAreaView extends View {
      * @param percent
      */
     public void setPercent(float percent) {
-        if (percent < 0 | percent > 1) {
-            throw new IllegalStateException(" please input legal data   ");
-        } else {
-            this.mCredPercent = percent;
-        }
+        parameterIsNotLegal();
+        this.mCredPercent = percent;
         postInvalidate();
     }
 
