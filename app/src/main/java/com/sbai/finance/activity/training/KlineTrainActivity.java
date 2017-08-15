@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.view.train.DiamondView;
+import com.sbai.finance.view.training.DiamondView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

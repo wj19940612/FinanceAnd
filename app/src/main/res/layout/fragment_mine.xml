@@ -157,7 +157,7 @@
         android:background="@color/yellowAssist"
         android:gravity="center">
 
-        <com.sbai.finance.view.train.CountDownView
+        <com.sbai.finance.view.training.CountDownView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

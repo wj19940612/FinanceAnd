@@ -35,7 +35,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
-import com.sbai.finance.view.train.CountDownView;
+import com.sbai.finance.view.training.CountDownView;
 
 import java.util.ArrayList;
 

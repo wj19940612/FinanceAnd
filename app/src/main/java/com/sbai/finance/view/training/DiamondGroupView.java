@@ -1,6 +1,5 @@
-package com.sbai.finance.view.train;
+package com.sbai.finance.view.training;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,9 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.training.Train;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
