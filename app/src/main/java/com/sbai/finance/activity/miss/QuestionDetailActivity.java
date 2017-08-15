@@ -261,7 +261,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
 		mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(question.getPriseCount())));
 		mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(question.getAwardCount())));
-		mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(question.getReplyCount())));
+		//mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(question.getReplyCount())));
 		mVoice.setText(getString(R.string.voice_time, question.getSoundTime()));
 
 		if (question.getReplyCount() > 0) {
@@ -299,7 +299,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
 					@Override
 					protected void onRespSuccessData(QuestionReply questionReply) {
-						updateQuestionReplyList(questionReply.getData());
+						questionReply.getResultCount();
+						updateQuestionReplyList(questionReply.getData(), questionReply.getResultCount());
 					}
 
 					@Override
@@ -316,7 +317,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 	}
 
-	private void updateQuestionReplyList(List<QuestionReply.DataBean> questionReplyList) {
+	private void updateQuestionReplyList(List<QuestionReply.DataBean> questionReplyList, int resultCount) {
+		mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(resultCount)));
 		if (questionReplyList == null) {
 			stopRefreshAnimation();
 			return;
