@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.traingame;
+package com.sbai.finance.activity.training;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +17,7 @@ import butterknife.OnClick;
  * 怎么玩页面
  */
 
-public class HowPlayVerticalActivity extends BaseActivity {
+public class HowPlayHorizontalActivity extends BaseActivity {
     @BindView(R.id.content)
     TextView mContent;
     @BindView(R.id.confirm)
@@ -28,7 +28,7 @@ public class HowPlayVerticalActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_how_play_vertical);
+        setContentView(R.layout.activity_how_play_horizontal);
         ButterKnife.bind(this);
         initView();
         requestTrainGuide();
