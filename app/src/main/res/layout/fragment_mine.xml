@@ -151,4 +151,17 @@
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/yellowAssist"
+        android:gravity="center">
+
+        <com.sbai.finance.view.train.CountDownView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
 </LinearLayout>

@@ -757,4 +757,5 @@
 
     <!--训练-->
     <string name="how_play">怎么玩？</string>
+    <string name="data">%1$s%2$s</string>
 </resources>
