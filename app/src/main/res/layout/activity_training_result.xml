@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.training.TrainingResultActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_black_close"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/myGrade"
+        android:textColor="@color/primaryText"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/myGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/primaryText"
+        android:textSize="32sp"
+        android:visibility="gone"
+        tools:text="2分43秒"/>
+
+    <TextView
+        android:id="@+id/failedMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/what_a_pity_you_do_not_finish"
+        android:textColor="@color/colorPrimary"
+        android:textSize="26sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="35dp"
+        android:text="@string/achieveGoal"
+        android:textColor="@color/primaryText"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.training.TrainingAchievementView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:background="@drawable/bg_training_result_achievement"/>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/primaryText"
+            android:minHeight="50dp"
+            android:visibility="invisible"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/primaryText"
+            android:minHeight="50dp"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/recordTrainingExperience"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="15dp"
+        android:drawableTop="@drawable/btn_training_result_record"
+        android:text="记下本次训练的感受和心得"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"/>
+</LinearLayout>

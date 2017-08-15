@@ -104,6 +104,7 @@ public class TrainDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_train_detail);
 		ButterKnife.bind(this);
+
 		initData(getIntent());
 		initBackGround(mType);
 
@@ -122,28 +123,29 @@ public class TrainDetailActivity extends BaseActivity {
 	private void initData(Intent intent) {
 		mType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mTrainId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+		// TODO: 15/08/2017 直接接收一个  training 修改 extraKey
 	}
 
 	private void initBackGround(int type) {
 		switch (type) {
 			case TYPE_THEORY:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theory_red));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theory_red));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
 				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_theory));
 				break;
 			case TYPE_TECHNOLOGY:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technology_violet));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technology_violet));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
 				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_technology));
 				break;
 			case TYPE_FUNDAMENTALS:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentals_yellow));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentals_yellow));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
 				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_fundamentals));
 				break;
 			case TYPE_COMPREHENSIVE:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensive_blue));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensive_blue));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
 				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_comprehensive));
 				break;
 		}
@@ -387,7 +389,7 @@ public class TrainDetailActivity extends BaseActivity {
 				.hasFeedback(true)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
 					@Override
-					public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
+					public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
 						Client.share().setTag(TAG).fire();
 					}
 

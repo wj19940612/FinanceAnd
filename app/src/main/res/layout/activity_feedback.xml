@@ -36,7 +36,7 @@
                 android:background="@color/background"
                 android:clipToPadding="false"
                 android:divider="@null"
-                android:paddingBottom="@dimen/dp_10"
+                android:paddingBottom="10dp"
                 android:visibility="visible"/>
 
             <TextView

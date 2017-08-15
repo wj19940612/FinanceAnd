@@ -35,7 +35,7 @@
                 app:radarLineColor="@color/split"
                 app:showInsideCircle="true"/>
 
-            <com.sbai.finance.view.train.ScoreProgressView
+            <com.sbai.finance.view.training.ScoreProgressView
                 android:id="@+id/scoreProgress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -163,7 +163,6 @@
         <attr name="focusable" format="boolean"/>
     </declare-styleable>
 
-
     <declare-styleable name="ScoreView">
         <attr name="areaCount" format="integer"/>
         <attr name="showScore" format="boolean"/>
@@ -194,6 +193,7 @@
         <attr name="credPercent" format="float"/>
         <attr name="gradeCount" format="integer"/>
     </declare-styleable>
+
     <!--训练的时间进度条-->
     <declare-styleable name="TrainProgressBar">
         <attr name="boundaryColor" format="color|reference"/>

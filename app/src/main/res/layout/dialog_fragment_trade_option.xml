@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_marginLeft="@dimen/dp_10"
-              android:layout_marginRight="@dimen/dp_10"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
               android:background="@android:color/transparent"
               android:orientation="vertical">
 
@@ -19,7 +19,7 @@
             android:adjustViewBounds="true"
             android:gravity="center"
             android:text="@string/choose_trade_type"
-            android:textSize="@dimen/sp_12"
+            android:textSize="12sp"
             android:textColor="@color/greyAssist"/>
 
         <include layout="@layout/split_line_grey_light"/>

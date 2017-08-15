@@ -752,4 +752,11 @@
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
     <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>
     <string name="question_share_description">快来一起听小姐姐的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
+
+    <!--Training-->
+    <string name="myGrade">我的成绩</string>
+    <string name="achieveGoal">完成目标</string>
+    <string name="what_a_pity_you_do_not_finish">真可惜，没有完成训练哦</string>
+    <string name="not_achieved">未达成</string>
+    
 </resources>
