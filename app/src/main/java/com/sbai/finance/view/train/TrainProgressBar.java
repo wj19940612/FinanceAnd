@@ -39,7 +39,7 @@ public class TrainProgressBar extends ProgressBar {
     private OnProgressCompleteListener mOnProgressCompleteListener;
 
     //因为目前的样式差不多，所以设置一个通用的，可以关闭
-    private boolean mUseDedaultProgressDrawable;
+    private boolean mUseDefaultProgressDrawable;
 
     public interface OnProgressCompleteListener {
         void onProgressComplete(int progress);
@@ -71,12 +71,12 @@ public class TrainProgressBar extends ProgressBar {
         mHintSplitLineWidth = typedArray.getDimension(R.styleable.TrainProgressBar_hintSplitLineWidth, 4);
         mHintSplitScale = typedArray.getFloat(R.styleable.TrainProgressBar_hintSplitScale, 0.8f);
         mHasSplitLine = typedArray.getBoolean(R.styleable.TrainProgressBar_hasSplitLine, true);
-        mUseDedaultProgressDrawable = typedArray.getBoolean(R.styleable.TrainProgressBar_isUseDefaultProgressDrawable, true);
+        mUseDefaultProgressDrawable = typedArray.getBoolean(R.styleable.TrainProgressBar_isUseDefaultProgressDrawable, true);
         typedArray.recycle();
     }
 
     private void init() {
-        if (mUseDedaultProgressDrawable) {
+        if (mUseDefaultProgressDrawable) {
             setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.bg_train_progress));
         }
         mBoundaryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
