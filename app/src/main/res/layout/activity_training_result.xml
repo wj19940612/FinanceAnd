@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="15dp"
-        android:text="@string/myGrade"
+        android:text="@string/my_grade"
         android:textColor="@color/primaryText"
         android:textSize="18sp"/>
 

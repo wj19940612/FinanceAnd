@@ -130,7 +130,7 @@ public class LeaderBoardsActivity extends BaseActivity {
 
     private void updateSelfLeaderInfo(TextView textView, LeaderBoardRank item) {
         if (LocalUser.getUser().isLogin()) {
-            if (item.getCurr() == null || item.getCurr().getNo() == 0) {
+            if (item.getCurr() == null || item.getCurr().getNo() <= 0) {
                 textView.setText(getString(R.string.you_no_enter_leader_board));
             } else {
                 textView.setText(getString(R.string.your_rank, item.getCurr().getNo()));

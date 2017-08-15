@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.training.TrainingResultActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
@@ -17,7 +16,6 @@ import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.websocket.WsClient;
@@ -44,8 +42,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
 //        checkVersion();
 //        translucentStatusBar();
-
-        Launcher.with(getActivity(), TrainingResultActivity.class).execute();
     }
 
     private void checkVersion() {

@@ -242,7 +242,7 @@ public class StudyRoomActivity extends BaseActivity {
 
         mTrainId = data.getId();
         //update explain info
-        mTestTitle.setText(data.getTitle());
+        mTestTitle.setText(data.getDigest());
         mAnswerDetail.setText(data.getAnalysis());
         for (StudyOption.ContentBean contentBean : data.getContent()) {
             if (contentBean.isRight()) {
@@ -292,7 +292,7 @@ public class StudyRoomActivity extends BaseActivity {
         updateTrainData(studyOption);
         if (data.getAnswer().get(0).getAnswerIds().size() > 0) {
             for (int i = 0; i < studyOption.getContent().size(); i++) {
-                if (studyOption.getContent().get(i).getId() == data.getAnswer().get(0).getAnswerIds().get(0).getOptionId()) {
+                if (studyOption.getContent().get(i).getId().equalsIgnoreCase(data.getAnswer().get(0).getAnswerIds().get(0).getOptionId())) {
                     mSelectedIndex = i;
                     updateResultView();
                     break;

@@ -106,6 +106,9 @@ public class PushIntentService extends GTIntentService {
         if (pushMessageModel.isBattleMatchSuccess() && Preference.get().isForeground()) {
             return;
         }
+        if (pushMessageModel.isMissAnswer()) {
+            pushMessageModel.setTitle(null);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(pushMessageModel.getTitle());

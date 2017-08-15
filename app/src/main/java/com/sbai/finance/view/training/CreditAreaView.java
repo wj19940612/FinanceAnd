@@ -111,8 +111,6 @@ public class CreditAreaView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-
         mMeasuredWidth = getWidth();
         mMeasuredHeight = getHeight();
         if (mSplitHeight == 0) {

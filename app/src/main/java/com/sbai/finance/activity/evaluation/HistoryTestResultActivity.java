@@ -130,7 +130,7 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
         TestResultModel testResultModel = (TestResultModel) parent.getAdapter().getItem(position);
         if (testResultModel != null) {
             Launcher.with(getActivity(), ScoreIntroduceActivity.class)
-                    .putExtra(ExtraKeys.HISTORY_TEST_RESULT,testResultModel)
+                    .putExtra(ExtraKeys.HISTORY_TEST_RESULT, testResultModel)
                     .execute();
         }
     }
@@ -175,7 +175,7 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
                 mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
-                        String.valueOf(item.getAllAccuracy()),
+                        NumberFormatUtils.formatPercentString(item.getAllAccuracy(), 1),
                         NumberFormatUtils.formatPercentString(item.getPassPercent())));
             }
 

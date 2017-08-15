@@ -30,6 +30,15 @@ public class StudyOption implements Serializable {
     private String title;
     private int type;
     private List<ContentBean> content;
+    private String digest;
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
+    }
 
     public String getAnalysis() {
         return analysis;
@@ -112,7 +121,7 @@ public class StudyOption implements Serializable {
          */
 
         private String content;
-        private long id;
+        private String id;
         private boolean right;
         private int seq;
 
@@ -124,11 +133,11 @@ public class StudyOption implements Serializable {
             this.content = content;
         }
 
-        public long getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(long id) {
+        public void setId(String id) {
             this.id = id;
         }
 

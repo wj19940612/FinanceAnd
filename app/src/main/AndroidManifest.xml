@@ -422,9 +422,22 @@
         <activity
             android:name=".activity.training.TrainDetailActivity"
             android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.training.TrainingResultActivity"
-            android:theme="@style/PageBottomEnter"
+            android:screenOrientation="portrait"
+            android:theme="@style/PageBottomEnter"/>
+        <activity
+            android:name=".activity.training.HowPlayHorizontalActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activity.training.TrainCountDownActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.KlineTrainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.AnnalsCreateActivity"
             android:screenOrientation="portrait"/>
     </application>
 
