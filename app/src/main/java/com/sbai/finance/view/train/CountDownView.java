@@ -202,7 +202,6 @@ public class CountDownView extends LinearLayout {
 
                     if (mTotalTime < mTotalChangeTime) {
                         mTimeHandler.removeCallbacksAndMessages(null);
-                        mMinuteSecondTextView.setText("00");
                         if (mOnTimeStopChangeListener != null) {
                             mOnTimeStopChangeListener.StopChange();
                         }
@@ -225,6 +224,8 @@ public class CountDownView extends LinearLayout {
                     mMinuteSecondTextView.setText(millisecondTimeData);
                     if (mTotalTime > mTotalChangeTime) {
                         mTimeHandler.sendEmptyMessageDelayed(MESSAGE_WHAT_MILLISECOND, 10);
+                    } else {
+                        mMinuteSecondTextView.setText("00");
                     }
 
                     break;
