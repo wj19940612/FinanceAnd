@@ -101,9 +101,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                tools:text="@string/voice_time"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                tools:text="@string/voice_time"/>
         </LinearLayout>
 
         <TextView
@@ -113,9 +113,9 @@
             android:layout_alignLeft="@+id/voiceArea"
             android:layout_below="@+id/missAvatar"
             android:layout_marginTop="5dp"
-            tools:text="@string/listener_number"
             android:textColor="@color/colorPrimary"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            tools:text="@string/listener_number"/>
 
         <TextView
             android:id="@+id/noMissReply"
@@ -147,10 +147,10 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_miss_love"
             android:drawablePadding="6dp"
-            android:gravity="center"
-            tools:text="3.6万"
+            android:gravity="center_vertical"
             android:textColor="@color/primaryText"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="3.6万"/>
 
         <TextView
             android:id="@+id/commentNumber"
@@ -159,10 +159,10 @@
             android:layout_marginLeft="20dp"
             android:drawableLeft="@drawable/ic_miss_comment"
             android:drawablePadding="6dp"
-            android:gravity="center"
-            tools:text="3003"
+            android:gravity="center_vertical"
             android:textColor="@color/primaryText"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="3003"/>
 
         <TextView
             android:id="@+id/ingotNumber"
@@ -171,10 +171,10 @@
             android:layout_marginLeft="20dp"
             android:drawableLeft="@drawable/ic_miss_ingot"
             android:drawablePadding="6dp"
-            android:gravity="center"
-            tools:text="208"
+            android:gravity="center_vertical"
             android:textColor="@color/primaryText"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            tools:text="208"/>
 
     </LinearLayout>
 
