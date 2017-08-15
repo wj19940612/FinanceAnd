@@ -62,33 +62,31 @@
         android:orientation="vertical">
 
         <com.sbai.finance.view.training.TrainingAchievementView
+            android:id="@+id/achievement1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:background="@drawable/bg_training_result_achievement"/>
-
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/card2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/primaryText"
-            android:minHeight="50dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_training_result_achievement"
             android:visibility="invisible"/>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card3"
+        <com.sbai.finance.view.training.TrainingAchievementView
+            android:id="@+id/achievement2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/primaryText"
-            android:minHeight="50dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/bg_training_result_achievement"
+            android:visibility="invisible"/>
+
+        <com.sbai.finance.view.training.TrainingAchievementView
+            android:id="@+id/achievement3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/bg_training_result_achievement"
             android:visibility="invisible"/>
     </LinearLayout>
 
@@ -101,5 +99,17 @@
         android:drawableTop="@drawable/btn_training_result_record"
         android:text="记下本次训练的感受和心得"
         android:textColor="@color/unluckyText"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/retry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_primary"
+        android:gravity="center"
+        android:minHeight="44dp"
+        android:text="@string/retry"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"/>
 </LinearLayout>

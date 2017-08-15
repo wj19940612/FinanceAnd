@@ -758,5 +758,6 @@
     <string name="achieveGoal">完成目标</string>
     <string name="what_a_pity_you_do_not_finish">真可惜，没有完成训练哦</string>
     <string name="not_achieved">未达成</string>
-    
+    <string name="retry">再试一次</string>
+
 </resources>

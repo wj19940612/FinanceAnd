@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.training;
 
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
@@ -9,6 +8,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.utils.AnimUtils;
+import com.sbai.finance.view.training.TrainingAchievementView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,18 +22,24 @@ public class TrainingResultActivity extends BaseActivity {
     private static final long ANIM_DURATION = 500;
     private static final long ENTER_OFFSET = (long) (0.4f * ANIM_DURATION);
 
+    // Activity enter anim duration is 400ms.
+    // And onEnterAnimationComplete is not work when user close screen before activity show completely
+    private static final long ANIM_DELAY = 410;
+
     @BindView(R.id.myGrade)
     TextView mMyGrade;
     @BindView(R.id.failedMessage)
     TextView mFailedMessage;
 
-    @BindView(R.id.card2)
-    CardView mCard2;
-    @BindView(R.id.card3)
-    CardView mCard3;
-
     @BindView(R.id.recordTrainingExperience)
     TextView mRecordTrainingExperience;
+
+    @BindView(R.id.achievement1)
+    TrainingAchievementView mAchievement1;
+    @BindView(R.id.achievement2)
+    TrainingAchievementView mAchievement2;
+    @BindView(R.id.achievement3)
+    TrainingAchievementView mAchievement3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,41 +47,59 @@ public class TrainingResultActivity extends BaseActivity {
         setContentView(R.layout.activity_training_result);
         ButterKnife.bind(this);
 
+        mAchievement1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showAchievementViews();
+            }
+        }, ANIM_DELAY);
+    }
+
+    private void showAchievementViews() {
+        // TODO: 15/08/2017 init data
+        showResultsWithAnim();
     }
 
     public void showResultsWithAnim() {
-//        mCard1.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION,
-//                new AnimUtils.AnimEndListener() {
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        mCard1.setVisibility(View.VISIBLE);
-//                    }
-//                }));
-
-        mCard2.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET,
+        mAchievement1.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION,
                 new AnimUtils.AnimEndListener() {
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        mCard2.setVisibility(View.VISIBLE);
+                        mAchievement1.setVisibility(View.VISIBLE);
                     }
                 }));
 
-        mCard3.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET * 2,
+        mAchievement2.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET,
                 new AnimUtils.AnimEndListener() {
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        mCard3.setVisibility(View.VISIBLE);
+                        mAchievement2.setVisibility(View.VISIBLE);
                     }
                 }));
-    }
 
-    @OnClick(R.id.recordTrainingExperience)
-    public void onViewClicked() {
+        mAchievement3.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET * 2,
+                new AnimUtils.AnimEndListener() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mAchievement3.setVisibility(View.VISIBLE);
+                    }
+                }));
     }
 
     @Override
-    public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-        showResultsWithAnim();
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.slide_out_to_bottom);
+    }
+
+    @OnClick({R.id.recordTrainingExperience, R.id.retry})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.recordTrainingExperience:
+                // TODO: 15/08/2017 跳转写心得
+                break;
+            case R.id.retry:
+                break;
+        }
     }
 }
