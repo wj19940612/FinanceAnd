@@ -202,5 +202,6 @@
         <attr name="hintSplitLineWidth" format="dimension|reference"/>
         <attr name="hintSplitScale" format="float"/>
         <attr name="hasSplitLine" format="boolean"/>
+        <attr name="isUseDefaultProgressDrawable" format="boolean"/>
     </declare-styleable>
 </resources>

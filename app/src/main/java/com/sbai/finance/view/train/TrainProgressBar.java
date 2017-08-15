@@ -8,7 +8,9 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
@@ -34,13 +36,25 @@ public class TrainProgressBar extends ProgressBar {
     private float mHintSplitScale;
     private boolean mHasSplitLine;
 
+    private OnProgressCompleteListener mOnProgressCompleteListener;
+
+    //因为目前的样式差不多，所以设置一个通用的，可以关闭
+    private boolean mUseDedaultProgressDrawable;
+
+    public interface OnProgressCompleteListener {
+        void onProgressComplete(int progress);
+    }
+
+    public void setOnProgressCompleteListener(OnProgressCompleteListener onProgressCompleteListener) {
+        this.mOnProgressCompleteListener = onProgressCompleteListener;
+    }
 
     public TrainProgressBar(Context context) {
         this(context, null);
     }
 
     public TrainProgressBar(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.progressBarStyle);
+        this(context, attrs, android.R.attr.progressBarStyleHorizontal);
     }
 
     public TrainProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -57,10 +71,14 @@ public class TrainProgressBar extends ProgressBar {
         mHintSplitLineWidth = typedArray.getDimension(R.styleable.TrainProgressBar_hintSplitLineWidth, 4);
         mHintSplitScale = typedArray.getFloat(R.styleable.TrainProgressBar_hintSplitScale, 0.8f);
         mHasSplitLine = typedArray.getBoolean(R.styleable.TrainProgressBar_hasSplitLine, true);
+        mUseDedaultProgressDrawable = typedArray.getBoolean(R.styleable.TrainProgressBar_isUseDefaultProgressDrawable, true);
         typedArray.recycle();
     }
 
     private void init() {
+        if (mUseDedaultProgressDrawable) {
+            setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.bg_train_progress));
+        }
         mBoundaryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBoundaryPaint.setAntiAlias(true);
         mBoundaryPaint.setColor(mBoundaryColor);
@@ -116,6 +134,10 @@ public class TrainProgressBar extends ProgressBar {
             super.handleMessage(msg);
             if (mProgress < 101) {
                 mProgress++;
+                Log.d(TAG, "handleMessage: " + mProgress);
+                if (mOnProgressCompleteListener != null) {
+                    mOnProgressCompleteListener.onProgressComplete(mProgress);
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     setProgress(mProgress, true);
                 } else {
