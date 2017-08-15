@@ -109,18 +109,6 @@
             android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.UserDataActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.AttentionActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.FansActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.PublishActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.trade.PredictionRuleActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -155,9 +143,6 @@
         <!-- 我的: 设置 Setting -->
         <activity
             android:name=".activity.mine.setting.SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.setting.ShieldRelieveSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.setting.SetNotificationSwitchActivity"

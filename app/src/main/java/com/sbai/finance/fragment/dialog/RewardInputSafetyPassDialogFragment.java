@@ -187,26 +187,23 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
-                        protected void onReceiveResponse(Resp<Object> objectResp) {
-                            if (objectResp.isSuccess()) {
-                                ToastUtil.show(getString(R.string.success_reward));
-                                mIsSuccess = true;
-                                sendRewardSuccessBroadcast(getActivity());
-                                dismissAllowingStateLoss();
-                            } else {
-                                if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
-                                    dismissAllowingStateLoss();
-                                } else {
-                                    if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
-                                        mSafetyPasswordNumber.clearSafetyNumber();
-                                    }
-                                    ToastUtil.show(objectResp.getMsg());
-                                }
-                            }
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            ToastUtil.show(getString(R.string.success_reward));
+                            mIsSuccess = true;
+                            sendRewardSuccessBroadcast(getActivity());
+                            dismissAllowingStateLoss();
                         }
 
                         @Override
-                        protected void onRespSuccess(Resp<Object> resp) {
+                        protected void onRespFailure(Resp failedResp) {
+                            if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                                dismissAllowingStateLoss();
+                            } else {
+                                if (failedResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
+                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                }
+                                ToastUtil.show(failedResp.getMsg());
+                            }
                         }
                     }).fire();
 
@@ -216,26 +213,23 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
-                        protected void onReceiveResponse(Resp<Object> objectResp) {
-                            if (objectResp.isSuccess()) {
-                                ToastUtil.show(getString(R.string.success_reward));
-                                mIsSuccess = true;
-                                sendRewardSuccessBroadcast(getActivity());
-                                dismissAllowingStateLoss();
-                            } else {
-                                if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
-                                    dismissAllowingStateLoss();
-                                } else {
-                                    if (objectResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
-                                        mSafetyPasswordNumber.clearSafetyNumber();
-                                    }
-                                    ToastUtil.show(objectResp.getMsg());
-                                }
-                            }
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            ToastUtil.show(getString(R.string.success_reward));
+                            mIsSuccess = true;
+                            sendRewardSuccessBroadcast(getActivity());
+                            dismissAllowingStateLoss();
                         }
 
                         @Override
-                        protected void onRespSuccess(Resp<Object> resp) {
+                        protected void onRespFailure(Resp failedResp) {
+                            if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                                dismissAllowingStateLoss();
+                            } else {
+                                if (failedResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
+                                    mSafetyPasswordNumber.clearSafetyNumber();
+                                }
+                                ToastUtil.show(failedResp.getMsg());
+                            }
                         }
                     }).fire();
 

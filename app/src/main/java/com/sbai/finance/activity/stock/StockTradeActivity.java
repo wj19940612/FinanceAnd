@@ -234,10 +234,10 @@ public abstract class StockTradeActivity extends BaseActivity {
                     }
 
                     @Override
-                    protected void onReceiveResponse(Resp<JsonObject> resp) {
-                        super.onReceiveResponse(resp);
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
                         // 701 代表已经添加过
-                        if (resp.getCode() == Resp.CODE_REPEAT_ADD) {
+                        if (failedResp.getCode() == Resp.CODE_REPEAT_ADD) {
                             mTradeFloatButtons.setHasAddInOption(true);
                         }
                     }

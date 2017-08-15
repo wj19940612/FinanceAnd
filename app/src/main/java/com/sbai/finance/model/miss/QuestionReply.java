@@ -1,4 +1,4 @@
-package com.sbai.finance.model.missTalk;
+package com.sbai.finance.model.miss;
 
 import android.os.Parcel;
 import android.os.Parcelable;

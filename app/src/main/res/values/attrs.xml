@@ -180,4 +180,27 @@
         <attr name="valueColor" format="color|reference"/>
         <attr name="radarLineColor" format="color|reference"/>
     </declare-styleable>
+
+    <!--分数区间 分段view  0 -200 -->
+    <declare-styleable name="CreditAreaView">
+        <attr name="startColor" format="color|reference"/>
+        <attr name="endColor" format="color|reference"/>
+        <attr name="splitColor" format="color|reference"/>
+        <attr name="splitWidth" format="dimension|reference"/>
+        <attr name="splitHeight" format="dimension|reference"/>
+        <attr name="viewRadius" format="dimension|reference"/>
+        <attr name="hasSplit" format="boolean"/>
+        <attr name="notReachedCreditViewColor" format="color|reference"/>
+        <attr name="credPercent" format="float"/>
+        <attr name="gradeCount" format="integer"/>
+    </declare-styleable>
+    <!--训练的时间进度条-->
+    <declare-styleable name="TrainProgressBar">
+        <attr name="boundaryColor" format="color|reference"/>
+        <attr name="boundaryHeight" format="dimension|reference"/>
+        <attr name="hintSplitLineColor" format="color|reference"/>
+        <attr name="hintSplitLineWidth" format="dimension|reference"/>
+        <attr name="hintSplitScale" format="float"/>
+        <attr name="hasSplitLine" format="boolean"/>
+    </declare-styleable>
 </resources>

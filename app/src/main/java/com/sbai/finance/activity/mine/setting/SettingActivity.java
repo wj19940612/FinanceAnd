@@ -30,7 +30,6 @@ public class SettingActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.shieldSetting:
-                Launcher.with(getActivity(), ShieldRelieveSettingActivity.class).execute();
                 break;
             case R.id.newMessageNotification:
                 Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
