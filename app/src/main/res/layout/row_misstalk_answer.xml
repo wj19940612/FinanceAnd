@@ -147,13 +147,8 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_miss_love"
             android:drawablePadding="6dp"
-<<<<<<< HEAD
-            android:gravity="center_vertical"
-            android:text="3.6万"
-=======
             android:gravity="center"
             tools:text="3.6万"
->>>>>>> f561bd85154b64ce14a022540e663836610db1df
             android:textColor="@color/primaryText"
             android:textSize="14sp"/>
 
