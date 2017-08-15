@@ -383,7 +383,7 @@ public class TrainDetailActivity extends BaseActivity {
 				.setTitle(getString(R.string.share_title))
 				.setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
 				.setShareDescription(getString(R.string.train_share_description))
-				.setShareUrl(SHARE_URL_TRAIN_EXPERIENCE)
+				.setShareUrl(String.format(SHARE_URL_TRAIN_EXPERIENCE, mTrainId))
 				.hasFeedback(true)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
 					@Override
