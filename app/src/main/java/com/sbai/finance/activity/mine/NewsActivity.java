@@ -156,7 +156,6 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
             switch (type) {
                 //关注
                 case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                    Launcher.with(getActivity(), FansActivity.class).execute();
                     break;
                 //// 20.成为观点大神
                 case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
@@ -181,17 +180,13 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 // 25.涨跌预测成功
                 case HistoryNewsModel.FORCAEST_highs_and_lows_fail:
                     if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), PublishActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getUserId())
-                                .execute();
+
                     }
                     break;
                 //26.涨跌预测失败
                 case HistoryNewsModel.FORCAEST_highs_and_lows_success:
                     if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), PublishActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, historyNewsModel.getUserId())
-                                .execute();
+
                     }
                     break;
                 //   30.意向金支付成功

@@ -133,7 +133,7 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         initScreenOnReceiver();
         updateAvatar();
-     //   requestBattleList();
+        //   requestBattleList();
 
         scrollToTop(mTitleBar, mListView);
     }
@@ -360,30 +360,26 @@ public class BattleListActivity extends BaseActivity implements
         Client.joinBattle(data.getId(), Battle.SOURCE_HALL).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    protected void onReceiveResponse(Resp<Battle> battleResp) {
-                        if (battleResp.isSuccess()) {
-                            Battle battle = battleResp.getData();
-                            if (battle != null) {
-                                //更新列表对战信息
-                                data.setGameStatus(battle.getGameStatus());
-                                data.setAgainstUser(battle.getAgainstUser());
-                                data.setAgainstUserPortrait(battle.getAgainstUserPortrait());
-                                data.setAgainstUserName(battle.getAgainstUserName());
-                                mVersusListAdapter.notifyDataSetChanged();
+                    protected void onRespSuccess(Resp<Battle> resp) {
+                        Battle battle = resp.getData();
+                        if (battle != null) {
+                            //更新列表对战信息
+                            data.setGameStatus(battle.getGameStatus());
+                            data.setAgainstUser(battle.getAgainstUser());
+                            data.setAgainstUserPortrait(battle.getAgainstUserPortrait());
+                            data.setAgainstUserName(battle.getAgainstUserName());
+                            mVersusListAdapter.notifyDataSetChanged();
 
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
-                                        .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
-                                        .executeForResult(CANCEL_BATTLE);
-                            }
-                        } else {
-                            showJoinBattleFailureDialog(battleResp);
+                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
+                                    .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
+                                    .executeForResult(CANCEL_BATTLE);
                         }
                     }
 
                     @Override
-                    protected void onRespSuccess(Resp<Battle> resp) {
-
+                    protected void onRespFailure(Resp failedResp) {
+                        showJoinBattleFailureDialog(failedResp);
                     }
                 }).fireFree();
     }
@@ -393,17 +389,17 @@ public class BattleListActivity extends BaseActivity implements
         Client.getQuickMatchResult(Battle.AGAINST_FAST_MATCH, null).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
-                    protected void onReceiveResponse(Resp<Battle> battleResp) {
-                        if (battleResp.isSuccess() && battleResp.getData() != null) {
-                            showMatchSuccessDialog(battleResp.getData());
-                        } else if (battleResp.getCode() == Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT) {
-                            showMatchTimeoutDialog();
+                    protected void onRespSuccess(Resp<Battle> resp) {
+                        if (resp.hasData()) {
+                            showMatchSuccessDialog(resp.getData());
                         }
                     }
 
                     @Override
-                    protected void onRespSuccess(Resp<Battle> resp) {
-
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Battle.CODE_AGAINST_FAST_MATCH_TIMEOUT) {
+                            showMatchTimeoutDialog();
+                        }
                     }
                 }).fireFree();
     }
@@ -592,10 +588,10 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinBattleFailureDialog(final Resp<Battle> resp) {
-        final int code = resp.getCode();
+    private void showJoinBattleFailureDialog(Resp failedResp) {
+        final int code = failedResp.getCode();
+        String msg = failedResp.getMsg();
         int positiveMsg;
-        String msg = null;
         SmartDialog smartDialog = SmartDialog.single(getActivity(), msg);
         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
             msg = getString(R.string.battle_joined_or_created);

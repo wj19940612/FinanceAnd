@@ -36,6 +36,7 @@
     <color name="yellowGradientStart">#ffe548</color>
     <color name="backgroundGradientStart">#69b2ff</color>
     <color name="backgroundGradientEnd">#8687f9</color>
+    <color name="creditEndColor">#C286F9</color>
 
     <color name="yellowShallow">#FFFCF5</color>
     <color name="yellowShallowBorder">#F3B071</color>
@@ -48,4 +49,5 @@
     <color name="technology_violet">#8268E4</color>
     <color name="fundamentals_yellow">#FFB51F</color>
     <color name="comprehensive_blue">#53A5F2</color>
+
 </resources>

@@ -215,28 +215,25 @@ public class ExChangeProductFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<Object>>(false) {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            if (mOnUserFundChangeListener != null) {
-                                mOnUserFundChangeListener.onUserFundChange();
-                            }
-                            ToastUtil.show(resp.getMsg());
+                        if (mOnUserFundChangeListener != null) {
+                            mOnUserFundChangeListener.onUserFundChange();
                         }
+                        ToastUtil.show(resp.getMsg());
                     }
 
                     @Override
-                    protected void onReceiveResponse(Resp<Object> objectResp) {
-                        super.onReceiveResponse(objectResp);
-                        if (objectResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
                             showExchangeFailDialog(item);
-                        } else if (objectResp.isExchangeProductHasChange()) {
-                            requestIngotOrIntegrateList();
-                            ToastUtil.show(objectResp.getMsg());
                         } else {
-                            ToastUtil.show(objectResp.getMsg());
+                            ToastUtil.show(failedResp.getMsg());
+                            if (failedResp.getCode() == Resp.CODE_EXCHANGE_ITEM_IS_GONE
+                                    || failedResp.getCode() == Resp.CODE_EXCHANGE_ITEM_IS_MODIFIED) {
+                                requestIngotOrIntegrateList();
+                            }
                         }
                     }
-                })
-                .fire();
+                }).fire();
     }
 
     private void showExchangeFailDialog(CornucopiaProductModel item) {

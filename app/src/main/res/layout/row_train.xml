@@ -6,10 +6,10 @@
                                     android:layout_width="150dp"
                                     android:layout_height="195dp"
                                     android:layout_marginBottom="5dp"
-                                    android:background="?android:attr/selectableItemBackground"
                                     android:layout_marginLeft="@dimen/common_padding"
                                     android:layout_marginRight="1dp"
                                     android:layout_marginTop="2dp"
+                                    android:background="?android:attr/selectableItemBackground"
                                     android:orientation="vertical"
                                     app:cardCornerRadius="8dp"
                                     app:cardElevation="3dp"
@@ -47,6 +47,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="3dp"
+            android:maxLines="2"
             android:textColor="#FF222222"
             tools:text="k线基础\n完成次"/>
 

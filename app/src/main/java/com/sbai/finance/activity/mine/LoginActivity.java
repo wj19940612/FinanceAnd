@@ -376,8 +376,8 @@ public class LoginActivity extends BaseActivity {
                         }
 
                         @Override
-                        protected void onRespFailureWitMsg(String msg, int code) {
-                            super.onRespFailureWitMsg(msg, code);
+                        protected void onRespFailure(Resp failedResp) {
+                            super.onRespFailure(failedResp);
                             mLoading.clearAnimation();
                         }
                     }).fire();
@@ -397,8 +397,8 @@ public class LoginActivity extends BaseActivity {
                         }
 
                         @Override
-                        protected void onRespFailureWitMsg(String msg, int code) {
-                            super.onRespFailureWitMsg(msg, code);
+                        protected void onRespFailure(Resp failedResp) {
+                            super.onRespFailure(failedResp);
                             mLoading.clearAnimation();
                         }
                     }).fire();

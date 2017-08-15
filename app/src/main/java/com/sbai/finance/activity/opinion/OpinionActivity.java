@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.ViewPointMater;
 import com.sbai.finance.net.Callback2D;
@@ -67,7 +66,6 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             @Override
             public void onClick(int userId) {
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, userId).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -82,7 +80,6 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
                 ViewPointMater viewPointMater = mOpinionListAdapter.getItem(position);
                 if (viewPointMater!=null){
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), UserDataActivity.class).putExtra(Launcher.USER_ID, viewPointMater.getUserId()).execute();
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }

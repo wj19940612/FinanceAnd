@@ -25,7 +25,7 @@ import com.sbai.httplib.RequestManager;
  * Two main callbacks to handle our custom reponse: Resp
  * <ul>
  *     <li>onRespSuccess() when Resp.code == 200</li>
- *     <li>onRespFailureWitMsg() when Resp.code != 200</li>
+ *     <li>onRespFailure() when Resp.code != 200</li>
  * </ul>
  *
  * @param <T>
@@ -104,14 +104,14 @@ public abstract class Callback<T> extends ApiCallback<T> {
         }
     }
 
-    protected void onReceiveResponse(T t) {
+    private void onReceiveResponse(T t) {
         if (t instanceof Resp) {
             Resp resp = (Resp) t;
             if (resp.isSuccess()) {
                 onRespSuccess(t);
             } else {
                 onFailure(null);
-                onRespFailureWitMsg(resp.getMsg(), resp.getCode());
+                onRespFailure(resp);
             }
         } else {
             onRespSuccess(t);
@@ -120,9 +120,9 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     protected abstract void onRespSuccess(T resp);
 
-    protected void onRespFailureWitMsg(String msg, int code) {
+    protected void onRespFailure(Resp failedResp) {
         if (mErrorToast) {
-            ToastUtil.show(msg);
+            ToastUtil.show(failedResp.getMsg());
         }
     }
 }

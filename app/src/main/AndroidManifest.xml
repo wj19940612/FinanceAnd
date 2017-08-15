@@ -74,7 +74,6 @@
             android:name=".activity.RewardGetActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme.NoTitle.FadeIn"/>
-
         <activity
             android:name=".activity.economiccircle.OpinionDetailsActivity"
             android:screenOrientation="portrait"
@@ -107,18 +106,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.NewsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.UserDataActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.AttentionActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.FansActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.PublishActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.trade.PredictionRuleActivity"
@@ -155,9 +142,6 @@
         <!-- 我的: 设置 Setting -->
         <activity
             android:name=".activity.mine.setting.SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.setting.ShieldRelieveSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.setting.SetNotificationSwitchActivity"
@@ -412,7 +396,6 @@
             android:name=".activity.training.MoreTrainFeedbackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
-
         <activity
             android:name=".activity.training.ScoreIntroduceActivity"
             android:screenOrientation="portrait"
@@ -435,11 +418,17 @@
         <activity
             android:name=".activity.training.WriteExperienceActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.training.TrainDetailActivity"
             android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".activity.training.HowPlayVerticalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.HowPlayHorizontalActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".activity.training.AnnalsCreateActivity">
+        </activity>
     </application>
 
 </manifest>

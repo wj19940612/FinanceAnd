@@ -19,7 +19,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.OpinionDetailsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.UserDataActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Opinion;
@@ -308,9 +307,6 @@ public class ViewpointFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, item.getUserId())
-                                .executeForResult(REQ_CODE_USERDATA);
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }
@@ -321,9 +317,6 @@ public class ViewpointFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, item.getUserId())
-                                .executeForResult(REQ_CODE_USERDATA);
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
                     }

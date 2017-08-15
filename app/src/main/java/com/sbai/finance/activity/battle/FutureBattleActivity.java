@@ -1116,19 +1116,16 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
-                    protected void onReceiveResponse(Resp<TradeOrder> resp) {
-                        super.onReceiveResponse(resp);
-                        if (resp.getCode() == GameCode.ORDER_EXISIT) {
-                            refreshTradeView();
-                        }
-                    }
-
-                    @Override
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
                     }
 
-                })
-                .fire();
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
+                            refreshTradeView();
+                        }
+                    }
+                }).fire();
     }
 
     private void requestClosePosition(int orderId) {
@@ -1136,20 +1133,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
-                    protected void onReceiveResponse(Resp<TradeOrderClosePosition> resp) {
-                        super.onReceiveResponse(resp);
-                        if (resp.getCode() == GameCode.ORDER_CLOSE) {
+                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
                         }
-                    }
-
-                    @Override
-                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
-
-                    }
-
-                    @Override
-                    protected void onRespFailureWitMsg(String msg, int code) {
                     }
                 })
                 .fire();

@@ -154,11 +154,11 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                                 protected void onRespSuccess(Resp<Object> resp) {
                                     Log.d(TAG, "onRespSuccess: " + resp.toString());
                                     if (resp.isSuccess()) {
-                                        ToastMassage(resp);
+                                        toastMassage(resp);
                                         setResult(RESULT_OK);
                                         finish();
                                     } else {
-                                        ToastMassage(resp);
+                                        toastMassage(resp);
                                     }
                                 }
 
@@ -169,7 +169,7 @@ public class UpdateSecurityPassActivity extends BaseActivity {
         }
     }
 
-    private void ToastMassage(Resp<Object> resp) {
+    private void toastMassage(Resp<Object> resp) {
         ToastUtil.show(resp.getMsg());
     }
 
@@ -182,25 +182,21 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                         .setCallback(new Callback<Resp<Object>>() {
                             @Override
                             protected void onRespSuccess(Resp<Object> resp) {
-                                if (resp.isSuccess()) {
-                                    mOldPassword = passWord;
-                                    mPasswordInputCount++;
-                                    mSafetyPasswordHint.setText(R.string.please_input_new_password);
-                                    mSecurityPassword.clearSafetyNumber();
-                                }
-                                ToastMassage(resp);
+                                mOldPassword = passWord;
+                                mPasswordInputCount++;
+                                mSafetyPasswordHint.setText(R.string.please_input_new_password);
+                                mSecurityPassword.clearSafetyNumber();
+                                toastMassage(resp);
                             }
 
                             @Override
-                            protected void onReceiveResponse(Resp<Object> objectResp) {
-                                super.onReceiveResponse(objectResp);
-                                if (objectResp.getCode() == 600) {
+                            protected void onRespFailure(Resp failedResp) {
+                                super.onRespFailure(failedResp);
+                                if (failedResp.getCode() == 600) {
                                     mSecurityPassword.clearSafetyNumber();
                                 }
                             }
-
-                        })
-                        .fire();
+                        }).fire();
 
             } else if (mPasswordInputCount == 1) {
                 mNewPassWord = passWord;
@@ -209,23 +205,16 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                     mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
                     mSecurityPassword.clearSafetyNumber();
                 } else {
-//                    SmartDialog.with(ModifySafetyPassActivity.this,
-//                            R.string.new_password_is_same_as_old_pass, R.string.modify_fail)
-//                            .show();
                     mSafetyPasswordHint.setText(R.string.please_input_new_password);
                     mPasswordInputCount = 1;
                     mSecurityPassword.clearSafetyNumber();
                     mPasswordHint.setText(R.string.new_password_is_same_as_old_pass);
                     mPasswordHint.setVisibility(View.VISIBLE);
-
                 }
             } else if (mPasswordInputCount == 2) {
                 if (mNewPassWord.equalsIgnoreCase(passWord)) {
                     confirmNewPassword(mNewPassWord);
                 } else {
-//                    SmartDialog.with(ModifySafetyPassActivity.this,
-//                            R.string.twice_password_is_different, R.string.modify_fail)
-//                            .show();
                     mSecurityPassword.clearSafetyNumber();
                     mPasswordHint.setVisibility(View.VISIBLE);
                     mPasswordHint.setText(R.string.twice_pass_is_different);
@@ -244,11 +233,11 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            ToastMassage(resp);
+                            toastMassage(resp);
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            ToastMassage(resp);
+                            toastMassage(resp);
                         }
                     }
                 })

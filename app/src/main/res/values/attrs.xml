@@ -180,4 +180,42 @@
         <attr name="valueColor" format="color|reference"/>
         <attr name="radarLineColor" format="color|reference"/>
     </declare-styleable>
+
+    <!--分数区间 分段view  0 -200 -->
+    <declare-styleable name="CreditAreaView">
+        <attr name="startColor" format="color|reference"/>
+        <attr name="endColor" format="color|reference"/>
+        <attr name="splitColor" format="color|reference"/>
+        <attr name="splitWidth" format="dimension|reference"/>
+        <attr name="splitHeight" format="dimension|reference"/>
+        <attr name="viewRadius" format="dimension|reference"/>
+        <attr name="hasSplit" format="boolean"/>
+        <attr name="notReachedCreditViewColor" format="color|reference"/>
+        <attr name="credPercent" format="float"/>
+        <attr name="gradeCount" format="integer"/>
+    </declare-styleable>
+    <!--训练的时间进度条-->
+    <declare-styleable name="TrainProgressBar">
+        <attr name="boundaryColor" format="color|reference"/>
+        <attr name="boundaryHeight" format="dimension|reference"/>
+        <attr name="hintSplitLineColor" format="color|reference"/>
+        <attr name="hintSplitLineWidth" format="dimension|reference"/>
+        <attr name="hintSplitScale" format="float"/>
+        <attr name="hasSplitLine" format="boolean"/>
+        <attr name="isUseDefaultProgressDrawable" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CountDownView">
+        <attr name="minuteStartTimeTextSize" format="dimension|reference"/>
+        <attr name="minuteStartTimeTextColor" format="color|reference"/>
+        <attr name="millisecondStartTimeTextColor" format="color|reference"/>
+        <attr name="millisecondStartTimeTextSize" format="dimension|reference"/>
+        <attr name="secondStartTextColor" format="color|reference"/>
+        <attr name="secondStartTextSize" format="dimension|reference"/>
+        <attr name="minuteSecondSplitString" format="string|reference"/>
+        <attr name="secondMillisecondSplitString" format="string|reference"/>
+        <attr name="showMillisecond" format="boolean"/>
+        <attr name="timeViewMarginRight" format="dimension|reference"/>
+    </declare-styleable>
+
 </resources>

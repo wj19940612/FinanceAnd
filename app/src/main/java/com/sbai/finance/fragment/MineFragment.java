@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
-import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
@@ -34,7 +33,9 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.train.CountDownView;
 
 import java.util.ArrayList;
 
@@ -71,6 +72,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
+    @BindView(R.id.time)
+    CountDownView mTime;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -101,6 +104,12 @@ public class MineFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
+        mTime.setOnTimeStopChangeListener(new CountDownView.OnTimeStopChangeListener() {
+            @Override
+            public void StopChange() {
+                ToastUtil.show("结束了");
+            }
+        });
     }
 
     @Override
@@ -248,7 +257,9 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.aboutUs:
-                Launcher.with(getActivity(), AboutUsActivity.class).execute();
+                // TODO: 2017/8/15 测试
+//                Launcher.with(getActivity(), AboutUsActivity.class).execute();
+                mTime.setMinuteTime(1);
                 break;
         }
     }
