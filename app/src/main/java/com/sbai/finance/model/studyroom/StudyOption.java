@@ -30,6 +30,15 @@ public class StudyOption implements Serializable {
     private String title;
     private int type;
     private List<ContentBean> content;
+    private String digest;
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
+    }
 
     public String getAnalysis() {
         return analysis;
