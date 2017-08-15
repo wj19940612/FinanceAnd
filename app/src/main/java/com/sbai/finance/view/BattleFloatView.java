@@ -131,13 +131,6 @@ public class BattleFloatView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                    if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getContext(), UserDataActivity.class)
-                                .putExtra(Launcher.USER_ID, mBattle.getLaunchUser())
-                                .execute();
-                    } else {
-                        Launcher.with(getContext(), LoginActivity.class).execute();
-                    }
                 }
             });
 
@@ -145,15 +138,6 @@ public class BattleFloatView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
-                    if (LocalUser.getUser().isLogin()) {
-                        if (mBattle.getAgainstUser() != 0) {
-                            Launcher.with(getContext(), UserDataActivity.class)
-                                    .putExtra(Launcher.USER_ID, mBattle.getAgainstUser())
-                                    .execute();
-                        }
-                    } else {
-                        Launcher.with(getContext(), LoginActivity.class).execute();
-                    }
                 }
             });
         }

@@ -137,13 +137,13 @@ public class MyStudyInfo {
              * optionId : 892553962484412400
              */
 
-            private long optionId;
+            private String optionId;
 
-            public long getOptionId() {
+            public String getOptionId() {
                 return optionId;
             }
 
-            public void setOptionId(long optionId) {
+            public void setOptionId(String optionId) {
                 this.optionId = optionId;
             }
 

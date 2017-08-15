@@ -439,6 +439,12 @@
         <activity
             android:name=".activity.training.TrainDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.traingame.HowPlayVerticalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.traingame.HowPlayHorizontalActivity"
+            android:screenOrientation="landscape"/>
 
     </application>
 

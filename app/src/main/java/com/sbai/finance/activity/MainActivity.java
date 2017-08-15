@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.traingame.HowPlayHorizontalActivity;
+import com.sbai.finance.activity.traingame.HowPlayVerticalActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
@@ -40,7 +42,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-
 //        checkVersion();
 //        translucentStatusBar();
     }
