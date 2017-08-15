@@ -187,9 +187,9 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public BattleFloatView setAgainstName(String userName) {
-        if (TextUtils.isEmpty(userName)){
+        if (TextUtils.isEmpty(userName)) {
             mAgainstName.setText(getContext().getString(R.string.wait_to_join));
-        }else {
+        } else {
             mAgainstName.setText(userName);
         }
         return this;
@@ -309,8 +309,8 @@ public class BattleFloatView extends RelativeLayout {
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(getContext().getString(R.string.support,String.valueOf(myPraiseCount)));
-            mUserPraise.setText(getContext().getString(R.string.support,String.valueOf(fighterPraiseNumber)));
+            mMyPraise.setText(getContext().getString(R.string.support, String.valueOf(myPraiseCount)));
+            mUserPraise.setText(getContext().getString(R.string.support, String.valueOf(fighterPraiseNumber)));
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);
@@ -324,6 +324,7 @@ public class BattleFloatView extends RelativeLayout {
     /**
      * 设置输赢
      * 设置此局游戏是否胜利
+     *
      * @param result 0 平手  1发起者赢  2对抗者赢
      * @return
      */
@@ -338,10 +339,11 @@ public class BattleFloatView extends RelativeLayout {
 
     /**
      * 设置点赞按钮是否可用
+     *
      * @param enable
      * @return
      */
-    public BattleFloatView setPraiseEnable(boolean enable){
+    public BattleFloatView setPraiseEnable(boolean enable) {
         mMyPraiseButton.setEnabled(enable);
         mUserPraiseButton.setEnabled(enable);
         return this;
