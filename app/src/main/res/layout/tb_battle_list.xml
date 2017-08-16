@@ -41,7 +41,7 @@
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_12"
+                android:textSize="12sp"
                 tools:text="100.00"/>
 
             <TextView
@@ -56,7 +56,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_12"
+                android:textSize="12sp"
                 tools:text="100个"/>
         </LinearLayout>
 

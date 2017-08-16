@@ -1,4 +1,4 @@
-package com.sbai.finance.view.train;
+package com.sbai.finance.view.training;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;

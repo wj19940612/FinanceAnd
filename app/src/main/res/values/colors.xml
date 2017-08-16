@@ -23,6 +23,7 @@
     <color name="assistText">#B3B3B3</color>
     <color name="warningText">#CD4A47</color>
     <color name="opinionText">#5F6166</color>
+    <color name="whiteHintText">#FDFDFD</color>
 
     <color name="unluckyText">#999</color>
     <color name="luckyText">#666</color>
@@ -40,14 +41,11 @@
 
     <color name="yellowShallow">#FFFCF5</color>
     <color name="yellowShallowBorder">#F3B071</color>
-
-    <!---->
     <color name="yellowScoreGrade">#ffC200</color>
-    <color name="hint_white_color">#FDFDFD</color>
 
-    <color name="theory_red">#EF5053</color>
-    <color name="technology_violet">#8268E4</color>
-    <color name="fundamentals_yellow">#FFB51F</color>
-    <color name="comprehensive_blue">#53A5F2</color>
-
+    <!-- Training color -->
+    <color name="redTheoryTraining">#EF5053</color>
+    <color name="violetTechnologyTraining">#8268E4</color>
+    <color name="yellowFundamentalTraining">#FFB51F</color>
+    <color name="blueComprehensiveTraining">#53A5F2</color>
 </resources>

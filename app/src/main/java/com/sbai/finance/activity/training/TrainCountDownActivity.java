@@ -31,12 +31,15 @@ import butterknife.ButterKnife;
  */
 
 public class TrainCountDownActivity extends BaseActivity {
+
     public static final String TYPE = "type";
     public static final String ORIENTATION = "orientation";
-    @BindView(R.id.img)
-    ImageView mImg;
+
+    @BindView(R.id.image)
+    ImageView mImage;
     @BindView(R.id.mainArea)
     RelativeLayout mMainArea;
+
     private int mType;
     private static final int MESSAGE_SUCCESS = 250;
     //handler发送消息所携带的参数（持续时间）
@@ -47,7 +50,6 @@ public class TrainCountDownActivity extends BaseActivity {
         Launcher.with(activity, TrainCountDownActivity.class)
                 .putExtra(TYPE, type)
                 .execute();
-
     }
 
     @Override
@@ -55,9 +57,9 @@ public class TrainCountDownActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_count_down);
         ButterKnife.bind(this);
+
         initData(getIntent());
         initView();
-
     }
 
     private void initData(Intent intent) {
@@ -78,15 +80,15 @@ public class TrainCountDownActivity extends BaseActivity {
         int drawable = 0;
         int color = 0;
         switch (mType) {
-            case Train.TRAIN_THEORY:
+            case Train.TRAIN_TYPE_THEORY:
                 drawable = R.drawable.ic_count_down_theory;
                 color = Color.parseColor("#e44b58");
                 break;
-            case Train.TRAIN_TECHNOLOGY:
+            case Train.TRAIN_TYPE_TECHNOLOGY:
                 drawable = R.drawable.ic_count_down_technology;
                 color = Color.parseColor("#6843c4");
                 break;
-            case Train.TRAIN_BASIS:
+            case Train.TRAIN_TYPE_FUNDAMENTAL:
                 drawable = R.drawable.ic_count_down_fundamentals;
                 color = Color.parseColor("#f9b727");
                 break;
@@ -119,7 +121,7 @@ public class TrainCountDownActivity extends BaseActivity {
                         }
                     })
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)//添加缓存
-                    .into(new GlideDrawableImageViewTarget(mImg, 1));
+                    .into(new GlideDrawableImageViewTarget(mImage, 1));
         }
     }
 }

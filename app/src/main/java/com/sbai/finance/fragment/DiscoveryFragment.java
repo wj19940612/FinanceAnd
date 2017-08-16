@@ -296,20 +296,20 @@ public class DiscoveryFragment extends BaseFragment {
                 }
                 mGrade.setText(context.getString(R.string.level, item.getLevel()));
                 switch (item.getType()) {
-                    case Train.TRAIN_THEORY:
+                    case Train.TRAIN_TYPE_THEORY:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
                         } else {
                             mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
                         }
                         break;
-                    case Train.TRAIN_TECHNOLOGY:
+                    case Train.TRAIN_TYPE_TECHNOLOGY:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#694FC8"), Color.parseColor("#C86DD7")}, context));
                         break;
-                    case Train.TRAIN_BASIS:
+                    case Train.TRAIN_TYPE_FUNDAMENTAL:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FF8930"), Color.parseColor("#F7D34C")}, context));
                         break;
-                    case Train.TRAIN_COMPREHENSIVE:
+                    case Train.TRAIN_TYPE_COMPREHENSIVE:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#4F8CFE"), Color.parseColor("#33BCFE")}, context));
                         break;
                 }

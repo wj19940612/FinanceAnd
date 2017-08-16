@@ -11,6 +11,9 @@ public interface ExtraKeys {
     String HAS_LOGIN_PSD = "has_login_psd";
     String AUTH_CODE = "auth_code";
 
+    String TRAINING = "training";
+
+
     String FIRST_TEST = "first_test";
     String HISTORY_TEST_RESULT = "history_test_result";
 }
